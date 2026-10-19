@@ -395,7 +395,7 @@ motivo_porcion <- function(txt_trazado, frase_lote) {
   else paste0(txt_trazado, frase_lote)
 }
 contra_dims <- function(q1, q2) paste0(
-  "Un lote de ", fmt_mil(area), " m$^2$ puede medir ", largo, " m por ", ancho,
+  "Un lote de ", fmt_mil(area), " m² puede medir ", largo, " m por ", ancho,
   " m, y entonces la respuesta sería ", q1, "; pero también puede medir ",
   alt_l, " m por ", alt_a, " m, y entonces sería ", q2,
   ". El enunciado no dice cuál de los dos es.")
@@ -635,12 +635,12 @@ preguntas <- list(
   list(codigo = "GEO-INF-FIJ-01", cada = FALSE, met = TRUE, porc = FALSE,
        det = TRUE,
        texto = paste0("¿Cuál es el área del lote", posesivo, "?"),
-       valor = paste0(fmt_mil(area), " m$^2$"),
+       valor = paste0(fmt_mil(area), " m²"),
        razon = if (info_L)
          paste0("Se multiplican las dos medidas del lote: $", largo,
                 " \\times ", ancho, " = ", area, "$.")
        else
-         paste0("El enunciado la da directamente: ", fmt_mil(area), " m$^2$."),
+         paste0("El enunciado la da directamente: ", fmt_mil(area), " m²."),
        motivo = "", contra = ""),
   list(codigo = "GEO-INF-FIJ-02", cada = TRUE, met = FALSE, porc = FALSE,
        det = info_N,
@@ -658,14 +658,14 @@ preguntas <- list(
        det = info_N,
        texto = paste0("¿Cuál es el área de la porción que le corresponde a cada ",
                       b_sing, "?"),
-       valor = paste0(fmt_mil(area_hijo), " m$^2$"),
+       valor = paste0(fmt_mil(area_hijo), " m²"),
        razon = paste0("Se reparte el área total entre las partes: $", area,
                       " \\div ", n_hijos, " = ", area_hijo, "$."),
        motivo = paste0("Se conoce el área total, pero no en cuántas partes se divide: ",
                        "el enunciado no da ese número, así que el área de cada porción ",
                        "no queda determinada."),
-       contra = contra_partes(paste0(fmt_mil(area_hijo), " m$^2$"),
-                              paste0(fmt_mil(area / alt_n), " m$^2$"))),
+       contra = contra_partes(paste0(fmt_mil(area_hijo), " m²"),
+                              paste0(fmt_mil(area / alt_n), " m²"))),
   list(codigo = "GEO-INF-FIJ-04", cada = TRUE, met = FALSE, porc = FALSE,
        det = info_N,
        texto = paste0("¿Cuál es el porcentaje del lote que le corresponde a cada ",
@@ -682,21 +682,21 @@ preguntas <- list(
        det = info_N,
        texto = paste0("¿Cuál es el área de terreno que suman entre sí las porciones ",
                       "de dos ", b_plur, "?"),
-       valor = paste0(fmt_mil(2 * area_hijo), " m$^2$"),
-       razon = paste0("Cada porción mide ", fmt_mil(area_hijo), " m$^2$, así que dos ",
+       valor = paste0(fmt_mil(2 * area_hijo), " m²"),
+       razon = paste0("Cada porción mide ", fmt_mil(area_hijo), " m², así que dos ",
                       "porciones suman el doble: $2 \\times ", area_hijo, " = ",
                       2 * area_hijo, "$. No hace falta saber dónde está cada una."),
        motivo = paste0("Cada porción vale el área total dividida entre el número de ",
                        "partes, y ese número no aparece en el enunciado."),
-       contra = contra_partes(paste0(fmt_mil(2 * area_hijo), " m$^2$"),
-                              paste0(fmt_mil(2 * area / alt_n), " m$^2$"))),
+       contra = contra_partes(paste0(fmt_mil(2 * area_hijo), " m²"),
+                              paste0(fmt_mil(2 * area / alt_n), " m²"))),
   list(codigo = "GEO-INF-FIJ-06", cada = FALSE, met = TRUE, porc = TRUE,
        det = TRUE,
        texto = "¿Cuál es el área total que ocupan juntas todas las porciones del lote?",
-       valor = paste0(fmt_mil(area), " m$^2$"),
+       valor = paste0(fmt_mil(area), " m²"),
        razon = paste0("Las porciones cubren el lote completo, sin importar cómo se ",
                       "tracen los cortes: su suma es el área total, ", fmt_mil(area),
-                      " m$^2$."),
+                      " m²."),
        motivo = "", contra = ""),
   list(codigo = "GEO-INF-FIJ-07", cada = FALSE, met = FALSE, porc = TRUE,
        det = info_N,
@@ -936,6 +936,26 @@ clave      <- entradas[[idx_clave]]
 # =========================================================================
 # GUARDAS (stopifnot, no comentarios)
 # =========================================================================
+# G8 (objeción 2 del detractor, ronda 4). El modelo de determinación de UBI-01 se
+# contradice entre ramas: det = T & A & N con una justificación que solo invoca el trazado y
+# la asignación, frente al `motivo` de la rama LTA-, que la declara indeterminada por no
+# saber en cuántas partes se reparte. Hoy UBI-01 solo aparece en la canónica (P = 0
+# fuera de ella, enumeración exacta); esta guarda impide que reaparezca con trazado y
+# asignación declarados sin resolver antes ese modelo. Va antes de G1 para que su
+# mutante muera por ESTA sonda y no por una guarda anterior.
+stopifnot("G8: UBI-01 fuera de la canónica con trazado y asignación declarados" =
+            is_canonical || !("GEO-INF-UBI-01" %in% codigos) || !(info_T && info_A))
+# G9 (objeción 3 del detractor, ronda 4). Sin las medidas del lote (L callado), el
+# contraejemplo de POR-01/02/04/05 compara la franja del lote real (b_l por b_a) con
+# la del lote alternativo (a_l por a_a). Si son congruentes, describe la misma porción
+# girada y no prueba nada (5,51 % de la masa, medido por el detractor). Se compara el
+# CONJUNTO de lados y no la condición aritmética alt_corto * n == lado mayor: las dos
+# coinciden mientras la línea de `corte_fijo` haga que, sin L, el lado fijo sea el
+# menor, pero esta no depende de esa línea. Hoy es inalcanzable (POR-01..05, P = 0).
+POR_1245 <- c("GEO-INF-POR-01", "GEO-INF-POR-02", "GEO-INF-POR-04", "GEO-INF-POR-05")
+franjas_congruentes <- isTRUE(all.equal(sort(c(b_l, b_a)), sort(c(a_l, a_a))))
+stopifnot("G9: contraejemplo de dimensiones con franjas congruentes" =
+            info_L || !(clave$codigo %in% POR_1245) || !franjas_congruentes)
 # G1. Exactamente una pregunta no determinada por versión.
 stopifnot(sum(es_nd) == 1L, length(idx_clave) == 1L, nchar(exsolution) == 4L)
 # G1b. La clave es indeterminada y los tres distractores están determinados.
@@ -1063,7 +1083,7 @@ tabla_resumen <- data.frame(
 # --- Que hechos declara esta versión, para la Solution -------------------
 hechos_dados <- c(
   if (info_L) paste0("**cuánto mide** el lote (", largo, " m y ", ancho, " m)")
-  else paste0("**qué área** tiene el lote (", fmt_mil(area), " m$^2$)"),
+  else paste0("**qué área** tiene el lote (", fmt_mil(area), " m²)"),
   if (info_N) paste0("**en cuántas partes iguales** se reparte (", n_hijos, ")")
   else "que el reparto es **en partes iguales**",
   if (info_T) "**por dónde pasan los cortes** (franjas paralelas a un lado)",
@@ -1141,36 +1161,45 @@ cat(paste0(clave$contra, "\n\n"))
 if (info_N) {
   cat(paste0(
     "En cambio, el área de cada porción es la misma en todos esos casos (",
-    fmt_mil(area_hijo), " m$^2$) y la fracción también ($1/", n_hijos,
+    fmt_mil(area_hijo), " m²) y la fracción también ($1/", n_hijos,
     "$): por eso las preguntas que solo dependen del área y del número de partes ",
     "sí tienen respuesta.\n\n"))
 } else {
   cat(paste0(
-    "En cambio, el área total del lote (", fmt_mil(area), " m$^2$) es la misma en ",
+    "En cambio, el área total del lote (", fmt_mil(area), " m²) es la misma en ",
     "todos esos casos: por eso las preguntas que solo dependen de ella sí tienen ",
     "respuesta.\n\n"))
 }
 
 cat("### Resumen {-}\n\n")
-cat(tabla_responsiva(tabla_resumen, align = c("l", "c", "l")), "\n\n")
+# Lista y no tabla (objeción 1 del detractor, ronda 4): exams:::pandoc pasa
+# --columns=99999, así que la tabla pipe nunca ajusta las celdas y en el PDF se
+# salía del papel en 5 de 7 versiones. La lista conserva el orden por CATEGORÍA
+# (Incidente Q): primero las que sí se pueden responder y al final la clave.
+for (k in seq_len(nrow(tabla_resumen))) {
+  cat(paste0("- ", tabla_resumen$Pregunta[k], " — **",
+             tabla_resumen[["Se puede responder"]][k], "**: ",
+             tabla_resumen$Respuesta[k], "\n"))
+}
+cat("\n")
 
 cat("### Reflexión metacognitiva {-}\n\n")
 cat(reflexion, "\n\n")
 
 cat("### Estrategia para evitar el error {-}\n\n")
 cat(paste0(
-  "1. **Liste los datos y pregúntese qué determina cada uno.** No todos los ",
+  "- **Liste los datos y pregúntese qué determina cada uno.** No todos los ",
   "enunciados dan lo mismo: unos dan las dos medidas del lote y otros solo el ",
   "área; unos dicen cómo se corta y otros no.\n"))
 cat(paste0(
-  "2. **Busque el contraejemplo antes de calcular.** Si logra imaginar dos ",
+  "- **Busque el contraejemplo antes de calcular.** Si logra imaginar dos ",
   "situaciones que cumplen el enunciado y responden distinto, la pregunta no está ",
   "determinada; no siga buscando la cuenta.\n"))
 cat(paste0(
-  "3. **Separe el tamaño de la geometría.** El reparto en partes iguales fija el ",
+  "- **Separe el tamaño de la geometría.** El reparto en partes iguales fija el ",
   "tamaño de cada parte, pero no su forma, sus lados ni su ubicación.\n"))
 cat(paste0(
-  "4. **Desconfíe de las palabras repetidas.** Que el perímetro **del lote** se ",
+  "- **Desconfíe de las palabras repetidas.** Que el perímetro **del lote** se ",
   "pueda calcular no implica que se pueda calcular el perímetro **de cada ",
   "porción**: son magnitudes distintas aunque compartan el nombre.\n\n"))
 ```
