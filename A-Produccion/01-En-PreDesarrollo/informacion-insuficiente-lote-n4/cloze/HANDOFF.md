@@ -68,7 +68,15 @@
 >   `exclozetype` y `##ANSWER1..6##` sin cambios y en orden; FASE 2J, glifos y ortografía OK.
 > - *General:* metadatos sin cambios frente a agosto; DOK 3 ⇒ Nivel 4; canónica verbatim (G7).
 >
-> **Pendiente: validar_icfes (paso 10) y aprobación del profesor (11).**
+> **Paso 10, validar_icfes (2026-10-19), resellado sobre la versión final:** competencia,
+> componente, nivel, afirmación, evidencia y descriptor coinciden con `ITEM_OFICIAL.md`;
+> estructura CLOZE de 6 partes y DOK 3 ⇒ Nivel 4 conformes. El validador (haiku) dio NO CUMPLE
+> por una sola diferencia: `exextra[GradoSugerido]: 6-7` frente a `6°-7°` en la ficha. **Se
+> conserva `6-7` por decisión del profesor:** mismo valor, solo formato; los metadatos `exextra`
+> van en ASCII (regla #7) y el SCHOICE hermano usa el mismo `6-7`. Observación sin acción: el
+> campo «Genérico» de la ficha no se declara en `exextra`.
+>
+> **Pendiente: aprobación del profesor (paso 11).**
 
 > ✅ **Aprobación del profesor: 2026-08-13.** El ciclo técnico está cerrado y el ejercicio puede
 > aplicarse con estudiantes.
