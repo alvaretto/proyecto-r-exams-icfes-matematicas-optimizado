@@ -5,8 +5,8 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "00-teorema_pitagoras_entrenamiento_completo_cloze_geometrico_metrico_formulacion_ejecucion_n2_cloze_v1.Rmd"
-copias <- 300
+archivo_examen <- "informacion_insuficiente_lote_geometrico_metrico_argumentacion_n4_schoice_v1.Rmd"
+copias <- 200
 numpreg <- 1
 semilla_base <- sample(100:1e8, 1)
 # NO establecer semilla fija - cada versión usará semilla diferente
