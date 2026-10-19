@@ -3,7 +3,7 @@
   "ejercicio": "informacion_insuficiente_lote_geometrico_metrico_argumentacion_n4_schoice_v1",
   "tipo": "schoice",
   "timestamp_inicio": "2026-08-10T19:44:14.840202-05:00",
-  "timestamp_ultima_actualizacion": "2026-08-10T23:56:48.214255-05:00",
+  "timestamp_ultima_actualizacion": "2026-10-08T22:10:37.539894-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -26,18 +26,19 @@
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-08-10T23:56:48.214255-05:00",
-      "formatos": "HTML/PDF/DOCX/NOPS/Moodle/TEX 6/6 en sesion R limpia"
+      "timestamp": "2026-10-08T20:32:05.890089-05:00",
+      "formatos": "Ronda 5, sha 4545fcd7: HTML 7, PDF 7, DOCX 2, NOPS 2, Moodle 7 en R limpio con exams::, cwd del subproyecto y Rmd relativo (name de Moodle sin ruta); PDF con pandoc 3.10 de RStudio 2/2",
+      "verificacion": "pdftotext -bbox: xMax maximo 513,0 pt = margen derecho en 7/7 PDF y 2/2 RStudio, 0 palabras fuera del margen (control positivo: los PDF de la ronda 4 daban 5-13 palabras fuera y hasta 597,8 pt); NOPS: ejercicio dentro de su margen 495,0 pt; tex: 0 usos de pandocbounded, 0 longtable, Resumen y Estrategia en itemize; Moodle sin /home/; pagina 2 semilla 8 inspeccionada"
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-08-10T23:56:48.214255-05:00",
-      "detalle": "6/6 formatos; coherencia APROBADO; multisemilla 20/20; diversidad PASS; diagnosticidad PASS; ortografia exit 0; 500/500 semillas sin violar guardas"
+      "timestamp": "2026-10-08T20:34:19.350037-05:00",
+      "detalle": "Ronda 5, sha 4545fcd7. Hook invocado a mano con cwd=ruta_destino: 2A APROBADO 0 errores, 2B 2 previews, 2C/2E/2F OK, 2I/2J/2K/2O OK, 2L N/A. 2D ERROR = 2 falsos positivos heredados de la ronda 4 (mas en un comentario de data_generation, codigo en identificadores; el corrector de la regla 7 sale con exit 0). Un tercer falso positivo (solucion, etiqueta de chunk expuesta porque la regex de 2D no quita chunks con acentos graves) se introdujo y se retiro en esta ronda. 2N WARN_DIV_ESTATICA = falso aviso por pipefail+grep -q sobre bloque de 64 KB (reproducido: WARN_FALSO con pipefail, OK sin el; 15 llamadas a sample en el chunk). 2G aparte: multisemilla 100/100 APROBADO. 2H aparte con N=100 (resultado en el paso 9)."
     },
     "detractor_fase2c": {
-      "completado": false,
-      "timestamp": null,
-      "veredicto": "ronda 3 = RECHAZAR (0 criticas, 3 altas). Aplicadas ALTA 1 (carretera anclada), ALTA 2 (ambiguedad realizable: adversario 73,7->57,4 %), MEDIA 5, MEDIA 6, BAJA 8. ABIERTAS: ALTA 3 (FIJ-01/06 nunca clave) y MEDIA 4 (POR-01..05 inalcanzables). Veredicto caducado por los fixes."
+      "completado": true,
+      "timestamp": "2026-10-08T22:10:37.539894-05:00",
+      "veredicto": "Ronda 5, sha 4545fcd7: VEREDICTO_DETRACTOR: APROBAR_CON_CAMBIOS (AgenteDetractor nuevo, sin name, independiente; reporte recibido integro con marcador). 0 defectos de CORRECCION (oraculo propio, N=100 natural + 6x100 por rama, 0 diferencias frente a la ronda 4); 0 CRITICA/ALTA/MEDIA. Cerradas objeciones r4 1, 2 (G8), 3 (G9), 5 y 12; 4, 6-11 abiertas como observacion decidida, sin empeorar. Cambios pendientes, todos de decision humana en el WAIT_USER 3: override R1-R3 (P7-E) y BAJA N1 (Resumen sin referente de Si/No, introducida en r5), N2 (Tampoco aqui sin antecedente, compartida con CLOZE), N3 (mayuscula tras dos puntos, compartida con CLOZE), N4 (cifra y unidad separadas en el salto de linea)."
     },
     "coherencias_5": {
       "completado": false,
@@ -46,9 +47,9 @@
     },
     "validar_diversidad": {
       "completado": true,
-      "timestamp": "2026-08-10T21:48:39.629626-05:00",
-      "versiones_unicas": null,
-      "nota": "diversidad sustantiva PASS: 24 valores unicos de la clave en 40 versiones"
+      "timestamp": "2026-10-08T19:26:56.331046-05:00",
+      "versiones_unicas": 294,
+      "nota": "Ronda 4, N=100 (regla 23): multisemilla 100/100; diversidad sustantiva WARN_DIV_BAJA 26<30 por texto (11 codigos de clave, max 18,22 % exacto); diagnosticidad PASS (H1 1 %/5 %, margenes 10 %/13 %; H2/H3 ciegas; H3b 9 %); bateria P7 vara oficial +3,3 pp NO_CONCLUYENTE (bajo +5,3 pp de P7-A); render real exams2html 294/300 preguntas unicas; H1 por rama N=200 y exacto por enumeracion; enumeracion exacta: FIJ-01/06 en 100 % (+8,33 pp), 13/20 alcanzables, 12 conjuntos, adversario bayesiano 57,58 %; stress test N=100 100/100. Rehacer si el .Rmd cambia."
     },
     "validar_icfes": {
       "completado": false,
