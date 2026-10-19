@@ -277,29 +277,41 @@ if (info_T) {
 }
 
 # --- Enunciado: base + los hechos que esta versión SI declara ------------
-med_txt <- if (info_L) paste0(largo, " metros de largo y ", ancho,
-                              " metros de ancho") else
-                       paste0(fmt_mil(area), " metros cuadrados de área")
-n_txt   <- if (info_N) paste0(n_hijos, " ") else ""
-enunciado <- ctx$plantilla(med_txt, n_txt)
-if (info_T) enunciado <- paste0(enunciado, " El reparto se hará en franjas ",
-  "iguales, todas paralelas al lado", if (info_L) paste0(" de ", lado_fijo, " metros") else
-  " más corto", ".")
-# La carretera se declara SIEMPRE (salvo en la canonica, que reproduce el
-# cuadernillo y alli no hay carretera): si solo apareciera con info_A,
-# nombrarla en una opción cuando el enunciado la calla identificaria la clave
-# sin razonar. Va anclada a un lado PARALELO a los cortes; si corriera por un
-# lado perpendicular, todas las franjas darian a ella y "la que da a la
-# carretera" no designaria ninguna.
-if (!is_canonical) {
-  lado_carr <- if (info_T) {
-    if (info_L) paste0(" a lo largo de uno de sus lados de ", lado_fijo, " metros")
-    else        " a lo largo de uno de sus lados más cortos"
-  } else " por uno de sus lados"
-  enunciado <- paste0(enunciado, " El lote colinda con una carretera", lado_carr, ".")
+# Sin las medidas, el lado de los cortes se nombra en relativo. En las ramas
+# vivas sin L el trazado es siempre el del lado más corto (ver `corte_fijo`);
+# el enunciado hipotético de la Parte 6 sale de una rama con L, donde el lado
+# sorteado puede ser el largo, y debe seguir describiendo el mismo lote.
+rel_fijo <- if (lado_fijo <= min(largo, ancho)) "más corto" else "más largo"
+# Constructor PURO (sin azar): la Parte 6 lo vuelve a llamar con los datos del
+# enunciado hipotético, para que el texto que lee el estudiante sea el mismo
+# con el que se decide la clave.
+construir_enunciado <- function(info_L, info_T, info_A, info_N) {
+  med_txt <- if (info_L) paste0(largo, " metros de largo y ", ancho,
+                                " metros de ancho") else
+                         paste0(fmt_mil(area), " metros cuadrados de área")
+  n_txt   <- if (info_N) paste0(n_hijos, " ") else ""
+  enunciado <- ctx$plantilla(med_txt, n_txt)
+  if (info_T) enunciado <- paste0(enunciado, " El reparto se hará en franjas ",
+    "iguales, todas paralelas al lado", if (info_L) paste0(" de ", lado_fijo, " metros") else
+    paste0(" ", rel_fijo), ".")
+  # La carretera se declara SIEMPRE (salvo en la canonica, que reproduce el
+  # cuadernillo y alli no hay carretera): si solo apareciera con info_A,
+  # nombrarla en una opción cuando el enunciado la calla identificaria la clave
+  # sin razonar. Va anclada a un lado PARALELO a los cortes; si corriera por un
+  # lado perpendicular, todas las franjas darian a ella y "la que da a la
+  # carretera" no designaria ninguna.
+  if (!is_canonical) {
+    lado_carr <- if (info_T) {
+      if (info_L) paste0(" a lo largo de uno de sus lados de ", lado_fijo, " metros")
+      else        paste0(" a lo largo de uno de sus lados ", rel_fijo, "s")
+    } else " por uno de sus lados"
+    enunciado <- paste0(enunciado, " El lote colinda con una carretera", lado_carr, ".")
+  }
+  if (info_A) enunciado <- paste0(enunciado, " Las franjas se asignan a los ", b_plur,
+    " en el orden en que aparecen en el acta, empezando por la que da a la carretera.")
+  enunciado
 }
-if (info_A) enunciado <- paste0(enunciado, " Las franjas se asignan a los ", b_plur,
-  " en el orden en que aparecen en el acta, empezando por la que da a la carretera.")
+enunciado <- construir_enunciado(info_L, info_T, info_A, info_N)
 
 # --- Frases reutilizadas por los contraejemplos --------------------------
 lado_par <- if (info_T) lado_fijo else largo
@@ -317,7 +329,7 @@ contra_cortes <- function(q1, q2) paste0(
   "; con franjas paralelas al de ", ancho, " m sería ", q2,
   ". Las dos formas de repartir cumplen el enunciado.")
 contra_dims <- function(q1, q2) paste0(
-  "Un lote de ", fmt_mil(area), " m$^2$ puede medir ", largo, " m por ", ancho,
+  "Un lote de ", fmt_mil(area), " m² puede medir ", largo, " m por ", ancho,
   " m, y entonces la respuesta sería ", q1, "; pero también puede medir ",
   alt_l, " m por ", alt_a, " m, y entonces sería ", q2,
   ". El enunciado no dice cuál de los dos es.")
@@ -349,7 +361,13 @@ lados_porc_txt <- paste0(fmt_dec(cf_l), " m por ", fmt_dec(cf_a), " m")
 ent <- function(x) if (is.finite(x) && abs(x - round(x)) < 1e-9 && x > 0)
   as.numeric(round(x)) else NA_real_
 
-preguntas <- list(
+# Constructor PURO del banco (sin azar), parametrizado por los cuatro datos: la
+# Parte 6 lo vuelve a llamar con los del enunciado hipotético para tomar de ahí
+# el motivo de su clave y los valores de sus distractores. Excepción declarada:
+# motivo_porcion() y contra_porcion() leen los datos GLOBALES; solo las usan
+# POR-01..05, que no están determinadas en ninguna rama viva y por eso nunca
+# llegan a la Parte 6 (lo vigila G10).
+construir_banco <- function(info_L, info_T, info_A, info_N) list(
   # --- Dependen de la ASIGNACION -----------------------------------------
   list(codigo = "GEO-INF-UBI-01", cada = TRUE, met = FALSE, porc = TRUE,
        det = info_T && info_A && info_N,
@@ -547,10 +565,10 @@ preguntas <- list(
        num_val = NA_real_, num_unidad = "",
        texto = "¿Cuál es el lado del lote al que son paralelos los cortes?",
        valor = if (info_L) paste0("el lado de ", lado_fijo, " m") else
-                           "el lado más corto",
+                           paste0("el lado ", rel_fijo),
        razon = paste0("El enunciado dice que las franjas son todas paralelas al ",
                       if (info_L) paste0("lado de ", lado_fijo, " metros")
-                      else "lado más corto",
+                      else paste0("lado ", rel_fijo),
                       ", así que los cortes van en esa dirección."),
        # NO puede presuponer que el reparto sea en franjas paralelas a un lado:
        # POR-06 tiene `det` identico (indeterminada en las mismas versiones) y su
@@ -642,12 +660,12 @@ preguntas <- list(
        det = TRUE,
        num_val = ent(area), num_unidad = "metros cuadrados",
        texto = paste0("¿Cuál es el área del lote", posesivo, "?"),
-       valor = paste0(fmt_mil(area), " m$^2$"),
+       valor = paste0(fmt_mil(area), " m²"),
        razon = if (info_L)
          paste0("Se multiplican las dos medidas del lote: $", largo,
                 " \\times ", ancho, " = ", area, "$.")
        else
-         paste0("El enunciado la da directamente: ", fmt_mil(area), " m$^2$."),
+         paste0("El enunciado la da directamente: ", fmt_mil(area), " m²."),
        motivo = "", contra = ""),
   list(codigo = "GEO-INF-FIJ-02", cada = TRUE, met = FALSE, porc = FALSE,
        det = info_N,
@@ -667,14 +685,14 @@ preguntas <- list(
        num_val = ent(area_hijo), num_unidad = "metros cuadrados",
        texto = paste0("¿Cuál es el área de la porción que le corresponde a cada ",
                       b_sing, "?"),
-       valor = paste0(fmt_mil(area_hijo), " m$^2$"),
+       valor = paste0(fmt_mil(area_hijo), " m²"),
        razon = paste0("Se reparte el área total entre las partes: $", area,
                       " \\div ", n_hijos, " = ", area_hijo, "$."),
        motivo = paste0("Se conoce el área total, pero no en cuántas partes se divide: ",
                        "el enunciado no da ese número, así que el área de cada porción ",
                        "no queda determinada."),
-       contra = contra_partes(paste0(fmt_mil(area_hijo), " m$^2$"),
-                              paste0(fmt_mil(area / alt_n), " m$^2$"))),
+       contra = contra_partes(paste0(fmt_mil(area_hijo), " m²"),
+                              paste0(fmt_mil(area / alt_n), " m²"))),
   list(codigo = "GEO-INF-FIJ-04", cada = TRUE, met = FALSE, porc = FALSE,
        det = info_N,
        num_val = NA_real_, num_unidad = "",
@@ -693,22 +711,22 @@ preguntas <- list(
        num_val = ent(2 * area_hijo), num_unidad = "metros cuadrados",
        texto = paste0("¿Cuál es el área de terreno que suman entre sí las porciones ",
                       "de dos ", b_plur, "?"),
-       valor = paste0(fmt_mil(2 * area_hijo), " m$^2$"),
-       razon = paste0("Cada porción mide ", fmt_mil(area_hijo), " m$^2$, así que dos ",
+       valor = paste0(fmt_mil(2 * area_hijo), " m²"),
+       razon = paste0("Cada porción mide ", fmt_mil(area_hijo), " m², así que dos ",
                       "porciones suman el doble: $2 \\times ", area_hijo, " = ",
                       2 * area_hijo, "$. No hace falta saber dónde está cada una."),
        motivo = paste0("Cada porción vale el área total dividida entre el número de ",
                        "partes, y ese número no aparece en el enunciado."),
-       contra = contra_partes(paste0(fmt_mil(2 * area_hijo), " m$^2$"),
-                              paste0(fmt_mil(2 * area / alt_n), " m$^2$"))),
+       contra = contra_partes(paste0(fmt_mil(2 * area_hijo), " m²"),
+                              paste0(fmt_mil(2 * area / alt_n), " m²"))),
   list(codigo = "GEO-INF-FIJ-06", cada = FALSE, met = TRUE, porc = TRUE,
        det = TRUE,
        num_val = ent(area), num_unidad = "metros cuadrados",
        texto = "¿Cuál es el área total que ocupan juntas todas las porciones del lote?",
-       valor = paste0(fmt_mil(area), " m$^2$"),
+       valor = paste0(fmt_mil(area), " m²"),
        razon = paste0("Las porciones cubren el lote completo, sin importar cómo se ",
                       "tracen los cortes: su suma es el área total, ", fmt_mil(area),
-                      " m$^2$."),
+                      " m²."),
        motivo = "", contra = ""),
   # --- AMPLIACION DEL BANCO (2026-08-12) --------------------------------
   # Ampliar el banco solo aporta cupo si las preguntas nuevas NO son gemelas de
@@ -785,6 +803,7 @@ preguntas <- list(
        contra = contra_partes(paste0("$\\dfrac{", n_hijos - 1L, "}{", n_hijos, "}$"),
                               paste0("$\\dfrac{", alt_n - 1L, "}{", alt_n, "}$")))
 )
+preguntas <- construir_banco(info_L, info_T, info_A, info_N)
 
 # --- Dependencia declarada de cada pregunta -------------------------------
 DEP <- c("GEO-INF-UBI-01" = "TAN", "GEO-INF-UBI-02" = "TA",
@@ -842,6 +861,17 @@ PARES_EXCLUYENTES <- list(
   # volver a medir. Detractor FASE 2C, objeción 5 (MEDIA).
   c("GEO-INF-POR-08", "GEO-INF-POR-09")
 )
+# UBI-01 fuera del banco cuando el enunciado declara trazado Y asignación (ramas
+# -TAN y LTA-). Allí «ubicación» admite tres lecturas que no coinciden: el orden
+# de la franja (no necesita N), la región relativa al lote (necesita N: es la
+# DEP "TAN") y los límites en metros (necesita además L). En -TAN su respuesta y
+# su justificación están escritas en la primera, y en LTA- su motivo, en la tercera.
+# En la canónica y en -T-N, LT-- y L--N las tres dan «indeterminada» y se queda.
+# Detractor independiente, 2026-10-19 (objeción 2, ALTA; opción (a), decisión
+# del profesor). Es el equivalente de la G8 del SCHOICE, pero como FILTRO: aquí
+# UBI-01 salía en ~50 % de las versiones de esas ramas y un stopifnot abortaría.
+if (!is_canonical && info_T && info_A)
+  preguntas <- Filter(function(e) e$codigo != "GEO-INF-UBI-01", preguntas)
 cods <- vapply(preguntas, function(e) e$codigo, character(1))
 # Vecinos de un código: el mismo más sus parejas equivalentes. Es la unidad de
 # exclusión de la guarda C-1 (fuga inter-parte): si una pregunta esta en la
@@ -1111,15 +1141,33 @@ elegir_p6 <- function(h, cand_p6) {
   }
   NULL
 }
+# Quitar las medidas pone el ÁREA en el enunciado citado por la Parte 6: si la
+# Parte 2 o la 3 la piden, la Parte 6 imprimiría su respuesta (FASE 2C, pasada
+# 2 de la reapertura, 2026-10-19, O-1: 8,2 % de las versiones). En ese caso el
+# dato L se intenta al final, después de agotar los demás en los tres
+# escalones, y si aun así sale queda contado (`p6_L_forzado`, ver G12).
+cods_area <- cods[vapply(preguntas, function(e) isTRUE(e$num_val == area), logical(1))]
+area_en_p23 <- any(cods[par_23] %in% cods_area)
+orden_h6 <- safe_sample(declarados, length(declarados))
+pasadas_h6 <- if (area_en_p23 && "L" %in% orden_h6 && length(orden_h6) > 1L)
+  list(setdiff(orden_h6, "L"), "L") else list(orden_h6)
 hecho_p6 <- NA_character_; pack_p6 <- NULL; nivel_excl_p6 <- NA_integer_
-for (lv in 1:3) {
-  cp <- switch(lv, cand_p6_1, cand_p6_2, cand_p6_3)
-  for (h in safe_sample(declarados, length(declarados))) {
-    pack_p6 <- elegir_p6(h, cp)
-    if (!is.null(pack_p6)) { hecho_p6 <- h; nivel_excl_p6 <- lv; break }
+for (hs6 in pasadas_h6) {
+  for (lv in 1:3) {
+    cp <- switch(lv, cand_p6_1, cand_p6_2, cand_p6_3)
+    for (h in hs6) {
+      pack_p6 <- elegir_p6(h, cp)
+      if (!is.null(pack_p6)) { hecho_p6 <- h; nivel_excl_p6 <- lv; break }
+    }
+    if (!is.null(pack_p6)) break
   }
   if (!is.null(pack_p6)) break
 }
+# Forzado solo si L llegó en la SEGUNDA pasada, después de agotar los demás
+# datos en los tres escalones. Definido como «área en P2/P3 y L elegido», la
+# G12 toleraba justo el caso que debe impedir: el mutante sin reordenamiento
+# sobrevivía 600 semillas.
+p6_L_forzado <- length(pasadas_h6) == 2L && identical(hecho_p6, "L")
 stopifnot(!is.null(pack_p6), !is.na(hecho_p6), !is.na(nivel_excl_p6))
 idx_p6 <- c(pack_p6$clave, pack_p6$dist)
 es_nd_p6 <- c(TRUE, FALSE, FALSE, FALSE)
@@ -1136,10 +1184,59 @@ stopifnot(sum(sol_p6) == 1L, length(unique(opciones_p6)) == 4L,
           all(vapply(cods[idx_p6], function(c)
               det_bajo(DEP[[c]], K_ACTUAL), logical(1))))
 frase_quitar <- c(L = paste0("no hubiera dado las dos medidas del lote, sino ",
-                             "únicamente su área"),
-                  T = "no hubiera dicho por dónde pasan los cortes",
+                             "solo su área"),
+                  # quitar_k("T") quita también la asignación: se dice.
+                  T = if (info_A) paste0("no hubiera dicho por dónde pasan los cortes ",
+                                         "ni, por lo tanto, cómo se asignan las franjas")
+                      else "no hubiera dicho por dónde pasan los cortes",
                   A = "no hubiera dicho a quién le corresponde cada parte",
                   N = "no hubiera dicho en cuántas partes se reparte el lote")[[hecho_p6]]
+# Enunciado y banco HIPOTÉTICOS de la Parte 6. La clave se decide con k_p6, así
+# que el estudiante tiene que LEER ese enunciado, no el original más una frase
+# que diga qué se quitó: con la frase sola el resto del texto seguía dando el
+# dato («paralelas al lado de 80 metros» más el área dan el otro lado;
+# «empezando por la que da a la carretera» responde UBI-02) y la clave era falsa
+# en ~150 de 500 versiones. Del banco hipotético salen el motivo de la clave y
+# los valores de los distractores: el `motivo` del banco real culpaba, con dos
+# dependencias, a un dato que el enunciado sí da (49/450). Detractores
+# independientes, 2026-10-19 (reapertura y su FASE 2C, objeción 1).
+enunciado_p6 <- construir_enunciado(k_p6$L, k_p6$T, k_p6$A, k_p6$N)
+banco_p6 <- construir_banco(k_p6$L, k_p6$T, k_p6$A, k_p6$N)
+cods_p6  <- vapply(banco_p6, function(e) e$codigo, character(1))
+q_p6 <- function(cc) banco_p6[[which(cods_p6 == cc)]]
+motivo_p6  <- q_p6(clave_p6$codigo)$motivo
+valores_p6 <- vapply(cods[idx_p6], function(cc) q_p6(cc)$valor, character(1))
+# G6b. En el banco hipotético, `det` y DEP coinciden para las cuatro opciones.
+stopifnot("G6b: banco hipotético de la Parte 6 incoherente con DEP" =
+  all(vapply(cods[idx_p6], function(cc)
+    isTRUE(q_p6(cc)$det) == det_bajo(DEP[[cc]], k_p6), logical(1))))
+# G11. El enunciado hipotético no conserva el dato quitado.
+stopifnot(
+  "G11: el enunciado hipotético conserva las medidas" =
+    k_p6$L || !grepl("[0-9] metros(?! cuadrados)", enunciado_p6, perl = TRUE),
+  "G11: el enunciado hipotético conserva el trazado" =
+    k_p6$T || !grepl("franja", enunciado_p6, ignore.case = TRUE),
+  "G11: el enunciado hipotético conserva la asignación" =
+    k_p6$A || !grepl("se asignan", enunciado_p6, fixed = TRUE),
+  "G11: el enunciado hipotético conserva el número de partes" =
+    k_p6$N || !grepl(paste0(n_hijos, " ", b_plur), enunciado_p6, fixed = TRUE))
+# G10. La justificación de la Parte 6 nombra el dato quitado y no culpa a
+#      ninguno que el enunciado hipotético SÍ declara. Gemela de la G4b de la
+#      Parte 1. Frases de ausencia tomadas del propio banco.
+AUSENCIA <- c(
+  L = "no sus dos medidas|sin las dos medidas|no se deduce del área|no se deduce de su área|da el área, no los lados|da el área del lote, pero|con solo el área",
+  T = "no dice por dónde pasan|no dice cómo se divide|por dónde pasen: el enunciado no|no fija su figura|sin el trazado|sin saber por dónde pasan|depende de cómo se reparta",
+  A = "no fija ningún orden|sin un orden de asignación|no dice \\*\\*a quién",
+  N = "cuántas\\*\\*|en cuántas partes\\*\\*|no dice en cuántas|ese número no aparece|y eso no se dice|no da ese número|porciones haya en total|sin saber en cuántas partes")
+siguen_declarados <- ORD_H[unlist(k_p6[ORD_H])]
+stopifnot(
+  "G10: la clave de la Parte 6 no tiene motivo" =
+    length(motivo_p6) == 1L && !is.na(motivo_p6) && nzchar(motivo_p6),
+  "G10: el motivo de la Parte 6 no nombra el dato quitado" =
+    grepl(AUSENCIA[[hecho_p6]], motivo_p6, ignore.case = TRUE, perl = TRUE),
+  "G10: el motivo de la Parte 6 culpa a un dato que el enunciado sí da" =
+    !any(vapply(siguen_declarados, function(h)
+      grepl(AUSENCIA[[h]], motivo_p6, ignore.case = TRUE, perl = TRUE), logical(1))))
 
 # =========================================================================
 # PARTE 5 — JUSTIFICAR: atribuir la falta de respuesta a un hecho concreto
@@ -1173,7 +1270,7 @@ callados_h <- ORD_H[!c(info_L, info_T, info_A, info_N)]
 stopifnot(length(callados_h) >= 1L)
 indet_todas <- !det_todas
 dep_incluye <- function(cc, h) grepl(h, DEP[[cc]], fixed = TRUE)
-armar_p5 <- function(h, excl, podar_dist = TRUE) {
+armar_p5 <- function(h, excl, podar_dist = TRUE, largo_min = 0) {
   libres <- which(!(cods %in% excl))
   afect <- libres[indet_todas[libres] &
                   vapply(cods[libres], function(c) dep_incluye(c, h), logical(1))]
@@ -1197,6 +1294,13 @@ armar_p5 <- function(h, excl, podar_dist = TRUE) {
       if (length(resto) < 2L) next
       dd <- c(f1, safe_sample(resto, 2L))
     } else dd <- safe_sample(mm, 3L)
+    # Canal de longitud (FASE 2C de la reapertura, 2026-10-19, objeción 2): en
+    # P5 LTA- la clave era la opción más larga con +15,5 pp explotables. Con un
+    # distractor de al menos `largo_min` veces la clave, el margen de la clave
+    # como opción más larga queda por debajo del 15 % (inexplotable, §P7-B).
+    if (largo_min > 0 &&
+        max(nchar(vapply(preguntas[dd], function(e) e$texto, character(1)))) <
+          largo_min * nchar(preguntas[[ik]]$texto)) next
     return(list(clave = ik, dist = dd, fuerte = length(fuertes) >= 1L,
                 sin_poda = !podar_dist))
   }
@@ -1242,6 +1346,9 @@ if (rt > 1L) {
   par_23_rt <- NULL; nivel_p23_rt <- NA_integer_
   for (lv23 in 1:2) {
     ex23 <- if (lv23 == 1L) veto else codigos_p1
+    # Si la Parte 6 quitó las medidas, su enunciado citado muestra el área: la
+    # pareja nueva no puede pedirla (ver G12).
+    if (identical(hecho_p6, "L")) ex23 <- unique(c(ex23, cods_area))
     par_23_rt <- elegir_p23(ex23)
     if (!is.null(par_23_rt)) { nivel_p23_rt <- lv23; break }
   }
@@ -1279,14 +1386,23 @@ indet_pool_p4  <- pool_p4_sin_p5[!det_todas[pool_p4_sin_p5]]
 reserva_p4 <- c(if (length(det_pool_p4)   >= 1L) safe_sample(det_pool_p4,   1L),
                 if (length(indet_pool_p4) >= 1L) safe_sample(indet_pool_p4, 1L))
 h_p5 <- NA_character_; pack_p5 <- NULL; nivel_excl_p5 <- NA_integer_
+p5_sin_largo <- FALSE
 for (lv in 1:6) {
   hs <- if (lv <= 2L && length(h_pref) > 0L) h_pref else callados_h
   ex <- switch(lv, excl_p5a, excl_p5b, excl_p5a, excl_p5b,
                unique(c(veto, cods[par_23])), unique(c(veto, cods[par_23])))
   if (lv <= 4L) ex <- unique(c(ex, cods[reserva_p4]))
-  for (h in safe_sample(hs, length(hs))) {
-    pack_p5 <- armar_p5(h, ex, podar_dist = (lv < 6L))
-    if (!is.null(pack_p5)) { h_p5 <- h; nivel_excl_p5 <- lv; break }
+  # En cada escalón, primero con la restricción de longitud y solo si no cabe
+  # sin ella: las exclusiones anti-fuga del escalón pesan más que la longitud.
+  # El caso sin restricción queda contado en `p5_sin_largo` para declararlo.
+  for (lmin in c(0.85, 0)) {
+    for (h in safe_sample(hs, length(hs))) {
+      pack_p5 <- armar_p5(h, ex, podar_dist = (lv < 6L), largo_min = lmin)
+      if (!is.null(pack_p5)) {
+        h_p5 <- h; nivel_excl_p5 <- lv; p5_sin_largo <- lmin == 0; break
+      }
+    }
+    if (!is.null(pack_p5)) break
   }
   if (!is.null(pack_p5)) break
 }
@@ -1526,6 +1642,32 @@ if (is_canonical) {
             setequal(codigos_p1, c("GEO-INF-UBI-01", "GEO-INF-FIJ-01",
                                    "GEO-INF-LOT-01", "GEO-INF-FIJ-02")))
 }
+# G12. La Parte 6 no imprime la respuesta de la Parte 2 ni de la 3: ningún
+#      valor numérico de esas partes aparece en el enunciado citado sin estar
+#      también en el original. Solo se tolera si quitar las medidas era la
+#      única opción de la Parte 6 (`p6_L_forzado`), y queda contado.
+num_en <- function(v, txt) grepl(paste0("(?<![0-9.,])",
+  gsub(".", "\\.", fmt_mil(v), fixed = TRUE), "(?![0-9.,])"), txt, perl = TRUE)
+p6_fuga_p23 <- any(vapply(c(exsol_p2, exsol_p3), function(v)
+  num_en(v, enunciado_p6) && !num_en(v, enunciado), logical(1)))
+stopifnot("G12: la Parte 6 imprime la respuesta de la Parte 2 o 3" =
+            !p6_fuga_p23 || p6_L_forzado)
+# G9. Sin las medidas del lote, el contraejemplo de POR-01/02/04/05 compara la
+#     franja del lote real (b_l por b_a) con la del lote alternativo (a_l por
+#     a_a); si son congruentes describe la misma porción girada y no prueba
+#     nada. Hoy es inalcanzable: POR-01..05 nunca son clave de la Parte 1, la
+#     única cuyo contraejemplo se imprime. Igual que la G9 del SCHOICE gemelo.
+POR_1245 <- c("GEO-INF-POR-01", "GEO-INF-POR-02", "GEO-INF-POR-04", "GEO-INF-POR-05")
+franjas_congruentes <- isTRUE(all.equal(sort(c(b_l, b_a)), sort(c(a_l, a_a))))
+stopifnot("G9: contraejemplo de dimensiones con franjas congruentes" =
+            info_L || !(clave$codigo %in% POR_1245) || !franjas_congruentes)
+# G8. UBI-01 no sale en ninguna parte de las ramas con trazado y asignación
+#     declarados (-TAN, LTA-): ver el filtro previo a `cods`. Mismo nombre y
+#     propósito que la G8 del SCHOICE gemelo.
+stopifnot("G8: UBI-01 en una rama con trazado y asignación declarados" =
+  is_canonical || !(info_T && info_A) ||
+  !("GEO-INF-UBI-01" %in% c(codigos_p1, cods[par_23], cods[idx_p4],
+                            cods[idx_p5], cods[idx_p6])))
 
 # --- Alias para los validadores genericos del repo ------------------------
 # `validar_coherencia_matematica.R` y `validar_diversidad_sustantiva.R` buscan
@@ -1566,7 +1708,7 @@ tabla_resumen <- data.frame(
 # --- Que hechos declara esta versión, para la Solution -------------------
 hechos_dados <- c(
   if (info_L) paste0("**cuánto mide** el lote (", largo, " m y ", ancho, " m)")
-  else paste0("**qué área** tiene el lote (", fmt_mil(area), " m$^2$)"),
+  else paste0("**qué área** tiene el lote (", fmt_mil(area), " m²)"),
   if (info_N) paste0("**en cuántas partes iguales** se reparte (", n_hijos, ")")
   else "que el reparto es **en partes iguales**",
   if (info_T) "**por dónde pasan los cortes** (franjas paralelas a un lado)",
@@ -1628,8 +1770,10 @@ cat("**Parte 5.** Observe que el enunciado ", frase_falta,
 # El enunciado NO declara que estas cuatro preguntas se respondan con el
 # enunciado original: si lo dijera, resolveria por escrito los items de la
 # Parte 4 que coincidieran con ellas. Solo interroga el escenario modificado.
+# Se CITA el enunciado modificado: es el que decide la clave (ver G11).
 cat("**Parte 6.** Suponga ahora que el enunciado ", frase_quitar,
-    ". Con esa versión del enunciado —y solo esa—, ¿cuál de las siguientes ",
+    ", es decir, que dijera exactamente esto:\n\n> ", enunciado_p6, "\n\n",
+    "Con esa versión del enunciado —y solo esa—, ¿cuál de las siguientes ",
     "preguntas ***NO*** sería posible responder?\n", sep = "")
 ```
 
@@ -1728,42 +1872,52 @@ cat(paste0(clave$contra, "\n\n"))
 if (info_N) {
   cat(paste0(
     "En cambio, el área de cada porción es la misma en todos esos casos (",
-    fmt_mil(area_hijo), " m$^2$) y la fracción también ($1/", n_hijos,
+    fmt_mil(area_hijo), " m²) y la fracción también ($1/", n_hijos,
     "$): por eso las preguntas que solo dependen del área y del número de partes ",
     "sí tienen respuesta.\n\n"))
 } else {
   cat(paste0(
-    "En cambio, el área total del lote (", fmt_mil(area), " m$^2$) es la misma en ",
+    "En cambio, el área total del lote (", fmt_mil(area), " m²) es la misma en ",
     "todos esos casos: por eso las preguntas que solo dependen de ella sí tienen ",
     "respuesta.\n\n"))
 }
 
 cat("### Parte 6 — transferencia {-}\n\n")
-cat(paste0("Si el enunciado ", frase_quitar, ", la pregunta **\"", clave_p6$texto,
-           "\"** dejaría de tener respuesta: ", clave_p6$motivo, "\n\n"))
-cat(paste0("Las otras tres preguntas de esa parte no dependen de ese dato, así que ",
-           "seguirían teniendo respuesta.\n\n"))
+cat(paste0("Con el enunciado modificado, la pregunta **\"", clave_p6$texto,
+           "\"** ya no tiene respuesta: ", motivo_p6, "\n\n"))
+cat(paste0("Las otras tres preguntas de esa parte no dependen ",
+           if (hecho_p6 == "T" && info_A) "de los datos que se quitaron"
+           else "del dato que se quitó", ", ",
+           "así que siguen teniendo respuesta con ese enunciado.\n\n"))
 
 cat("### Resumen de la Parte 1 {-}\n\n")
-cat(tabla_responsiva(tabla_resumen, align = c("l", "c", "l")), "\n\n")
+# Lista y no tabla (reapertura del 2026-10-19, igual que el SCHOICE gemelo):
+# exams:::pandoc pasa --columns=99999, así que la tabla pipe nunca ajusta las
+# celdas y en el PDF se salía del margen en 6 de 6 versiones medidas.
+for (k in seq_len(nrow(tabla_resumen))) {
+  cat(paste0("- ", tabla_resumen$Pregunta[k], " — **",
+             tabla_resumen[["Se puede responder"]][k], "**: ",
+             tabla_resumen$Respuesta[k], "\n"))
+}
+cat("\n")
 
 cat("### Reflexión metacognitiva {-}\n\n")
 cat(reflexion, "\n\n")
 
 cat("### Estrategia para evitar el error {-}\n\n")
 cat(paste0(
-  "1. **Liste los datos y pregúntese qué determina cada uno.** No todos los ",
+  "- **Liste los datos y pregúntese qué determina cada uno.** No todos los ",
   "enunciados dan lo mismo: unos dan las dos medidas del lote y otros solo el ",
   "área; unos dicen cómo se corta y otros no.\n"))
 cat(paste0(
-  "2. **Busque el contraejemplo antes de calcular.** Si logra imaginar dos ",
+  "- **Busque el contraejemplo antes de calcular.** Si logra imaginar dos ",
   "situaciones que cumplen el enunciado y responden distinto, la pregunta no está ",
   "determinada; no siga buscando la cuenta.\n"))
 cat(paste0(
-  "3. **Separe el tamaño de la geometría.** El reparto en partes iguales fija el ",
+  "- **Separe el tamaño de la geometría.** El reparto en partes iguales fija el ",
   "tamaño de cada parte, pero no su forma, sus lados ni su ubicación.\n"))
 cat(paste0(
-  "4. **Desconfíe de las palabras repetidas.** Que el perímetro **del lote** se ",
+  "- **Desconfíe de las palabras repetidas.** Que el perímetro **del lote** se ",
   "pueda calcular no implica que se pueda calcular el perímetro **de cada ",
   "porción**: son magnitudes distintas aunque compartan el nombre.\n\n"))
 ```
@@ -1806,10 +1960,13 @@ fb_p5 <- vapply(seq_along(idx_p5), function(k) {
 fb_p6 <- vapply(seq_along(idx_p6), function(k) {
   e <- preguntas[[idx_p6[k]]]
   if (es_nd_p6[k])
-    paste0("Correcto. Sin ese dato esa pregunta deja de tener respuesta: ", e$motivo)
+    paste0("Correcto. Con el enunciado modificado esa pregunta ya no tiene respuesta: ",
+           motivo_p6)
   else
-    paste0("Esa pregunta no depende del dato que se quita: sigue respondiéndose (",
-           e$valor, ").")
+    paste0("Esa pregunta no depende ",
+           if (hecho_p6 == "T" && info_A) "de los datos que se quitan" else "del dato que se quita",
+           ": sigue respondiéndose (",
+           valores_p6[k], ").")
 }, character(1))
 answerlist(c(fb_p1, fb_p2, fb_p3, fb_p4, fb_p5, fb_p6), markup = "markdown")
 ```

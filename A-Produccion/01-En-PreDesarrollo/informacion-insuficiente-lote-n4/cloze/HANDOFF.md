@@ -1,6 +1,74 @@
 # HANDOFF — CLOZE `informacion_insuficiente_lote_..._n4_cloze_v1`
 
-**Última sesión:** 2026-08-13 · **Estado:** **11/11 — APROBADO PARA LLEVAR AL AULA**
+**Última sesión:** 2026-10-19 · **Estado:** **REABIERTO, 7/11 — NO LLEVAR AL AULA** (todavía no se usó en clase)
+
+> ⛔ **REAPERTURA DEL 2026-10-19 — LEER ESTO ANTES QUE EL RESTO.** Lo de abajo describe el
+> estado del 2026-08-13 y quedó superado.
+>
+> 1. **Detractor independiente sobre la versión aprobada → RECHAZAR**
+>    (`REPORTE_DETRACTOR_2026-10-19_UBI01.md`). La Parte 6 imprimía `clave_p6$motivo`, calculado con
+>    el enunciado real: con dos dependencias culpaba a un dato que el enunciado sí da (49/450).
+>    UBI-01 era ambigua en -TAN y LTA- (tres lecturas de «ubicación»).
+> 2. **Corregido (decisión del profesor: P6 + opción (a)), sin commitear:** `motivo_sin` en
+>    UBI-02/POR-07/POR-09, `motivo_p6` y guarda **G10**; UBI-01 filtrada del banco cuando
+>    `!is_canonical && info_T && info_A`, con guarda **G8**. Verificador nuevo
+>    `verificar_p6_ubi01.R` (N=100 por rama; mutantes M1/M2 mueren por G10/G8). La tabla C de
+>    `auditoria_propia.R` ahora une los bancos de todas las versiones. Pasos 3-6 y 9 resellados.
+> 3. **FASE 2C de la reapertura → RECHAZAR** (`REPORTE_DETRACTOR_2026-10-19_FASE2C_REAPERTURA.md`).
+>    Lo corregido está bien, pero la Parte 6 tiene un defecto de CORRECCIÓN anterior y más hondo:
+>    `quitar_k()` decide la clave con un enunciado hipotético distinto del que lee el estudiante
+>    (`frase_quitar` solo nombra el dato quitado; el resto del texto lo sigue dando). Quitando L con
+>    T declarado, «paralelas al lado de 80 metros» + el área dan el otro lado (semilla 3); quitando
+>    T con A declarado, «empezando por la que da a la carretera» responde UBI-02 (semilla 4).
+>    ~153/500 versiones. Además, DIAGNOSTICIDAD ALTA previa en P5 LTA- (clave = opción más larga,
+>    +15,5 pp explotables > +8).
+> 4. **Segunda corrección (decisiones del profesor: mostrar el hipotético; corregir la longitud
+>    de P5; aplicar los cambios de presentación del SCHOICE).** `construir_enunciado()` y
+>    `construir_banco()` puros; la Parte 6 CITA `enunciado_p6` y toma motivo y valores del banco
+>    hipotético (se retiró `motivo_sin`); `rel_fijo`; guardas G6b, G11, G9; `armar_p5(largo_min)`
+>    con cascada «primero con restricción» (`p5_sin_largo`); Resumen como lista, m², viñetas.
+> 5. **FASE 2C pasada 2 → APROBAR_CON_CAMBIOS** (`REPORTE_DETRACTOR_2026-10-19_FASE2C_PASADA2.md`):
+>    CORRECCIÓN cerrada (oráculo en dos direcciones, 0/568); P5 explotable +9,2 → +0,8 pp. ALTA
+>    nueva O-1: al quitar L la Parte 6 cita el ÁREA, que P2/P3 piden en el 8,2 % → corregido: L
+>    al final de la cascada si P2/P3 piden el área, reintento de P2/P3 sin el área, guarda
+>    **G12** (`p6_L_forzado` solo si L llegó en la segunda pasada: la primera versión era vacua y
+>    el mutante M5 la delató). O-2: el verificador ahora usa oráculo en dos direcciones con
+>    canónicas y 5 mutantes. O-3/O-4: redacción.
+> 6. **FASE 2C de confirmación → APROBAR_CON_CAMBIOS** (`REPORTE_DETRACTOR_2026-10-19_FASE2C_CONFIRMACION.md`,
+>    detractor distinto de los tres anteriores, 1500 semillas + N=100 por rama). O-1 cerrada
+>    (16/8/17 → 0); G12 portante (M5 muere en la 10; M6, sin la exclusión del bucle `rt`, en la
+>    84); CORRECCIÓN 0/1500; sin regresiones. Cambios pedidos y hechos: mutante M6 y deducción
+>    de «lado suelto + área» en el oráculo de `verificar_p6_ubi01.R`.
+>
+> **RESIDUOS DECLARADOS — DECISIÓN DEL PROFESOR (no bloquean la FASE 3):**
+> - **O-A (MEDIA, anterior a O-1, misma familia).** Al quitar L, la Parte 6 cita el área; si
+>   P2/P3 piden FIJ-03 (área/n) o FIJ-05 (2·área/n), se resuelven con una división en vez de
+>   multiplicar largo por ancho (semilla 22: 5.400 m² y 5 hijos → 2160). Canónica 40/95, L--N
+>   29/100, resto 0; ≈ 6,2 % del total. Tratar como «área» todo lo que va en m² lo cierra
+>   (0/95, 0/222, 0 errores) pero concentra la Parte 6: dato quitado N en el 86-89 % y cuota
+>   máxima de clave en la canónica 23 % → 44 % con 2 claves posibles. Alternativa sin medir:
+>   reelegir P2/P3 sin códigos en m² cuando el dato quitado sea L.
+> - **O-B (DIAGNOSTICIDAD, anterior; regla nueva fuera de la batería congelada, §P7-C).**
+>   «Elegir en P6 la opción que repite una pregunta de P2/P3» acierta 45,5 % en -T-N (+20,5 pp)
+>   y 34,5 % en LT-- (+9,5 pp) frente a un nulo de 25 %; agregado sin canónica 30,3 % (+5,3 pp).
+>   Mecanismo en -T-N: FIJ-05 con N quitado y POR-07. Alternativa sin medir: excluir de los
+>   candidatos de P6 las preguntas de P2/P3 (y viceversa en el bucle `rt`), luego medir errores
+>   de generación y cuota de claves de P6. Para el próximo ciclo o por decisión del profesor.
+>
+> **Paso 8, 5 coherencias (2026-10-19), sobre la versión final:**
+> - *Semántica:* oráculo literal en dos direcciones 0 violaciones (1017 semillas + 68 canónicas;
+>   el detractor de confirmación, 0/1500); FASE 2A APROBADO; clave única en P1/P5/P6 y P4 con
+>   al menos una V y una F en 300/300 (auditoría propia).
+> - *Visual-texto:* sin gráficos (`flujo_b` no requerido). PDF revisado a ojo (semilla 3, pp. 1
+>   y 3: cita de la Parte 6, Resumen dentro del margen, m², viñetas); HTML a 360 px (semilla 3);
+>   Moodle con 7 `<blockquote>` y 0 «Opción [A-D]»; DOCX generado.
+> - *Matemática:* multisemilla 100/100; P2/P3 enteros por guarda; aritmética de los ejemplos
+>   comprobada (2(80+140)=440, 80:140=4:7, 140−80=60, 100/8=12,5 %, 100/5=20 %).
+> - *Código:* guardas G1-G12 y C-1..C-3; 0 errores de generación; 6 mutantes mueren;
+>   `exclozetype` y `##ANSWER1..6##` sin cambios y en orden; FASE 2J, glifos y ortografía OK.
+> - *General:* metadatos sin cambios frente a agosto; DOK 3 ⇒ Nivel 4; canónica verbatim (G7).
+>
+> **Pendiente: validar_icfes (paso 10) y aprobación del profesor (11).**
 
 > ✅ **Aprobación del profesor: 2026-08-13.** El ciclo técnico está cerrado y el ejercicio puede
 > aplicarse con estudiantes.

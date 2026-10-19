@@ -165,7 +165,10 @@ for (rr in ramas) {
 
 # ---------- C) ALCANZABILIDAD DEL BANCO (Error 27) -------------------------
 cat("\n== C) Alcanzabilidad de las 20 preguntas del banco ==\n")
-todos <- V[[1]]$cods
+# Unión de los bancos de TODAS las versiones: desde el 2026-10-19 el banco depende
+# de la rama (UBI-01 sale de -TAN y LTA-), y con V[[1]]$cods una pregunta ausente
+# del banco de la primera versión desaparecía de la tabla y del chequeo «nunca».
+todos <- unique(unlist(lapply(V, function(x) x$cods)))
 como_clave <- table(factor(vapply(V, function(x) x$clave_p1, character(1)), levels = todos))
 como_dist  <- table(factor(unlist(lapply(V, function(x) setdiff(x$cod_p1, x$clave_p1))), levels = todos))
 en_p4      <- table(factor(unlist(lapply(V, function(x) x$cod_p4)), levels = todos))

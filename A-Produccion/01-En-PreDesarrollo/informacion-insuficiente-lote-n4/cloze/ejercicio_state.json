@@ -3,7 +3,7 @@
   "ejercicio": "informacion_insuficiente_lote_geometrico_metrico_argumentacion_n4_cloze_v1",
   "tipo": "cloze",
   "timestamp_inicio": "2026-08-12T17:55:27.055928-05:00",
-  "timestamp_ultima_actualizacion": "2026-08-13T11:31:51.933552-05:00",
+  "timestamp_ultima_actualizacion": "2026-10-19T12:51:08.201927-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -17,43 +17,43 @@
     },
     "generacion_rmd": {
       "completado": true,
-      "timestamp": "2026-08-12T18:25:34.860657-05:00",
+      "timestamp": "2026-10-19T11:58:57.341407-05:00",
       "archivo": "informacion_insuficiente_lote_geometrico_metrico_argumentacion_n4_cloze_v1.Rmd"
     },
     "retroalimentacion": {
       "completado": true,
-      "timestamp": "2026-08-12T18:25:35.962646-05:00"
+      "timestamp": "2026-10-19T11:58:57.399776-05:00"
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-08-12T18:25:37.072298-05:00",
-      "formatos": "HTML/PDF/DOCX/Moodle 4/4 en R limpio; NOPS N/A esperado (cloze exercises)"
+      "timestamp": "2026-10-19T11:58:57.458485-05:00",
+      "formatos": "2026-10-19, reapertura (pasada 3): HTML 7, PDF 7, DOCX 2, Moodle 7 en R limpio con exams::; NOPS N/A esperado (cloze)"
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-08-13T08:18:12.320397-05:00"
+      "timestamp": "2026-10-19T11:58:57.516601-05:00"
     },
     "detractor_fase2c": {
       "completado": true,
-      "timestamp": "2026-08-13T09:56:15.402228-05:00",
-      "veredicto": "APROBAR"
+      "timestamp": "2026-10-19T12:30:18.880913-05:00",
+      "veredicto": "APROBAR CON CAMBIOS"
     },
     "coherencias_5": {
       "completado": true,
-      "timestamp": "2026-08-13T09:56:15.461687-05:00"
+      "timestamp": "2026-10-19T12:51:08.201927-05:00"
     },
     "validar_diversidad": {
       "completado": true,
-      "timestamp": "2026-08-13T08:18:12.378005-05:00",
+      "timestamp": "2026-10-19T11:58:57.575869-05:00",
       "versiones_unicas": 300
     },
     "validar_icfes": {
-      "completado": true,
-      "timestamp": "2026-08-13T08:18:12.436663-05:00"
+      "completado": false,
+      "timestamp": null
     },
     "aprobacion_usuario": {
-      "completado": true,
-      "timestamp": "2026-08-13T11:31:51.933552-05:00"
+      "completado": false,
+      "timestamp": null
     }
   }
 }
