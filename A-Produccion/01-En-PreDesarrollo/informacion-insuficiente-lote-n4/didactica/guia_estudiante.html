@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guía del estudiante</title>
+<meta name="description" content="Paso a paso para entrar a la actividad «¿Alcanzan los datos?» en Moodle y completarla.">
+<style>
+:root{
+  --bg:#f7f5ef; --surface:#ffffff; --ink:#1d2125; --muted:#59616a; --line:#d8d2c3;
+  --accent:#2e6b4f; --accent-ink:#ffffff; --accent-soft:#e2eee7;
+  --warn:#8f4e10; --warn-soft:#f6e8d7; --bad:#a3372d; --bad-soft:#f7e2df;
+  --dot-saved:#2e6b4f; --dot-saving:#b7791f; --dot-bad:#a3372d;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14171a; --surface:#1c2125; --ink:#e6e8e9; --muted:#a2aab1; --line:#353c42;
+    --accent:#7cc3a0; --accent-ink:#0e1a13; --accent-soft:#1e3328;
+    --warn:#e2a66b; --warn-soft:#3a2a19; --bad:#ee918a; --bad-soft:#3c2220;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14171a; --surface:#1c2125; --ink:#e6e8e9; --muted:#a2aab1; --line:#353c42;
+  --accent:#7cc3a0; --accent-ink:#0e1a13; --accent-soft:#1e3328;
+  --warn:#e2a66b; --warn-soft:#3a2a19; --bad:#ee918a; --bad-soft:#3c2220;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:17px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif}
+main{max-width:720px;margin:0 auto;padding:16px 16px 64px}
+h1,h2,h3{font-family:"Noto Serif",Georgia,"Times New Roman",serif;line-height:1.25;font-weight:700}
+h1{font-size:1.7rem;margin:.4em 0 .2em}
+h2{font-size:1.25rem;margin:0 0 .5em}
+h3{font-size:1.05rem;margin:1.1em 0 .4em}
+p{margin:.5em 0}
+.sub{color:var(--muted);margin-top:0}
+.lead{font-size:1.1rem;font-weight:600;margin:14px 0}
+nav.progress{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}
+nav.progress a{display:inline-block;padding:6px 12px;border-radius:999px;font-size:.9rem;
+  text-decoration:none;border:1px solid var(--line);color:var(--ink);background:var(--surface);min-height:36px}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;margin:18px 0;scroll-margin-top:12px}
+.tag{display:inline-block;font-size:.78rem;font-weight:600;letter-spacing:.02em;
+  color:var(--accent);text-transform:uppercase;margin-bottom:4px}
+ol.do{margin:.4em 0;padding-left:1.6em}
+ol.do > li{margin:.55em 0;padding-left:.2em}
+ol.do > li::marker{font-weight:700;color:var(--accent)}
+ul.sub-list{margin:.3em 0;padding-left:1.2em}
+ul.sub-list li{margin:.25em 0}
+.btn{display:inline-block;font-weight:600;font-size:.95em;line-height:1.3;padding:2px 9px;
+  border-radius:6px;background:var(--accent);color:var(--accent-ink);white-space:normal}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn.danger{background:transparent;color:var(--bad);border:1px solid var(--bad);text-decoration:line-through}
+.nowrap{white-space:nowrap}
+.url{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;background:var(--bg);
+  border:1px solid var(--line);border-radius:6px;padding:1px 6px;white-space:nowrap}
+.box{border-radius:8px;padding:10px 12px;margin:12px 0}
+.box p{margin:.2em 0}
+.check{background:var(--accent-soft)}
+.wait{background:var(--warn-soft)}
+.danger{background:var(--bad-soft)}
+.box > strong:first-child{display:block;margin-bottom:2px}
+.checklist{list-style:none;margin:.4em 0;padding:0}
+.checklist li{margin:6px 0}
+.checklist label{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1px solid var(--line);
+  border-radius:8px;background:var(--surface);cursor:pointer}
+.checklist input{margin-top:3px;flex:none;width:22px;height:22px;accent-color:var(--accent)}
+.checklist label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;
+  border:1px solid var(--line);background:var(--surface);font-size:.92rem;font-weight:600;max-width:100%}
+.pill .dot{width:10px;height:10px;border-radius:50%;flex:none}
+.d-saved{background:var(--dot-saved)}
+.d-saving{background:var(--dot-saving)}
+.d-bad{background:var(--dot-bad)}
+.states{display:grid;gap:10px;margin:10px 0}
+.state{border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.state p{margin:.35em 0 0}
+.state .means{color:var(--muted);font-size:.95rem}
+.msgmock{border:1px solid var(--accent);border-radius:8px;
+  padding:10px 12px;background:var(--bg);margin:10px 0}
+.msgmock .head{font-size:.85rem;color:var(--muted)}
+.msgmock .body{margin:4px 0 8px}
+.trouble{display:grid;gap:10px;margin:10px 0}
+.trouble .state p:first-child{margin:0;font-weight:600}
+.note{color:var(--muted);font-size:.92rem}
+footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
+@media (min-width:600px){ .states,.trouble{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media print{
+  :root,:root[data-theme="dark"],:root:not([data-theme="light"]){
+    --bg:#ffffff; --surface:#ffffff; --ink:#000000; --muted:#333333; --line:#999999;
+    --accent:#1f4d38; --accent-ink:#ffffff; --accent-soft:#eeeeee;
+    --warn:#6b3a0b; --warn-soft:#eeeeee; --bad:#8a2a21; --bad-soft:#eeeeee;
+  }
+  body{font-size:12pt}
+  nav.progress{display:none}
+  .step{break-inside:avoid;border-color:#999}
+}
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <span class="tag">Matemáticas · Guía del estudiante</span>
+  <h1>¿Alcanzan los datos?</h1>
+  <p class="sub">Cómo entrar a la actividad en Moodle y hacerla de principio a fin.</p>
+  <p class="lead">Lea un paso, hágalo y solo entonces pase al siguiente.</p>
+  <nav class="progress" aria-label="Partes de la guía">
+    <a href="#antes">Antes</a>
+    <a href="#entrar">A · Entrar</a>
+    <a href="#pildora">B · Píldora</a>
+    <a href="#mensajes">C · Mensajes</a>
+    <a href="#p1">D · Pasos 1-8</a>
+    <a href="#problemas">E · Si algo sale mal</a>
+  </nav>
+</header>
+
+<section class="step" id="antes">
+  <span class="tag">Antes de empezar</span>
+  <h2>Revise que tiene todo</h2>
+  <ul class="checklist">
+    <li><label><input type="checkbox"> <span>Tengo el celular cargado.</span></label></li>
+    <li><label><input type="checkbox"> <span>Me sé mi usuario y mi contraseña de Moodle.</span></label></li>
+    <li><label><input type="checkbox"> <span>Sé quiénes son los dos compañeros de mi trío.</span></label></li>
+  </ul>
+</section>
+
+<section class="step" id="entrar">
+  <span class="tag">Parte A</span>
+  <h2>Entrar a la actividad</h2>
+  <ol class="do">
+    <li>Abra el navegador del celular (Chrome, por ejemplo).</li>
+    <li>En la barra de arriba escriba <span class="url">aula.senodeteta.com</span> y toque Ir.</li>
+    <li>Escriba su usuario y su contraseña. Toque <span class="nowrap"><span class="btn">Acceder</span>.</span></li>
+    <li>Entre a su curso de Matemáticas.</li>
+    <li>Toque la actividad <strong>«¿Alcanzan los datos?»</strong>.</li>
+    <li>Toque el botón <span class="nowrap"><span class="btn">Abrir la actividad</span>.</span></li>
+  </ol>
+  <div class="box check">
+    <strong>✅ Lo hizo bien si…</strong>
+    <p>Arriba dice «¿Alcanzan los datos?» y abajo a la derecha hay un óvalo con un punto de color. Ese óvalo se llama la <strong>píldora</strong>.</p>
+  </div>
+</section>
+
+<section class="step" id="pildora">
+  <span class="tag">Parte B</span>
+  <h2>La píldora (abajo a la derecha)</h2>
+  <p>La píldora le dice si sus respuestas ya quedaron guardadas en Moodle. Mírela cada vez que guarde algo.</p>
+  <div class="states">
+    <div class="state">
+      <span class="pill"><span class="dot d-saved"></span>Guardado en Moodle ✓</span>
+      <p class="means">Todo está bien.</p>
+      <p>Siga trabajando.</p>
+    </div>
+    <div class="state">
+      <span class="pill"><span class="dot d-saving"></span>Guardando…</span>
+      <p class="means">Está enviando su respuesta.</p>
+      <p>Espere un momento.</p>
+    </div>
+    <div class="state">
+      <span class="pill"><span class="dot d-bad"></span>Sin conexión: se guarda al volver</span>
+      <p class="means">Se cayó la red.</p>
+      <p>Siga trabajando y <strong>no cierre la página</strong>. Se guarda sola cuando vuelva la red.</p>
+    </div>
+    <div class="state">
+      <span class="pill"><span class="dot d-bad"></span>Su sesión de Moodle se cerró…</span>
+      <p class="means">Moodle lo sacó. Sus respuestas siguen en el celular.</p>
+      <p>Toque <span class="btn ghost">Volver a entrar</span> en el aviso de arriba.</p>
+    </div>
+    <div class="state">
+      <span class="pill"><span class="dot d-bad"></span>No se pudo guardar</span>
+      <p class="means">Algo falló.</p>
+      <p>Levante la mano.</p>
+    </div>
+  </div>
+</section>
+
+<section class="step" id="mensajes">
+  <span class="tag">Parte C</span>
+  <h2>Mensajes de su docente</h2>
+  <p>Mientras trabaja, su docente le puede escribir. El mensaje aparece arriba, así:</p>
+  <div class="msgmock" aria-hidden="true">
+    <div class="head">Mensaje de su docente · 10:42</div>
+    <div class="body">(aquí va lo que le escribe su docente)</div>
+    <span class="btn">Entendido</span>
+  </div>
+  <ol class="do">
+    <li>Lea el mensaje completo.</li>
+    <li>Toque <span class="nowrap"><span class="btn">Entendido</span>.</span> Así su docente sabe que lo leyó.</li>
+    <li>Para volver a leer los mensajes, <strong>toque la píldora</strong>. Se abre la lista «Mensajes de su docente». Tóquela otra vez para cerrarla.</li>
+  </ol>
+  <p class="note">Si la píldora muestra «· 1 ✉», tiene un mensaje sin leer.</p>
+</section>
+
+<p class="lead">Ahora sí, la actividad. Un paso cerrado dice qué falta para abrirlo («Se abre cuando…»). Si un paso no se abre, lea esa frase.</p>
+
+<section class="step" id="inicio">
+  <span class="tag">Antes de empezar (dentro de la actividad)</span>
+  <h2>Quiénes trabajan</h2>
+  <ol class="do">
+    <li>Escriba su nombre y el de sus compañeros de trío.</li>
+    <li>Recuerde: lo que responda al principio <strong>no</strong> cuenta por acertar.</li>
+  </ol>
+</section>
+
+<section class="step" id="p1">
+  <span class="tag">Paso 1 · Solo, sin hablar</span>
+  <h2>Lea la pregunta y decida</h2>
+  <ol class="do">
+    <li>Lea la pregunta del lote <strong>dos veces</strong>.</li>
+    <li>Toque una letra: A, B, C o D.</li>
+    <li>Diga qué tan seguro está: «Estoy adivinando», «Poco seguro», «Bastante seguro» o «Totalmente seguro».</li>
+    <li>En el recuadro, escriba <strong>por qué</strong> eligió esa letra. Basta con una o dos frases.</li>
+    <li>Toque <span class="nowrap"><span class="btn">Guardar mi primera decisión</span>.</span></li>
+  </ol>
+  <div class="box wait">
+    <strong>✋ Espere.</strong>
+    <p>Espere en silencio a que todos guarden. Su docente ve en el panel cómo decidió el curso y les dirá cuándo formar los tríos.</p>
+  </div>
+  <div class="box check"><strong>✅ Listo cuando…</strong><p>Se abre el paso 2.</p></div>
+</section>
+
+<section class="step" id="p2">
+  <span class="tag">Paso 2 · En el trío</span>
+  <h2>Reparta el lote de muchas maneras</h2>
+  <ol class="do">
+    <li>Repártanse los roles y cámbienlos en cada reparto:
+      <ul class="sub-list">
+        <li><strong>Constructor:</strong> arma el reparto en su celular.</li>
+        <li><strong>Lector:</strong> relee el enunciado y revisa que el reparto lo cumpla.</li>
+        <li><strong>Escéptico:</strong> pregunta «¿el enunciado dice eso?».</li>
+      </ul>
+    </li>
+    <li>Toque los <strong>Repartos para empezar</strong> (8 franjas verticales, cuadrícula 4 × 2…). Toque una parte del dibujo para ver sus medidas.</li>
+    <li>Para armar su propio reparto:
+      <ul class="sub-list">
+        <li>Elija <strong>Franjas verticales</strong> o <strong>Franjas horizontales</strong>.</li>
+        <li>Escriba cuántas partes lleva cada franja, separadas por «+». Las partes deben sumar 8, por ejemplo 2+6 o 2+2+4.</li>
+        <li>Toque <span class="nowrap"><span class="btn">Dibujar</span>.</span></li>
+      </ul>
+    </li>
+    <li>Toque <span class="nowrap"><span class="btn">Guardar este reparto</span>.</span></li>
+    <li>Repita hasta que diga <strong>Repartos guardados: 3 (meta: 3)</strong>.</li>
+  </ol>
+  <div class="box danger"><strong>⚠️ No toque «Borrar la tabla».</strong></div>
+</section>
+
+<section class="step" id="p3">
+  <span class="tag">Paso 3 · En el trío</span>
+  <h2>Comparen sus repartos</h2>
+  <ol class="do">
+    <li>Miren su tabla. Para cada pregunta, digan si la respuesta <strong>fue igual en todos los repartos o cambió</strong>.</li>
+    <li>Toquen <span class="nowrap"><span class="btn">Revisar con nuestra tabla</span>.</span></li>
+    <li>Completen la regla: «Una pregunta NO se puede responder con lo que dice el enunciado cuando…».</li>
+    <li>Lean lo que dijo Sara. Escriban qué está suponiendo ella que el enunciado no dice, y usen uno de sus repartos para responderle.</li>
+    <li>Toquen <span class="nowrap"><span class="btn">Guardar el paso 3</span>.</span></li>
+  </ol>
+</section>
+
+<section class="step" id="p4">
+  <span class="tag">Paso 4 · Solo</span>
+  <h2>Vuelva a decidir</h2>
+  <ol class="do">
+    <li>Toque su letra <strong>ahora</strong>. Puede ser la misma de antes o una distinta.</li>
+    <li>Diga qué tan seguro está ahora.</li>
+    <li>Justifique con <strong>un dato del enunciado</strong> o con <strong>uno de sus repartos</strong>.</li>
+  </ol>
+  <div class="box danger">
+    <strong>⚠️ Revise antes de guardar.</strong>
+    <p>Esta decisión <strong>no se puede cambiar</strong> después de guardarla.</p>
+  </div>
+  <ol class="do" start="4">
+    <li>Toque <span class="nowrap"><span class="btn">Guardar mi segunda decisión</span>.</span></li>
+  </ol>
+  <div class="box check">
+    <strong>✅ Aparece:</strong>
+    <p>«Segunda decisión guardada. El paso 5 se abre con la palabra que dirá su docente.»</p>
+  </div>
+  <div class="box wait">
+    <strong>✋ Espere.</strong>
+    <p>No intente adivinar la palabra. Su docente la dice al final de la clase.</p>
+  </div>
+</section>
+
+<section class="step" id="p5">
+  <span class="tag">Paso 5 · Solo, al final de la clase</span>
+  <h2>La explicación</h2>
+  <ol class="do">
+    <li>Cuando su docente diga la palabra en voz alta, escríbala al final del paso 4, en <strong>Palabra para abrir el paso 5</strong>.</li>
+    <li>Toque <span class="nowrap"><span class="btn">Abrir el paso 5</span>.</span>
+      <ul class="sub-list">
+        <li>Si sale «Esa no es la palabra», revise cómo la escribió o espere a que su docente la repita.</li>
+      </ul>
+    </li>
+    <li>Lea la explicación completa y los tres errores frecuentes.</li>
+    <li>Escriba <strong>qué entiende ahora que no veía al principio</strong>, en una o dos frases.</li>
+    <li>Toque <span class="nowrap"><span class="btn">Guardar y terminar la sesión 1</span>.</span></li>
+  </ol>
+  <div class="box check">
+    <strong>✅ Aparece:</strong>
+    <p>«Sesión 1 terminada. Sus respuestas ya están guardadas en Moodle.»</p>
+  </div>
+</section>
+
+<section class="step" id="p6">
+  <span class="tag">Paso 6 · Sesión 2 · En pareja</span>
+  <h2>Mismo lote, otros enunciados</h2>
+  <ol class="do">
+    <li>Lea cada caso. Para cada pregunta, decida si <strong>sí se puede</strong> o <strong>no se puede</strong> responder.</li>
+    <li><strong>Antes de comprobar</strong>, compare con su pareja. Si no coinciden, cada uno debe convencer al otro con <strong>dos situaciones</strong> que cumplan el enunciado.</li>
+    <li>Responda la pregunta de «Compare los casos».</li>
+    <li>Toque <span class="nowrap"><span class="btn">Guardar el paso 6</span>.</span></li>
+  </ol>
+</section>
+
+<section class="step" id="p7">
+  <span class="tag">Paso 7 · En pareja</span>
+  <h2>Invente su propia pregunta</h2>
+  <ol class="do">
+    <li>Escriban un enunciado corto: un lote, un salón, una huerta, una pizza…</li>
+    <li>Escriban <strong>tres preguntas que sí se pueden responder</strong>, con su respuesta.</li>
+    <li>Escriban <strong>una pregunta que no se puede responder</strong>.</li>
+    <li>Escriban <strong>las dos situaciones</strong> que cumplen el enunciado y responden distinto.</li>
+    <li>Toquen <span class="nowrap"><span class="btn">Guardar mi pregunta</span>.</span></li>
+    <li>Intercambien el celular con otra pareja: ellos buscan cuál pregunta no se puede responder.</li>
+  </ol>
+</section>
+
+<section class="step" id="p8">
+  <span class="tag">Paso 8</span>
+  <h2>Resumen</h2>
+  <ol class="do">
+    <li>Sus respuestas <strong>ya están guardadas en Moodle</strong>.</li>
+    <li>Toque <span class="btn ghost">Copiar el resumen</span> solo si su docente lo pide.</li>
+  </ol>
+  <div class="box danger">
+    <strong>⚠️ Nunca toque <span class="nowrap"><span class="btn danger">Borrar todas mis respuestas</span>.</span></strong>
+  </div>
+</section>
+
+<section class="step" id="problemas">
+  <span class="tag">Parte E</span>
+  <h2>Si algo sale mal</h2>
+  <div class="trouble">
+    <div class="state">
+      <p>Cerré la página sin querer.</p>
+      <p>Entre otra vez por la <a href="#entrar">Parte A</a>. Sus respuestas siguen ahí.</p>
+    </div>
+    <div class="state">
+      <p>Se me apagó el celular.</p>
+      <p>Entre con <strong>su mismo usuario</strong> en otro celular. Aparece todo igual.</p>
+    </div>
+    <div class="state">
+      <p>Un paso no se abre.</p>
+      <p>Lea la frase «Se abre cuando…» de ese paso.</p>
+    </div>
+    <div class="state">
+      <p>La píldora sigue en rojo.</p>
+      <p>Levante la mano.</p>
+    </div>
+    <div class="state">
+      <p>No sé qué hacer.</p>
+      <p>Mire en qué paso va, lea su primera línea y levante la mano.</p>
+    </div>
+  </div>
+</section>
+
+<footer>Ítem MAT-2026-1-010 (Saber 11, Matemáticas) · Guía del estudiante para la actividad en Moodle.</footer>
+</main>
+</body>
+</html>
