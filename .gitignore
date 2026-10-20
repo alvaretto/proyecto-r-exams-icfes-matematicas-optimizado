@@ -301,6 +301,9 @@ AnythingLLM-Config/
 # HTML generados desde Markdown (se regeneran fácilmente)
 *.html
 !docs/**/*.html
+# Excepción (2026-10-20): los HTML de didactica/ son FUENTES escritas a mano, no salidas renderizadas.
+# actividad_estudiante.html es además la fuente única de la actividad del plugin Moodle mod_aulaviva.
+!A-Produccion/**/didactica/*.html
 
 # Binarios de herramientas IA/CLI (nunca en Git)
 acli

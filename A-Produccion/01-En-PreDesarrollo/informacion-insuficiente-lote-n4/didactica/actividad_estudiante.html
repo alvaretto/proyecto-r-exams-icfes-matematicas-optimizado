@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>¿Alcanzan los datos?</title>
+<meta name="description" content="Actividad autónoma sobre el ítem MAT-2026-1-010: decidir qué pregunta no se puede responder con la información del enunciado.">
+<style>
+:root{
+  --bg:#f7f5ef; --surface:#ffffff; --ink:#1d2125; --muted:#59616a; --line:#d8d2c3;
+  --accent:#2e6b4f; --accent-ink:#ffffff; --accent-soft:#e2eee7;
+  --warn:#8f4e10; --warn-soft:#f6e8d7; --bad:#a3372d; --bad-soft:#f7e2df;
+  --lot:#ece4cf; --lot-stroke:#6b5a33; --hl:#2e6b4f; --hl-ink:#ffffff;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14171a; --surface:#1c2125; --ink:#e6e8e9; --muted:#a2aab1; --line:#353c42;
+    --accent:#7cc3a0; --accent-ink:#0e1a13; --accent-soft:#1e3328;
+    --warn:#e2a66b; --warn-soft:#3a2a19; --bad:#ee918a; --bad-soft:#3c2220;
+    --lot:#3a3426; --lot-stroke:#cdbd91; --hl:#7cc3a0; --hl-ink:#0e1a13;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14171a; --surface:#1c2125; --ink:#e6e8e9; --muted:#a2aab1; --line:#353c42;
+  --accent:#7cc3a0; --accent-ink:#0e1a13; --accent-soft:#1e3328;
+  --warn:#e2a66b; --warn-soft:#3a2a19; --bad:#ee918a; --bad-soft:#3c2220;
+  --lot:#3a3426; --lot-stroke:#cdbd91; --hl:#7cc3a0; --hl-ink:#0e1a13;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif}
+main{max-width:720px;margin:0 auto;padding:16px 16px 64px}
+h1,h2,h3{font-family:"Noto Serif",Georgia,"Times New Roman",serif;line-height:1.25;font-weight:700}
+h1{font-size:1.7rem;margin:.4em 0 .2em}
+h2{font-size:1.25rem;margin:0 0 .5em}
+h3{font-size:1.05rem;margin:1.2em 0 .4em}
+p{margin:.5em 0}
+.sub{color:var(--muted);margin-top:0}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;margin:18px 0}
+.step.locked{opacity:.55}
+.step.locked .body{display:none}
+.lockmsg{display:none;color:var(--muted);font-style:italic}
+.step.locked .lockmsg{display:block}
+.tag{display:inline-block;font-size:.78rem;font-weight:600;letter-spacing:.02em;
+  color:var(--accent);text-transform:uppercase;margin-bottom:4px}
+nav.progress{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px;padding:0;list-style:none}
+nav.progress a{display:inline-block;padding:4px 10px;border-radius:999px;font-size:.85rem;
+  text-decoration:none;border:1px solid var(--line);color:var(--muted);background:var(--surface)}
+nav.progress a.done{background:var(--accent-soft);color:var(--ink);border-color:var(--accent)}
+nav.progress a.open{color:var(--ink)}
+nav.progress a.closed{border-style:dashed;background:transparent}
+.item{border:1px solid var(--line);padding:10px 12px;background:var(--bg);border-radius:8px}
+.item p{margin:.3em 0}
+fieldset{border:0;margin:10px 0;padding:0}
+legend{font-weight:600;margin-bottom:6px;padding:0}
+label.opt{display:flex;gap:10px;align-items:flex-start;padding:10px;border:1px solid var(--line);
+  border-radius:8px;margin:6px 0;cursor:pointer;background:var(--surface)}
+label.opt input{margin-top:4px;flex:none;width:20px;height:20px}
+label.opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.conf{display:grid;grid-template-columns:1fr;gap:6px}
+.conf label.opt{margin:0}
+textarea,input[type=text]{width:100%;font:inherit;color:var(--ink);background:var(--surface);
+  border:1px solid var(--line);border-radius:8px;padding:10px}
+textarea{min-height:84px;resize:vertical}
+button{font:inherit;font-weight:600;min-height:44px;padding:8px 14px;border-radius:8px;
+  border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+button.ghost{background:transparent;color:var(--accent)}
+button.small{min-height:38px;padding:6px 10px;font-size:.9rem}
+button:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.msg{margin:8px 0;padding:8px 10px;border-radius:8px;font-size:.95rem;display:none}
+.msg.show{display:block}
+.msg.ok{background:var(--accent-soft)}
+.msg.warn{background:var(--warn-soft)}
+.msg.bad{background:var(--bad-soft)}
+.note{color:var(--muted);font-size:.92rem}
+.roles{margin:.4em 0 .4em 1.1em;padding:0}
+.roles li{margin:.2em 0}
+svg#lote{width:100%;height:auto;display:block;margin:8px 0;touch-action:manipulation}
+#lote .lot-bg{fill:var(--lot)}
+#lote .parcel{fill:var(--lot);stroke:var(--lot-stroke);stroke-width:.45;cursor:pointer}
+#lote .parcel.hl{fill:var(--hl)}
+#lote .lot-outline{fill:none;stroke:var(--lot-stroke);stroke-width:1}
+#lote .plabel{fill:var(--ink);font-weight:700;pointer-events:none}
+#lote .plabel.hl{fill:var(--hl-ink)}
+#lote .dim{fill:var(--muted);font-size:4px}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.presets button{background:var(--surface);color:var(--ink);border-color:var(--line);font-weight:500}
+.presets button.on{border-color:var(--accent);background:var(--accent-soft)}
+.info{background:var(--bg);border-radius:8px;padding:10px 12px;font-size:.95rem}
+.info p{margin:.2em 0}
+.custom{display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px}
+.custom .pair{display:flex;gap:8px;flex-wrap:wrap}
+.custom select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);
+  border-radius:8px;padding:8px;min-height:44px}
+.custom input[type=text]{flex:1;min-width:140px}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0}
+table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:640px}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--bg);font-weight:600}
+.qcmp{border:1px solid var(--line);border-radius:8px;padding:10px;margin:8px 0}
+.qcmp p.q{font-weight:600;margin:0 0 6px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg label{display:flex;gap:6px;align-items:center;padding:6px 10px;border:1px solid var(--line);
+  border-radius:999px;cursor:pointer;font-size:.92rem}
+.seg label:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.fb{font-size:.92rem;margin-top:6px}
+.fb.ok{color:var(--accent)}
+.fb.bad{color:var(--bad)}
+.caso{border:1px solid var(--line);border-radius:8px;padding:12px;margin:12px 0}
+.caso .enun{background:var(--bg);padding:8px 10px;border-radius:6px}
+.reveal ul{padding-left:1.2em}
+.reveal li{margin:.35em 0}
+.rule{border:2px solid var(--accent);border-radius:8px;padding:10px 12px;margin:10px 0}
+#resumen{min-height:220px;font-size:.88rem;font-family:ui-monospace,Menlo,Consolas,monospace}
+footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
+@media (min-width:440px){ .conf{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (min-width:680px){ .conf{grid-template-columns:repeat(4,minmax(0,1fr))} }
+@media print{
+  :root,:root[data-theme="dark"],:root:not([data-theme="light"]){
+    --bg:#ffffff; --surface:#ffffff; --ink:#111111; --muted:#444444; --line:#bbbbbb;
+    --accent:#1f5a40; --accent-ink:#ffffff; --accent-soft:#eeeeee; --warn:#6b3a0b; --warn-soft:#f3f3f3;
+    --bad:#8a2b22; --bad-soft:#f3f3f3; --lot:#f2ecdc; --lot-stroke:#4a3e22; --hl:#1f5a40; --hl-ink:#ffffff;
+  }
+  .step.locked{display:none} button,nav.progress{display:none}
+}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="tag">Matemáticas · Saber 11</span>
+    <h1>¿Alcanzan los datos?</h1>
+    <p class="sub" id="sub">Actividad en ocho pasos sobre una pregunta del ICFES. Sus respuestas se guardan en este celular; al final copia un resumen y lo pega en la tarea de Moodle.</p>
+    <nav class="progress" id="nav" aria-label="Pasos de la actividad"></nav>
+  </header>
+
+  <!-- PASO 0 -->
+  <section class="step" id="s0">
+    <span class="tag">Antes de empezar</span>
+    <h2>Quiénes trabajan</h2>
+    <div class="body">
+      <p>Trabajará en un trío. Cada integrante usa su propio celular y escribe sus propias respuestas.</p>
+      <label for="nombre"><strong>Su nombre y el de sus compañeros de trío</strong></label>
+      <input type="text" id="nombre" autocomplete="off" placeholder="Ejemplo: Laura (yo), Andrés, Sofía">
+      <p class="note">Nada de lo que responda al principio cuenta por acertar. Lo que importa es cómo cambia su razonamiento.</p>
+    </div>
+  </section>
+
+  <!-- PASO 1 -->
+  <section class="step" id="s1">
+    <span class="tag">Paso 1 · Solo, sin hablar</span>
+    <h2>Lea la pregunta y decida</h2>
+    <div class="body">
+      <div class="item">
+        <p>Un empresario compró un lote rectangular de 50 metros de largo y 120 metros de ancho, para repartirlo en partes iguales entre sus 8 hijos. Con base en esta información, ¿cuál de las siguientes preguntas <strong>NO</strong> es posible responder?</p>
+      </div>
+      <fieldset id="p1op">
+        <legend>Su respuesta</legend>
+        <label class="opt"><input type="radio" name="p1op" value="A"><span><strong>A.</strong> ¿Cuál es el área del lote del empresario?</span></label>
+        <label class="opt"><input type="radio" name="p1op" value="B"><span><strong>B.</strong> ¿Cuál es la ubicación que le corresponde a cada hijo dentro del lote?</span></label>
+        <label class="opt"><input type="radio" name="p1op" value="C"><span><strong>C.</strong> ¿Cuál es el perímetro del lote del empresario?</span></label>
+        <label class="opt"><input type="radio" name="p1op" value="D"><span><strong>D.</strong> ¿Cuál es la fracción del lote que le corresponde a cada hijo?</span></label>
+      </fieldset>
+      <fieldset>
+        <legend>¿Qué tan seguro está?</legend>
+        <div class="conf" id="p1conf">
+          <label class="opt"><input type="radio" name="p1conf" value="1"><span>Estoy adivinando</span></label>
+          <label class="opt"><input type="radio" name="p1conf" value="2"><span>Poco seguro</span></label>
+          <label class="opt"><input type="radio" name="p1conf" value="3"><span>Bastante seguro</span></label>
+          <label class="opt"><input type="radio" name="p1conf" value="4"><span>Totalmente seguro</span></label>
+        </div>
+      </fieldset>
+      <label for="p1why"><strong>¿Por qué eligió esa? Escríbalo en una o dos frases.</strong></label>
+      <textarea id="p1why" placeholder="Elegí esa porque…"></textarea>
+      <div class="row"><button id="p1save">Guardar mi primera decisión</button></div>
+      <div class="msg" id="p1msg" role="status"></div>
+      <p class="note">Cuando todos hayan guardado, su docente pedirá que muestren la letra al mismo tiempo, con los dedos (A = 1, B = 2, C = 3, D = 4).</p>
+    </div>
+  </section>
+
+  <!-- PASO 2 -->
+  <section class="step locked" id="s2">
+    <span class="tag">Paso 2 · En el trío</span>
+    <h2>Reparta el lote de muchas maneras</h2>
+    <p class="lockmsg">Se abre cuando guarde su primera decisión.</p>
+    <div class="body">
+      <p>El enunciado solo exige tres cosas: usar <strong>todo el lote</strong>, hacer <strong>8 partes</strong> y que todas sean <strong>del mismo tamaño</strong>. Busquen repartos que cumplan eso y que sean lo más distintos posible. Guarden <strong>al menos tres</strong>.</p>
+      <p class="note">Roles del trío (rótenlos en cada reparto):</p>
+      <ul class="roles note">
+        <li><strong>Constructor:</strong> arma el reparto en su celular.</li>
+        <li><strong>Lector:</strong> relee el enunciado y comprueba que el reparto lo cumple.</li>
+        <li><strong>Escéptico:</strong> pregunta «¿el enunciado dice eso?» cada vez que alguien da algo por hecho.</li>
+      </ul>
+
+      <h3>Repartos para empezar</h3>
+      <div class="presets" id="presets">
+        <button type="button" data-p="v8">8 franjas verticales</button>
+        <button type="button" data-p="h8">8 franjas horizontales</button>
+        <button type="button" data-p="g42">Cuadrícula 4 × 2</button>
+        <button type="button" data-p="g24">Cuadrícula 2 × 4</button>
+        <button type="button" data-p="m35">Franjas de 3 y de 5 partes</button>
+        <button type="button" data-p="tri">Triángulos</button>
+      </div>
+
+      <svg id="lote" viewBox="-9 -3 132 63" role="img" aria-label="Lote de 120 m por 50 m repartido en 8 partes"></svg>
+
+      <div class="row">
+        <button type="button" class="ghost small" id="shuffle">Otra forma de asignar los hijos</button>
+        <span class="note">Toque una parte para ver sus medidas.</span>
+      </div>
+
+      <div class="info" id="info" aria-live="polite"></div>
+
+      <h3>Arme su propio reparto</h3>
+      <div class="custom">
+        <p class="note">Primero se corta el lote en franjas; luego cada franja se corta en partes. Escriba cuántas partes lleva cada franja, separadas por «+». Deben sumar 8. Ejemplos: <code>1+7</code>, <code>2+2+4</code>, <code>2+6</code>.</p>
+        <div class="pair">
+          <select id="orient" aria-label="Dirección de las franjas">
+            <option value="V">Franjas verticales</option>
+            <option value="H">Franjas horizontales</option>
+          </select>
+          <input type="text" id="comp" inputmode="numeric" autocomplete="off" placeholder="2+6" aria-label="Partes por franja">
+          <button type="button" class="small" id="build">Dibujar</button>
+        </div>
+        <div class="msg" id="buildmsg" role="status"></div>
+      </div>
+
+      <div class="row">
+        <button type="button" id="savep">Guardar este reparto</button>
+        <span class="note" id="counter">Repartos guardados: 0 (meta: 3)</span>
+      </div>
+      <div class="msg" id="savemsg" role="status"></div>
+
+      <h3>Tabla de sus repartos</h3>
+      <div class="tablewrap">
+        <table>
+          <thead><tr>
+            <th>#</th><th>Reparto</th><th>Área del lote</th><th>Perímetro del lote</th>
+            <th>Fracción de cada parte</th><th>Área de cada parte</th><th>Perímetro de cada parte</th><th>Parte del hijo 1</th>
+          </tr></thead>
+          <tbody id="tbody"><tr><td colspan="8" class="note">Todavía no hay repartos guardados.</td></tr></tbody>
+        </table>
+      </div>
+      <p class="note">«Parte del hijo 1» se mide desde la esquina inferior izquierda del lote: <em>x</em> de izquierda a derecha, <em>y</em> de abajo hacia arriba.</p>
+      <div class="row"><button type="button" class="ghost small" id="clearp">Borrar la tabla</button></div>
+    </div>
+  </section>
+
+  <!-- PASO 3 -->
+  <section class="step locked" id="s3">
+    <span class="tag">Paso 3 · En el trío</span>
+    <h2>Comparen sus repartos</h2>
+    <p class="lockmsg">Se abre cuando tengan al menos dos repartos guardados.</p>
+    <div class="body">
+      <p>Miren su tabla. Para cada pregunta, decidan si su respuesta <strong>fue la misma en todos los repartos</strong> o <strong>cambió</strong> de un reparto a otro.</p>
+      <div id="cmp"></div>
+      <div class="row"><button type="button" id="p3check">Revisar con nuestra tabla</button></div>
+      <div class="msg" id="p3msg" role="status"></div>
+
+      <div id="p3more" hidden>
+        <h3>Escriban la regla</h3>
+        <label for="p3regla">Completen: <em>«Una pregunta NO se puede responder con lo que dice el enunciado cuando…»</em></label>
+        <textarea id="p3regla"></textarea>
+        <h3>Un compañero de otro curso dijo esto</h3>
+        <p class="item">Sara: «Sí se sabe dónde le toca a cada hijo: a cada uno le toca 1/8 del lote, o sea una franja de 15 metros».</p>
+        <label for="p3sara">¿Qué está suponiendo Sara que el enunciado no dice? Usen uno de sus repartos para responderle.</label>
+        <textarea id="p3sara"></textarea>
+        <div class="row"><button type="button" id="p3save">Guardar el paso 3</button></div>
+        <div class="msg" id="p3savemsg" role="status"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PASO 4 -->
+  <section class="step locked" id="s4">
+    <span class="tag">Paso 4 · Solo</span>
+    <h2>Vuelva a decidir</h2>
+    <p class="lockmsg">Se abre cuando guarden el paso 3.</p>
+    <div class="body">
+      <p id="p1recap" class="info"></p>
+      <fieldset id="p4op">
+        <legend>Su respuesta ahora</legend>
+        <label class="opt"><input type="radio" name="p4op" value="A"><span><strong>A.</strong> ¿Cuál es el área del lote del empresario?</span></label>
+        <label class="opt"><input type="radio" name="p4op" value="B"><span><strong>B.</strong> ¿Cuál es la ubicación que le corresponde a cada hijo dentro del lote?</span></label>
+        <label class="opt"><input type="radio" name="p4op" value="C"><span><strong>C.</strong> ¿Cuál es el perímetro del lote del empresario?</span></label>
+        <label class="opt"><input type="radio" name="p4op" value="D"><span><strong>D.</strong> ¿Cuál es la fracción del lote que le corresponde a cada hijo?</span></label>
+      </fieldset>
+      <fieldset>
+        <legend>¿Qué tan seguro está ahora?</legend>
+        <div class="conf" id="p4conf">
+          <label class="opt"><input type="radio" name="p4conf" value="1"><span>Estoy adivinando</span></label>
+          <label class="opt"><input type="radio" name="p4conf" value="2"><span>Poco seguro</span></label>
+          <label class="opt"><input type="radio" name="p4conf" value="3"><span>Bastante seguro</span></label>
+          <label class="opt"><input type="radio" name="p4conf" value="4"><span>Totalmente seguro</span></label>
+        </div>
+      </fieldset>
+      <label for="p4why"><strong>Justifique con un dato del enunciado o con uno de sus repartos.</strong></label>
+      <textarea id="p4why" placeholder="Ahora elijo… porque en el reparto… / porque el enunciado no dice…"></textarea>
+      <div class="row"><button id="p4save">Guardar mi segunda decisión</button></div>
+      <div class="msg" id="p4msg" role="status"></div>
+    </div>
+  </section>
+
+  <!-- PASO 5 -->
+  <section class="step locked" id="s5">
+    <span class="tag">Paso 5 · Solo</span>
+    <h2>La explicación</h2>
+    <p class="lockmsg">Se abre cuando guarde su segunda decisión.</p>
+    <div class="body reveal">
+      <div class="msg show ok" id="p5personal"></div>
+      <h3>Las cuatro preguntas, una por una</h3>
+      <ul>
+        <li><strong>Área del lote del empresario: sí se puede responder.</strong> Con las dos medidas: 50 × 120 = 6.000 m². En su tabla, esa columna fue igual en todas las filas.</li>
+        <li><strong>Perímetro del lote del empresario: sí se puede responder.</strong> 2 × (50 + 120) = 340 m. Tampoco cambió con el reparto.</li>
+        <li><strong>Fracción del lote de cada hijo: sí se puede responder.</strong> Si se reparte en partes iguales entre 8, a cada uno le toca 1/8. Eso dice <em>cuánto</em> le toca, no <em>dónde</em>.</li>
+        <li><strong>Ubicación de cada hijo: no se puede responder.</strong> Con 8 franjas verticales, la parte del hijo 1 es una franja de 15 m × 50 m; con 8 franjas horizontales, es una de 120 m × 6,25 m; con una cuadrícula, es un rectángulo de 30 m × 25 m. Los tres repartos cumplen el enunciado. Además, el enunciado no dice cómo se corta el lote ni a quién le toca cada parte.</li>
+      </ul>
+      <div class="rule">
+        <p><strong>La regla.</strong> Una pregunta se puede responder cuando <strong>todas</strong> las situaciones que cumplen el enunciado dan la misma respuesta. Si encuentra <strong>dos situaciones que cumplen el enunciado y responden distinto</strong>, la pregunta no se puede responder: falta información.</p>
+        <p>«Partes iguales» quiere decir iguales en <strong>tamaño</strong> (750 m² cada una), no en forma ni en posición.</p>
+      </div>
+      <h3>Tres errores frecuentes</h3>
+      <ul>
+        <li>Creer que el área o el perímetro del lote no se pueden calcular, cuando salen directo de las dos medidas.</li>
+        <li>Confundir la fracción (1/8, el tamaño) con la ubicación física de cada parte.</li>
+        <li>Suponer que el lote se corta en franjas, o que las partes tienen que ser rectángulos, aunque el enunciado no lo diga.</li>
+      </ul>
+      <label for="p5ref"><strong>¿Qué entiende ahora que no veía al principio? Una o dos frases.</strong></label>
+      <textarea id="p5ref"></textarea>
+      <div class="row"><button type="button" id="p5save">Guardar y terminar la sesión 1</button></div>
+      <div class="msg" id="p5msg" role="status"></div>
+    </div>
+  </section>
+
+  <!-- PASO 6 -->
+  <section class="step locked" id="s6">
+    <span class="tag">Paso 6 · Sesión 2 · En pareja</span>
+    <h2>Mismo lote, otros enunciados</h2>
+    <p class="lockmsg">Se abre al terminar la sesión 1. <button type="button" class="ghost small" id="unlock2">Ya hice la sesión 1 en otro celular</button></p>
+    <div class="body">
+      <p>Cada caso cambia lo que dice el enunciado. Para cada pregunta, decida si <strong>sí se puede</strong> o <strong>no se puede</strong> responder. Antes de comprobar, compare con su pareja: si no coinciden, cada uno debe convencer al otro con dos situaciones que cumplan el enunciado.</p>
+      <div id="casos"></div>
+      <h3>Compare los casos</h3>
+      <p>En la pregunta original, el <strong>perímetro de cada parte</strong> no se podía saber, pero en el caso B sí. Y la <strong>fracción de cada uno</strong> sí se podía saber en la original, pero en el caso C no. ¿Qué frase del enunciado hizo la diferencia en cada caso?</p>
+      <textarea id="contraste"></textarea>
+      <div class="row"><button type="button" id="p6save">Guardar el paso 6</button></div>
+      <div class="msg" id="p6msg" role="status"></div>
+    </div>
+  </section>
+
+  <!-- PASO 7 -->
+  <section class="step locked" id="s7">
+    <span class="tag">Paso 7 · En pareja</span>
+    <h2>Invente su propia pregunta</h2>
+    <p class="lockmsg">Se abre con la sesión 2.</p>
+    <div class="body">
+      <p>Escriban un enunciado corto (puede ser sobre un lote, un salón, una huerta, una pizza…) y cuatro preguntas: <strong>tres que sí se puedan responder</strong> y <strong>una que no</strong>. Después intercambien celular con otra pareja: ellos deben encontrar cuál no se puede responder y dar las dos situaciones que lo prueban.</p>
+      <label for="c_en"><strong>Enunciado</strong></label>
+      <textarea id="c_en"></textarea>
+      <label for="c_si"><strong>Tres preguntas que sí se pueden responder, con su respuesta</strong></label>
+      <textarea id="c_si" placeholder="1. ¿…? Respuesta: …&#10;2. ¿…? Respuesta: …&#10;3. ¿…? Respuesta: …"></textarea>
+      <label for="c_no"><strong>La pregunta que no se puede responder</strong></label>
+      <input type="text" id="c_no" autocomplete="off">
+      <label for="c_contra"><strong>Las dos situaciones que cumplen su enunciado y responden distinto</strong></label>
+      <textarea id="c_contra" placeholder="Situación 1: …  Situación 2: …"></textarea>
+      <div class="row"><button type="button" id="p7save">Guardar mi pregunta</button></div>
+      <div class="msg" id="p7msg" role="status"></div>
+    </div>
+  </section>
+
+  <!-- PASO 8 -->
+  <section class="step locked" id="s8">
+    <span class="tag">Paso 8</span>
+    <h2>Resumen para entregar</h2>
+    <p class="lockmsg">Se abre cuando guarde su primera decisión.</p>
+    <div class="body">
+      <p id="s8intro">Copie este texto y péguelo en la tarea de Moodle que indique su docente. Se actualiza solo cada vez que guarda un paso.</p>
+      <textarea id="resumen" readonly></textarea>
+      <div class="row">
+        <button type="button" id="copy">Copiar el resumen</button>
+        <button type="button" class="ghost small" id="reset">Borrar todas mis respuestas</button>
+      </div>
+      <div class="msg" id="copymsg" role="status"></div>
+    </div>
+  </section>
+
+  <footer id="pie">Ítem MAT-2026-1-010 (Saber 11, Matemáticas). Funciona sin internet; las respuestas quedan solo en este celular.</footer>
+</main>
+
+<script>
+(function(){
+'use strict';
+var KEY='lote-d49-estudiante-v1';
+// Dentro de Moodle (mod_aulaviva) el bridge define window.AulaViva y el estado se guarda allá, por usuario.
+var AV=(window.AulaViva&&window.AulaViva.available)?window.AulaViva:null;
+var W=120,H=50,N=8;
+var OPC={
+  A:'¿Cuál es el área del lote del empresario?',
+  B:'¿Cuál es la ubicación que le corresponde a cada hijo dentro del lote?',
+  C:'¿Cuál es el perímetro del lote del empresario?',
+  D:'¿Cuál es la fracción del lote que le corresponde a cada hijo?'
+};
+var CONF={'1':'estoy adivinando','2':'poco seguro','3':'bastante seguro','4':'totalmente seguro'};
+
+function blank(){return {nombre:'',p1:null,repartos:[],p3:null,p4:null,p5:null,casos:{},contraste:'',p6:false,crear:null,s2:false};}
+function load(){
+  if(AV){var o=AV.initialState(),b=blank();if(o&&typeof o==='object'&&!Array.isArray(o)){for(var k in b){if(!(k in o))o[k]=b[k];}return o;}return b;}
+  try{var r=localStorage.getItem(KEY);
+    if(r){var o=JSON.parse(r),b=blank();for(var k in b){if(!(k in o))o[k]=b[k];}return o;}
+  }catch(e){}
+  return blank();
+}
+var S=load();
+function persist(m){
+  if(AV)return AV.save(S,m||'');
+  try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}
+  return Promise.resolve();
+}
+function save(m){persist(m);refresh();}
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function msg(id,text,kind){var m=$(id);m.textContent=text;m.className='msg show '+(kind||'ok');}
+function radio(name){var e=document.querySelector('input[name="'+name+'"]:checked');return e?e.value:null;}
+function setRadio(name,v){var e=document.querySelector('input[name="'+name+'"][value="'+v+'"]');if(e)e.checked=true;}
+
+/* ---------- números ---------- */
+function exact2(x){return Math.abs(x*100-Math.round(x*100))<1e-9;}
+function fmt(x){
+  var s=(Math.round(x*100)/100).toFixed(2).replace(/\.?0+$/,'');
+  var p=s.split('.');p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+  return (exact2(x)?'':'≈ ')+(p[1]?p[0]+','+p[1]:p[0]);
+}
+function fmt0(x){return fmt(x).replace('≈ ','');}
+
+/* ---------- geometría del reparto ---------- */
+function bands(orient,comp){
+  var parts=[],pos=0;
+  comp.forEach(function(k){
+    var j;
+    if(orient==='V'){var bw=W*k/N;for(j=0;j<k;j++){parts.push({t:'r',x:pos,y:j*H/k,w:bw,h:H/k});}pos+=bw;}
+    else{var bh=H*k/N;for(j=0;j<k;j++){parts.push({t:'r',x:j*W/k,y:pos,w:W/k,h:bh});}pos+=bh;}
+  });
+  return parts;
+}
+function triangles(){
+  var p=[];for(var i=0;i<4;i++){var x0=30*i;
+    p.push({t:'t',pts:[[x0,0],[x0+30,0],[x0,50]]});
+    p.push({t:'t',pts:[[x0+30,0],[x0+30,50],[x0,50]]});}
+  return p;
+}
+function dist(a,b){return Math.sqrt((a[0]-b[0])*(a[0]-b[0])+(a[1]-b[1])*(a[1]-b[1]));}
+function perim(p){return p.t==='r'?2*(p.w+p.h):dist(p.pts[0],p.pts[1])+dist(p.pts[1],p.pts[2])+dist(p.pts[2],p.pts[0]);}
+function area(p){
+  if(p.t==='r')return p.w*p.h;
+  var a=p.pts;return Math.abs((a[1][0]-a[0][0])*(a[2][1]-a[0][1])-(a[2][0]-a[0][0])*(a[1][1]-a[0][1]))/2;
+}
+function dims(p){
+  if(p.t==='r')return fmt(p.w)+' m × '+fmt(p.h)+' m';
+  return 'triángulo de catetos 30 m y 50 m';
+}
+function locShort(p){
+  if(p.t==='r')return 'x de '+fmt0(p.x)+' a '+fmt(p.x+p.w)+'; y de '+fmt0(p.y)+' a '+fmt(p.y+p.h);
+  return 'triángulo con vértices '+p.pts.map(function(q){return '('+fmt0(q[0])+', '+fmt0(q[1])+')';}).join(', ');
+}
+function locLong(p){
+  if(p.t==='r')return 'va de '+fmt0(p.x)+' a '+fmt(p.x+p.w)+' m de izquierda a derecha, y de '+fmt0(p.y)+' a '+fmt(p.y+p.h)+' m de abajo hacia arriba';
+  return 'es el '+locShort(p);
+}
+function r2(x){return (Math.round(x*100)/100).toString();}
+function pkey(p){return p.t==='r'?['r',r2(p.x),r2(p.y),r2(p.w),r2(p.h)].join(','):'t'+p.pts.map(function(q){return r2(q[0])+','+r2(q[1]);}).join(';');}
+function uniq(a){var o=[];a.forEach(function(x){if(o.indexOf(x)<0)o.push(x);});return o;}
+
+function describe(orient,comp,tri){
+  if(tri)return 'Triángulos (4 rectángulos cortados en diagonal)';
+  var allOne=comp.every(function(k){return k===1;});
+  if(allOne)return '8 franjas '+(orient==='V'?'verticales':'horizontales');
+  if(comp.length===1)return '8 franjas '+(orient==='V'?'horizontales':'verticales');
+  var eq=comp.every(function(k){return k===comp[0];});
+  if(eq){var cols=orient==='V'?comp.length:comp[0],rows=orient==='V'?comp[0]:comp.length;return 'Cuadrícula '+cols+' columnas × '+rows+' filas';}
+  return 'Franjas '+(orient==='V'?'verticales':'horizontales')+' con '+comp.join(' + ')+' partes';
+}
+
+var cur=null,sel=-1;
+function setRep(orient,comp,tri){
+  var parts=tri?triangles():bands(orient,comp);
+  cur={orient:orient,comp:comp,tri:!!tri,parts:parts,asign:parts.map(function(_,i){return i+1;}),desc:describe(orient,comp,tri)};
+  sel=-1;render();
+}
+var PRE={v8:['V',[1,1,1,1,1,1,1,1]],h8:['H',[1,1,1,1,1,1,1,1]],g42:['V',[2,2,2,2]],g24:['V',[4,4]],m35:['V',[3,5]]};
+
+function render(){
+  var h='<rect x="0" y="0" width="120" height="50" class="lot-bg"/>';
+  cur.parts.forEach(function(p,i){
+    var n=cur.asign[i],cls=(n===1?' hl':''),cx,cy,fs;
+    if(p.t==='r'){var ys=H-(p.y+p.h);
+      h+='<rect x="'+p.x+'" y="'+ys+'" width="'+p.w+'" height="'+p.h+'" class="parcel'+cls+'" data-i="'+i+'"/>';
+      cx=p.x+p.w/2;cy=ys+p.h/2;fs=Math.min(6,p.h*0.62,p.w*0.62);
+    }else{
+      var pts=p.pts.map(function(q){return q[0]+','+(H-q[1]);}).join(' ');
+      h+='<polygon points="'+pts+'" class="parcel'+cls+'" data-i="'+i+'"/>';
+      cx=(p.pts[0][0]+p.pts[1][0]+p.pts[2][0])/3;cy=H-(p.pts[0][1]+p.pts[1][1]+p.pts[2][1])/3;fs=5;
+    }
+    h+='<text x="'+cx+'" y="'+cy+'" font-size="'+fs.toFixed(2)+'" class="plabel'+cls+'" text-anchor="middle" dominant-baseline="central">'+n+'</text>';
+  });
+  h+='<rect x="0" y="0" width="120" height="50" class="lot-outline"/>';
+  h+='<text x="60" y="56.5" class="dim" text-anchor="middle">120 m</text>';
+  h+='<text x="-4.5" y="25" class="dim" text-anchor="middle" transform="rotate(-90 -4.5 25)">50 m</text>';
+  var svg=$('lote');svg.innerHTML=h;
+  svg.setAttribute('aria-label','Reparto: '+cur.desc+'. La parte del hijo 1 '+locLong(cur.parts[cur.asign.indexOf(1)])+'.');
+  Array.prototype.forEach.call(document.querySelectorAll('#presets button'),function(b){
+    var p=PRE[b.getAttribute('data-p')];
+    var on=b.getAttribute('data-p')==='tri'?cur.tri:(!cur.tri&&p&&describe(p[0],p[1],false)===cur.desc);
+    b.className=on?'on':'';
+  });
+  info();
+}
+function info(){
+  var per=uniq(cur.parts.map(function(p){return fmt(perim(p));}));
+  var dm=uniq(cur.parts.map(dims));
+  var ar=uniq(cur.parts.map(function(p){return fmt(area(p));}));
+  var h1=cur.parts[cur.asign.indexOf(1)];
+  var t='<p><strong>'+esc(cur.desc)+'</strong></p>'+
+    '<p>Área de cada parte: '+ar.join(' / ')+' m² · Fracción de cada parte: 1/8</p>'+
+    '<p>Medidas de las partes: '+dm.join('; ')+'</p>'+
+    '<p>Perímetro de cada parte: '+per.join(' m; ')+' m'+(per.length>1?' (no todas iguales)':'')+'</p>'+
+    '<p>La parte del <strong>hijo 1</strong> (resaltada) '+locLong(h1)+'.</p>';
+  if(sel>=0){var q=cur.parts[sel];
+    t+='<p class="note">Parte tocada: hijo '+cur.asign[sel]+' · '+dims(q)+' · perímetro '+fmt(perim(q))+' m · área '+fmt(area(q))+' m²</p>';}
+  $('info').innerHTML=t;
+}
+function shuffle(){
+  var a=cur.asign.slice();
+  for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+  if(a.join()===cur.asign.join()){var t2=a[0];a[0]=a[1];a[1]=t2;}
+  cur.asign=a;render();
+}
+function record(){
+  var h1=cur.parts[cur.asign.indexOf(1)];
+  var per=uniq(cur.parts.map(function(p){return fmt(perim(p));}));
+  return {
+    key:cur.parts.map(pkey).sort().join('|')+'#'+pkey(h1),
+    desc:cur.desc,areaLote:'6.000 m²',perLote:'340 m',frac:'1/8',
+    areaParte:uniq(cur.parts.map(function(p){return fmt(area(p));})).join(' / ')+' m²',
+    perParte:(per.length>1?'varía: ':'')+per.join(' m; ')+' m',
+    hijo1:locShort(h1)
+  };
+}
+function drawTable(){
+  var tb=$('tbody');
+  if(!S.repartos.length){tb.innerHTML='<tr><td colspan="8" class="note">Todavía no hay repartos guardados.</td></tr>';}
+  else tb.innerHTML=S.repartos.map(function(r,i){
+    return '<tr><td>'+(i+1)+'</td><td>'+esc(r.desc)+'</td><td>'+r.areaLote+'</td><td>'+r.perLote+'</td><td>'+r.frac+
+      '</td><td>'+r.areaParte+'</td><td>'+esc(r.perParte)+'</td><td>'+esc(r.hijo1)+'</td></tr>';
+  }).join('');
+  $('counter').textContent='Repartos guardados: '+S.repartos.length+' (meta: 3)';
+}
+
+/* ---------- paso 3: comparación ---------- */
+var CMP=[
+  {id:'area',q:OPC.A,col:'Área del lote',f:'areaLote'},
+  {id:'ubic',q:OPC.B,col:'Parte del hijo 1',f:'hijo1'},
+  {id:'per',q:OPC.C,col:'Perímetro del lote',f:'perLote'},
+  {id:'frac',q:OPC.D,col:'Fracción de cada parte',f:'frac'},
+  {id:'perp',q:'Pregunta extra: ¿cuál es el perímetro de la parte de cada hijo?',col:'Perímetro de cada parte',f:'perParte'}
+];
+function drawCmp(){
+  $('cmp').innerHTML=CMP.map(function(c){
+    return '<div class="qcmp"><p class="q">'+esc(c.q)+'</p><div class="seg">'+
+      '<label><input type="radio" name="cmp_'+c.id+'" value="misma"> Fue la misma en todos</label>'+
+      '<label><input type="radio" name="cmp_'+c.id+'" value="cambio"> Cambió entre repartos</label>'+
+      '</div><div class="fb" id="fb_'+c.id+'"></div></div>';
+  }).join('');
+  if(S.p3&&S.p3.sel){CMP.forEach(function(c){if(S.p3.sel[c.id])setRadio('cmp_'+c.id,S.p3.sel[c.id]);});}
+}
+function varies(f){return uniq(S.repartos.map(function(r){return r[f];})).length>1;}
+function checkCmp(){
+  if(S.repartos.length<2){msg('p3msg','Necesitan al menos dos repartos guardados en el paso 2.','warn');return;}
+  var all=true,missing=false,selv={};
+  CMP.forEach(function(c){
+    var v=radio('cmp_'+c.id);selv[c.id]=v;var fb=$('fb_'+c.id);
+    if(!v){missing=true;fb.textContent='';return;}
+    var truth=varies(c.f)?'cambio':'misma';
+    if(v===truth){fb.textContent='Coincide con su tabla.';fb.className='fb ok';}
+    else{all=false;fb.className='fb bad';
+      fb.textContent=truth==='cambio'
+        ?'Miren otra vez la columna «'+c.col+'»: no es igual en todas las filas.'
+        :'Con los repartos que guardaron, la columna «'+c.col+'» no cambió. Si creen que sí puede cambiar, busquen y guarden un reparto que lo muestre.';}
+  });
+  if(missing){msg('p3msg','Respondan las cinco preguntas antes de revisar.','warn');return;}
+  S.p3=S.p3||{};S.p3.sel=selv;save();
+  if(all){msg('p3msg','Sus respuestas coinciden con su tabla. Ahora escriban la regla.','ok');$('p3more').hidden=false;}
+  else msg('p3msg','Hay diferencias entre lo que dicen y lo que muestra su tabla. Revisen y vuelvan a intentar.','warn');
+}
+
+/* ---------- paso 6: casos ---------- */
+var CASOS=[
+ {id:'A',t:'Caso A · El enunciado original, otras preguntas',
+  e:'Un empresario compró un lote rectangular de 50 metros de largo y 120 metros de ancho, para repartirlo en partes iguales entre sus 8 hijos.',
+  q:[
+   ['¿Cuál es el perímetro de la porción que le corresponde a cada hijo?',false,'No se puede. Franjas de 15 m × 50 m dan 130 m; franjas de 120 m × 6,25 m dan 252,5 m. Las dos cumplen el enunciado.'],
+   ['¿Cuál es el área de la porción que le corresponde a cada hijo?',true,'Sí: 6.000 ÷ 8 = 750 m², sea cual sea el reparto.'],
+   ['¿Cuál es la longitud total del cerco que rodea el lote?',true,'Sí: es el perímetro del lote, 2 × (50 + 120) = 340 m.'],
+   ['¿Cuál es la razón entre el largo y el ancho del lote?',true,'Sí: 50 a 120, que simplificada es 5 : 12.']
+  ]},
+ {id:'B',t:'Caso B · Ahora se dice cómo se corta',
+  e:'Una familia recibió como herencia un lote rectangular de 50 metros de largo y 120 metros de ancho, y debe repartirlo en partes iguales entre los 8 hermanos. El reparto se hará en franjas iguales, todas paralelas al lado de 50 metros. El lote colinda con una carretera a lo largo de uno de sus lados de 50 metros.',
+  q:[
+   ['¿Cuál es el perímetro de la porción que le corresponde a cada hermano?',true,'Sí: cada franja mide 50 m × 15 m, así que su perímetro es 2 × (50 + 15) = 130 m.'],
+   ['¿Cuál de los hermanos recibe la porción que da a la carretera?',false,'No se puede. El enunciado no dice en qué orden se asignan las franjas: la de la carretera le puede tocar a cualquiera.'],
+   ['¿Cuál es la longitud de la cerca que separa unas porciones de otras?',true,'Sí: entre 8 franjas hay 7 cortes de 50 m, o sea 350 m.'],
+   ['¿Cuál es la fracción del lote que le corresponde a cada hermano?',true,'Sí: 1/8.']
+  ]},
+ {id:'C',t:'Caso C · Se dice cómo se corta y a quién le toca, pero falta un dato',
+  e:'Una cooperativa adquirió un lote rectangular de 50 metros de largo y 120 metros de ancho para distribuirlo en partes iguales entre sus asociados. El reparto se hará en franjas iguales, todas paralelas al lado de 50 metros. El lote colinda con una carretera a lo largo de uno de sus lados de 50 metros. Las franjas se asignan a los asociados en el orden en que aparecen en el acta, empezando por la que da a la carretera.',
+  q:[
+   ['¿Cuál de los asociados recibe la porción que da a la carretera?',true,'Sí: el primero en el orden del acta.'],
+   ['¿Cuál es la fracción del lote que le corresponde a cada asociado?',false,'No se puede. El enunciado no dice cuántos asociados son: con 8 sería 1/8; con 10, 1/10.'],
+   ['¿Cuál es el área del lote?',true,'Sí: 50 × 120 = 6.000 m².'],
+   ['¿Cuál es el perímetro de la porción que le corresponde a cada asociado?',false,'No se puede. Con 8 asociados las franjas miden 50 m × 15 m (130 m); con 10 miden 50 m × 12 m (124 m).']
+  ]},
+ {id:'D',t:'Caso D · Solo se da el área',
+  e:'Para un ejercicio de su clase de geometría, Camila modeló un lote rectangular de 6.000 metros cuadrados de área que se reparte en partes iguales entre los 8 beneficiarios. El reparto se hará en franjas iguales, todas paralelas al lado más corto.',
+  q:[
+   ['¿Cuál es el perímetro del lote?',false,'No se puede. Un lote de 50 m × 120 m tiene 340 m de perímetro; uno de 60 m × 100 m tiene 320 m. Los dos miden 6.000 m².'],
+   ['¿Cuál es el área de la porción que le corresponde a cada beneficiario?',true,'Sí: 6.000 ÷ 8 = 750 m².'],
+   ['¿Cuál es la fracción del lote que le corresponde a cada beneficiario?',true,'Sí: 1/8.'],
+   ['¿Cuál es la medida del lado más largo del lote?',false,'No se puede: puede ser 120 m (50 × 120), 100 m (60 × 100) o 150 m (40 × 150).']
+  ]}
+];
+function drawCasos(){
+  $('casos').innerHTML=CASOS.map(function(c){
+    var st=S.casos[c.id]||{};
+    return '<div class="caso" id="caso_'+c.id+'"><h3>'+esc(c.t)+'</h3><p class="enun">'+esc(c.e)+'</p>'+
+      c.q.map(function(q,i){
+        var nm='cs_'+c.id+'_'+i;
+        return '<div class="qcmp"><p class="q">'+esc(q[0])+'</p><div class="seg">'+
+          '<label><input type="radio" name="'+nm+'" value="si"> Sí se puede</label>'+
+          '<label><input type="radio" name="'+nm+'" value="no"> No se puede</label>'+
+          '</div><div class="fb" id="fb_'+nm+'"></div></div>';
+      }).join('')+
+      '<div class="row"><button type="button" class="small" data-caso="'+c.id+'">Comprobar el caso '+c.id+'</button></div>'+
+      '<div class="msg" id="msg_caso_'+c.id+'"></div></div>';
+  }).join('');
+  CASOS.forEach(function(c){var st=S.casos[c.id];if(st&&st.r){st.r.forEach(function(v,i){if(v)setRadio('cs_'+c.id+'_'+i,v);});if(st.checked)checkCaso(c.id,true);}});
+}
+function checkCaso(id,silent){
+  var c=CASOS.filter(function(x){return x.id===id;})[0],r=[],ok=0,miss=false;
+  c.q.forEach(function(q,i){var v=radio('cs_'+id+'_'+i);r.push(v);if(!v)miss=true;});
+  if(miss){if(!silent)msg('msg_caso_'+id,'Responda las cuatro preguntas antes de comprobar.','warn');return;}
+  c.q.forEach(function(q,i){
+    var good=(r[i]==='si')===q[1];if(good)ok++;
+    var fb=$('fb_cs_'+id+'_'+i);fb.className='fb '+(good?'ok':'bad');
+    fb.textContent=(good?'Correcto. ':'Revise. ')+q[2];
+  });
+  S.casos[id]={r:r,checked:true,ok:ok};
+  msg('msg_caso_'+id,'Acertó '+ok+' de 4. Si falló alguna, busque las dos situaciones que muestran por qué.',ok===4?'ok':'warn');
+  if(!silent)save('caso-'+id);
+}
+
+/* ---------- resumen ---------- */
+function resumen(){
+  var L=[];
+  L.push('ACTIVIDAD ¿ALCANZAN LOS DATOS? (ítem MAT-2026-1-010)');
+  L.push('Nombre y trío: '+(S.nombre||'(sin escribir)'));
+  if(S.p1)L.push('','PRIMERA DECISIÓN: '+S.p1.op+' ('+CONF[S.p1.conf]+')','Razón: '+S.p1.why);
+  if(S.repartos.length){L.push('','REPARTOS GUARDADOS: '+S.repartos.length);
+    S.repartos.forEach(function(r,i){L.push((i+1)+'. '+r.desc+' | perímetro de cada parte: '+r.perParte+' | hijo 1: '+r.hijo1);});}
+  if(S.p3&&S.p3.regla)L.push('','REGLA DEL TRÍO: '+S.p3.regla,'Respuesta a Sara: '+S.p3.sara);
+  if(S.p4)L.push('','SEGUNDA DECISIÓN: '+S.p4.op+' ('+CONF[S.p4.conf]+')','Justificación: '+S.p4.why);
+  if(S.p5)L.push('','LO QUE ENTIENDO AHORA: '+S.p5);
+  var cs=CASOS.filter(function(c){return S.casos[c.id]&&S.casos[c.id].checked;});
+  if(cs.length){var t=0;cs.forEach(function(c){t+=S.casos[c.id].ok;});
+    L.push('','SESIÓN 2. Casos comprobados: '+cs.map(function(c){return c.id+' ('+S.casos[c.id].ok+'/4)';}).join(', ')+'. Total: '+t+' de '+(cs.length*4)+'.');}
+  if(S.contraste)L.push('Comparación de casos: '+S.contraste);
+  if(S.crear)L.push('','MI PREGUNTA','Enunciado: '+S.crear.en,'Sí se pueden responder: '+S.crear.si,'No se puede responder: '+S.crear.no,'Contraejemplo: '+S.crear.contra);
+  return L.join('\n');
+}
+
+/* ---------- estado de los pasos ---------- */
+function lock(id,locked){$(id).classList.toggle('locked',locked);}
+function refresh(){
+  var s2=!!(S.p5||S.s2);
+  lock('s2',!S.p1);
+  lock('s3',S.repartos.length<2);
+  lock('s4',!(S.p3&&S.p3.regla));
+  lock('s5',!S.p4);
+  lock('s6',!s2);lock('s7',!s2);
+  lock('s8',!S.p1);
+  drawTable();
+  if(S.p1)$('p1recap').innerHTML='Su primera decisión fue <strong>'+S.p1.op+'</strong> ('+CONF[S.p1.conf]+'): «'+esc(S.p1.why)+'».';
+  if(S.p4)personal();
+  $('resumen').value=resumen();
+  var steps=[['s0','Inicio',!!S.nombre],['s1','1',!!S.p1],['s2','2',S.repartos.length>=3],['s3','3',!!(S.p3&&S.p3.regla)],
+    ['s4','4',!!S.p4],['s5','5',!!S.p5],['s6','6',!!S.p6],['s7','7',!!S.crear],['s8','8',false]];
+  $('nav').innerHTML=steps.map(function(s){
+    var locked=$(s[0]).classList.contains('locked');
+    var label=s[0]==='s0'?s[1]:'Paso '+s[1];
+    return '<a href="#'+s[0]+'" class="'+(s[2]?'done':(locked?'closed':'open'))+'" aria-label="'+label+(s[2]?', hecho':(locked?', cerrado':''))+'">'+label+'</a>';
+  }).join('');
+}
+function personal(){
+  var a=S.p1.op,b=S.p4.op,t;
+  if(b==='B'){
+    t=a==='B'?'Mantuvo la respuesta de la ubicación. Compare su razón de la primera vez con la de ahora: ¿era la misma?'
+             :'Cambió de '+a+' a B. Escriba abajo qué reparto o qué dato del enunciado lo hizo cambiar.';
+  }else{
+    var why={A:'Eligió la pregunta por el área del lote. Esa sí se responde: 50 × 120 = 6.000 m². En su tabla, la columna «Área del lote» fue igual en todas las filas.',
+             C:'Eligió la pregunta por el perímetro del lote. Esa sí se responde: 2 × (50 + 120) = 340 m. En su tabla, esa columna no cambió.',
+             D:'Eligió la pregunta por la fracción. Esa sí se responde: 1/8, porque las partes son iguales. La fracción dice cuánto le toca a cada hijo, no dónde. En su tabla la fracción fue 1/8 en todas las filas, pero la parte del hijo 1 cambió de lugar.'};
+    t=why[b];
+  }
+  $('p5personal').textContent=t;
+}
+
+/* ---------- eventos ---------- */
+$('nombre').value=S.nombre;
+$('nombre').addEventListener('change',function(){S.nombre=this.value.trim();save();});
+
+if(S.p1){setRadio('p1op',S.p1.op);setRadio('p1conf',S.p1.conf);$('p1why').value=S.p1.why;}
+$('p1save').addEventListener('click',function(){
+  var op=radio('p1op'),cf=radio('p1conf'),why=$('p1why').value.trim();
+  if(!op||!cf){msg('p1msg','Elija una respuesta y qué tan seguro está.','warn');return;}
+  if(why.length<10){msg('p1msg','Escriba al menos una frase con su razón.','warn');return;}
+  if(S.p1&&S.p1.op!==op){msg('p1msg','Su primera decisión ya estaba guardada como '+S.p1.op+'. Puede cambiar de opinión en el paso 4.','warn');setRadio('p1op',S.p1.op);return;}
+  S.p1={op:op,conf:cf,why:why};save('p1');
+  msg('p1msg','Decisión guardada. Aquí no se dice si es correcta: lo van a averiguar ustedes en el paso 2.','ok');
+});
+
+$('presets').addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;var k=b.getAttribute('data-p');
+  if(k==='tri')setRep('V',[],true);else setRep(PRE[k][0],PRE[k][1].slice(),false);
+});
+$('lote').addEventListener('click',function(e){var i=e.target.getAttribute('data-i');if(i!==null){sel=+i;info();}});
+$('shuffle').addEventListener('click',shuffle);
+$('build').addEventListener('click',function(){
+  var raw=$('comp').value.replace(/\s/g,'');
+  if(!/^\d+(\+\d+)*$/.test(raw)){msg('buildmsg','Escriba números separados por «+», por ejemplo 2+6.','warn');return;}
+  var comp=raw.split('+').map(Number);
+  if(comp.some(function(k){return k<1;})){msg('buildmsg','Cada franja debe tener al menos una parte.','warn');return;}
+  var sum=comp.reduce(function(a,b){return a+b;},0);
+  if(sum!==8){msg('buildmsg','Los números suman '+sum+'; deben sumar 8, uno por cada hijo.','warn');return;}
+  setRep($('orient').value,comp,false);
+  msg('buildmsg','Listo: '+cur.desc+'. Todas las partes miden 750 m².','ok');
+});
+$('savep').addEventListener('click',function(){
+  var r=record();
+  if(S.repartos.some(function(x){return x.key===r.key;})){msg('savemsg','Ese reparto ya está en la tabla, con el hijo 1 en el mismo lugar. Prueben otro.','warn');return;}
+  if(S.repartos.length>=10){msg('savemsg','La tabla ya tiene 10 repartos. Es suficiente para comparar.','warn');return;}
+  S.repartos.push(r);save('reparto');
+  msg('savemsg','Reparto '+S.repartos.length+' guardado.'+(S.repartos.length<3?' Busquen otro distinto.':''),'ok');
+});
+var clearArmed=false;
+$('clearp').addEventListener('click',function(){
+  if(!clearArmed){clearArmed=true;this.textContent='Toque otra vez para borrar la tabla';var b=this;setTimeout(function(){clearArmed=false;b.textContent='Borrar la tabla';},4000);return;}
+  S.repartos=[];clearArmed=false;this.textContent='Borrar la tabla';save('borrar-tabla');
+});
+
+$('p3check').addEventListener('click',checkCmp);
+$('p3save').addEventListener('click',function(){
+  var rg=$('p3regla').value.trim(),sa=$('p3sara').value.trim();
+  if(rg.length<15||sa.length<10){msg('p3savemsg','Escriban la regla y la respuesta a Sara.','warn');return;}
+  S.p3=S.p3||{};S.p3.regla=rg;S.p3.sara=sa;save('p3');
+  msg('p3savemsg','Paso 3 guardado. Ahora, cada uno por su cuenta, el paso 4.','ok');
+});
+
+if(S.p4){setRadio('p4op',S.p4.op);setRadio('p4conf',S.p4.conf);$('p4why').value=S.p4.why;}
+$('p4save').addEventListener('click',function(){
+  var op=radio('p4op'),cf=radio('p4conf'),why=$('p4why').value.trim();
+  if(!op||!cf){msg('p4msg','Elija una respuesta y qué tan seguro está.','warn');return;}
+  if(why.length<15){msg('p4msg','Justifique con un dato del enunciado o con uno de sus repartos.','warn');return;}
+  S.p4={op:op,conf:cf,why:why};save('p4');
+  msg('p4msg','Segunda decisión guardada. La explicación está en el paso 5.','ok');
+});
+
+$('p5ref').value=S.p5||'';
+$('p5save').addEventListener('click',function(){
+  var t=$('p5ref').value.trim();
+  if(t.length<10){msg('p5msg','Escriba al menos una frase.','warn');return;}
+  S.p5=t;save('p5');msg('p5msg',AV?'Sesión 1 terminada. Sus respuestas ya están guardadas en Moodle.':'Sesión 1 terminada. Copie el resumen del paso 8 en Moodle.','ok');
+});
+
+$('unlock2').addEventListener('click',function(){S.s2=true;save('s2');});
+$('casos').addEventListener('click',function(e){var b=e.target.closest('button[data-caso]');if(b)checkCaso(b.getAttribute('data-caso'));});
+$('casos').addEventListener('change',function(e){
+  var m=/^cs_([A-D])_(\d)$/.exec(e.target.name||'');if(!m)return;
+  var st=S.casos[m[1]]||{r:[null,null,null,null]};st.r=st.r||[null,null,null,null];st.r[+m[2]]=e.target.value;st.checked=false;S.casos[m[1]]=st;
+  persist();
+});
+$('contraste').value=S.contraste||'';
+$('p6save').addEventListener('click',function(){
+  var t=$('contraste').value.trim(),n=CASOS.filter(function(c){return S.casos[c.id]&&S.casos[c.id].checked;}).length;
+  if(n<4){msg('p6msg','Comprueben los cuatro casos antes de guardar ('+n+' de 4).','warn');return;}
+  if(t.length<15){msg('p6msg','Escriban qué frase hizo la diferencia en cada caso.','warn');return;}
+  S.contraste=t;S.p6=true;save('p6');msg('p6msg','Paso 6 guardado.','ok');
+});
+
+if(S.crear){$('c_en').value=S.crear.en;$('c_si').value=S.crear.si;$('c_no').value=S.crear.no;$('c_contra').value=S.crear.contra;}
+$('p7save').addEventListener('click',function(){
+  var c={en:$('c_en').value.trim(),si:$('c_si').value.trim(),no:$('c_no').value.trim(),contra:$('c_contra').value.trim()};
+  if(!c.en||!c.si||!c.no||!c.contra){msg('p7msg','Complete los cuatro campos.','warn');return;}
+  S.crear=c;save('p7');msg('p7msg','Pregunta guardada. Intercambien celular con otra pareja.','ok');
+});
+
+$('copy').addEventListener('click',function(){
+  var ta=$('resumen'),txt=ta.value;
+  function fallback(){ta.removeAttribute('readonly');ta.select();ta.setSelectionRange(0,txt.length);
+    var ok=false;try{ok=document.execCommand('copy');}catch(e){}
+    ta.setAttribute('readonly','');
+    msg('copymsg',ok?'Resumen copiado.':'No se pudo copiar solo: mantenga presionado el texto, elija «Seleccionar todo» y «Copiar».',ok?'ok':'warn');}
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(txt).then(function(){msg('copymsg','Resumen copiado.','ok');},fallback);}
+  else fallback();
+});
+var resetArmed=false;
+$('reset').addEventListener('click',function(){
+  if(!resetArmed){resetArmed=true;this.textContent='Toque otra vez para borrar todo';var b=this;setTimeout(function(){resetArmed=false;b.textContent='Borrar todas mis respuestas';},4000);return;}
+  if(AV){S=blank();AV.save(S,'reset').then(function(){location.reload();});return;}
+  try{localStorage.removeItem(KEY);}catch(e){}
+  location.reload();
+});
+
+if(AV){
+  $('sub').textContent='Actividad en ocho pasos sobre una pregunta del ICFES. Sus respuestas se guardan solas en Moodle y su docente las ve mientras trabaja.';
+  $('s8intro').textContent='Sus respuestas ya están guardadas en Moodle. Este resumen es una copia para su cuaderno, o para entregarla si su docente se la pide.';
+  $('pie').textContent='Ítem MAT-2026-1-010 (Saber 11, Matemáticas). Las respuestas se guardan en Moodle con su usuario.';
+  if(!S.nombre&&AV.fullname)$('nombre').placeholder='Ejemplo: '+AV.fullname+' (yo), Andrés, Sofía';
+}
+setRep('V',[1,1,1,1,1,1,1,1],false);
+drawCmp();drawCasos();refresh();
+if(S.p3&&S.p3.regla){$('p3more').hidden=false;$('p3regla').value=S.p3.regla;$('p3sara').value=S.p3.sara||'';}
+})();
+</script>
+</body>
+</html>

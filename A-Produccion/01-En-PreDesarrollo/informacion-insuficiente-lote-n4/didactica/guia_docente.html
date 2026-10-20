@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guía: ¿Alcanzan los datos?</title>
+<meta name="description" content="Guía docente para enseñar el ítem MAT-2026-1-010 en 10.° y 11.°: análisis del ítem, matriz de 21 métodos con su evidencia, secuencia de dos sesiones y criterios de comprensión.">
+<style>
+:root{
+  --bg:#f7f5ef; --surface:#ffffff; --ink:#1d2125; --muted:#59616a; --line:#d8d2c3;
+  --accent:#2e6b4f; --accent-soft:#e2eee7; --warn:#8f4e10; --warn-soft:#f6e8d7;
+  --bad:#a3372d; --bad-soft:#f7e2df; --lot:#ece4cf; --lot-stroke:#6b5a33; --hl:#2e6b4f;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14171a; --surface:#1c2125; --ink:#e6e8e9; --muted:#a2aab1; --line:#353c42;
+    --accent:#7cc3a0; --accent-soft:#1e3328; --warn:#e2a66b; --warn-soft:#3a2a19;
+    --bad:#ee918a; --bad-soft:#3c2220; --lot:#3a3426; --lot-stroke:#cdbd91; --hl:#7cc3a0;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14171a; --surface:#1c2125; --ink:#e6e8e9; --muted:#a2aab1; --line:#353c42;
+  --accent:#7cc3a0; --accent-soft:#1e3328; --warn:#e2a66b; --warn-soft:#3a2a19;
+  --bad:#ee918a; --bad-soft:#3c2220; --lot:#3a3426; --lot-stroke:#cdbd91; --hl:#7cc3a0;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif}
+main{max-width:860px;margin:0 auto;padding:16px 16px 72px}
+h1,h2,h3{font-family:"Noto Serif",Georgia,"Times New Roman",serif;line-height:1.25}
+h1{font-size:1.9rem;margin:.3em 0 .2em}
+h2{font-size:1.35rem;margin:2.2em 0 .6em;padding-top:.6em;border-top:1px solid var(--line)}
+h3{font-size:1.08rem;margin:1.4em 0 .4em}
+p{margin:.55em 0}
+a{color:var(--accent)}
+code{overflow-wrap:anywhere}
+.kicker{font-size:.8rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--accent)}
+.lede{font-size:1.06rem;color:var(--muted)}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin:12px 0}
+.box.key{border-color:var(--accent)}
+.box.warn{background:var(--warn-soft);border-color:transparent}
+.item p{margin:.35em 0}
+.item ol{list-style:upper-alpha;padding-left:1.6em;margin:.4em 0}
+.item li{margin:.2em 0}
+nav.toc ol{columns:2;column-gap:28px;padding-left:1.2em;margin:.4em 0}
+nav.toc li{margin:.15em 0;break-inside:avoid}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:.88rem;background:var(--surface)}
+table.wide{min-width:1100px}
+table.mid{min-width:640px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--bg);font-weight:600;position:sticky;top:0}
+tr.grp td{background:var(--accent-soft);font-weight:600}
+.badge{display:inline-block;font-size:.8rem;font-weight:600;padding:1px 7px;border-radius:999px;margin-top:4px;white-space:nowrap}
+.v-ok{background:var(--accent-soft);color:var(--ink)}
+.v-sec{background:var(--warn-soft);color:var(--ink)}
+.v-no{background:var(--bad-soft);color:var(--ink)}
+.v-none{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.use{font-weight:600}
+.figs{display:grid;grid-template-columns:1fr;gap:12px;margin:10px 0}
+.figs figure{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px}
+.figs figcaption{font-size:.88rem;color:var(--muted);margin-top:6px}
+svg.lot{width:100%;height:auto;display:block}
+svg.lot .p{fill:var(--lot);stroke:var(--lot-stroke);stroke-width:.5}
+svg.lot .h{fill:var(--hl);stroke:var(--lot-stroke);stroke-width:.5}
+svg.lot .o{fill:none;stroke:var(--lot-stroke);stroke-width:1}
+svg.lot .g{stroke:var(--line);stroke-width:.3}
+svg.lot text{fill:var(--muted);font-size:4px}
+ul.tight li,ol.tight li{margin:.25em 0}
+.phrases li{margin:.4em 0}
+.small{font-size:.9rem;color:var(--muted)}
+.refs li{margin:.45em 0;font-size:.92rem}
+.print-only{display:none}
+footer{color:var(--muted);font-size:.85rem;margin-top:36px}
+@media (min-width:720px){ .figs{grid-template-columns:repeat(3,1fr)} }
+@media (max-width:560px){ nav.toc ol{columns:1} }
+@media print{
+  :root,:root[data-theme="dark"],:root:not([data-theme="light"]){
+    --bg:#ffffff; --surface:#ffffff; --ink:#111111; --muted:#444444; --line:#bbbbbb;
+    --accent:#1f5a40; --accent-soft:#eeeeee; --warn:#6b3a0b; --warn-soft:#f3f3f3;
+    --bad:#8a2b22; --bad-soft:#f3f3f3; --lot:#f2ecdc; --lot-stroke:#4a3e22; --hl:#1f5a40;
+  }
+  nav.toc{display:none}
+  .tablewrap{overflow:visible}
+  table.wide,table.mid{min-width:0;font-size:.8rem}
+  th{position:static}
+  #papel{break-before:page}
+  .print-only{display:block}
+}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <span class="kicker">Guía docente · no compartir con estudiantes (contiene la clave)</span>
+  <h1>¿Alcanzan los datos?</h1>
+  <p class="lede">Cómo enseñar en 10.° y 11.° el ítem MAT-2026-1-010 con poca intervención del docente: análisis del ítem, 21 métodos comparados con su evidencia y una secuencia de dos sesiones lista para aplicar.</p>
+</header>
+
+<div class="box key">
+  <p><strong>En una frase.</strong> En lugar de guiar con preguntas (método socrático), la propuesta hace que <strong>cada estudiante se comprometa por escrito antes de hablar</strong>, que <strong>los tríos construyan ellos mismos los contraejemplos</strong> en un lote interactivo y que <strong>la regla se formule al final, con sus repartos</strong>. El docente lanza, observa, usa tres frases y cierra.</p>
+  <p class="small">Material: la «Actividad en vivo» de Moodle «¿Alcanzan los datos?», que guarda cada respuesta y le muestra un panel en vivo, y esta guía. Sin Moodle, el mismo archivo <code>actividad_estudiante.html</code> funciona solo en el celular.</p>
+</div>
+
+<nav class="toc" aria-label="Contenido">
+  <ol>
+    <li><a href="#uso">Cómo usarla en Moodle</a></li>
+    <li><a href="#item">El ítem canónico</a></li>
+    <li><a href="#analisis">Análisis matemático</a></li>
+    <li><a href="#dificultad">Por qué es difícil en 10.° y 11.°</a></li>
+    <li><a href="#matriz">Matriz de 21 métodos</a></li>
+    <li><a href="#recomendacion">Recomendación</a></li>
+    <li><a href="#secuencia">Secuencia de las dos sesiones</a></li>
+    <li><a href="#errores">Cómo se hace visible cada error</a></li>
+    <li><a href="#transferencia">Casos de transferencia y su clave</a></li>
+    <li><a href="#evidencia">Cómo saber si comprendieron</a></li>
+    <li><a href="#limites">Límites de esta propuesta</a></li>
+    <li><a href="#papel">Plan B en papel</a></li>
+    <li><a href="#referencias">Referencias</a></li>
+  </ol>
+</nav>
+
+<!-- 1 -->
+<h2 id="uso">1. Cómo usarla en Moodle</h2>
+<ol class="tight">
+  <li><strong>En el curso, «Agregar una actividad» → «Actividad en vivo»</strong> y elija «¿Alcanzan los datos? (MAT-2026-1-010)». Cada estudiante entra con su usuario y toca «Abrir la actividad»: la actividad se abre a pantalla completa y cada respuesta se guarda sola a su nombre. Si se cae la red del aula, las respuestas esperan en el celular y se envían al volver.</li>
+  <li><strong>En su computador, abra «Abrir el panel en vivo».</strong> Ahí ve quién está conectado, en qué paso va cada estudiante, las barras de la primera y la segunda decisión, lo que escribió cada uno y el aviso «sin avance hace N min». Desde cada tarjeta, o marcando varias (un trío), puede enviar un mensaje: le aparece al estudiante en su pantalla en pocos segundos, y usted ve «visto» cuando lo lee. Las tres frases permitidas están como frases rápidas.</li>
+  <li><strong>Pruébela antes</strong> con «Ver la actividad (vista previa)», que no guarda nada, y en un celular conectado a la red del aula.</li>
+  <li><strong>No publique esta guía para los estudiantes.</strong> Contiene la clave y la secuencia.</li>
+</ol>
+<p class="small">El panel muestra respuestas de menores de edad: no lo proyecte. Si no hay Moodle disponible, suba <code>actividad_estudiante.html</code> como recurso «Archivo» (Mostrar: «Abrir»). Así las respuestas quedan solo en cada celular y se copian a una tarea con el resumen del paso 8.</p>
+
+<!-- 2 -->
+<h2 id="item">2. El ítem canónico (MAT-2026-1-010)</h2>
+<p>Es la instancia que el <code>.Rmd</code> llama canónica: reproduce el cuadernillo palabra por palabra, sin trazados, carreteras ni asignaciones. Fuente: <code>ITEM_OFICIAL.md</code> del subproyecto.</p>
+<div class="box item">
+  <p>Un empresario compró un lote rectangular de 50 metros de largo y 120 metros de ancho, para repartirlo en partes iguales entre sus 8 hijos. Con base en esta información, ¿cuál de las siguientes preguntas <strong>NO</strong> es posible responder?</p>
+  <ol>
+    <li>¿Cuál es el área del lote del empresario?</li>
+    <li><strong>¿Cuál es la ubicación que le corresponde a cada hijo dentro del lote?</strong> (clave)</li>
+    <li>¿Cuál es el perímetro del lote del empresario?</li>
+    <li>¿Cuál es la fracción del lote que le corresponde a cada hijo?</li>
+  </ol>
+</div>
+<p class="small">A y C dicen «del empresario»; B y D no. Esa asimetría es del original y no se corrige.</p>
+<div class="tablewrap"><table class="mid">
+  <tr><th>Competencia</th><td>Argumentación</td><th>Componente</th><td>Geométrico-métrico</td></tr>
+  <tr><th>Nivel</th><td>4</td><th>Grado sugerido</th><td>6.°-7.°</td></tr>
+  <tr><th>Afirmación</th><td colspan="3">Valida procedimientos y estrategias matemáticas utilizadas para dar solución a problemas.</td></tr>
+  <tr><th>Evidencia</th><td colspan="3">Establece la validez o pertinencia de una solución propuesta a un problema dado.</td></tr>
+  <tr><th>Descriptor</th><td colspan="3">D4.9 — Justifica si hay falta de información en una situación problema para tomar una decisión.</td></tr>
+</table></div>
+
+<!-- 3 -->
+<h2 id="analisis">3. Análisis matemático</h2>
+<div class="tablewrap"><table class="mid">
+  <thead><tr><th>Pregunta</th><th>¿Se puede responder?</th><th>Por qué</th><th>Qué piensa quien la elige</th></tr></thead>
+  <tbody>
+  <tr><td>Área del lote</td><td>Sí: 6.000 m²</td><td>50 × 120 con las dos medidas dadas.</td><td>La descarta como incalculable sin ver que sale directo de los dos datos.</td></tr>
+  <tr><td>Perímetro del lote</td><td>Sí: 340 m</td><td>2 × (50 + 120).</td><td>No reconoce que el perímetro se calcula con las dos medidas.</td></tr>
+  <tr><td>Fracción de cada hijo</td><td>Sí: 1/8</td><td>Partes iguales entre 8.</td><td>Confunde la fracción (el tamaño) con la ubicación física.</td></tr>
+  <tr><td><strong>Ubicación de cada hijo</strong></td><td><strong>No</strong></td><td>El enunciado no dice cómo se corta ni a quién le toca cada parte.</td><td>—</td></tr>
+  </tbody>
+</table></div>
+
+<div class="box key">
+  <p><strong>La idea que hay que construir.</strong> Una pregunta está <em>determinada</em> cuando todas las situaciones que cumplen el enunciado dan la misma respuesta. Está <em>indeterminada</em> cuando existen al menos dos situaciones que cumplen el enunciado y responden distinto. La prueba de que falta información es un <strong>contraejemplo</strong>.</p>
+  <p>«Partes iguales» significa iguales en tamaño, no en forma ni en posición.</p>
+</div>
+
+<div class="figs">
+  <figure>
+    <svg class="lot" viewBox="-2 -2 124 60" role="img" aria-label="Ocho franjas verticales de 15 por 50 metros; la del hijo 1 a la izquierda">
+      <rect class="h" x="0" y="0" width="15" height="50"/><rect class="p" x="15" y="0" width="15" height="50"/><rect class="p" x="30" y="0" width="15" height="50"/><rect class="p" x="45" y="0" width="15" height="50"/><rect class="p" x="60" y="0" width="15" height="50"/><rect class="p" x="75" y="0" width="15" height="50"/><rect class="p" x="90" y="0" width="15" height="50"/><rect class="p" x="105" y="0" width="15" height="50"/>
+      <rect class="o" x="0" y="0" width="120" height="50"/><text x="60" y="56">120 m</text>
+    </svg>
+    <figcaption>8 franjas de 15 m × 50 m. Perímetro de cada parte: 130 m.</figcaption>
+  </figure>
+  <figure>
+    <svg class="lot" viewBox="-2 -2 124 60" role="img" aria-label="Ocho franjas horizontales de 120 por 6,25 metros; la del hijo 1 abajo">
+      <rect class="p" x="0" y="0" width="120" height="6.25"/><rect class="p" x="0" y="6.25" width="120" height="6.25"/><rect class="p" x="0" y="12.5" width="120" height="6.25"/><rect class="p" x="0" y="18.75" width="120" height="6.25"/><rect class="p" x="0" y="25" width="120" height="6.25"/><rect class="p" x="0" y="31.25" width="120" height="6.25"/><rect class="p" x="0" y="37.5" width="120" height="6.25"/><rect class="h" x="0" y="43.75" width="120" height="6.25"/>
+      <rect class="o" x="0" y="0" width="120" height="50"/><text x="60" y="56">120 m</text>
+    </svg>
+    <figcaption>8 franjas de 120 m × 6,25 m. Perímetro de cada parte: 252,5 m.</figcaption>
+  </figure>
+  <figure>
+    <svg class="lot" viewBox="-2 -2 124 60" role="img" aria-label="Cuadrícula de 4 columnas por 2 filas, partes de 30 por 25 metros; la del hijo 1 abajo a la izquierda">
+      <rect class="p" x="0" y="0" width="30" height="25"/><rect class="p" x="30" y="0" width="30" height="25"/><rect class="p" x="60" y="0" width="30" height="25"/><rect class="p" x="90" y="0" width="30" height="25"/>
+      <rect class="h" x="0" y="25" width="30" height="25"/><rect class="p" x="30" y="25" width="30" height="25"/><rect class="p" x="60" y="25" width="30" height="25"/><rect class="p" x="90" y="25" width="30" height="25"/>
+      <rect class="o" x="0" y="0" width="120" height="50"/><text x="60" y="56">120 m</text>
+    </svg>
+    <figcaption>Cuadrícula de 30 m × 25 m. Perímetro de cada parte: 110 m.</figcaption>
+  </figure>
+</div>
+<p>Los tres repartos cumplen el enunciado. En los tres, cada parte mide 750 m² y es 1/8 del lote, pero la parte del hijo 1 (resaltada) cambia de forma y de lugar. Además, aunque los cortes fueran fijos, el enunciado tampoco dice qué parte le toca a cada hijo.</p>
+
+<!-- 4 -->
+<h2 id="dificultad">4. Por qué es difícil en 10.° y 11.° si las cuentas son de 6.°</h2>
+<p>El grado sugerido oficial es 6.°-7.° y el ítem es de Nivel 4. Para un estudiante de 10.° u 11.° las cuentas son triviales; lo difícil es <strong>decidir si los datos alcanzan</strong> antes de calcular. Dos resultados de investigación orientan el diseño:</p>
+<ul class="tight">
+  <li><strong>La tendencia a calcular aunque falten datos es fuerte.</strong> En una prueba con estudiantes de 5.° grado, solo el 14 %, el 3 % y el 5 % de las respuestas a tres problemas «problemáticos» tuvieron en cuenta la situación real; el resto aplicó la operación directamente (Verschaffel, De Corte y Lasure, 1994, citado por Fagnant y Auquière, 2018). La población es de primaria: el porcentaje no se traslada a 10.°, pero el mecanismo es el mismo que lleva a elegir la fracción.</li>
+  <li><strong>Avisar no basta.</strong> Advertir a los estudiantes que la prueba tenía problemas «raros» o acompañarlos de ilustraciones no aumentó las respuestas realistas (Dewolf et al., 2014, citado por Fagnant y Auquière, 2018). Por eso la actividad no dice «cuidado, hay trampa»: el estudiante construye las situaciones que la revelan.</li>
+</ul>
+
+<!-- 5 -->
+<h2 id="matriz">5. Matriz de 21 métodos</h2>
+<p>Cada cifra viene de una fuente abierta en esta investigación. La etiqueta dice hasta dónde se verificó:</p>
+<ul class="tight small">
+  <li><span class="badge v-ok">Verificada: resumen</span> cifras leídas en el resumen original del artículo.</li>
+  <li><span class="badge v-sec">Verificada: fuente secundaria</span> cifras leídas en una reseña o un artículo que cita el original.</li>
+  <li><span class="badge v-no">No verificada</span> solo se encontró en resultados de búsqueda; no se usa para decidir.</li>
+  <li><span class="badge v-none">Sin evidencia localizada</span> no se encontró estudio con resultados de aprendizaje.</li>
+</ul>
+<p class="small">Las cifras d y g son diferencias de medias estandarizadas. Vienen de poblaciones distintas (universidad, primaria, 7.° grado en EE. UU.) y no se suman ni se trasladan tal cual a su curso.</p>
+
+<div class="tablewrap"><table class="wide">
+<thead><tr>
+  <th style="width:12%">Método</th><th style="width:10%">Intervención docente</th><th style="width:24%">Evidencia</th>
+  <th style="width:12%">Ajuste a este ítem</th><th style="width:8%">Costo</th><th style="width:12%">Riesgos</th>
+  <th style="width:10%">Participación de todos</th><th style="width:12%">En la propuesta</th>
+</tr></thead>
+<tbody>
+<tr class="grp"><td colspan="8">Referencia</td></tr>
+<tr><td>Método socrático</td><td>Alta: formula cada pregunta, decide quién responde y cuándo avanzar.</td>
+  <td>Estudios pequeños de investigación-acción en secundaria y universidad; sin tamaño de efecto.<br><span class="badge v-no">No verificada</span></td>
+  <td>Medio: puede llegar al contraejemplo, pero lo produce la pregunta del docente.</td><td>Sin materiales; todo el tiempo del docente.</td>
+  <td>Responde quien ya sabe y el resto espera: lo que usted observó.</td><td>Secuencial: uno a la vez.</td><td class="use">Se reemplaza: sus preguntas quedan escritas en la página.</td></tr>
+
+<tr class="grp"><td colspan="8">Intentar antes de la explicación</td></tr>
+<tr><td>Fracaso productivo (resolver y luego instruir)</td><td>Media: diseña el problema, no ayuda en el intento, consolida al final.</td>
+  <td>Metaanálisis de 53 estudios y 166 comparaciones: g = 0,36 (IC 95 % 0,20–0,51); con alta fidelidad al diseño, g entre 0,37 y 0,58. En 2.°–5.° grado y en habilidades de dominio general favorece instruir primero (Sinha y Kapur, 2021).<br><span class="badge v-ok">Verificada: resumen</span></td>
+  <td>Alto: el ítem es el problema que se intenta antes de la explicación.</td><td>20–30 min.</td>
+  <td>Sin consolidación posterior la idea no se fija; en primaria el efecto se invierte.</td><td>Todos intentan; sin medición localizada.</td><td class="use">Núcleo de la sesión 1 (pasos 1 a 3).</td></tr>
+<tr><td>Invención con casos contrastados</td><td>Baja-media.</td>
+  <td>Dos experimentos con adolescentes (N = 128 y N = 120), física: igual rendimiento en problemas verbales que «explicar y practicar», mejor comprensión de la estructura y más transferencia; benefició a estudiantes de bajo y de alto rendimiento (Schwartz et al., 2011).<br><span class="badge v-ok">Verificada: resumen</span></td>
+  <td>Alto: los estudiantes generan los repartos que se contrastan.</td><td>Bajo.</td>
+  <td>Si los casos no difieren en lo que importa, no hay qué descubrir.</td><td>Sin evidencia localizada.</td><td class="use">Núcleo: el lote interactivo del paso 2.</td></tr>
+<tr><td>Comparación de casos</td><td>Baja-media: elige los casos y la consigna.</td>
+  <td>Metaanálisis de 57 experimentos y 336 pruebas: d = 0,50 (IC 95 % 0,44–0,56). Presentar el principio <em>después</em> de comparar rinde más (Alfieri, Nokes-Malach y Schunn, 2013).<br><span class="badge v-ok">Verificada: resumen</span></td>
+  <td>Alto.</td><td>Bajo.</td><td>Dar la regla antes de comparar.</td><td>Sin evidencia localizada.</td>
+  <td class="use">Núcleo: tabla del paso 2, comparación del paso 3 y casos del paso 6. La regla llega al final.</td></tr>
+<tr><td>Predecir-Observar-Explicar</td><td>Media.</td>
+  <td>Revisiones y tesis, sobre todo en ciencias, con métricas poco claras.<br><span class="badge v-no">No verificada</span></td>
+  <td>Medio.</td><td>Medio.</td><td>Evidencia de baja calidad.</td><td>Sin evidencia localizada.</td><td class="use">Solo la predicción (paso 1).</td></tr>
+
+<tr class="grp"><td colspan="8">Participación y discusión</td></tr>
+<tr><td>Instrucción entre pares (Mazur)</td><td>Media.</td>
+  <td>Curso universitario de genética: la discusión mejoró la respuesta individual a una pregunta equivalente, incluso en grupos donde nadie sabía la respuesta al inicio (Smith et al., 2009). Diez años en física universitaria con mejora conceptual y cuantitativa (Crouch y Mazur, 2001). Los resúmenes no dan tamaño de efecto.<br><span class="badge v-ok">Verificada: resumen</span></td>
+  <td>Alto: el ítem ya es de selección múltiple.</td><td>10–15 min; voto con los dedos, sin conexión.</td>
+  <td>Si el voto no es simultáneo, se copian. No se localizó evidencia en secundaria.</td><td>El voto individual obliga a todos a comprometerse.</td><td class="use">Primer voto (paso 1) y segunda decisión (paso 4).</td></tr>
+<tr><td>Aprendizaje cooperativo estructurado (pensar-pareja-compartir, roles)</td><td>Media.</td>
+  <td>Metaanálisis de 26 estudios en matemáticas: d = 0,59 (IC 95 % 0,38–0,80) en rendimiento y d = 0,16 en actitudes (Capar y Tarım, 2015).<br><span class="badge v-ok">Verificada: resumen</span></td>
+  <td>Medio-alto.</td><td>Bajo.</td><td>Si los roles no rotan, trabaja uno.</td><td>Cada integrante tiene una tarea.</td><td class="use">Tríos con roles rotativos (paso 2).</td></tr>
+<tr><td>Building Thinking Classrooms (Liljedahl)</td><td>Media-alta al inicio, baja después.</td>
+  <td>Investigación de diseño; no se localizó ensayo controlado ni tamaño de efecto.<br><span class="badge v-none">Sin evidencia localizada</span></td>
+  <td>Medio.</td><td>Alto: tableros verticales y rediseño del aula.</td><td>Sin datos.</td><td>Es su objetivo declarado; sin medición localizada.</td><td class="use">Solo la formación aleatoria de grupos.</td></tr>
+<tr><td>Cinco prácticas (Smith y Stein)</td><td>Alta en planeación, media en clase.</td>
+  <td>Marco para orquestar discusiones (Stein et al., 2008); no se localizó tamaño de efecto.<br><span class="badge v-no">No verificada</span></td>
+  <td>Medio: sirve para el cierre.</td><td>Planeación previa.</td><td>Exige anticipar respuestas.</td><td>Sin evidencia localizada.</td><td class="use">Cierre de la sesión 1: observar, seleccionar y ordenar repartos.</td></tr>
+<tr><td>Movimientos de discurso (talk moves)</td><td>Media-alta.</td>
+  <td>No se localizó estudio con efecto en aprendizaje.<br><span class="badge v-none">Sin evidencia localizada</span></td>
+  <td>Medio.</td><td>Práctica del docente.</td><td>Sin datos.</td><td>Su objetivo es que respondan unos a otros.</td><td class="use">Tres frases permitidas para el docente.</td></tr>
+
+<tr class="grp"><td colspan="8">Explicar y analizar ejemplos</td></tr>
+<tr><td>Autoexplicación</td><td>Baja.</td>
+  <td>Metaanálisis de 64 estudios, cerca de 6000 participantes: g = 0,55. El formato de opción múltiple rindió menos, con evidencia limitada (Bisra et al., 2018).<br><span class="badge v-sec">Verificada: fuente secundaria</span></td>
+  <td>Alto.</td><td>Bajo.</td><td>Rinde menos si se responde eligiendo en vez de escribiendo.</td><td>Cada uno escribe.</td><td class="use">Preguntas «¿por qué?» escritas en los pasos 1, 3, 4 y 5.</td></tr>
+<tr><td>Ejemplos resueltos</td><td>Baja.</td>
+  <td>Efecto de inversión de la pericia: con estudiantes que ya dominan el procedimiento, el ejemplo resuelto deja de ayudar (Kalyuga, 2007).<br><span class="badge v-no">No verificada</span></td>
+  <td>Bajo: en 10.° y 11.° el cálculo ya está dominado.</td><td>Bajo.</td><td>Copiar el procedimiento sin decidir.</td><td>Sin evidencia localizada.</td><td class="use">Descartado.</td></tr>
+<tr><td>Ejemplos erróneos</td><td>Baja si es autoguiado.</td>
+  <td>6.° y 7.° con tutor web: ventaja en la prueba diferida, no en la inmediata (Adams et al., 2014); ejemplos correctos e incorrectos en álgebra (Booth et al., 2013). Resultados no confirmados en los resúmenes.<br><span class="badge v-no">No verificada</span></td>
+  <td>Alto para la opción D.</td><td>Bajo.</td><td>Que el estudiante no detecte el error.</td><td>Sin evidencia localizada.</td><td class="use">El caso de Sara (paso 3).</td></tr>
+<tr><td>Práctica intercalada</td><td>Baja: los docentes la aplicaron sin formación.</td>
+  <td>Ensayo aleatorizado en 54 clases de 7.°: en una prueba sorpresa un mes después, 61 % frente a 38 %, d = 0,83 (Rohrer et al., 2020). Mide la elección de estrategia, no decisiones sobre suficiencia de datos.<br><span class="badge v-ok">Verificada: resumen</span></td>
+  <td>Medio-alto para la sesión 2.</td><td>Bajo.</td><td>Se probó en otro tipo de tarea.</td><td>Sin evidencia localizada.</td><td class="use">Los casos A a D mezclan preguntas que sí y que no.</td></tr>
+
+<tr class="grp"><td colspan="8">Argumentar y producir</td></tr>
+<tr><td>Contraejemplos (Lakatos, Komatsu)</td><td>Media.</td>
+  <td>Estudio cualitativo con 32 estudiantes de 9.° en Japón: dificultades para dibujar figuras que cumplan las condiciones y para justificar (Komatsu et al., 2017).<br><span class="badge v-no">No verificada</span></td>
+  <td>Muy alto: es la lógica de la clave.</td><td>Bajo.</td><td>Tratar el contraejemplo como «excepción» y no como refutación.</td><td>Sin evidencia localizada.</td><td class="use">La regla del paso 5 se enuncia como contraejemplo.</td></tr>
+<tr><td>Modelo de Toulmin</td><td>Alta.</td>
+  <td>Entrevistas con estudiantes de posgrado; no es un estudio de intervención (Inglis, Mejía-Ramos y Simpson, 2007).<br><span class="badge v-no">No verificada</span></td>
+  <td>Medio.</td><td>Bajo.</td><td>Sin datos.</td><td>Sin evidencia localizada.</td><td class="use">Opcional: «afirmo / porque / salvo que» en el cierre.</td></tr>
+<tr><td>Problemas con datos insuficientes («problemáticos»)</td><td>Alta en los experimentos de enseñanza.</td>
+  <td>5.° grado: 14 %, 3 % y 5 % de respuestas realistas en tres problemas (Verschaffel, De Corte y Lasure, 1994). Advertir o ilustrar no tuvo efecto (Dewolf et al., 2014). Ambas citadas por Fagnant y Auquière (2018).<br><span class="badge v-sec">Verificada: fuente secundaria</span></td>
+  <td>Muy alto: describe la tendencia a calcular aunque falten datos.</td><td>Bajo.</td><td>Población de primaria; no medido en 10.° y 11.°.</td><td>Sin evidencia localizada.</td><td class="use">Fundamento: la página no avisa; el estudiante construye la situación.</td></tr>
+<tr><td>Planteamiento de problemas</td><td>Media.</td>
+  <td>Metaanálisis de estudios experimentales (1989–2011): efectos positivos «grandes» (g de Hedges) en rendimiento, resolución de problemas, nivel de los problemas planteados y actitudes. Las cifras no están en el resumen (Rosli, Capraro y Capraro, 2014).<br><span class="badge v-ok">Verificada: resumen, sin cifras</span></td>
+  <td>Alto.</td><td>15–20 min.</td><td>El efecto depende de la duración y del diseño.</td><td>Cada pareja produce un ítem.</td><td class="use">Paso 7.</td></tr>
+<tr><td>Tareas de información faltante / tres actos (Meyer)</td><td>Baja-media.</td>
+  <td>Práctica profesional; no se localizó estudio comparativo.<br><span class="badge v-none">Sin evidencia localizada</span></td>
+  <td>Alto en diseño.</td><td>Bajo.</td><td>Sin datos.</td><td>Sin evidencia localizada.</td><td class="use">Inspira el caso C («falta un dato»).</td></tr>
+<tr><td>Rutinas de pensamiento visible (Project Zero)</td><td>Baja.</td>
+  <td>No se localizó estudio experimental.<br><span class="badge v-none">Sin evidencia localizada</span></td>
+  <td>Medio-alto.</td><td>Muy bajo.</td><td>Sin datos.</td><td>Sin evidencia localizada.</td><td class="use">No se usa por separado.</td></tr>
+<tr><td>Manipulativos virtuales y GeoGebra</td><td>Media.</td>
+  <td>GeoGebra: 29 estudios, 36 efectos, 2111 estudiantes, efecto global 0,96 (EE 0,08), mayor con un computador por estudiante y grupos de 30 o menos (Juandi et al., 2021). Manipulativos virtuales: 46 estudios, 104 efectos, efecto global moderado (Moyer-Packenham y Westenskow, 2016).<br><span class="badge v-ok">Verificada: resumen</span></td>
+  <td>Alto si funciona sin conexión.</td><td>Instalación y dispositivos.</td><td>La evidencia es de otras herramientas; no se traslada sola al lote de esta página.</td><td>Sin evidencia localizada.</td><td class="use">Reemplazado por el lote interactivo de la página.</td></tr>
+</tbody>
+</table></div>
+<p class="small">Resumen de verificación: 8 métodos con cifras leídas en el resumen original, 2 en fuente secundaria, 7 no verificados y 4 sin evidencia localizada.</p>
+
+<!-- 6 -->
+<h2 id="recomendacion">6. Recomendación</h2>
+<p>No hay un método único que resuelva su caso. La propuesta combina cinco, cada uno con una función:</p>
+<div class="tablewrap"><table class="mid">
+<thead><tr><th>Momento</th><th>Método</th><th>Por qué aquí</th></tr></thead>
+<tbody>
+<tr><td>Decidir solo y votar a la vez (paso 1)</td><td>Instrucción entre pares</td><td>Ataca el problema que usted observó: nadie espera a que otro responda, porque todos se comprometen por escrito y votan al mismo tiempo.</td></tr>
+<tr><td>Repartir el lote en trío (paso 2)</td><td>Fracaso productivo + invención con casos contrastados + cooperativo con roles</td><td>El estudiante produce el contraejemplo en vez de recibirlo. El metaanálisis de fracaso productivo muestra efecto positivo en secundaria y el moderador de primaria no aplica a 10.° y 11.°.</td></tr>
+<tr><td>Comparar la tabla y escribir la regla (paso 3)</td><td>Comparación de casos + autoexplicación</td><td>La regla sale de comparar sus propios repartos. El principio se formaliza después de comparar, que es la condición con mejor resultado en Alfieri et al. (2013).</td></tr>
+<tr><td>Segunda decisión y cierre (pasos 4-5)</td><td>Instrucción entre pares + cinco prácticas</td><td>El cambio entre el primer y el segundo voto es visible para usted y para ellos. En el cierre usted solo ordena los repartos que ellos hicieron.</td></tr>
+<tr><td>Sesión 2: casos y crear ítem (pasos 6-7)</td><td>Práctica intercalada + planteamiento de problemas</td><td>La misma pregunta cambia de estado según el enunciado: obliga a decidir en cada caso. Inventar una pregunta sin respuesta exige dominar la regla.</td></tr>
+</tbody>
+</table></div>
+<p><strong>Qué se descarta y por qué:</strong> el método socrático como eje (intervención alta y participación de a uno); Building Thinking Classrooms completo (costo alto y sin ensayo controlado: se toman solo los grupos aleatorios); ejemplos resueltos (el cálculo ya está dominado); avisos de «cuidado con la trampa» (Dewolf et al., 2014: sin efecto); GeoGebra (necesita instalación o conexión; la página trae su propio lote).</p>
+<p><strong>Su intervención queda en:</strong> una consigna inicial, observar y anotar, tres frases y un cierre de 13 minutos en la sesión 1.</p>
+
+<!-- 7 -->
+<h2 id="secuencia">7. Secuencia de las dos sesiones</h2>
+<p class="small">Calculada para sesiones de 55 minutos con menos de 25 estudiantes (7 u 8 tríos). Si su sesión dura otra cosa, recorte primero el cierre del paso 7, no el paso 2.</p>
+
+<h3>Antes de clase</h3>
+<ul class="tight">
+  <li>Agregue la actividad en vivo al curso (sección 1) y ábrala en vista previa y en un celular.</li>
+  <li>Prepare fichas numeradas del 1 al 8 (tres de cada número) para formar los tríos al azar.</li>
+  <li>Imprima dos o tres copias del <a href="#papel">plan B en papel</a> por si falla algún celular.</li>
+</ul>
+
+<h3>Sesión 1 · Construir la idea</h3>
+<div class="tablewrap"><table class="wide">
+<thead><tr><th style="width:8%">Min</th><th style="width:7%">Paso</th><th style="width:30%">Estudiantes</th><th style="width:30%">Docente hace</th><th style="width:25%">Docente no hace</th></tr></thead>
+<tbody>
+<tr><td>0–5</td><td>1</td><td>Abren la página. Solos y en silencio: leen, eligen, marcan qué tan seguros están y escriben su razón.</td><td>Da una sola consigna: «Primero solos. No importa acertar ahora».</td><td>No lee el ítem en voz alta ni aclara palabras.</td></tr>
+<tr><td>5–8</td><td>1</td><td>Votan a la vez, a la cuenta de tres, con los dedos (A = 1, B = 2, C = 3, D = 4).</td><td>Mira en el panel el conteo exacto de la primera decisión, sin comentar.</td><td>No dice cuál es la correcta ni pide que alguien explique.</td></tr>
+<tr><td>8–10</td><td>—</td><td>Forman tríos con las fichas y reparten los roles de la página (constructor, lector, escéptico).</td><td>Reparte las fichas.</td><td>No deja elegir compañeros.</td></tr>
+<tr><td>10–30</td><td>2–3</td><td>Arman y guardan al menos tres repartos; comparan la tabla; escriben la regla y la respuesta a Sara.</td><td>Circula y anota qué repartos aparecen (franjas, cuadrículas, triángulos, mixtos) y en qué trío. Solo usa las tres frases.</td><td>No sugiere repartos, no confirma respuestas, no explica.</td></tr>
+<tr><td>30–35</td><td>4</td><td>Cada uno vuelve a decidir y justifica con un reparto o un dato del enunciado.</td><td>Silencio.</td><td>—</td></tr>
+<tr><td>35–37</td><td>4</td><td>Segundo voto simultáneo.</td><td>Compara en el panel las barras de la primera y la segunda decisión.</td><td>No comenta el cambio todavía.</td></tr>
+<tr><td>37–50</td><td>Cierre</td><td>Tres tríos muestran su tabla, en el orden que usted eligió.</td><td>Orden sugerido: (1) un trío con franjas verticales, (2) uno con franjas horizontales o cuadrícula, (3) uno con triángulos o un reparto mixto. Pregunta al grupo: «¿Qué cambió de un reparto a otro y qué no cambió?». Escribe la regla con las palabras de ellos.</td><td>No da la regla antes de que comparen.</td></tr>
+<tr><td>50–55</td><td>5</td><td>Leen la explicación y escriben qué entienden ahora. Sus respuestas ya quedaron en Moodle.</td><td>—</td><td>—</td></tr>
+</tbody></table></div>
+
+<h3>Sesión 2 · Transferir y crear</h3>
+<div class="tablewrap"><table class="wide">
+<thead><tr><th style="width:8%">Min</th><th style="width:7%">Paso</th><th style="width:30%">Estudiantes</th><th style="width:30%">Docente hace</th><th style="width:25%">Docente no hace</th></tr></thead>
+<tbody>
+<tr><td>0–5</td><td>—</td><td>Cada uno escribe la regla de memoria en el cuaderno, sin abrir la página.</td><td>—</td><td>No la recuerda por ellos.</td></tr>
+<tr><td>5–25</td><td>6</td><td>En parejas, casos A a D. Cada uno decide; comparan antes de comprobar; si no coinciden, cada uno argumenta con dos situaciones.</td><td>Circula con las tres frases.</td><td>No confirma antes de que comprueben.</td></tr>
+<tr><td>25–30</td><td>6</td><td>Escriben qué frase del enunciado hizo la diferencia entre la pregunta original y los casos B y C.</td><td>—</td><td>—</td></tr>
+<tr><td>30–45</td><td>7</td><td>Inventan su ítem e intercambian celular con otra pareja, que debe encontrar la pregunta sin respuesta y dar el contraejemplo.</td><td>Elige dos ítems para el cierre: uno que funciona y uno cuya pregunta «sin respuesta» sí tiene respuesta.</td><td>No corrige los ítems uno por uno.</td></tr>
+<tr><td>45–55</td><td>Cierre</td><td>Las dos parejas presentan; el grupo decide si el contraejemplo vale.</td><td>Modera con las tres frases.</td><td>No decide por el grupo.</td></tr>
+</tbody></table></div>
+
+<h3>Las tres frases permitidas</h3>
+<ol class="phrases">
+  <li>«¿Ese reparto cumple todo lo que dice el enunciado? Léanlo otra vez».</li>
+  <li>«¿Pueden encontrar otro reparto que también cumpla y dé otra respuesta?».</li>
+  <li>«¿Qué tendría que decir el enunciado para que esa pregunta tuviera una sola respuesta?».</li>
+</ol>
+<p class="small">Si un trío lleva más de tres minutos bloqueado en el paso 2: «Prueben el botón Triángulos». Es la única pista de contenido.</p>
+
+<!-- 8 -->
+<h2 id="errores">8. Cómo se hace visible cada error</h2>
+<div class="tablewrap"><table class="mid">
+<thead><tr><th>Error</th><th>Qué lo hace visible sin que usted lo diga</th></tr></thead>
+<tbody>
+<tr><td>Creer que el área o el perímetro del lote no se pueden calcular (A, C)</td><td>En la tabla, «Área del lote» y «Perímetro del lote» son iguales en todas las filas, y el paso 3 les pide decidir si cambiaron.</td></tr>
+<tr><td>Confundir fracción con ubicación (D)</td><td>La columna «Fracción» es 1/8 en todas las filas mientras «Parte del hijo 1» cambia. El caso de Sara pone el error en boca de otro, para que lo refuten sin defender su propia respuesta.</td></tr>
+<tr><td>Creer que «partes iguales» quiere decir «misma forma»</td><td>Los botones «Triángulos» y «Franjas de 3 y de 5 partes» muestran partes de 750 m² con formas distintas, incluso dentro de un mismo reparto.</td></tr>
+<tr><td>Creer que si se calcula el perímetro del lote también se calcula el de cada parte</td><td>La columna extra «Perímetro de cada parte» cambia entre repartos; el caso A lo pregunta directamente.</td></tr>
+<tr><td>Acertar B por intuición, sin poder justificar</td><td>El nivel de seguridad del paso 1 y la justificación del paso 4: debe nombrar el dato que falta o un reparto.</td></tr>
+</tbody></table></div>
+
+<!-- 9 -->
+<h2 id="transferencia">9. Casos de transferencia y su clave</h2>
+<p>Los cuatro casos del paso 6 siguen el modelo de determinación del <code>.Rmd</code>: la misma pregunta pasa de tener respuesta a no tenerla según lo que declare el enunciado (las dos medidas, el trazado de los cortes, la asignación, el número de partes). Las respuestas se verificaron a mano contra ese modelo.</p>
+<div class="tablewrap"><table class="mid">
+<thead><tr><th>Caso</th><th>Qué declara el enunciado</th><th>Pregunta</th><th>Clave</th></tr></thead>
+<tbody>
+<tr><td rowspan="4">A</td><td rowspan="4">El original: medidas y número de partes</td><td>Perímetro de la porción de cada hijo</td><td><strong>No</strong>: 130 m o 252,5 m según el corte</td></tr>
+<tr><td>Área de la porción de cada hijo</td><td>Sí: 750 m²</td></tr>
+<tr><td>Longitud total del cerco que rodea el lote</td><td>Sí: 340 m</td></tr>
+<tr><td>Razón entre el largo y el ancho del lote</td><td>Sí: 5 : 12</td></tr>
+<tr><td rowspan="4">B</td><td rowspan="4">Medidas, 8 partes y trazado (franjas paralelas al lado de 50 m); carretera en un lado de 50 m</td><td>Perímetro de la porción de cada hermano</td><td>Sí: 2 × (50 + 15) = 130 m</td></tr>
+<tr><td>Quién recibe la porción que da a la carretera</td><td><strong>No</strong>: no se dice el orden de asignación</td></tr>
+<tr><td>Longitud de la cerca que separa las porciones</td><td>Sí: 7 × 50 = 350 m</td></tr>
+<tr><td>Fracción de cada hermano</td><td>Sí: 1/8</td></tr>
+<tr><td rowspan="4">C</td><td rowspan="4">Medidas, trazado y asignación por el orden del acta, pero no cuántos asociados son</td><td>Quién recibe la porción que da a la carretera</td><td>Sí: el primero del acta</td></tr>
+<tr><td>Fracción de cada asociado</td><td><strong>No</strong>: 1/8 con 8, 1/10 con 10</td></tr>
+<tr><td>Área del lote</td><td>Sí: 6.000 m²</td></tr>
+<tr><td>Perímetro de la porción de cada asociado</td><td><strong>No</strong>: 130 m con 8, 124 m con 10</td></tr>
+<tr><td rowspan="4">D</td><td rowspan="4">Solo el área (6.000 m²), 8 partes y franjas paralelas al lado más corto</td><td>Perímetro del lote</td><td><strong>No</strong>: 340 m (50 × 120) o 320 m (60 × 100)</td></tr>
+<tr><td>Área de la porción de cada beneficiario</td><td>Sí: 750 m²</td></tr>
+<tr><td>Fracción de cada beneficiario</td><td>Sí: 1/8</td></tr>
+<tr><td>Medida del lado más largo del lote</td><td><strong>No</strong>: 120 m, 100 m o 150 m</td></tr>
+</tbody></table></div>
+<p class="small">Las preguntas que cambian de estado respecto del ítem original (A1, B1, C2 y D1) son las que mejor muestran si la regla se transfirió.</p>
+
+<!-- 10 -->
+<h2 id="evidencia">10. Cómo saber si comprendieron</h2>
+<p>Todo lo que sigue se ve en el panel en vivo: en cada tarjeta, «Ver todas sus respuestas».</p>
+<div class="tablewrap"><table class="mid">
+<thead><tr><th>Evidencia</th><th>Dónde se ve</th><th>Se considera lograda si…</th></tr></thead>
+<tbody>
+<tr><td>E1. Decisión justificada</td><td>Primera y segunda decisión</td><td>La segunda justificación nombra un dato que el enunciado no da (los cortes o la asignación) o un reparto concreto.</td></tr>
+<tr><td>E2. Contraejemplo propio</td><td>Lista de repartos</td><td>Hay al menos dos repartos con el hijo 1 en lugares distintos.</td></tr>
+<tr><td>E3. Tamaño frente a ubicación</td><td>Respuesta a Sara</td><td>Distingue que 1/8 fija el tamaño y no el lugar, y lo prueba con un reparto.</td></tr>
+<tr><td>E4. Transferencia</td><td>Casos A a D</td><td>Acierta A1, B1, C2 y D1, las preguntas que cambian de estado.</td></tr>
+<tr><td>E5. Producción</td><td>Su ítem (paso 7)</td><td>La pregunta «sin respuesta» de verdad no tiene respuesta y las dos situaciones cumplen su enunciado.</td></tr>
+</tbody></table></div>
+<h3>Para saber si la secuencia funcionó con su grupo</h3>
+<ul class="tight">
+  <li>Compare en el panel las barras de la primera y la segunda decisión.</li>
+  <li>Cruce la respuesta con la seguridad: un B con «Estoy adivinando» no es lo mismo que un B «Totalmente seguro» justificado.</li>
+  <li>Cuente cuántos estudiantes logran E2 y E5.</li>
+  <li>Unas semanas después, aplique un caso nuevo sin la página para ver si la regla se mantiene.</li>
+</ul>
+
+<!-- 11 -->
+<h2 id="limites">11. Límites de esta propuesta</h2>
+<ul class="tight">
+  <li>Ningún estudio de los consultados probó esta secuencia ni este ítem. Las cifras vienen de otras poblaciones y no predicen el resultado en su curso.</li>
+  <li>11 de los 21 métodos no tienen evidencia verificada o no tienen evidencia localizada; la matriz lo marca y no se usaron para decidir.</li>
+  <li>El lote interactivo no se ha probado con estudiantes. Pruébelo en un celular de la intranet antes de la clase.</li>
+  <li>La clave está en el código de la página: un estudiante que abra el código fuente podría encontrarla.</li>
+  <li>Estas páginas no usan versiones generadas por el <code>.Rmd</code>, que sigue en revisión: usan el ítem oficial y cuatro casos verificados a mano. Si quiere más casos, genere versiones del <code>.Rmd</code> y revíselas antes de usarlas.</li>
+</ul>
+
+<!-- 12 -->
+<h2 id="papel">12. Plan B en papel</h2>
+<p class="print-only small">Imprima esta página para los tríos que no tengan celular. Cada cuadro mide 10 m × 10 m.</p>
+<p>Si falla un celular, el trío trabaja aquí. Consigna: «Dibujen tres repartos distintos del lote en 8 partes iguales. Marquen la parte del hijo 1 y completen la tabla».</p>
+<div class="figs">
+  <figure><svg class="lot" viewBox="-2 -2 124 60" role="img" aria-label="Lote vacío con cuadrícula de 10 metros">
+    <rect class="p" x="0" y="0" width="120" height="50" style="fill:none"/>
+    <path class="g" d="M10 0V50M20 0V50M30 0V50M40 0V50M50 0V50M60 0V50M70 0V50M80 0V50M90 0V50M100 0V50M110 0V50M0 10H120M0 20H120M0 30H120M0 40H120"/>
+    <rect class="o" x="0" y="0" width="120" height="50"/><text x="60" y="56">120 m</text></svg><figcaption>Reparto 1</figcaption></figure>
+  <figure><svg class="lot" viewBox="-2 -2 124 60" role="img" aria-label="Lote vacío con cuadrícula de 10 metros">
+    <rect class="p" x="0" y="0" width="120" height="50" style="fill:none"/>
+    <path class="g" d="M10 0V50M20 0V50M30 0V50M40 0V50M50 0V50M60 0V50M70 0V50M80 0V50M90 0V50M100 0V50M110 0V50M0 10H120M0 20H120M0 30H120M0 40H120"/>
+    <rect class="o" x="0" y="0" width="120" height="50"/><text x="60" y="56">120 m</text></svg><figcaption>Reparto 2</figcaption></figure>
+  <figure><svg class="lot" viewBox="-2 -2 124 60" role="img" aria-label="Lote vacío con cuadrícula de 10 metros">
+    <rect class="p" x="0" y="0" width="120" height="50" style="fill:none"/>
+    <path class="g" d="M10 0V50M20 0V50M30 0V50M40 0V50M50 0V50M60 0V50M70 0V50M80 0V50M90 0V50M100 0V50M110 0V50M0 10H120M0 20H120M0 30H120M0 40H120"/>
+    <rect class="o" x="0" y="0" width="120" height="50"/><text x="60" y="56">120 m</text></svg><figcaption>Reparto 3</figcaption></figure>
+</div>
+<div class="tablewrap"><table class="mid">
+<thead><tr><th>Reparto</th><th>Área del lote</th><th>Perímetro del lote</th><th>Fracción de cada parte</th><th>Perímetro de cada parte</th><th>¿Dónde queda la parte del hijo 1?</th></tr></thead>
+<tbody><tr><td>1</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>2</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>3</td><td></td><td></td><td></td><td></td><td></td></tr></tbody>
+</table></div>
+<p>Luego: «¿Qué columnas cambiaron de un reparto a otro? ¿Cuál de las cuatro preguntas del ítem depende de una columna que cambió?».</p>
+
+<!-- 13 -->
+<h2 id="referencias">13. Referencias</h2>
+<h3>Con resultados leídos en esta investigación</h3>
+<ul class="refs">
+  <li>Alfieri, L., Nokes-Malach, T. J. y Schunn, C. D. (2013). Learning through case comparisons: A meta-analytic review. <em>Educational Psychologist, 48</em>(2), 87–113. <a href="https://doi.org/10.1080/00461520.2013.775712">doi:10.1080/00461520.2013.775712</a></li>
+  <li>Bisra, K., Liu, Q., Nesbit, J. C., Salimi, F. y Winne, P. H. (2018). Inducing self-explanation: A meta-analysis. <em>Educational Psychology Review, 30</em>(3), 703–725. <a href="https://doi.org/10.1007/s10648-018-9434-x">doi:10.1007/s10648-018-9434-x</a>. Cifras leídas en la reseña de la British Psychological Society: <a href="https://www.bps.org.uk/research-digest/self-explanation-powerful-learning-technique-according-meta-analysis-64-studies">bps.org.uk</a>.</li>
+  <li>Capar, G. y Tarım, K. (2015). Efficacy of the cooperative learning method on mathematics achievement and attitude: A meta-analysis research. <em>Educational Sciences: Theory &amp; Practice, 15</em>(2). <a href="https://doi.org/10.12738/estp.2015.2.2098">doi:10.12738/estp.2015.2.2098</a></li>
+  <li>Crouch, C. H. y Mazur, E. (2001). Peer Instruction: Ten years of experience and results. <em>American Journal of Physics, 69</em>(9), 970–977. <a href="https://doi.org/10.1119/1.1374249">doi:10.1119/1.1374249</a></li>
+  <li>Fagnant, A. y Auquière, A. (2018). Impact des illustrations accompagnant les problèmes problématiques : focus sur le codage des réponses. <em>Actes du colloque EMF 2018</em>. <a href="https://emf.unige.ch/download_file/view/628/279">emf.unige.ch</a>. Fuente de las cifras de Verschaffel et al. (1994) y del resultado de Dewolf et al. (2014).</li>
+  <li>Juandi, D., Kusumah, Y. S., Tamur, M., Perbowo, K. S. y Wijaya, T. T. (2021). A meta-analysis of GeoGebra software decade of assisted mathematics learning: What to learn and where to go? <em>Heliyon, 7</em>(5), e06953. <a href="https://doi.org/10.1016/j.heliyon.2021.e06953">doi:10.1016/j.heliyon.2021.e06953</a></li>
+  <li>Moyer-Packenham, P. S. y Westenskow, A. (2016). Revisiting the effects and affordances of virtual manipulatives for mathematics learning. En K. Terry y A. Cheney (Eds.), <em>Utilizing Virtual and Personal Learning Environments for Optimal Learning</em> (pp. 186–215). IGI Global. <a href="https://digitalcommons.usu.edu/teal_facpub/2399">digitalcommons.usu.edu</a></li>
+  <li>Rohrer, D., Dedrick, R. F., Hartwig, M. K. y Cheung, C.-N. (2020). A randomized controlled trial of interleaved mathematics practice. <em>Journal of Educational Psychology, 112</em>(1), 40–52. <a href="https://doi.org/10.1037/edu0000367">doi:10.1037/edu0000367</a></li>
+  <li>Rosli, R., Capraro, M. M. y Capraro, R. M. (2014). The effects of problem posing on student mathematical learning: A meta-analysis. <em>International Education Studies, 7</em>(13), 227. <a href="https://doi.org/10.5539/ies.v7n13p227">doi:10.5539/ies.v7n13p227</a></li>
+  <li>Schwartz, D. L., Chase, C. C., Oppezzo, M. A. y Chin, D. B. (2011). Practicing versus inventing with contrasting cases: The effects of telling first on learning and transfer. <em>Journal of Educational Psychology, 103</em>(4), 759–775. <a href="https://doi.org/10.1037/a0025140">doi:10.1037/a0025140</a></li>
+  <li>Sinha, T. y Kapur, M. (2021). When problem solving followed by instruction works: Evidence for productive failure. <em>Review of Educational Research</em>. <a href="https://doi.org/10.3102/00346543211019105">doi:10.3102/00346543211019105</a></li>
+  <li>Smith, M. K., Wood, W. B., Adams, W. K., Wieman, C., Knight, J. K., Guild, N. y Su, T. T. (2009). Why peer discussion improves student performance on in-class concept questions. <em>Science, 323</em>(5910), 122–124. <a href="https://doi.org/10.1126/science.1165919">doi:10.1126/science.1165919</a></li>
+  <li>Verschaffel, L., De Corte, E. y Lasure, S. (1994). Realistic considerations in mathematical modeling of school arithmetic word problems. <em>Learning and Instruction, 4</em>(4), 273–294. <a href="https://doi.org/10.1016/0959-4752(94)90002-7">doi:10.1016/0959-4752(94)90002-7</a></li>
+  <li>Moodle Docs. File resource settings. <a href="https://docs.moodle.org/402/en/File_resource_settings">docs.moodle.org</a></li>
+</ul>
+<h3>Encontradas solo en resultados de búsqueda (no se usaron para decidir)</h3>
+<ul class="refs">
+  <li>Adams, D. M., McLaren, B. M., Durkin, K. L., Mayer, R. E., Rittle-Johnson, B., Isotani, S. y van Velsen, M. (2014). Using erroneous examples to improve mathematics learning with a web-based tutoring system. <em>Computers in Human Behavior, 36</em>, 401–411. <a href="https://doi.org/10.1016/j.chb.2014.03.053">doi:10.1016/j.chb.2014.03.053</a></li>
+  <li>Booth, J. L., Lange, K. E., Koedinger, K. R. y Newton, K. J. (2013). Using example problems to improve student learning in algebra: Differentiating between correct and incorrect examples. <em>Learning and Instruction, 25</em>, 24–34. <a href="https://doi.org/10.1016/j.learninstruc.2012.11.002">doi:10.1016/j.learninstruc.2012.11.002</a></li>
+  <li>Inglis, M., Mejía-Ramos, J. P. y Simpson, A. (2007). Modelling mathematical argumentation: The importance of qualification. <em>Educational Studies in Mathematics, 66</em>(1), 3–21.</li>
+  <li>Kalyuga, S. (2007). Expertise reversal effect and its implications for learner-tailored instruction. <em>Educational Psychology Review, 19</em>(4), 509–539.</li>
+  <li>Komatsu, K., Jones, K., Ikedo, T. y Narazaki, A. (2017). Proof validation and modification in secondary school geometry. <em>Journal of Mathematical Behavior</em>. <a href="https://eprints.soton.ac.uk/411718">eprints.soton.ac.uk</a></li>
+  <li>Liljedahl, P. <em>Building Thinking Classrooms in Mathematics</em>. Corwin.</li>
+  <li>Meyer, D. (2011). <em>Education Week</em>, columna sobre tareas en tres actos.</li>
+  <li>Ritchhart, R., Church, M. y Morrison, K. (2011). <em>Making Thinking Visible</em>. Jossey-Bass.</li>
+  <li>Stein, M. K., Engle, R. A., Smith, M. S. y Hughes, E. K. (2008). Orchestrating productive mathematical discussions. <em>Mathematical Thinking and Learning, 10</em>(4), 313–340. <a href="https://doi.org/10.1080/10986060802229675">doi:10.1080/10986060802229675</a></li>
+</ul>
+<p class="small">Ítem: <code>ITEM_OFICIAL.md</code> del subproyecto <code>informacion-insuficiente-lote-n4</code> (ERA-2026, sesión 1, pregunta 10).</p>
+
+<footer>Guía docente · ítem MAT-2026-1-010 · Funciona sin internet.</footer>
+</main>
+</body>
+</html>
