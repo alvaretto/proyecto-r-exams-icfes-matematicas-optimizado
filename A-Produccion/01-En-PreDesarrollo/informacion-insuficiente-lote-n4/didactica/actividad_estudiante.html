@@ -179,7 +179,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
       <textarea id="p1why" placeholder="Elegí esa porque…"></textarea>
       <div class="row"><button id="p1save">Guardar mi primera decisión</button></div>
       <div class="msg" id="p1msg" role="status"></div>
-      <p class="note">Cuando todos hayan guardado, su docente pedirá que muestren la letra al mismo tiempo, con los dedos (A = 1, B = 2, C = 3, D = 4).</p>
+      <p class="note" id="p1vote">Cuando todos hayan guardado, su docente pedirá que muestren la letra al mismo tiempo, con los dedos (A = 1, B = 2, C = 3, D = 4).</p>
     </div>
   </section>
 
@@ -844,6 +844,8 @@ if(AV){
   $('sub').textContent='Actividad en ocho pasos sobre una pregunta del ICFES. Sus respuestas se guardan solas en Moodle y su docente las ve mientras trabaja.';
   $('s8intro').textContent='Sus respuestas ya están guardadas en Moodle. Este resumen es una copia para su cuaderno, o para entregarla si su docente se la pide.';
   $('pie').textContent='Ítem MAT-2026-1-010 (Saber 11, Matemáticas). Las respuestas se guardan en Moodle con su usuario.';
+  // En Moodle no se vota con los dedos: el docente ve en el panel la primera decisión de cada uno.
+  $('p1vote').textContent='Espere en silencio a que todos guarden. Su docente ve en el panel cómo decidió el curso y les dirá cuándo formar los tríos.';
   if(!S.nombre&&AV.fullname)$('nombre').placeholder='Ejemplo: '+AV.fullname+' (yo), Andrés, Sofía';
 }
 setRep('V',[1,1,1,1,1,1,1,1],false);
