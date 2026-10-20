@@ -97,6 +97,7 @@ svg#lote{width:100%;height:auto;display:block;margin:8px 0;touch-action:manipula
 .custom select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);
   border-radius:8px;padding:8px;min-height:44px}
 .custom input[type=text]{flex:1;min-width:140px}
+#p5gate .row input[type=text]{flex:1;min-width:140px;width:auto}
 .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0}
 table{border-collapse:collapse;width:100%;font-size:.88rem;min-width:640px}
 th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
@@ -302,6 +303,12 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
       <textarea id="p4why" placeholder="Ahora elijo… porque en el reparto… / porque el enunciado no dice…"></textarea>
       <div class="row"><button id="p4save">Guardar mi segunda decisión</button></div>
       <div class="msg" id="p4msg" role="status"></div>
+      <div id="p5gate" hidden>
+        <label for="p5word"><strong>Palabra para abrir el paso 5</strong></label>
+        <p class="note">Su docente la dirá en voz alta al final de la clase.</p>
+        <div class="row"><input type="text" id="p5word" autocomplete="off" autocapitalize="none" spellcheck="false"><button type="button" class="small" id="p5go">Abrir el paso 5</button></div>
+        <div class="msg" id="p5gatemsg" role="status"></div>
+      </div>
     </div>
   </section>
 
@@ -309,7 +316,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
   <section class="step locked" id="s5">
     <span class="tag">Paso 5 · Solo</span>
     <h2>La explicación</h2>
-    <p class="lockmsg">Se abre cuando guarde su segunda decisión.</p>
+    <p class="lockmsg">Se abre con la palabra que dirá su docente al final de la clase. Se escribe al final del paso 4.</p>
     <div class="body reveal">
       <div class="msg show ok" id="p5personal"></div>
       <h3>Las cuatro preguntas, una por una</h3>
@@ -406,7 +413,7 @@ var OPC={
 };
 var CONF={'1':'estoy adivinando','2':'poco seguro','3':'bastante seguro','4':'totalmente seguro'};
 
-function blank(){return {nombre:'',p1:null,repartos:[],p3:null,p4:null,p5:null,casos:{},contraste:'',p6:false,crear:null,s2:false};}
+function blank(){return {nombre:'',p1:null,repartos:[],p3:null,p4:null,p5open:false,p5:null,casos:{},contraste:'',p6:false,crear:null,s2:false};}
 function load(){
   if(AV){var o=AV.initialState(),b=blank();if(o&&typeof o==='object'&&!Array.isArray(o)){for(var k in b){if(!(k in o))o[k]=b[k];}return o;}return b;}
   try{var r=localStorage.getItem(KEY);
@@ -683,11 +690,12 @@ function resumen(){
 /* ---------- estado de los pasos ---------- */
 function lock(id,locked){$(id).classList.toggle('locked',locked);}
 function refresh(){
-  var s2=!!(S.p5||S.s2);
+  var s2=!!(S.p5||S.s2),p5open=!!(S.p4&&(S.p5open||S.p5));
   lock('s2',!S.p1);
   lock('s3',S.repartos.length<2);
   lock('s4',!(S.p3&&S.p3.regla));
-  lock('s5',!S.p4);
+  lock('s5',!p5open);
+  $('p5gate').hidden=!S.p4||p5open;
   lock('s6',!s2);lock('s7',!s2);
   lock('s8',!S.p1);
   drawTable();
@@ -772,9 +780,19 @@ $('p4save').addEventListener('click',function(){
   var op=radio('p4op'),cf=radio('p4conf'),why=$('p4why').value.trim();
   if(!op||!cf){msg('p4msg','Elija una respuesta y qué tan seguro está.','warn');return;}
   if(why.length<15){msg('p4msg','Justifique con un dato del enunciado o con uno de sus repartos.','warn');return;}
+  if(S.p4&&S.p4.op!==op){msg('p4msg','Su segunda decisión ya estaba guardada como '+S.p4.op+'. Si ahora piensa distinto, escríbalo en el paso 5.','warn');setRadio('p4op',S.p4.op);return;}
   S.p4={op:op,conf:cf,why:why};save('p4');
-  msg('p4msg','Segunda decisión guardada. La explicación está en el paso 5.','ok');
+  msg('p4msg','Segunda decisión guardada. El paso 5 se abre con la palabra que dirá su docente.','ok');
 });
+
+// El paso 5 trae la clave: lo abre la palabra que el docente dice después del cierre (guía, sección 7).
+var PALABRAS=['lindero','linderos'];
+$('p5go').addEventListener('click',function(){
+  var w=$('p5word').value.toLowerCase().replace(/[^a-z]/g,'');
+  if(PALABRAS.indexOf(w)<0){msg('p5gatemsg','Esa no es la palabra. Espere a que su docente la diga.','warn');return;}
+  S.p5open=true;save();
+});
+$('p5word').addEventListener('keydown',function(e){if(e.key==='Enter')$('p5go').click();});
 
 $('p5ref').value=S.p5||'';
 $('p5save').addEventListener('click',function(){

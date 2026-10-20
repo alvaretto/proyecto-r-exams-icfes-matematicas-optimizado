@@ -30,3 +30,7 @@ docente un panel en vivo con retroalimentación escrita.
   y cuatro casos de transferencia verificados a mano contra el modelo de determinación del `.Rmd`.
 - Plugin instalado en producción el 2026-10-20. Falta la aceptación del profesor en el curso `lab`
   y la aplicación en aula.
+- 2026-10-20: la segunda decisión queda fija al guardarla y el paso 5 (explicación y clave) se abre
+  con la palabra «lindero», que el docente dice al terminar el cierre (guía, secciones 1 y 7). Antes
+  se abría al guardar la segunda decisión y esta se podía cambiar después, así que el conteo del panel
+  salía inflado. Falta desplegarlo: el servidor tiene la versión anterior.
