@@ -35,10 +35,11 @@ docente un panel en vivo con retroalimentación escrita.
   con la palabra «lindero», que el docente dice al terminar el cierre (guía, secciones 1 y 7). Antes
   se abría al guardar la segunda decisión y esta se podía cambiar después, así que el conteo del panel
   salía inflado. Desplegado el 2026-10-20 a las 16:22 (sha256 `8c452816…2aec1404`, sin deriva).
-- 2026-10-20 17:43, provisional y desplegado: en modo Moodle ya no se vota con los dedos. El paso 1
-  (`#p1vote`) dice «Espere en silencio a que todos guarden…», y lo mismo dicen la secuencia de la guía
-  docente y el paso 1 de `guia_estudiante.html`. Sin Moodle se conserva el voto con los dedos (plan sin
-  conexión). El arnés del nivel 0 del plugin vigila los dos textos.
+- 2026-10-20: ya no se vota con los dedos en ningún modo. A las 17:43 se quitó del modo Moodle y en la
+  noche también del modo sin Moodle (archivo suelto o la dirección directa de la actividad), porque el
+  profesor lo seguía viendo. El paso 1 (`#p1vote`) dice «Espere en silencio a que todos guarden…», y lo
+  mismo dicen la guía docente y la del estudiante. El arnés del nivel 0 del plugin exige que ningún texto
+  de la página lo mencione, con o sin Moodle.
 - 2026-10-20, detractor independiente (APROBAR_CON_CAMBIOS, 5 hallazgos altos). Los puntos 1 y 2 de su
   plan están aplicados:
   - **H1:** la pregunta de Sara ya no presupone la clave: «¿Tiene razón Sara? Sí / No» y la
