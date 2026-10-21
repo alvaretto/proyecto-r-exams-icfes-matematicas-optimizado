@@ -86,13 +86,24 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .roles{margin:.4em 0 .4em 1.1em;padding:0}
 .roles li{margin:.2em 0}
 svg#lote{width:100%;height:auto;display:block;margin:8px 0;touch-action:manipulation}
-#lote .lot-bg{fill:var(--lot)}
-#lote .parcel{fill:var(--lot);stroke:var(--lot-stroke);stroke-width:.45;cursor:pointer}
-#lote .parcel.hl{fill:var(--hl)}
-#lote .lot-outline{fill:none;stroke:var(--lot-stroke);stroke-width:1}
-#lote .plabel{fill:var(--ink);font-weight:700;pointer-events:none}
-#lote .plabel.hl{fill:var(--hl-ink)}
-#lote .dim{fill:var(--muted);font-size:4px}
+svg.lotsvg .lot-bg{fill:var(--lot)}
+svg.lotsvg .parcel{fill:var(--lot);stroke:var(--lot-stroke);stroke-width:.45;cursor:pointer}
+svg.lotsvg .parcel.hl{fill:var(--hl)}
+svg.lotsvg .lot-outline{fill:none;stroke:var(--lot-stroke);stroke-width:1}
+svg.lotsvg .plabel{fill:var(--ink);font-weight:700;pointer-events:none}
+svg.lotsvg .plabel.hl{fill:var(--hl-ink)}
+svg.lotsvg .dim{fill:var(--muted);font-size:4px}
+.figs3{display:grid;grid-template-columns:1fr;gap:12px;margin:8px 0}
+.figs3 figure{margin:0;border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--bg)}
+.figs3 svg{width:100%;height:auto;display:block}
+.figs3 figcaption{font-size:.9rem}
+@media (min-width:680px){ .figs3{grid-template-columns:repeat(3,minmax(0,1fr))} }
+.qcmp p.q2{font-weight:600;margin:10px 0 4px;font-size:.95rem}
+.razones label.opt{padding:8px;font-size:.95rem}
+.share{position:fixed;inset:0;z-index:50;background:var(--bg);overflow:auto;padding:16px}
+.share .in{max-width:720px;margin:0 auto}
+.share ol{padding-left:1.4em}
+.share li{margin:.5em 0}
 .presets{display:flex;flex-wrap:wrap;gap:6px}
 .presets button{background:var(--surface);color:var(--ink);border-color:var(--line);font-weight:500}
 .presets button.on{border-color:var(--accent);background:var(--accent-soft)}
@@ -195,25 +206,25 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
     <h2>Reparta el lote de muchas maneras</h2>
     <p class="lockmsg">Se abre cuando guarde su primera decisión.</p>
     <div class="body">
-      <p>El enunciado solo exige tres cosas: usar <strong>todo el lote</strong>, hacer <strong>8 partes</strong> y que todas sean <strong>del mismo tamaño</strong>. Busquen repartos que cumplan eso y que sean lo más distintos posible. Guarden <strong>al menos tres</strong>.</p>
-      <p class="note">Roles del trío (rótenlos en cada reparto):</p>
+      <p>El enunciado solo exige tres cosas: usar <strong>todo el lote</strong>, hacer <strong>8 partes</strong> y que todas sean <strong>del mismo tamaño</strong>. Busquen repartos que cumplan eso y que sean lo más distintos posible. Guarden <strong>al menos tres</strong>, y que al menos uno lo armen ustedes con «Dibujar».</p>
+      <p class="note">Cómo trabaja el trío: cada integrante propone un reparto distinto, y los tres lo arman y lo guardan en su propio celular. Así cada celular termina con un reparto de cada uno. Mientras uno propone, los otros dos hacen de:</p>
       <ul class="roles note">
-        <li><strong>Constructor:</strong> arma el reparto en su celular.</li>
         <li><strong>Lector:</strong> relee el enunciado y comprueba que el reparto lo cumple.</li>
         <li><strong>Escéptico:</strong> pregunta «¿el enunciado dice eso?» cada vez que alguien da algo por hecho.</li>
       </ul>
 
-      <h3>Repartos para empezar</h3>
+      <h3>Un reparto para empezar</h3>
       <div class="presets" id="presets">
         <button type="button" data-p="v8">8 franjas verticales</button>
-        <button type="button" data-p="h8">8 franjas horizontales</button>
-        <button type="button" data-p="g42">Cuadrícula 4 × 2</button>
-        <button type="button" data-p="g24">Cuadrícula 2 × 4</button>
-        <button type="button" data-p="m35">Franjas de 3 y de 5 partes</button>
-        <button type="button" data-p="tri">Triángulos</button>
+        <button type="button" data-p="h8" hidden>8 franjas horizontales</button>
+        <button type="button" data-p="g42" hidden>Cuadrícula 4 × 2</button>
+        <button type="button" data-p="g24" hidden>Cuadrícula 2 × 4</button>
+        <button type="button" data-p="m35" hidden>Franjas de 3 y de 5 partes</button>
+        <button type="button" data-p="tri" hidden>Triángulos</button>
       </div>
+      <p class="note" id="presetnota">Otros repartos aparecen aquí cuando guarden uno armado por ustedes, abajo, en «Arme su propio reparto».</p>
 
-      <svg id="lote" viewBox="-9 -3 132 63" role="img" aria-label="Lote de 120 m por 50 m repartido en 8 partes"></svg>
+      <svg id="lote" class="lotsvg" viewBox="-9 -3 132 63" role="img" aria-label="Lote de 120 m por 50 m repartido en 8 partes"></svg>
 
       <div class="row">
         <button type="button" class="ghost small" id="shuffle">Otra forma de asignar los hijos</button>
@@ -244,10 +255,11 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
 
       <h3>Tabla de sus repartos</h3>
       <div class="tablewrap">
-        <table>
+        <table id="reptable">
+          <!-- H9: «Parte del hijo 1» va tercera: a 360 px se ve sin desplazar la tabla (el arnés mide que termine antes de 294 px) -->
           <thead><tr>
-            <th>#</th><th>Reparto</th><th>Área del lote</th><th>Perímetro del lote</th>
-            <th>Fracción de cada parte</th><th>Área de cada parte</th><th>Perímetro de cada parte</th><th>Parte del hijo 1</th>
+            <th>#</th><th>Reparto</th><th>Parte del hijo 1</th><th>Área del lote</th><th>Perímetro del lote</th>
+            <th>Fracción de cada parte</th><th>Área de cada parte</th><th>Perímetro de cada parte</th>
           </tr></thead>
           <tbody id="tbody"><tr><td colspan="8" class="note">Todavía no hay repartos guardados.</td></tr></tbody>
         </table>
@@ -312,9 +324,25 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
       <textarea id="p4why" placeholder="Ahora elijo… porque en el reparto… / porque el enunciado no dice…"></textarea>
       <div class="row"><button id="p4save">Guardar mi segunda decisión</button></div>
       <div class="msg" id="p4msg" role="status"></div>
+      <p class="note" id="p4vote">Espere en silencio a que todos guarden. Después siga con el cierre, aquí abajo.</p>
+      <div id="cierrebox" hidden>
+        <h3>Cierre · Cada uno por escrito</h3>
+        <label for="ci_cambio"><strong>Mire la tabla de sus repartos. ¿Qué cambió de un reparto a otro y qué no cambió?</strong></label>
+        <textarea id="ci_cambio" placeholder="Cambió… / No cambió…"></textarea>
+        <div class="row"><button type="button" id="ci1save">Guardar</button></div>
+        <div class="msg" id="ci1msg" role="status"></div>
+        <div id="ci_figs" hidden>
+          <p>Tres repartos que cumplen el enunciado. Compárelos con su tabla y espere a que su docente lea algunas respuestas; después escriba su regla.</p>
+          <div class="figs3" id="figs3"></div>
+          <label for="ci_regla"><strong>Ahora, con sus palabras: ¿cuándo no se puede responder una pregunta con lo que dice el enunciado? Use uno de estos repartos como ejemplo.</strong></label>
+          <textarea id="ci_regla" placeholder="No se puede responder cuando… Por ejemplo…"></textarea>
+          <div class="row"><button type="button" id="ci2save">Guardar mi regla</button></div>
+          <div class="msg" id="ci2msg" role="status"></div>
+        </div>
+      </div>
       <div id="p5gate" hidden>
         <label for="p5word"><strong>Palabra para abrir el paso 5</strong></label>
-        <p class="note">Su docente la dirá en voz alta al final de la clase.</p>
+        <p class="note">Su docente la dirá en voz alta al terminar el cierre.</p>
         <div class="row"><input type="text" id="p5word" autocomplete="off" autocapitalize="none" spellcheck="false"><button type="button" class="small" id="p5go">Abrir el paso 5</button></div>
         <div class="msg" id="p5gatemsg" role="status"></div>
       </div>
@@ -325,7 +353,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
   <section class="step locked" id="s5">
     <span class="tag">Paso 5 · Solo</span>
     <h2>La explicación</h2>
-    <p class="lockmsg">Se abre con la palabra que dirá su docente al final de la clase. Se escribe al final del paso 4.</p>
+    <p class="lockmsg">Se abre con la palabra que dirá su docente al terminar el cierre. Se escribe al final del paso 4.</p>
     <div class="body reveal">
       <div class="msg show ok" id="p5personal"></div>
       <h3>Las cuatro preguntas, una por una</h3>
@@ -333,7 +361,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
         <li><strong>Área del lote del empresario: sí se puede responder.</strong> Con las dos medidas: 50 × 120 = 6.000 m². En su tabla, esa columna fue igual en todas las filas.</li>
         <li><strong>Perímetro del lote del empresario: sí se puede responder.</strong> 2 × (50 + 120) = 340 m. Tampoco cambió con el reparto.</li>
         <li><strong>Fracción del lote de cada hijo: sí se puede responder.</strong> Si se reparte en partes iguales entre 8, a cada uno le toca 1/8. Eso dice <em>cuánto</em> le toca, no <em>dónde</em>.</li>
-        <li><strong>Ubicación de cada hijo: no se puede responder.</strong> Con 8 franjas verticales, la parte del hijo 1 es una franja de 15 m × 50 m; con 8 franjas horizontales, es una de 120 m × 6,25 m; con una cuadrícula, es un rectángulo de 30 m × 25 m. Los tres repartos cumplen el enunciado. Además, el enunciado no dice cómo se corta el lote ni a quién le toca cada parte.</li>
+        <li><strong>Ubicación de cada hijo: no se puede responder.</strong> En los tres repartos del cierre, la parte del hijo 1 está en lugares distintos: la franja de la izquierda (x de 0 a 15), la franja de arriba (y de 43,75 a 50) y un triángulo del centro, con vértices (60, 0), (90, 0) y (60, 50). Los tres repartos cumplen el enunciado. Además, el enunciado no dice cómo se corta el lote ni a quién le toca cada parte.</li>
       </ul>
       <div class="rule">
         <p><strong>La regla.</strong> Una pregunta se puede responder cuando <strong>todas</strong> las situaciones que cumplen el enunciado dan la misma respuesta. Si encuentra <strong>dos situaciones que cumplen el enunciado y responden distinto</strong>, la pregunta no se puede responder: falta información.</p>
@@ -370,7 +398,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
         <div class="msg" id="regla2msg" role="status"></div>
       </div>
       <div id="casoswrap" hidden>
-      <p>Cada caso cambia lo que dice el enunciado. Para cada pregunta, primero decida <strong>usted solo</strong> si <strong>sí se puede</strong> o <strong>no se puede</strong> responder, y toque «Guardar mi decisión»: esa decisión queda fija. Después compare con su pareja: si no coinciden, cada uno debe convencer al otro con dos situaciones que cumplan el enunciado. Al final, comprueben.</p>
+      <p>Cada caso cambia lo que dice el enunciado. Para cada pregunta, primero decida <strong>usted solo</strong> si <strong>sí se puede</strong> o <strong>no se puede</strong> responder. En cada caso hay también la respuesta de un estudiante: decida si es válida y por qué. Luego toque «Guardar mi decisión»: esa decisión queda fija. Después compare con su pareja: si no coinciden, cada uno debe convencer al otro con dos situaciones que cumplan el enunciado. Al final, comprueben.</p>
       <div id="casos"></div>
       <div id="contrastebox" hidden>
       <h3>Compare los casos</h3>
@@ -390,19 +418,62 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
     <h2>Invente su propia pregunta</h2>
     <p class="lockmsg">Se abre con la sesión 2.</p>
     <div class="body">
-      <p>Escriban un enunciado corto (puede ser sobre un lote, un salón, una huerta, una pizza…) y cuatro preguntas: <strong>tres que sí se puedan responder</strong> y <strong>una que no</strong>. Después intercambien celular con otra pareja: ellos deben encontrar cuál no se puede responder y dar las dos situaciones que lo prueban.</p>
+      <p>Escriban un enunciado corto (puede ser sobre un lote, un salón, una huerta, una pizza…) y cuatro preguntas: <strong>tres que sí se puedan responder</strong> y <strong>una que no</strong>, en el orden que quieran. Escríbanlo en un solo celular de la pareja. Después otra pareja lee su ítem y busca cuál no se puede responder; esa revisión, en cambio, la hace cada uno en su propio celular, más abajo.</p>
       <label for="c_en"><strong>Enunciado</strong></label>
       <textarea id="c_en"></textarea>
-      <label for="c_si"><strong>Tres preguntas que sí se pueden responder, con su respuesta</strong></label>
-      <textarea id="c_si" placeholder="1. ¿…? Respuesta: …&#10;2. ¿…? Respuesta: …&#10;3. ¿…? Respuesta: …"></textarea>
-      <label for="c_no"><strong>La pregunta que no se puede responder</strong></label>
-      <input type="text" id="c_no" autocomplete="off">
-      <label for="c_contra"><strong>Las dos situaciones que cumplen su enunciado y responden distinto</strong></label>
+      <label for="c_q1"><strong>Pregunta 1</strong></label><input type="text" id="c_q1" autocomplete="off">
+      <label for="c_q2"><strong>Pregunta 2</strong></label><input type="text" id="c_q2" autocomplete="off">
+      <label for="c_q3"><strong>Pregunta 3</strong></label><input type="text" id="c_q3" autocomplete="off">
+      <label for="c_q4"><strong>Pregunta 4</strong></label><input type="text" id="c_q4" autocomplete="off">
+      <fieldset><legend>¿Cuál de sus preguntas no se puede responder?</legend>
+        <div class="seg" id="c_no"><label><input type="radio" name="c_no" value="1"> 1</label><label><input type="radio" name="c_no" value="2"> 2</label><label><input type="radio" name="c_no" value="3"> 3</label><label><input type="radio" name="c_no" value="4"> 4</label></div>
+      </fieldset>
+      <label for="c_si"><strong>La respuesta de cada una de las otras tres</strong></label>
+      <textarea id="c_si" placeholder="Pregunta 1: …&#10;Pregunta 2: …&#10;Pregunta 4: …"></textarea>
+      <label for="c_contra"><strong>Dos situaciones que cumplen su enunciado y responden distinto a la que no se puede responder</strong></label>
       <textarea id="c_contra" placeholder="Situación 1: …  Situación 2: …"></textarea>
       <div class="row"><button type="button" id="p7save">Guardar mi pregunta</button></div>
       <div class="msg" id="p7msg" role="status"></div>
+      <div id="p7share" hidden>
+        <div class="row"><button type="button" class="ghost" id="p7show">Mostrar mi ítem a la otra pareja (sin respuestas)</button></div>
+      </div>
+
+      <div id="revbox" hidden>
+        <h3>El ítem de la otra pareja</h3>
+        <p>Pidan a la otra pareja que les muestre su ítem con «Mostrar mi ítem a la otra pareja». Léanlo allá y respondan aquí, en su celular.</p>
+        <label for="rv_de"><strong>Nombres de la otra pareja</strong></label>
+        <input type="text" id="rv_de" autocomplete="off">
+        <fieldset><legend>¿Cuál de sus preguntas no se puede responder?</legend>
+          <div class="seg"><label><input type="radio" name="rv_cual" value="1"> 1</label><label><input type="radio" name="rv_cual" value="2"> 2</label><label><input type="radio" name="rv_cual" value="3"> 3</label><label><input type="radio" name="rv_cual" value="4"> 4</label></div>
+        </fieldset>
+        <label for="rv_sits"><strong>Dos situaciones que cumplen su enunciado y responden distinto a esa pregunta</strong></label>
+        <textarea id="rv_sits" placeholder="Situación 1: …  Situación 2: …"></textarea>
+        <div class="row"><button type="button" id="rv1save">Guardar mi respuesta</button></div>
+        <div class="msg" id="rv1msg" role="status"></div>
+        <div id="rv2box" hidden>
+          <p>Ahora pidan a la otra pareja que les diga cuál marcó como imposible y sus dos situaciones.</p>
+          <fieldset><legend>La pregunta que ellos marcaron, ¿de verdad no se puede responder?</legend>
+            <div class="seg"><label><input type="radio" name="rv_valida" value="Sí"> Sí, de verdad no se puede</label><label><input type="radio" name="rv_valida" value="No"> No: sí tiene respuesta</label></div>
+          </fieldset>
+          <label for="rv_por"><strong>¿Por qué? Si tiene respuesta, escriban cuál es.</strong></label>
+          <textarea id="rv_por"></textarea>
+          <div class="row"><button type="button" id="rv2save">Guardar mi revisión</button></div>
+          <div class="msg" id="rv2msg" role="status"></div>
+        </div>
+      </div>
     </div>
   </section>
+
+  <div class="share" id="p7view" hidden role="dialog" aria-modal="true" aria-labelledby="p7viewt">
+    <div class="in">
+      <span class="tag">Ítem de otra pareja</span>
+      <h2 id="p7viewt">¿Cuál de estas preguntas NO se puede responder?</h2>
+      <div class="item"><p id="p7view_en"></p></div>
+      <ol id="p7view_qs"></ol>
+      <p class="note">Respondan en su propio celular, en «El ítem de la otra pareja». Aquí no se escribe nada.</p>
+      <div class="row"><button type="button" id="p7hide">Devolver el celular a sus dueños</button></div>
+    </div>
+  </div>
 
   <!-- PASO 8 -->
   <section class="step locked" id="s8">
@@ -438,7 +509,7 @@ var OPC={
 };
 var CONF={'1':'estoy adivinando','2':'poco seguro','3':'bastante seguro','4':'totalmente seguro'};
 
-function blank(){return {nombre:'',p1:null,repartos:[],p3:null,p4:null,p5open:false,p5:null,s2ini:false,regla2:'',casos:{},contraste:'',p6:false,crear:null,s2:false};}
+function blank(){return {nombre:'',p1:null,repartos:[],p3:null,p4:null,cierre:null,p5open:false,p5:null,s2ini:false,regla2:'',casos:{},contraste:'',p6:false,crear:null,revision:null,p7:false,s2:false};}
 function load(){
   if(AV){var o=AV.initialState(),b=blank();if(o&&typeof o==='object'&&!Array.isArray(o)){for(var k in b){if(!(k in o))o[k]=b[k];}return o;}return b;}
   try{var r=localStorage.getItem(KEY);
@@ -517,17 +588,18 @@ function describe(orient,comp,tri){
 }
 
 var cur=null,sel=-1;
-function setRep(orient,comp,tri){
+// own: reparto armado por el trío con «Dibujar» (H6). Los sugeridos no lo son.
+function setRep(orient,comp,tri,own){
   var parts=tri?triangles():bands(orient,comp);
-  cur={orient:orient,comp:comp,tri:!!tri,parts:parts,asign:parts.map(function(_,i){return i+1;}),desc:describe(orient,comp,tri)};
+  cur={orient:orient,comp:comp,tri:!!tri,own:!!own,parts:parts,asign:parts.map(function(_,i){return i+1;}),desc:describe(orient,comp,tri)};
   sel=-1;render();
 }
 var PRE={v8:['V',[1,1,1,1,1,1,1,1]],h8:['H',[1,1,1,1,1,1,1,1]],g42:['V',[2,2,2,2]],g24:['V',[4,4]],m35:['V',[3,5]]};
 
-function render(){
+function svgInner(parts,asign){
   var h='<rect x="0" y="0" width="120" height="50" class="lot-bg"/>';
-  cur.parts.forEach(function(p,i){
-    var n=cur.asign[i],cls=(n===1?' hl':''),cx,cy,fs;
+  parts.forEach(function(p,i){
+    var n=asign[i],cls=(n===1?' hl':''),cx,cy,fs;
     if(p.t==='r'){var ys=H-(p.y+p.h);
       h+='<rect x="'+p.x+'" y="'+ys+'" width="'+p.w+'" height="'+p.h+'" class="parcel'+cls+'" data-i="'+i+'"/>';
       cx=p.x+p.w/2;cy=ys+p.h/2;fs=Math.min(6,p.h*0.62,p.w*0.62);
@@ -541,7 +613,23 @@ function render(){
   h+='<rect x="0" y="0" width="120" height="50" class="lot-outline"/>';
   h+='<text x="60" y="56.5" class="dim" text-anchor="middle">120 m</text>';
   h+='<text x="-4.5" y="25" class="dim" text-anchor="middle" transform="rotate(-90 -4.5 25)">50 m</text>';
-  var svg=$('lote');svg.innerHTML=h;
+  return h;
+}
+// H7: los tres repartos del cierre se dibujan en cada celular (en el aula no hay tablero ni impresora).
+// H4 (reauditoría): el cuarto dato es la parte del hijo 1; solo la primera figura lo deja en la esquina (0, 0).
+var FIGS=[['V',[1,1,1,1,1,1,1,1],false,0],['H',[1,1,1,1,1,1,1,1],false,7],['V',[],true,4]];
+function drawFigs(){
+  $('figs3').innerHTML=FIGS.map(function(f){
+    var parts=f[2]?triangles():bands(f[0],f[1]),asign=parts.map(function(_,i){return i+1;}),d=describe(f[0],f[1],f[2]);
+    asign[0]=f[3]+1;asign[f[3]]=1;var h1=parts[f[3]];
+    var per=uniq(parts.map(function(p){return fmt(perim(p));}));
+    return '<figure><svg class="lotsvg" viewBox="-9 -3 132 63" role="img" aria-label="'+esc(d+'. La parte del hijo 1 '+locLong(h1)+'.')+'">'+svgInner(parts,asign)+'</svg>'+
+      '<figcaption><strong>'+esc(d)+'</strong><br>Cada parte: 750 m², 1/8 del lote.<br>Perímetro de cada parte: '+per.join(' m; ')+' m.<br>Parte del hijo 1: '+esc(locShort(h1))+'.</figcaption></figure>';
+  }).join('');
+}
+
+function render(){
+  var svg=$('lote');svg.innerHTML=svgInner(cur.parts,cur.asign);
   svg.setAttribute('aria-label','Reparto: '+cur.desc+'. La parte del hijo 1 '+locLong(cur.parts[cur.asign.indexOf(1)])+'.');
   Array.prototype.forEach.call(document.querySelectorAll('#presets button'),function(b){
     var p=PRE[b.getAttribute('data-p')];
@@ -578,17 +666,24 @@ function record(){
     desc:cur.desc,areaLote:'6.000 m²',perLote:'340 m',frac:'1/8',
     areaParte:uniq(cur.parts.map(function(p){return fmt(area(p));})).join(' / ')+' m²',
     perParte:(per.length>1?'varía: ':'')+per.join(' m; ')+' m',
-    hijo1:locShort(h1)
+    hijo1:locShort(h1),
+    own:cur.own?1:0
   };
 }
 function drawTable(){
   var tb=$('tbody');
   if(!S.repartos.length){tb.innerHTML='<tr><td colspan="8" class="note">Todavía no hay repartos guardados.</td></tr>';}
   else tb.innerHTML=S.repartos.map(function(r,i){
-    return '<tr><td>'+(i+1)+'</td><td>'+esc(r.desc)+'</td><td>'+r.areaLote+'</td><td>'+r.perLote+'</td><td>'+r.frac+
-      '</td><td>'+r.areaParte+'</td><td>'+esc(r.perParte)+'</td><td>'+esc(r.hijo1)+'</td></tr>';
+    return '<tr><td>'+(i+1)+'</td><td>'+esc(r.desc)+'</td><td>'+esc(r.hijo1)+'</td><td>'+r.areaLote+'</td><td>'+r.perLote+'</td><td>'+r.frac+
+      '</td><td>'+r.areaParte+'</td><td>'+esc(r.perParte)+'</td></tr>';
   }).join('');
   $('counter').textContent='Repartos guardados: '+S.repartos.length+' (meta: 3)';
+}
+// H6: al inicio solo se ve «8 franjas verticales»; los demás sugeridos, tras guardar un reparto propio.
+function paintPresets(){
+  var propio=S.repartos.some(function(r){return r.own;});
+  Array.prototype.forEach.call(document.querySelectorAll('#presets button'),function(b){if(b.getAttribute('data-p')!=='v8')b.hidden=!propio;});
+  $('presetnota').hidden=propio;
 }
 
 /* ---------- paso 3: comparación ---------- */
@@ -633,9 +728,10 @@ var CASOS=[
  {id:'A',k:[],t:'Caso A · El enunciado original, otras preguntas',
   e:'Un empresario compró un lote rectangular de 50 metros de largo y 120 metros de ancho, para repartirlo en partes iguales entre sus 8 hijos.',
   q:[
-   ['¿Cuál es el perímetro de la porción que le corresponde a cada hijo?',false,'No se puede. Franjas de 15 m × 50 m dan 130 m; franjas de 120 m × 6,25 m dan 252,5 m. Las dos cumplen el enunciado.'],
+   ['Julián dice: «La porción de cada hijo tiene 130 m de perímetro, porque a cada uno le toca una franja de 15 m × 50 m». ¿Es válida su respuesta?',false,'No es válida. Su cuenta está bien, pero supone cómo se corta el lote, y el enunciado no lo dice: con franjas de 120 m × 6,25 m, que también lo cumplen, el perímetro es 252,5 m.',
+    {r:['La cuenta está bien hecha: 2 × (15 + 50) = 130 m, así que su respuesta es correcta.','La cuenta está mal: una franja de 15 m × 50 m no tiene 130 m de perímetro.','Supone cómo se corta el lote: con franjas de 120 m × 6,25 m el perímetro es otro.'],ok:2}],
    ['¿Cuál es el área de la porción que le corresponde a cada hijo?',true,'Sí: 6.000 ÷ 8 = 750 m², sea cual sea el reparto.'],
-   ['¿Cuál es la longitud total del cerco que rodea el lote?',true,'Sí: es el perímetro del lote, 2 × (50 + 120) = 340 m.'],
+   ['¿Cuántos metros de cerco se necesitan para rodear todo el lote, sin dejar puertas?',true,'Sí: es el perímetro del lote, 2 × (50 + 120) = 340 m.'],
    ['¿Cuál es la razón entre el largo y el ancho del lote?',true,'Sí: 50 a 120, que simplificada es 5 : 12.']
   ]},
  {id:'B',k:[0],t:'Caso B · Ahora se dice cómo se corta',
@@ -643,7 +739,8 @@ var CASOS=[
   q:[
    ['¿Cuál es el perímetro de la porción que le corresponde a cada hermano?',true,'Sí: cada franja mide 50 m × 15 m, así que su perímetro es 2 × (50 + 15) = 130 m.'],
    ['¿Cuál de los hermanos recibe la porción que da a la carretera?',false,'No se puede. El enunciado no dice en qué orden se asignan las franjas: la de la carretera le puede tocar a cualquiera.'],
-   ['¿Cuál es la longitud de la cerca que separa unas porciones de otras?',true,'Sí: entre 8 franjas hay 7 cortes de 50 m, o sea 350 m.'],
+   ['Valeria dice: «Los cortes que separan las porciones suman 350 m, porque entre las 8 franjas hay 7 cortes de 50 m». ¿Es válida su respuesta?',true,'Es válida. Este enunciado sí dice cómo se corta: franjas paralelas al lado de 50 m. Entre 8 franjas hay 7 cortes de 50 m: 7 × 50 = 350 m. Si las franjas fueran paralelas al lado de 120 m, cada corte mediría 120 m: la razón es el trazado que da el enunciado.',
+    {r:['Las franjas van paralelas al lado de 50 m: cada corte mide 50 m y entre 8 franjas hay 7.','Supone cómo se corta el lote, y este enunciado no dice cómo se corta ni por dónde van los cortes.','Cada franja mide 50 m de largo, así que 7 × 50 = 350 m, vayan como vayan las franjas.'],ok:0}],
    ['¿Cuál es la fracción del lote que le corresponde a cada hermano?',true,'Sí: 1/8.']
   ]},
  {id:'C',k:[0,1],t:'Caso C · Se dice cómo se corta y a quién le toca, pero falta un dato',
@@ -652,13 +749,15 @@ var CASOS=[
    ['¿Qué lugar del acta ocupa el asociado que recibe la franja que da a la carretera?',true,'Sí: el primero, porque las franjas se asignan en el orden del acta empezando por la que da a la carretera. Compárelo con el caso B, donde no se dice el orden.'],
    ['¿Cuál es la fracción del lote que le corresponde a cada asociado?',false,'No se puede. El enunciado no dice cuántos asociados son: con 8 sería 1/8; con 10, 1/10.'],
    ['¿Cuál es el área del lote?',true,'Sí: 50 × 120 = 6.000 m².'],
-   ['¿Cuál es el perímetro de la porción que le corresponde a cada asociado?',false,'No se puede. Con 8 asociados las franjas miden 50 m × 15 m (130 m); con 10 miden 50 m × 12 m (124 m).']
+   ['Andrés dice: «La porción de cada asociado tiene 130 m de perímetro, porque a cada uno le toca una franja de 15 m × 50 m». ¿Es válida su respuesta?',false,'No es válida. Su cuenta está bien para 8 asociados, pero el enunciado no dice cuántos son: con 10, las franjas miden 12 m × 50 m y el perímetro es 124 m.',
+    {r:['La cuenta está bien hecha: 2 × (15 + 50) = 130 m, así que su respuesta es correcta.','Supone 8 asociados: con 10, las franjas miden 12 m × 50 m y el perímetro es otro.','Las franjas de este enunciado no van paralelas al lado de 50 m.'],ok:1}]
   ]},
  {id:'D',k:[0],t:'Caso D · Solo se da el área',
   e:'Para un ejercicio de su clase de geometría, Camila modeló un lote rectangular de 6.000 metros cuadrados de área que se reparte en partes iguales entre los 8 beneficiarios. El reparto se hará en franjas iguales, todas paralelas al lado más corto.',
   q:[
    ['¿Cuál es el perímetro del lote?',false,'No se puede. Un lote de 50 m × 120 m tiene 340 m de perímetro; uno de 60 m × 100 m tiene 320 m. Los dos miden 6.000 m².'],
-   ['¿Cuál es el área de la porción que le corresponde a cada beneficiario?',true,'Sí: 6.000 ÷ 8 = 750 m².'],
+   ['Sebastián dice: «La porción de cada beneficiario mide 750 m², porque 6.000 ÷ 8 = 750». ¿Es válida su respuesta?',true,'Es válida. Las 8 porciones son iguales y el área del lote está dada, así que cada una mide 6.000 ÷ 8 = 750 m², aunque no se sepan el largo ni el ancho.',
+    {r:['No se sabe el largo ni el ancho del lote, así que no se puede saber el área de cada porción.','Las porciones son iguales y el área del lote está dada: 6.000 ÷ 8 = 750 m².','Con un lote de 50 m × 120 m, cada porción es una franja de 15 m × 50 m: 750 m².'],ok:1}],
    ['¿Cuál es la fracción del lote que le corresponde a cada beneficiario?',true,'Sí: 1/8.'],
    ['¿Cuál es la medida del lado más largo del lote?',false,'No se puede: puede ser 120 m (50 × 120), 100 m (60 × 100) o 150 m (40 × 150).']
   ]}
@@ -669,6 +768,12 @@ function drawCasos(){
     return '<div class="caso" id="caso_'+c.id+'"><h3 id="ct_'+c.id+'">'+esc('Caso '+c.id)+'</h3><p class="enun">'+esc(c.e)+'</p>'+
       c.q.map(function(q,i){
         var nm='cs_'+c.id+'_'+i;
+        if(q[3])return '<div class="qcmp"><p class="q">'+esc(q[0])+'</p><div class="seg">'+
+          '<label><input type="radio" name="'+nm+'" value="si"> Es válida</label>'+
+          '<label><input type="radio" name="'+nm+'" value="no"> No es válida</label>'+
+          '</div><p class="q2">¿Por qué?</p><div class="razones">'+q[3].r.map(function(t,j){
+            return '<label class="opt"><input type="radio" name="cw_'+c.id+'_'+i+'" value="'+j+'"><span><strong>'+'abc'.charAt(j)+')</strong> '+esc(t)+'</span></label>';
+          }).join('')+'</div><div class="fb" id="fb_'+nm+'"></div></div>';
         return '<div class="qcmp"><p class="q">'+esc(q[0])+'</p><div class="seg">'+
           '<label><input type="radio" name="'+nm+'" value="si"> Sí se puede</label>'+
           '<label><input type="radio" name="'+nm+'" value="no"> No se puede</label>'+
@@ -679,11 +784,21 @@ function drawCasos(){
       '<button type="button" class="small" data-caso="'+c.id+'">Comprobar el caso '+c.id+'</button></div>'+
       '<div class="msg" id="msg_caso_'+c.id+'"></div></div>';
   }).join('');
-  CASOS.forEach(function(c){var st=S.casos[c.id];paintR1(c.id);if(st&&st.r){st.r.forEach(function(v,i){if(v)setRadio('cs_'+c.id+'_'+i,v);});if(st.checked)checkCaso(c.id,true);}});
+  CASOS.forEach(function(c){var st=S.casos[c.id],pi=propIdx(c);paintR1(c.id);
+    if(st&&st.w!=null&&pi>=0)setRadio('cw_'+c.id+'_'+pi,st.w);
+    if(st&&st.r){st.r.forEach(function(v,i){if(v)setRadio('cs_'+c.id+'_'+i,v);});if(st.checked)checkCaso(c.id,true);}});
 }
 function paintContraste(){var todos=CASOS.every(function(c){var x=S.casos[c.id];return x&&(x.r1||x.ok!=null);});$('contrastebox').hidden=!todos;$('contrastenota').hidden=todos;}
 function caso(id){return CASOS.filter(function(x){return x.id===id;})[0];}
-function leerCaso(id){var r=[],miss=false;caso(id).q.forEach(function(q,i){var v=radio('cs_'+id+'_'+i);r.push(v);if(!v)miss=true;});return miss?null:r;}
+// H8: cada caso trae una respuesta de un estudiante (q[3]) que se valida en dos niveles: ¿es válida? y ¿por qué?
+// Cuenta como acierto solo si los dos niveles están bien. Nunca es una de las preguntas que cambian de estado (k).
+function propIdx(c){for(var i=0;i<c.q.length;i++){if(c.q[i][3])return i;}return -1;}
+function bien(q,v,w){return (v==='si')===q[1]&&(!q[3]||w===String(q[3].ok));}
+function leerCaso(id){
+  var r=[],w=null,miss=false;
+  caso(id).q.forEach(function(q,i){var v=radio('cs_'+id+'_'+i);r.push(v);if(!v)miss=true;if(q[3]){w=radio('cw_'+id+'_'+i);if(w===null)miss=true;}});
+  return miss?null:{r:r,w:w};
+}
 // La decisión «antes de hablar» (r1) queda fija: es la evidencia individual de transferencia que ve el panel
 // (ok1 de 4 y c1 = aciertos en las preguntas que cambian de estado, lista k). Comprobar solo se habilita después de guardarla.
 // Un caso comprobado antes de que existiera r1 (estado viejo) no lo ofrece: ya vio la retroalimentación (N7).
@@ -693,27 +808,30 @@ function paintR1(id){
   b1.hidden=!!st.r1||viejo;bc.disabled=!st.r1&&!viejo;
   $('ct_'+id).textContent=(st.r1||viejo)?caso(id).t:'Caso '+id; // el subtítulo da pistas: solo después de decidir
   paintContraste();
-  $('r1_'+id).textContent=st.r1?'Su decisión antes de hablar quedó guardada: '+st.r1.map(function(v,i){return (i+1)+' '+(v==='si'?'Sí':'No');}).join(' · ')+'.':(viejo?'Este caso se comprobó antes de que existiera la decisión antes de hablar: no tiene primer intento.':'');
+  $('r1_'+id).textContent=st.r1?'Su decisión antes de hablar quedó guardada: '+st.r1.map(function(v,i){var q=caso(id).q[i];
+    return (i+1)+' '+(q[3]?(v==='si'?'Válida':'No válida')+(st.w1!=null?' ('+'abc'.charAt(+st.w1)+')':''):(v==='si'?'Sí':'No'));}).join(' · ')+'.':(viejo?'Este caso se comprobó antes de que existiera la decisión antes de hablar: no tiene primer intento.':'');
 }
 function saveR1(id){
-  var st=S.casos[id]||{},c=caso(id),r=leerCaso(id);
+  var st=S.casos[id]||{},c=caso(id),L=leerCaso(id),pi=propIdx(c);
   if(st.r1||st.ok!=null){paintR1(id);return;}
-  if(!r){msg('msg_caso_'+id,'Decida las cuatro preguntas antes de guardar.','warn');return;}
-  var ok1=0;c.q.forEach(function(q,i){if((r[i]==='si')===q[1])ok1++;});
-  st.r1=r.slice();st.ok1=ok1;st.c1=c.k.filter(function(i){return (r[i]==='si')===c.q[i][1];}).length;st.r=r.slice();st.checked=false;S.casos[id]=st;
+  if(!L){msg('msg_caso_'+id,'Decida las cuatro preguntas, y el porqué de la respuesta del estudiante, antes de guardar.','warn');return;}
+  var ok1=0;c.q.forEach(function(q,i){if(bien(q,L.r[i],L.w))ok1++;});
+  st.r1=L.r.slice();st.w1=L.w;st.ok1=ok1;st.c1=c.k.filter(function(i){return (L.r[i]==='si')===c.q[i][1];}).length;
+  st.v1=(pi>=0&&bien(c.q[pi],L.r[pi],L.w))?1:0;
+  st.r=L.r.slice();st.w=L.w;st.checked=false;S.casos[id]=st;
   paintR1(id);msg('msg_caso_'+id,'Decisión guardada. Ahora compárenla en pareja y después comprueben.','ok');
   save('caso-'+id+'-r1');
 }
 function checkCaso(id,silent){
-  var c=caso(id),st=S.casos[id]||{},r=leerCaso(id),ok=0;
+  var c=caso(id),st=S.casos[id]||{},L=leerCaso(id),ok=0;
   if(!st.r1&&st.ok==null&&!silent){msg('msg_caso_'+id,'Primero guarde su decisión antes de hablar.','warn');return;}
-  if(!r){if(!silent)msg('msg_caso_'+id,'Responda las cuatro preguntas antes de comprobar.','warn');return;}
+  if(!L){if(!silent)msg('msg_caso_'+id,'Responda las cuatro preguntas, y el porqué de la respuesta del estudiante, antes de comprobar.','warn');return;}
   c.q.forEach(function(q,i){
-    var good=(r[i]==='si')===q[1];if(good)ok++;
+    var vOk=(L.r[i]==='si')===q[1],good=bien(q,L.r[i],L.w);if(good)ok++;
     var fb=$('fb_cs_'+id+'_'+i);fb.className='fb '+(good?'ok':'bad');
-    fb.textContent=(good?'Correcto. ':'Revise. ')+q[2];
+    fb.textContent=(good?'Correcto. ':(q[3]&&vOk?'La decisión está bien, pero revise el porqué. ':'Revise. '))+q[2];
   });
-  st.r=r;st.checked=true;st.ok=ok;S.casos[id]=st;
+  st.r=L.r;st.w=L.w;st.checked=true;st.ok=ok;S.casos[id]=st;
   msg('msg_caso_'+id,'Acertó '+ok+' de 4'+(st.r1?' (antes de hablar: '+st.ok1+' de 4)':'')+'. Si falló alguna, busque las dos situaciones que muestran por qué.',ok===4?'ok':'warn');
   if(!silent)save('caso-'+id);
 }
@@ -728,13 +846,19 @@ function resumen(){
     S.repartos.forEach(function(r,i){L.push((i+1)+'. '+r.desc+' | perímetro de cada parte: '+r.perParte+' | hijo 1: '+r.hijo1);});}
   if(S.p3&&S.p3.regla)L.push('','REGLA DEL TRÍO: '+S.p3.regla,'¿Sara tiene razón? '+(S.p3.saraOK||'(sin decidir)')+'. Por qué: '+S.p3.sara);
   if(S.p4)L.push('','SEGUNDA DECISIÓN: '+S.p4.op+' ('+CONF[S.p4.conf]+')','Justificación: '+S.p4.why);
+  if(S.cierre&&S.cierre.cambio){L.push('','CIERRE. Qué cambió y qué no: '+S.cierre.cambio);if(S.cierre.regla)L.push('Mi regla: '+S.cierre.regla);}
   if(S.p5)L.push('','LO QUE ENTIENDO AHORA: '+S.p5);
   if(S.regla2)L.push('','SESIÓN 2. Regla de memoria: '+S.regla2);
   var cs=CASOS.filter(function(c){return S.casos[c.id]&&S.casos[c.id].checked;});
-  if(cs.length){var t=0,t1=0;cs.forEach(function(c){t+=S.casos[c.id].ok;t1+=S.casos[c.id].ok1||0;});
-    L.push('','Casos comprobados: '+cs.map(function(c){var x=S.casos[c.id];return c.id+' (antes de hablar '+(x.ok1==null?'—':x.ok1)+'/4, al comprobar '+x.ok+'/4)';}).join(', ')+'. Total: '+t+' de '+(cs.length*4)+'. Antes de hablar: '+t1+' de '+(cs.length*4)+'.');}
+  if(cs.length){var t=0,t1=0,v1=0;cs.forEach(function(c){t+=S.casos[c.id].ok;t1+=S.casos[c.id].ok1||0;v1+=S.casos[c.id].v1||0;});
+    L.push('','Casos comprobados: '+cs.map(function(c){var x=S.casos[c.id];return c.id+' (antes de hablar '+(x.ok1==null?'—':x.ok1)+'/4, al comprobar '+x.ok+'/4)';}).join(', ')+'. Total: '+t+' de '+(cs.length*4)+'. Antes de hablar: '+t1+' de '+(cs.length*4)+'.',
+      'Respuestas de estudiantes bien validadas antes de hablar (decisión y porqué): '+v1+' de '+cs.length+'.');}
   if(S.contraste)L.push('Comparación de casos: '+S.contraste);
-  if(S.crear)L.push('','MI PREGUNTA','Enunciado: '+S.crear.en,'Sí se pueden responder: '+S.crear.si,'No se puede responder: '+S.crear.no,'Contraejemplo: '+S.crear.contra);
+  if(S.crear){L.push('','MI PREGUNTA','Enunciado: '+S.crear.en);
+    if(S.crear.preguntas)L.push('Preguntas:',S.crear.preguntas);
+    L.push('No se puede responder: '+S.crear.no,(S.crear.preguntas?'Respuestas de las otras: ':'Sí se pueden responder: ')+S.crear.si,'Contraejemplo: '+S.crear.contra);}
+  if(S.revision&&S.revision.cual){L.push('','REVISIÓN DEL ÍTEM DE: '+S.revision.de,'Según yo, no se puede responder la '+S.revision.cual+'. Mis dos situaciones: '+S.revision.sits);
+    if(S.revision.valida)L.push('¿La que ellos marcaron de verdad no se puede responder? '+S.revision.valida+'. Por qué: '+S.revision.por);}
   return L.join('\n');
 }
 
@@ -749,28 +873,39 @@ function fijar(radios,campos,boton,hecho){
 // P1: la regla de memoria se escribe al empezar la sesión 2, no al terminar la 1 (recuperación diferida).
 function paintS2ini(){var ini=!!(S.s2ini||S.regla2);$('s2inibox').hidden=ini;$('r2box').hidden=!ini;}
 function paintFijos(){
+  var ci=S.cierre||{},rv=S.revision||{};
   fijar(['p1op','p1conf'],['p1why'],'p1save',!!S.p1);
   fijar(['saraok'],['p3regla','p3sara'],'p3save',!!S.p4);
   fijar(['p4op','p4conf'],['p4why'],'p4save',!!S.p4);
+  fijar([],['ci_cambio'],'ci1save',!!ci.cambio); // H7: el cierre escrito queda fijo al guardarlo
+  fijar([],['ci_regla'],'ci2save',!!ci.regla);
+  fijar(['rv_cual'],['rv_de','rv_sits'],'rv1save',!!rv.cual); // H11: la respuesta al ítem ajeno, antes de oír la de los autores
+  fijar(['rv_valida'],['rv_por'],'rv2save',!!rv.valida);
 }
 function refresh(){
-  var s2=!!(S.p5||S.s2),p5open=!!(S.p4&&(S.p5open||S.p5));
+  var s2=!!(S.p5||S.s2),p5open=!!(S.p4&&(S.p5open||S.p5)),ci=S.cierre||{};
   lock('s2',!S.p1);
   lock('s3',S.repartos.length<2);
   lock('s4',!(S.p3&&S.p3.regla));
   lock('s5',!p5open);
-  $('p5gate').hidden=!S.p4||p5open;
+  $('cierrebox').hidden=!S.p4;
+  $('ci_figs').hidden=!ci.cambio;
+  $('p5gate').hidden=!S.p4||p5open||!ci.regla; // la palabra se pide después del cierre escrito
   lock('s6',!s2);lock('s7',!s2);
   lock('s8',!S.p1);
+  $('p7share').hidden=!(S.crear&&S.crear.qs);
+  $('revbox').hidden=!s2; // H2 (reauditoría): cada uno revisa en su celular, aunque el ítem de la pareja esté en el otro
+  $('rv2box').hidden=!(S.revision&&S.revision.cual);
   document.body.classList.toggle('evocando',s2&&!!S.s2ini&&!S.regla2); // N3; P1: solo tras «Empezar la sesión 2»
   paintS2ini();
   paintFijos();
+  paintPresets();
   drawTable();
   if(S.p1)$('p1recap').innerHTML='Su primera decisión fue <strong>'+S.p1.op+'</strong> ('+CONF[S.p1.conf]+'): «'+esc(S.p1.why)+'».';
   if(S.p4)personal();
   $('resumen').value=resumen();
   var steps=[['s0','Inicio',!!S.nombre],['s1','1',!!S.p1],['s2','2',S.repartos.length>=3],['s3','3',!!(S.p3&&S.p3.regla)],
-    ['s4','4',!!S.p4],['s5','5',!!S.p5],['s6','6',!!S.p6],['s7','7',!!S.crear],['s8','8',false]];
+    ['s4','4',!!S.p4],['s5','5',!!S.p5],['s6','6',!!S.p6],['s7','7',!!(S.p7||S.crear)],['s8','8',false]];
   $('nav').innerHTML=steps.map(function(s){
     var locked=$(s[0]).classList.contains('locked');
     var label=s[0]==='s0'?s[1]:'Paso '+s[1];
@@ -818,7 +953,7 @@ $('build').addEventListener('click',function(){
   if(comp.some(function(k){return k<1;})){msg('buildmsg','Cada franja debe tener al menos una parte.','warn');return;}
   var sum=comp.reduce(function(a,b){return a+b;},0);
   if(sum!==8){msg('buildmsg','Los números suman '+sum+'; deben sumar 8, uno por cada hijo.','warn');return;}
-  setRep($('orient').value,comp,false);
+  setRep($('orient').value,comp,false,true);
   msg('buildmsg','Listo: '+cur.desc+'. Todas las partes miden 750 m².','ok');
 });
 $('savep').addEventListener('click',function(){
@@ -850,7 +985,24 @@ $('p4save').addEventListener('click',function(){
   if(!op||!cf){msg('p4msg','Elija una respuesta y qué tan seguro está.','warn');return;}
   if(why.length<15){msg('p4msg','Justifique con un dato del enunciado o con uno de sus repartos.','warn');return;}
   S.p4={op:op,conf:cf,why:why};save('p4');
-  msg('p4msg','Segunda decisión guardada. El paso 5 se abre con la palabra que dirá su docente.','ok');
+  msg('p4msg','Segunda decisión guardada. Siga con el cierre, aquí abajo.','ok');
+});
+
+// H7: cierre escrito, cada uno solo. Primero qué cambió y qué no; después las tres figuras y la regla con sus palabras.
+$('ci_cambio').value=(S.cierre&&S.cierre.cambio)||'';
+$('ci_regla').value=(S.cierre&&S.cierre.regla)||'';
+$('ci1save').addEventListener('click',function(){
+  if(S.cierre&&S.cierre.cambio){$('ci_cambio').value=S.cierre.cambio;return;}
+  var t=$('ci_cambio').value.trim();
+  if(t.length<15){msg('ci1msg','Escriba qué cambió y qué no cambió, al menos en una frase.','warn');return;}
+  S.cierre={cambio:t,regla:''};save('cierre');msg('ci1msg','Guardado. Ya no se puede cambiar.','ok');
+});
+$('ci2save').addEventListener('click',function(){
+  if(!S.cierre||!S.cierre.cambio)return;
+  if(S.cierre.regla){$('ci_regla').value=S.cierre.regla;return;}
+  var t=$('ci_regla').value.trim();
+  if(t.length<20){msg('ci2msg','Escriba la regla y un ejemplo con uno de los repartos.','warn');return;}
+  S.cierre.regla=t;save('cierre-regla');msg('ci2msg','Regla guardada. Espere la palabra de su docente para abrir el paso 5.','ok');
 });
 
 // El paso 5 trae la clave: lo abre la palabra que el docente dice después del cierre (guía, sección 7).
@@ -880,8 +1032,10 @@ $('casos').addEventListener('click',function(e){
   var g=e.target.closest('button[data-r1]');if(g)saveR1(g.getAttribute('data-r1'));
 });
 $('casos').addEventListener('change',function(e){
-  var m=/^cs_([A-D])_(\d)$/.exec(e.target.name||'');if(!m)return;
-  var st=S.casos[m[1]]||{};st.r=st.r||[null,null,null,null];st.r[+m[2]]=e.target.value;st.checked=false;S.casos[m[1]]=st;
+  var m=/^c([sw])_([A-D])_(\d)$/.exec(e.target.name||'');if(!m)return;
+  var st=S.casos[m[2]]||{};
+  if(m[1]==='s'){st.r=st.r||[null,null,null,null];st.r[+m[3]]=e.target.value;}else{st.w=e.target.value;}
+  st.checked=false;S.casos[m[2]]=st;
   persist();
 });
 // Sesión 2: la regla de memoria se escribe sola y queda fija; recién entonces se ven los casos.
@@ -906,11 +1060,36 @@ $('p6save').addEventListener('click',function(){
   S.contraste=t;S.p6=true;save('p6');msg('p6msg','Paso 6 guardado.','ok');
 });
 
-if(S.crear){$('c_en').value=S.crear.en;$('c_si').value=S.crear.si;$('c_no').value=S.crear.no;$('c_contra').value=S.crear.contra;}
+if(S.crear){$('c_en').value=S.crear.en||'';$('c_si').value=S.crear.si||'';$('c_contra').value=S.crear.contra||'';
+  if(S.crear.qs){S.crear.qs.forEach(function(q,i){$('c_q'+(i+1)).value=q;});setRadio('c_no',S.crear.noIdx);}}
 $('p7save').addEventListener('click',function(){
-  var c={en:$('c_en').value.trim(),si:$('c_si').value.trim(),no:$('c_no').value.trim(),contra:$('c_contra').value.trim()};
-  if(!c.en||!c.si||!c.no||!c.contra){msg('p7msg','Complete los cuatro campos.','warn');return;}
-  S.crear=c;save('p7');msg('p7msg','Pregunta guardada. Intercambien celular con otra pareja.','ok');
+  var qs=[1,2,3,4].map(function(i){return $('c_q'+i).value.trim();}),no=radio('c_no');
+  var c={en:$('c_en').value.trim(),qs:qs,noIdx:no,si:$('c_si').value.trim(),contra:$('c_contra').value.trim()};
+  if(!c.en||qs.some(function(q){return !q;})||!no||!c.si||!c.contra){msg('p7msg','Complete el enunciado, las cuatro preguntas, cuál no se puede responder, las respuestas y las dos situaciones.','warn');return;}
+  c.no=no+'. '+qs[+no-1];c.preguntas=qs.map(function(q,i){return (i+1)+'. '+q;}).join('\n');
+  S.crear=c;S.p7=true;save('p7');msg('p7msg','Pregunta guardada. Muéstrenla a otra pareja con el botón de abajo.','ok');
+});
+// H11: la otra pareja lee el ítem guardado sin las respuestas, en pantalla completa, y responde en su propio celular.
+$('p7show').addEventListener('click',function(){
+  if(!S.crear||!S.crear.qs)return;
+  $('p7view_en').textContent=S.crear.en;
+  $('p7view_qs').innerHTML=S.crear.qs.map(function(q){return '<li>'+esc(q)+'</li>';}).join('');
+  $('p7view').hidden=false;$('p7hide').focus();
+});
+$('p7hide').addEventListener('click',function(){$('p7view').hidden=true;$('p7show').focus();});
+if(S.revision){$('rv_de').value=S.revision.de||'';$('rv_sits').value=S.revision.sits||'';$('rv_por').value=S.revision.por||'';
+  if(S.revision.cual)setRadio('rv_cual',S.revision.cual);if(S.revision.valida)setRadio('rv_valida',S.revision.valida);}
+$('rv1save').addEventListener('click',function(){
+  if(S.revision&&S.revision.cual)return;
+  var de=$('rv_de').value.trim(),cual=radio('rv_cual'),sits=$('rv_sits').value.trim();
+  if(de.length<2||!cual||sits.length<15){msg('rv1msg','Escriban los nombres de la otra pareja, cuál no se puede responder y sus dos situaciones.','warn');return;}
+  S.revision={de:de,cual:cual,sits:sits};S.p7=true;save('revision');msg('rv1msg','Respuesta guardada. Ya no se puede cambiar.','ok');
+});
+$('rv2save').addEventListener('click',function(){
+  if(!S.revision||!S.revision.cual||S.revision.valida)return;
+  var v=radio('rv_valida'),por=$('rv_por').value.trim();
+  if(!v||por.length<10){msg('rv2msg','Decidan si la pregunta de ellos de verdad no se puede responder y expliquen por qué.','warn');return;}
+  S.revision.valida=v;S.revision.por=por;save('revision-2');msg('rv2msg','Revisión guardada.','ok');
 });
 
 $('copy').addEventListener('click',function(){
@@ -935,11 +1114,15 @@ if(AV){
   $('s8intro').textContent='Sus respuestas ya están guardadas en Moodle. Este resumen es una copia para su cuaderno, o para entregarla si su docente se la pide.';
   $('pie').textContent='Ítem MAT-2026-1-010 (Saber 11, Matemáticas). Las respuestas se guardan en Moodle con su usuario.';
   // En Moodle el docente ve en el panel la primera decisión de cada uno.
-  $('p1vote').textContent='Espere en silencio a que todos guarden. Su docente ve en el panel cómo decidió el curso y les dirá cuándo formar los tríos.';
+  // P-1 = variante B (decisión del profesor, 2026-10-21): el curso ve las barras de la primera y la segunda
+  // decisión juntas, antes del cierre. Las pinta el bridge (barras del curso), no esta página.
+  $('p1vote').textContent='Espere en silencio a que todos guarden. Su docente les dirá cuándo formar los tríos. Antes del cierre verá en este celular cómo decidió el curso.';
+  $('p4vote').textContent='Espere en silencio a que todos guarden. Su docente le mostrará arriba, en este celular, cómo decidió el curso la primera y la segunda vez: mírelo en silencio y toque «Cerrar». Después siga con el cierre, aquí abajo.';
   $('unlock2').hidden=true;$('reset').hidden=true; // N5, N7: en Moodle el estado sigue al usuario y no se borra desde aquí
   if(!S.nombre&&AV.fullname)$('nombre').placeholder='Ejemplo: '+AV.fullname+' (yo), Andrés, Sofía';
 }
 setRep('V',[1,1,1,1,1,1,1,1],false);
+drawFigs();
 ['s0','s1','s2','s3','s4','s5','s7','s8'].forEach(function(id){var sec=$(id);sec.classList.add('evo');var n=document.createElement('p');n.className='evonota';
   n.textContent='Oculto mientras escribe su regla de memoria en el paso 6. Vuelve a verse al guardarla.';sec.querySelector('h2').after(n);});
 drawCmp();drawCasos();refresh();

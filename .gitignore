@@ -304,6 +304,9 @@ AnythingLLM-Config/
 # Excepción (2026-10-20): los HTML de didactica/ son FUENTES escritas a mano, no salidas renderizadas.
 # actividad_estudiante.html es además la fuente única de la actividad del plugin Moodle mod_aulaviva.
 !A-Produccion/**/didactica/*.html
+# Excepción (2026-10-21): las preguntas del cuestionario de verificación diferida (XML de Moodle) son
+# fuente escrita a mano; Moodle/cuestionarios/ del repo Proyectos-Varios las importa.
+!A-Produccion/**/didactica/verificacion_diferida.xml
 
 # Binarios de herramientas IA/CLI (nunca en Git)
 acli

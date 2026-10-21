@@ -116,6 +116,7 @@ footer{color:var(--muted);font-size:.85rem;margin-top:36px}
     <li><a href="#errores">Cómo se hace visible cada error</a></li>
     <li><a href="#transferencia">Casos de transferencia y su clave</a></li>
     <li><a href="#evidencia">Cómo saber si comprendieron</a></li>
+    <li><a href="#verificacion">Verificación diferida</a></li>
     <li><a href="#limites">Límites de esta propuesta</a></li>
     <li><a href="#papel">Plan B en papel</a></li>
     <li><a href="#referencias">Referencias</a></li>
@@ -126,12 +127,12 @@ footer{color:var(--muted);font-size:.85rem;margin-top:36px}
 <h2 id="uso">1. Cómo usarla en Moodle</h2>
 <ol class="tight">
   <li><strong>En el curso, «Agregar una actividad» → «Actividad en vivo»</strong> y elija «¿Alcanzan los datos? (MAT-2026-1-010)». Cada estudiante entra con su usuario y toca «Abrir la actividad»: la actividad se abre a pantalla completa y cada respuesta se guarda sola a su nombre. Si se cae la red del aula, las respuestas esperan en el celular y se envían al volver.</li>
-  <li><strong>En su computador, abra «Abrir el panel en vivo».</strong> Ahí ve quién está conectado, en qué paso va cada estudiante, las barras de la primera y la segunda decisión, lo que escribió cada uno y el aviso «sin avance hace N min». Desde cada tarjeta, o marcando varias (un trío), puede enviar un mensaje: le aparece al estudiante en su pantalla en pocos segundos, y usted ve «visto» cuando lo lee. Las tres frases permitidas están como frases rápidas.</li>
-  <li><strong>Pruébela antes</strong> con «Ver la actividad (vista previa)», que no guarda nada, y en un celular conectado a la red del aula.</li>
-  <li><strong>El paso 5 se abre con la palabra «lindero».</strong> Ese paso trae la explicación y la clave, así que no se abre solo al guardar la segunda decisión. Dígala en voz alta al terminar el cierre (minuto 50, sección 7); cada estudiante la escribe al final del paso 4. Si alguien hace la sesión 1 en otro momento, désela usted. La primera y la segunda decisión quedan fijas completas al guardarlas: letra, seguridad y justificación. Si alguien cambia de opinión, lo escribe en el paso 5.</li>
+  <li><strong>En su computador, abra «Abrir el panel en vivo».</strong> Ahí ve quién está conectado, en qué paso va cada estudiante, las barras de la primera y la segunda decisión, lo que escribió cada uno y el aviso «sin avance hace N min». Desde cada tarjeta, o marcando varias (un trío), puede enviar un mensaje: le aparece al estudiante en su pantalla en pocos segundos, y usted ve «visto» cuando lo lee. Las tres frases permitidas están como frases rápidas. En «Votos», cada conteo tiene el botón «Mostrar al curso»: los celulares de quienes ya guardaron esa decisión ven las barras, sin nombres, y quien no la ha guardado ve solo un aviso. Úselo como dice la sección 7: las dos decisiones juntas, antes del cierre.</li>
+  <li><strong>Pruébela antes</strong> con «Ver la actividad (vista previa)», que no guarda nada, y en un celular conectado a la red del aula. La vista previa no muestra las barras del curso: para verlas, entre con una cuenta de estudiante.</li>
+  <li><strong>El paso 5 se abre con la palabra «lindero».</strong> Ese paso trae la explicación y la clave, así que no se abre solo al guardar la segunda decisión. Dígala en voz alta al terminar el cierre escrito (minuto 45, sección 7); cada estudiante la escribe al final del paso 4, y solo se la pide después de guardar su regla del cierre. Si alguien hace la sesión 1 en otro momento, désela usted. La primera y la segunda decisión quedan fijas completas al guardarlas: letra, seguridad y justificación. Si alguien cambia de opinión, lo escribe en el paso 5.</li>
   <li><strong>No publique esta guía para los estudiantes.</strong> Contiene la clave y la secuencia.</li>
 </ol>
-<p class="small">El panel muestra respuestas de menores de edad: no lo proyecte. Si no hay Moodle disponible, suba <code>actividad_estudiante.html</code> como recurso «Archivo» (Mostrar: «Abrir»). Así las respuestas quedan solo en cada celular y se copian a una tarea con el resumen del paso 8.</p>
+<p class="small">El panel muestra respuestas de menores de edad: no lo proyecte. Si Moodle funciona pero el plugin «Actividad en vivo» no está disponible, suba <code>actividad_estudiante.html</code> como recurso «Archivo» (Mostrar: «Abrir»). Las respuestas quedan solo en cada celular y se copian a una tarea con el resumen del paso 8. En ese modo no hay panel ni barras: cree dos actividades «Consulta» («Primera decisión» y «Segunda decisión», opciones A a D, sin permitir cambiar la elección y con resultados anónimos que no se publican) y, al minuto 37, cuando todos hayan respondido la segunda, cambie las dos para que muestren los resultados a quienes ya respondieron. Si Moodle no funciona, cada estudiante escribe su letra en un papelito doblado; usted los recoge y los cuenta.</p>
 
 <!-- 2 -->
 <h2 id="item">2. El ítem canónico (MAT-2026-1-010)</h2>
@@ -180,16 +181,16 @@ footer{color:var(--muted);font-size:.85rem;margin-top:36px}
     <figcaption>8 franjas de 15 m × 50 m. Perímetro de cada parte: 130 m.</figcaption>
   </figure>
   <figure>
-    <svg class="lot" viewBox="-2 -2 124 60" role="img" aria-label="Ocho franjas horizontales de 120 por 6,25 metros; la del hijo 1 abajo">
-      <rect class="p" x="0" y="0" width="120" height="6.25"/><rect class="p" x="0" y="6.25" width="120" height="6.25"/><rect class="p" x="0" y="12.5" width="120" height="6.25"/><rect class="p" x="0" y="18.75" width="120" height="6.25"/><rect class="p" x="0" y="25" width="120" height="6.25"/><rect class="p" x="0" y="31.25" width="120" height="6.25"/><rect class="p" x="0" y="37.5" width="120" height="6.25"/><rect class="h" x="0" y="43.75" width="120" height="6.25"/>
+    <svg class="lot" viewBox="-2 -2 124 60" role="img" aria-label="Ocho franjas horizontales de 120 por 6,25 metros; la del hijo 1 arriba">
+      <rect class="h" x="0" y="0" width="120" height="6.25"/><rect class="p" x="0" y="6.25" width="120" height="6.25"/><rect class="p" x="0" y="12.5" width="120" height="6.25"/><rect class="p" x="0" y="18.75" width="120" height="6.25"/><rect class="p" x="0" y="25" width="120" height="6.25"/><rect class="p" x="0" y="31.25" width="120" height="6.25"/><rect class="p" x="0" y="37.5" width="120" height="6.25"/><rect class="p" x="0" y="43.75" width="120" height="6.25"/>
       <rect class="o" x="0" y="0" width="120" height="50"/><text x="60" y="56">120 m</text>
     </svg>
     <figcaption>8 franjas de 120 m × 6,25 m. Perímetro de cada parte: 252,5 m.</figcaption>
   </figure>
   <figure>
-    <svg class="lot" viewBox="-2 -2 124 60" role="img" aria-label="Cuadrícula de 4 columnas por 2 filas, partes de 30 por 25 metros; la del hijo 1 abajo a la izquierda">
-      <rect class="p" x="0" y="0" width="30" height="25"/><rect class="p" x="30" y="0" width="30" height="25"/><rect class="p" x="60" y="0" width="30" height="25"/><rect class="p" x="90" y="0" width="30" height="25"/>
-      <rect class="h" x="0" y="25" width="30" height="25"/><rect class="p" x="30" y="25" width="30" height="25"/><rect class="p" x="60" y="25" width="30" height="25"/><rect class="p" x="90" y="25" width="30" height="25"/>
+    <svg class="lot" viewBox="-2 -2 124 60" role="img" aria-label="Cuadrícula de 4 columnas por 2 filas, partes de 30 por 25 metros; la del hijo 1 arriba, en la tercera columna">
+      <rect class="p" x="0" y="0" width="30" height="25"/><rect class="p" x="30" y="0" width="30" height="25"/><rect class="h" x="60" y="0" width="30" height="25"/><rect class="p" x="90" y="0" width="30" height="25"/>
+      <rect class="p" x="0" y="25" width="30" height="25"/><rect class="p" x="30" y="25" width="30" height="25"/><rect class="p" x="60" y="25" width="30" height="25"/><rect class="p" x="90" y="25" width="30" height="25"/>
       <rect class="o" x="0" y="0" width="120" height="50"/><text x="60" y="56">120 m</text>
     </svg>
     <figcaption>Cuadrícula de 30 m × 25 m. Perímetro de cada parte: 110 m.</figcaption>
@@ -250,16 +251,16 @@ footer{color:var(--muted);font-size:.85rem;margin-top:36px}
 <tr><td>Instrucción entre pares (Mazur)</td><td>Media.</td>
   <td>Curso universitario de genética: la discusión mejoró la respuesta individual a una pregunta equivalente, incluso en grupos donde nadie sabía la respuesta al inicio (Smith et al., 2009). Diez años en física universitaria con mejora conceptual y cuantitativa (Crouch y Mazur, 2001). Los resúmenes no dan tamaño de efecto.<br><span class="badge v-ok">Verificada: resumen</span></td>
   <td>Alto: el ítem ya es de selección múltiple.</td><td>10–15 min. Cada decisión queda guardada por escrito; en Moodle, usted ve el conteo en el panel.</td>
-  <td>Si el voto no es simultáneo, se copian. No se localizó evidencia en secundaria.</td><td>El voto individual obliga a todos a comprometerse.</td><td class="use">Primer voto (paso 1) y segunda decisión (paso 4).</td></tr>
+  <td>Si se muestra cómo decidió el curso antes de discutir, más estudiantes cambian a la respuesta más común (Perez et al., 2010, biología universitaria: un 28 % más en selección múltiple). No se localizó evidencia en secundaria.</td><td>La decisión individual por escrito obliga a todos a comprometerse.</td><td class="use">Primera decisión (paso 1) y segunda (paso 4), por escrito. El curso ve las barras de las dos juntas, antes del cierre.</td></tr>
 <tr><td>Aprendizaje cooperativo estructurado (pensar-pareja-compartir, roles)</td><td>Media.</td>
   <td>Metaanálisis de 26 estudios en matemáticas: d = 0,59 (IC 95 % 0,38–0,80) en rendimiento y d = 0,16 en actitudes (Capar y Tarım, 2015).<br><span class="badge v-ok">Verificada: resumen</span></td>
-  <td>Medio-alto.</td><td>Bajo.</td><td>Si los roles no rotan, trabaja uno.</td><td>Cada integrante tiene una tarea.</td><td class="use">Tríos con roles rotativos (paso 2).</td></tr>
+  <td>Medio-alto.</td><td>Bajo.</td><td>Si los roles no rotan, trabaja uno.</td><td>Cada integrante tiene una tarea.</td><td class="use">Tríos: cada uno propone un reparto y los tres lo guardan; lector y escéptico rotan (paso 2).</td></tr>
 <tr><td>Building Thinking Classrooms (Liljedahl)</td><td>Media-alta al inicio, baja después.</td>
   <td>Investigación de diseño; no se localizó ensayo controlado ni tamaño de efecto.<br><span class="badge v-none">Sin evidencia localizada</span></td>
   <td>Medio.</td><td>Alto: tableros verticales y rediseño del aula.</td><td>Sin datos.</td><td>Es su objetivo declarado; sin medición localizada.</td><td class="use">Solo la formación aleatoria de grupos.</td></tr>
 <tr><td>Cinco prácticas (Smith y Stein)</td><td>Alta en planeación, media en clase.</td>
   <td>Marco para orquestar discusiones (Stein et al., 2008); no se localizó tamaño de efecto.<br><span class="badge v-no">No verificada</span></td>
-  <td>Medio: sirve para el cierre.</td><td>Planeación previa.</td><td>Exige anticipar respuestas.</td><td>Sin evidencia localizada.</td><td class="use">Cierre de la sesión 1: observar, seleccionar y ordenar repartos.</td></tr>
+  <td>Medio: sirve para el cierre.</td><td>Planeación previa.</td><td>Exige anticipar respuestas.</td><td>Sin evidencia localizada.</td><td class="use">Cierre de la sesión 1: el docente selecciona y lee respuestas escritas, sin proyectar.</td></tr>
 <tr><td>Movimientos de discurso (talk moves)</td><td>Media-alta.</td>
   <td>No se localizó estudio con efecto en aprendizaje.<br><span class="badge v-none">Sin evidencia localizada</span></td>
   <td>Medio.</td><td>Práctica del docente.</td><td>Sin datos.</td><td>Su objetivo es que respondan unos a otros.</td><td class="use">Tres frases permitidas para el docente.</td></tr>
@@ -310,15 +311,15 @@ footer{color:var(--muted);font-size:.85rem;margin-top:36px}
 <div class="tablewrap"><table class="mid">
 <thead><tr><th>Momento</th><th>Método</th><th>Por qué aquí</th></tr></thead>
 <tbody>
-<tr><td>Decidir solo y votar a la vez (paso 1)</td><td>Instrucción entre pares</td><td>Ataca el problema que usted observó: nadie espera a que otro responda, porque todos se comprometen por escrito y votan al mismo tiempo.</td></tr>
+<tr><td>Decidir solo (paso 1)</td><td>Instrucción entre pares</td><td>Ataca el problema que usted observó: nadie espera a que otro responda, porque todos se comprometen por escrito antes de hablar. El curso ve sus barras al final, antes y después, para no empujar hacia la mayoría (Perez et al., 2010).</td></tr>
 <tr><td>Repartir el lote en trío (paso 2)</td><td>Fracaso productivo + invención con casos contrastados + cooperativo con roles</td><td>El estudiante produce el contraejemplo en vez de recibirlo. El metaanálisis de fracaso productivo muestra efecto positivo en secundaria y el moderador de primaria no aplica a 10.° y 11.°.</td></tr>
 <tr><td>Comparar la tabla y escribir la regla (paso 3)</td><td>Comparación de casos + autoexplicación</td><td>La regla sale de comparar sus propios repartos. El principio se formaliza después de comparar, que es la condición con mejor resultado en Alfieri et al. (2013).</td></tr>
-<tr><td>Segunda decisión y cierre (pasos 4-5)</td><td>Instrucción entre pares + cinco prácticas</td><td>La segunda decisión llega después de discutir en trío: muestra el compromiso de cada uno, no el aprendizaje (Smith et al., 2009: el revoto mezcla aprendizaje con influencia de los pares). La evidencia está en los casos de la sesión 2, decididos solos antes de hablar. En el cierre usted solo ordena los repartos que ellos hicieron.</td></tr>
-<tr><td>Sesión 2: casos y crear ítem (pasos 6-7)</td><td>Práctica intercalada + planteamiento de problemas</td><td>La misma pregunta cambia de estado según el enunciado: obliga a decidir en cada caso. Inventar una pregunta sin respuesta exige dominar la regla.</td></tr>
+<tr><td>Segunda decisión y cierre (pasos 4-5)</td><td>Instrucción entre pares + cinco prácticas</td><td>La segunda decisión llega después de discutir en trío: muestra el compromiso de cada uno, no el aprendizaje (Smith et al., 2009: el revoto mezcla aprendizaje con influencia de los pares). La evidencia está en los casos de la sesión 2, decididos solos antes de hablar. En el cierre cada uno escribe primero, y usted lee en voz alta, sin nombres, dos o tres respuestas.</td></tr>
+<tr><td>Sesión 2: casos y crear ítem (pasos 6-7)</td><td>Práctica intercalada + planteamiento de problemas</td><td>La misma pregunta cambia de estado según el enunciado: obliga a decidir en cada caso. Inventar una pregunta sin respuesta exige dominar la regla. Cada caso trae además la respuesta de un estudiante para validar, con su razón, que es lo que pide la evidencia oficial del ítem; y cada pareja revisa por escrito el ítem de otra.</td></tr>
 </tbody>
 </table></div>
 <p><strong>Qué se descarta y por qué:</strong> el método socrático como eje (intervención alta y participación de a uno); Building Thinking Classrooms completo (costo alto y sin ensayo controlado: se toman solo los grupos aleatorios); ejemplos resueltos (el cálculo ya está dominado); avisos de «cuidado con la trampa» (Dewolf et al., 2014: sin efecto); GeoGebra (necesita instalación o conexión; la página trae su propio lote).</p>
-<p><strong>Su intervención queda en:</strong> una consigna inicial, observar y anotar, tres frases y un cierre de 13 minutos en la sesión 1.</p>
+<p><strong>Su intervención queda en:</strong> en la sesión 1, una consigna, observar y anotar, las tres frases, mostrar las barras y un cierre de 8 minutos en el que lee dos o tres respuestas; en la sesión 2, las tres frases y un cierre de 5 minutos con un ítem que elige en el panel. Unos 25 minutos de 110.</p>
 
 <!-- 7 -->
 <h2 id="secuencia">7. Secuencia de las dos sesiones</h2>
@@ -327,8 +328,9 @@ footer{color:var(--muted);font-size:.85rem;margin-top:36px}
 <h3>Antes de clase</h3>
 <ul class="tight">
   <li>Agregue la actividad en vivo al curso (sección 1) y ábrala en vista previa y en un celular.</li>
-  <li>Prepare fichas numeradas del 1 al 8 (tres de cada número) para formar los tríos al azar.</li>
-  <li>Imprima dos o tres copias del <a href="#papel">plan B en papel</a> por si falla algún celular.</li>
+  <li>No hace falta imprimir ni proyectar nada. Los tríos se forman numerándose en voz alta del 1 al número de tríos (estudiantes ÷ 3: del 1 al 8 con 24); los del mismo número trabajan juntos, y si sobran uno o dos se suman a un trío.</li>
+  <li>Si falla un celular, ese estudiante sigue en el cuaderno con el <a href="#papel">plan B</a>.</li>
+  <li>Si hay una réplica o una evacuación, nadie toca nada: lo guardado no se pierde, y al volver cada uno sigue donde iba.</li>
 </ul>
 
 <h3>Sesión 1 · Construir la idea</h3>
@@ -336,13 +338,13 @@ footer{color:var(--muted);font-size:.85rem;margin-top:36px}
 <thead><tr><th style="width:8%">Min</th><th style="width:7%">Paso</th><th style="width:30%">Estudiantes</th><th style="width:30%">Docente hace</th><th style="width:25%">Docente no hace</th></tr></thead>
 <tbody>
 <tr><td>0–5</td><td>1</td><td>Abren la página. Solos y en silencio: leen, eligen, marcan qué tan seguros están y escriben su razón.</td><td>Da una sola consigna: «Primero solos. No importa acertar ahora».</td><td>No lee el ítem en voz alta ni aclara palabras.</td></tr>
-<tr><td>5–8</td><td>1</td><td>Esperan en silencio a que todos guarden: la decisión de cada uno ya quedó guardada por escrito.</td><td>Mira en el panel el conteo exacto de la primera decisión, sin comentar.</td><td>No dice cuál es la correcta ni pide que alguien explique.</td></tr>
-<tr><td>8–10</td><td>—</td><td>Forman tríos con las fichas y reparten los roles de la página (constructor, lector, escéptico).</td><td>Reparte las fichas.</td><td>No deja elegir compañeros.</td></tr>
-<tr><td>10–30</td><td>2–3</td><td>Arman y guardan al menos tres repartos; comparan la tabla; escriben la regla y la respuesta a Sara.</td><td>Circula y anota qué repartos aparecen (franjas, cuadrículas, triángulos, mixtos) y en qué trío. Solo usa las tres frases.</td><td>No sugiere repartos, no confirma respuestas, no explica.</td></tr>
+<tr><td>5–8</td><td>1</td><td>Esperan en silencio a que todos guarden: la decisión de cada uno ya quedó guardada por escrito.</td><td>Mira en el panel el conteo exacto de la primera decisión, sin mostrarlo ni comentarlo.</td><td>No muestra las barras todavía, no dice cuál es la correcta ni pide que alguien explique.</td></tr>
+<tr><td>8–10</td><td>—</td><td>Se numeran en voz alta y forman tríos. Cada uno propondrá un reparto; mientras tanto, los otros dos hacen de lector y de escéptico.</td><td>Dice hasta qué número se cuentan.</td><td>No deja elegir compañeros.</td></tr>
+<tr><td>10–30</td><td>2–3</td><td>Cada uno propone un reparto y los tres lo guardan en su celular, al menos uno armado con «Dibujar» (eso abre los demás repartos sugeridos). Comparan la tabla, escriben la regla y deciden si Sara tiene razón.</td><td>Circula y anota qué repartos aparecen; en el panel, la columna «Repartos propios» dice qué trío todavía no armó uno. Solo usa las tres frases.</td><td>No sugiere repartos, no confirma respuestas, no explica.</td></tr>
 <tr><td>30–35</td><td>4</td><td>Cada uno vuelve a decidir y justifica con un reparto o un dato del enunciado. La decisión queda fija al guardarla.</td><td>Silencio.</td><td>—</td></tr>
-<tr><td>35–37</td><td>4</td><td>Esperan en silencio a que todos guarden la segunda decisión.</td><td>Compara en el panel las barras de la primera y la segunda decisión.</td><td>No comenta el cambio todavía.</td></tr>
-<tr><td>37–50</td><td>Cierre</td><td>Tres tríos muestran su tabla, en el orden que usted eligió.</td><td>Orden sugerido: (1) un trío con franjas verticales, (2) uno con franjas horizontales o cuadrícula, (3) uno con triángulos o un reparto mixto. Pregunta al grupo: «¿Qué cambió de un reparto a otro y qué no cambió?». Escribe la regla con las palabras de ellos.</td><td>No da la regla antes de que comparen.</td></tr>
-<tr><td>50–55</td><td>5</td><td>Escriben la palabra al final del paso 4, leen la explicación y escriben qué entienden ahora. Sus respuestas ya quedaron en Moodle. No tocan «Empezar la sesión 2»: es para la próxima clase.</td><td>Dice en voz alta la palabra «lindero».</td><td>No la dice antes de terminar el cierre.</td></tr>
+<tr><td>35–37</td><td>4</td><td>Esperan en silencio. Cuando el docente las muestra, miran en su celular las barras de la primera y la segunda decisión y tocan «Cerrar».</td><td>Cuando el panel marque que todos guardaron la segunda decisión, toca «Mostrar al curso» en «Primera decisión» y en «Segunda decisión»: el curso ve el antes y el después. Si alguien no ha guardado la segunda, espera: quien ve las barras antes de decidir se va con la mayoría.</td><td>No comenta el cambio.</td></tr>
+<tr><td>37–45</td><td>Cierre escrito (paso 4)</td><td>Cada uno escribe qué cambió de un reparto a otro y qué no (2 min). Al guardarlo ve en su celular tres repartos dibujados (franjas verticales, horizontales y triángulos, con el hijo 1 en lugares distintos) y espera. Cuando el docente termina de leer, escribe la regla con sus palabras, con uno de esos repartos como ejemplo (2 min). Las dos respuestas quedan fijas.</td><td>Lee en voz alta, sin nombres, dos o tres respuestas del panel («Cierre: qué cambió y qué no»): una que note que cambia el lugar del hijo 1, una que note que el área no cambia y, si aparece, una que note que cambia la forma.</td><td>No da la regla ni abre una pregunta al grupo: la regla escrita ya pide un reparto como ejemplo. No proyecta el panel.</td></tr>
+<tr><td>45–55</td><td>5</td><td>Escriben la palabra al final del paso 4, leen la explicación y escriben qué entienden ahora (10 min). Sus respuestas ya quedaron en Moodle. No tocan «Empezar la sesión 2»: es para la próxima clase.</td><td>Cuando el panel muestre «4b · Cierre escrito» en casi todos, toca «Ocultar al curso» en los dos conteos (si no, las barras reaparecen en la sesión 2) y dice en voz alta la palabra «lindero».</td><td>No la dice antes de terminar el cierre.</td></tr>
 </tbody></table></div>
 
 <h3>Sesión 2 · Transferir y crear</h3>
@@ -350,11 +352,13 @@ footer{color:var(--muted);font-size:.85rem;margin-top:36px}
 <thead><tr><th style="width:8%">Min</th><th style="width:7%">Paso</th><th style="width:30%">Estudiantes</th><th style="width:30%">Docente hace</th><th style="width:25%">Docente no hace</th></tr></thead>
 <tbody>
 <tr><td>0–5</td><td>6</td><td>Tocan «Empezar la sesión 2» y cada uno escribe la regla de memoria. Mientras la escribe, los pasos 1 a 5, el 7 y el resumen se ocultan, porque contienen la regla. Queda fija al guardarla, y solo entonces se ven los casos.</td><td>Dice: «Toquen Empezar la sesión 2».</td><td>No la recuerda por ellos.</td></tr>
-<tr><td>5–25</td><td>6</td><td>Casos A a D. Cada uno decide solo y toca «Guardar mi decisión»: esa decisión queda fija y es la que ve usted en el panel. Después comparan en pareja; si no coinciden, cada uno argumenta con dos situaciones, y al final comprueban.</td><td>Circula con las tres frases.</td><td>No confirma antes de que comprueben.</td></tr>
+<tr><td>5–25</td><td>6</td><td>Casos A a D. Cada uno decide solo si cada pregunta se puede responder y si la respuesta de un estudiante es válida, con su razón, y toca «Guardar mi decisión»: esa decisión queda fija y es la que ve usted en el panel. Después comparan en pareja; si no coinciden, cada uno argumenta con dos situaciones, y al final comprueban.</td><td>Circula con las tres frases.</td><td>No confirma antes de que comprueben.</td></tr>
 <tr><td>25–30</td><td>6</td><td>Escriben qué frase del enunciado hizo la diferencia entre la pregunta original y los casos B y C.</td><td>—</td><td>—</td></tr>
-<tr><td>30–45</td><td>7</td><td>Inventan su ítem e intercambian celular con otra pareja, que debe encontrar la pregunta sin respuesta y dar el contraejemplo.</td><td>Elige dos ítems para el cierre: uno que funciona y uno cuya pregunta «sin respuesta» sí tiene respuesta.</td><td>No corrige los ítems uno por uno.</td></tr>
-<tr><td>45–55</td><td>Cierre</td><td>Las dos parejas presentan; el grupo decide si el contraejemplo vale.</td><td>Modera con las tres frases.</td><td>No decide por el grupo.</td></tr>
+<tr><td>30–50</td><td>7</td><td>Escriben su ítem con cuatro preguntas en un solo celular de la pareja (10 min) y se lo muestran a otra pareja con «Mostrar mi ítem a la otra pareja», que oculta sus respuestas. Cada uno responde el ítem ajeno en su propio celular (queda fijo) y después decide si la pregunta que los autores marcaron de verdad no se puede responder (10 min).</td><td>Mira en el panel la columna «Ítem ajeno: ¿la de ellos es imposible?» y elige para el cierre un ítem marcado «No».</td><td>No corrige los ítems uno por uno.</td></tr>
+<tr><td>50–55</td><td>Cierre</td><td>Escuchan el ítem elegido y la razón de quienes lo revisaron; los autores responden en una frase con su contraejemplo.</td><td>Lee en voz alta, sin nombres, el ítem y la razón de la revisión, y da la palabra a los autores. Al final aplica la regla en voz alta: «¿Las dos situaciones cumplen todo lo que dice el enunciado? ¿Dan respuestas distintas?». Si las dos cumplen y responden distinto, concluye: «no se puede responder». Si no, dice: «Ese par no prueba que falte información. La respuesta de los revisores, ¿sale igual en todas las situaciones que cumplen el enunciado?», y solo con eso concluye.</td><td>No da su opinión: aplica la regla en voz alta. No abre una votación a mano alzada.</td></tr>
 </tbody></table></div>
+
+<p class="small"><strong>Sin el plugin</strong> (actividad como «Archivo» y dos «Consulta», sección 1), la secuencia es la misma con estos cambios: al minuto 5 cada uno responde además la Consulta «Primera decisión», y al minuto 35 la «Segunda decisión»; usted muestra las dos juntas al minuto 37. En el cierre lee dos o tres respuestas mirando celulares mientras circula, sin nombres. Dice la palabra cuando la mayoría le muestre su regla guardada. En la sesión 2, sin panel, pregunta qué pareja marcó «No» en su revisión y elige ese ítem para el cierre.</p>
 
 <h3>Las tres frases permitidas</h3>
 <ol class="phrases">
@@ -362,7 +366,7 @@ footer{color:var(--muted);font-size:.85rem;margin-top:36px}
   <li>«¿Pueden encontrar otro reparto que también cumpla y dé otra respuesta?».</li>
   <li>«¿Qué tendría que decir el enunciado para que esa pregunta tuviera una sola respuesta?».</li>
 </ol>
-<p class="small">Si un trío lleva más de tres minutos bloqueado en el paso 2: «Prueben el botón Triángulos». Es la única pista de contenido.</p>
+<p class="small">Si un trío lleva más de tres minutos sin un reparto propio: «Armen un reparto con Dibujar y guárdenlo». Si ya lo tiene y sigue bloqueado: «Prueben el botón Triángulos», que aparece al guardar el primer reparto propio. Es la única pista de contenido. Las dos están en las frases rápidas del panel.</p>
 
 <!-- 8 -->
 <h2 id="errores">8. Cómo se hace visible cada error</h2>
@@ -371,8 +375,9 @@ footer{color:var(--muted);font-size:.85rem;margin-top:36px}
 <tbody>
 <tr><td>Creer que el área o el perímetro del lote no se pueden calcular (A, C)</td><td>En la tabla, «Área del lote» y «Perímetro del lote» son iguales en todas las filas, y el paso 3 les pide decidir si cambiaron.</td></tr>
 <tr><td>Confundir fracción con ubicación (D)</td><td>La columna «Fracción» es 1/8 en todas las filas mientras «Parte del hijo 1» cambia. El caso de Sara pone el error en boca de otro, para que lo refuten sin defender su propia respuesta.</td></tr>
-<tr><td>Creer que «partes iguales» quiere decir «misma forma»</td><td>Los botones «Triángulos» y «Franjas de 3 y de 5 partes» muestran partes de 750 m² con formas distintas, incluso dentro de un mismo reparto.</td></tr>
+<tr><td>Creer que «partes iguales» quiere decir «misma forma»</td><td>Los botones «Triángulos» y «Franjas de 3 y de 5 partes», que aparecen al guardar un reparto propio, muestran partes de 750 m² con formas distintas, incluso dentro de un mismo reparto. En el cierre escrito, los tres repartos dibujados lo muestran a todos.</td></tr>
 <tr><td>Creer que si se calcula el perímetro del lote también se calcula el de cada parte</td><td>La columna extra «Perímetro de cada parte» cambia entre repartos; el caso A lo pregunta directamente.</td></tr>
+<tr><td>Generalizar de más: creer que, si falta un dato, nada se puede responder</td><td>En los casos B y D, la respuesta de Valeria y la de Sebastián son válidas aunque al enunciado le falte información. Una razón del tipo «no se sabe cómo se corta» las rechaza y cuenta como error.</td></tr>
 <tr><td>Acertar B por intuición, sin poder justificar</td><td>El nivel de seguridad del paso 1 y la justificación del paso 4: debe nombrar el dato que falta o un reparto.</td></tr>
 </tbody></table></div>
 
@@ -382,24 +387,25 @@ footer{color:var(--muted);font-size:.85rem;margin-top:36px}
 <div class="tablewrap"><table class="mid">
 <thead><tr><th>Caso</th><th>Qué declara el enunciado</th><th>Pregunta</th><th>Clave</th></tr></thead>
 <tbody>
-<tr><td rowspan="4">A</td><td rowspan="4">El original: medidas y número de partes</td><td>Perímetro de la porción de cada hijo</td><td><strong>No</strong>: 130 m o 252,5 m según el corte</td></tr>
+<tr><td rowspan="4">A</td><td rowspan="4">El original: medidas y número de partes</td><td>Julián: «la porción de cada hijo tiene 130 m de perímetro, porque le toca una franja de 15 m × 50 m». ¿Es válida?</td><td><strong>No es válida</strong>, razón c: supone cómo se corta; con franjas de 120 m × 6,25 m el perímetro es 252,5 m</td></tr>
 <tr><td>Área de la porción de cada hijo</td><td>Sí: 750 m²</td></tr>
-<tr><td>Longitud total del cerco que rodea el lote</td><td>Sí: 340 m</td></tr>
+<tr><td>Metros de cerco para rodear todo el lote, sin dejar puertas</td><td>Sí: 340 m</td></tr>
 <tr><td>Razón entre el largo y el ancho del lote</td><td>Sí: 5 : 12</td></tr>
 <tr><td rowspan="4">B</td><td rowspan="4">Medidas, 8 partes y trazado (franjas paralelas al lado de 50 m); carretera en un lado de 50 m</td><td>Perímetro de la porción de cada hermano</td><td>Sí: 2 × (50 + 15) = 130 m</td></tr>
 <tr><td>Quién recibe la porción que da a la carretera</td><td><strong>No</strong>: no se dice el orden de asignación</td></tr>
-<tr><td>Longitud de la cerca que separa las porciones</td><td>Sí: 7 × 50 = 350 m</td></tr>
+<tr><td>Valeria: «los cortes que separan las porciones suman 350 m, porque entre las 8 franjas hay 7 cortes de 50 m». ¿Es válida?</td><td><strong>Es válida</strong>, razón a: este enunciado sí dice cómo se corta, y 7 × 50 = 350 m</td></tr>
 <tr><td>Fracción de cada hermano</td><td>Sí: 1/8</td></tr>
 <tr><td rowspan="4">C</td><td rowspan="4">Medidas, trazado y asignación por el orden del acta, pero no cuántos asociados son</td><td>Qué lugar del acta ocupa el asociado que recibe la franja de la carretera</td><td>Sí: el primero (las franjas se asignan en el orden del acta, empezando por esa)</td></tr>
 <tr><td>Fracción de cada asociado</td><td><strong>No</strong>: 1/8 con 8, 1/10 con 10</td></tr>
 <tr><td>Área del lote</td><td>Sí: 6.000 m²</td></tr>
-<tr><td>Perímetro de la porción de cada asociado</td><td><strong>No</strong>: 130 m con 8, 124 m con 10</td></tr>
+<tr><td>Andrés: «la porción de cada asociado tiene 130 m de perímetro, porque le toca una franja de 15 m × 50 m». ¿Es válida?</td><td><strong>No es válida</strong>, razón b: supone 8 asociados; con 10, las franjas miden 12 m × 50 m (124 m)</td></tr>
 <tr><td rowspan="4">D</td><td rowspan="4">Solo el área (6.000 m²), 8 partes y franjas paralelas al lado más corto</td><td>Perímetro del lote</td><td><strong>No</strong>: 340 m (50 × 120) o 320 m (60 × 100)</td></tr>
-<tr><td>Área de la porción de cada beneficiario</td><td>Sí: 750 m²</td></tr>
+<tr><td>Sebastián: «la porción de cada beneficiario mide 750 m², porque 6.000 ÷ 8 = 750». ¿Es válida?</td><td><strong>Es válida</strong>, razón b: las porciones son iguales y el área está dada, midan lo que midan los lados</td></tr>
 <tr><td>Fracción de cada beneficiario</td><td>Sí: 1/8</td></tr>
 <tr><td>Medida del lado más largo del lote</td><td><strong>No</strong>: 120 m, 100 m o 150 m</td></tr>
 </tbody></table></div>
-<p class="small">Las preguntas que cambian de estado respecto del enunciado original o de un caso anterior (B1, C1, C2 y D1) son las que mejor muestran si la regla se transfirió. C1 es el espejo de B2: con la frase de la asignación, la pregunta por quién recibe la franja de la carretera pasa de «No» a «Sí». Pregunta por el lugar en el acta, no por un nombre (el acta no se conoce) ni por la región de la franja (dependería de cuántos asociados son, como muestra C4). El caso A repite el enunciado original y no cuenta: A1 ya se resolvió en el paso 3.</p>
+<p class="small">Las preguntas que cambian de estado respecto del enunciado original o de un caso anterior (B1, C1, C2 y D1) son las que mejor muestran si la regla se transfirió. C1 es el espejo de B2: con la frase de la asignación, la pregunta por quién recibe la franja de la carretera pasa de «No» a «Sí». Pregunta por el lugar en el acta, no por un nombre (el acta no se conoce) ni por la región de la franja (dependería de cuántos asociados son, como muestra la respuesta de Andrés, C4). El caso A repite el enunciado original y no cuenta: A1 ya se resolvió en el paso 3.</p>
+<p class="small">Las respuestas de Julián (A1), Valeria (B3), Andrés (C4) y Sebastián (D2) se validan en dos niveles, «¿es válida?» y «¿por qué?», y solo cuentan si los dos están bien. Dos son válidas y dos no. Julián y Andrés dicen lo mismo (130 m) y fallan por razones distintas: en A falta el corte; en C, el número de asociados. Ninguna de las cuatro es una de las preguntas que cambian de estado, así que E4 se mide igual que antes.</p>
 
 <!-- 10 -->
 <h2 id="evidencia">10. Cómo saber si comprendieron</h2>
@@ -408,18 +414,43 @@ footer{color:var(--muted);font-size:.85rem;margin-top:36px}
 <thead><tr><th>Evidencia</th><th>Dónde se ve</th><th>Se considera lograda si…</th></tr></thead>
 <tbody>
 <tr><td>E1. Decisión justificada</td><td>Primera y segunda decisión</td><td>La segunda justificación nombra un dato que el enunciado no da (los cortes o la asignación) o un reparto concreto.</td></tr>
-<tr><td>E2. Contraejemplo propio</td><td>Lista de repartos</td><td>Hay al menos dos repartos con el hijo 1 en lugares distintos.</td></tr>
+<tr><td>E2. Contraejemplo propio</td><td>Lista de repartos</td><td>Hay al menos un reparto propio (columna «Repartos propios») y al menos dos repartos con el hijo 1 en lugares distintos.</td></tr>
 <tr><td>E3. Tamaño frente a ubicación</td><td>«¿Sara tiene razón?» y su porqué (también en «Votos»)</td><td>Decide que Sara no tiene razón, distingue que 1/8 fija el tamaño y no el lugar, y lo prueba con un reparto.</td></tr>
 <tr><td>E4. Transferencia</td><td>Columnas «Cambian de estado (antes de hablar)» y «Casos (antes de hablar)»</td><td>4 de 4 en las preguntas que cambian de estado (B1, C1, C2 y D1), en la decisión que cada uno fijó solo, antes de hablar con su pareja. «Casos (al comprobar)» es el resultado después de la retroalimentación: no sirve como evidencia.</td></tr>
-<tr><td>E5. Producción</td><td>Su ítem (paso 7)</td><td>La pregunta «sin respuesta» de verdad no tiene respuesta y las dos situaciones cumplen su enunciado.</td></tr>
+<tr><td>E5. Producción</td><td>Su ítem (paso 7) y la columna «Ítem ajeno: ¿la de ellos es imposible?»</td><td>La pregunta «sin respuesta» de verdad no tiene respuesta y las dos situaciones cumplen su enunciado. Lea primero los ítems que otra pareja marcó con «No».</td></tr>
+<tr><td>E6. Validar una solución propuesta</td><td>Columna «Validó respuestas de otros (antes de hablar)»</td><td>3 o 4 de 4: decide bien si la respuesta del estudiante es válida y elige la razón correcta, antes de hablar con su pareja. Es la evidencia oficial del ítem: «establece la validez o pertinencia de una solución propuesta».</td></tr>
+<tr><td>E7. Retención</td><td>Cuestionario de verificación (sección 10b)</td><td>Precisión de 4 de 6 o más, dos o tres semanas después y sin la página.</td></tr>
 </tbody></table></div>
 <h3>Para saber si la secuencia funcionó con su grupo</h3>
 <ul class="tight">
   <li>Mire las columnas «Cambian de estado (antes de hablar)» y «Casos (antes de hablar)»: son decisiones individuales, tomadas antes de discutir. Las barras de la primera y la segunda decisión muestran el compromiso del curso, no el aprendizaje, porque la segunda llega después de discutir en trío.</li>
   <li>Cruce la respuesta con la seguridad: un B con «Estoy adivinando» no es lo mismo que un B «Totalmente seguro» justificado.</li>
-  <li>Cuente cuántos estudiantes logran E2 y E5.</li>
-  <li>Unas semanas después, aplique un caso nuevo sin la página para ver si la regla se mantiene.</li>
+  <li>Cuente cuántos estudiantes logran E2, E5 y E6.</li>
+  <li>Dos o tres semanas después, aplique el cuestionario de verificación (sección 10b): mide si la regla se mantiene sin la página.</li>
 </ul>
+
+<!-- 10b -->
+<h2 id="verificacion">10b. Verificación diferida (cuestionario con certeza)</h2>
+<p>Dos o tres semanas después de la sesión 2, en otra clase y sin la página, cada estudiante responde seis preguntas en un cuestionario de Moodle (unos 10 minutos). Cuatro tienen el formato del ítem («¿cuál de las siguientes preguntas NO es posible responder?») con contextos nuevos, y dos son de argumentación («¿Se puede asegurar lo que afirma…?»), como las del examen. Ninguna usa el lote. Mide si la regla se mantiene sin ayuda (E7) y, con la certeza, si cada uno sabe cuánto sabe.</p>
+<ul class="tight">
+  <li><strong>Dónde está:</strong> «¿Alcanzan los datos? — verificación», en el curso Lab, para que usted lo revise en vista previa antes de usarlo. Si una pregunta necesita cambios, no la edite en Moodle: se corrige en <code>verificacion_diferida.xml</code> y el cuestionario se vuelve a crear con <code>crear_verificacion_lote_d49.php --reemplazar</code>, que solo funciona mientras nadie lo haya presentado. Así el XML, esta tabla y Moodle no se separan. Las preguntas también están en <code>verificacion_diferida.xml</code> (formato XML de Moodle) para importarlas en otro curso.</li>
+  <li><strong>Configuración:</strong> retroalimentación diferida con CBM (en cada pregunta el estudiante marca qué tan seguro está), un intento, una pregunta por página, opciones barajadas y contraseña <strong>certeza</strong>, que usted dice en clase. Al terminar, cada uno ve en su celular la respuesta correcta, la retroalimentación de la opción que eligió y la explicación general de cada pregunta.</li>
+  <li><strong>Cómo leer el resultado:</strong> la calificación usa la escala de certeza. Un acierto vale 1, 2 o 3 según la seguridad, y un error con seguridad media o alta resta 2 o 6, así que la calificación de un intento puede pasar de 6 o quedar negativa. Para saber quién aprendió, mire la <strong>precisión</strong> (porcentaje de aciertos, sin contar la certeza), que aparece en la revisión de cada intento. Para saber quién cree saber lo que no sabe, mire los errores con certeza alta.</li>
+  <li><strong>En el libro de calificaciones</strong> la nota se recorta entre 0 y 6: un 6 puede ir desde 2 aciertos con seguridad alta hasta 6 aciertos, y una nota negativa aparece como 0. No la use para calificar ni para E7. Use la precisión de cada intento, o el informe «Calificaciones» del cuestionario: ahí cada pregunta con nota positiva es un acierto.</li>
+  <li><strong>Finalización:</strong> se marca al recibir una calificación, es decir, al terminar el intento. No se usa «calificación aprobatoria»: con la escala de certeza, quien acierta todo con poca seguridad puede quedar por debajo de quien acierta menos con mucha.</li>
+  <li><strong>Libro de calificaciones:</strong> no lo agregue a Matemáticas 10A. Su total es una media que cuenta las notas vacías como 0 y bajaría la nota de todos mientras no lo hayan presentado. Úselo en un curso con libro aparte, como «Práctica Saber 11 — 10A».</li>
+</ul>
+<div class="tablewrap"><table class="mid">
+<thead><tr><th>Pregunta</th><th>Enunciado</th><th>Clave</th><th>Por qué</th></tr></thead>
+<tbody>
+<tr><td>AD-1 Huertas</td><td>Una junta de acción comunal tiene un terreno rectangular de 40 metros de largo y 90 metros de ancho, y lo va a dividir en 6 partes iguales para seis huertas familiares. Con base en esta información, ¿cuál de las siguientes preguntas <strong>NO</strong> es posible responder?</td><td><strong>¿Cuál es el perímetro de cada huerta?</strong></td><td>Correcto. Si el terreno se divide en franjas de 15 m × 40 m, el perímetro de cada huerta es 110 m; si se divide en rectángulos de 30 m × 20 m, es 100 m. Las dos divisiones cumplen el enunciado y dan respuestas distintas.</td></tr>
+<tr><td>AD-2 Café</td><td>Una cooperativa cafetera recogió 2.400 kilogramos de café para repartirlos en partes iguales entre sus socios. Con base en esta información, ¿cuál de las siguientes preguntas <strong>NO</strong> es posible responder?</td><td><strong>¿Cuántos kilogramos de café recibe cada socio?</strong></td><td>Correcto. El enunciado no dice cuántos socios hay: con 30 socios, cada uno recibe 80 kg; con 40, recibe 60 kg.</td></tr>
+<tr><td>AD-3 Jardín</td><td>Un jardín rectangular tiene 48 metros cuadrados de área. Con base en esta información, ¿cuál de las siguientes preguntas <strong>NO</strong> es posible responder?</td><td><strong>¿Cuántos metros de malla se necesitan para encerrar el jardín?</strong></td><td>Correcto. Un jardín de 6 m × 8 m y uno de 4 m × 12 m miden 48 m², pero necesitan 28 m y 32 m de malla.</td></tr>
+<tr><td>AD-4 Feria</td><td>En una feria escolar hay 5 puestos en fila, uno al lado del otro, y el primero de la fila queda junto a la entrada. Los 5 grupos de grado once sortean los puestos: a cada grupo le toca uno. Con base en esta información, ¿cuál de las siguientes preguntas <strong>NO</strong> es posible responder?</td><td><strong>¿Qué grupo recibe el puesto que queda junto a la entrada?</strong></td><td>Correcto. Es un sorteo: el puesto de la entrada le puede tocar a cualquiera de los 5 grupos.</td></tr>
+<tr><td>AD-5 Cartulina, forma</td><td>Una profesora corta una cartulina rectangular de 60 cm × 80 cm en 4 pedazos iguales, pero no dice cómo la corta. Mateo afirma: «Cada pedazo es un rectángulo de 30 cm × 40 cm». ¿Se puede asegurar lo que afirma Mateo?</td><td><strong>No, porque también se puede cortar en tiras de 15 cm × 80 cm, que son pedazos iguales.</strong></td><td>Correcto. Las tiras de 15 cm × 80 cm cumplen el enunciado y no son rectángulos de 30 cm × 40 cm.</td></tr>
+<tr><td>AD-6 Cartulina, área</td><td>La misma cartulina de 60 cm × 80 cm se corta en 4 pedazos iguales, sin decir cómo. Sofía afirma: «Cada pedazo tiene 1.200 cm² de área». ¿Se puede asegurar lo que afirma Sofía?</td><td><strong>Sí, porque los 4 pedazos son iguales y la cartulina tiene 4.800 cm², se corte como se corte.</strong></td><td>Correcto. Con cualquier corte en 4 pedazos iguales, cada uno tiene 4.800 ÷ 4 = 1.200 cm².</td></tr>
+</tbody></table></div>
+<p class="small">Las redactó el asistente el 2026-10-21 y no se han probado con estudiantes: revíselas antes de aplicarlas. Ninguna clave es la opción más larga. Para que «falta un dato» no se vuelva «nada se puede responder», AD-6 pide aceptar una afirmación verdadera y en AD-2 una de las preguntas trae ella misma el dato que falta.</p>
 
 <!-- 11 -->
 <h2 id="limites">11. Límites de esta propuesta</h2>
@@ -429,12 +460,13 @@ footer{color:var(--muted);font-size:.85rem;margin-top:36px}
   <li>El lote interactivo no se ha probado con estudiantes. Pruébelo en un celular de la intranet antes de la clase.</li>
   <li>La clave y la palabra del paso 5 están en el código de la página: un estudiante que abra el código fuente podría encontrarlas. La palabra ordena la clase; no protege la clave.</li>
   <li>Estas páginas no usan versiones generadas por el <code>.Rmd</code>, que sigue en revisión: usan el ítem oficial y cuatro casos verificados a mano. Si quiere más casos, genere versiones del <code>.Rmd</code> y revíselas antes de usarlas.</li>
+  <li>Las seis preguntas del cuestionario de verificación y las cuatro respuestas de estudiantes de los casos no se han probado con estudiantes.</li>
 </ul>
 
 <!-- 12 -->
 <h2 id="papel">12. Plan B en papel</h2>
-<p class="print-only small">Imprima esta página para los tríos que no tengan celular. Cada cuadro mide 10 m × 10 m.</p>
-<p>Si falla un celular, el trío trabaja aquí. Consigna: «Dibujen tres repartos distintos del lote en 8 partes iguales. Marquen la parte del hijo 1 y completen la tabla».</p>
+<p class="small">Sin impresora: cada estudiante dibuja en el cuaderno un rectángulo de 12 cuadritos de ancho por 5 de alto; cada cuadrito vale 10 m × 10 m. Las figuras de abajo son su referencia.</p>
+<p>Si falla un celular, ese estudiante sigue en el cuaderno con su trío. Consigna: «Dibujen tres repartos distintos del lote en 8 partes iguales. Marquen la parte del hijo 1 y completen la tabla».</p>
 <div class="figs">
   <figure><svg class="lot" viewBox="-2 -2 124 60" role="img" aria-label="Lote vacío con cuadrícula de 10 metros">
     <rect class="p" x="0" y="0" width="120" height="50" style="fill:none"/>
@@ -466,6 +498,7 @@ footer{color:var(--muted);font-size:.85rem;margin-top:36px}
   <li>Fagnant, A. y Auquière, A. (2018). Impact des illustrations accompagnant les problèmes problématiques : focus sur le codage des réponses. <em>Actes du colloque EMF 2018</em>. <a href="https://emf.unige.ch/download_file/view/628/279">emf.unige.ch</a>. Fuente de las cifras de Verschaffel et al. (1994) y del resultado de Dewolf et al. (2014).</li>
   <li>Juandi, D., Kusumah, Y. S., Tamur, M., Perbowo, K. S. y Wijaya, T. T. (2021). A meta-analysis of GeoGebra software decade of assisted mathematics learning: What to learn and where to go? <em>Heliyon, 7</em>(5), e06953. <a href="https://doi.org/10.1016/j.heliyon.2021.e06953">doi:10.1016/j.heliyon.2021.e06953</a></li>
   <li>Moyer-Packenham, P. S. y Westenskow, A. (2016). Revisiting the effects and affordances of virtual manipulatives for mathematics learning. En K. Terry y A. Cheney (Eds.), <em>Utilizing Virtual and Personal Learning Environments for Optimal Learning</em> (pp. 186–215). IGI Global. <a href="https://digitalcommons.usu.edu/teal_facpub/2399">digitalcommons.usu.edu</a></li>
+  <li>Perez, K. E., Strauss, E. A., Downey, N., Galbraith, A., Jeanne, R. y Cooper, S. (2010). Does displaying the class results affect student discussion during peer instruction? <em>CBE—Life Sciences Education, 9</em>(2), 133–140. <a href="https://doi.org/10.1187/cbe.09-11-0080">doi:10.1187/cbe.09-11-0080</a></li>
   <li>Rohrer, D., Dedrick, R. F., Hartwig, M. K. y Cheung, C.-N. (2020). A randomized controlled trial of interleaved mathematics practice. <em>Journal of Educational Psychology, 112</em>(1), 40–52. <a href="https://doi.org/10.1037/edu0000367">doi:10.1037/edu0000367</a></li>
   <li>Rosli, R., Capraro, M. M. y Capraro, R. M. (2014). The effects of problem posing on student mathematical learning: A meta-analysis. <em>International Education Studies, 7</em>(13), 227. <a href="https://doi.org/10.5539/ies.v7n13p227">doi:10.5539/ies.v7n13p227</a></li>
   <li>Schwartz, D. L., Chase, C. C., Oppezzo, M. A. y Chin, D. B. (2011). Practicing versus inventing with contrasting cases: The effects of telling first on learning and transfer. <em>Journal of Educational Psychology, 103</em>(4), 759–775. <a href="https://doi.org/10.1037/a0025140">doi:10.1037/a0025140</a></li>
