@@ -1,0 +1,8 @@
+# Sin hallazgos
+
+No encontré objeciones.
+
+CITAS_DETRACTOR
+NINGUNA
+FIN_CITAS_DETRACTOR
+VEREDICTO_DETRACTOR: APROBAR

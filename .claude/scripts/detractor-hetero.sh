@@ -160,7 +160,10 @@ EOF
     | python3 -c 'import sys,json; d=json.load(sys.stdin); print("".join(b.get("text","") for b in d.get("content",[]) if b.get("type")=="text") or json.dumps(d))' > "$out" 2>&1
 }
 
-entregado() { tail -n 3 "$1" | grep -Eq "$MARCADOR"; }
+con_marcador() { tail -n 3 "$1" | grep -Eq "$MARCADOR"; }
+# Regla #9 v1.6: entrega = marcador Y citas que existen en los archivos (bloque CITAS_DETRACTOR).
+citas_ok() { python3 -I "$REPO/.claude/scripts/verificar_citas_detractor.py" "$1" --repo "$REPO" > "$1.citas" 2>&1; }
+entregado() { con_marcador "$1" && citas_ok "$1"; }
 saturado()  { grep -Eiq "$SATURADO" "$1"; }
 
 ejecutar_motor() {
@@ -208,6 +211,11 @@ for motor in $CASCADA; do
     exit 0
   fi
   motivo="sin marcador"
+  if [ -s "$out" ] && con_marcador "$out"; then
+    motivo="citas no verificadas"
+    sed 's/^/   /' "$out.citas" >&2
+    cat "$out.citas" >> "$out"
+  fi
   [ -s "$out" ] && saturado "$out" && motivo="saturado/sin saldo"
   [ -s "$out" ] || motivo="sin salida"
   echo "   $motor ($MODELO_USADO): $motivo tras ${dur}s" >&2

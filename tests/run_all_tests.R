@@ -220,6 +220,13 @@ suites <- list(
     watch = c("agente-detractor", "detractor-obligatorio", "test_contrato_detractor")
   ),
   list(
+    nombre = "Citas verificables del detractor: hook SubagentStop (Regla #9 v1.6)",
+    archivo = "tests/testthat/test_citas_detractor.R",
+    critico = TRUE,
+    watch = c("verificar_citas_detractor", "agente-detractor", "detractor-obligatorio",
+              "detractor-hetero", "settings.json", "citas_detractor")
+  ),
+  list(
     nombre = "Contrato de entrega de los orquestadores (paridad con el detractor)",
     archivo = "tests/testthat/test_contrato_entrega_orquestadores.R",
     critico = TRUE,

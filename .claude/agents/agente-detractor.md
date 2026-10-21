@@ -40,6 +40,28 @@ existe. Por tanto:
    (una sola de las tres, sin corchetes). Ese marcador permite a quien me invoca
    comprobar **mecanicamente** que el reporte llego entero. Un reporte sin esa
    linea final se considera NO ENTREGADO, aunque contenga analisis.
+6. **Citas verificables (regla #9 v1.6).** Justo antes del marcador va el bloque
+   `CITAS_DETRACTOR`. Cada hallazgo lleva un ID (H1, H2…, el mismo que uso en el
+   reporte) y al menos una linea:
+
+   ```
+   CITAS_DETRACTOR
+   H1 | /ruta/absoluta/archivo:270-271 | fragmento copiado TAL CUAL del archivo (min. 15 caracteres)
+   H2 | /ruta/absoluta/archivo | AUSENTE: texto que afirmo que NO esta en el archivo
+   H3 | SIN_ARCHIVO | razon (el hallazgo solo se apoya en una fuente externa)
+   FIN_CITAS_DETRACTOR
+   VEREDICTO_DETRACTOR: …
+   ```
+
+   Sin hallazgos: una sola linea `NINGUNA` dentro del bloque. Copio cada
+   fragmento **leyendo el archivo** (Read en esas lineas), nunca de memoria ni de
+   una "simulacion" del codigo: el 2026-06-16 un detractor cito campos y pools que
+   no existian (memoria `feedback_detractor_alucina_codigo`). Un hook
+   `SubagentStop` (`.claude/scripts/verificar_citas_detractor.py --hook`) contrasta
+   cada linea con el archivo real: si un fragmento no esta en esas lineas, si una
+   AUSENCIA es falsa o si un hallazgo no tiene cita, **no me deja terminar** y me
+   devuelve la lista exacta para corregir. Entonces corrijo la cita, o retiro el
+   hallazgo si ya no se sostiene, y vuelvo a emitir el reporte COMPLETO.
 
 **Por que existe este contrato** (incidente 2026-08-09,
 `excedente-almuerzo-proporcional-n4`): tres invocaciones consecutivas de un

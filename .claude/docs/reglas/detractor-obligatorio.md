@@ -695,6 +695,36 @@ Con el detractor obligatorio:
 **Skill asociado**: `.claude/skills/skill-detractor/SKILL.md`
 **Agente asociado**: `.claude/agents/agente-detractor.md`
 **Detractor heterogéneo**: `.claude/scripts/detractor-hetero.sh` · `/detractor-hetero`
+**Verificador de citas**: `.claude/scripts/verificar_citas_detractor.py` (hook `SubagentStop` en `.claude/settings.json`)
+
+### Cambios v1.6 (2026-10-20) — citas verificables, con hook que no deja terminar
+- **Origen**: el 2026-06-16 un detractor reportó un «bug crítico» sobre una reconstrucción
+  inventada del código: citó un campo `calcula = function(m,b) b`, pools `m_vals`/`b_vals` y un grupo
+  `tabla_valores` que no existían en el `.Rmd` (memoria `feedback_detractor_alucina_codigo`). Hasta
+  ahora la única defensa era que el coordinador revisara a mano las citas antes de actuar.
+- **Contrato**: justo antes de `VEREDICTO_DETRACTOR:` va un bloque legible por máquina:
+  ```
+  CITAS_DETRACTOR
+  H1 | /ruta/absoluta/archivo:270-271 | fragmento copiado tal cual (≥ 15 caracteres)
+  H2 | /ruta/absoluta/archivo | AUSENTE: texto que se afirma que NO está
+  H3 | SIN_ARCHIVO | razón (solo fuente externa; se avisa, no falla)
+  FIN_CITAS_DETRACTOR
+  ```
+  Sin hallazgos: `NINGUNA`. Cada hallazgo con ID (filas `| H1 |`, encabezados o negritas `H1:`)
+  necesita al menos una cita verificada.
+- **Verificación** (`verificar_citas_detractor.py`): el archivo existe; el fragmento está en esas
+  líneas (holgura de 2; sin distinguir espacios ni entidades HTML) y, si no, dice si está en otra
+  línea o si no está en el archivo; una AUSENCIA falsa falla; un hallazgo sin cita falla.
+- **Hook `SubagentStop`** (en `.claude/settings.json`, sin filtro de tipo: actúa sobre todo
+  subagente cuyo último mensaje trae `VEREDICTO_DETRACTOR:`): con citas que no verifican responde
+  `decision: "block"` y el detractor recibe la lista exacta de lo que debe corregir. Tope: 3
+  bloqueos por agente; después deja terminar y escribe «TOPE ALCANZADO» en
+  `~/.claude/hooks/logs/citas-detractor.log`. Ese reporte cuenta como **no entregado**.
+- **`detractor-hetero.sh`**: un motor solo «entrega» si trae el marcador **y** sus citas verifican;
+  si no, pasa al siguiente de la cascada.
+- **Lo que no cubre**: no comprueba que el *razonamiento* sobre un fragmento real sea correcto (eso
+  sigue siendo trabajo de quien recibe el reporte), ni las fuentes web.
+- **Tests**: `tests/testthat/test_citas_detractor.R` (casos inventados que deben fallar y el modo hook).
 
 ### Cambios v1.5 (2026-09-13)
 

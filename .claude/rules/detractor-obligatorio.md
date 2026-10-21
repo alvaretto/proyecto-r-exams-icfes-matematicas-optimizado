@@ -21,6 +21,9 @@ El reporte está entregado sólo si su última línea es `VEREDICTO_DETRACTOR: A
 
 PROHIBIDO sustituir el detractor por la auditoría propia, sellar `detractor_fase2c` o declarar el ejercicio listo. La revisión propia se permite sólo declarada como **no independiente**, dejando la FASE 2C abierta.
 
-**Test:** `tests/testthat/test_contrato_detractor.R`.
+## Citas verificables (v1.6)
+Antes del marcador, el bloque `CITAS_DETRACTOR` … `FIN_CITAS_DETRACTOR`: por hallazgo (ID H1, H2…) al menos una línea `ID | ruta:línea[-línea] | fragmento literal` (≥ 15 caracteres), `ID | ruta | AUSENTE: texto` o `ID | SIN_ARCHIVO | razón`; sin hallazgos, `NINGUNA`. `.claude/scripts/verificar_citas_detractor.py` las contrasta con los archivos: como hook `SubagentStop` **no deja terminar** al detractor mientras una cita no coincida (tope de 3 bloqueos, registro en `~/.claude/hooks/logs/citas-detractor.log`), y `detractor-hetero.sh` no acepta un reporte con citas que fallan. Quien recibe un reporte con hallazgos de código lo verifica con ese script antes de actuar; «TOPE ALCANZADO» en el registro = reporte NO entregado.
 
-**Versión**: 1.5 · compacta desde 2026-09-29 · Excepciones: NINGUNA.
+**Tests:** `tests/testthat/test_contrato_detractor.R`, `tests/testthat/test_citas_detractor.R`.
+
+**Versión**: 1.6 · compacta desde 2026-09-29 · Excepciones: NINGUNA.

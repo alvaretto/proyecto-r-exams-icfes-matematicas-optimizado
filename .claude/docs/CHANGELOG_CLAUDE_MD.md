@@ -8,6 +8,22 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.29.0 (2026-10-20)
+
+- **Regla #9 v1.6: las citas del detractor se verifican mecánicamente.** Origen: el 2026-06-16 un
+  detractor reportó un «bug crítico» sobre código reconstruido de memoria (campos, pools y un grupo
+  que no existían); hasta ahora solo lo frenaba la revisión manual del coordinador.
+  - Contrato: bloque `CITAS_DETRACTOR` … `FIN_CITAS_DETRACTOR` antes del marcador, con al menos una
+    cita por hallazgo (`ID | ruta:línea | fragmento`, `AUSENTE:` o `SIN_ARCHIVO`).
+  - `.claude/scripts/verificar_citas_detractor.py`: contrasta cada cita con el archivo real.
+  - Hook `SubagentStop` en `settings.json` (todo subagente cuyo último mensaje trae el marcador):
+    con citas que fallan responde `decision: "block"` y el detractor recibe la lista exacta. Tope de
+    3 bloqueos; luego registra «TOPE ALCANZADO» en `~/.claude/hooks/logs/citas-detractor.log`.
+  - `detractor-hetero.sh`: un motor solo entrega con marcador **y** citas que verifican.
+  - Test: `tests/testthat/test_citas_detractor.R` (suite crítica en `run_all_tests.R`), con seis
+    reportes inventados que deben fallar y tres mutantes del verificador.
+  - Respaldo previo: `.claude/backups/2026-10-20-citas-detractor/`.
+
 ### Cambios v3.28.1 (2026-10-02)
 
 - **`workflow-state.sh` ya no sella `flujo_b` con la sola decisión.** `complete <dir> flujo_b

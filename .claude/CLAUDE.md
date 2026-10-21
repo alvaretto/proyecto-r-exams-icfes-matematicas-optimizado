@@ -49,6 +49,10 @@ Consolidado: `.claude/docs/REGLAS_CRITICAS.md` (leer bajo demanda). Cada ruta `.
    **Desde la v1.5 (2026-09-13): su alcance incluye overrides firmados e invariantes locales**
    (`.claude/CLAUDE.md` del subproyecto, regla #17), no sólo el `.Rmd` — encontró un override con
    el exceso §P7 mal medido y dos invariantes en prosa sin guarda ejecutable (Errores 35-37).
+   **Desde la v1.6 (2026-10-20): citas verificables.** El reporte cierra con el bloque
+   `CITAS_DETRACTOR` (por hallazgo, `ID | ruta:línea | fragmento literal` o `AUSENTE:`), y el hook
+   `SubagentStop` (`verificar_citas_detractor.py --hook`) **no deja terminar** al detractor mientras
+   una cita no coincida con el archivo: un detractor ya citó código inventado (2026-06-16).
 10. **Validación _neg_ opciones repetidas** → .claude/rules/validacion-neg-opciones-repetidas.md
 11. **Contextos narrativos creativos** (no mecánicos) → .claude/rules/contextos-narrativos-creativos.md
 12. **Validación semántica automática** (Nivel 4: descripción ↔ datos) → .claude/rules/ejercicios-metacognitivos.md (sección Validación Semántica)
@@ -179,8 +183,8 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.28.1 (`workflow-state.sh`: `flujo_b` sólo se sella con `--lenguaje`)
-**Fecha**: 2026-10-02
+**Versión**: 3.29.0 (regla #9 v1.6: citas del detractor verificadas por hook `SubagentStop`)
+**Fecha**: 2026-10-20
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)
 **Copia íntegra del índice anterior (v3.24.0) y script de reversión**: `.claude/backups/2026-09-07-recorte-contexto/`
