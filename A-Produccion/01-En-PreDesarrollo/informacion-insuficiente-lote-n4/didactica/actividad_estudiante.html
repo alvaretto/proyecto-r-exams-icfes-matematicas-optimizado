@@ -362,11 +362,14 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
       <div id="casoswrap" hidden>
       <p>Cada caso cambia lo que dice el enunciado. Para cada pregunta, primero decida <strong>usted solo</strong> si <strong>sí se puede</strong> o <strong>no se puede</strong> responder, y toque «Guardar mi decisión»: esa decisión queda fija. Después compare con su pareja: si no coinciden, cada uno debe convencer al otro con dos situaciones que cumplan el enunciado. Al final, comprueben.</p>
       <div id="casos"></div>
+      <div id="contrastebox" hidden>
       <h3>Compare los casos</h3>
       <p>En la pregunta original, el <strong>perímetro de cada parte</strong> no se podía saber, pero en el caso B sí. Y la <strong>fracción de cada uno</strong> sí se podía saber en la original, pero en el caso C no. ¿Qué frase del enunciado hizo la diferencia en cada caso?</p>
       <textarea id="contraste"></textarea>
       <div class="row"><button type="button" id="p6save">Guardar el paso 6</button></div>
       <div class="msg" id="p6msg" role="status"></div>
+      </div>
+      <p class="note" id="contrastenota">La comparación de los casos aparece cuando haya guardado sus cuatro decisiones.</p>
       </div>
     </div>
   </section>
@@ -617,7 +620,7 @@ function checkCmp(){
 
 /* ---------- paso 6: casos ---------- */
 var CASOS=[
- {id:'A',k:0,t:'Caso A · El enunciado original, otras preguntas',
+ {id:'A',k:[],t:'Caso A · El enunciado original, otras preguntas',
   e:'Un empresario compró un lote rectangular de 50 metros de largo y 120 metros de ancho, para repartirlo en partes iguales entre sus 8 hijos.',
   q:[
    ['¿Cuál es el perímetro de la porción que le corresponde a cada hijo?',false,'No se puede. Franjas de 15 m × 50 m dan 130 m; franjas de 120 m × 6,25 m dan 252,5 m. Las dos cumplen el enunciado.'],
@@ -625,7 +628,7 @@ var CASOS=[
    ['¿Cuál es la longitud total del cerco que rodea el lote?',true,'Sí: es el perímetro del lote, 2 × (50 + 120) = 340 m.'],
    ['¿Cuál es la razón entre el largo y el ancho del lote?',true,'Sí: 50 a 120, que simplificada es 5 : 12.']
   ]},
- {id:'B',k:0,t:'Caso B · Ahora se dice cómo se corta',
+ {id:'B',k:[0],t:'Caso B · Ahora se dice cómo se corta',
   e:'Una familia recibió como herencia un lote rectangular de 50 metros de largo y 120 metros de ancho, y debe repartirlo en partes iguales entre los 8 hermanos. El reparto se hará en franjas iguales, todas paralelas al lado de 50 metros. El lote colinda con una carretera a lo largo de uno de sus lados de 50 metros.',
   q:[
    ['¿Cuál es el perímetro de la porción que le corresponde a cada hermano?',true,'Sí: cada franja mide 50 m × 15 m, así que su perímetro es 2 × (50 + 15) = 130 m.'],
@@ -633,15 +636,15 @@ var CASOS=[
    ['¿Cuál es la longitud de la cerca que separa unas porciones de otras?',true,'Sí: entre 8 franjas hay 7 cortes de 50 m, o sea 350 m.'],
    ['¿Cuál es la fracción del lote que le corresponde a cada hermano?',true,'Sí: 1/8.']
   ]},
- {id:'C',k:1,t:'Caso C · Se dice cómo se corta y a quién le toca, pero falta un dato',
+ {id:'C',k:[0,1],t:'Caso C · Se dice cómo se corta y a quién le toca, pero falta un dato',
   e:'Una cooperativa adquirió un lote rectangular de 50 metros de largo y 120 metros de ancho para distribuirlo en partes iguales entre sus asociados. El reparto se hará en franjas iguales, todas paralelas al lado de 50 metros. El lote colinda con una carretera a lo largo de uno de sus lados de 50 metros. Las franjas se asignan a los asociados en el orden en que aparecen en el acta, empezando por la que da a la carretera.',
   q:[
-   ['¿Qué porción le corresponde al primer asociado del acta?',true,'Sí: la que da a la carretera, porque las franjas se asignan en el orden del acta empezando por esa.'],
+   ['¿Cuál es la ubicación de la franja que le corresponde al primer asociado del acta?',true,'Sí: es la franja que da a la carretera, porque las franjas se asignan en el orden del acta empezando por esa.'],
    ['¿Cuál es la fracción del lote que le corresponde a cada asociado?',false,'No se puede. El enunciado no dice cuántos asociados son: con 8 sería 1/8; con 10, 1/10.'],
    ['¿Cuál es el área del lote?',true,'Sí: 50 × 120 = 6.000 m².'],
    ['¿Cuál es el perímetro de la porción que le corresponde a cada asociado?',false,'No se puede. Con 8 asociados las franjas miden 50 m × 15 m (130 m); con 10 miden 50 m × 12 m (124 m).']
   ]},
- {id:'D',k:0,t:'Caso D · Solo se da el área',
+ {id:'D',k:[0],t:'Caso D · Solo se da el área',
   e:'Para un ejercicio de su clase de geometría, Camila modeló un lote rectangular de 6.000 metros cuadrados de área que se reparte en partes iguales entre los 8 beneficiarios. El reparto se hará en franjas iguales, todas paralelas al lado más corto.',
   q:[
    ['¿Cuál es el perímetro del lote?',false,'No se puede. Un lote de 50 m × 120 m tiene 340 m de perímetro; uno de 60 m × 100 m tiene 320 m. Los dos miden 6.000 m².'],
@@ -653,7 +656,7 @@ var CASOS=[
 function drawCasos(){
   $('casos').innerHTML=CASOS.map(function(c){
     var st=S.casos[c.id]||{};
-    return '<div class="caso" id="caso_'+c.id+'"><h3>'+esc(c.t)+'</h3><p class="enun">'+esc(c.e)+'</p>'+
+    return '<div class="caso" id="caso_'+c.id+'"><h3 id="ct_'+c.id+'">'+esc('Caso '+c.id)+'</h3><p class="enun">'+esc(c.e)+'</p>'+
       c.q.map(function(q,i){
         var nm='cs_'+c.id+'_'+i;
         return '<div class="qcmp"><p class="q">'+esc(q[0])+'</p><div class="seg">'+
@@ -668,6 +671,7 @@ function drawCasos(){
   }).join('');
   CASOS.forEach(function(c){var st=S.casos[c.id];paintR1(c.id);if(st&&st.r){st.r.forEach(function(v,i){if(v)setRadio('cs_'+c.id+'_'+i,v);});if(st.checked)checkCaso(c.id,true);}});
 }
+function paintContraste(){var todos=CASOS.every(function(c){return S.casos[c.id]&&S.casos[c.id].r1;});$('contrastebox').hidden=!todos;$('contrastenota').hidden=todos;}
 function caso(id){return CASOS.filter(function(x){return x.id===id;})[0];}
 function leerCaso(id){var r=[],miss=false;caso(id).q.forEach(function(q,i){var v=radio('cs_'+id+'_'+i);r.push(v);if(!v)miss=true;});return miss?null:r;}
 // La decisión «antes de hablar» (r1) queda fija: es la evidencia individual de transferencia que ve el panel
@@ -675,6 +679,8 @@ function leerCaso(id){var r=[],miss=false;caso(id).q.forEach(function(q,i){var v
 function paintR1(id){
   var st=S.casos[id]||{},b1=document.querySelector('button[data-r1="'+id+'"]'),bc=document.querySelector('button[data-caso="'+id+'"]');
   b1.hidden=!!st.r1;bc.disabled=!st.r1;
+  $('ct_'+id).textContent=st.r1?caso(id).t:'Caso '+id; // el subtítulo da pistas: solo después de decidir
+  paintContraste();
   $('r1_'+id).textContent=st.r1?'Su decisión antes de hablar quedó guardada: '+st.r1.map(function(v,i){return (i+1)+' '+(v==='si'?'Sí':'No');}).join(' · ')+'.':'';
 }
 function saveR1(id){
@@ -682,7 +688,7 @@ function saveR1(id){
   if(st.r1){paintR1(id);return;}
   if(!r){msg('msg_caso_'+id,'Decida las cuatro preguntas antes de guardar.','warn');return;}
   var ok1=0;c.q.forEach(function(q,i){if((r[i]==='si')===q[1])ok1++;});
-  st.r1=r.slice();st.ok1=ok1;st.c1=((r[c.k]==='si')===c.q[c.k][1])?1:0;st.r=r.slice();st.checked=false;S.casos[id]=st;
+  st.r1=r.slice();st.ok1=ok1;st.c1=c.k.filter(function(i){return (r[i]==='si')===c.q[i][1];}).length;st.r=r.slice();st.checked=false;S.casos[id]=st;
   paintR1(id);msg('msg_caso_'+id,'Decisión guardada. Ahora compárenla en pareja y después comprueben.','ok');
   save('caso-'+id+'-r1');
 }

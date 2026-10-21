@@ -16,8 +16,11 @@
   `~/.claude/settings.json` (comando en `.claude/docs/reglas/detractor-obligatorio.md`, v1.6) y el
   verificador deduplica las dos copias con un candado de 3 s. Prueba viva con un subagente: bloqueado
   y, tras corregir la cita, entrega verificada. Suite: 49 expectativas.
-- **Hallazgo abierto**: por la misma causa, ningún hook del proyecto (`pre-write-rmd-gate.sh`,
-  `post-exams2-validation.sh`, ruflo) corre en sesiones abiertas en un subproyecto.
+- **Por la misma causa, ningún hook del proyecto** (`pre-write-rmd-gate.sh`, `post-exams2-validation.sh`,
+  ruflo) corre en sesiones abiertas en un subproyecto. Decisión del usuario: aviso al arrancar. Un hook
+  `SessionStart` de usuario (`~/.claude/hooks/aviso-hooks-proyecto.py`) detecta la sesión abierta en
+  una subcarpeta de un repo con hooks y le dice al usuario y al modelo cuáles quedan apagados y dónde
+  abrir Claude Code. Desde la raíz o fuera del repo no dice nada.
 
 ### Cambios v3.29.0 (2026-10-20)
 

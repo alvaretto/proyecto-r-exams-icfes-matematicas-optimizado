@@ -43,8 +43,9 @@ docente un panel en vivo con retroalimentación escrita.
   plan están aplicados:
   - **H1:** la pregunta de Sara ya no presupone la clave: «¿Tiene razón Sara? Sí / No» y la
     justificación con un reparto (`p3.saraOK`).
-  - **H5:** el caso C1 se reformuló para que tenga una sola lectura («¿Qué porción le corresponde al
-    primer asociado del acta?» → la que da a la carretera).
+  - **H5:** el caso C1 se reformuló para que tenga una sola lectura: «¿Cuál es la ubicación de la
+    franja que le corresponde al primer asociado del acta?» → la que da a la carretera. La primera
+    reformulación («¿Qué porción…?») admitía la lectura de cuota (reauditoría, N2).
   - **H2:** en la sesión 2, la regla de memoria y la decisión de cada caso se guardan solas y quedan
     fijas antes de hablar (`regla2`, `casos[X].r1`).
   - **H3:** el panel muestra el primer intento: columnas «Casos (antes de hablar)» (`ok1`) y «Cambian
