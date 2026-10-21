@@ -44,6 +44,11 @@ p{margin:.5em 0}
 .step.locked .body{display:none}
 .lockmsg{display:none;color:var(--muted);font-style:italic}
 .step.locked .lockmsg{display:block}
+.evonota{display:none;color:var(--muted);font-style:italic}
+body.evocando .evo>.body{display:none}
+body.evocando .evo>.evonota{display:block}
+label.opt:has(input:disabled),.seg label:has(input:disabled){cursor:default;opacity:.75}
+textarea[readonly]{background:var(--bg)}
 .tag{display:inline-block;font-size:.78rem;font-weight:600;letter-spacing:.02em;
   color:var(--accent);text-transform:uppercase;margin-bottom:4px}
 nav.progress{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px;padding:0;list-style:none}
@@ -350,7 +355,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
   <section class="step locked" id="s6">
     <span class="tag">Paso 6 · Sesión 2 · En pareja</span>
     <h2>Mismo lote, otros enunciados</h2>
-    <p class="lockmsg">Se abre al terminar la sesión 1. <button type="button" class="ghost small" id="unlock2">Ya hice la sesión 1 en otro celular</button></p>
+    <p class="lockmsg">Se abre al terminar la sesión 1. <button type="button" class="ghost small" id="unlock2">Ya hice la sesión 1 en otro celular</button><span id="unlock2box" hidden> Palabra que dijo su docente al final de la sesión 1: <input type="text" id="unlock2word" autocomplete="off" autocapitalize="none" spellcheck="false"> <button type="button" class="small" id="unlock2go">Abrir la sesión 2</button></span></p>
     <div class="body">
       <div id="r2box">
         <h3>Antes de empezar, cada uno solo</h3>
@@ -364,7 +369,7 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
       <div id="casos"></div>
       <div id="contrastebox" hidden>
       <h3>Compare los casos</h3>
-      <p>En la pregunta original, el <strong>perímetro de cada parte</strong> no se podía saber, pero en el caso B sí. Y la <strong>fracción de cada uno</strong> sí se podía saber en la original, pero en el caso C no. ¿Qué frase del enunciado hizo la diferencia en cada caso?</p>
+      <p>Con el enunciado original, el <strong>perímetro de cada parte</strong> no se podía saber, pero en el caso B sí. Y la <strong>fracción de cada uno</strong> sí se podía saber con el enunciado original, pero en el caso C no. ¿Qué frase del enunciado hizo la diferencia en cada caso?</p>
       <textarea id="contraste"></textarea>
       <div class="row"><button type="button" id="p6save">Guardar el paso 6</button></div>
       <div class="msg" id="p6msg" role="status"></div>
@@ -639,7 +644,7 @@ var CASOS=[
  {id:'C',k:[0,1],t:'Caso C · Se dice cómo se corta y a quién le toca, pero falta un dato',
   e:'Una cooperativa adquirió un lote rectangular de 50 metros de largo y 120 metros de ancho para distribuirlo en partes iguales entre sus asociados. El reparto se hará en franjas iguales, todas paralelas al lado de 50 metros. El lote colinda con una carretera a lo largo de uno de sus lados de 50 metros. Las franjas se asignan a los asociados en el orden en que aparecen en el acta, empezando por la que da a la carretera.',
   q:[
-   ['¿Cuál es la ubicación de la franja que le corresponde al primer asociado del acta?',true,'Sí: es la franja que da a la carretera, porque las franjas se asignan en el orden del acta empezando por esa.'],
+   ['¿Qué lugar del acta ocupa el asociado que recibe la franja que da a la carretera?',true,'Sí: el primero, porque las franjas se asignan en el orden del acta empezando por la que da a la carretera. Compárelo con el caso B, donde no se dice el orden.'],
    ['¿Cuál es la fracción del lote que le corresponde a cada asociado?',false,'No se puede. El enunciado no dice cuántos asociados son: con 8 sería 1/8; con 10, 1/10.'],
    ['¿Cuál es el área del lote?',true,'Sí: 50 × 120 = 6.000 m².'],
    ['¿Cuál es el perímetro de la porción que le corresponde a cada asociado?',false,'No se puede. Con 8 asociados las franjas miden 50 m × 15 m (130 m); con 10 miden 50 m × 12 m (124 m).']
@@ -671,21 +676,23 @@ function drawCasos(){
   }).join('');
   CASOS.forEach(function(c){var st=S.casos[c.id];paintR1(c.id);if(st&&st.r){st.r.forEach(function(v,i){if(v)setRadio('cs_'+c.id+'_'+i,v);});if(st.checked)checkCaso(c.id,true);}});
 }
-function paintContraste(){var todos=CASOS.every(function(c){return S.casos[c.id]&&S.casos[c.id].r1;});$('contrastebox').hidden=!todos;$('contrastenota').hidden=todos;}
+function paintContraste(){var todos=CASOS.every(function(c){var x=S.casos[c.id];return x&&(x.r1||x.checked);});$('contrastebox').hidden=!todos;$('contrastenota').hidden=todos;}
 function caso(id){return CASOS.filter(function(x){return x.id===id;})[0];}
 function leerCaso(id){var r=[],miss=false;caso(id).q.forEach(function(q,i){var v=radio('cs_'+id+'_'+i);r.push(v);if(!v)miss=true;});return miss?null:r;}
 // La decisión «antes de hablar» (r1) queda fija: es la evidencia individual de transferencia que ve el panel
-// (ok1 de 4 y c1 = acierto en la pregunta que cambia de estado). Comprobar solo se habilita después de guardarla.
+// (ok1 de 4 y c1 = aciertos en las preguntas que cambian de estado, lista k). Comprobar solo se habilita después de guardarla.
+// Un caso comprobado antes de que existiera r1 (estado viejo) no lo ofrece: ya vio la retroalimentación (N7).
 function paintR1(id){
   var st=S.casos[id]||{},b1=document.querySelector('button[data-r1="'+id+'"]'),bc=document.querySelector('button[data-caso="'+id+'"]');
-  b1.hidden=!!st.r1;bc.disabled=!st.r1;
-  $('ct_'+id).textContent=st.r1?caso(id).t:'Caso '+id; // el subtítulo da pistas: solo después de decidir
+  var viejo=!!(st.checked&&!st.r1);
+  b1.hidden=!!st.r1||viejo;bc.disabled=!st.r1&&!viejo;
+  $('ct_'+id).textContent=(st.r1||viejo)?caso(id).t:'Caso '+id; // el subtítulo da pistas: solo después de decidir
   paintContraste();
-  $('r1_'+id).textContent=st.r1?'Su decisión antes de hablar quedó guardada: '+st.r1.map(function(v,i){return (i+1)+' '+(v==='si'?'Sí':'No');}).join(' · ')+'.':'';
+  $('r1_'+id).textContent=st.r1?'Su decisión antes de hablar quedó guardada: '+st.r1.map(function(v,i){return (i+1)+' '+(v==='si'?'Sí':'No');}).join(' · ')+'.':(viejo?'Este caso se comprobó antes de que existiera la decisión antes de hablar: no tiene primer intento.':'');
 }
 function saveR1(id){
   var st=S.casos[id]||{},c=caso(id),r=leerCaso(id);
-  if(st.r1){paintR1(id);return;}
+  if(st.r1||st.checked){paintR1(id);return;}
   if(!r){msg('msg_caso_'+id,'Decida las cuatro preguntas antes de guardar.','warn');return;}
   var ok1=0;c.q.forEach(function(q,i){if((r[i]==='si')===q[1])ok1++;});
   st.r1=r.slice();st.ok1=ok1;st.c1=c.k.filter(function(i){return (r[i]==='si')===c.q[i][1];}).length;st.r=r.slice();st.checked=false;S.casos[id]=st;
@@ -728,6 +735,17 @@ function resumen(){
 
 /* ---------- estado de los pasos ---------- */
 function lock(id,locked){$(id).classList.toggle('locked',locked);}
+// N4: cada decisión queda fija completa (letra, seguridad y razón) al guardarla; la regla del trío y la
+// respuesta a Sara (paso 3), al guardar la segunda decisión.
+function fijar(radios,campos,boton,hecho){
+  radios.forEach(function(n){document.querySelectorAll('input[name="'+n+'"]').forEach(function(e){e.disabled=hecho;});});
+  campos.forEach(function(id){$(id).readOnly=hecho;});$(boton).hidden=hecho;
+}
+function paintFijos(){
+  fijar(['p1op','p1conf'],['p1why'],'p1save',!!S.p1);
+  fijar(['saraok'],['p3regla','p3sara'],'p3save',!!S.p4);
+  fijar(['p4op','p4conf'],['p4why'],'p4save',!!S.p4);
+}
 function refresh(){
   var s2=!!(S.p5||S.s2),p5open=!!(S.p4&&(S.p5open||S.p5));
   lock('s2',!S.p1);
@@ -737,6 +755,8 @@ function refresh(){
   $('p5gate').hidden=!S.p4||p5open;
   lock('s6',!s2);lock('s7',!s2);
   lock('s8',!S.p1);
+  document.body.classList.toggle('evocando',s2&&!S.regla2); // N3
+  paintFijos();
   drawTable();
   if(S.p1)$('p1recap').innerHTML='Su primera decisión fue <strong>'+S.p1.op+'</strong> ('+CONF[S.p1.conf]+'): «'+esc(S.p1.why)+'».';
   if(S.p4)personal();
@@ -769,10 +789,10 @@ $('nombre').addEventListener('change',function(){S.nombre=this.value.trim();save
 
 if(S.p1){setRadio('p1op',S.p1.op);setRadio('p1conf',S.p1.conf);$('p1why').value=S.p1.why;}
 $('p1save').addEventListener('click',function(){
+  if(S.p1){setRadio('p1op',S.p1.op);setRadio('p1conf',S.p1.conf);$('p1why').value=S.p1.why;msg('p1msg','Su primera decisión ya estaba guardada como '+S.p1.op+' y no se puede cambiar. Puede cambiar de opinión en el paso 4.','warn');return;}
   var op=radio('p1op'),cf=radio('p1conf'),why=$('p1why').value.trim();
   if(!op||!cf){msg('p1msg','Elija una respuesta y qué tan seguro está.','warn');return;}
   if(why.length<10){msg('p1msg','Escriba al menos una frase con su razón.','warn');return;}
-  if(S.p1&&S.p1.op!==op){msg('p1msg','Su primera decisión ya estaba guardada como '+S.p1.op+'. Puede cambiar de opinión en el paso 4.','warn');setRadio('p1op',S.p1.op);return;}
   S.p1={op:op,conf:cf,why:why};save('p1');
   msg('p1msg','Decisión guardada. Aquí no se dice si es correcta: lo van a averiguar ustedes en el paso 2.','ok');
 });
@@ -808,6 +828,7 @@ $('clearp').addEventListener('click',function(){
 
 $('p3check').addEventListener('click',checkCmp);
 $('p3save').addEventListener('click',function(){
+  if(S.p4){$('p3regla').value=S.p3.regla;$('p3sara').value=S.p3.sara||'';if(S.p3.saraOK)setRadio('saraok',S.p3.saraOK);msg('p3savemsg','El paso 3 quedó fijo al guardar la segunda decisión.','warn');return;}
   var rg=$('p3regla').value.trim(),sok=radio('saraok'),sa=$('p3sara').value.trim();
   if(rg.length<15||!sok||sa.length<10){msg('p3savemsg','Escriban la regla, decidan si Sara tiene razón y justifíquenlo con uno de sus repartos.','warn');return;}
   S.p3=S.p3||{};S.p3.regla=rg;S.p3.saraOK=sok;S.p3.sara=sa;save('p3');
@@ -816,10 +837,10 @@ $('p3save').addEventListener('click',function(){
 
 if(S.p4){setRadio('p4op',S.p4.op);setRadio('p4conf',S.p4.conf);$('p4why').value=S.p4.why;}
 $('p4save').addEventListener('click',function(){
+  if(S.p4){setRadio('p4op',S.p4.op);setRadio('p4conf',S.p4.conf);$('p4why').value=S.p4.why;msg('p4msg','Su segunda decisión ya estaba guardada como '+S.p4.op+' y no se puede cambiar. Si ahora piensa distinto, escríbalo en el paso 5.','warn');return;}
   var op=radio('p4op'),cf=radio('p4conf'),why=$('p4why').value.trim();
   if(!op||!cf){msg('p4msg','Elija una respuesta y qué tan seguro está.','warn');return;}
   if(why.length<15){msg('p4msg','Justifique con un dato del enunciado o con uno de sus repartos.','warn');return;}
-  if(S.p4&&S.p4.op!==op){msg('p4msg','Su segunda decisión ya estaba guardada como '+S.p4.op+'. Si ahora piensa distinto, escríbalo en el paso 5.','warn');setRadio('p4op',S.p4.op);return;}
   S.p4={op:op,conf:cf,why:why};save('p4');
   msg('p4msg','Segunda decisión guardada. El paso 5 se abre con la palabra que dirá su docente.','ok');
 });
@@ -840,7 +861,12 @@ $('p5save').addEventListener('click',function(){
   S.p5=t;save('p5');msg('p5msg',AV?'Sesión 1 terminada. Sus respuestas ya están guardadas en Moodle.':'Sesión 1 terminada. Copie el resumen del paso 8 en Moodle.','ok');
 });
 
-$('unlock2').addEventListener('click',function(){S.s2=true;save('s2');});
+$('unlock2').addEventListener('click',function(){$('unlock2box').hidden=false;$('unlock2word').focus();});
+$('unlock2go').addEventListener('click',function(){
+  var w=$('unlock2word').value.toLowerCase().replace(/[^a-z]/g,'');
+  if(PALABRAS.indexOf(w)<0){$('unlock2word').value='';$('unlock2word').placeholder='Esa no es la palabra';return;}
+  S.s2=true;save('s2');
+});
 $('casos').addEventListener('click',function(e){
   var b=e.target.closest('button[data-caso]');if(b){checkCaso(b.getAttribute('data-caso'));return;}
   var g=e.target.closest('button[data-r1]');if(g)saveR1(g.getAttribute('data-r1'));
@@ -901,9 +927,12 @@ if(AV){
   $('pie').textContent='Ítem MAT-2026-1-010 (Saber 11, Matemáticas). Las respuestas se guardan en Moodle con su usuario.';
   // En Moodle no se vota con los dedos: el docente ve en el panel la primera decisión de cada uno.
   $('p1vote').textContent='Espere en silencio a que todos guarden. Su docente ve en el panel cómo decidió el curso y les dirá cuándo formar los tríos.';
+  $('unlock2').hidden=true;$('reset').hidden=true; // N5, N7: en Moodle el estado sigue al usuario y no se borra desde aquí
   if(!S.nombre&&AV.fullname)$('nombre').placeholder='Ejemplo: '+AV.fullname+' (yo), Andrés, Sofía';
 }
 setRep('V',[1,1,1,1,1,1,1,1],false);
+['s0','s1','s2','s3','s4','s5','s8'].forEach(function(id){var sec=$(id);sec.classList.add('evo');var n=document.createElement('p');n.className='evonota';
+  n.textContent='Guardado. Se oculta mientras escribe su regla de memoria en el paso 6 y vuelve a verse al guardarla.';sec.querySelector('h2').after(n);});
 drawCmp();drawCasos();refresh();
 if(S.p3&&S.p3.regla){$('p3more').hidden=false;$('p3regla').value=S.p3.regla;$('p3sara').value=S.p3.sara||'';if(S.p3.saraOK)setRadio('saraok',S.p3.saraOK);}
 })();

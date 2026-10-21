@@ -43,15 +43,30 @@ docente un panel en vivo con retroalimentación escrita.
   plan están aplicados:
   - **H1:** la pregunta de Sara ya no presupone la clave: «¿Tiene razón Sara? Sí / No» y la
     justificación con un reparto (`p3.saraOK`).
-  - **H5:** el caso C1 se reformuló para que tenga una sola lectura: «¿Cuál es la ubicación de la
-    franja que le corresponde al primer asociado del acta?» → la que da a la carretera. La primera
-    reformulación («¿Qué porción…?») admitía la lectura de cuota (reauditoría, N2).
+  - **H5:** el caso C1 pregunta «¿Qué lugar del acta ocupa el asociado que recibe la franja que da a la
+    carretera?» → el primero. Antes hubo tres versiones con dos lecturas, cada una detectada por un
+    detractor: «¿Cuál de los asociados…?» (el nombre no se conoce), «¿Qué porción…?» (cuota) y
+    «¿Cuál es la ubicación…?» (la región depende de cuántos asociados son). Preguntar por la posición en
+    el acta esquiva las tres, y C1 queda como espejo de B2.
   - **H2:** en la sesión 2, la regla de memoria y la decisión de cada caso se guardan solas y quedan
     fijas antes de hablar (`regla2`, `casos[X].r1`).
   - **H3:** el panel muestra el primer intento: columnas «Casos (antes de hablar)» (`ok1`) y «Cambian
     de estado (antes de hablar)» (`c1`, E4).
   El arnés del nivel 0 vigila las cuatro, con mutantes probados. Pendientes del plan: H4 (cuestionario
   diferido con CBM), H6-H12.
+- 2026-10-20, dos reauditorías (RECHAZAR y RECHAZAR) y sus correcciones:
+  - **N1:** «Compare los casos» solo con las cuatro decisiones; títulos neutros hasta decidir.
+  - **N6/M2:** E4 = B1, C1, C2 y D1. El caso A no cuenta, y la guardia del arnés decide bien A1 para
+    que un mutante que lo vuelva a contar dé rojo.
+  - **N3:** mientras se escribe la regla de memoria, los pasos 1 a 5 y el resumen se ocultan.
+  - **N4:** la primera y la segunda decisión quedan fijas completas (letra, seguridad y razón), y el
+    paso 3, al guardar la segunda.
+  - **N5:** en Moodle no aparece «Ya hice la sesión 1 en otro celular»; sin Moodle pide la palabra.
+  - **N7:** un caso comprobado sin decisión previa (estado viejo) no ofrece fijarla; en Moodle no
+    aparece «Borrar todas mis respuestas».
+  - **M3:** redacción de «Compare los casos» y guardia de los cuatro títulos.
+  Cada corrección tiene su guardia en el arnés (5 páginas, una de «estado viejo»), y seis mutantes la
+  ponen en rojo. Desplegado el 2026-10-20 (`activity.html` sha256 `7ae9d137dc09f78f…`, sin deriva).
 - Pendiente: las barras del curso en cada celular, que el docente libera desde el panel. Su PRP es
   `Proyectos-Varios/Moodle/PRPs/mod-aulaviva-barras-del-curso.md`, sin ejecutar; antes hay que resolver
   su P-1. Cuando exista, los textos provisionales pasan a hablar de las barras.
