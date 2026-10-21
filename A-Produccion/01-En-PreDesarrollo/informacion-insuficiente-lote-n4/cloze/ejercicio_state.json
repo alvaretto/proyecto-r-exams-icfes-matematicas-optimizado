@@ -3,7 +3,7 @@
   "ejercicio": "informacion_insuficiente_lote_geometrico_metrico_argumentacion_n4_cloze_v1",
   "tipo": "cloze",
   "timestamp_inicio": "2026-08-12T17:55:27.055928-05:00",
-  "timestamp_ultima_actualizacion": "2026-10-19T13:50:37.226482-05:00",
+  "timestamp_ultima_actualizacion": "2026-10-20T20:59:59.436653-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -17,8 +17,9 @@
     },
     "generacion_rmd": {
       "completado": true,
-      "timestamp": "2026-10-19T11:58:57.341407-05:00",
-      "archivo": "informacion_insuficiente_lote_geometrico_metrico_argumentacion_n4_cloze_v1.Rmd"
+      "timestamp": "2026-10-20T20:59:59.142546-05:00",
+      "archivo": "informacion_insuficiente_lote_geometrico_metrico_argumentacion_n4_cloze_v1.Rmd",
+      "nota": "2026-10-20: UBI-02 reformulada (texto: turno del <b_sing> cuya porcion da a la carretera; valor: el primero en el orden del acta). Solo texto y valor; det/DEP/seleccion sin cambios. Decision del profesor tras O1 del detractor de la didactica."
     },
     "retroalimentacion": {
       "completado": true,
@@ -26,26 +27,29 @@
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-10-19T11:58:57.458485-05:00",
-      "formatos": "2026-10-19, reapertura (pasada 3): HTML 7, PDF 7, DOCX 2, Moodle 7 en R limpio con exams::; NOPS N/A esperado (cloze)"
+      "timestamp": "2026-10-20T20:59:59.202174-05:00",
+      "formatos": "2026-10-20, UBI-02 turno: HTML 2, PDF 2, DOCX 1, Moodle 2 + Moodle 20 en R sin perfil con exams::; NOPS N/A esperado (cloze). PDF semilla 3 revisado a ojo (P5 y Solution con la redaccion nueva); Moodle 20: 0 restos de la redaccion vieja, 0 Opcion [A-D]"
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-10-19T11:58:57.516601-05:00"
+      "timestamp": "2026-10-20T20:59:59.262781-05:00",
+      "detalle": "2026-10-20, hook invocado a mano (la sesion arranco en una subcarpeta): 2A APROBADO, 2C/2E/2F OK, 2I/2J/2K/2L/2O OK; 2D ERROR = falso positivo codigo, identico a HEAD; 2N WARN_DIV_ESTATICA heredado. Multisemilla 100/100, coherencia APROBADO, diversidad PASS 6/6, diagnosticidad PASS. auditoria_propia 300 APROBADO (todos los estratos), verificar_p6_ubi01 APROBADO (oraculo 0 violaciones, 6 mutantes mueren)"
     },
     "detractor_fase2c": {
       "completado": true,
-      "timestamp": "2026-10-19T12:30:18.880913-05:00",
-      "veredicto": "APROBAR CON CAMBIOS"
+      "timestamp": "2026-10-20T20:59:59.320252-05:00",
+      "veredicto": "2026-10-20, UBI-02 turno: APROBAR_CON_CAMBIOS (AgenteDetractor nuevo, sin name, independiente; 9 citas verificadas por el hook). 0 CORRECCION. H1 MEDIA y H2 BAJA (comentarios) corregidos; H3 BAJA (solo SCHOICE) y H4 BAJA (residuos de largo bajo P7-A) registrados. Reporte: REPORTE_DETRACTOR_2026-10-20_UBI02_TURNO.md"
     },
     "coherencias_5": {
       "completado": true,
-      "timestamp": "2026-10-19T12:51:08.201927-05:00"
+      "timestamp": "2026-10-20T20:59:59.379062-05:00",
+      "nota": "2026-10-20, sobre UBI-02 turno: semantica (barrido del detractor 0 incoherencias en P1/P4/P5/P6 y enunciado_p6; oraculo P6 0 violaciones), visual-texto (PDF y Moodle revisados), matematica (multisemilla 100/100), codigo (G1-G12 y 6 mutantes intactos), general (metadatos sin cambios)"
     },
     "validar_diversidad": {
       "completado": true,
-      "timestamp": "2026-10-19T11:58:57.575869-05:00",
-      "versiones_unicas": 300
+      "timestamp": "2026-10-20T20:59:59.436653-05:00",
+      "versiones_unicas": 300,
+      "nota": "2026-10-20: 300/300 unicas (enunciado + opciones de las 6 partes), 0 errores; diversidad sustantiva PASS 6/6"
     },
     "validar_icfes": {
       "completado": true,

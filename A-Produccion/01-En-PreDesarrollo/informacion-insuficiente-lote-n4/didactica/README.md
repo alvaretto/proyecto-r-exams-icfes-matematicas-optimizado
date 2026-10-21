@@ -80,8 +80,11 @@ docente un panel en vivo con retroalimentación escrita.
   - **P5:** la nota del ocultamiento es neutra y no aparece en pasos bloqueados.
   Arnés 6 de 6 páginas (nueva: «viejo2»), con mutantes en rojo. Desplegado el 2026-10-20
   (`activity.html` sha256 `4c1d95642ee4ef72…`, sin deriva; backup `20261020_195541`).
-- Pendiente de decisión (O1): el `.Rmd` del subproyecto usa como pregunta determinada «¿Cuál de los X
-  recibe la porción que da a la carretera?», la formulación que esta didáctica dejó por ambigua.
+- O1 resuelto el 2026-10-20: los dos `.Rmd` del subproyecto ya no preguntan «¿Cuál de los X recibe la
+  porción que da a la carretera?». Ahora preguntan «¿Cuál es el turno del X cuya porción da a la
+  carretera?» → «el primero en el orden del acta», es decir, por la posición, como C1. No nombran el
+  acta porque la mayoría de sus contextos no la mencionan. La FASE 2C dio APROBAR_CON_CAMBIOS, sin
+  hallazgos de corrección (`../cloze/REPORTE_DETRACTOR_2026-10-20_UBI02_TURNO.md`).
 - Pendiente: las barras del curso en cada celular, que el docente libera desde el panel. Su PRP es
   `Proyectos-Varios/Moodle/PRPs/mod-aulaviva-barras-del-curso.md`, sin ejecutar; antes hay que resolver
   su P-1. Cuando exista, los textos provisionales pasan a hablar de las barras.

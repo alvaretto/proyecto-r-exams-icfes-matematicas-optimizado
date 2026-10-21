@@ -458,8 +458,16 @@ preguntas <- list(
                 " m las porciones caen en lugares distintos.")),
   list(codigo = "GEO-INF-UBI-02", cada = FALSE, met = FALSE, porc = TRUE,
        det = info_T && info_A,
-       texto = paste0("¿Cuál de los ", b_plur, " recibe la porción que da a la carretera?"),
-       valor = paste0("el primero de los ", b_plur, " en el orden del acta"),
+       # Pregunta por el TURNO, no por la identidad: «¿Cuál de los hijos…?» admitía
+       # la lectura «no se sabe quién es» aunque el orden lo fije el enunciado (detractor
+       # del material didáctico, O1, 2026-10-20). No nombra el acta: fuera de info_A el
+       # enunciado solo la menciona en el contexto 5 («El acta de reparto…»); en los otros
+       # seis, nombrarla en la opción delataría la clave. Mide un carácter menos que
+       # «¿Cuál de los hijos recibe…?». Con «que recibe la porción que da a…» (12 caracteres
+       # más) la clave era la opción más larga en el 57,1 % de la rama LT-N (enumeración
+       # exacta; antes 7,1 %), porque allí la clave es UBI-02.
+       texto = paste0("¿Cuál es el turno del ", b_sing, " cuya porción da a la carretera?"),
+       valor = "el primero en el orden del acta",
        razon = paste0("El enunciado dice que las franjas se asignan en el orden del ",
                       "acta empezando por la que da a la carretera."),
        motivo = paste0("El enunciado no fija ningún orden de asignación: cualquiera de ",

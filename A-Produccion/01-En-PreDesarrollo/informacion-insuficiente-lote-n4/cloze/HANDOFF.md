@@ -1,6 +1,41 @@
 # HANDOFF — CLOZE `informacion_insuficiente_lote_..._n4_cloze_v1`
 
-**Última sesión:** 2026-10-19 · **Estado:** **REABIERTO, 7/11 — NO LLEVAR AL AULA** (todavía no se usó en clase)
+**Última sesión:** 2026-10-20 · **Estado:** **10/11 — NO LLEVAR AL AULA hasta la aprobación del profesor** (todavía no se usó en clase)
+
+> **2026-10-20 — UBI-02 pregunta por el turno (CLOZE y SCHOICE).** Un detractor del material
+> didáctico (`../didactica/`, O1) señaló que «¿Cuál de los X recibe la porción que da a la
+> carretera?» admite la lectura «pregunta quién es, y el nombre no se conoce». Con esa lectura,
+> un estudiante podía defender «no se puede responder» en versiones donde la clave la da por
+> determinada. Por decisión del profesor, los dos `.Rmd` cambian solo `texto` y `valor` de
+> GEO-INF-UBI-02:
+> - texto: «¿Cuál es el turno del <b_sing> cuya porción da a la carretera?»
+> - valor: «el primero en el orden del acta»
+> - `det`, `DEP`, `motivo`, `contra` y la selección: sin cambios.
+>
+> Restricciones: conserva el molde «¿Cuál es…» (H2/H3 siguen ciegas por diseño) y no nombra el
+> acta, que sin `info_A` solo aparece en el contexto 5. Mide 54 + nchar(b_sing), un carácter menos
+> que la original. Una primera redacción de 70 caracteres («…que recibe la porción que da a…») se
+> descartó: en la rama `LT-N` del SCHOICE la clave pasaba a ser la opción más larga en el 57,1 %
+> (enumeración exacta; antes 7,1 %).
+>
+> Mediciones de la versión final (contra HEAD `351dd9c5`):
+> - Multisemilla 100/100; coherencia APROBADO; diversidad PASS 6/6; 300/300 únicas.
+> - Diagnosticidad PASS.
+> - `auditoria_propia.R … 300`: APROBADO, todos los estratos dictaminados.
+>   - Bloque B, P1 `L--N`: el peor token baja de «los» 45,8 % a «ubicación» 30,5 %. El «de los» de
+>     la redacción vieja era el que más delataba.
+> - `verificar_p6_ubi01.R`: APROBADO, oráculo 0 violaciones, los 6 mutantes mueren. P5 `LTA-`
+>   explotable (margen ≥ 15 %) 1 %, igual que HEAD.
+> - Render HTML/PDF/DOCX/Moodle OK, NOPS N/A.
+>
+> **FASE 2C → APROBAR_CON_CAMBIOS** (`REPORTE_DETRACTOR_2026-10-20_UBI02_TURNO.md`, 0 CORRECCIÓN):
+> - H1 y H2, dos comentarios de código: corregidos.
+> - H3 (solo SCHOICE): el `motivo`/`contra` de UBI-02 no se ramifica por `info_T` como aquí.
+>   Queda abierta y no bloquea.
+> - H4, residuo de largo bajo §P7-A, sin acción. P5 `-TAN` única-más-larga 21,0 → 28,4 % (n=81,
+>   sin margen). P6: cuota de UBI-02 como clave 28 → 32 % en `-TAN` y 39 → 40 % en `LTA-`.
+>
+> Pasos 3, 5-9 resellados con notas en `ejercicio_state.json`. **Pendiente: aprobación del profesor (paso 11).**
 
 > ⛔ **REAPERTURA DEL 2026-10-19 — LEER ESTO ANTES QUE EL RESTO.** Lo de abajo describe el
 > estado del 2026-08-13 y quedó superado.
