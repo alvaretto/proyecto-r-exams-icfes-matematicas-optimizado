@@ -47,6 +47,7 @@ p{margin:.5em 0}
 .evonota{display:none;color:var(--muted);font-style:italic}
 body.evocando .evo>.body{display:none}
 body.evocando .evo>.evonota{display:block}
+body.evocando .evo.locked>.evonota{display:none}
 label.opt:has(input:disabled),.seg label:has(input:disabled){cursor:default;opacity:.75}
 textarea[readonly]{background:var(--bg)}
 .tag{display:inline-block;font-size:.78rem;font-weight:600;letter-spacing:.02em;
@@ -357,7 +358,11 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
     <h2>Mismo lote, otros enunciados</h2>
     <p class="lockmsg">Se abre al terminar la sesión 1. <button type="button" class="ghost small" id="unlock2">Ya hice la sesión 1 en otro celular</button><span id="unlock2box" hidden> Palabra que dijo su docente al final de la sesión 1: <input type="text" id="unlock2word" autocomplete="off" autocapitalize="none" spellcheck="false"> <button type="button" class="small" id="unlock2go">Abrir la sesión 2</button></span></p>
     <div class="body">
-      <div id="r2box">
+      <div id="s2inibox">
+        <p>La sesión 2 es en otra clase. Toque el botón cuando su docente lo indique, al empezar esa clase.</p>
+        <div class="row"><button type="button" id="s2ini">Empezar la sesión 2</button></div>
+      </div>
+      <div id="r2box" hidden>
         <h3>Antes de empezar, cada uno solo</h3>
         <label for="regla2">Escriba de memoria, sin mirar la sesión 1: ¿cuándo <strong>no</strong> se puede responder una pregunta con lo que dice el enunciado?</label>
         <textarea id="regla2" placeholder="No se puede responder cuando…"></textarea>
@@ -433,7 +438,7 @@ var OPC={
 };
 var CONF={'1':'estoy adivinando','2':'poco seguro','3':'bastante seguro','4':'totalmente seguro'};
 
-function blank(){return {nombre:'',p1:null,repartos:[],p3:null,p4:null,p5open:false,p5:null,regla2:'',casos:{},contraste:'',p6:false,crear:null,s2:false};}
+function blank(){return {nombre:'',p1:null,repartos:[],p3:null,p4:null,p5open:false,p5:null,s2ini:false,regla2:'',casos:{},contraste:'',p6:false,crear:null,s2:false};}
 function load(){
   if(AV){var o=AV.initialState(),b=blank();if(o&&typeof o==='object'&&!Array.isArray(o)){for(var k in b){if(!(k in o))o[k]=b[k];}return o;}return b;}
   try{var r=localStorage.getItem(KEY);
@@ -676,7 +681,7 @@ function drawCasos(){
   }).join('');
   CASOS.forEach(function(c){var st=S.casos[c.id];paintR1(c.id);if(st&&st.r){st.r.forEach(function(v,i){if(v)setRadio('cs_'+c.id+'_'+i,v);});if(st.checked)checkCaso(c.id,true);}});
 }
-function paintContraste(){var todos=CASOS.every(function(c){var x=S.casos[c.id];return x&&(x.r1||x.checked);});$('contrastebox').hidden=!todos;$('contrastenota').hidden=todos;}
+function paintContraste(){var todos=CASOS.every(function(c){var x=S.casos[c.id];return x&&(x.r1||x.ok!=null);});$('contrastebox').hidden=!todos;$('contrastenota').hidden=todos;}
 function caso(id){return CASOS.filter(function(x){return x.id===id;})[0];}
 function leerCaso(id){var r=[],miss=false;caso(id).q.forEach(function(q,i){var v=radio('cs_'+id+'_'+i);r.push(v);if(!v)miss=true;});return miss?null:r;}
 // La decisión «antes de hablar» (r1) queda fija: es la evidencia individual de transferencia que ve el panel
@@ -684,7 +689,7 @@ function leerCaso(id){var r=[],miss=false;caso(id).q.forEach(function(q,i){var v
 // Un caso comprobado antes de que existiera r1 (estado viejo) no lo ofrece: ya vio la retroalimentación (N7).
 function paintR1(id){
   var st=S.casos[id]||{},b1=document.querySelector('button[data-r1="'+id+'"]'),bc=document.querySelector('button[data-caso="'+id+'"]');
-  var viejo=!!(st.checked&&!st.r1);
+  var viejo=!st.r1&&st.ok!=null; // P2: ok no se borra al cambiar un radio; checked sí
   b1.hidden=!!st.r1||viejo;bc.disabled=!st.r1&&!viejo;
   $('ct_'+id).textContent=(st.r1||viejo)?caso(id).t:'Caso '+id; // el subtítulo da pistas: solo después de decidir
   paintContraste();
@@ -692,7 +697,7 @@ function paintR1(id){
 }
 function saveR1(id){
   var st=S.casos[id]||{},c=caso(id),r=leerCaso(id);
-  if(st.r1||st.checked){paintR1(id);return;}
+  if(st.r1||st.ok!=null){paintR1(id);return;}
   if(!r){msg('msg_caso_'+id,'Decida las cuatro preguntas antes de guardar.','warn');return;}
   var ok1=0;c.q.forEach(function(q,i){if((r[i]==='si')===q[1])ok1++;});
   st.r1=r.slice();st.ok1=ok1;st.c1=c.k.filter(function(i){return (r[i]==='si')===c.q[i][1];}).length;st.r=r.slice();st.checked=false;S.casos[id]=st;
@@ -701,7 +706,7 @@ function saveR1(id){
 }
 function checkCaso(id,silent){
   var c=caso(id),st=S.casos[id]||{},r=leerCaso(id),ok=0;
-  if(!st.r1&&!silent){msg('msg_caso_'+id,'Primero guarde su decisión antes de hablar.','warn');return;}
+  if(!st.r1&&st.ok==null&&!silent){msg('msg_caso_'+id,'Primero guarde su decisión antes de hablar.','warn');return;}
   if(!r){if(!silent)msg('msg_caso_'+id,'Responda las cuatro preguntas antes de comprobar.','warn');return;}
   c.q.forEach(function(q,i){
     var good=(r[i]==='si')===q[1];if(good)ok++;
@@ -741,6 +746,8 @@ function fijar(radios,campos,boton,hecho){
   radios.forEach(function(n){document.querySelectorAll('input[name="'+n+'"]').forEach(function(e){e.disabled=hecho;});});
   campos.forEach(function(id){$(id).readOnly=hecho;});$(boton).hidden=hecho;
 }
+// P1: la regla de memoria se escribe al empezar la sesión 2, no al terminar la 1 (recuperación diferida).
+function paintS2ini(){var ini=!!(S.s2ini||S.regla2);$('s2inibox').hidden=ini;$('r2box').hidden=!ini;}
 function paintFijos(){
   fijar(['p1op','p1conf'],['p1why'],'p1save',!!S.p1);
   fijar(['saraok'],['p3regla','p3sara'],'p3save',!!S.p4);
@@ -755,7 +762,8 @@ function refresh(){
   $('p5gate').hidden=!S.p4||p5open;
   lock('s6',!s2);lock('s7',!s2);
   lock('s8',!S.p1);
-  document.body.classList.toggle('evocando',s2&&!S.regla2); // N3
+  document.body.classList.toggle('evocando',s2&&!!S.s2ini&&!S.regla2); // N3; P1: solo tras «Empezar la sesión 2»
+  paintS2ini();
   paintFijos();
   drawTable();
   if(S.p1)$('p1recap').innerHTML='Su primera decisión fue <strong>'+S.p1.op+'</strong> ('+CONF[S.p1.conf]+'): «'+esc(S.p1.why)+'».';
@@ -882,6 +890,7 @@ function paintRegla2(){
   var hecho=!!S.regla2;$('regla2').readOnly=hecho;$('regla2save').hidden=hecho;$('casoswrap').hidden=!hecho;
   if(hecho)msg('regla2msg','Regla guardada. Ya no se puede cambiar: sigan con los casos.','ok');
 }
+$('s2ini').addEventListener('click',function(){S.s2ini=true;save('s2ini');});
 $('regla2save').addEventListener('click',function(){
   if(S.regla2){paintRegla2();return;}
   var t=$('regla2').value.trim();
@@ -931,8 +940,8 @@ if(AV){
   if(!S.nombre&&AV.fullname)$('nombre').placeholder='Ejemplo: '+AV.fullname+' (yo), Andrés, Sofía';
 }
 setRep('V',[1,1,1,1,1,1,1,1],false);
-['s0','s1','s2','s3','s4','s5','s8'].forEach(function(id){var sec=$(id);sec.classList.add('evo');var n=document.createElement('p');n.className='evonota';
-  n.textContent='Guardado. Se oculta mientras escribe su regla de memoria en el paso 6 y vuelve a verse al guardarla.';sec.querySelector('h2').after(n);});
+['s0','s1','s2','s3','s4','s5','s7','s8'].forEach(function(id){var sec=$(id);sec.classList.add('evo');var n=document.createElement('p');n.className='evonota';
+  n.textContent='Oculto mientras escribe su regla de memoria en el paso 6. Vuelve a verse al guardarla.';sec.querySelector('h2').after(n);});
 drawCmp();drawCasos();refresh();
 if(S.p3&&S.p3.regla){$('p3more').hidden=false;$('p3regla').value=S.p3.regla;$('p3sara').value=S.p3.sara||'';if(S.p3.saraOK)setRadio('saraok',S.p3.saraOK);}
 })();

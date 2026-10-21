@@ -67,6 +67,20 @@ docente un panel en vivo con retroalimentación escrita.
   - **M3:** redacción de «Compare los casos» y guardia de los cuatro títulos.
   Cada corrección tiene su guardia en el arnés (5 páginas, una de «estado viejo»), y seis mutantes la
   ponen en rojo. Desplegado el 2026-10-20 (`activity.html` sha256 `7ae9d137dc09f78f…`, sin deriva).
+- Tercera reauditoría (APROBAR_CON_CAMBIOS: M1, M2, M3, N5 y H5 cerrados; N4 cerrado en Moodle). Sus
+  hallazgos, corregidos:
+  - **P1:** la regla de memoria y el ocultamiento empiezan con «Empezar la sesión 2», en la clase
+    siguiente. Al terminar la sesión 1 no se oculta nada (antes desaparecían la confirmación y el
+    resumen, y la regla se escribía con la explicación recién leída).
+  - **P4:** el paso 7, cuyo rótulo es casi la regla, también se oculta mientras se escribe.
+  - **P2:** el estado viejo se reconoce por `ok` (persiste), no por `checked` (se borra al cambiar un
+    radio).
+  - **P3:** la guía docente ya no dice que la seguridad y la justificación se pueden corregir.
+  - **P5:** la nota del ocultamiento es neutra y no aparece en pasos bloqueados.
+  Arnés 6 de 6 páginas (nueva: «viejo2»), con mutantes en rojo. Desplegado el 2026-10-20
+  (`activity.html` sha256 `4c1d95642ee4ef72…`, sin deriva; backup `20261020_195541`).
+- Pendiente de decisión (O1): el `.Rmd` del subproyecto usa como pregunta determinada «¿Cuál de los X
+  recibe la porción que da a la carretera?», la formulación que esta didáctica dejó por ambigua.
 - Pendiente: las barras del curso en cada celular, que el docente libera desde el panel. Su PRP es
   `Proyectos-Varios/Moodle/PRPs/mod-aulaviva-barras-del-curso.md`, sin ejecutar; antes hay que resolver
   su P-1. Cuando exista, los textos provisionales pasan a hablar de las barras.
