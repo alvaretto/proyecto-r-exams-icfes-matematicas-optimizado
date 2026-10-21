@@ -268,7 +268,10 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
         <textarea id="p3regla"></textarea>
         <h3>Un compañero de otro curso dijo esto</h3>
         <p class="item">Sara: «Sí se sabe dónde le toca a cada hijo: a cada uno le toca 1/8 del lote, o sea una franja de 15 metros».</p>
-        <label for="p3sara">¿Qué está suponiendo Sara que el enunciado no dice? Usen uno de sus repartos para responderle.</label>
+        <fieldset><legend>¿Tiene razón Sara?</legend>
+          <div class="seg"><label><input type="radio" name="saraok" value="Sí"> Sí, tiene razón</label><label><input type="radio" name="saraok" value="No"> No tiene razón</label></div>
+        </fieldset>
+        <label for="p3sara">Justifíquenlo con uno de sus repartos.</label>
         <textarea id="p3sara"></textarea>
         <div class="row"><button type="button" id="p3save">Guardar el paso 3</button></div>
         <div class="msg" id="p3savemsg" role="status"></div>
@@ -349,13 +352,22 @@ footer{color:var(--muted);font-size:.85rem;text-align:center;margin-top:28px}
     <h2>Mismo lote, otros enunciados</h2>
     <p class="lockmsg">Se abre al terminar la sesión 1. <button type="button" class="ghost small" id="unlock2">Ya hice la sesión 1 en otro celular</button></p>
     <div class="body">
-      <p>Cada caso cambia lo que dice el enunciado. Para cada pregunta, decida si <strong>sí se puede</strong> o <strong>no se puede</strong> responder. Antes de comprobar, compare con su pareja: si no coinciden, cada uno debe convencer al otro con dos situaciones que cumplan el enunciado.</p>
+      <div id="r2box">
+        <h3>Antes de empezar, cada uno solo</h3>
+        <label for="regla2">Escriba de memoria, sin mirar la sesión 1: ¿cuándo <strong>no</strong> se puede responder una pregunta con lo que dice el enunciado?</label>
+        <textarea id="regla2" placeholder="No se puede responder cuando…"></textarea>
+        <div class="row"><button type="button" id="regla2save">Guardar mi regla</button></div>
+        <div class="msg" id="regla2msg" role="status"></div>
+      </div>
+      <div id="casoswrap" hidden>
+      <p>Cada caso cambia lo que dice el enunciado. Para cada pregunta, primero decida <strong>usted solo</strong> si <strong>sí se puede</strong> o <strong>no se puede</strong> responder, y toque «Guardar mi decisión»: esa decisión queda fija. Después compare con su pareja: si no coinciden, cada uno debe convencer al otro con dos situaciones que cumplan el enunciado. Al final, comprueben.</p>
       <div id="casos"></div>
       <h3>Compare los casos</h3>
       <p>En la pregunta original, el <strong>perímetro de cada parte</strong> no se podía saber, pero en el caso B sí. Y la <strong>fracción de cada uno</strong> sí se podía saber en la original, pero en el caso C no. ¿Qué frase del enunciado hizo la diferencia en cada caso?</p>
       <textarea id="contraste"></textarea>
       <div class="row"><button type="button" id="p6save">Guardar el paso 6</button></div>
       <div class="msg" id="p6msg" role="status"></div>
+      </div>
     </div>
   </section>
 
@@ -413,7 +425,7 @@ var OPC={
 };
 var CONF={'1':'estoy adivinando','2':'poco seguro','3':'bastante seguro','4':'totalmente seguro'};
 
-function blank(){return {nombre:'',p1:null,repartos:[],p3:null,p4:null,p5open:false,p5:null,casos:{},contraste:'',p6:false,crear:null,s2:false};}
+function blank(){return {nombre:'',p1:null,repartos:[],p3:null,p4:null,p5open:false,p5:null,regla2:'',casos:{},contraste:'',p6:false,crear:null,s2:false};}
 function load(){
   if(AV){var o=AV.initialState(),b=blank();if(o&&typeof o==='object'&&!Array.isArray(o)){for(var k in b){if(!(k in o))o[k]=b[k];}return o;}return b;}
   try{var r=localStorage.getItem(KEY);
@@ -605,7 +617,7 @@ function checkCmp(){
 
 /* ---------- paso 6: casos ---------- */
 var CASOS=[
- {id:'A',t:'Caso A · El enunciado original, otras preguntas',
+ {id:'A',k:0,t:'Caso A · El enunciado original, otras preguntas',
   e:'Un empresario compró un lote rectangular de 50 metros de largo y 120 metros de ancho, para repartirlo en partes iguales entre sus 8 hijos.',
   q:[
    ['¿Cuál es el perímetro de la porción que le corresponde a cada hijo?',false,'No se puede. Franjas de 15 m × 50 m dan 130 m; franjas de 120 m × 6,25 m dan 252,5 m. Las dos cumplen el enunciado.'],
@@ -613,7 +625,7 @@ var CASOS=[
    ['¿Cuál es la longitud total del cerco que rodea el lote?',true,'Sí: es el perímetro del lote, 2 × (50 + 120) = 340 m.'],
    ['¿Cuál es la razón entre el largo y el ancho del lote?',true,'Sí: 50 a 120, que simplificada es 5 : 12.']
   ]},
- {id:'B',t:'Caso B · Ahora se dice cómo se corta',
+ {id:'B',k:0,t:'Caso B · Ahora se dice cómo se corta',
   e:'Una familia recibió como herencia un lote rectangular de 50 metros de largo y 120 metros de ancho, y debe repartirlo en partes iguales entre los 8 hermanos. El reparto se hará en franjas iguales, todas paralelas al lado de 50 metros. El lote colinda con una carretera a lo largo de uno de sus lados de 50 metros.',
   q:[
    ['¿Cuál es el perímetro de la porción que le corresponde a cada hermano?',true,'Sí: cada franja mide 50 m × 15 m, así que su perímetro es 2 × (50 + 15) = 130 m.'],
@@ -621,15 +633,15 @@ var CASOS=[
    ['¿Cuál es la longitud de la cerca que separa unas porciones de otras?',true,'Sí: entre 8 franjas hay 7 cortes de 50 m, o sea 350 m.'],
    ['¿Cuál es la fracción del lote que le corresponde a cada hermano?',true,'Sí: 1/8.']
   ]},
- {id:'C',t:'Caso C · Se dice cómo se corta y a quién le toca, pero falta un dato',
+ {id:'C',k:1,t:'Caso C · Se dice cómo se corta y a quién le toca, pero falta un dato',
   e:'Una cooperativa adquirió un lote rectangular de 50 metros de largo y 120 metros de ancho para distribuirlo en partes iguales entre sus asociados. El reparto se hará en franjas iguales, todas paralelas al lado de 50 metros. El lote colinda con una carretera a lo largo de uno de sus lados de 50 metros. Las franjas se asignan a los asociados en el orden en que aparecen en el acta, empezando por la que da a la carretera.',
   q:[
-   ['¿Cuál de los asociados recibe la porción que da a la carretera?',true,'Sí: el primero en el orden del acta.'],
+   ['¿Qué porción le corresponde al primer asociado del acta?',true,'Sí: la que da a la carretera, porque las franjas se asignan en el orden del acta empezando por esa.'],
    ['¿Cuál es la fracción del lote que le corresponde a cada asociado?',false,'No se puede. El enunciado no dice cuántos asociados son: con 8 sería 1/8; con 10, 1/10.'],
    ['¿Cuál es el área del lote?',true,'Sí: 50 × 120 = 6.000 m².'],
    ['¿Cuál es el perímetro de la porción que le corresponde a cada asociado?',false,'No se puede. Con 8 asociados las franjas miden 50 m × 15 m (130 m); con 10 miden 50 m × 12 m (124 m).']
   ]},
- {id:'D',t:'Caso D · Solo se da el área',
+ {id:'D',k:0,t:'Caso D · Solo se da el área',
   e:'Para un ejercicio de su clase de geometría, Camila modeló un lote rectangular de 6.000 metros cuadrados de área que se reparte en partes iguales entre los 8 beneficiarios. El reparto se hará en franjas iguales, todas paralelas al lado más corto.',
   q:[
    ['¿Cuál es el perímetro del lote?',false,'No se puede. Un lote de 50 m × 120 m tiene 340 m de perímetro; uno de 60 m × 100 m tiene 320 m. Los dos miden 6.000 m².'],
@@ -649,22 +661,42 @@ function drawCasos(){
           '<label><input type="radio" name="'+nm+'" value="no"> No se puede</label>'+
           '</div><div class="fb" id="fb_'+nm+'"></div></div>';
       }).join('')+
-      '<div class="row"><button type="button" class="small" data-caso="'+c.id+'">Comprobar el caso '+c.id+'</button></div>'+
+      '<p class="note" id="r1_'+c.id+'"></p>'+
+      '<div class="row"><button type="button" class="small" data-r1="'+c.id+'">Guardar mi decisión (antes de hablar)</button>'+
+      '<button type="button" class="small" data-caso="'+c.id+'">Comprobar el caso '+c.id+'</button></div>'+
       '<div class="msg" id="msg_caso_'+c.id+'"></div></div>';
   }).join('');
-  CASOS.forEach(function(c){var st=S.casos[c.id];if(st&&st.r){st.r.forEach(function(v,i){if(v)setRadio('cs_'+c.id+'_'+i,v);});if(st.checked)checkCaso(c.id,true);}});
+  CASOS.forEach(function(c){var st=S.casos[c.id];paintR1(c.id);if(st&&st.r){st.r.forEach(function(v,i){if(v)setRadio('cs_'+c.id+'_'+i,v);});if(st.checked)checkCaso(c.id,true);}});
+}
+function caso(id){return CASOS.filter(function(x){return x.id===id;})[0];}
+function leerCaso(id){var r=[],miss=false;caso(id).q.forEach(function(q,i){var v=radio('cs_'+id+'_'+i);r.push(v);if(!v)miss=true;});return miss?null:r;}
+// La decisión «antes de hablar» (r1) queda fija: es la evidencia individual de transferencia que ve el panel
+// (ok1 de 4 y c1 = acierto en la pregunta que cambia de estado). Comprobar solo se habilita después de guardarla.
+function paintR1(id){
+  var st=S.casos[id]||{},b1=document.querySelector('button[data-r1="'+id+'"]'),bc=document.querySelector('button[data-caso="'+id+'"]');
+  b1.hidden=!!st.r1;bc.disabled=!st.r1;
+  $('r1_'+id).textContent=st.r1?'Su decisión antes de hablar quedó guardada: '+st.r1.map(function(v,i){return (i+1)+' '+(v==='si'?'Sí':'No');}).join(' · ')+'.':'';
+}
+function saveR1(id){
+  var st=S.casos[id]||{},c=caso(id),r=leerCaso(id);
+  if(st.r1){paintR1(id);return;}
+  if(!r){msg('msg_caso_'+id,'Decida las cuatro preguntas antes de guardar.','warn');return;}
+  var ok1=0;c.q.forEach(function(q,i){if((r[i]==='si')===q[1])ok1++;});
+  st.r1=r.slice();st.ok1=ok1;st.c1=((r[c.k]==='si')===c.q[c.k][1])?1:0;st.r=r.slice();st.checked=false;S.casos[id]=st;
+  paintR1(id);msg('msg_caso_'+id,'Decisión guardada. Ahora compárenla en pareja y después comprueben.','ok');
+  save('caso-'+id+'-r1');
 }
 function checkCaso(id,silent){
-  var c=CASOS.filter(function(x){return x.id===id;})[0],r=[],ok=0,miss=false;
-  c.q.forEach(function(q,i){var v=radio('cs_'+id+'_'+i);r.push(v);if(!v)miss=true;});
-  if(miss){if(!silent)msg('msg_caso_'+id,'Responda las cuatro preguntas antes de comprobar.','warn');return;}
+  var c=caso(id),st=S.casos[id]||{},r=leerCaso(id),ok=0;
+  if(!st.r1&&!silent){msg('msg_caso_'+id,'Primero guarde su decisión antes de hablar.','warn');return;}
+  if(!r){if(!silent)msg('msg_caso_'+id,'Responda las cuatro preguntas antes de comprobar.','warn');return;}
   c.q.forEach(function(q,i){
     var good=(r[i]==='si')===q[1];if(good)ok++;
     var fb=$('fb_cs_'+id+'_'+i);fb.className='fb '+(good?'ok':'bad');
     fb.textContent=(good?'Correcto. ':'Revise. ')+q[2];
   });
-  S.casos[id]={r:r,checked:true,ok:ok};
-  msg('msg_caso_'+id,'Acertó '+ok+' de 4. Si falló alguna, busque las dos situaciones que muestran por qué.',ok===4?'ok':'warn');
+  st.r=r;st.checked=true;st.ok=ok;S.casos[id]=st;
+  msg('msg_caso_'+id,'Acertó '+ok+' de 4'+(st.r1?' (antes de hablar: '+st.ok1+' de 4)':'')+'. Si falló alguna, busque las dos situaciones que muestran por qué.',ok===4?'ok':'warn');
   if(!silent)save('caso-'+id);
 }
 
@@ -676,12 +708,13 @@ function resumen(){
   if(S.p1)L.push('','PRIMERA DECISIÓN: '+S.p1.op+' ('+CONF[S.p1.conf]+')','Razón: '+S.p1.why);
   if(S.repartos.length){L.push('','REPARTOS GUARDADOS: '+S.repartos.length);
     S.repartos.forEach(function(r,i){L.push((i+1)+'. '+r.desc+' | perímetro de cada parte: '+r.perParte+' | hijo 1: '+r.hijo1);});}
-  if(S.p3&&S.p3.regla)L.push('','REGLA DEL TRÍO: '+S.p3.regla,'Respuesta a Sara: '+S.p3.sara);
+  if(S.p3&&S.p3.regla)L.push('','REGLA DEL TRÍO: '+S.p3.regla,'¿Sara tiene razón? '+(S.p3.saraOK||'(sin decidir)')+'. Por qué: '+S.p3.sara);
   if(S.p4)L.push('','SEGUNDA DECISIÓN: '+S.p4.op+' ('+CONF[S.p4.conf]+')','Justificación: '+S.p4.why);
   if(S.p5)L.push('','LO QUE ENTIENDO AHORA: '+S.p5);
+  if(S.regla2)L.push('','SESIÓN 2. Regla de memoria: '+S.regla2);
   var cs=CASOS.filter(function(c){return S.casos[c.id]&&S.casos[c.id].checked;});
-  if(cs.length){var t=0;cs.forEach(function(c){t+=S.casos[c.id].ok;});
-    L.push('','SESIÓN 2. Casos comprobados: '+cs.map(function(c){return c.id+' ('+S.casos[c.id].ok+'/4)';}).join(', ')+'. Total: '+t+' de '+(cs.length*4)+'.');}
+  if(cs.length){var t=0,t1=0;cs.forEach(function(c){t+=S.casos[c.id].ok;t1+=S.casos[c.id].ok1||0;});
+    L.push('','Casos comprobados: '+cs.map(function(c){var x=S.casos[c.id];return c.id+' (antes de hablar '+(x.ok1==null?'—':x.ok1)+'/4, al comprobar '+x.ok+'/4)';}).join(', ')+'. Total: '+t+' de '+(cs.length*4)+'. Antes de hablar: '+t1+' de '+(cs.length*4)+'.');}
   if(S.contraste)L.push('Comparación de casos: '+S.contraste);
   if(S.crear)L.push('','MI PREGUNTA','Enunciado: '+S.crear.en,'Sí se pueden responder: '+S.crear.si,'No se puede responder: '+S.crear.no,'Contraejemplo: '+S.crear.contra);
   return L.join('\n');
@@ -769,9 +802,9 @@ $('clearp').addEventListener('click',function(){
 
 $('p3check').addEventListener('click',checkCmp);
 $('p3save').addEventListener('click',function(){
-  var rg=$('p3regla').value.trim(),sa=$('p3sara').value.trim();
-  if(rg.length<15||sa.length<10){msg('p3savemsg','Escriban la regla y la respuesta a Sara.','warn');return;}
-  S.p3=S.p3||{};S.p3.regla=rg;S.p3.sara=sa;save('p3');
+  var rg=$('p3regla').value.trim(),sok=radio('saraok'),sa=$('p3sara').value.trim();
+  if(rg.length<15||!sok||sa.length<10){msg('p3savemsg','Escriban la regla, decidan si Sara tiene razón y justifíquenlo con uno de sus repartos.','warn');return;}
+  S.p3=S.p3||{};S.p3.regla=rg;S.p3.saraOK=sok;S.p3.sara=sa;save('p3');
   msg('p3savemsg','Paso 3 guardado. Ahora, cada uno por su cuenta, el paso 4.','ok');
 });
 
@@ -802,12 +835,28 @@ $('p5save').addEventListener('click',function(){
 });
 
 $('unlock2').addEventListener('click',function(){S.s2=true;save('s2');});
-$('casos').addEventListener('click',function(e){var b=e.target.closest('button[data-caso]');if(b)checkCaso(b.getAttribute('data-caso'));});
+$('casos').addEventListener('click',function(e){
+  var b=e.target.closest('button[data-caso]');if(b){checkCaso(b.getAttribute('data-caso'));return;}
+  var g=e.target.closest('button[data-r1]');if(g)saveR1(g.getAttribute('data-r1'));
+});
 $('casos').addEventListener('change',function(e){
   var m=/^cs_([A-D])_(\d)$/.exec(e.target.name||'');if(!m)return;
-  var st=S.casos[m[1]]||{r:[null,null,null,null]};st.r=st.r||[null,null,null,null];st.r[+m[2]]=e.target.value;st.checked=false;S.casos[m[1]]=st;
+  var st=S.casos[m[1]]||{};st.r=st.r||[null,null,null,null];st.r[+m[2]]=e.target.value;st.checked=false;S.casos[m[1]]=st;
   persist();
 });
+// Sesión 2: la regla de memoria se escribe sola y queda fija; recién entonces se ven los casos.
+$('regla2').value=S.regla2||'';
+function paintRegla2(){
+  var hecho=!!S.regla2;$('regla2').readOnly=hecho;$('regla2save').hidden=hecho;$('casoswrap').hidden=!hecho;
+  if(hecho)msg('regla2msg','Regla guardada. Ya no se puede cambiar: sigan con los casos.','ok');
+}
+$('regla2save').addEventListener('click',function(){
+  if(S.regla2){paintRegla2();return;}
+  var t=$('regla2').value.trim();
+  if(t.length<15){msg('regla2msg','Escriba la regla con sus palabras (al menos una frase).','warn');return;}
+  S.regla2=t;save('regla2');paintRegla2();
+});
+paintRegla2();
 $('contraste').value=S.contraste||'';
 $('p6save').addEventListener('click',function(){
   var t=$('contraste').value.trim(),n=CASOS.filter(function(c){return S.casos[c.id]&&S.casos[c.id].checked;}).length;
@@ -850,7 +899,7 @@ if(AV){
 }
 setRep('V',[1,1,1,1,1,1,1,1],false);
 drawCmp();drawCasos();refresh();
-if(S.p3&&S.p3.regla){$('p3more').hidden=false;$('p3regla').value=S.p3.regla;$('p3sara').value=S.p3.sara||'';}
+if(S.p3&&S.p3.regla){$('p3more').hidden=false;$('p3regla').value=S.p3.regla;$('p3sara').value=S.p3.sara||'';if(S.p3.saraOK)setRadio('saraok',S.p3.saraOK);}
 })();
 </script>
 </body>

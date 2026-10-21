@@ -39,6 +39,18 @@ docente un panel en vivo con retroalimentación escrita.
   (`#p1vote`) dice «Espere en silencio a que todos guarden…», y lo mismo dicen la secuencia de la guía
   docente y el paso 1 de `guia_estudiante.html`. Sin Moodle se conserva el voto con los dedos (plan sin
   conexión). El arnés del nivel 0 del plugin vigila los dos textos.
+- 2026-10-20, detractor independiente (APROBAR_CON_CAMBIOS, 5 hallazgos altos). Los puntos 1 y 2 de su
+  plan están aplicados:
+  - **H1:** la pregunta de Sara ya no presupone la clave: «¿Tiene razón Sara? Sí / No» y la
+    justificación con un reparto (`p3.saraOK`).
+  - **H5:** el caso C1 se reformuló para que tenga una sola lectura («¿Qué porción le corresponde al
+    primer asociado del acta?» → la que da a la carretera).
+  - **H2:** en la sesión 2, la regla de memoria y la decisión de cada caso se guardan solas y quedan
+    fijas antes de hablar (`regla2`, `casos[X].r1`).
+  - **H3:** el panel muestra el primer intento: columnas «Casos (antes de hablar)» (`ok1`) y «Cambian
+    de estado (antes de hablar)» (`c1`, E4).
+  El arnés del nivel 0 vigila las cuatro, con mutantes probados. Pendientes del plan: H4 (cuestionario
+  diferido con CBM), H6-H12.
 - Pendiente: las barras del curso en cada celular, que el docente libera desde el panel. Su PRP es
   `Proyectos-Varios/Moodle/PRPs/mod-aulaviva-barras-del-curso.md`, sin ejecutar; antes hay que resolver
   su P-1. Cuando exista, los textos provisionales pasan a hablar de las barras.
