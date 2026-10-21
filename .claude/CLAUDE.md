@@ -183,7 +183,7 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.29.0 (regla #9 v1.6: citas del detractor verificadas por hook `SubagentStop`)
+**Versión**: 3.29.1 (hook de citas también en `~/.claude/settings.json`: el del repo no carga desde subcarpetas)
 **Fecha**: 2026-10-20
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)

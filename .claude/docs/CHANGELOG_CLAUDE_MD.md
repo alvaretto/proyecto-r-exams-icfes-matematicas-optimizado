@@ -8,6 +8,17 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.29.1 (2026-10-20)
+
+- **El hook de citas también corre en sesiones abiertas en subcarpetas.** Claude Code lee el
+  `.claude/settings.json` compartido del directorio de arranque, no de la raíz del repo: en una sesión
+  abierta en `…/didactica` el hook no corrió con un detractor real. Ahora vive también en
+  `~/.claude/settings.json` (comando en `.claude/docs/reglas/detractor-obligatorio.md`, v1.6) y el
+  verificador deduplica las dos copias con un candado de 3 s. Prueba viva con un subagente: bloqueado
+  y, tras corregir la cita, entrega verificada. Suite: 49 expectativas.
+- **Hallazgo abierto**: por la misma causa, ningún hook del proyecto (`pre-write-rmd-gate.sh`,
+  `post-exams2-validation.sh`, ruflo) corre en sesiones abiertas en un subproyecto.
+
 ### Cambios v3.29.0 (2026-10-20)
 
 - **Regla #9 v1.6: las citas del detractor se verifican mecánicamente.** Origen: el 2026-06-16 un

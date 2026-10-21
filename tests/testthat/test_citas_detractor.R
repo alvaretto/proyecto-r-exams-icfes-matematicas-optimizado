@@ -89,7 +89,8 @@ test_that("con citas inventadas bloquea 3 veces y luego deja terminar, registrá
   skip_if_not_installed("jsonlite")
   estado <- tempfile("citas-estado-")
   dir.create(estado)
-  env <- paste0("CITAS_DETRACTOR_ESTADO=", estado)
+  # Ventana 0: cada invocación cuenta (simula reenvíos separados en el tiempo).
+  env <- c(paste0("CITAS_DETRACTOR_ESTADO=", estado), "CITAS_DETRACTOR_VENTANA=0")
   for (i in 1:3) {
     r <- correr("--hook", input = entrada_hook(reporte("inventada"), "agente-test"), env = env)
     expect_equal(r$status, 0L)
@@ -102,6 +103,18 @@ test_that("con citas inventadas bloquea 3 veces y luego deja terminar, registrá
   expect_equal(r$texto, "", info = "tras el tope no debe bloquear")
   log <- paste(readLines(file.path(estado, "citas-detractor.log")), collapse = "\n")
   expect_match(log, "TOPE ALCANZADO")
+})
+
+test_that("dos copias del hook (repo y usuario) sobre el mismo mensaje evalúan una sola vez", {
+  skip_if_not_installed("jsonlite")
+  estado <- tempfile("citas-estado-")
+  dir.create(estado)
+  env <- paste0("CITAS_DETRACTOR_ESTADO=", estado)
+  r1 <- correr("--hook", input = entrada_hook(reporte("inventada"), "agente-doble"), env = env)
+  r2 <- correr("--hook", input = entrada_hook(reporte("inventada"), "agente-doble"), env = env)
+  expect_equal(jsonlite::fromJSON(r1$texto)$decision, "block")
+  expect_equal(r2$texto, "", info = "la segunda copia, en la misma ventana, no debe volver a bloquear")
+  expect_equal(readLines(file.path(estado, "citas-detractor-agente-doble.count")), "1")
 })
 
 test_that("con citas reales no bloquea y registra la entrega verificada", {

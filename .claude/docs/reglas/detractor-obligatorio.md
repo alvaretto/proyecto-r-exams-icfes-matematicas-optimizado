@@ -722,6 +722,19 @@ Con el detractor obligatorio:
   `~/.claude/hooks/logs/citas-detractor.log`. Ese reporte cuenta como **no entregado**.
 - **`detractor-hetero.sh`**: un motor solo «entrega» si trae el marcador **y** sus citas verifican;
   si no, pasa al siguiente de la cascada.
+- **Sesiones abiertas en una subcarpeta (medido el mismo día).** Claude Code lee el
+  `.claude/settings.json` compartido del directorio donde arranca la sesión, no de la raíz del repo.
+  Con la sesión abierta en `…/didactica`, el hook no corrió con un detractor real, aunque el script,
+  probado con su transcripción, verificaba sus 34 citas. Por eso el hook vive también en
+  `~/.claude/settings.json` (se carga siempre), con este comando, que no hace nada fuera del repo:
+  ```
+  sh -c 'r=$(git rev-parse --show-toplevel 2>/dev/null) && [ -f "$r/.claude/scripts/verificar_citas_detractor.py" ] && exec python3 -I "$r/.claude/scripts/verificar_citas_detractor.py" --hook; exit 0'
+  ```
+  Si la sesión arranca en la raíz corren las dos copias en paralelo: un candado por agente y mensaje
+  (`CITAS_DETRACTOR_VENTANA`, 3 s por defecto) hace que evalúe una sola, para no gastar dos bloqueos
+  por intento. **Prueba viva**: un subagente Haiku entregó una cita inventada; el registro muestra
+  «BLOQUEADO (1/3)» a las 19:18:20 y, tras leer el archivo y corregirla, «ENTREGA VERIFICADA» a las
+  19:18:28. Respaldo de la configuración de usuario: `~/.claude/backups/settings.json.pre-citas-detractor-20261020_191727`.
 - **Lo que no cubre**: no comprueba que el *razonamiento* sobre un fragmento real sea correcto (eso
   sigue siendo trabajo de quien recibe el reporte), ni las fuentes web.
 - **Tests**: `tests/testthat/test_citas_detractor.R` (casos inventados que deben fallar y el modo hook).

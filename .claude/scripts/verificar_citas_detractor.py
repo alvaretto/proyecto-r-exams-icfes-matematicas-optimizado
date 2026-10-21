@@ -31,6 +31,7 @@ verifica, responde {"decision": "block", "reason": …}: el subagente NO termina
 lista de citas a corregir. Tope: 3 bloqueos por agente (luego deja terminar y lo registra).
 Estado y registro en $CITAS_DETRACTOR_ESTADO (por defecto ~/.claude/hooks/logs).
 """
+import hashlib
 import html
 import json
 import os
@@ -209,6 +210,30 @@ def modo_hook():
     agente = re.sub(r'[^A-Za-z0-9_-]', '', str(datos.get('agent_id') or 'sin-id'))[:64] or 'sin-id'
     contador = estado / f'citas-detractor-{agente}.count'
     registro = estado / 'citas-detractor.log'
+    # El hook vive en dos sitios: el settings.json del repo (solo se carga si la sesión arranca en la raíz)
+    # y ~/.claude/settings.json (se carga siempre). Si corren los dos sobre el mismo mensaje, Claude Code
+    # los lanza en paralelo: el primero que crea el candado evalúa y el otro sale sin hacer nada, para no
+    # gastar dos bloqueos por intento. El candado dura VENTANA segundos (3 por defecto): las dos copias
+    # corren en el mismo instante, y reescribir un reporte le toma al modelo bastante más, así que un
+    # reporte reenviado sin corregir se vuelve a evaluar.
+    ventana = float(os.environ.get('CITAS_DETRACTOR_VENTANA', '3'))
+    clave = hashlib.sha1((agente + '\0' + mensaje).encode('utf-8', 'replace')).hexdigest()[:16]
+    candado = estado / f'citas-detractor-{agente}-{clave}.lock'
+    try:
+        os.close(os.open(candado, os.O_CREAT | os.O_EXCL | os.O_WRONLY))
+    except FileExistsError:
+        try:
+            if time.time() - candado.stat().st_mtime < ventana:
+                return 0
+            candado.touch()
+        except OSError:
+            return 0
+    for viejo in estado.glob('citas-detractor-*.lock'):
+        try:
+            if time.time() - viejo.stat().st_mtime > 86400:
+                viejo.unlink()
+        except OSError:
+            pass
     try:
         fallos, avisos, n = verificar(mensaje, repo)
     except Exception as e:  # Un error del verificador no debe dejar al agente en un bucle.
