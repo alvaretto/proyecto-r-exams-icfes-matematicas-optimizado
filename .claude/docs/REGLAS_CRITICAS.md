@@ -438,14 +438,18 @@ descripción  información  configuración  clasificación
 
 ### Excepciones (ASCII Obligatorio)
 
-**Metadatos R-exams** NUNCA llevan tildes:
+**Identificadores de R-exams y claves de `exextra`** NUNCA llevan tildes:
 ```yaml
 exname: nombre_sin_tildes
 exsection: Numerico-Variacional/Argumentacion
 extype: schoice
 exsolution: 1000
-exextra[Competencia]: Interpretacion  # Sin tilde
-exextra[Componente]: Aleatorio
+```
+
+**Los VALORES de `exextra` van literales del catálogo ICFES**, con tildes y mayúsculas (regla #7, 2026-10-22):
+```yaml
+exextra[Competencia]: Interpretación y representación
+exextra[Componente]: Numérico-variacional
 ```
 
 **Variables R**: `angulos`, `solucion`, `grafica` (sin tildes para compatibilidad)

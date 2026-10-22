@@ -95,10 +95,13 @@ Verificar que metadatos ICFES esten completos y consistentes.
 **Metadatos ICFES (6 dimensiones):**
 
 - exextra[Type]: SCHOICE o CLOZE
-- exextra[Competencia]: Interpretacion|Formulacion|Argumentacion
-- exextra[Componente]: Numerico-Variacional|Geometrico-Metrico|Aleatorio
-- exextra[Afirmacion]: Descripcion especifica
-- exextra[Evidencia]: Descripcion especifica
+- exextra[Competencia]: Interpretación y representación | Formulación y ejecución | Argumentación
+- exextra[Componente]: Numérico-variacional | Geométrico-métrico | Aleatorio
+- exextra[Afirmacion]: texto literal del catálogo canónico
+- exextra[Evidencia]: texto literal del catálogo canónico
+
+Los valores van literales, con tildes (regla #7, 2026-10-22). Un ejercicio antiguo con el valor en
+ASCII (`Argumentacion`) tiene el mismo contenido: es una diferencia de FORMATO, no de clasificación.
 - exextra[Nivel]: 1|2|3|4
 
 **Formato exsolution:**
@@ -115,8 +118,8 @@ Verificar que metadatos ICFES esten completos y consistentes.
 [ ] exshuffle: TRUE (FALSE si SCHOICE con PNGs gráficos)
 [ ] extol: 0.01 o apropiado
 [ ] exextra[Type]: SCHOICE o CLOZE
-[ ] exextra[Competencia]: Valor valido ICFES
-[ ] exextra[Componente]: Valor valido ICFES
+[ ] exextra[Competencia]: Valor oficial ICFES, literal
+[ ] exextra[Componente]: Valor oficial ICFES, literal
 [ ] exextra[Afirmacion]: Presente
 [ ] exextra[Evidencia]: Presente
 [ ] exextra[Nivel]: 1, 2, 3, o 4

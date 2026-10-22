@@ -4,7 +4,9 @@
 
 **Principio.** Todo `.Rmd` en `01-En-PreDesarrollo/` o `02-En-Desarrollo/` pasa por el workflow completo. El gate `.claude/hooks/pre-write-rmd-gate.sh` (PreToolUse) BLOQUEA (exit 2) la escritura si en `ejercicio_state.json` falta `analisis_icfes`, si `flujo_b.requerido` es `null`, o si es `true` y el Flujo B no está completo. Se permite si `generacion_rmd.completado = true` (corrección), fuera de esos directorios, o en `Ejemplos-Funcionales/`. Falla abierto ante JSON inválido.
 
-**CLI:** `.claude/scripts/workflow-state.sh init <dir> --tipo schoice|cloze` · `complete <dir> <paso> [--key value]` · `check` · `status` · `next`. Schema: `.claude/schemas/ejercicio_state.schema.json`.
+**CLI:** `.claude/scripts/workflow-state.sh init <dir> --tipo schoice|cloze` · `complete <dir> <paso> [--key value]` · `check` · `status` · `next` · `reopen <dir> --desde <paso> --motivo "<texto>" [--reporte <ruta>]`. Schema: `.claude/schemas/ejercicio_state.schema.json`.
+
+**Reabrir un ejercicio sellado** (2026-10-22): `reopen` des-sella `--desde` y los pasos posteriores que estuvieran completados, y deja en `reaperturas` el motivo, el reporte y lo que tenían; el motivo es obligatorio y no se reabre `analisis_icfes` ni `flujo_b` (eso es rehacer el ejercicio). Nunca des-sellar editando el JSON. Test: `test_workflow_state_reopen.R`.
 
 **11 pasos:** 1 `analisis_icfes` · 2 `flujo_b` · 3 `generacion_rmd` · 4 `retroalimentacion` · 5 `renderizado_4_formatos` · 6 `arsenal_post_render` · 7 `detractor_fase2c` · 8 `coherencias_5` · 9 `validar_diversidad` · 10 `validar_icfes` · 11 `aprobacion_usuario`. Los 4-11 no tienen gate mecánico pero son obligatorios; se sellan sólo al ejecutarse (auditar por artefacto, no por flag).
 
@@ -12,4 +14,4 @@
 
 **Sellado del Flujo B:** `--requerido true` sólo registra la decisión (paso pendiente, gate cerrado); se sella con `complete <dir> flujo_b --lenguaje tikz|python|r` tras la elección del usuario. Nunca editar `completado` a mano. Test: `test_workflow_state_flujo_b.R`.
 
-**Versión**: 1.1 · compacta desde 2026-09-29.
+**Versión**: 1.2 (2026-10-22: `reopen`) · compacta desde 2026-09-29.

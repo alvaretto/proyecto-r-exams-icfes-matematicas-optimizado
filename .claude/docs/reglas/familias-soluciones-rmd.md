@@ -94,10 +94,15 @@ stopifnot(max(valores) - min(valores) == objetivo)
 
 **Familia (helper):**
 ```r
-tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0)) {
+tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0), ancho_max_pdf = 85) {
   df2 <- data.frame(lapply(df, as.character), stringsAsFactors = FALSE, check.names = FALSE)
   if (length(bold_rows)) for (r in bold_rows)
     df2[r, ] <- lapply(df2[r, , drop = FALSE], function(x) paste0("**", x, "**"))  # negrita nativa
+  # Guarda del PDF (v1.3): ancho de contenido = texto más largo de cada columna + 2 por columna + 1
+  anchos_col <- vapply(seq_along(df2), function(j) max(nchar(c(names(df2)[j], df2[[j]]))), numeric(1))
+  ancho <- sum(anchos_col) + 2L * length(anchos_col) + 1L
+  if (!is.null(ancho_max_pdf) && ancho > ancho_max_pdf)
+    stop("tabla_responsiva(): la tabla mide ", ancho, " caracteres de ancho ... use lista_responsiva()")
   md <- paste(knitr::kable(df2, format = "markdown", align = align), collapse = "\n")
   if (knitr::is_latex_output()) md   # RAMA MUERTA: siempre FALSE bajo R/exams (ver aviso arriba)
   else paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; margin:0.6em 0;\"}\n\n",
@@ -108,6 +113,49 @@ tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0)) {
 
 **Requisitos:** mantener el guard `\@ifundefined{c@none}{\newcounter{none}}{}` al inicio de `Question`. En PDF se ejecuta la rama `else`, y dentro del fenced div sigue viajando la tabla `format="markdown"` que pandoc convierte a `longtable`: el guard sigue siendo obligatorio (regla #20).
 **Verificación:** render 4 formatos; en HTML/Moodle buscar `<div ... overflow-x`; en DOCX confirmar `<w:tbl>` (no texto aplanado); en PDF compilar con pandoc de RStudio (3.8.3).
+
+### En el PDF la tabla no parte el texto de sus celdas (v1.3, 2026-10-22)
+
+**Síntoma:** una tabla con frases en las celdas desborda el margen derecho del PDF, sin ningún error;
+en HTML, DOCX y Moodle se ve bien. Un CLOZE aprobado lo tuvo dos meses en su «Resumen» (6 de 6
+versiones medidas; `informacion-insuficiente-lote-n4`, corregido el 2026-10-19).
+
+**Causa, verificada en el código y medida:**
+- `exams:::pandoc()` (exams 2.4.2) añade `--columns=99999` cuando no recibe otro `--columns`.
+- Pandoc solo reparte anchos relativos en una tabla pipe (columnas `p{…}`, que parten el texto) cuando
+  alguna línea del Markdown supera `--columns`. Con 99999 eso no pasa nunca, y la tabla sale con
+  columnas `l`/`c`/`r`. Medido con la misma tabla: `{@{}lcl@{}}` con `--columns=99999` y `p{…}` con el
+  valor por defecto.
+- Forzar anchos relativos no es salida: los `p{(\linewidth - …) * \real{…}}` de pandoc 3 necesitan los
+  paquetes `array` y `calc`, y las plantillas de exams (`plain`, `plain8`, `exam`, `solution`) cargan
+  `booktabs` y `longtable` pero no esos dos.
+
+**Calibración (plantilla `plain`, avisos `Overfull \hbox … in alignment` del log):**
+
+| Serie | Sin desborde hasta | Con desborde desde |
+|---|---|---|
+| Numérica (columnas «Medición k» con números de 4 cifras) | 85 caracteres | 97 caracteres |
+| Texto (3 columnas, la última crece) | 98 caracteres | 103 caracteres |
+
+El ancho se mide sobre el contenido: el texto más largo de cada columna (encabezado incluido) + 2 por
+columna + 1, que es el largo de la línea pipe que emite `kable()` sin `align`. No se mide la línea
+emitida porque `align` añade un carácter de relleno por columna sin cambiar el PDF (la misma tabla
+mide 85 o 92).
+
+**Familia (v1.3):**
+- `tabla_responsiva(..., ancho_max_pdf = 85)` **aborta** si el ancho supera el límite, con un mensaje
+  que remite a `lista_responsiva()`. `ancho_max_pdf = NULL` desactiva la guarda: solo después de revisar
+  el PDF.
+- `lista_responsiva(df, negrita = 2)` emite una línea por fila: `- <col1> — **<col2>**: <col3>; …`. Es
+  el arreglo verificado en los cuatro formatos el 2026-10-19. Los encabezados no se imprimen: el texto
+  que precede a la lista los presenta.
+- Los `.Rmd` que ya copiaron el helper conservan su copia sin guarda. Medidos el 2026-10-22 los siete
+  de `01-`/`02-` que lo usan (5 semillas cada uno, pipeline real, con control positivo y negativo): 0
+  desbordes. Sus tablas tienen celdas cortas y acotadas por construcción, así que no se tocaron.
+
+**Test:** `tests/testthat/test_tabla_responsiva_pdf.R` (límite exacto 85/86, independencia del `align`,
+formato de la lista y, si hay `pdflatex`, la calibración con el pipeline real: 85 sin desborde, 97 con
+desborde, la lista de frases largas sin desborde).
 
 ---
 
@@ -220,7 +268,7 @@ Por la auto-contención de los `.Rmd` (R-exams copia el ejercicio a un edir temp
 | Familia | Verificación |
 |---|---|
 | 1 (sin cuelgue) | `tests/testthat/test_data_generation_no_hang.R` (estático + runtime timeout) |
-| 2 (tablas responsivas) | render 4 formatos + grep `overflow-x` (HTML/Moodle) + `<w:tbl>` (DOCX) |
+| 2 (tablas responsivas) | render 4 formatos + grep `overflow-x` (HTML/Moodle) + `<w:tbl>` (DOCX) + `tests/testthat/test_tabla_responsiva_pdf.R` (margen del PDF, v1.3) |
 | 3 (ecuaciones responsivas) | igual que F2 (divs por ecuación) |
 | 4 (marcas cloze) | verificador marca-vs-verdad sobre XML Moodle |
 | 5 (sample escalar) | cubierto por F1 + análisis estático de `sample(` en `calcula()` |
@@ -228,8 +276,10 @@ Por la auto-contención de los `.Rmd` (R-exams copia el ejercicio a un edir temp
 
 ---
 
-**Versión:** 1.2
-**Fecha:** 2026-08-15 (v1.2 — **corrección factual**: la Familia 2 afirmaba que
+**Versión:** 1.3
+**Fecha:** 2026-10-22 (v1.3 — la Familia 2 no advertía que en el PDF de R/exams una tabla pipe no
+parte el texto de sus celdas: guarda de ancho calibrada en `tabla_responsiva()` y helper
+`lista_responsiva()`; ver § «En el PDF la tabla no parte el texto de sus celdas»); 2026-08-15 (v1.2 — **corrección factual**: la Familia 2 afirmaba que
 `knitr::is_latex_output()` es el «ÚNICO discriminador (TRUE = PDF/NOPS)» bajo R/exams. Medido:
 es **FALSE en los cinco pipelines**, porque R/exams teje siempre a Markdown y delega la conversión
 en pandoc. Quien enruta es pandoc, por tipo de bloque. Las ramas LaTeX de `tabla_responsiva()` y

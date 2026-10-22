@@ -85,8 +85,8 @@ cafetería  boletín  periódico  compañeros  jóvenes  líder  géneros  área
 - `angulos`, `solucion`, `grafica`, `numero`, `codigo`, `metodo`
 - Razón: Nombres de variables R deben ser ASCII para compatibilidad
 
-### 2. Metadatos R-exams (OBLIGATORIO ASCII)
-Los siguientes campos NUNCA llevan tildes porque R-exams los usa como identificadores:
+### 2. Identificadores de R-exams (OBLIGATORIO ASCII)
+Estos campos van en ASCII porque R-exams los usa como identificadores (nombre de archivo, sección, tipo, solución):
 
 ```
 exname: nombre_ejercicio_sin_tildes
@@ -95,11 +95,37 @@ extype: schoice
 exsolution: 1000
 exshuffle: TRUE
 extol: 0.01
-exextra[Competencia]: Interpretacion
-exextra[Componente]: Aleatorio
 ```
 
-**Razón**: R-exams parsea estos campos como identificadores. Las tildes pueden causar errores de codificación en algunos sistemas.
+Las **claves** de `exextra` también van en ASCII: `exextra[Afirmacion]`, `exextra[GradoSugerido]`.
+
+### 2b. Valores de `exextra`: LITERALES del catálogo ICFES (decisión del 2026-10-22)
+Los **valores** de `exextra` se copian literales del catálogo canónico o de la ficha del ítem, con sus
+tildes, mayúsculas y signos (`°`, `—`):
+
+```
+exextra[Competencia]: Argumentación
+exextra[Componente]: Geométrico-métrico
+exextra[Afirmacion]: Valida procedimientos y estrategias matemáticas utilizadas para dar solución a problemas.
+exextra[GradoSugerido]: 6°-7°
+```
+
+- **Por qué**: la alineación ICFES exige literalidad. El catálogo canónico es `CANONICO_INMUTABLE`, los
+  orquestadores lo copian «sin parafrasear» (§ Exigencia ICFES) y `NOMENCLATURA_ARCHIVOS_RMD.md` ya decía
+  «Los `exextra[...]` llevan tildes y mayúsculas (literalidad ICFES)». Quitar las tildes es parafrasear.
+- **Verificado el 2026-10-22**: un ejercicio de control con Competencia «Argumentación», Componente
+  «Geométrico-métrico», un Descriptor con «—» y GradoSugerido «6°-7°» renderiza en HTML, PDF, DOCX y
+  Moodle, y `exams::read_metainfo()` devuelve los cinco valores intactos en UTF-8. La razón que daba esta
+  regla («R-exams parsea estos campos como identificadores») vale para `exname`/`exsection`, no para los
+  valores de `exextra`, que R/exams guarda como texto.
+- **Alcance**: ejercicios nuevos y los que se corrijan. Los valores en ASCII que ya existen no se migran
+  en bloque (y `03-En-Produccion/` es inmutable): se corrigen al tocar el ejercicio.
+- El corrector `corregir_ortografia_espanol.R` excluye las líneas `exextra`: la literalidad se comprueba
+  contra el catálogo en el paso 10 (`validar_icfes`), no con el corrector. Una diferencia solo de formato
+  frente a la ficha (tildes, «°», mayúsculas) se reporta como FORMATO, no como contenido distinto.
+- **Historial**: hasta el 2026-10-22 esta sección decía «`exextra[...]` siempre ASCII» y contradecía a la
+  nomenclatura y a los orquestadores; un ejercicio llegó a conservar `6-7` frente al `6°-7°` de su ficha
+  amparado en la versión vieja.
 
 ### 3. Inglés técnico
 - TikZ, LaTeX, R-exams, chunk, hash, reticulate, ggplot2

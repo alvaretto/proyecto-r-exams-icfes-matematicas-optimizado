@@ -223,10 +223,10 @@ exshuffle: TRUE  # FALSE en SCHOICE con opciones gráficas PNG (ver graficos-com
 extol: 0.01
 
 exextra[Type]: SCHOICE
-exextra[Competencia]: Formulación y Ejecución
-exextra[Componente]: Numérico-Variacional
-exextra[Afirmacion]: Resuelve operaciones aritméticas básicas
-exextra[Evidencia]: Aplica orden de operaciones correctamente
+exextra[Competencia]: Formulación y ejecución
+exextra[Componente]: Numérico-variacional
+exextra[Afirmacion]: [texto literal del catálogo canónico, con tildes]
+exextra[Evidencia]: [texto literal del catálogo canónico, con tildes]
 exextra[Nivel]: 1
 
 # Taxonomías cognitivas (OBLIGATORIAS para ejercicios metacognitivos)

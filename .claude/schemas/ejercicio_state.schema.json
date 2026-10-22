@@ -39,6 +39,47 @@
       "description": "Fecha y hora de la última modificación (ISO 8601)",
       "format": "date-time"
     },
+    "reaperturas": {
+      "type": "array",
+      "description": "Historial de reaperturas de un ejercicio ya sellado (workflow-state.sh reopen): desde qué paso, por qué, qué pasos se des-sellaron y qué tenían",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["timestamp", "desde", "motivo", "pasos_desellados"],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "desde": {
+            "type": "string",
+            "enum": ["generacion_rmd", "retroalimentacion", "renderizado_4_formatos", "arsenal_post_render", "detractor_fase2c", "coherencias_5", "validar_diversidad", "validar_icfes", "aprobacion_usuario"]
+          },
+          "motivo": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reporte": {
+            "type": ["string", "null"]
+          },
+          "pasos_desellados": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "enum": ["generacion_rmd", "retroalimentacion", "renderizado_4_formatos", "arsenal_post_render", "detractor_fase2c", "coherencias_5", "validar_diversidad", "validar_icfes", "aprobacion_usuario"]
+            }
+          },
+          "estado_previo": {
+            "type": "object",
+            "description": "Por paso des-sellado, los campos que tenía antes (timestamp incluido)",
+            "additionalProperties": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
     "pasos": {
       "type": "object",
       "description": "Estado de cada paso del workflow",

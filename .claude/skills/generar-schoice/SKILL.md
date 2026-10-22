@@ -37,7 +37,7 @@ Ver regla completa: `.claude/rules/ejercicios-metacognitivos.md`
 Antes de escribir generación ad-hoc, usar las familias canónicas de
 `.claude/rules/familias-soluciones-rmd.md` (helpers en `.claude/scripts/snippets_familias_rmd.R`):
 - **F1 — Generación sin cuelgue:** nunca `repeat`/`while` que resamplea hacia una condición posiblemente imposible. Usar `pick_int()` + `construir_valores_con_rango()`. (Error 22)
-- **F2 — Tablas responsivas:** toda tabla va por `tabla_responsiva()` (scroll horizontal en móvil para HTML/Moodle; tabla nativa en DOCX/PDF; conserva el guard `none` de regla #20).
+- **F2 — Tablas responsivas:** toda tabla va por `tabla_responsiva()` (scroll horizontal en móvil para HTML/Moodle; tabla nativa en DOCX/PDF; conserva el guard `none` de regla #20). En el PDF la tabla no parte el texto de sus celdas: la función aborta si el ancho de contenido supera 85 caracteres. Si las celdas llevan frases, usar `lista_responsiva()`.
 - **F3 — Ecuaciones display responsivas:** cada `$$...$$` se emite vía `eq_display()` en un chunk `results='asis'`.
 - **F4 — Coherencia de marcas:** construir `opciones` y `sol` en el mismo orden; identificar la correcta por contenido (regla #19).
 - **F5 — Trampa `sample(escalar)`:** usar `pick_int()`/`safe_sample()` en soportes que puedan colapsar a 1 valor.

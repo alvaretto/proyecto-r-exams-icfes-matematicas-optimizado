@@ -60,10 +60,10 @@ extol: 0|1|0
 exshuffle: TRUE  # Nota: FALSE solo aplica a SCHOICE con PNGs gráficos (ver graficos-como-opciones.md)
 
 exextra[Type]: CLOZE
-exextra[Competencia]: Formulacion y Ejecucion
-exextra[Componente]: Numerico-Variacional
-exextra[Afirmacion]: Resuelve problemas multietapa
-exextra[Evidencia]: Aplica formulas y calcula correctamente
+exextra[Competencia]: Formulación y ejecución
+exextra[Componente]: Numérico-variacional
+exextra[Afirmacion]: [texto literal del catálogo canónico, con tildes]
+exextra[Evidencia]: [texto literal del catálogo canónico, con tildes]
 exextra[Nivel]: 3
 ```
 

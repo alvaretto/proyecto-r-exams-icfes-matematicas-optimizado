@@ -434,6 +434,14 @@ for i, paso in enumerate(ORDEN, 1):
 total = sum(1 for p in ORDEN if state["pasos"].get(p, {}).get("completado", False))
 print(f"")
 print(f"  Progreso: {total}/{len(ORDEN)} pasos completados")
+
+reaperturas = state.get("reaperturas") or []
+if reaperturas:
+    ult = reaperturas[-1]
+    ult_ts = str(ult.get("timestamp") or "?")[:19]
+    ult_motivo = " ".join(str(ult.get("motivo") or "?").split())
+    print(f"  🔁 Reaperturas: {len(reaperturas)} (última: {ult_ts} "
+          f"desde {ult.get('desde', '?')} — {ult_motivo})")
 print(f"")
 PYEOF
 }
@@ -522,6 +530,161 @@ PYEOF
 }
 
 # ---------------------------------------------------------------------------
+# Comando: reopen
+# ---------------------------------------------------------------------------
+# Reabre un ejercicio sellado para corregirlo. Des-sella --desde y todo paso
+# posterior que estuviera completado (completado=false, timestamp=null) y deja
+# en reaperturas[] el motivo y lo que esos pasos tenían (estado_previo): no se
+# pierde nada y `status` no muestra los datos de la versión anterior.
+# Sólo desde generacion_rmd en adelante: reabrir el análisis o el Flujo B es
+# rehacer el ejercicio, no corregirlo.
+cmd_reopen() {
+    local dir=""
+    local desde=""
+    local motivo=""
+    local reporte=""
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --desde)
+                shift
+                desde="${1:-}"
+                ;;
+            --motivo)
+                shift
+                motivo="${1:-}"
+                ;;
+            --reporte)
+                shift
+                reporte="${1:-}"
+                ;;
+            --*)
+                echo "ERROR: Opción desconocida para reopen: $1" >&2
+                exit 2
+                ;;
+            *)
+                if [[ -z "$dir" ]]; then
+                    dir="$1"
+                else
+                    echo "ERROR: Argumento inesperado para reopen: $1" >&2
+                    exit 2
+                fi
+                ;;
+        esac
+        shift
+    done
+
+    if [[ -z "$dir" ]]; then
+        echo "Uso: reopen <dir> --desde <paso> --motivo \"<texto>\" [--reporte <ruta>]" >&2
+        exit 2
+    fi
+    if [[ -z "$desde" ]]; then
+        echo "ERROR: --desde es obligatorio: paso desde el que se reabre (generacion_rmd ... aprobacion_usuario)" >&2
+        exit 2
+    fi
+
+    local sf
+    sf=$(state_path "$dir")
+    require_state "$sf"
+
+    local ts
+    ts=$(now_iso)
+
+    python3 - "$sf" "$desde" "$motivo" "$reporte" "$ts" "${PASOS_ORDEN[@]}" <<'PYEOF'
+import json, sys
+
+sf      = sys.argv[1]
+desde   = sys.argv[2]
+motivo  = sys.argv[3].strip()
+reporte = sys.argv[4].strip() or None
+ts      = sys.argv[5]
+ORDEN   = sys.argv[6:]  # orden canónico del workflow (PASOS_ORDEN)
+
+# Sólo se reabre desde la generación del .Rmd en adelante.
+INICIO     = ORDEN.index("generacion_rmd")
+REABRIBLES = ORDEN[INICIO:]
+
+# Un paso des-sellado queda con la forma que le da `init` (la que exige el
+# schema): completado=false y timestamp=null, más estas claves. `archivo` se
+# conserva (el .Rmd es el mismo, se corrige en el sitio); veredicto y
+# versiones_unicas vuelven a null para que `status` no muestre los de la
+# versión anterior. Todo lo demás que tuviera el paso va a estado_previo.
+CONSERVA = {"generacion_rmd": ("archivo",)}
+REINICIA = {"detractor_fase2c": ("veredicto",),
+            "validar_diversidad": ("versiones_unicas",)}
+
+if desde in ORDEN[:INICIO]:
+    print(f"ERROR: No se puede reabrir desde '{desde}': reabrir el análisis o el "
+          f"Flujo B no es una corrección, es rehacer el ejercicio.", file=sys.stderr)
+    print(f"Para corregir, reabra desde '{REABRIBLES[0]}' o un paso posterior.",
+          file=sys.stderr)
+    sys.exit(2)
+if desde not in REABRIBLES:
+    print(f"ERROR: Paso desconocido '{desde}'", file=sys.stderr)
+    print(f"Pasos desde los que se puede reabrir: {', '.join(REABRIBLES)}",
+          file=sys.stderr)
+    sys.exit(2)
+if not motivo:
+    print("ERROR: --motivo es obligatorio y no puede estar vacío: queda "
+          "registrado en 'reaperturas' del estado.", file=sys.stderr)
+    sys.exit(2)
+
+with open(sf, 'r', encoding='utf-8') as fh:
+    state = json.load(fh)
+
+pasos = state["pasos"]
+desellados = []
+estado_previo = {}
+for paso in REABRIBLES[REABRIBLES.index(desde):]:
+    info = pasos.get(paso)
+    if not isinstance(info, dict) or not info.get("completado", False):
+        continue
+    previo = {"timestamp": info.get("timestamp")}
+    previo.update({k: v for k, v in info.items()
+                   if k not in ("completado", "timestamp")})
+    estado_previo[paso] = previo
+    nuevo = {"completado": False, "timestamp": None}
+    for k in CONSERVA.get(paso, ()):
+        nuevo[k] = info.get(k)
+    for k in REINICIA.get(paso, ()):
+        nuevo[k] = None
+    pasos[paso] = nuevo
+    desellados.append(paso)
+
+if not desellados:
+    print(f"ERROR: nada que reabrir: ningún paso desde '{desde}' está completado "
+          f"(el estado no se modificó).", file=sys.stderr)
+    sys.exit(1)
+
+reaperturas = state.get("reaperturas") or []
+reaperturas.append({
+    "timestamp": ts,
+    "desde": desde,
+    "motivo": motivo,
+    "reporte": reporte,
+    "pasos_desellados": desellados,
+    "estado_previo": estado_previo,
+})
+state["reaperturas"] = reaperturas
+state["timestamp_ultima_actualizacion"] = ts
+
+# Serializar ANTES de abrir el archivo para escribir: si el motivo o el reporte
+# no son UTF-8 válido, el estado queda intacto en vez de truncado.
+try:
+    datos = (json.dumps(state, indent=2, ensure_ascii=False) + '\n').encode('utf-8')
+except UnicodeEncodeError:
+    print("ERROR: --motivo o --reporte no son UTF-8 válido (el estado no se "
+          "modificó).", file=sys.stderr)
+    sys.exit(2)
+with open(sf, 'wb') as fh:
+    fh.write(datos)
+
+print(f"🔁 Reapertura #{len(reaperturas)}: {len(desellados)} paso(s) des-sellado(s) "
+      f"desde '{desde}': {', '.join(desellados)}")
+PYEOF
+}
+
+# ---------------------------------------------------------------------------
 # Comando: help
 # ---------------------------------------------------------------------------
 cmd_help() {
@@ -555,6 +718,19 @@ COMANDOS:
 
   next <dir>
       Muestra el siguiente paso pendiente con el comando sugerido.
+
+  reopen <dir> --desde <paso> --motivo "<texto>" [--reporte <ruta>]
+      Reabre un ejercicio ya sellado para corregirlo. Des-sella, en orden, todos
+      los pasos completados desde <paso> hasta aprobacion_usuario (completado=false,
+      timestamp=null) y guarda lo que tenían (veredicto, versiones únicas, ...) en
+      la lista 'reaperturas' del estado, junto con el motivo: no se pierde nada.
+      --desde   : generacion_rmd ... aprobacion_usuario. analisis_icfes y flujo_b
+                  no se reabren: hacerlo es rehacer el ejercicio, no corregirlo.
+      --motivo  : OBLIGATORIO (no puede ir vacío). Por qué se reabre.
+      --reporte : ruta del reporte que motiva la reapertura (opcional).
+      Exit 0 = reabierto; 1 = nada que reabrir (el archivo no cambia);
+      2 = argumentos inválidos (el archivo no cambia).
+      Ejemplo: workflow-state.sh reopen ./mi-ejercicio --desde validar_icfes --motivo "El detractor halló un distractor correcto" --reporte DETRACTOR.md
 
   help
       Muestra este mensaje.
@@ -605,6 +781,7 @@ main() {
         check)    cmd_check "$@" ;;
         status)   cmd_status "$@" ;;
         next)     cmd_next "$@" ;;
+        reopen)   cmd_reopen "$@" ;;
         help|--help|-h) cmd_help ;;
         *)
             echo "ERROR: Comando desconocido: '$cmd'" >&2

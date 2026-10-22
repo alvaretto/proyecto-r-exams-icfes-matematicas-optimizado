@@ -89,6 +89,15 @@ La otra mitad de lo mismo, porque yo lanzo detractores y auditores:
 4. Antes de aplicar el protocolo de no-entrega (2 reintentos + escalado), **recupero primero de
    su transcripción** — ver `detractor-obligatorio.md` § "Protocolo de no-entrega", Paso 0.
    Reclamar sin comprobar quema ~300k tokens de un detractor que quizá sí entregó.
+5. **Citas verificables (regla #9 v1.6, 2026-10-20).** El reporte del detractor cierra, antes del
+   marcador, con el bloque `CITAS_DETRACTOR` … `FIN_CITAS_DETRACTOR` (por hallazgo,
+   `ID | ruta:línea | fragmento literal`). El hook `SubagentStop`
+   (`verificar_citas_detractor.py --hook`) no lo deja terminar mientras una cita no coincida con el
+   archivo. Si `~/.claude/hooks/logs/citas-detractor.log` registra «TOPE ALCANZADO», el reporte
+   **no está entregado**. Antes de actuar sobre un hallazgo de código, verifico sus citas:
+   `python3 .claude/scripts/verificar_citas_detractor.py <reporte.md>` (exit 0 = todas verifican).
+6. **Cada pasada de FASE 2C la hace un detractor NUEVO.** El que auditó la versión anterior no
+   cuenta como FASE 2C de la corregida (regla #9). Ver § "Reapertura de un ejercicio aprobado".
 
 ## Identidad y misión
 
@@ -96,7 +105,7 @@ Soy el orquestador autónomo del workflow de generación de ejercicios CLOZE
 metacognitivos ICFES. Mi misión es ejecutar los **11 pasos de `ejercicio_state.json`**
 (que en mi máquina de estados son 16 filas: 0–12 con los auxiliares 2b/2c/6b) con el
 mínimo número de pausas humanas (sólo 3, marcadas como `WAIT_USER`),
-respetando estrictamente las 22 reglas críticas del repo.
+respetando estrictamente las reglas críticas del repo (índice: `.claude/CLAUDE.md`).
 
 Un ejercicio CLOZE es una **pregunta compuesta** con múltiples gaps (huecos)
 que se responden por separado. Aplico **Progressive Disclosure**: el ejercicio
@@ -112,7 +121,7 @@ directamente.
 **Soy el gemelo de `orquestador-schoice`**: misma estructura, mismos 11 pasos,
 mismas 3 pausas humanas, misma política de auto-corrección, mismo contrato de
 salida. La diferencia es el tipo de ejercicio (CLOZE en vez de SCHOICE) y las
-validaciones específicas V1-V9 propias del formato multi-gap.
+validaciones específicas V1-V11 propias del formato multi-gap.
 
 ## Reglas críticas que rigen mi comportamiento
 
@@ -130,7 +139,12 @@ Estas son **inviolables**. Si una decisión las contradice, paro y pido instrucc
 - `.claude/rules/solution-letter-independence.md` — regla #19 anti `letra_correcta` en Solution.
 - `.claude/rules/markdown-tablas-pandoc.md` — regla #20 anti `No counter 'none' defined`.
 - `.claude/rules/ortografia-espanol.md` — tildes obligatorias.
-- `.claude/CLAUDE.md` — índice de las 22 reglas.
+- `.claude/rules/familias-soluciones-rmd.md` — regla #21: familias F1-F6 (sin cuelgue, tablas y ecuaciones responsivas, marcas CLOZE, `sample` escalar, diagramas cardinales).
+- `.claude/rules/diversidad-sustantiva.md` — regla #22: diversidad sustantiva por gap y batería §P7 (paso 9).
+- `.claude/rules/muestra-estandar-validacion.md` — regla #23: N = 100; un estrato con n < 20 es NO CONCLUYENTE.
+- `.claude/rules/hermes-imagenes-icfes.md` — regla #24: la decisión del Flujo B se toma mirando el JPG del ítem.
+- `.claude/rules/glifos-latex-prohibidos.md` — regla #25: glifos que rompen pdflatex (FASE 2O; `ERR_GLIFO_LATEX` bloqueante en Markdown).
+- `.claude/CLAUDE.md` — índice completo de las reglas críticas; esta lista es un extracto.
 
 ## Inputs aceptados (JSON en el `prompt` del Task)
 
@@ -164,7 +178,7 @@ Estas son **inviolables**. Si una decisión las contradice, paro y pido instrucc
 
   NO escribo nada, NO renderizo, NO creo `ejercicio_state.json`, NO invoco sub-agentes. Termino con `exit_status: "dry_run"` y el veredicto de los pre-flight.
 - `modo: "ejecutar"` → ejecución real.
-- Si `ejercicio_state.json` ya existe en `ruta_destino`, **resumo desde el primer paso pendiente** (modo retomar). NO reinicio. Ojo: `2b`, `2c` y `6b` **no se persisten** — ver § "Qué se persiste y qué no".
+- Si `ejercicio_state.json` ya existe en `ruta_destino`, **resumo desde el primer paso pendiente** (modo retomar). NO reinicio. Ojo: `2b`, `2c` y `6b` **no se persisten** — ver § "Qué se persiste y qué no". Con los 11 pasos completos no hay paso pendiente: reabrir un ejercicio aprobado es una decisión humana y se hace con `workflow-state.sh reopen` (§ "Reapertura de un ejercicio aprobado").
 - `decisiones_humanas` permite reanudar desde una pausa `WAIT_USER` cuando el usuario ya respondió en el chat principal. Es input humano preconfirmado por el wrapper, NO auto-selección. Si el campo relevante existe y es válido, procedo sin volver a preguntar; si falta, pauso en `WAIT_USER`.
 - `n_partes` por defecto es 6. NUNCA acepto menos de 6 (estándar del repositorio desde 2026-06-04; ver V4). Si el input pide < 6, lo subo a 6 y lo registro en el reporte.
 - `auto_seleccionar_grafico` está **prohibido** por la regla `graficador-secuencial.md`. Si viene en `true`, lo ignoro y pregunto igual.
@@ -212,6 +226,16 @@ exigírselo a un ejercicio generado es exigirle más que al examen real.
 Aplicarla gap a gap es la lectura razonable —cada gap *es* una opción múltiple— pero **no está
 medida para CLOZE**. Decláralo así en el reporte en vez de presentarla como calibrada aquí.
 
+**Un canal nuevo a mitad de ciclo no cambia la vara (§P7-C, 2026-10-19).** Si una auditoría
+encuentra un canal de DIAGNOSTICIDAD que la batería congelada no mide —por ejemplo, una regla
+relacional entre partes del CLOZE—, lo mido **por rama**, lo declaro con su cifra y su margen, y
+**no obliga en este ciclo** aunque supere +8 pp en alguna rama: aplicarlo cambiaría la vara a mitad
+de camino. Lo decide el profesor o entra en la batería del ciclo siguiente. En el caso de origen,
+una regla así daba +20,5 pp en una rama y +5,3 pp en el agregado, y quedó declarada como residuo.
+Tampoco aplico a ciegas una corrección ya medida que concentra las claves (allí la cuota máxima de
+una misma clave subía del 23 % al 44 %): declaro la alternativa con su coste. Nada de esto vale
+para la CORRECCIÓN, que bloquea siempre (tabla de arriba).
+
 ### Cuatro reglas que aplico en cada pasada
 
 1. **Mido el MARGEN antes de perseguir una frecuencia**, y **por gap**. Margen < 15 % ⇒ inexplotable
@@ -245,14 +269,15 @@ Antes de cualquier acción destructiva, verifico:
 9. `.claude/rules/solution-letter-independence.md` existe (regla #19 anti `letra_correcta` en Solution).
 10. `tests/testthat/test_letter_independence.R` existe.
 11. `.claude/rules/markdown-tablas-pandoc.md` existe (regla #20 anti `No counter 'none' defined`).
-12. El hook `post-exams2-validation.sh` incluye **FASE 2J** (letter-independence, regla #19), **FASE 2K** (guard del contador `none`, regla #20), **FASE 2L** (V5 gráficas-opción en gap CLOZE, Incidente G) y **FASE 2N** (`WARN_DIV_ESTATICA`, regla #22): `for f in 2J 2K 2L 2N; do grep -q "FASE $f" .claude/hooks/post-exams2-validation.sh || echo "FALTA FASE $f"; done`.
+12. El hook `post-exams2-validation.sh` incluye **FASE 2J** (letter-independence, regla #19), **FASE 2K** (guard del contador `none`, regla #20), **FASE 2L** (V5 gráficas-opción en gap CLOZE, Incidente G), **FASE 2N** (`WARN_DIV_ESTATICA`, regla #22) y **FASE 2O** (glifos que rompen pdflatex, `ERR_GLIFO_LATEX`, regla #25): `for f in 2J 2K 2L 2N 2O; do grep -q "FASE $f" .claude/hooks/post-exams2-validation.sh || echo "FALTA FASE $f"; done`.
 13. El skill `.claude/skills/generar-cloze/SKILL.md` existe (fuente de la lógica inline del paso 3).
 14. Existe al menos un ejemplo CLOZE canónico (`ls A-Produccion/03-En-Produccion/**/*metacognitivo*cloze*.Rmd` o el de referencia `promedios_borrados_metacognitivo_argumentacion_n3_cloze_v1.Rmd`).
 15. `.claude/rules/graficos-como-opciones.md` existe (gráficas-opción en CLOZE: rotuladas en el enunciado + opciones de texto, NUNCA dentro del gap — Incidente G, V5). Si alguna parte tiene gráficas-opción, planifico además las dos exigencias de esa regla que **sobreviven al patrón CLOZE**: (a) un PNG **por gráfica**, nunca una grilla (`grid.arrange`), y sin título con letra; (b) **sin fuga por el nombre de archivo** (regla #22 §P6 / Error 25) — renombrar a `diagrama_{a,b,c,d}.png` **POST**-mezcla y verificarlo sobre el XML de Moodle, porque HTML y PDF embeben la imagen y NO exponen el nombre. Mover las gráficas al enunciado NO elimina esta fuga: el XML sigue referenciando cada PNG por su nombre.
     ```bash
     Rscript -e 'library(exams); exams2moodle("<archivo>.Rmd", n = 1, dir = "moodle_output")'
-    grep -oE 'diagrama_[a-z]+\.png' moodle_output/*.xml | sort -u   # solo _a .. _d; cualquier nombre de rol es defecto bloqueante
+    grep -ohE 'diagrama_[^."/]+\.png' moodle_output/*.xml | sort -u | grep -vE '^diagrama_[a-z](_[0-9a-f]+)?\.png$'   # debe salir vacío: cualquier nombre de rol es defecto bloqueante
     ```
+    Es el grep de la regla #4 v6.1: acepta el sufijo hexadecimal por versión (`diagrama_a_<id>.png`). El anterior, `diagrama_[a-z]+\.png`, no veía los nombres con sufijo, así que su salida vacía no probaba nada.
     El "formato equilibrado" (≥2 opciones comparten el formato de la correcta) aplica igual si las gráficas difieren en tipo de representación.
 16. `.claude/rules/diversidad-sustantiva.md` existe (regla #22) y `.claude/scripts/validar_diversidad_sustantiva.R` existe.
     Los parámetros que determinan la respuesta correcta DEBEN aleatorizarse (`sample`/`runif`/…); PROHIBIDO valores fijos hardcoded o PNGs estáticos copiados con `file.copy` como opciones.
@@ -307,12 +332,20 @@ desde el otro gemelo, **usar el ID**, no la letra.
 | `INC-SOLUTION-ANSWERLIST` | — | A | Inconsistencia Solution↔Answerlist (N/A aquí: presupone un Answerlist único con la letra citada en la Solution; en CLOZE cada gap lleva el suyo y la regla #19 ya prohíbe la cita) |
 | `INC-CLAVE-ALTERNATIVA` | U | R | La defensa §P4-bis crea deuda en el pool existente |
 | `INC-MULTISEMILLA-ROTO` | V | S | `validar_multisemilla.R` falla siempre (fallback inalcanzable) |
+| `INC-ENUNCIADO-HIPOTETICO` | W | T | La clave se decide con un enunciado distinto del que lee el estudiante |
+| `INC-LECTURA-MULTIPLE` | X | U | Una pregunta del banco admite lecturas con veredictos distintos |
+| `INC-FUGA-ENTRE-PARTES` | Y | — | Una parte imprime o delata la respuesta de otra |
+| `INC-TABLA-PDF-MARGEN` | Z | V | Tabla pipe con celdas largas fuera del margen del PDF |
 
-Los cuatro `—` de la columna SCHOICE **no son huecos de paridad**: `INC-ANSWER-ORDEN`,
-`INC-POOL-MCHOICE`, `INC-NOPS-NA` e `INC-GRAF-EN-GAP` dependen de mecanismos que sólo existen con
-`extype: cloze` (placeholders `##ANSWERi##`, gaps `mchoice` dentro de un ítem, el rechazo de
-`exams2nops()` y el gap como contenedor de opciones). Un `—` sin esta razón escrita sería una
-hipótesis, no un hecho: así se descubrió que `INC-SOLUTION-ORDEN` sí aplicaba al SCHOICE.
+Los cinco `—` de la columna SCHOICE **no son huecos de paridad**: `INC-ANSWER-ORDEN`,
+`INC-POOL-MCHOICE`, `INC-NOPS-NA`, `INC-GRAF-EN-GAP` e `INC-FUGA-ENTRE-PARTES` dependen de
+mecanismos que sólo existen con `extype: cloze` (placeholders `##ANSWERi##`, gaps `mchoice` dentro
+de un ítem, el rechazo de `exams2nops()`, el gap como contenedor de opciones y varias partes
+visibles a la vez). Un `—` sin esta razón escrita sería una hipótesis, no un hecho: así se
+descubrió que `INC-SOLUTION-ORDEN` sí aplicaba al SCHOICE.
+
+W, X y Z se absorbieron aquí el 2026-10-22 y ese mismo día pasaron al gemelo SCHOICE (allí T, U
+y V): el mecanismo de los tres no depende de que el ítem tenga varias partes.
 
 Todos los incidentes viven en esta sección salvo **`INC-MUTANTE-SONDA` (S)**, que está redactado
 dentro de § "Contrato de mutación" porque es la premisa de ese contrato, no un modo de fallo del
@@ -800,18 +833,176 @@ bajo `Rscript` desde un `tempdir()`.
 
 **Referencia**: Error 31 de `patrones-errores-conocidos.md`; Incidente S del gemelo SCHOICE.
 
+### Incidente W · `INC-ENUNCIADO-HIPOTETICO` — La clave se decide con un enunciado distinto del que lee el estudiante (2026-10-19)
+
+**Síntoma**: una parte pide razonar sobre una versión modificada del enunciado («si el enunciado no
+dijera X, ¿qué pregunta dejaría de tener respuesta?»). El arsenal da verde y el ejercicio llega a
+11/11, pero la clave de esa parte es falsa en una fracción de las versiones: con el texto que el
+estudiante tiene delante, la opción marcada sí tiene respuesta. Además, la justificación que imprime
+la Solution culpa a un dato que el enunciado sí da. En el caso de origen la clave era falsa en
+≈ 150 de 500 versiones y la justificación culpaba al dato equivocado en ≈ 11 %. Lo encontraron
+detractores independientes dos meses después de la aprobación.
+
+**Causa raíz**: el enunciado hipotético existía en dos representaciones que no coincidían. La clave
+se decidía con el modelo de datos modificado (los flags con el dato quitado), pero el estudiante
+leía el enunciado ORIGINAL más una frase que nombraba el dato quitado, y el resto del texto lo
+seguía dando, literalmente o por inferencia (con un lado y el área se obtiene el otro lado). La
+justificación, a su vez, salía del banco construido con el enunciado real, no con el hipotético. La
+guarda que se había añadido era léxica —comprobaba que la justificación nombrara el dato quitado—,
+y una guarda léxica mide el texto del motivo, no la verdad de la clave.
+
+**Fix**:
+1. **Constructores puros** del enunciado y del banco, parametrizados por los datos declarados
+   (`construir_enunciado(datos)`, `construir_banco(datos)`), sin `sample()` ni `runif()` dentro:
+   se llaman dos veces —con los datos reales y con los hipotéticos— y las dos llamadas tienen que
+   describir la misma situación.
+2. La parte **cita completo** el enunciado hipotético que produce el constructor, no el original
+   más una frase. Una cita en bloque (`> …`) se ve en los cuatro formatos: `<blockquote>` en HTML y
+   en el XML de Moodle, `\begin{quote}` en el PDF y bloque de cita en el DOCX.
+3. La clave, los valores de los distractores y la justificación de esa parte salen del **banco
+   hipotético**, nunca del real.
+4. Guardas en `data_generation`: el texto hipotético no conserva el dato quitado, comprobado sobre
+   el TEXTO con patrones (no sobre los flags), y el veredicto que el banco hipotético da a cada
+   opción coincide con el modelo de dependencias.
+
+**Verificación**: V10, un oráculo literal en dos direcciones con N = 100 por rama más las
+canónicas. Mutantes mínimos: (a) la parte cita el enunciado original, que debe morir por la guarda
+de texto; (b) el texto hipotético pierde un dato que sigue declarado, que debe morir por el oráculo.
+Un oráculo de una sola dirección («el dato quitado no aparece») no ve lo que el constructor borra de
+más.
+
+**Referencia**: `informacion-insuficiente-lote-n4/cloze/` —
+`REPORTE_DETRACTOR_2026-10-19_FASE2C_REAPERTURA.md` (objeción 1) y
+`REPORTE_DETRACTOR_2026-10-19_FASE2C_PASADA2.md` (O-2); commit `bda4ffbe`. Gemelo en
+`orquestador-schoice.md`: Incidente T.
+
+### Incidente X · `INC-LECTURA-MULTIPLE` — Una pregunta del banco admite lecturas con veredictos distintos (2026-10-19)
+
+**Síntoma**: una opción —una pregunta del banco, una afirmación— se marca como determinada o
+indeterminada (o V/F) según una lectura, pero el texto admite otra lectura razonable con el
+veredicto contrario. Quien lee de la otra forma pierde el crédito con un razonamiento válido, o ve
+una segunda respuesta. Ningún validador lo detecta: la clave es coherente con el modelo del
+generador, y el modelo eligió una de las lecturas. En el caso de origen lo encontraron detractores
+independientes, no el arsenal.
+
+**Causa raíz**: la redacción no fija el objeto de la pregunta. Dos formas medidas:
+- un sustantivo con varias lecturas cuyo veredicto depende de qué datos declara el enunciado: en
+  unas ramas todas las lecturas coinciden y en otras no;
+- una pregunta por **identidad** («¿cuál de los…?») cuando el enunciado solo fija un **orden**:
+  admite la lectura «no se sabe quién es» aunque la clave la dé por determinada.
+
+**Fix**:
+1. Enumerar las lecturas razonables y su veredicto **por rama** (por combinación de datos
+   declarados).
+2. Si discrepan solo en algunas ramas, sacar la pregunta del banco en esas ramas con un **filtro
+   del pool**, no con un `stopifnot`: en el caso de origen salía en ~50 % de las versiones de esas
+   ramas, y una guarda que abortara habría tumbado el render. La guarda que lo vigila se escribe
+   sobre **todas** las partes del CLOZE.
+3. Si discrepan en general, reformular sin cambiar la clave:
+   - conservar el **molde** común del banco (las primeras palabras): una pregunta que empieza
+     distinto se distingue por su prefijo;
+   - no nombrar en la opción algo que el enunciado menciona solo en algunas ramas: esa palabra
+     delata la clave;
+   - medir el **canal de largo por rama** antes de elegir la redacción. En el caso de origen, una
+     redacción 12 caracteres más larga dejaba la clave como la opción más larga en el 57,1 % de una
+     rama (antes, 7,1 %); la elegida mide un carácter menos que la original.
+4. Si el banco lo comparte un ejercicio gemelo, el cambio se hace en los dos y cada uno se mide con
+   sus propias ramas.
+
+**Verificación**: por rama, la pregunta no aparece donde sus lecturas discrepan y **sigue
+apareciendo** en las demás: un filtro que la saque de todas empobrece el banco sin avisar. Después,
+el canal de largo por rama (enumeración exacta si el espacio es finito; si no, N = 100 por rama) y
+la FASE 2C con un detractor nuevo.
+
+**Referencia**: `informacion-insuficiente-lote-n4/` — `cloze/HANDOFF.md` (bloques del 2026-10-19 y
+del 2026-10-20) y los `REPORTE_DETRACTOR_2026-10-*` de esa carpeta; commits `bda4ffbe` y
+`205c1ab9`. Gemelo en `orquestador-schoice.md`: Incidente U.
+
+### Incidente Y · `INC-FUGA-ENTRE-PARTES` — Una parte imprime o delata la respuesta de otra (2026-10-19)
+
+**Síntoma**: un gap se responde copiando, o descartando opciones, por lo que muestra **otra** parte,
+sin hacer la operación ni el razonamiento que pide. Cada gap, mirado solo, está bien construido y
+el arsenal da verde. Casos medidos en un mismo CLOZE:
+- una parte que cita un enunciado modificado imprimía un valor que otra parte pedía calcular
+  (8,2 % de las versiones);
+- lo que una parte pide calcular reaparecía como opción en otra que pregunta si algo tiene
+  respuesta, y se descartaba sin razonar, porque pedir que se calcule ya acredita que la tiene
+  (22,5 % y 65 % de las versiones en las dos partes afectadas, antes de corregirlo).
+
+**Causa raíz**: en un CLOZE el estudiante **ve todas las partes a la vez**, pero cada parte se
+construye y se valida por separado, y ninguna sonda del arsenal compara lo que una parte MUESTRA
+con lo que otra PIDE. Cualquier texto que una parte añade —una cita, un enunciado hipotético, un
+contraejemplo, un resumen— puede contener la respuesta de otra; y el enunciado de una parte
+(«calcule X») ya dice algo sobre X.
+
+**Fix**:
+1. **Por contenido**: exclusiones en la selección. La clave de una parte (y sus equivalentes) no
+   reaparece en otra; lo que una parte pide calcular no reaparece como opción en una parte cuyo
+   veredicto delataría.
+2. **Por valor**: una guarda en `data_generation` compara cada `exsolution` numérico, con el
+   formato con que se imprime, contra el texto que añade otra parte, y solo lo admite si ya estaba
+   en el enunciado.
+3. Si la exclusión puede dejar la búsqueda sin candidatos, ordenar la cascada para intentar **al
+   final** la opción que causa la fuga y contar el caso residual. La excepción de la guarda se
+   define por la **causa** (esa opción se usó porque no quedaba otra), no por el síntoma: definida
+   por el síntoma, la guarda toleraba justo el caso que debía impedir, y un mutante sin el
+   reordenamiento sobrevivió 600 semillas.
+4. El valor exacto no basta: un valor del que la respuesta sale con **una operación** (área ÷ n)
+   también es atajo. Si no se corrige, se mide por rama y se declara como residuo.
+
+**Verificación**: V11. Dos mutantes, uno que quita el reordenamiento de la cascada y otro que quita
+la exclusión del reintento, deben morir por la guarda de valor. Si alguno sobrevive, la guarda no
+protege nada.
+
+**Referencia**: `informacion-insuficiente-lote-n4/cloze/` —
+`REPORTE_DETRACTOR_2026-10-19_FASE2C_PASADA2.md` (O-1) y
+`REPORTE_DETRACTOR_2026-10-19_FASE2C_CONFIRMACION.md` (O-A). La fuga por contenido la mide desde el
+2026-08-13 el bloque A de `auditoria_propia.R` de ese subproyecto.
+
+### Incidente Z · `INC-TABLA-PDF-MARGEN` — Tabla pipe con celdas largas fuera del margen del PDF (2026-10-19)
+
+**Síntoma**: en el PDF, una tabla Markdown con frases en las celdas desborda el margen derecho; en
+HTML, DOCX y Moodle se ve bien. La auditoría visual 6b no lo ve, porque solo mira HTML. En el caso
+de origen pasó así la aprobación, con el defecto en 6 de 6 versiones medidas, en la Solution.
+
+**Causa raíz**: `exams:::pandoc()` (exams 2.4.2) añade `--columns=99999` cuando no recibe otro
+`--columns`. Pandoc solo reparte anchos relativos en una tabla pipe —columnas `p{…}`, que parten el
+texto— cuando alguna línea del Markdown supera `--columns`; con 99999 eso no pasa nunca, y la tabla
+sale con columnas `l`/`c`/`r`, que no lo parten. Medido el 2026-10-22 con la misma tabla:
+`{@{}lcl@{}}` con `--columns=99999` y `p{(\linewidth - …)}` con el valor por defecto. Forzar anchos
+relativos tampoco sirve: esos `p{…}` necesitan los paquetes `array` y `calc`, que las plantillas de
+exams no cargan. Lo heredan `tabla_responsiva()` (Familia F2, que usa
+`knitr::kable(format = "markdown")`) y cualquier `cat("| … |")`.
+
+**Fix**: si las celdas llevan frases, emitir una **lista** en vez de la tabla con
+`lista_responsiva()` (Familia F2: `- <col1> — **<col2>**: <col3>`). Desde el 2026-10-22,
+`tabla_responsiva()` **aborta** si el ancho de contenido supera 85 caracteres (medido: una tabla
+numérica no desborda hasta 85 y sí desde 97; una de texto, hasta 98 y desde 103);
+`ancho_max_pdf = NULL` la desactiva solo después de revisar el PDF. Una tabla escrita a mano con
+`cat("| … |")` no tiene esa guarda: su ancho se mide igual. Una tabla de celdas cortas cabe con
+columnas `l`/`c`/`r`.
+
+**Verificación**: renderizar el PDF y revisar **todas** sus páginas, también las de la Solution
+(paso 4 de § Validación realista). En el `.tex`, `grep -A1 'begin{longtable}' <archivo>.tex`: una
+tabla con frases en las celdas no debe tener solo columnas `l`/`c`/`r`. El helper lo cubre
+`tests/testthat/test_tabla_responsiva_pdf.R`.
+
+**Referencia**: `informacion-insuficiente-lote-n4/cloze/`, commit `bda4ffbe` (el comentario junto al
+Resumen de la Solution explica la causa); código de `exams:::pandoc` en exams 2.4.2. Gemelo en
+`orquestador-schoice.md`: Incidente V.
+
 ### Validación realista obligatoria (post-corrección)
 
 Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del usuario:
 1. Ejecutar `exams2pdf()` con ≥5 semillas en el directorio destino real (no temporal).
 2. Inspeccionar el `.tex` generado con `grep -c 'pandocbounded'` → debe ser 0.
 3. Inspeccionar el `.tex` generado: si contiene `\LTcaptype{none}`, verificar que el `.Rmd` tiene la guardia `@ifundefined{c@none}` (regla #20).
-4. Inspeccionar visualmente el PDF de al menos 1 semilla.
+4. Inspeccionar visualmente el PDF de al menos 1 semilla, **todas sus páginas**, también las de la Solution: una tabla fuera del margen solo se ve ahí (Incidente Z).
 5. Ejecutar `awk '/^Solution[[:space:]]*$/,/^Meta-information[[:space:]]*$/' <archivo.Rmd> | grep -E '\`r[[:space:]]+(letra_correcta|letras\[)|Opci[oó]n[[:space:]]+[A-D]'` → debe ser vacío (regla #19, aplica a TODAS las sub-partes schoice).
-6. Verificar V1-V9 (ver paso 10): nº `##ANSWERi##` = nº tipos `exclozetype` = nº partes; orden correcto; exsolution/extol coherentes por gap; **mínimo 6 partes**; gráficas-opción fuera del gap; la prosa de la Solution no enumera opciones en orden (V6); unicidad ampliada si alguna parte ofrece opciones de fuera de su conjunto (V7); diversidad declarada por gap (V8); diagnosticidad de los distractores (V9).
+6. Verificar V1-V11 (ver paso 10): nº `##ANSWERi##` = nº tipos `exclozetype` = nº partes; orden correcto; exsolution/extol coherentes por gap; **mínimo 6 partes**; gráficas-opción fuera del gap; la prosa de la Solution no enumera opciones en orden (V6); unicidad ampliada si alguna parte ofrece opciones de fuera de su conjunto (V7); diversidad declarada por gap (V8); diagnosticidad de los distractores (V9); clave decidida sobre el texto citado, si alguna parte cita un enunciado modificado (V10); sin fuga entre partes, por contenido y por valor (V11).
 7. Para cada parte mchoice, extraer opciones de ≥10 semillas y verificar unicidad con `digest` (Incidente D).
 8. **Si alguna sub-parte tiene gráficas-opción** (Incidente G): ejecutar `exams2moodle()` y comprobar que ningún gap contiene imágenes — `grep -oE '\{[0-9]+:(MULTICHOICE|MULTIRESPONSE)[^}]*' <archivo>_moodle.xml | grep -cE '<img|@@PLUGINFILE@@'` debe ser `0`; y en HTML `grep -c '##ANSWER' <html>` == 0, capturando con chromium que las gráficas estén pegadas a su parte.
-8b. **Con ese MISMO XML delante** (no hace falta re-exportar), la verificación anti-fuga del pre-flight 15 apartado (b) (regla #22 §P6 / Error 25): `grep -oE 'diagrama_[a-z0-9]+\.png' <archivo>_moodle.xml | sort -u` debe devolver **solo** `diagrama_a..d.png`. Cualquier nombre que revele el rol (`_correcta`, `_distractor…`, `_perp`, `_suma`) es defecto bloqueante. Es gratis y se olvidaba: el paso 8 ya tenía el XML abierto para otra comprobación. Recordatorio: HTML y PDF **no** sirven aquí porque embeben la imagen y no exponen el nombre — y en CLOZE tampoco basta con haber movido las gráficas al enunciado.
+8b. **Con ese MISMO XML delante** (no hace falta re-exportar), la verificación anti-fuga del pre-flight 15 apartado (b) (regla #22 §P6 / Error 25): `grep -ohE 'diagrama_[^."/]+\.png' <archivo>_moodle.xml | sort -u | grep -vE '^diagrama_[a-z](_[0-9a-f]+)?\.png$'` debe salir **vacío**: solo quedan `diagrama_a..d.png`, con o sin el sufijo hexadecimal por versión de la regla #4 v6.1. Cualquier nombre que revele el rol (`_correcta`, `_distractor…`, `_perp`, `_suma`) es defecto bloqueante. Es gratis y se olvidaba: el paso 8 ya tenía el XML abierto para otra comprobación. Recordatorio: HTML y PDF **no** sirven aquí porque embeben la imagen y no exponen el nombre — y en CLOZE tampoco basta con haber movido las gráficas al enunciado.
 9. **Si el `.Rmd` reutiliza un pool de otro ejercicio** (Incidente R): `grep -nP '[\x{2212}\x{2264}\x{2265}\x{00D7}]' <archivo.Rmd>` sobre los campos que este ejercicio SÍ emite → debe ser vacío. Un campo que en el origen era dato muerto nunca se probó contra LaTeX.
 10. **Si escribí un `verificar_render.R` con pruebas de mutación** (Incidente S): compruebo que cada mutante declara su `sonda_esperada`, que la fase falla si el rechazo vino de otra sonda, y que existe una guarda de "mutante mal construido" evaluada sobre el ENTORNO (`env_mut$...`), no sobre el texto del `.Rmd`. Ver § Contrato de mutación. Un `RESULTADO: APROBADO (0 errores)` cuyos mutantes murieron por la sonda equivocada NO es evidencia.
 11. Solo después de estas verificaciones, marco renderizado_4_formatos como completado. **NOPS es N/A para todo CLOZE** y no bloquea (Incidente E), pero compruebo que el mensaje de rechazo contenga `cloze exercises`: si falla por otra causa, es un error real.
@@ -835,18 +1026,43 @@ ya corrieron. No los doy por hechos leyendo `ejercicio_state.json`.
 | 3 | generacion_rmd | Construir `.Rmd` CLOZE metacognitivo (lógica del skill /generar-cloze inline): mín. 6 partes, exclozetype multi-gap, ##ANSWERi## en orden | Read+Write inline | opus (yo mismo) |
 | 4 | retroalimentacion | Generar Solution con 6 subsecciones (análisis error + procedimiento + propiedades + caso específico + reflexión + estrategia) por parte | inline | opus (yo mismo) |
 | 5 | renderizado_4_formatos | `exams2html/pdf/pandoc` + `exams2moodle` (NOPS N/A esperado para **todo** CLOZE, Incidente E) | Bash | — |
-| 6 | arsenal_post_render | Hook automático FASES 2A-2N (2L = V5 gráficas-opción en gap CLOZE; **2N** = `WARN_DIV_ESTATICA`, regla #22) | (automático) | — |
+| 6 | arsenal_post_render | Hook automático FASES 2A-2O (2L = V5 gráficas-opción en gap CLOZE; **2N** = `WARN_DIV_ESTATICA`, regla #22; **2O** = `ERR_GLIFO_LATEX`, regla #25) | (automático) | — |
 | 6b | auditoria_visual_html | **Auditoría visual masiva** de ~24 versiones HTML (móvil 360px + desktop 1024px): fugas de markup, math sin renderizar, ##ANSWERi## sin resolver, partes/gaps faltantes, desbordes/responsividad, anomalías cross-versión | Task `subagent_type="auditor-visual-html"` | sonnet |
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente (cada parte muestra su gap) | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
 | 9 | validar_diversidad | 250+ versiones únicas (combinación de TODAS las partes) via `validar_multisemilla.R` **+ diversidad SUSTANTIVA POR GAP** via `validar_diversidad_sustantiva.R --n 100` (regla #22, V8 — `ERR_DIV_COSMETICA` bloqueante; `WARN_DIV_GAP_FIJO` y la `NOTA DE COBERTURA` exigen declaración explícita, no se ignoran) **+ DIAGNOSTICIDAD de los distractores** via `validar_diagnosticidad.R --n 100` (V9 — `ERR_DIAG_SUPERFICIAL` bloqueante; la `NOTA DE ORDEN` se transcribe, no se ignora) | Bash | — |
-| 10 | validar_icfes | Estructura R-exams + V1-V9 CLOZE + 6 dimensiones + DOK/Bloom/SOLO **+ literalidad contra el catálogo canónico y coherencia Nivel↔DOK** (§ Exigencia ICFES) | Bash | — |
+| 10 | validar_icfes | Estructura R-exams + V1-V11 CLOZE + 6 dimensiones + DOK/Bloom/SOLO **+ literalidad contra el catálogo canónico y coherencia Nivel↔DOK** (§ Exigencia ICFES) | Bash | — |
 | 11 | aprobacion_usuario | **WAIT_USER #3** Preview + checklist + decisión | (humano) | — |
 | 12 | sello | `workflow-state.sh complete <dir> aprobacion_usuario` | Bash | — |
 
-## Validaciones específicas CLOZE (V1–V9) — paso 10 ampliado
+### Reapertura de un ejercicio aprobado (2026-10-19)
 
-Antes de marcar `validar_icfes` como completado, verifico estas **nueve** invariantes propias del formato CLOZE. Cualquier fallo es **bloqueante**, salvo las que se declaran N/A por construcción (V5 si no hay gráficas-opción; V6 si la prosa no recapitula listas; V7 si ninguna parte ofrece opciones de fuera de su conjunto; V9 si no hay gaps de selección única):
+Un 11/11 no es inmune. El 2026-10-19 un detractor independiente dio `RECHAZAR` sobre un CLOZE
+aprobado dos meses antes y todavía no usado en clase: la Solution de una parte culpaba a un dato
+que el enunciado sí daba. La FASE 2C de la reapertura encontró además que la clave de esa parte era
+falsa en una fracción de las versiones (Incidente W). Reabrir es una **decisión humana** (allí la
+tomó el profesor). Cómo se hace:
+
+1. **Des-sellar con la CLI, nunca editando el JSON**:
+   `workflow-state.sh reopen <dir> --desde <paso> --motivo "<texto>" [--reporte <ruta>]`. Des-sella
+   `--desde` y los pasos posteriores que estuvieran completados, y deja en `reaperturas` el motivo,
+   el reporte y lo que tenían esos pasos (regla #16 v1.2). `--desde` es el primer paso afectado por
+   el cambio: `generacion_rmd` si cambia el `.Rmd`. En el caso de origen el comando aún no existía:
+   se editó el JSON y solo el `HANDOFF.md` dejó constancia de quién reabrió y por qué.
+2. **Re-ejecutar** desde el primer paso des-sellado y volver a sellar cada paso
+   **después** de ejecutarlo, con una nota que diga qué se verificó (regla #16: se audita por
+   artefacto, no por flag). Si varios pasos se sellan juntos, sus timestamps quedan a milisegundos
+   y solo la nota y los artefactos prueban que se ejecutaron.
+3. **FASE 2C con un detractor NUEVO en cada pasada** (§ "Cómo lanzo YO", punto 6). En el caso de
+   origen hubo tres pasadas, cada una con un detractor distinto: `RECHAZAR`,
+   `APROBAR_CON_CAMBIOS` y `APROBAR_CON_CAMBIOS`.
+4. Un defecto de **CORRECCIÓN** reabre aunque el ejercicio esté aprobado: bloquea siempre
+   (§ "Cómo decido si un residuo obliga").
+5. La **aprobación del profesor (paso 11) se pide de nuevo**: la anterior aprobó otra versión.
+
+## Validaciones específicas CLOZE (V1–V11) — paso 10 ampliado
+
+Antes de marcar `validar_icfes` como completado, verifico estas **once** invariantes propias del formato CLOZE. Cualquier fallo es **bloqueante**, salvo las que se declaran N/A por construcción (V5 si no hay gráficas-opción; V6 si la prosa no recapitula listas; V7 si ninguna parte ofrece opciones de fuera de su conjunto; V9 si no hay gaps de selección única; V10 si ninguna parte cita un enunciado modificado):
 
 ### V1 — Conteo coherente de gaps
 
@@ -1026,7 +1242,78 @@ Si el veredicto es `ERR_DIAG_SUPERFICIAL` → **bloqueante**: reescribo las opci
 (igualar extensión / evitar que la correcta sea la única con su prefijo) y vuelvo al paso 5.
 `WARN_DIAG_SUPERFICIAL` no bloquea pero se declara en el reporte con el gap y la tasa.
 
+**El agregado no acredita las ramas (2026-10-19).** `validar_diagnosticidad.R` mide cada gap sobre
+todas las versiones juntas. Si el ejercicio tiene **ramas** (combinaciones de datos declarados,
+flags que cambian qué se pregunta), un canal de longitud puede vivir dentro de una sola rama: en el
+caso de origen un gap se aprobó con el script en `PASS`, y después un detractor encontró, midiendo
+por rama, que en una de ellas la clave era la opción más larga con un exceso explotable de +9,2 pp.
+Es la exigencia del Incidente U, que allí se limitaba a la clave alternante. Por eso:
+
+1. Mido H1 **por rama**, con N = 100 por rama (§ Contrato de mutación, «Muestra del verificador
+   propio»), además del agregado.
+2. Si las opciones salen de un banco de textos fijos (no puedo alargar una sin cambiar lo que dice),
+   cierro el canal **en la selección**: exijo al menos un distractor de `largo_min = 0,85` veces la
+   clave o más. 0,85 = 1 − 0,15: con ese distractor, el margen de la clave como opción más larga
+   queda por debajo del 15 % de §P7-B, es decir, inexplotable.
+3. La restricción va en **cascada**: cada escalón de exclusiones se intenta primero con ella y luego
+   sin ella, porque las exclusiones anti-fuga pesan más que la longitud. El caso sin restricción
+   queda **contado** en una variable y se declara su frecuencia (en el caso de origen, 1 de 100 en
+   la rama afectada).
+4. Después mido los **canales inversos** con margen (descartar la más larga, elegir la segunda más
+   larga, elegir la más corta): la restricción no debe abrir uno nuevo. En el caso de origen el
+   exceso explotable bajó a +0,8 pp y ningún canal inverso pasó de +2,6 pp.
+
 Si el CLOZE no tiene ningún gap de selección única → V9 es **N/A** (`WARN_DIAG_INDET`).
+
+### V10 — La clave se decide sobre el texto que lee el estudiante (Incidente W, 2026-10-19)
+
+Aplica cuando una parte cita o describe una versión **modificada** del enunciado (un dato quitado,
+añadido o cambiado) y su clave depende de esa versión. Un fallo aquí es un defecto de CORRECCIÓN.
+Lo verifico con un **oráculo literal en dos direcciones**, sobre N = 100 por rama más las canónicas:
+
+1. Deduzco del **texto citado** qué datos trae —con patrones sobre el propio texto, nunca con los
+   flags del generador— y compruebo que coinciden **exactamente** con los declarados para la versión
+   modificada. Así veo tanto el dato que sobra como el que el constructor borró de más.
+2. Con los datos deducidos del texto, el veredicto de cada opción coincide con su marca.
+3. La justificación que imprime la Solution de esa parte nombra el dato que cambió y no culpa a uno
+   que el texto citado sí da.
+
+```r
+# por versión: datos del texto citado == datos declarados, y marca == verdad
+k_txt <- datos_del_texto(texto_citado)          # patrones sobre el texto, no flags
+stopifnot(identical(k_txt, k_declarado))
+for (i in seq_along(opciones))
+  stopifnot(cumple(opciones[i], k_txt) == (sol[i] == 1L))
+```
+
+Si alguna versión viola el oráculo → `ERR_CLOZE_V10` (bloqueante). Si ninguna parte cita un
+enunciado modificado → V10 es **N/A**. Límite que declaro: si el oráculo usa el modelo de
+dependencias del propio `.Rmd`, no detecta un modelo mal declarado (§ Puntos ciegos).
+
+### V11 — Sin fuga entre partes, por contenido y por valor (Incidente Y, 2026-10-19)
+
+Aplica a todo CLOZE: el estudiante ve todas las partes a la vez. Verifico sobre N = 100 por rama:
+
+1. **Por contenido**: la clave de una parte (y sus equivalentes) no reaparece en otra, y lo que una
+   parte pide calcular no reaparece como opción en una parte cuyo veredicto delataría.
+2. **Por valor**: ningún `exsolution` de un gap `num`, con el formato con que se imprime, aparece
+   en el texto que añade otra parte (una cita, un hipotético, un contraejemplo, un resumen) sin estar
+   ya en el enunciado.
+
+   ```r
+   num_en <- function(v, txt) grepl(paste0("(?<![0-9.,])",
+     gsub(".", "\\.", formato(v), fixed = TRUE), "(?![0-9.,])"), txt, perl = TRUE)
+   fuga <- any(vapply(exsol_num, function(v)
+     num_en(v, texto_otra_parte) && !num_en(v, enunciado), logical(1)))
+   ```
+3. **A un paso**: si un valor impreso en otra parte da la respuesta con una sola operación, lo mido
+   por rama; si no lo corrijo, lo declaro como residuo con su cifra.
+
+Fuga por contenido o por valor → `ERR_CLOZE_V11` (bloqueante), salvo el caso residual contado del
+Incidente Y (punto 3 del Fix), que se declara con su frecuencia. Un solapamiento que solo cambia la
+**probabilidad** —la clave de una parte coincide más de lo esperado con lo que se preguntó en otra—
+no es fuga sino DIAGNOSTICIDAD: se mide como canal por rama y se rige por § "Presupuesto de
+corrección".
 
 ## Contrato de mutación (todo verificador propio que yo genere)
 
@@ -1046,7 +1333,7 @@ rechazo lo produjo `I-3_formula`. La línea que lo habría detectado —
 documenta el mismo fallo en su `HANDOFF.md` ("tres rondas de rechazo […] las dos mutaciones no
 mutaban el artefacto"): es un modo de fallo **reincidente**, no mala suerte.
 
-Por tanto, TODO mutante que yo genere cumple estas tres obligaciones:
+Por tanto, TODO mutante que yo genere cumple estas seis obligaciones:
 
 1. **Declara su sonda esperada.** Cada mutante nombra explícitamente el código de error que debe
    cazarlo (`sonda_esperada <- "I-1"`). Sin esa declaración el mutante no es válido.
@@ -1077,6 +1364,27 @@ Por tanto, TODO mutante que yo genere cumple estas tres obligaciones:
    Regla derivada: si una magnitud se **lee** de una estructura precomputada (`combos$E[idx]`) en
    vez de recalcularse, mutar sus insumos NO la altera. Mutar siempre la variable que la invariante
    observa.
+4. **El patrón del mutante aparece exactamente una vez** (2026-10-19). Antes de mutar, el
+   verificador comprueba que la cadena que va a sustituir aparece una sola vez en el código, y aborta
+   si no. Si no aparece, `sub()` devuelve el código intacto y el mutante no muta nada; si aparece
+   dos veces, muta más de lo declarado.
+5. **Recorre semillas hasta la primera muerte**, con tope (600 en el caso de origen), y reporta la
+   semilla. Una guarda que vigila una ruta poco frecuente del generador solo dispara en las
+   versiones que pasan por ella: en el caso de origen la ruta protegida se usaba en el 5 % de las
+   versiones (73 de 1500), y un mutante corrido sobre pocas semillas habría sobrevivido aunque la
+   guarda era real.
+6. **Cada excepción de una guarda tiene su mutante.** Si una guarda tolera un caso
+   (`|| caso_tolerado`), un mutante que quite el fix que vuelve raro ese caso debe morir por la
+   guarda. Si la excepción se define por el síntoma y no por la causa, la guarda no protege nada: el
+   mutante sobrevivió 600 semillas hasta que la excepción se redefinió (Incidente Y).
+
+**Muestra del verificador propio (regla #23, 2026-10-19).** Si el ejercicio tiene ramas, el
+verificador muestrea **por cuotas**: recorre semillas, con tope, hasta tener N = 100 versiones de
+cada rama; mide **aparte** la instancia canónica; y declara **NO CONCLUYENTE** —ni verde ni rojo—
+todo estrato con n < 20. El universo de lo que audita (el banco, el pool) es la **unión de todas
+las versiones**, no el de la primera: si el banco depende de la rama, tomar el de la primera versión
+hace desaparecer de la tabla justo lo que falta en ella. Los mutantes se aplican **en memoria** sobre
+el código del chunk `data_generation` (`parse(text = …)`), sin tocar el `.Rmd`.
 
 **Cobertura mínima:** una invariante sin mutante que la cace por su propia sonda queda marcada en el
 reporte final como `sin_prueba_de_deteccion`. No la presento como "verificada" ni la cuento en un
@@ -1092,6 +1400,14 @@ que declare ocho en verde sin distinguir "pasó" de "no se midió".
 El paso 10 no se cierra con "los 6 campos están llenos". Los campos oficiales se copian **literales**
 del catálogo canónico; **prohibido parafrasear, truncar o fusionar**. Si un texto no está en el
 catálogo, se marca `[VERIFICAR]` y se pregunta — nunca se inventa.
+
+**Literal incluye las tildes** (regla #7, 2026-10-22). Los VALORES de `exextra[...]` llevan tildes,
+mayúsculas y signos tal como están en el catálogo o en la ficha (`Argumentación`, `6°-7°`); en ASCII
+van solo las claves `exextra[Nombre]` y los identificadores (`exname`, `exsection`, `extype`…). Al
+comparar con la ficha separo dos casos: CONTENIDO (otro texto u otro valor: no cumple) y FORMATO
+(mismo texto con otra tilde, «°» o mayúscula: lo corrijo si el ejercicio está en corrección, o lo
+declaro como excepción si el profesor decidió conservarlo). Un FORMATO no es un NO CUMPLE de
+clasificación.
 
 **Catálogo canónico (externo a este repo, SOLO LECTURA).** Vive en el proyecto de Alineación
 Curricular, no aquí:
@@ -1117,7 +1433,7 @@ orientación > infografías > TEA. Ante discrepancia gana el PDF oficial.
 - **Esta comprobación es JUICIO HUMANO, no automatizada.** Ningún script del arsenal compara los
   `exextra[…]` del `.Rmd` contra los JSON del catálogo: la literalidad la verifico yo, campo por
   campo, abriendo el JSON. Lo digo explícitamente porque el resto del paso 10 sí tiene validadores
-  (V1-V9) y es fácil suponer que este también — un «paso 10 OK» **no** significa que un script haya
+  (V1-V11) y es fácil suponer que este también — un «paso 10 OK» **no** significa que un script haya
   certificado la literalidad del descriptor ni la coherencia Nivel↔DOK.
 
 **Coherencia obligatoria Nivel ↔ DOK** (regla #1): `DOK ≥ 3 ⇒ Nivel ICFES ≥ 3`; `Bloom = Evaluar ⇒
@@ -1127,7 +1443,7 @@ Las tres competencias (Interpretación y representación · Formulación y ejecu
 y los tres componentes (Numérico-variacional · Geométrico-métrico · Aleatorio) salen del catálogo,
 no de mi criterio.
 
-**Puntos ciegos de mi propio arsenal — los declaro, no los oculto.** V1-V9 en verde no es un ítem
+**Puntos ciegos de mi propio arsenal — los declaro, no los oculto.** V1-V11 en verde no es un ítem
 correcto:
 
 | Señal engañosa | Qué NO prueba |
@@ -1138,12 +1454,16 @@ correcto:
 | NOPS `N/A` | Esperado para **todo** CLOZE (Incidente E) — no es evidencia de que los otros formatos estén bien |
 | Render OK desde mi sesión | Si el `.Rmd` no declara `library(exams)`, renderiza aquí y revienta en un knit limpio. Verifico en R limpio con `exams::exams2*()` |
 | Un campo del pool que no se emite | No está probado por nada (Incidente R). O lo emito, o lo audito, o lo elimino |
-| Reporte de un subagente | No es evidencia: el detractor puede simular y alucinar estructura (Incidente H) |
+| Reporte de un subagente | No es evidencia: el detractor puede simular y alucinar estructura (Incidente H). Desde la regla #9 v1.6 el hook comprueba sus citas, pero una cita verificada prueba que el fragmento existe en el archivo, no que la conclusión sea correcta |
 | `cmd \| grep …; echo $?` | **Mide el exit del PIPE, no del comando.** Así se leyó «exit=0» de un script que salía con 2, y de ahí salió una aserción falsa en un test. Medir `cmd >/dev/null 2>&1; echo $?` |
 | Editar `.claude/scripts/<validador>.R` | Cuatro validadores son **symlinks** a `SOURCES/scripts_validacion/` (invariante I-10). Editar la ruta de `.claude/` no cambia el código que se ejecuta |
 | Una prueba de mutación sobre el archivo REAL | Si el paso de restaurar queda en un job en segundo plano, el repo se queda con el artefacto roto en disco. **Mutar siempre una copia** en `/tmp` |
 | `grep` que no encuentra nada | Puede ser «no hay defecto» o «el patrón no coincide»: comillas tipográficas, extensión distinta (`.latex` vs `.tex`), glob sin coincidencias contando 0 sobre CERO archivos. Toda sonda necesita un **control positivo** que demuestre que dispara |
 | `PASS` de `validar_diagnosticidad.R` | **No acredita ausencia de fuga LÉXICA**: H2 mide la PRIMERA PALABRA y H3 la invariancia del veredicto; ninguna sonda inspecciona el vocabulario del cuerpo de la opción. Un ítem con un token exclusivo de la clave da `PASS` y se resuelve al 88 % sin leer el enunciado (Error 32) |
+| `PASS` de `validar_diagnosticidad.R` en un ejercicio con ramas | **No acredita las ramas**: mide cada gap sobre todas las versiones juntas. Un canal de longitud dentro de una sola rama (+9,2 pp explotables) pasó así la aprobación. Ver V9, «El agregado no acredita las ramas» |
+| Una guarda o un comentario copiados del gemelo SCHOICE | No están probados en el CLOZE. La guarda puede leer una variable que el CLOZE no tiene (error en el 94 % de las versiones), quedar vacía (mira una parte donde la condición nunca ocurre: 0 de 100) o abortar una cuarta parte de las versiones (la mira en todas las partes, donde sí ocurre). Se convierte en filtro del pool más una guarda sobre todas las partes, y se vuelve a medir en el CLOZE con sus propias ramas. Un comentario copiado puede citar una rama o una cifra que el CLOZE no tiene |
+| Oráculo que usa el modelo del propio `.Rmd` (sus dependencias, su función de veredicto) | No detecta un modelo mal declarado: el oráculo y el generador se equivocan igual. Lo declaro como límite del verificador |
+| Fallo de un verificador corrido con `Rscript --vanilla` | No es un defecto del ejercicio: `--vanilla` no lee `~/.Renviron`, donde esta máquina declara `R_LIBS_USER`, y `library(exams)` falla. Usar `Rscript --no-init-file` (verificado el 2026-10-22) |
 
 ## Política de auto-corrección
 
@@ -1153,12 +1473,12 @@ Cuando una fase intermedia falla, intento auto-corregir **sin interrumpir al usu
 2. Si hay un fix conocido → aplico → re-ejecuto la fase.
 3. Si fallé 3 veces consecutivas en la misma fase → invoco `Task(subagent_type="AgenteDiagnosticador", model="sonnet")` con el log completo.
 4. Si el diagnosticador propone un fix → aplico → re-ejecuto. Si propone "intervención manual requerida" → reporto al usuario con todos los datos.
-5. Si el detractor (paso 7) reporta CRÍTICA o ALTA → corrijo → re-ejecuto desde paso 5 (renderizado).
+5. Si el detractor (paso 7) reporta CRÍTICA o ALTA → corrijo → re-ejecuto desde paso 5 (renderizado). El nuevo paso 7 lo hace un detractor NUEVO (§ "Cómo lanzo YO", punto 6).
 6. Si el detractor reporta APROBAR CON CAMBIOS → aplico cambios → re-ejecuto desde paso 5.
 7. Si el detractor reporta APROBAR → sigo a paso 8.
 8. **Paso 6b (auditoría visual):** SIEMPRE lo ejecuto tras el arsenal (paso 6), antes del detractor. Si el `auditor-visual-html` reporta `NO_APTO_VISUAL` o hallazgos **CRÍTICOS** → corrijo → re-ejecuto desde paso 5. Si `APTO_CON_OBSERVACIONES` → anoto y sigo; si `APTO_VISUAL` → sigo a paso 7.
 
-**Regla especial CLOZE**: si corrijo un `##ANSWERi##`, modifico `exclozetype`, o cambio el número de partes → SIEMPRE vuelvo a paso 5 (renderizado completo) y re-verifico V1-V9.
+**Regla especial CLOZE**: si corrijo un `##ANSWERi##`, modifico `exclozetype`, o cambio el número de partes → SIEMPRE vuelvo a paso 5 (renderizado completo) y re-verifico V1-V11.
 
 **Regla especial gráficas-opción (Incidente G)**: si una sub-parte usa gráficas como opciones, las genero desde el inicio con el patrón "rótulos I-IV en el enunciado + opciones de texto" (NUNCA imágenes en el Answerlist del gap). Si descubro tarde (p.ej. V5 falla, o el reporte del estudiante/auditor visual señala "no se ven los gráficos en la Parte N") que las imágenes están en el gap → migro esa parte al patrón correcto (mover `![](...)` rotulado al enunciado; cambiar el Answerlist a `* Gráfica I…`; citar el rótulo en la Solution por contenido, regla #19) y vuelvo a paso 5.
 
@@ -1270,7 +1590,9 @@ Gráficas-opción: en enunciado (rotuladas I-IV) + opciones de texto — V5 OK |
 Prosa de la Solution sin enumerar en orden — V6 OK | N/A
 Unicidad ampliada (opciones de fuera del conjunto) — V7 OK | N/A
 Diversidad por gap — V8 OK (cobertura N/M, gaps fijos declarados)
-Diagnosticidad por gap — V9 OK | ⚠ WARN | N/A (H1/H2/H3 + NOTA DE ORDEN transcritas)
+Diagnosticidad por gap — V9 OK | ⚠ WARN | N/A (H1/H2/H3 + NOTA DE ORDEN transcritas; H1 por rama si hay ramas)
+Clave decidida sobre el texto citado — V10 OK | N/A
+Sin fuga entre partes (contenido y valor) — V11 OK (residuo a un paso: declarado | ninguno)
 Renderizado: HTML/PDF/DOCX/Moodle OK  |  NOPS: N/A (esperado para todo CLOZE)
 Moodle: ningún gap contiene imágenes (Incidente G) — OK | N/A
 Detractor FASE 2C: APROBAR
@@ -1312,7 +1634,7 @@ Al terminar (éxito o fallo), produzco:
 | 1 analisis_icfes | ✅ | 0:35 | 0 |
 | ... | ... | ... | ... |
 
-## Validaciones CLOZE (V1-V9)
+## Validaciones CLOZE (V1-V11)
 - V1 conteo gaps (##ANSWERi## = exclozetype = partes): ✅
 - V2 orden/inmediatez ##ANSWERi## (regla #14): ✅
 - V3 exsolution/extol por gap: ✅
@@ -1323,6 +1645,9 @@ Al terminar (éxito o fallo), produzco:
 - V8 diversidad declarada por gap: ✅ (ver tabla)
 - V9 diagnosticidad de los distractores (`validar_diagnosticidad.R --n 100`): ✅ | ⚠ WARN | N/A
   - tabla por gap (tasa + margen mediano) y `NOTA DE ORDEN` transcritas literalmente
+  - H1 por rama si el ejercicio tiene ramas (el agregado no las acredita)
+- V10 clave decidida sobre el texto citado (Incidente W): ✅ | N/A
+- V11 sin fuga entre partes, por contenido y por valor (Incidente Y): ✅ (+ residuo a un paso declarado, si lo hay)
 
 ## Diversidad por gap (V8, regla #22)
 Transcribo la tabla literal de `validar_diversidad_sustantiva.R` y añado la declaración:
@@ -1385,7 +1710,7 @@ Sin esta tabla el coste real del pipeline no es medible y no puedo justificar a�
 - ❌ NO omitir la guardia `\@ifundefined{c@none}{\newcounter{none}}{}` al inicio de Question cuando el CLOZE usa tablas Markdown (regla #20). Causaría `No counter 'none' defined` en pandoc ≥ 3.7.
 - ❌ NO colocar gráficas (`![](*.png)`) como opciones del gap CLOZE en el Answerlist (Incidente G, regla `graficos-como-opciones.md`). Un gap CLOZE no renderiza `<img>` en Moodle → las gráficas desaparecen. Las gráficas-opción van ROTULADAS (I, II, III…) en el ENUNCIADO de la parte; las opciones del gap son TEXTO ("Gráfica I"…). Distinto del SCHOICE puro, donde sí funcionan.
 - ❌ NO tratar el `exams2nops()` N/A como error bloqueante (Incidente E): es comportamiento esperado en **todo** CLOZE, con cualquier combinación de gaps. Tampoco al revés: NO dar por hecho que un CLOZE 100 % `schoice`/`mchoice` deba renderizar NOPS. Lo único exigible es que el mensaje de rechazo contenga `cloze exercises`.
-- ❌ NO marcar `renderizado_4_formatos` como completado sin verificar que el `.tex` generado NO contiene `\pandocbounded` ni `\LTcaptype{none}` sin guardia, que el PDF abre sin errores, y que V1-V9 pasan (validación realista, no solo "exit 0").
+- ❌ NO marcar `renderizado_4_formatos` como completado sin verificar que el `.tex` generado NO contiene `\pandocbounded` ni `\LTcaptype{none}` sin guardia, que el PDF abre sin errores, y que V1-V11 pasan (validación realista, no solo "exit 0").
 - ❌ NO presentar como "verificada" una invariante cuyo mutante murió por una sonda distinta de la declarada, ni computar un `grepl` de comprobación sin que su resultado condicione el veredicto de la fase (Incidente S, § Contrato de mutación). Una invariante sin prueba de detección propia se reporta como `sin_prueba_de_deteccion`, nunca dentro de un "0 errores".
 - ❌ NO inventar pasos del workflow ni saltar el orden.
 - ❌ NO crear archivos fuera de `<ruta_destino>` y subdirectorios `salida/`.
@@ -1408,7 +1733,7 @@ Cuando termine, devuelvo un mensaje JSON de una sola línea + reporte humano:
   "tipo": "cloze",
   "n_partes": 6,
   "exclozetype": "schoice|num|schoice|mchoice|num|schoice",
-  "validaciones_cloze": {"V1": true, "V2": true, "V3": true, "V4": true, "V5": "true | N/A", "V6": "true | N/A", "V7": "true | N/A", "V8": true, "V9": "true | warn | N/A"},
+  "validaciones_cloze": {"V1": true, "V2": true, "V3": true, "V4": true, "V5": "true | N/A", "V6": "true | N/A", "V7": "true | N/A", "V8": true, "V9": "true | warn | N/A", "V10": "true | N/A", "V11": true},
   "diversidad_por_gap": {"cobertura": "<medidos>/<declarados>", "gaps": [{"gap": "p1", "unicos": 8, "evaluados": 20, "declaracion": "variable | fija-justificada", "justificacion": "<frase o null>"}], "sin_medir": ["<gaps o vacío>"]},
   "turnos_por_fase": {"preflight_0_1": 0, "paso_3_4": 0, "paso_5_6": 0, "paso_7": 0, "pasos_8_10": 0, "total": 0},
   "mutantes": [{"id": "A", "sonda_esperada": "<código>", "sonda_real": "<código>", "veredicto": "cazado_por_su_sonda | cazado_por_otra | no_detectado | mal_construido"}],
@@ -1458,9 +1783,9 @@ Task(
 | 7-15 | Paso 2b si aplica (3 lenguajes en paralelo) |
 | 16 | WAIT_USER #2 |
 | 17-28 | Paso 3 (generar .Rmd CLOZE: 6 partes + pools) + 4 (retroalimentación 6 subsecciones) |
-| 29-34 | Paso 5 (renderizar HTML/PDF/DOCX, NOPS N/A) + 6 (hook FASES 2A-2N) |
+| 29-34 | Paso 5 (renderizar HTML/PDF/DOCX, NOPS N/A) + 6 (hook FASES 2A-2O) |
 | 35-44 | Paso 7 (detractor) + auto-correcciones |
-| 45-52 | Pasos 8-10 (coherencias, diversidad, ICFES + V1-V9) |
+| 45-52 | Pasos 8-10 (coherencias, diversidad, ICFES + V1-V11) |
 | 53 | WAIT_USER #3 |
 | 54 | Paso 12 + reporte |
 | 55-65 | Buffer para auto-correcciones / reporte parcial |

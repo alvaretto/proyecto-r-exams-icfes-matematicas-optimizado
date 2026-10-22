@@ -306,6 +306,13 @@ suites <- list(
               "snippets_familias_rmd", "test_is_latex_output_rexams")
   ),
   list(
+    nombre = "Familia F2: tabla_responsiva() no deja tablas fuera del margen del PDF",
+    archivo = "tests/testthat/test_tabla_responsiva_pdf.R",
+    critico = TRUE,
+    watch = c("familias-soluciones-rmd", "snippets_familias_rmd",
+              "test_tabla_responsiva_pdf")
+  ),
+  list(
     nombre = "Bateria de eliminacion: cierre por familias + techo nulo (regla #22 P7)",
     archivo = "tests/testthat/test_bateria_eliminacion.R",
     critico = TRUE,
@@ -333,6 +340,12 @@ suites <- list(
     critico = TRUE,
     watch = c("workflow-state", "pre-write-rmd-gate", "ejercicio_state.schema",
               "test_workflow_state_flujo_b")
+  ),
+  list(
+    nombre = "workflow-state: reopen des-sella desde un paso y registra el motivo (regla #16)",
+    archivo = "tests/testthat/test_workflow_state_reopen.R",
+    critico = TRUE,
+    watch = c("workflow-state", "ejercicio_state.schema", "test_workflow_state_reopen")
   ),
   list(
     nombre = "Presupuesto de contexto de .claude/rules/ (compactas + texto integro)",

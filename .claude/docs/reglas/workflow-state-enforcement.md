@@ -60,6 +60,7 @@ Cuando el gate bloquea, muestra mensajes informativos con los **comandos exactos
 | `check <dir> <paso>` | Exit 0 si completado, exit 1 si pendiente |
 | `status <dir>` | Muestra todos los pasos con iconos ✅/⬜ |
 | `next <dir>` | Muestra el siguiente paso pendiente con comando sugerido |
+| `reopen <dir> --desde <paso> --motivo "<texto>" [--reporte <ruta>]` | Reabre un ejercicio sellado para corregirlo (ver § «Reabrir un ejercicio sellado») |
 | `help` | Muestra la ayuda completa |
 
 ### Campos extra por paso
@@ -183,6 +184,39 @@ El estado sobrevive entre conversaciones, reinicios de Claude Code y cambios de 
 
 ---
 
+## Reabrir un ejercicio sellado (`reopen`, desde 2026-10-22)
+
+**Origen.** El 2026-10-19 un detractor independiente dio `RECHAZAR` sobre un CLOZE ya aprobado
+(11/11, `informacion-insuficiente-lote-n4`). La CLI no tenía forma de des-sellar pasos: se pusieron
+`validar_icfes` y `aprobacion_usuario` en `false` editando el JSON a mano, y solo el `HANDOFF.md`
+dejaba constancia de quién reabrió y por qué.
+
+```bash
+workflow-state.sh reopen <dir> --desde <paso> --motivo "<texto>" [--reporte <ruta>]
+```
+
+- Des-sella `--desde` y cada paso posterior que estuviera completado: `completado: false`,
+  `timestamp: null`. Los pasos no completados no se tocan.
+- Los campos que el schema exige se conservan con la forma que les da `init`:
+  `generacion_rmd.archivo` sigue igual (el `.Rmd` se corrige en el sitio), y `detractor_fase2c.veredicto`
+  y `validar_diversidad.versiones_unicas` vuelven a `null`. El resto de campos (`nota`, `formatos`…) sale
+  del paso.
+- Añade un registro a la lista de primer nivel `reaperturas`: `timestamp`, `desde`, `motivo`, `reporte`
+  (o `null`), `pasos_desellados` y `estado_previo` (lo que tenía cada paso, timestamp incluido). No se
+  pierde nada, y `status` muestra la última reapertura.
+- `--motivo` es obligatorio. `--desde` va de `generacion_rmd` a `aprobacion_usuario`: reabrir
+  `analisis_icfes` o `flujo_b` es rehacer el ejercicio, no corregirlo.
+- Exit 0 = reabierto; 1 = nada que reabrir; 2 = argumentos inválidos. En los dos últimos casos el
+  archivo no cambia.
+- Después cada paso se vuelve a sellar **al ejecutarlo**, con `complete`, como siempre. Reabrir es
+  decisión humana; la aprobación del paso 11 se pide de nuevo, porque la anterior aprobó otra versión.
+
+**Nunca des-sellar editando el JSON a mano.** Test: `tests/testthat/test_workflow_state_reopen.R`
+(invocaciones inválidas sin tocar el archivo, des-sellado parcial y completo, estado previo, «nada que
+reabrir», re-sellado posterior, acumulación y coherencia con el schema).
+
+---
+
 ## Flujo Completo con Gate
 
 ```
@@ -220,8 +254,8 @@ Esta regla (16) refuerza y depende de:
 
 ---
 
-**Versión**: 1.0
-**Fecha**: 2026-03-21
+**Versión**: 1.2
+**Fecha**: 2026-10-22 (v1.2 — comando `reopen` y lista `reaperturas` en el schema; v1.1 2026-10-02 — `flujo_b` solo se sella con `--lenguaje`; v1.0 2026-03-21)
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: Ver sección "Lo que PERMITE"
 **Scripts asociados**:

@@ -66,10 +66,10 @@ exshuffle: TRUE
 extol: 0|0.01|0|0
 
 exextra[Type]: CLOZE
-exextra[Competencia]: Argumentacion
-exextra[Componente]: [Aleatorio|Numerico-Variacional|Geometrico-Metrico]
-exextra[Afirmacion]: [descripcion especifica]
-exextra[Evidencia]: [descripcion especifica]
+exextra[Competencia]: Argumentación
+exextra[Componente]: [Aleatorio|Numérico-variacional|Geométrico-métrico]
+exextra[Afirmacion]: [texto literal del catálogo canónico, con tildes]
+exextra[Evidencia]: [texto literal del catálogo canónico, con tildes]
 exextra[Nivel]: 3
 
 exextra[DOK]: 3

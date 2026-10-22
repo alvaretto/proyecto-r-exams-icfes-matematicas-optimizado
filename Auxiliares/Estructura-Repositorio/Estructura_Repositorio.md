@@ -333,14 +333,14 @@ exsolution: 1000
 exshuffle: TRUE
 extol: 0.01
 exextra[Type]: SCHOICE
-exextra[Competencia]: Formulacion
-exextra[Componente]: Geometrico-Metrico
-exextra[Afirmacion]: Descripcion especifica de la afirmacion evaluada
-exextra[Evidencia]: Descripcion especifica de la evidencia esperada
+exextra[Competencia]: Formulación y ejecución
+exextra[Componente]: Geométrico-métrico
+exextra[Afirmacion]: [texto literal del catálogo canónico]
+exextra[Evidencia]: [texto literal del catálogo canónico]
 exextra[Nivel]: 2
 ```
 
-**Nota**: Los valores de `exextra` usan ASCII sin tildes porque R-exams los parsea como identificadores.
+**Nota**: `exname`, `exsection`, `extype` y las claves `exextra[...]` van en ASCII porque son identificadores. Los **valores** de `exextra` se copian literales del catálogo ICFES, con tildes (regla #7, 2026-10-22): R-exams los guarda como texto UTF-8 y los cuatro formatos renderizan.
 
 ### Correspondencia Metadatos <-> ICFES 2026
 

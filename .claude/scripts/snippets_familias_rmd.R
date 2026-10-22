@@ -46,10 +46,33 @@ construir_valores_con_rango <- function(rango_objetivo, n, lo, hi) {
 # PDF/NOPS: tabla Markdown (longtable; requiere guard \newcounter{none}, regla #20).
 # HTML/Moodle: fenced div con scroll horizontal. DOCX: tabla nativa de Word.
 # bold_rows: índices de filas a resaltar (negrita Markdown nativa **x**).
-tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0)) {
+# ancho_max_pdf (2026-10-22): en el PDF de R/exams una tabla pipe NO parte el texto de
+# sus celdas. exams:::pandoc() añade --columns=99999, y pandoc solo reparte anchos
+# relativos cuando una línea del Markdown supera --columns; además las plantillas de
+# exams no cargan array ni calc, que los anchos p{...} de pandoc 3 necesitan. Una fila
+# demasiado larga se sale del margen sin ningún error (Incidente Z de los orquestadores).
+# El ancho se mide sobre el CONTENIDO: el texto más largo de cada columna (encabezado
+# incluido, con los ** de negrita) + 2 por columna + 1. Es el largo de la línea pipe
+# que emite kable sin `align`, con la que se calibró; no se mide la línea emitida
+# porque `align` cambia su relleno (un carácter por columna) sin cambiar el PDF.
+# Medido con la plantilla plain: tabla numérica de muchas columnas sin desborde hasta
+# 85 (con desborde desde 97); tabla de texto sin desborde hasta 98 (desde 103). Por
+# eso la función ABORTA si el ancho supera ancho_max_pdf. Con frases en las celdas,
+# usar lista_responsiva(). ancho_max_pdf = NULL desactiva la guarda: solo después de
+# revisar el PDF.
+tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0), ancho_max_pdf = 85) {
   df2 <- data.frame(lapply(df, as.character), stringsAsFactors = FALSE, check.names = FALSE)
   if (length(bold_rows)) for (r in bold_rows)
     df2[r, ] <- lapply(df2[r, , drop = FALSE], function(x) paste0("**", x, "**"))
+  anchos_col <- vapply(seq_along(df2), function(j)
+    max(nchar(c(names(df2)[j], df2[[j]]))), numeric(1))
+  ancho <- sum(anchos_col) + 2L * length(anchos_col) + 1L
+  if (!is.null(ancho_max_pdf) && ancho > ancho_max_pdf)
+    stop(sprintf(paste0(
+      "tabla_responsiva(): la tabla mide %d caracteres de ancho y en el PDF de R/exams ",
+      "una tabla pipe no parte el texto: se saldría del margen (límite medido: %d). ",
+      "Use lista_responsiva(), acorte las celdas o, si ya revisó el PDF, pase ",
+      "ancho_max_pdf = NULL."), as.integer(ancho), ancho_max_pdf), call. = FALSE)
   md <- paste(knitr::kable(df2, format = "markdown", align = align), collapse = "\n")
   # ⚠️ RAMA MUERTA (anotado 2026-08-15): `knitr::is_latex_output()` es SIEMPRE FALSE
   # bajo R/exams — los 5 pipelines tejen a Markdown y delegan la conversión en pandoc,
@@ -65,6 +88,27 @@ tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0)) {
     paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; margin:0.6em 0;\"}\n\n",
            md, "\n\n:::\n")
   }
+}
+
+# ---- Familia 2b: LISTA en lugar de tabla cuando las celdas llevan frases -------
+# Una línea por fila: «- <col1> — **<col2>**: <col3>; <col4>...». En el PDF el texto
+# se ajusta al ancho de la página, y se ve igual en HTML, DOCX y Moodle. Es el arreglo
+# del Incidente Z, verificado en los cuatro formatos el 2026-10-19
+# (informacion-insuficiente-lote-n4). Los encabezados de las columnas no se imprimen:
+# el texto que precede a la lista tiene que presentarlas. Emitir tras una línea en
+# blanco. negrita: índice de la columna resaltada (NULL para ninguna).
+lista_responsiva <- function(df, negrita = 2L, sep = " — ") {
+  df2 <- data.frame(lapply(df, as.character), stringsAsFactors = FALSE, check.names = FALSE)
+  stopifnot(ncol(df2) >= 1L, nrow(df2) >= 1L)
+  filas <- vapply(seq_len(nrow(df2)), function(i) {
+    x <- unlist(df2[i, ], use.names = FALSE)
+    if (!is.null(negrita) && negrita >= 1L && negrita <= length(x))
+      x[negrita] <- paste0("**", x[negrita], "**")
+    if (length(x) == 1L) return(paste0("- ", x))
+    if (length(x) == 2L) return(paste0("- ", x[1], sep, x[2]))
+    paste0("- ", x[1], sep, x[2], ": ", paste(x[-(1:2)], collapse = "; "))
+  }, character(1))
+  paste0(paste(filas, collapse = "\n"), "\n")
 }
 
 # ---- Familia 3: ecuación display RESPONSIVA ---------------------------------
