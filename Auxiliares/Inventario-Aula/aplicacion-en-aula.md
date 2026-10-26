@@ -2,22 +2,22 @@
 
 Registro de que ejercicios validados ya se aplicaron en clase con TODOS los estudiantes del grupo. Es el requisito de evidencia de Nivel 3 para promover a `03-En-Produccion/`. Este archivo lo mantiene una rutina automatica semanal, pero las respuestas las escribe el docente a mano.
 
-Ultima revision automatica: 2026-10-19
+Ultima revision automatica: 2026-10-26
 
 ## Pendientes de aplicar
 
 | Ejercicio | Tipo | Ruta | Aprobado el | Dias esperando |
 |---|---|---|---|---|
-| razones_trigonometricas_error_procedimiento_metacognitivo_argumentacion_n3_cloze_v1 | cloze | A-Produccion/01-En-PreDesarrollo/29-2025-2 | 2026-03-24 | 209 |
-| interseccion_ingresos_gastos_metacognitivo_interpretacion_n2_schoice_v1 | schoice | A-Produccion/01-En-PreDesarrollo/interseccion-ingresos-gastos-v1 | 2026-05-03 | 169 |
-| migraciones_exteriores_metacognitivo_interpretacion_n2_schoice_v1 | schoice | A-Produccion/01-En-PreDesarrollo/migraciones-exteriores-lineas-n2 | 2026-05-04 | 168 |
-| rango_dispersion_botellas_metacognitivo_argumentacion_n2_schoice_v1 | schoice | A-Produccion/01-En-PreDesarrollo/Rango-Dispersion-Botellas-Agua | 2026-05-05 | 167 |
-| distribucion_contagiados_metacognitivo_interpretacion_n3_schoice_v1 | schoice | A-Produccion/01-En-PreDesarrollo/distribucion-contagiados-v1 | 2026-05-14 | 158 |
-| rango_colesterol_metacognitivo_interpretacion_n3_schoice_v1 | schoice | A-Produccion/01-En-PreDesarrollo/Rango-Colesterol-Pacientes | 2026-06-03 | 138 |
-| rango_colesterol_metacognitivo_interpretacion_n3_cloze_v1 | cloze | A-Produccion/01-En-PreDesarrollo/Rango-Colesterol-Pacientes/Cloze | 2026-06-05 | 136 |
-| grafica_funcion_lineal_metacognitivo_interpretacion_n3_schoice_v1 | schoice | A-Produccion/01-En-PreDesarrollo/SAI2-PS-26 | 2026-06-12 | 129 |
-| grafica_funcion_lineal_metacognitivo_interpretacion_n3_cloze_v1 | cloze | A-Produccion/01-En-PreDesarrollo/SAI2-PS-26/Cloze | 2026-06-13 | 128 |
-| grafica_funcion_lineal_metacognitivo_argumentacion_n3_schoice_neg_v1 | schoice | A-Produccion/01-En-PreDesarrollo/SAI2-PS-26/Neg | 2026-06-16 | 125 |
+| razones_trigonometricas_error_procedimiento_metacognitivo_argumentacion_n3_cloze_v1 | cloze | A-Produccion/01-En-PreDesarrollo/29-2025-2 | 2026-03-24 | 216 |
+| interseccion_ingresos_gastos_metacognitivo_interpretacion_n2_schoice_v1 | schoice | A-Produccion/01-En-PreDesarrollo/interseccion-ingresos-gastos-v1 | 2026-05-03 | 176 |
+| migraciones_exteriores_metacognitivo_interpretacion_n2_schoice_v1 | schoice | A-Produccion/01-En-PreDesarrollo/migraciones-exteriores-lineas-n2 | 2026-05-04 | 175 |
+| rango_dispersion_botellas_metacognitivo_argumentacion_n2_schoice_v1 | schoice | A-Produccion/01-En-PreDesarrollo/Rango-Dispersion-Botellas-Agua | 2026-05-05 | 174 |
+| distribucion_contagiados_metacognitivo_interpretacion_n3_schoice_v1 | schoice | A-Produccion/01-En-PreDesarrollo/distribucion-contagiados-v1 | 2026-05-14 | 165 |
+| rango_colesterol_metacognitivo_interpretacion_n3_schoice_v1 | schoice | A-Produccion/01-En-PreDesarrollo/Rango-Colesterol-Pacientes | 2026-06-03 | 145 |
+| rango_colesterol_metacognitivo_interpretacion_n3_cloze_v1 | cloze | A-Produccion/01-En-PreDesarrollo/Rango-Colesterol-Pacientes/Cloze | 2026-06-05 | 143 |
+| grafica_funcion_lineal_metacognitivo_interpretacion_n3_schoice_v1 | schoice | A-Produccion/01-En-PreDesarrollo/SAI2-PS-26 | 2026-06-12 | 136 |
+| grafica_funcion_lineal_metacognitivo_interpretacion_n3_cloze_v1 | cloze | A-Produccion/01-En-PreDesarrollo/SAI2-PS-26/Cloze | 2026-06-13 | 135 |
+| grafica_funcion_lineal_metacognitivo_argumentacion_n3_schoice_neg_v1 | schoice | A-Produccion/01-En-PreDesarrollo/SAI2-PS-26/Neg | 2026-06-16 | 132 |
 
 ## Ya aplicados en aula
 
