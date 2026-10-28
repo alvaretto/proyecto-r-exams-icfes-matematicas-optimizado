@@ -26,12 +26,12 @@
 ```
 ┌─────────────────────────────────────────────────────┐
 │  CAPA 1: ICFES (fuente de verdad)                   │
-│  - .claude/CLAUDE.md      ← índice de 17 reglas     │
-│  - .claude/rules/         ← 17 reglas en detalle    │
-│  - .claude/agents/<X>.md  ← 8 agentes ICFES         │
+│  - .claude/CLAUDE.md      ← índice de reglas        │
+│  - .claude/rules/         ← reglas (compactas)      │
+│  - .claude/agents/<X>.md  ← 10 agentes ICFES        │
 │  - .claude/skills/<X>/    ← skills ICFES            │
 │  - .claude/hooks/*.sh     ← gate + post-validation  │
-│  - .claude/scripts/       ← workflow-state.sh, ... │
+│  - .claude/scripts/       ← workflow-state.sh, ...  │
 │  - tests/testthat/        ← suites de test          │
 └─────────────────────────────────────────────────────┘
                        ↑
@@ -190,6 +190,7 @@ Mueve el ejercicio a `A-Produccion/03-En-Produccion/<categoria>/`.
 | Sub-agente | Modelo | Cuándo invocar |
 |---|---|---|
 | `orquestador-schoice` | opus | Pipeline completo SCHOICE |
+| `orquestador-cloze` | opus | Pipeline completo CLOZE |
 | `ClasificadorICFES` | haiku | Clasificar 6 dimensiones ICFES |
 | `PedagogoICFES` | opus | Análisis pedagógico profundo |
 | `AgenteDetractor` | opus | Auditoría adversarial 8 dominios |
@@ -197,6 +198,7 @@ Mueve el ejercicio a `A-Produccion/03-En-Produccion/<categoria>/`.
 | `AgenteCorrectorCoherencia` | sonnet | Aplicar fixes de coherencia |
 | `AgenteDiagnosticador` | sonnet | Diagnóstico de errores complejos |
 | `adversario` | sonnet | Análisis adversarial general |
+| `auditor-visual-html` | sonnet | Auditoría visual masiva de salidas HTML (360 y 1024 px) |
 
 Ejemplo de invocación:
 ```python
@@ -250,9 +252,9 @@ RepositorioMatematicasICFES_R_Exams/
 │       ├── Infografía Principal.md
 │       └── Infografía-Principal.pdf
 ├── .claude/
-│   ├── CLAUDE.md                ← ÍNDICE de 17 reglas
-│   ├── rules/                   ← 17 reglas
-│   ├── agents/                  ← 8 ICFES + 60+ Ruflo
+│   ├── CLAUDE.md                ← ÍNDICE de las reglas críticas
+│   ├── rules/                   ← reglas, versión compacta (íntegro en docs/reglas/)
+│   ├── agents/                  ← 10 ICFES (invariante I-5) + 60+ Ruflo
 │   ├── skills/                  ← 25+ ICFES + 35+ Ruflo
 │   ├── commands/                ← Comandos personalizados
 │   ├── hooks/                   ← pre-write-rmd-gate.sh, post-exams2-validation.sh, ...
@@ -281,7 +283,7 @@ RepositorioMatematicasICFES_R_Exams/
 2. **NO usar `git commit --no-verify`** (regla `testing-obligatorio.md`).
 3. **NO ejecutar `npx ... init` sin backup previo** (regla #17).
 4. **NO auto-decidir Flujo B ni selección de lenguaje gráfico** (reglas #2 + #3, `flujo-b-obligatorio.md`, `graficador-secuencial.md`).
-5. **NO sobrescribir `.claude/CLAUDE.md`, `CLAUDE.md` raíz, `settings.json` sin verificar invariantes I-1 a I-7** (regla #17).
+5. **NO sobrescribir `.claude/CLAUDE.md`, `CLAUDE.md` raíz, `settings.json` sin verificar invariantes I-1 a I-10** (regla #17).
 
 Lista completa: `.claude/CLAUDE.md`.
 

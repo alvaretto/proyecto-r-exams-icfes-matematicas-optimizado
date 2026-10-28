@@ -315,10 +315,17 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 
 **Síntoma**: Solution dice "Opción A" pero answerlist marca (c) como correcta.
 **Causa**: `exshuffle: TRUE` re-mezcla opciones después de evaluar `r letra_correcta`.
-**Defensa preventiva**:
-- Si Solution referencia `r letra_correcta` o "Opción [A-D]" → `exshuffle: FALSE` + mezcla interna `sample()`.
-- `letra_correcta` se calcula DESPUÉS del `sample()`.
-- Validar con 100 semillas (regla #23) que coincide en TODAS.
+**Defensa preventiva** (actualizada el 2026-10-28). La de antes era: si la Solution cita la letra,
+usar `exshuffle: FALSE` con mezcla interna. La superó el Incidente C: Moodle vuelve a mezclar por su
+cuenta y la letra deja de coincidir igual. Hoy la regla #19 prohíbe citarla:
+- La Solution **no cita la letra**: identifica la correcta por su contenido (`descripcion_corta`,
+  código del error). Así el orden de las opciones deja de importar, también ante el re-shuffle de Moodle.
+- Con opciones de texto, `exshuffle: TRUE` (`codigo-rmd.md` #6; con `FALSE`, `ERR_C4`). La mezcla interna
+  con `sample()` y `exshuffle: FALSE` queda solo para opciones gráficas PNG (regla #4), y tampoco ahí
+  se cita la letra.
+- `letra_correcta` puede existir para logs y asserts, calculada DESPUÉS del `sample()`.
+- Verificación: FASE 2J del hook (`ERR_SOL_LETRA_*`) y multi-semilla con 100 semillas (regla #23):
+  la opción marcada es la correcta en TODAS.
 
 ### Incidente B · `INC-PANDOCBOUNDED` — `\pandocbounded` undefined en PDF (Error 16)
 
