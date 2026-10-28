@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# post-exams2-validation.sh (v6.2: el informe llega al modelo como JSON; 2I-2L con ruta relativa)
+# post-exams2-validation.sh (v6.3: el ejercicio se deduce del .Rmd; el hook no escribe en el repo ni sella)
 # Hook PostToolUse: ARSENAL COMPLETO DE VALIDACIONES POST-RENDERIZADO
 #
 # Corre después de cada comando Bash terminado con éxito cuyo texto renderiza un .Rmd literal
@@ -25,6 +25,17 @@
 #
 # 2G y 2H solo corren si las fases anteriores no dieron errores. El informe llega al modelo como JSON
 # (sección «ENTREGA DEL INFORME AL MODELO») y queda completo en ~/.cache/post-exams2-validation/.
+#
+# v6.3 (2026-10-28): el ejercicio se deduce del .Rmd, no del cwd. Hasta la v6.2 el hook tomaba el cwd
+# de la sesión por la carpeta del ejercicio: con la sesión abierta en otra carpeta sellaba los pasos 5
+# y 6 del ejercicio_state.json de esa carpeta, sin nota (25 de 42 estados del repo llevaban esa firma),
+# y dejaba el stress test, las vistas previas y los tabla_*.png que dibujan los validadores en su cwd
+# donde estuviera la sesión (p. ej. un stress_test_output/ de otro ejercicio en la raíz). Ahora manda
+# RMD_ABS, la ruta absoluta y canónica del .Rmd: de ahí salen EJ_DIR, PROJECT_DIR y el estado del
+# workflow. Cada corrida trabaja en $INFORME_DIR/<nombre>/<fecha>-<pid>/ (work/, preview/,
+# stress_test_output/, ORIGEN.txt, informe.txt; se conservan las 5 más recientes por ejercicio) y los
+# validadores corren con cwd en work/. El hook NO sella pasos: imprime el comando
+# `workflow-state.sh complete` con su nota. Invariante: el hook no escribe nada dentro del repo.
 # =============================================================================
 
 set -o pipefail
@@ -81,11 +92,7 @@ if [ -z "$RMD_FILE" ]; then
   exit 0
 fi
 
-# Determinar ruta del proyecto
-PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(git -C "$CWD" rev-parse --show-toplevel 2>/dev/null)}"
-if [ -z "$PROJECT_DIR" ]; then
-  exit 0
-fi
+# PROJECT_DIR se determina más abajo (v6.3), desde la carpeta del .Rmd y no desde el cwd de la sesión.
 
 # =============================================================================
 # ENTREGA DEL INFORME AL MODELO (v6.2)
@@ -143,7 +150,7 @@ for linea in crudo.splitlines():
 while lineas and lineas[-1] == "":
     lineas.pop()
 
-cabecera = (f"Arsenal post-render (post-exams2-validation.sh v6.2) sobre {nombre}.Rmd: "
+cabecera = (f"Arsenal post-render (post-exams2-validation.sh v6.3) sobre {nombre}.Rmd: "
             f"{errores} error(es), {advertencias} advertencia(s). Informe completo: {ruta}")
 cuerpo = "\n".join(lineas).strip()
 if largo(cabecera) + largo(cuerpo) + 2 > LIMITE:
@@ -206,20 +213,58 @@ fi
 
 RMD_BASENAME=$(basename "$RMD_FILE" .Rmd)
 
-# Las fases 2I-2L comprueban `[ -f "$RMD_FILE" ]` con la ruta tal como vino en el comando. Si el
-# proceso del hook no está en el cwd de la sesión, una ruta relativa no aparece y esas fases callan:
-# con el mismo .Rmd, 0 errores con ruta relativa y 2 con absoluta (2026-10-28).
-cd "$CWD" 2>/dev/null || true
+# El ejercicio es el del .Rmd, no el del cwd de la sesión (v6.3). RMD_ABS es la ruta absoluta y
+# canónica del .Rmd (si vino relativa, resuelta contra $CWD); EJ_DIR, su carpeta; RMD_MD5, la huella de
+# esta versión del archivo. De aquí salen el proyecto, el estado del workflow y el destino de todo lo
+# que el hook produce. $CWD queda para resolver una ruta relativa y para localizar lo que escribió el
+# comando renderizado (el PDF, dir=/texdir=).
+RMD_ABS=$(realpath -- "$RMD_PATH" 2>/dev/null)
+RMD_ABS="${RMD_ABS:-$RMD_PATH}"
+EJ_DIR=$(dirname "$RMD_ABS")
+RMD_MD5=$(md5sum -- "$RMD_ABS" 2>/dev/null | cut -d' ' -f1)
+
+# El proyecto (validadores, workflow-state.sh) es el de la carpeta del .Rmd, no el del cwd.
+PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(git -C "$EJ_DIR" rev-parse --show-toplevel 2>/dev/null)}"
+if [ -z "$PROJECT_DIR" ]; then
+  exit 0
+fi
 
 # Desde aquí todo lo que escribe el arsenal (stdout y stderr, también el de los Rscript) va al
 # informe. Al salir, por la vía que sea, el trap restaura los descriptores y entrega el JSON.
 INFORME_DIR="${POST_EXAMS2_INFORME_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/post-exams2-validation}"
 INFORME="$INFORME_DIR/${RMD_BASENAME}.txt"
-if ! { mkdir -p "$INFORME_DIR" && : > "$INFORME"; } 2>/dev/null; then
+
+# Directorio de la corrida (v6.3): work/ es el cwd de los validadores (lo que sus chunks escriban
+# cae ahí, no en el repo), preview/ guarda las vistas previas del PDF y stress_test_output/ la salida
+# de la FASE 2H. Si la caché no es escribible, todo cae a un directorio temporal.
+RUN_DIR="$INFORME_DIR/$RMD_BASENAME/$(date +%Y%m%d-%H%M%S)-$$"
+if ! { mkdir -p "$RUN_DIR/work" "$RUN_DIR/preview" "$RUN_DIR/stress_test_output" && : > "$INFORME"; } 2>/dev/null; then
   INFORME=$(mktemp "${TMPDIR:-/tmp}/post-exams2-XXXXXX.txt")
+  RUN_DIR=$(mktemp -d "${TMPDIR:-/tmp}/post-exams2-corrida-XXXXXX")
+  mkdir -p "$RUN_DIR/work" "$RUN_DIR/preview" "$RUN_DIR/stress_test_output"
 fi
+{ printf 'rmd: %s\n' "$RMD_ABS"; printf 'md5: %s\n' "$RMD_MD5"; } 2>/dev/null > "$RUN_DIR/ORIGEN.txt"
+
+# Poda: se conservan las 5 corridas más recientes de este ejercicio (los nombres empiezan por la
+# fecha, así que ordenar por nombre es ordenar por antigüedad). Solo se borran directorios con ese
+# formato de nombre, dentro de la caché del propio ejercicio.
+if [[ "$RUN_DIR" = "$INFORME_DIR/$RMD_BASENAME/"* ]]; then
+  mapfile -t CORRIDAS < <(find "$INFORME_DIR/$RMD_BASENAME" -mindepth 1 -maxdepth 1 -type d -name '[0-9]*-[0-9]*-[0-9]*' 2>/dev/null | sort)
+  N_VIEJAS=$(( ${#CORRIDAS[@]} - 5 ))
+  if [ "$N_VIEJAS" -gt 0 ]; then
+    for VIEJA in "${CORRIDAS[@]:0:$N_VIEJAS}"; do
+      rm -rf -- "$VIEJA"
+    done
+  fi
+fi
+
+# El proceso del hook trabaja en work/: cualquier escritura relativa cae ahí y no en el repo.
+cd "$RUN_DIR/work" || {
+  emitir_json aviso "post-exams2-validation.sh: no pude entrar en $RUN_DIR/work. El arsenal post-render NO corrió."
+  exit 0
+}
 exec 3>&1 4>&2 1>"$INFORME" 2>&1
-trap 'exec 1>&3 2>&4; emitir_json informe "$INFORME" "$RMD_BASENAME" "${ERRORES_TOTALES:-0}" "${ADVERTENCIAS_TOTALES:-0}"' EXIT
+trap 'exec 1>&3 2>&4; cp -f -- "$INFORME" "$RUN_DIR/informe.txt" 2>/dev/null; emitir_json informe "$INFORME" "$RMD_BASENAME" "${ERRORES_TOTALES:-0}" "${ADVERTENCIAS_TOTALES:-0}"' EXIT
 
 # =============================================================================
 # ENCABEZADO DEL ARSENAL
@@ -248,7 +293,7 @@ echo "│ FASE 2A: Coherencia Matemática                                │"
 echo "└───────────────────────────────────────────────────────────────┘"
 
 if [ -f "$SCRIPT_MATH" ]; then
-  MATH_OUTPUT=$(cd "$CWD" && Rscript "$SCRIPT_MATH" "$RMD_FILE" 2>&1)
+  MATH_OUTPUT=$(cd "$RUN_DIR/work" && Rscript "$SCRIPT_MATH" "$RMD_ABS" 2>&1)
   MATH_EXIT=$?
 
   if [ $MATH_EXIT -eq 0 ]; then
@@ -304,17 +349,17 @@ for DIR in "${SEARCH_DIRS[@]}"; do
 done
 
 if [ -n "$PDF_FOUND" ]; then
-  PREVIEW_PNG="$CWD/preview_${RMD_BASENAME}.png"
+  PREVIEW_PNG="$RUN_DIR/preview/preview_${RMD_BASENAME}.png"
 
   if command -v magick &>/dev/null; then
     magick -density 150 "$PDF_FOUND" -quality 90 "$PREVIEW_PNG" 2>/dev/null
     MAGICK_EXIT=$?
 
     if [ $MAGICK_EXIT -eq 0 ]; then
-      NUM_PAGES=$(ls -1 "${CWD}/preview_${RMD_BASENAME}"*.png 2>/dev/null | wc -l)
+      NUM_PAGES=$(ls -1 "$RUN_DIR/preview/preview_${RMD_BASENAME}"*.png 2>/dev/null | wc -l)
       echo "  ✓ Preview generado: $NUM_PAGES página(s)"
-      ls -1 "${CWD}/preview_${RMD_BASENAME}"*.png 2>/dev/null | while read f; do
-        echo "    → $(basename "$f")"
+      ls -1 "$RUN_DIR/preview/preview_${RMD_BASENAME}"*.png 2>/dev/null | while read f; do
+        echo "    → $f"
       done
     else
       echo "  ❌ Error al convertir PDF a PNG"
@@ -342,7 +387,7 @@ if [ -f "$SCRIPT_ARSENAL" ]; then
   echo "│ FASES 2C-2F: Arsenal Completo                                 │"
   echo "└───────────────────────────────────────────────────────────────┘"
 
-  ARSENAL_OUTPUT=$(cd "$CWD" && Rscript "$SCRIPT_ARSENAL" "$RMD_FILE" 2>&1)
+  ARSENAL_OUTPUT=$(cd "$RUN_DIR/work" && Rscript "$SCRIPT_ARSENAL" "$RMD_ABS" 2>&1)
   ARSENAL_EXIT=$?
 
   # Mostrar salida filtrada
@@ -382,7 +427,7 @@ if [ -f "$SCRIPT_MULTISEMILLA" ] && [ $ERRORES_TOTALES -eq 0 ]; then
   # N=100 = muestra estandar unica (.claude/rules/muestra-estandar-validacion.md).
   # El timeout del hook en settings.json subio a 300 s para que quepa: medido
   # 61 s en el ejercicio con el motor mas pesado del repo.
-  MULTISEED_OUTPUT=$(cd "$CWD" && Rscript "$SCRIPT_MULTISEMILLA" "$RMD_FILE" --n 100 2>&1)
+  MULTISEED_OUTPUT=$(cd "$RUN_DIR/work" && Rscript "$SCRIPT_MULTISEMILLA" "$RMD_ABS" --n 100 2>&1)
   MULTISEED_EXIT=$?
 
   echo "$MULTISEED_OUTPUT" | grep -E "Semillas|Fallos|Tasa|RESULTADO|ERR_ANS|ERR_SEM"
@@ -410,8 +455,8 @@ if [ -f "$SCRIPT_STRESS_TEST" ] && [ $ERRORES_TOTALES -eq 0 ]; then
   echo "│ FASE 2H: Stress Test Visual (10 semillas, renderizado + PNGs) │"
   echo "└───────────────────────────────────────────────────────────────┘"
 
-  STRESS_OUTPUT_DIR="$CWD/stress_test_output"
-  STRESS_OUTPUT=$(cd "$CWD" && Rscript "$SCRIPT_STRESS_TEST" "$RMD_FILE" --n 10 --output-dir "$STRESS_OUTPUT_DIR" 2>&1)
+  STRESS_OUTPUT_DIR="$RUN_DIR/stress_test_output"
+  STRESS_OUTPUT=$(cd "$RUN_DIR/work" && Rscript "$SCRIPT_STRESS_TEST" "$RMD_ABS" --n 10 --output-dir "$STRESS_OUTPUT_DIR" 2>&1)
   STRESS_EXIT=$?
 
   echo "$STRESS_OUTPUT" | grep -E "Semillas|Anomalías|VEREDICTO|PASA|FALLA|ADVERTENCIA|sospechosas"
@@ -426,6 +471,7 @@ if [ -f "$SCRIPT_STRESS_TEST" ] && [ $ERRORES_TOTALES -eq 0 ]; then
     echo "  3. Verificar visualmente los problemas reportados"
   else
     echo "  ✓ Stress Test Visual: Sin anomalías críticas"
+    echo "    Salida del stress test: $STRESS_OUTPUT_DIR"
   fi
 elif [ $ERRORES_TOTALES -gt 0 ]; then
   echo "  ⚠️  Stress Test Visual omitido (hay errores previos que resolver primero)"
@@ -445,9 +491,9 @@ PANDOC_BUG_FOUND=0
 SOL_BUG_FOUND=0
 
 # 2I.1 — Markdown sin width en el .Rmd (estático)
-if [ -f "$RMD_FILE" ]; then
+if [ -f "$RMD_ABS" ]; then
   # Patrón: !\[...\](...\.png) sin {width=...} inmediatamente después
-  IMG_HITS=$(grep -nE '!\[[^]]*\]\([^)]+\.(png|jpe?g|svg|pdf)\)' "$RMD_FILE" | \
+  IMG_HITS=$(grep -nE '!\[[^]]*\]\([^)]+\.(png|jpe?g|svg|pdf)\)' "$RMD_ABS" | \
              grep -vE '!\[[^]]*\]\([^)]+\.(png|jpe?g|svg|pdf)\)\{[^}]*width' || true)
   # Excluir comentarios R puros
   IMG_HITS=$(echo "$IMG_HITS" | grep -vE '^[0-9]+:\s*#' || true)
@@ -481,9 +527,31 @@ PB_DEF_RE='\\(providecommand|newcommand|renewcommand|def)[[:space:]]*\{?\\pandoc
 
 PB_USOS=""
 PB_DEFINIDO=0
-TEX_FILES=$(find "$CWD" -maxdepth 4 -name "*.tex" -newer "$RMD_FILE" 2>/dev/null)
+
+# Solo los .tex de ESTE render (v6.3): los directorios que el comando nombra (dir=, texdir=, con
+# comillas dobles o simples; los relativos, contra $CWD) y la carpeta de la corrida, a profundidad 2.
+# Hasta la v6.2 era `find "$CWD" -maxdepth 4 -name "*.tex" -newer "$RMD_FILE"`: un barrido del cwd de
+# la sesión que le atribuía a este ejercicio los .tex de cualquier otro más nuevos que su .Rmd. El
+# borde (?<![A-Za-z0-9_.]) evita que `dir` case dentro de edir=, texdir= o tdir=.
+valores_literales_del_comando() {
+  grep -oP "(?<![A-Za-z0-9_.])$1\s*=\s*(\"[^\"]*\"|'[^']*')" <<< "$COMMAND" \
+    | grep -oP "(\"[^\"]*\"|'[^']*')" | tr -d "\"'"
+}
+TEX_DIRS=()
+for ARG_DIR in dir texdir; do
+  while IFS= read -r D; do
+    [ -n "$D" ] || continue
+    [[ "$D" = /* ]] || D="$CWD/$D"
+    [ -d "$D" ] && TEX_DIRS+=("$D")
+  done < <(valores_literales_del_comando "$ARG_DIR")
+done
+if [ ${#TEX_DIRS[@]} -eq 0 ]; then
+  echo "  ⊘ FASE 2I: sin salida .tex del render que revisar (el comando no nombra dir=/texdir=)"
+fi
+TEX_DIRS+=("$RUN_DIR")
+TEX_FILES=$(find "${TEX_DIRS[@]}" -maxdepth 2 -name "*.tex" -newer "$RMD_ABS" 2>/dev/null)
 if [ -n "$TEX_FILES" ]; then
-  for tex in $TEX_FILES; do
+  while IFS= read -r tex; do
     if grep -qE "$PB_USO_RE" "$tex" 2>/dev/null; then
       PB_USOS="${PB_USOS} $(basename "$tex")"
     fi
@@ -492,7 +560,7 @@ if [ -n "$TEX_FILES" ]; then
     if grep -qE "$PB_DEF_RE" "$tex" 2>/dev/null; then
       PB_DEFINIDO=1
     fi
-  done
+  done <<< "$TEX_FILES"
 fi
 
 if [ -n "$PB_USOS" ] && [ $PB_DEFINIDO -eq 0 ]; then
@@ -507,9 +575,9 @@ elif [ -n "$PB_USOS" ]; then
 fi
 
 # 2I.3 — exshuffle: TRUE + Solution con letra explícita (estático)
-if [ -f "$RMD_FILE" ]; then
-  HAS_EXSHUFFLE_TRUE=$(grep -E '^[[:space:]]*exshuffle[[:space:]]*:[[:space:]]*TRUE' "$RMD_FILE" | head -1)
-  HAS_LETRA_REF=$(grep -nE '`r[[:space:]]+letra_correcta[[:space:]]*`|Opci[oó]n[[:space:]]+\*\*[A-D]\*\*|Opci[oó]n[[:space:]]+[A-D][[:space:]]*\(?CORRECTA' "$RMD_FILE" | head -3)
+if [ -f "$RMD_ABS" ]; then
+  HAS_EXSHUFFLE_TRUE=$(grep -E '^[[:space:]]*exshuffle[[:space:]]*:[[:space:]]*TRUE' "$RMD_ABS" | head -1)
+  HAS_LETRA_REF=$(grep -nE '`r[[:space:]]+letra_correcta[[:space:]]*`|Opci[oó]n[[:space:]]+\*\*[A-D]\*\*|Opci[oó]n[[:space:]]+[A-D][[:space:]]*\(?CORRECTA' "$RMD_ABS" | head -3)
 
   if [ -n "$HAS_EXSHUFFLE_TRUE" ] && [ -n "$HAS_LETRA_REF" ]; then
     SOL_BUG_FOUND=1
@@ -542,13 +610,13 @@ echo "└───────────────────────�
 
 LETRA_BUG_FOUND=0
 
-if [ -f "$RMD_FILE" ]; then
+if [ -f "$RMD_ABS" ]; then
   # Extraer SOLO la seccion Solution (entre 'Solution' y 'Meta-information')
   SOL_BLOCK=$(awk '
     /^Solution[[:space:]]*$/ { in_sol = 1; next }
     /^Meta-information[[:space:]]*$/ { in_sol = 0 }
     in_sol == 1 { print NR ":" $0 }
-  ' "$RMD_FILE")
+  ' "$RMD_ABS")
 
   if [ -n "$SOL_BLOCK" ]; then
     # P1+P2: backtick-r letra_correcta o letras[...]
@@ -616,9 +684,9 @@ echo "┌───────────────────────�
 echo "│ FASE 2K: Guard contador 'none' para tablas (E21, regla #20)   │"
 echo "└───────────────────────────────────────────────────────────────┘"
 
-if [ -f "$RMD_FILE" ]; then
-  TIENE_TABLA=$(grep -nE 'kable\(|format[[:space:]]*=[[:space:]]*"markdown"|cat\("\|' "$RMD_FILE" || true)
-  TIENE_GUARD=$(grep -nE 'newcounter\{none\}|@ifundefined\{c@none\}' "$RMD_FILE" || true)
+if [ -f "$RMD_ABS" ]; then
+  TIENE_TABLA=$(grep -nE 'kable\(|format[[:space:]]*=[[:space:]]*"markdown"|cat\("\|' "$RMD_ABS" || true)
+  TIENE_GUARD=$(grep -nE 'newcounter\{none\}|@ifundefined\{c@none\}' "$RMD_ABS" || true)
   if [ -n "$TIENE_TABLA" ] && [ -z "$TIENE_GUARD" ]; then
     ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
     echo "  ❌ ERR_TABLA_NONE: .Rmd con tabla markdown SIN guard del contador 'none'"
@@ -654,15 +722,15 @@ echo "┌───────────────────────�
 echo "│ FASE 2L: Gráficas-opción en gap CLOZE (V5, Incidente G)       │"
 echo "└───────────────────────────────────────────────────────────────┘"
 
-if [ -f "$RMD_FILE" ]; then
-  ES_CLOZE=$(grep -nE '^extype:[[:space:]]*cloze|^exclozetype:' "$RMD_FILE" || true)
+if [ -f "$RMD_ABS" ]; then
+  ES_CLOZE=$(grep -nE '^extype:[[:space:]]*cloze|^exclozetype:' "$RMD_ABS" || true)
   if [ -n "$ES_CLOZE" ]; then
     # Answerlist del ENUNCIADO = primer bloque Answerlist, antes de la seccion Solution.
     ENUNCIADO_AL=$(awk '
       /^Solution[[:space:]]*$/ { in_al=0; next }
       /^Answerlist[[:space:]]*$/ && !seen { in_al=1; seen=1; next }
       in_al { print }
-    ' "$RMD_FILE")
+    ' "$RMD_ABS")
     # Imagen markdown ![](...) dentro de las opciones del gap (directa o via cat()).
     IMG_EN_AL=$(echo "$ENUNCIADO_AL" | grep -nE '!\[[^]]*\]\(' || true)
     if [ -n "$IMG_EN_AL" ]; then
@@ -700,7 +768,7 @@ if [ -n "$RMD_FILE" ] && [ "$ERRORES_TOTALES" -eq 0 ]; then
   echo "│ FASE 2M: Auditoría visual HTML multi-semilla (schoice/cloze)  │"
   echo "└───────────────────────────────────────────────────────────────┘"
   echo "  Paso del workflow — ejecutar el auditor visual masivo:"
-  echo "    /auditor-visual-html \"$RMD_FILE\" 24"
+  echo "    /auditor-visual-html \"$RMD_ABS\" 24"
   echo "  (o agente subagent_type=\"auditor-visual-html\"). Renderiza N"
   echo "  versiones, captura móvil 360px + desktop 1024px y detecta fugas de"
   echo "  markup, math sin renderizar, desbordes/responsividad y anomalías."
@@ -719,10 +787,10 @@ if [ -n "$RMD_FILE" ]; then
   echo "│ FASE 2N: Detección estática diversidad cosmética (regla #22) │"
   echo "└───────────────────────────────────────────────────────────────┘"
   # Extraer bloque data_generation (entre el primer ```{r data_generation y el cierre ```)
-  DG_BLOCK=$(awk '/^```\{r[ ,].*data_generation/,/^```\s*$/' "$RMD_FILE" 2>/dev/null || true)
+  DG_BLOCK=$(awk '/^```\{r[ ,].*data_generation/,/^```\s*$/' "$RMD_ABS" 2>/dev/null || true)
   if [ -z "$DG_BLOCK" ]; then
     # Fallback: primer bloque R del archivo
-    DG_BLOCK=$(awk '/^```\{r/,/^```\s*$/' "$RMD_FILE" 2>/dev/null | head -80 || true)
+    DG_BLOCK=$(awk '/^```\{r/,/^```\s*$/' "$RMD_ABS" 2>/dev/null | head -80 || true)
   fi
   DIV_WARN=0
   # grep lee el bloque por here-string, no por `echo | grep -q`: con `set -o pipefail`, grep -q
@@ -735,7 +803,7 @@ if [ -n "$RMD_FILE" ]; then
       echo "  WARN_DIV_ESTATICA: se usa file.copy() para PNGs en data_generation."
       echo "    -> Los PNGs estáticos producen contenido idéntico en todas las semillas."
       echo "    -> Si son opciones gráficas, deben generarse dinámicamente (ggplot2/TikZ/reticulate)."
-      echo "    -> Ejecutar: Rscript .claude/scripts/validar_diversidad_sustantiva.R \"$RMD_FILE\" --n 100"
+      echo "    -> Ejecutar: Rscript .claude/scripts/validar_diversidad_sustantiva.R \"$RMD_ABS\" --n 100"
       DIV_WARN=1
     fi
   fi
@@ -743,7 +811,7 @@ if [ -n "$RMD_FILE" ]; then
   if ! grep -qE 'sample\(|runif\(|rnorm\(|rbinom\(|rpois\(|rexp\(|rgeom\(|rhyper\(|runif\(|pick_int\(|safe_sample\(' <<< "$DG_BLOCK"; then
     echo "  WARN_DIV_ESTATICA: no se detecta ninguna función de aleatorización en data_generation."
     echo "    -> Sin sample()/runif()/rnorm() la respuesta correcta puede ser invariante entre versiones."
-    echo "    -> Ejecutar: Rscript .claude/scripts/validar_diversidad_sustantiva.R \"$RMD_FILE\" --n 100"
+    echo "    -> Ejecutar: Rscript .claude/scripts/validar_diversidad_sustantiva.R \"$RMD_ABS\" --n 100"
     DIV_WARN=1
   fi
   if [ "$DIV_WARN" -eq 0 ]; then
@@ -871,23 +939,31 @@ fi
 echo ""
 echo "───────────────────────────────────────────────────────────────"
 echo "Previews a inspeccionar:"
-ls -1 "${CWD}/preview_${RMD_BASENAME}"*.png 2>/dev/null || echo "  (ninguno generado)"
+ls -1 "$RUN_DIR/preview/preview_${RMD_BASENAME}"*.png 2>/dev/null || echo "  (ninguno generado)"
 echo "───────────────────────────────────────────────────────────────"
 echo ""
 
 # =============================================================================
 # NUDGE: SIGUIENTE PASO DEL WORKFLOW (si existe ejercicio_state.json)
 # =============================================================================
-STATE_FILE="${CWD}/ejercicio_state.json"
+STATE_FILE="$EJ_DIR/ejercicio_state.json"
 if [ -f "$STATE_FILE" ]; then
-  # Auto-marcar renderizado y arsenal como completados
   WORKFLOW_SCRIPT="$PROJECT_DIR/.claude/scripts/workflow-state.sh"
-  if [ -f "$WORKFLOW_SCRIPT" ] && [ $ERRORES_TOTALES -eq 0 ]; then
-    bash "$WORKFLOW_SCRIPT" complete "$CWD" renderizado_4_formatos 2>/dev/null
-    bash "$WORKFLOW_SCRIPT" complete "$CWD" arsenal_post_render 2>/dev/null
-  fi
 
-  NEXT_STEP=$(bash "$WORKFLOW_SCRIPT" next "$CWD" 2>/dev/null)
+  # v6.3: el hook NO sella pasos ni escribe en $STATE_FILE. Hasta la v6.2 sellaba renderizado_4_formatos
+  # y arsenal_post_render, sin nota, sobre el ejercicio_state.json del cwd de la sesión tras cualquier
+  # render con 0 errores. Ahora propone el comando, con la nota que ata el sello a este informe y a
+  # esta versión del .Rmd, y lo ejecuta quien revisó el resultado. `next` es de solo lectura.
+  echo "SELLADO DEL WORKFLOW (manual: el hook no escribe en $STATE_FILE):"
+  if [ $ERRORES_TOTALES -eq 0 ]; then
+    echo "  bash .claude/scripts/workflow-state.sh complete \"$EJ_DIR\" arsenal_post_render --nota \"informe $INFORME · md5 $RMD_MD5 · $ERRORES_TOTALES errores / $ADVERTENCIAS_TOTALES advertencias\""
+  else
+    echo "  arsenal_post_render NO se sella: el arsenal tiene $ERRORES_TOTALES error(es); corregir y volver a renderizar."
+  fi
+  echo "  renderizado_4_formatos se sella solo con HTML, PDF, DOCX y Moodle (NOPS es N/A en un cloze)"
+  echo ""
+
+  NEXT_STEP=$(bash "$WORKFLOW_SCRIPT" next "$EJ_DIR" 2>/dev/null)
   if [ -n "$NEXT_STEP" ]; then
     echo "╔═══════════════════════════════════════════════════════════════╗"
     echo "║  SIGUIENTE PASO OBLIGATORIO DEL WORKFLOW                     ║"
