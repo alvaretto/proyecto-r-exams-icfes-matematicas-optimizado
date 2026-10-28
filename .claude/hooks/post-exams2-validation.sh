@@ -1,10 +1,11 @@
 #!/bin/bash
 # =============================================================================
-# post-exams2-validation.sh (v6.1: activación, 2N y 2O sin `echo | grep -q` bajo pipefail)
+# post-exams2-validation.sh (v6.2: el informe llega al modelo como JSON; 2I-2L con ruta relativa)
 # Hook PostToolUse: ARSENAL COMPLETO DE VALIDACIONES POST-RENDERIZADO
 #
-# Se activa AUTOMÁTICAMENTE después de CADA comando Bash que contenga exams2*
-# Ejecuta TODAS las validaciones SIN EXCEPCIÓN:
+# Corre después de cada comando Bash terminado con éxito cuyo texto renderiza un .Rmd literal
+# (`exams2*("archivo.Rmd")`). Si el comando falla, Claude Code dispara PostToolUseFailure y este
+# hook no corre. Fases:
 #
 # FASE 2A: Coherencia Matemática (.R script)
 # FASE 2B: Preview Visual (PDF → PNG)
@@ -12,7 +13,7 @@
 # FASE 2D: Ortografía Española (tildes)
 # FASE 2E: Metadatos ICFES (6 dimensiones)
 # FASE 2F: Estructura Metacognitiva (Solution completa)
-# FASE 2G: Multi-semilla rápida (20 semillas, Nivel 5)
+# FASE 2G: Multi-semilla rápida (100 semillas, Nivel 5; regla #23)
 # FASE 2H: Stress Test Visual (10 semillas, renderizado real + PNGs)
 # FASE 2I: Detección \pandocbounded en .tex y `![]()` sin width en .Rmd (Errores 16-17)
 # FASE 2J: Letter-independence en Solution (Error 19, regla #19)
@@ -22,8 +23,8 @@
 # FASE 2N: Detección ESTÁTICA de diversidad cosmética (regla #22 — WARN_DIV_ESTATICA)
 # FASE 2O: Glifos Unicode que rompen pdflatex (ERR_GLIFO_LATEX)
 #
-# GARANTÍA: Toda renderización activa TODAS las fases
-# PERMANENTE: No hay forma de saltarse estas validaciones
+# 2G y 2H solo corren si las fases anteriores no dieron errores. El informe llega al modelo como JSON
+# (sección «ENTREGA DEL INFORME AL MODELO») y queda completo en ~/.cache/post-exams2-validation/.
 # =============================================================================
 
 set -o pipefail
@@ -86,6 +87,109 @@ if [ -z "$PROJECT_DIR" ]; then
   exit 0
 fi
 
+# =============================================================================
+# ENTREGA DEL INFORME AL MODELO (v6.2)
+# =============================================================================
+# Con exit 0, Claude Code manda el texto plano de un PostToolUse al log de depuración, no al modelo
+# (https://code.claude.com/docs/en/hooks.md#exit-code-0): hasta la v6.1 este informe no lo leía
+# nadie (verificado el 2026-10-28). Desde la v6.2 el hook escribe en stdout un único objeto JSON:
+#   - hookSpecificOutput.additionalContext: el informe sin marcos o, si no cabe, sus líneas clave.
+#     Claude Code corta ese campo en 10 000 caracteres y del exceso solo muestra una vista previa de
+#     2 000, así que el hook se queda en 9 000.
+#   - decision "block" + reason, si hay errores: Claude Code pone la razón junto al resultado.
+#   - systemMessage: una línea para el usuario.
+# El informe completo queda en $POST_EXAMS2_INFORME_DIR (por defecto ~/.cache/post-exams2-validation/).
+# Test: tests/testthat/test_post_exams2_informe.R.
+emitir_json() {
+  # emitir_json aviso <texto>
+  # emitir_json informe <ruta_del_informe> <nombre> <errores> <advertencias>
+  python3 - "$@" <<'PY'
+import json, re, sys
+
+LIMITE = 9000
+
+
+def largo(texto):
+    # Unidades UTF-16, como mide una cadena de JavaScript.
+    return len(texto.encode("utf-16-le")) // 2
+
+
+if sys.argv[1] == "aviso":
+    texto = sys.argv[2]
+    print(json.dumps({"systemMessage": texto,
+                      "hookSpecificOutput": {"hookEventName": "PostToolUse",
+                                             "additionalContext": texto}},
+                     ensure_ascii=False))
+    sys.exit(0)
+
+ruta, nombre = sys.argv[2], sys.argv[3]
+errores, advertencias = int(sys.argv[4] or 0), int(sys.argv[5] or 0)
+try:
+    with open(ruta, encoding="utf-8", errors="replace") as f:
+        crudo = f.read()
+except OSError:
+    crudo = ""
+
+# Fuera colores, líneas que solo son marco y los bordes de las cajas.
+crudo = re.sub(r"\x1b\[[0-9;]*[A-Za-z]", "", crudo)
+lineas = []
+for linea in crudo.splitlines():
+    if re.fullmatch(r"[\s╔╗╚╝╠╣═║┌┐└┘─│]*", linea):
+        if lineas and lineas[-1] != "":
+            lineas.append("")
+        continue
+    linea = re.sub(r"^\s*[║│]\s*", "", linea)
+    lineas.append(re.sub(r"\s*[║│]\s*$", "", linea).rstrip())
+while lineas and lineas[-1] == "":
+    lineas.pop()
+
+cabecera = (f"Arsenal post-render (post-exams2-validation.sh v6.2) sobre {nombre}.Rmd: "
+            f"{errores} error(es), {advertencias} advertencia(s). Informe completo: {ruta}")
+cuerpo = "\n".join(lineas).strip()
+if largo(cabecera) + largo(cuerpo) + 2 > LIMITE:
+    # Resumen: de las fases, los encabezados y las líneas con marca (más dos de detalle tras cada
+    # ❌); el bloque final (resumen, órdenes y previews), entero.
+    corte = max([i for i, l in enumerate(lineas) if "RESUMEN FINAL" in l], default=len(lineas))
+    marca = re.compile(r"FASE 2|❌|⚠|ERR_|WARN_|ERROR")
+    sel, detalle = [], 0
+    for linea in lineas[:corte]:
+        if marca.search(linea):
+            sel.append(linea)
+            detalle = 2 if "❌" in linea else 0
+        elif detalle and linea.strip():
+            sel.append(linea)
+            detalle -= 1
+    cabecera += ("\n(Resumido para caber en el contexto: de cada fase, el encabezado y las líneas con "
+                 "❌, ⚠️, ERR_, WARN_ o ERROR; el resto está en el informe completo.)")
+    final = "\n".join(lineas[corte:])
+    nota = "[… recortado: ver el informe completo]"
+    libre = LIMITE - largo(cabecera) - largo(final) - largo(nota) - 6
+    tomadas, usado = [], 0
+    for linea in sel:
+        if usado + largo(linea) + 1 > libre:
+            tomadas.append(nota)
+            break
+        tomadas.append(linea)
+        usado += largo(linea) + 1
+    cuerpo = "\n".join(tomadas) + "\n\n" + final
+contexto = cabecera + "\n\n" + cuerpo
+if largo(contexto) > LIMITE:
+    contexto = contexto[:LIMITE - 50] + "\n[… recortado]"
+
+salida = {
+    "systemMessage": (f"Arsenal post-render de {nombre}.Rmd: {errores} error(es), "
+                      f"{advertencias} advertencia(s). Informe: {ruta}"),
+    "hookSpecificOutput": {"hookEventName": "PostToolUse", "additionalContext": contexto},
+}
+if errores > 0:
+    salida["decision"] = "block"
+    salida["reason"] = (f"El arsenal post-render encontró {errores} error(es) en {nombre}.Rmd. "
+                        "Corregirlos y volver a renderizar antes de continuar: el detalle está en el "
+                        f"contexto adicional de este hook y el informe completo en {ruta}.")
+print(json.dumps(salida, ensure_ascii=False))
+PY
+}
+
 # Construir ruta completa del .Rmd
 if [[ "$RMD_FILE" = /* ]]; then
   RMD_PATH="$RMD_FILE"
@@ -94,10 +198,28 @@ else
 fi
 
 if [ ! -f "$RMD_PATH" ]; then
+  # Hasta la v6.1 salía callado: un render con el .Rmd fuera del cwd de la sesión (por ejemplo, tras
+  # un `cd` dentro del mismo comando) dejaba el arsenal sin correr y nadie se enteraba.
+  emitir_json aviso "post-exams2-validation.sh: el comando renderiza «$RMD_FILE», pero ese archivo no existe visto desde el cwd de la sesión ($CWD). El arsenal post-render NO corrió; para que corra, renderizar con la ruta absoluta del .Rmd."
   exit 0
 fi
 
 RMD_BASENAME=$(basename "$RMD_FILE" .Rmd)
+
+# Las fases 2I-2L comprueban `[ -f "$RMD_FILE" ]` con la ruta tal como vino en el comando. Si el
+# proceso del hook no está en el cwd de la sesión, una ruta relativa no aparece y esas fases callan:
+# con el mismo .Rmd, 0 errores con ruta relativa y 2 con absoluta (2026-10-28).
+cd "$CWD" 2>/dev/null || true
+
+# Desde aquí todo lo que escribe el arsenal (stdout y stderr, también el de los Rscript) va al
+# informe. Al salir, por la vía que sea, el trap restaura los descriptores y entrega el JSON.
+INFORME_DIR="${POST_EXAMS2_INFORME_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/post-exams2-validation}"
+INFORME="$INFORME_DIR/${RMD_BASENAME}.txt"
+if ! { mkdir -p "$INFORME_DIR" && : > "$INFORME"; } 2>/dev/null; then
+  INFORME=$(mktemp "${TMPDIR:-/tmp}/post-exams2-XXXXXX.txt")
+fi
+exec 3>&1 4>&2 1>"$INFORME" 2>&1
+trap 'exec 1>&3 2>&4; emitir_json informe "$INFORME" "$RMD_BASENAME" "${ERRORES_TOTALES:-0}" "${ADVERTENCIAS_TOTALES:-0}"' EXIT
 
 # =============================================================================
 # ENCABEZADO DEL ARSENAL
@@ -269,7 +391,7 @@ if [ -f "$SCRIPT_MULTISEMILLA" ] && [ $ERRORES_TOTALES -eq 0 ]; then
     ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
     echo "  ❌ Multi-semilla: FALLOS detectados en alguna(s) semilla(s)"
   else
-    echo "  ✓ Multi-semilla: 20/20 semillas aprobadas"
+    echo "  ✓ Multi-semilla: 100/100 semillas aprobadas"
   fi
 elif [ $ERRORES_TOTALES -gt 0 ]; then
   echo "  ⚠️  Multi-semilla omitida (hay errores previos que resolver primero)"

@@ -371,6 +371,12 @@ suites <- list(
     critico = TRUE,
     watch = c("barras-campeonato-baloncesto-n3", "verificar_dibujo_clave",
               "test_barras_campeonato_cloze")
+  ),
+  list(
+    nombre = "Hook post-render: el informe llega al modelo en JSON, avisa si no halla el .Rmd y 2I-2L con ruta relativa (v6.2)",
+    archivo = "tests/testthat/test_post_exams2_informe.R",
+    critico = TRUE,
+    watch = c("post-exams2-validation", "test_post_exams2_informe")
   )
 )
 
