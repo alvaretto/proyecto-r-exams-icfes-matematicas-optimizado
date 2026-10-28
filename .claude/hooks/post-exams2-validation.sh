@@ -197,6 +197,14 @@ print(json.dumps(salida, ensure_ascii=False))
 PY
 }
 
+# Valores literales de <argumento>="..." o <argumento>='...' en el comando renderizado, uno por línea
+# y sin comillas (v6.3). El borde (?<![A-Za-z0-9_.]) evita que `dir` case dentro de edir=, texdir= o
+# tdir=: hasta la v6.2 la 2B tomaba el valor del primero que apareciera, fuera cual fuera su nombre.
+valores_literales_del_comando() {
+  grep -oP "(?<![A-Za-z0-9_.])$1\s*=\s*(\"[^\"]*\"|'[^']*')" <<< "$COMMAND" \
+    | grep -oP "(\"[^\"]*\"|'[^']*')" | tr -d "\"'"
+}
+
 # Construir ruta completa del .Rmd
 if [[ "$RMD_FILE" = /* ]]; then
   RMD_PATH="$RMD_FILE"
@@ -228,6 +236,19 @@ PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(git -C "$EJ_DIR" rev-parse --show-toplevel 
 if [ -z "$PROJECT_DIR" ]; then
   exit 0
 fi
+
+# Entorno de R de los validadores (v6.3). Los Rscript del arsenal corren con cwd en work/, donde no hay
+# .Rprofile ni .Renviron: sin esto leerían los del usuario (~) y no los del proyecto. Con R_PROFILE_USER
+# y R_ENVIRON_USER apuntando a los del proyecto se reproduce el entorno de una sesión abierta en la raíz
+# (.libPaths con ~/R/library, RETICULATE_PYTHON=/usr/bin/python3, sin venv gestionado, digits=4,
+# scipen=999, OutDec "."). En la v6.2 ese entorno dependía del cwd: el del proyecto desde la raíz, el
+# del usuario desde la carpeta de un ejercicio. Cada variable se fija solo si su archivo existe. La 2O
+# corre con `Rscript --vanilla`, que ignora ambos archivos a propósito: no la afecta.
+# LIMITACIÓN: desde work/ un chunk que lea archivos relativos a la carpeta del .Rmd no los encuentra,
+# igual que en una sesión abierta en la raíz con la v6.2.
+ENV_R=()
+[ -f "$PROJECT_DIR/.Rprofile" ] && ENV_R+=("R_PROFILE_USER=$PROJECT_DIR/.Rprofile")
+[ -f "$PROJECT_DIR/.Renviron" ] && ENV_R+=("R_ENVIRON_USER=$PROJECT_DIR/.Renviron")
 
 # Desde aquí todo lo que escribe el arsenal (stdout y stderr, también el de los Rscript) va al
 # informe. Al salir, por la vía que sea, el trap restaura los descriptores y entrega el JSON.
@@ -293,7 +314,7 @@ echo "│ FASE 2A: Coherencia Matemática                                │"
 echo "└───────────────────────────────────────────────────────────────┘"
 
 if [ -f "$SCRIPT_MATH" ]; then
-  MATH_OUTPUT=$(cd "$RUN_DIR/work" && Rscript "$SCRIPT_MATH" "$RMD_ABS" 2>&1)
+  MATH_OUTPUT=$(cd "$RUN_DIR/work" && env "${ENV_R[@]}" Rscript "$SCRIPT_MATH" "$RMD_ABS" 2>&1)
   MATH_EXIT=$?
 
   if [ $MATH_EXIT -eq 0 ]; then
@@ -320,10 +341,8 @@ echo "│ FASE 2B: Preview Visual (PDF → PNG)                           │"
 echo "└───────────────────────────────────────────────────────────────┘"
 
 # Buscar PDF generado
-PDF_DIR=$(echo "$COMMAND" | grep -oP 'dir\s*=\s*"[^"]*"' | head -1 | grep -oP '"[^"]*"' | tr -d '"')
-if [ -z "$PDF_DIR" ]; then
-  PDF_DIR=$(echo "$COMMAND" | grep -oP "dir\s*=\s*'[^']*'" | head -1 | grep -oP "'[^']*'" | tr -d "'")
-fi
+# El valor de dir= con borde de palabra (v6.3): no casa dentro de edir=, texdir= ni tdir=.
+PDF_DIR=$(valores_literales_del_comando dir | sed -n '1p')
 
 PDF_FOUND=""
 SEARCH_DIRS=()
@@ -387,7 +406,7 @@ if [ -f "$SCRIPT_ARSENAL" ]; then
   echo "│ FASES 2C-2F: Arsenal Completo                                 │"
   echo "└───────────────────────────────────────────────────────────────┘"
 
-  ARSENAL_OUTPUT=$(cd "$RUN_DIR/work" && Rscript "$SCRIPT_ARSENAL" "$RMD_ABS" 2>&1)
+  ARSENAL_OUTPUT=$(cd "$RUN_DIR/work" && env "${ENV_R[@]}" Rscript "$SCRIPT_ARSENAL" "$RMD_ABS" 2>&1)
   ARSENAL_EXIT=$?
 
   # Mostrar salida filtrada
@@ -427,7 +446,7 @@ if [ -f "$SCRIPT_MULTISEMILLA" ] && [ $ERRORES_TOTALES -eq 0 ]; then
   # N=100 = muestra estandar unica (.claude/rules/muestra-estandar-validacion.md).
   # El timeout del hook en settings.json subio a 300 s para que quepa: medido
   # 61 s en el ejercicio con el motor mas pesado del repo.
-  MULTISEED_OUTPUT=$(cd "$RUN_DIR/work" && Rscript "$SCRIPT_MULTISEMILLA" "$RMD_ABS" --n 100 2>&1)
+  MULTISEED_OUTPUT=$(cd "$RUN_DIR/work" && env "${ENV_R[@]}" Rscript "$SCRIPT_MULTISEMILLA" "$RMD_ABS" --n 100 2>&1)
   MULTISEED_EXIT=$?
 
   echo "$MULTISEED_OUTPUT" | grep -E "Semillas|Fallos|Tasa|RESULTADO|ERR_ANS|ERR_SEM"
@@ -456,7 +475,7 @@ if [ -f "$SCRIPT_STRESS_TEST" ] && [ $ERRORES_TOTALES -eq 0 ]; then
   echo "└───────────────────────────────────────────────────────────────┘"
 
   STRESS_OUTPUT_DIR="$RUN_DIR/stress_test_output"
-  STRESS_OUTPUT=$(cd "$RUN_DIR/work" && Rscript "$SCRIPT_STRESS_TEST" "$RMD_ABS" --n 10 --output-dir "$STRESS_OUTPUT_DIR" 2>&1)
+  STRESS_OUTPUT=$(cd "$RUN_DIR/work" && env "${ENV_R[@]}" Rscript "$SCRIPT_STRESS_TEST" "$RMD_ABS" --n 10 --output-dir "$STRESS_OUTPUT_DIR" 2>&1)
   STRESS_EXIT=$?
 
   echo "$STRESS_OUTPUT" | grep -E "Semillas|Anomalías|VEREDICTO|PASA|FALLA|ADVERTENCIA|sospechosas"
@@ -531,12 +550,8 @@ PB_DEFINIDO=0
 # Solo los .tex de ESTE render (v6.3): los directorios que el comando nombra (dir=, texdir=, con
 # comillas dobles o simples; los relativos, contra $CWD) y la carpeta de la corrida, a profundidad 2.
 # Hasta la v6.2 era `find "$CWD" -maxdepth 4 -name "*.tex" -newer "$RMD_FILE"`: un barrido del cwd de
-# la sesión que le atribuía a este ejercicio los .tex de cualquier otro más nuevos que su .Rmd. El
-# borde (?<![A-Za-z0-9_.]) evita que `dir` case dentro de edir=, texdir= o tdir=.
-valores_literales_del_comando() {
-  grep -oP "(?<![A-Za-z0-9_.])$1\s*=\s*(\"[^\"]*\"|'[^']*')" <<< "$COMMAND" \
-    | grep -oP "(\"[^\"]*\"|'[^']*')" | tr -d "\"'"
-}
+# la sesión que le atribuía a este ejercicio los .tex de cualquier otro más nuevos que su .Rmd. Los
+# valores salen de valores_literales_del_comando (definida arriba, con borde de palabra).
 TEX_DIRS=()
 for ARG_DIR in dir texdir; do
   while IFS= read -r D; do
@@ -953,10 +968,12 @@ if [ -f "$STATE_FILE" ]; then
   # v6.3: el hook NO sella pasos ni escribe en $STATE_FILE. Hasta la v6.2 sellaba renderizado_4_formatos
   # y arsenal_post_render, sin nota, sobre el ejercicio_state.json del cwd de la sesión tras cualquier
   # render con 0 errores. Ahora propone el comando, con la nota que ata el sello a este informe y a
-  # esta versión del .Rmd, y lo ejecuta quien revisó el resultado. `next` es de solo lectura.
+  # esta versión del .Rmd, y lo ejecuta quien revisó el resultado. La nota cita la copia de la corrida
+  # ($RUN_DIR/informe.txt), que el render siguiente no pisa, y no <nombre>.txt, que sí se pisa.
+  # `next` es de solo lectura.
   echo "SELLADO DEL WORKFLOW (manual: el hook no escribe en $STATE_FILE):"
   if [ $ERRORES_TOTALES -eq 0 ]; then
-    echo "  bash .claude/scripts/workflow-state.sh complete \"$EJ_DIR\" arsenal_post_render --nota \"informe $INFORME · md5 $RMD_MD5 · $ERRORES_TOTALES errores / $ADVERTENCIAS_TOTALES advertencias\""
+    echo "  bash .claude/scripts/workflow-state.sh complete \"$EJ_DIR\" arsenal_post_render --nota \"informe $RUN_DIR/informe.txt · md5 $RMD_MD5 · $ERRORES_TOTALES errores / $ADVERTENCIAS_TOTALES advertencias\""
   else
     echo "  arsenal_post_render NO se sella: el arsenal tiene $ERRORES_TOTALES error(es); corregir y volver a renderizar."
   fi
