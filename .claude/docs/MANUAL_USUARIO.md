@@ -2,8 +2,8 @@
 
 > Manual operativo del repositorio ICFES R/exams. Si vas a generar, revisar o promover un ejercicio, este es el archivo a leer primero.
 
-**Versión del manual:** 1.0
-**Fecha:** 2026-05-03
+**Versión del manual:** 1.1 (2026-10-28: cifras de reglas, agentes, invariantes y hooks; comandos que faltaban en la sección 6)
+**Fecha:** 2026-10-28
 **Para Claude Code 2026 con Ruflo (claude-flow v3) instalado en convivencia (ADR-001)**
 
 ---
@@ -218,13 +218,18 @@ Ver `.claude/docs/COMANDOS_Y_SKILLS.md` para el catálogo completo. Resumen:
 | `/analizar-icfes` | skill | opus | Clasificación 6D + decisión Flujo B |
 | `/generar-schoice` | skill | opus | Generar .Rmd SCHOICE metacognitivo (11 pasos) |
 | `/generar-cloze` | skill | opus | Generar .Rmd CLOZE metacognitivo |
+| `/orquestador-schoice` | command | opus (agente) | Pipeline end-to-end SCHOICE: 11 pasos, 3 pausas humanas |
+| `/orquestador-cloze` | command | opus (agente) | Pipeline end-to-end CLOZE: 11 pasos, 3 pausas humanas |
 | `/revisar-schoice` | skill | sonnet | Revisar .Rmd existente (pasos 4-11) |
 | `/revisar-cloze` | skill | sonnet | Revisar .Rmd CLOZE existente |
 | `/skill-retroalimentacion` | skill | opus | Generar Solution científica |
 | `/validar-pedagogico` | skill | opus | Análisis pedagógico (consultivo) |
+| `/skill-detractor` | skill | opus | Revisión adversarial en 8 dominios (FASE 2C) |
+| `/detractor-hetero` | command | DeepSeek → GLM → GPT → local | Segundo detractor de otra familia de modelos (FASE 2C-bis; complementa, no sustituye) |
 | `/adversario` | command | sonnet | Auditoría adversarial |
 | `/auto-refinar-grafico` | skill | sonnet | Workflow B: TikZ→Python→R hasta 98% |
 | `/estado-graficador` | skill | haiku | Ver estado del workflow B |
+| `/exportar-graficos` | command | el de la sesión | Archivos finales y reporte consolidado del workflow B |
 | `/stress-test-visual` | skill | sonnet | Renderizar N semillas + análisis |
 | `/diagnosticar-errores` | skill | sonnet | Diagnóstico con `patrones-errores-conocidos.md` |
 | `/validar-renderizado` | skill | haiku | Ejecutar exams2* y reportar |
@@ -269,7 +274,7 @@ RepositorioMatematicasICFES_R_Exams/
 │   │   ├── MANUAL_USUARIO.md    ← Este archivo
 │   │   ├── patrones-errores-conocidos.md
 │   │   └── ...
-│   ├── settings.json            ← Hooks (3 Pre + 2 Post + Ruflo handlers)
+│   ├── settings.json            ← Hooks ICFES (2 PreToolUse, 1 PostToolUse, 1 SubagentStop) + handlers de Ruflo
 │   └── settings.local.json      ← Permissions locales
 ├── CLAUDE.md                    ← ICFES priority + Ruflo descriptivo
 └── CLAUDE.local.md              ← Local-only (gitignored)
