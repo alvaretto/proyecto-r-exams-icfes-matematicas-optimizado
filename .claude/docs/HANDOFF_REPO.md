@@ -6,10 +6,12 @@
 
 ## Estado al cierre del 2026-10-28
 
-- Rama `feat/plantillas-oficiales-rexams`, empujada a `origin`; local y remoto en `80d8e0ac`.
+- Rama `feat/plantillas-oficiales-rexams`, empujada a `origin`. Al cierre, local y remoto quedan
+  iguales; el último commit es el de este archivo.
 - Suite completa: 44/44 antes de los commits de la mañana (1424 s). Después del merge del hook v6.3
   corrió dos veces y dio 45/46 en las dos. Cada vez falló una suite distinta y ninguna por el hook
-  (ver «Suite completa tras el merge»).
+  (ver «Suite completa tras el merge»). Corregidas las dos causas, la corrida sobre `a25a7d0d` dio
+  **46/46**.
 - Cada push pasó su pre-push en modo rápido. El último ejecutó 18 suites y saltó 28. Las 18 pasaron,
   entre ellas las dos que habían fallado.
 
@@ -159,7 +161,7 @@ formatos existen y abren, y el informe del hook se leyó); `workflow-state.sh st
 con ⚠. El estado de `03-En-Produccion/` está en una carpeta inmutable: su re-verificación también es por
 artefacto, no por edición. Un sello nuevo lleva `--nota`; el hook v6.3 imprime el comando.
 
-## Suite completa tras el merge (45/46, dos veces)
+## Suite completa tras el merge (45/46 dos veces; 46/46 al cierre)
 
 1. **Primera corrida: `test_nomenclatura_rmd.R:277`.**
    - El worktree del agente vive *dentro* del repo, en `.claude/worktrees/agent-<id>/`, y el test
@@ -177,8 +179,7 @@ artefacto, no por edición. Un sello nuevo lleva `--nota`; el hook v6.3 imprime 
    - Corregido en `80d8e0ac`: el test exige el valor exacto fuera de un empate y acepta cualquiera de los
      dos vecinos en un empate. Fallos con la aserción nueva: 0 de 49410.
 
-La suite completa no se volvió a correr después de `80d8e0ac`. El pre-push de ese commit ejecutó 18
-suites, entre ellas las dos de arriba, y todas pasaron.
+Con los dos arreglos, la suite completa volvió a correr sobre `a25a7d0d`: **46/46**, en 1357 s.
 
 ## Cómo verificar el estado
 
@@ -223,7 +224,8 @@ Rscript tests/testthat/test_post_exams2_cwd.R      # el ejercicio sale del .Rmd;
 5. **Ramas y worktrees ajenos.** Las ramas `worktree-agent-a03756997b0850963` y
    `worktree-agent-a550e94592d0354aa` son de sesiones anteriores. Además hay siete worktrees de Cursor en
    `~/.cursor/worktrees/`. No se tocaron.
-6. **Una suite completa limpia (46/46) después de `80d8e0ac`.**
+6. ~~Una suite completa limpia (46/46) después de `80d8e0ac`~~. **Cerrado:** el 2026-10-28 corrió sobre
+   `a25a7d0d` y dio 46/46, en 1357 s (cobertura del 100 %, según el runner).
 
 ## Respaldos del día (fuera de git, regla #17)
 
