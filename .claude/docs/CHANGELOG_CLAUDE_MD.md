@@ -8,6 +8,19 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.30.1 (2026-10-28)
+
+- **HANDOFF general del repo:** `.claude/docs/HANDOFF_REPO.md`, para retomar el trabajo de
+  infraestructura que no pertenece a un ejercicio. Frase disparadora: «Continúa con el repo». Recoge:
+  - el estado al cierre del 2026-10-28, con los commits del día;
+  - dónde está el detalle de cada cambio;
+  - cómo verificar, incluida una prueba viva del hook sin efectos laterales;
+  - los pendientes que decide el usuario;
+  - los respaldos del día.
+
+  Se enlaza desde la tabla «Referencias Rápidas» de este índice y desde
+  `.claude/docs/INDICE_DOCUMENTACION.md`.
+
 ### Cambios v3.30.0 (2026-10-28)
 
 - **El informe del hook post-render llega al modelo (hook v6.2).** Con exit 0, Claude Code manda el

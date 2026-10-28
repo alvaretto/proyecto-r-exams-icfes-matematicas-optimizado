@@ -172,6 +172,7 @@ A-Produccion/
 | Saber si un canal es estructural antes de rediseñar | .claude/rules/diversidad-sustantiva.md §P7-F |
 | Entender por qué un cero puede no probar nada | .claude/docs/patrones-errores-conocidos.md Error 37 |
 | Historial de cambios de este índice | `.claude/docs/CHANGELOG_CLAUDE_MD.md` |
+| Retomar trabajo de infraestructura del repo («Continúa con el repo») | `.claude/docs/HANDOFF_REPO.md` |
 
 ### ⚙️ Configuración del Sistema
 
@@ -184,7 +185,7 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.30.0 (hook post-render v6.2: su informe llega al modelo; tabla de suites generada y vigilada)
+**Versión**: 3.30.1 (HANDOFF general del repo en `.claude/docs/HANDOFF_REPO.md`)
 **Fecha**: 2026-10-28
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)

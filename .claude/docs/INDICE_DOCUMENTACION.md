@@ -25,6 +25,12 @@
    - Recursos adicionales
    - **Tiempo de lectura:** 20-30 minutos
 
+### Si vienes a retomar trabajo de infraestructura (no de un ejercicio):
+
+- **[HANDOFF_REPO.md](HANDOFF_REPO.md)**: estado, cambios recientes, verificación y pendientes de
+  `.claude/`, tests y documentación. Frase disparadora: «Continúa con el repo». Cada ejercicio lleva su
+  propio `HANDOFF.md`.
+
 ---
 
 ## 📋 DOCUMENTACIÓN POR CATEGORÍA
