@@ -25,7 +25,7 @@ El agente `validator` del Context Engineering global tiene la función de "crear
 La lista vive en `tests/run_all_tests.R`; la columna «Qué valida» copia su campo `nombre`.
 
 <!-- SUITES:INICIO — generado por tests/sincronizar_doc_suites.R; no editar a mano -->
-Cifras (derivadas del runner): 44 suites, 400 bloques `test_that` y 8 suites sin `watch`.
+Cifras (derivadas del runner): 45 suites, 408 bloques `test_that` y 8 suites sin `watch`.
 
 | # | Archivo | Qué valida |
 |---|---------|-----------|
@@ -72,16 +72,17 @@ Cifras (derivadas del runner): 44 suites, 400 bloques `test_that` y 8 suites sin
 | 41 | `test_barras_campeonato_clave.R` | barras-campeonato-baloncesto-n3: clave y figuras leidas del dibujo (+7 mutantes) y cotejo con la ficha MAT-2026-1-015 |
 | 42 | `test_barras_campeonato_cloze.R` | barras-campeonato-baloncesto-n3 CLOZE: 6 claves leidas del dibujo y del texto (+5 mutantes, Semilleros) |
 | 43 | `test_post_exams2_informe.R` | Hook post-render: el informe llega al modelo en JSON, avisa si no halla el .Rmd y 2I-2L con ruta relativa (v6.2) |
-| 44 | `test_doc_suites_sincronizada.R` | Documento de cobertura sincronizado: tabla de suites generada desde el runner, fases y version del hook |
+| 44 | `test_post_exams2_cwd.R` | Hook post-render v6.3: el ejercicio sale del .Rmd y no del cwd; no escribe en el repo ni sella (7 casos + mutantes) |
+| 45 | `test_doc_suites_sincronizada.R` | Documento de cobertura sincronizado: tabla de suites generada desde el runner, fases y version del hook |
 
-En modo rápido (`R_TESTS_QUICK=1`, el del pre-push) corren siempre las 8 suites sin `watch` (1, 2, 5, 7, 9, 10, 13 y 40). Las otras 36 corren solo si cambió algún archivo que vigilan.
+En modo rápido (`R_TESTS_QUICK=1`, el del pre-push) corren siempre las 8 suites sin `watch` (1, 2, 5, 7, 9, 10, 13 y 40). Las otras 37 corren solo si cambió algún archivo que vigilan.
 <!-- SUITES:FIN -->
 
 ---
 
 ## El Hook post-exams2 — Validación Continua
 
-`post-exams2-validation.sh` (v6.2) es un hook `PostToolUse` sobre `Bash`, con timeout de 300 s (`.claude/settings.json`). Corre solo si el comando Bash termina con 0: si falla, Claude Code dispara `PostToolUseFailure` y el hook no corre (verificado el 2026-10-28).
+`post-exams2-validation.sh` (v6.3) es un hook `PostToolUse` sobre `Bash`, con timeout de 300 s (`.claude/settings.json`). Corre solo si el comando Bash termina con 0: si falla, Claude Code dispara `PostToolUseFailure` y el hook no corre (verificado el 2026-10-28).
 
 Se activa cuando el comando contiene una llamada `exams2*("archivo.Rmd")` (comillas dobles o simples), con ruta absoluta o relativa al `cwd` de la sesión. Si el primer argumento no es una cadena literal (una variable, `rep(...)`, `c(...)`), no se activa. Si el `.Rmd` no existe visto desde ese `cwd`, avisa al modelo de que el arsenal no corrió.
 

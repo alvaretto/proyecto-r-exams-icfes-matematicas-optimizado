@@ -151,6 +151,7 @@ test_that("la FASE 2G informa el N que corre (regla #23)", {
   hook <- readLines(HOOK, warn = FALSE, encoding = "UTF-8")
   expect_false(any(grepl("20/20|20 semillas", hook)),
                info = "La 2G corre --n 100 y decía «20/20 semillas aprobadas»")
-  expect_true(any(grepl("\"$SCRIPT_MULTISEMILLA\" \"$RMD_FILE\" --n 100", hook, fixed = TRUE)))
+  # v6.3: los validadores reciben la ruta absoluta y canónica (RMD_ABS), no la que vino en el comando.
+  expect_true(any(grepl("\"$SCRIPT_MULTISEMILLA\" \"$RMD_ABS\" --n 100", hook, fixed = TRUE)))
   expect_true(any(grepl("100/100 semillas aprobadas", hook, fixed = TRUE)))
 })

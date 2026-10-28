@@ -84,8 +84,11 @@ extraer_bloque <- function(hook_path, cabecera, siguiente, inicio) {
   l[ini:fin]
 }
 
+# Desde la v6.3 el bloque 2N lee el .Rmd por RMD_ABS (la ruta absoluta y canónica) y conserva
+# `[ -n "$RMD_FILE" ]` solo como condición de entrada: el harness define las dos.
 correr_2n <- function(rmd, hook = HOOK) {
   correr_bash(c("set -o pipefail", "ADVERTENCIAS_TOTALES=0", sprintf("RMD_FILE='%s'", rmd),
+                sprintf("RMD_ABS='%s'", rmd),
                 extraer_bloque(hook, "^# FASE 2N:", "^# FASE 2O:", '^if \\[ -n "\\$RMD_FILE" \\]; then'),
                 'echo "ADVERTENCIAS=$ADVERTENCIAS_TOTALES"'))
 }
