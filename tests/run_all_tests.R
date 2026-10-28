@@ -354,6 +354,12 @@ suites <- list(
     watch = c("workflow-state", "ejercicio_state.schema", "test_workflow_state_reopen")
   ),
   list(
+    nombre = "workflow-state: status avisa de la firma del auto-sello del hook v6.2 (pasos 5 y 6 sin nota)",
+    archivo = "tests/testthat/test_workflow_state_status_sello.R",
+    critico = TRUE,
+    watch = c("workflow-state", "post-exams2-validation", "test_workflow_state_status_sello")
+  ),
+  list(
     nombre = "Presupuesto de contexto de .claude/rules/ (compactas + texto integro)",
     archivo = "tests/testthat/test_presupuesto_contexto_reglas.R",
     critico = TRUE

@@ -442,6 +442,33 @@ if reaperturas:
     ult_motivo = " ".join(str(ult.get("motivo") or "?").split())
     print(f"  🔁 Reaperturas: {len(reaperturas)} (última: {ult_ts} "
           f"desde {ult.get('desde', '?')} — {ult_motivo})")
+
+# Aviso (2026-10-28): firma del auto-sello del hook post-render hasta la v6.2. Ese hook sellaba
+# renderizado_4_formatos y arsenal_post_render uno tras otro (el 6 unos 40-80 ms después del 5) sobre el
+# ejercicio_state.json del cwd de la sesión, sin nota: esos dos sellos no prueban que alguien
+# renderizara los formatos ni revisara el informe. Con los dos completados, el 6 de 40 a 80 ms después
+# del 5 (en ese orden) y ninguno con más claves que completado y timestamp, se avisa. Solo informa: ni
+# el estado ni los demás comandos (check, next, complete) ni el gate cambian por esto.
+from datetime import datetime, timedelta
+
+def firma_autosello(pasos):
+    p5 = pasos.get("renderizado_4_formatos") or {}
+    p6 = pasos.get("arsenal_post_render") or {}
+    if p5.get("completado") is not True or p6.get("completado") is not True:
+        return False
+    if (set(p5) | set(p6)) - {"completado", "timestamp"}:
+        return False
+    try:
+        t5 = datetime.fromisoformat(p5["timestamp"])
+        t6 = datetime.fromisoformat(p6["timestamp"])
+        delta_us = (t6 - t5) // timedelta(microseconds=1)   # enteros: sin error de coma flotante en los bordes
+    except (KeyError, TypeError, ValueError):
+        return False
+    return 40_000 <= delta_us <= 80_000
+
+if firma_autosello(state["pasos"]):
+    print("  ⚠ pasos 5 y 6: firma del auto-sello del hook post-render (v6.2 o anterior), sin nota: "
+          "re-verificar por artefacto antes de confiar en ellos")
 print(f"")
 PYEOF
 }
@@ -715,6 +742,9 @@ COMANDOS:
 
   status <dir>
       Muestra todos los pasos con íconos ✅/⬜ y datos extras relevantes.
+      Avisa (⚠) cuando los pasos 5 y 6 llevan la firma del auto-sello del hook post-render
+      (v6.2 o anterior): los dos completados, el 6 de 40 a 80 ms después del 5 y ninguno con
+      más claves que completado y timestamp, es decir, sin nota. Solo informa.
 
   next <dir>
       Muestra el siguiente paso pendiente con el comando sugerido.
