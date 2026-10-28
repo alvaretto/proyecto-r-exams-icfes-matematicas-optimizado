@@ -1,7 +1,7 @@
 # HANDOFF — `probabilidad-fichas-tabla-doble-entrada-n2`
 
 > Archivo de retorno (convención del repo). Frase disparadora: «Continúa con
-> probabilidad-fichas-tabla-doble-entrada-n2». Última actualización: 2026-10-28 (notas del hook). Si este archivo
+> probabilidad-fichas-tabla-doble-entrada-n2». Última actualización: 2026-10-28 (versionado e infraestructura). Si este archivo
 > y `ejercicio_state.json` discrepan, manda el JSON y sus notas.
 
 ## Qué es
@@ -13,8 +13,15 @@ guardias y **todas las firmas del profesor**: [`.claude/CLAUDE.md`](.claude/CLAU
 
 ## Estado: 11/11, aprobado para el aula por el profesor el 2026-10-27 (~23:35)
 
-No está en producción: la promoción espera la evidencia de aula. Sin `git add` ni commit hasta que el
-profesor lo pida.
+No está en producción: la promoción espera la evidencia de aula.
+
+Versionado en `86ef146b` (2026-10-27): 106 archivos, entre ellos el `.Rmd`,
+`verificar_espacio.R`, `salida/r1` … `r6` y las fuentes del graficador. Quedan sin versionar, a
+propósito, unos 127 artefactos generados:
+- los PNG de cada iteración del graficador;
+- los auxiliares de TikZ y `__pycache__`;
+- `stress_test_output/`;
+- `tabla_b8eeff.png`.
 
 Evidencia de la versión final en `salida/r6/`:
 
@@ -96,8 +103,23 @@ Hay tres cosas que tener presentes:
 - Para revisar los nombres de figura en el XML de Moodle hay que usar `[A-Za-z0-9_.-]+\.png`. Con
   `[a-z_]+` se corta un sufijo hexadecimal que termine en letras.
 
+## Cambios de infraestructura del 2026-10-28 que afectan a este ejercicio
+
+- **Hook post-render v6.2** (`f737fbf8`):
+  - Tras un render que termina con 0, el informe del arsenal le llega al modelo como contexto
+    adicional; con errores llega además como «hook blocking error».
+  - Silencio después de un render significa que el hook no corrió: el comando falló o venció el
+    timeout.
+  - La 2G ahora dice «100/100». El `salida/r6/arsenal_hook.txt` todavía muestra «20/20», el texto
+    viejo, aunque corrió 100 semillas.
+- **`/detractor` ya existe** (`8678846a`). La skill estaba registrada como `skill-detractor` y
+  `/detractor auditoria …` no resolvía. Los detractores r1 … r6 no pasaron por ese comando: sus reportes
+  están en `salida/r*/`, así que no se vieron afectados.
+- **Tabla de suites generada.** Si se añade un bloque `test_that` o una suite, hay que correr
+  `Rscript tests/sincronizar_doc_suites.R`; si no, el pre-push falla con esa instrucción.
+
 ## Pendiente después de la aprobación
 
 - Evidencia de aula antes de promover: 11/11 significa «aprobado para el aula», no producción.
-- `git add` solo cuando el profesor lo pida (incluye `verificar_espacio.R` y `salida/r*/` si se quieren
-  versionar). `Sesion-02.pdf` no se versiona (`.gitignore:469`); los recortes PNG sí, por LFS.
+- ~~`git add` cuando el profesor lo pida~~: hecho en `86ef146b` (ver «Estado»). `Sesion-02.pdf` no se
+  versiona (`.gitignore:469`); los recortes PNG sí, por LFS.
