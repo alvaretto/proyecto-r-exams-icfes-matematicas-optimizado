@@ -121,8 +121,6 @@ El paso 6 se sella a mano con la nota que sugiere el informe.
 - **Evidencia de aula (Nivel 3)** antes de promover. Destino previsto: el del SCHOICE, en
   `03-En-Produccion/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/07-Probabilidad_Principios-Aditivo-Multiplicativo-Conteo/`.
 - **Revisar la tabla en un celular real.**
-- **Versionar `cloze/`** cuando lo pida el profesor. Hoy está sin versionar entero. Van:
-  - el `.Rmd`, el estado, este HANDOFF y los scripts;
-  - las plantillas y los Semilleros.
-
-  No va `salida/`.
+- ~~Versionar `cloze/`~~. Hecho en `6f0a4d3a` (2026-10-28) y subido. Se versionaron las fuentes, los
+  Semilleros, las plantillas y la evidencia de texto de `salida/`, esta última añadida con `-f`, como en el
+  SCHOICE. Los renders y las imágenes de `salida/` no se versionan.

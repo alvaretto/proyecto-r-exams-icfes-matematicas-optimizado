@@ -1,14 +1,17 @@
 # HANDOFF — repositorio (infraestructura `.claude/`, tests y documentación)
 
 > Archivo de retorno para el trabajo que no pertenece a un ejercicio; cada ejercicio lleva su propio
-> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-10-28.
+> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-10-28, al cierre de la tarde.
 > Si este archivo y el código discrepan, manda el código: verificar antes de actuar.
 
 ## Estado al cierre del 2026-10-28
 
-- Rama `feat/plantillas-oficiales-rexams`, empujada a `origin`; local y remoto en `9ec30a9a`.
-- Antes de los commits del día corrió la suite completa: 44/44 suites en 1424 s.
-- Cada push pasó su pre-push en modo rápido.
+- Rama `feat/plantillas-oficiales-rexams`, empujada a `origin`; local y remoto en `80d8e0ac`.
+- Suite completa: 44/44 antes de los commits de la mañana (1424 s). Después del merge del hook v6.3
+  corrió dos veces y dio 45/46 en las dos. Cada vez falló una suite distinta y ninguna por el hook
+  (ver «Suite completa tras el merge»).
+- Cada push pasó su pre-push en modo rápido. El último ejecutó 18 suites y saltó 28. Las 18 pasaron,
+  entre ellas las dos que habían fallado.
 
 | Commit | Hora | Qué cambió |
 |---|---|---|
@@ -19,6 +22,9 @@
 | `6d4bc9ba` | 09:12 | MANUAL v1.1: hooks reales y comandos que faltaban en la sección 6 |
 | `8678846a` | 09:22 | La skill del detractor se registra como `/detractor` (antes `skill-detractor`, y `/detractor` no existía) |
 | `9ec30a9a` | 09:28 | HANDOFF de `probabilidad-fichas-tabla-doble-entrada-n2`: versionado e infraestructura |
+| `f080964d` … `c622dea0` | 12:35-13:34 | Hook post-render v6.3. Se hizo en un worktree y se integró con merge fast-forward a las 15:42. Ver «Auto-sello del hook post-render» |
+| `6f0a4d3a` | 17:07 | CLOZE de `probabilidad-fichas-tabla-doble-entrada-n2`, aprobado para el aula. Su retorno está en `cloze/HANDOFF.md` |
+| `80d8e0ac` | 17:37 | `test_cloze_n3.R` sin falsos rojos por empates de redondeo. En los orquestadores: patrón de nombre, 6 partes y pre-flight 14 |
 
 ## Qué cambió y dónde está el detalle
 
@@ -43,14 +49,15 @@
   Si el `.Rmd` no aparece desde el cwd de la sesión, ahora avisa.
 - **Detalle y contrato de Claude Code:** `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`, sección del hook.
 - **Tests:** `tests/testthat/test_post_exams2_pipefail.R` y `tests/testthat/test_post_exams2_informe.R`
-  (suite 43). Este último corre el hook real con un proyecto falso.
+  (suite 44). Este último corre el hook real con un proyecto falso. La v6.3 añade
+  `tests/testthat/test_post_exams2_cwd.R` (suite 45).
 - **Historial:** `.claude/docs/CHANGELOG_CLAUDE_MD.md`, v3.30.0.
 
 ### Documentación atada al código
 
 - `tests/sincronizar_doc_suites.R` genera desde `tests/run_all_tests.R` la tabla y las cifras del
-  documento de cobertura (hoy 44 suites y 400 bloques `test_that`). Con `--check` no escribe.
-- `tests/testthat/test_doc_suites_sincronizada.R` (suite 44) falla en cuatro casos:
+  documento de cobertura (hoy 46 suites y 417 bloques `test_that`). Con `--check` no escribe.
+- `tests/testthat/test_doc_suites_sincronizada.R` (suite 46) falla en cuatro casos:
   - si el documento diverge del runner;
   - si las fases del hook no coinciden con las del documento;
   - si la versión del hook no coincide con la del documento;
@@ -69,6 +76,15 @@
 - `.claude/agents/orquestador-schoice.md`, Incidente A: la Solution no cita la letra; `exshuffle: TRUE`
   con opciones de texto.
 - La skill `.claude/skills/detractor/` (renombrada con `git mv`).
+- `.claude/agents/orquestador-schoice.md` y `orquestador-cloze.md`, en `80d8e0ac`:
+  - el patrón de nombre del JSON de entrada pasa a `<tema>_<componente>_<competencia>`, y los ejemplos
+    llevan `aleatorio`;
+  - en el CLOZE, la plantilla del WAIT_USER #1 y el ejemplo del Incidente A muestran 6 partes;
+  - el pre-flight 14 busca por el metadato `extype`. El `ls …/**/…` anterior no encontraba nada sin
+    `globstar`.
+
+  Los subagentes cargan su definición desde HEAD, así que esto rige desde la próxima sesión.
+- `tests/testthat/test_cloze_n3.R`, en `80d8e0ac`: ver «Suite completa tras el merge».
 
 ## Auto-sello del hook post-render (corregido el 2026-10-28)
 
@@ -93,16 +109,21 @@ Medido el 2026-10-28 sobre copias, con los validadores reales:
 | `3eedd9fc` | Suite 45 `test_post_exams2_cwd.R` (7 casos y 6 mutantes entonces) |
 | `43d4775a` | `workflow-state.sh status` marca la firma del auto-sello; suite 40 `test_workflow_state_status_sello.R` |
 | `c19675c7` | Cabecera con el caso medido; «ya está sellado» en la sugerencia (T8, M11, M12); el rótulo del paso 6 deja de decir «automático via hook» |
-| el commit `docs:` de esta línea | Índice 3.31.0, documento de cobertura 1.3, HOOKS_Y_TESTING, `CLAUDE.md` raíz y este archivo |
+| `c622dea0` | Índice 3.31.0, documento de cobertura 1.3, HOOKS_Y_TESTING, `CLAUDE.md` raíz y este archivo |
 
 - **Equivalencia medida** (copias de tres ejercicios reales, v6.2 frente a v6.3): los mismos conteos por
   fase (E1 0 errores y 6 advertencias; E2 1 y 6, por un falso positivo propio de la 2D; E3 0 y 6), el mismo
   informe salvo las rutas de las previews, la línea de salida del stress test y el bloque de sellado, y la
   misma duración (34 s y 35 s). Con la v6.3 las
   copias y el worktree quedan intactos; la v6.2 escribía en ellos.
-- **Merge pendiente en el checkout principal**, después del respaldo de la regla #17
-  (`tar -czf .claude.pre-<plataforma>-<TS>.tar.gz .claude/`) y de la suite completa
-  (`R_TESTS_FULL=1 Rscript tests/run_all_tests.R`), con las invariantes I-1 a I-10 verificadas.
+- **Integrado el 2026-10-28 a las 15:42.**
+  - Respaldo de la regla #17: `.claude.pre-hookcwd-20261028-154216.tar.gz`.
+  - Merge fast-forward a `c622dea0`.
+  - Invariantes I-1 a I-10 en el checkout principal: 214/214. Incluyen I-6b, I-7 e I-8, que el
+    worktree no podía comprobar.
+  - Subido en `e7402c0d..6f0a4d3a`.
+- **Primera prueba en vivo:** sobre el CLOZE de probabilidad-fichas, el arsenal corrió solo, dejó todo
+  en la caché y no selló nada.
 
 **Estados con la firma.** Criterio, el mismo que aplica `workflow-state.sh status`: los pasos 5 y 6
 completados, el 6 de 40 a 80 ms después del 5 y ninguno de los dos con más claves que `completado` y
@@ -138,12 +159,34 @@ formatos existen y abren, y el informe del hook se leyó); `workflow-state.sh st
 con ⚠. El estado de `03-En-Produccion/` está en una carpeta inmutable: su re-verificación también es por
 artefacto, no por edición. Un sello nuevo lleva `--nota`; el hook v6.3 imprime el comando.
 
+## Suite completa tras el merge (45/46, dos veces)
+
+1. **Primera corrida: `test_nomenclatura_rmd.R:277`.**
+   - El worktree del agente vive *dentro* del repo, en `.claude/worktrees/agent-<id>/`, y el test
+     barre el árbol.
+   - Marcó la copia de un `HANDOFF.md`, porque esa ruta no está en su lista de legados.
+   - Con el worktree retirado, y sus dos ramas ya integradas, pasa 25/25.
+
+   **Antes de una suite completa, integrar y retirar los worktrees.**
+2. **Segunda corrida: `test_cloze_n3.R:97`, inestable.**
+   - El ejercicio, inmutable en `03-En-Produccion`, calcula la respuesta 6 con `round()` de Python.
+     En un empate `x.xx5`, esa función redondea al par sobre el valor binario.
+   - El test esperaba «.5 hacia arriba» con tolerancia 1e-8. Por eso fallaban 1616 de las 49410
+     combinaciones posibles (3,3 %), todas en empates.
+   - La semilla no se puede fijar: el ejercicio resiembra el RNG con el reloj (`INC-RNG-RESEED`).
+   - Corregido en `80d8e0ac`: el test exige el valor exacto fuera de un empate y acepta cualquiera de los
+     dos vecinos en un empate. Fallos con la aserción nueva: 0 de 49410.
+
+La suite completa no se volvió a correr después de `80d8e0ac`. El pre-push de ese commit ejecutó 18
+suites, entre ellas las dos de arriba, y todas pasaron.
+
 ## Cómo verificar el estado
 
 ```bash
 R_TESTS_FULL=1 Rscript tests/run_all_tests.R        # suite completa (~24 min el 2026-10-28)
 Rscript tests/sincronizar_doc_suites.R --check     # tabla de suites al día
 Rscript tests/testthat/test_post_exams2_informe.R  # entrega del informe del hook
+Rscript tests/testthat/test_post_exams2_cwd.R      # el ejercicio sale del .Rmd; no escribe en el repo ni sella
 ```
 
 **Prueba viva del hook, sin efectos laterales en el repo:**
@@ -153,7 +196,7 @@ Rscript tests/testthat/test_post_exams2_informe.R  # entrega del informe del hoo
 2. Correr `echo '… exams2html("<ruta absoluta del .Rmd>")'`. Tienen que llegar a la sesión el aviso
    «hook blocking error» y el contexto adicional con el informe.
 3. El mismo `echo` seguido de `; false` no debe producir nada: es el caso `PostToolUseFailure`.
-4. Borrar el `.Rmd` de prueba y su informe en `~/.cache/post-exams2-validation/`.
+4. Borrar el `.Rmd` de prueba, su informe y su carpeta de corridas en `~/.cache/post-exams2-validation/`.
 
 ## Pendientes (deciden el usuario o el dueño de cada cambio)
 
@@ -174,8 +217,13 @@ Rscript tests/testthat/test_post_exams2_informe.R  # entrega del informe del hoo
    - `A-Produccion/perifericos/` (tres `Semillero*.R` y `solpcielo.tex`);
    - `docs/guias/` (dos guías);
    - `tabla_datos.png`;
-   - en la raíz, artefactos sin rastrear de junio a octubre (`diagrama_*.png`/`.pdf`,
-     `stress_test_output/`, etc.).
+   - en la raíz, artefactos sin rastrear de junio a octubre (`diagrama_*.png`/`.pdf`, etc.). El
+     `stress_test_output/` de la raíz se borró el 2026-10-28: era el stress test del CLOZE de barras
+     (2026-10-04), que había dejado ahí el hook v6.2.
+5. **Ramas y worktrees ajenos.** Las ramas `worktree-agent-a03756997b0850963` y
+   `worktree-agent-a550e94592d0354aa` son de sesiones anteriores. Además hay siete worktrees de Cursor en
+   `~/.cursor/worktrees/`. No se tocaron.
+6. **Una suite completa limpia (46/46) después de `80d8e0ac`.**
 
 ## Respaldos del día (fuera de git, regla #17)
 
@@ -185,3 +233,7 @@ Rscript tests/testthat/test_post_exams2_informe.R  # entrega del informe del hoo
   barrido. Su README tiene la reversión y los hashes.
 - `.claude/backups/2026-10-28-manual-incidente-a/`: MANUAL y orquestador antes de la segunda ronda.
 - `.claude/backups/2026-10-28-renombre-detractor/`: la carpeta `skill-detractor/` antes del renombrado.
+- En la raíz del repo, ignorados por git:
+  - `.claude.pre-hookcwd-20261028-154216.tar.gz`: `.claude/` antes del merge del hook v6.3;
+  - `.claude.pre-docfix-20261028-171539.tar.gz`: antes de los arreglos de los orquestadores;
+  - `.claude.pre-docfix2-20261028-173626.tar.gz`: antes del pre-flight 14 y del Incidente A.
