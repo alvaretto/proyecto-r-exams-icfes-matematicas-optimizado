@@ -147,6 +147,30 @@ porque busca una opción única en el extremo y aquí hay empates.
 - Tras construir el pool agregado, volver a verificar por enumeración la unicidad (I-5) y la guarda de
   R2 (I-7).
 
+## CLOZE hermano (`cloze/`, desde el 2026-10-28)
+
+`cloze/probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1.Rmd` tiene su
+propio `cloze/ejercicio_state.json` y su `cloze/HANDOFF.md`. Sus 6 partes son
+`schoice|num|num|num|schoice|mchoice`, y la Parte 1 es este SCHOICE.
+
+- **I-1…I-8 rigen la Parte 1 del CLOZE.** Por código, la Parte 1 es el SCHOICE: el bloque de generación
+  se trasplantó sin tocar su consumo del RNG. La guarda es E1 de `cloze/verificar_espacio_cloze.R`:
+  objetos y `.Random.seed` iguales en 100 semillas.
+- **Las Partes 2 a 6** trabajan sobre N y una sola característica por versión, sorteada sin depender de
+  los roles. No imprimen cifras ni tipos de dos dimensiones (V11; E3 del mismo verificador).
+
+## I-9 · Pesos por gap del CLOZE
+
+`expoints: 3|1|1|1|1|1`: la Parte 1, que es la pregunta oficial, vale 3/8 de la pregunta, y cada una de
+las otras vale 1/8. En Moodle la pregunta vale 8 puntos, no 6. Si se mezcla con otras preguntas en un
+cuestionario, se fija la puntuación máxima de ese espacio y Moodle conserva la proporción.
+
+Guardas:
+- E7 de `cloze/verificar_espacio_cloze.R`, con 4 mutantes;
+- la guarda de pesos de `cloze/exportar_moodle_cloze.R` (`salida/mutantes_exportador_r4.txt`).
+
+R/exams recicla `expoints` sin avisar cuando faltan entradas. Cambiar los pesos exige firma (H-5).
+
 ## Decisiones del profesor (registro)
 
 | Fecha | Decisión | Alcance |
@@ -162,6 +186,11 @@ porque busca una opción única en el extremo y aquí hay empates.
 | 2026-10-27 | **Canales del detractor FASE 2C r5 (segundo desplazamiento; regla de parada).** (1) Se **firma como residuo estructural** la regla compuesta «descarta la pareja que repite y su gemela de molde»: 1/2 en las no canónicas (+25 pp), +20 pp en la mezcla, 0 % en el ítem oficial. Es el mismo hecho que el 1/3 ya firmado (la trampa repite, la clave no) y cerrarlo exigiría ampliar el pool. (2) **Pasada 2 de §P7-D, numérica:** las celdas de la clave salen del mismo rango que las demás (3..24, con `a` y `b` independientes), en lugar de 5..20. Simulado antes sobre copia: «algún número fuera de 5–20» +21,7 → −1,9 pp; «número mayor» +10,4 → −1,3; «celdas más juntas» +21,6 → +8,0 pp (zona del corte, no obliga; mezcla +4,7; oficial −25), que **se declara como residuo** | Generador no canónico; §P7-D: quedan una pasada y el cierre con residuo |
 | 2026-10-27 | **Cierre por la regla de parada (detractor FASE 2C r6): se firma POR ALCANCE «cualquier encadenamiento de las firmas de repetición con reglas de magnitud sobre las celdas».** Cifras exactas (depuración M = 50.000 del detractor; réplica propia N = 2.000 en `salida/r6/cadenas_replica_depuracion_n2000.txt`): «repite» + «celdas más juntas» 47,6 % (+22,6 pp; mezcla +17,8); compuesta + «celdas más juntas» 64,8 % (+39,8 pp; mezcla +33,3); «celdas más juntas» sola 32,6 % (+7,6 pp). Las tres dan 0 % en el ítem oficial. No nacen de la pasada 2, que las bajó unos 15 pp; la causa es que la clave tiene sumas iguales, así que sus pares de celdas comparten el centro s/2. Exigen aprender entre versiones que la pareja que repite nunca es la clave. El verificador (E4c) las mide y falla si superan la cifra firmada | Cierre de §P7-D con residuo declarado (pasadas usadas: 2 de 3); la evidencia de aula dirá si alguien las explota |
 | 2026-10-27 | Tabla a `{width=100%}` (auditoría visual a 360 px) y `exextra[TipoMetacognicion]: evaluacion_afirmacion` (describe la tarea del estudiante; el análisis de error ajeno sigue en la Solution, I-1) | Presentación y metadatos |
+| 2026-10-28 | **CLOZE: herencia del Flujo B.** El CLOZE reutiliza la tabla Python del SCHOICE (el Python embebido de su generación), sin regenerar el graficador. La firma del 96,8 % (fila del 2026-10-27) cubre también el CLOZE: es la misma tabla, con el mismo código. H-3 no se relaja | `cloze/` |
+| 2026-10-28 | **CLOZE: se mantiene el pool efectivo heredado (K-1).** Fuera de la canónica, la Parte 1 usa siempre PROB-SIM, PROB-UNA y PROB-CER, como se decidió el 2026-10-27 por el canal de estímulo | Parte 1 del CLOZE |
+| 2026-10-28 | **CLOZE: se firma el residuo estructural H3 de r1.** La Parte 6 se resuelve sin la tabla, porque el veredicto de cada plantilla de afirmación no cambia entre versiones. La Parte 5 presupone n1 ≠ n2. Reabrirlo exige otra firma: §P7-D está agotado en el CLOZE (3 de 3 pasadas) | Partes 5 y 6 del CLOZE |
+| 2026-10-28 | **CLOZE: pesos `3\|1\|1\|1\|1\|1` (I-9)**, decididos en el WAIT_USER #3. La Parte 1 vale 3/8 de la pregunta, y la pregunta vale 8 en Moodle | CLOZE; cierra r1 H8 |
+| 2026-10-28 | **CLOZE aprobado para el aula**, condicionado a revalidar el cambio de pesos (FASE 2C r4: APROBAR_CON_CAMBIOS, sin CORRECCIÓN). Residuos de cierre declarados: <br>- la Parte 5 da 22/100 valores únicos (r1 H7); <br>- lectura condicional con \|n1 − n2\| = 1 (≈ 4,6 %); <br>- exclusión de la característica que empata (5-6 %); <br>- regla cruzada «celdas más juntas»: +6,7 pp en depuración | CLOZE |
 
 ## Alineación
 

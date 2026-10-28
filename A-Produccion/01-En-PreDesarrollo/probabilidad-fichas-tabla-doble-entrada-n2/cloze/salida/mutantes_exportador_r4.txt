@@ -1,0 +1,10 @@
+Original: pesos OK = TRUE | imágenes en gaps = 0 | desplegables = 0 
+
+                            mutante                    control resultado
+ M1 Parte 1 a peso 1 (una pregunta)                      pesos     MUERE
+   M2 <img> en el gap de la Parte 1    imágenes (patrón nuevo)     MUERE
+         M2 con el patrón viejo {1:    imágenes (patrón viejo) SOBREVIVE
+        M3 Parte 5 como desplegable               desplegables     MUERE
+      M4 <img> tras un \\} escapado    imágenes (patrón nuevo)     MUERE
+             M4 con el patrón [^}]* imágenes (patrón de 15:46) SOBREVIVE
+         M5 el peso 3 en la Parte 2                      pesos     MUERE

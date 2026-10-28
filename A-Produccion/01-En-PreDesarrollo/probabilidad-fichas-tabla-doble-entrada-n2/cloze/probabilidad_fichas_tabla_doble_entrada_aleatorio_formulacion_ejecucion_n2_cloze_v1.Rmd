@@ -1,0 +1,1025 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## =============================================================================
+## CLOZE derivado del SCHOICE aprobado de este subproyecto (11/11, 2026-10-27).
+## Parte 1 = la pregunta del ítem, con la generación del SCHOICE copiada tal cual (R3): mismo
+## consumo del RNG, mismas guardas; solo se renombran opciones, sol y feedback (sufijo _p1).
+## Partes 2 a 6: N y una sola dimensión de la misma bolsa (I-4, D2.3). Ver el bloque tras el marcador.
+## Invariantes I-1..I-8 y firmas del profesor: ../.claude/CLAUDE.md (rigen también aquí).
+## =============================================================================
+## MAT-2026-07-032 — pregunta impresa 32, SAI «Nivelación 6», grado 10, Sesión 2.
+## Fuente verbatim: ITEM_OFICIAL.md. Invariantes I-1..I-8: .claude/CLAUDE.md local.
+## Tabla: Flujo B en Python (matplotlib vía reticulate), elegido por el profesor.
+## =============================================================================
+library(exams)
+library(reticulate)
+
+## --- Utilidades (familia F5: muestreo seguro) --------------------------------
+pick  <- function(x) x[sample.int(length(x), 1L)]     # vectores, también de longitud 1
+pick1 <- function(x) x[[sample.int(length(x), 1L)]]   # listas
+cap1  <- function(s) paste0(toupper(substr(s, 1L, 1L)), substring(s, 2L))
+DIMS  <- c("color", "categ", "figura")
+tp    <- function(d, l) list(d = d, l = l)            # tipo de ficha: dimensiones y niveles
+
+## --- Tipos de ficha sobre el cubo w[color, categoría, figura] ----------------
+indices_tipo <- function(t) {
+  idx <- list(1:2, 1:2, 1:2)
+  for (i in seq_along(t$d)) idx[[match(t$d[i], DIMS)]] <- t$l[i]
+  idx
+}
+celdas_tipo <- function(w, t) {
+  idx <- indices_tipo(t)
+  as.vector(w[idx[[1]], idx[[2]], idx[[3]]])
+}
+n_tipo <- function(w, t) sum(celdas_tipo(w, t))
+txt_tipo <- function(t, lab) {
+  v <- setNames(rep(NA_character_, 3), DIMS)
+  for (i in seq_along(t$d)) v[t$d[i]] <- lab[[t$d[i]]][t$l[i]]
+  tiene <- !is.na(v)
+  if (all(tiene)) {
+    return(paste0("una ficha ", v[["color"]], " de categoría ", v[["categ"]], " con un ", v[["figura"]]))
+  }
+  if (tiene[["color"]] && tiene[["figura"]]) return(paste0("una ficha ", v[["color"]], " con un ", v[["figura"]]))
+  if (tiene[["color"]] && tiene[["categ"]]) {
+    return(paste0("una ficha ", v[["color"]], " de categoría ", v[["categ"]]))
+  }
+  paste0("una ficha de categoría ", v[["categ"]], " con un ", v[["figura"]])
+}
+ordenar_par <- function(par) {
+  primero <- function(t) t$l[order(match(t$d, DIMS))][1]
+  if (primero(par[[1]]) > primero(par[[2]])) rev(par) else par
+}
+txt_opcion <- function(par, lab) {
+  paste0(cap1(paste(txt_tipo(par[[1]], lab), "y", txt_tipo(par[[2]], lab))), ".")
+}
+suma_txt <- function(w, t, lab) {
+  cel <- celdas_tipo(w, t)
+  if (length(cel) == 1L) return(paste0("«", txt_tipo(t, lab), "»: ", cel, " fichas"))
+  paste0("«", txt_tipo(t, lab), "»: ", cel[1], " + ", cel[2], " = ", sum(cel), " fichas")
+}
+
+## --- Instancia canónica (I-2): literales del impreso -------------------------
+CANON_ENUNCIADO <- paste(
+  "Eduardo puso en una bolsa las fichas de un antiguo juego chino, en el que se usan fichas blancas y",
+  "fichas negras de igual tamaño. Cada ficha tiene dibujada una figura geométrica y está clasificada",
+  "en una categoría, par o impar. En la tabla se indica la cantidad de fichas de cada tipo que puso en la bolsa.")
+PREGUNTA <- paste("Si se eligen al azar dos fichas de la bolsa, ¿cuáles de las siguientes fichas tienen",
+                  "la misma probabilidad de ser elegidas?")
+CANON_OPCIONES <- c(
+  A = "Una ficha blanca con un círculo y una ficha negra con un cuadrado.",
+  B = "Una ficha blanca con un cuadrado y una ficha negra con un círculo.",
+  C = "Una ficha blanca de categoría par con un cuadrado y una ficha negra de categoría impar con un círculo.",
+  D = "Una ficha blanca de categoría impar con un círculo y una ficha negra de categoría par con un cuadrado.")
+## w[color, categoría, figura]; R llena el primer índice más rápido.
+CANON_W <- array(c(12, 16, 8, 10, 11, 20, 15, 8), dim = c(2, 2, 2))
+CF  <- c("color", "figura")
+CKF <- c("color", "categ", "figura")
+CANON_PARES <- list(
+  A = list(tp(CF, c(1, 1)), tp(CF, c(2, 2))),
+  B = list(tp(CF, c(1, 2)), tp(CF, c(2, 1))),
+  C = list(tp(CKF, c(1, 1, 2)), tp(CKF, c(2, 2, 1))),
+  D = list(tp(CKF, c(1, 2, 1)), tp(CKF, c(2, 1, 2))))
+
+## --- Pool de errores conceptuales (I-6): calcula() pura y precondición por versión
+calc_par <- function(p, codigo) {
+  if (!is.list(p) || is.null(p$pares[[codigo]])) stop("calcula(): ", codigo, " fuera de contexto")
+  txt_opcion(ordenar_par(p$pares[[codigo]]), p$lab)
+}
+celdas_par <- function(p, codigo) {
+  par <- p$pares[[codigo]]
+  list(par = par, c1 = celdas_tipo(p$w, par[[1]]), c2 = celdas_tipo(p$w, par[[2]]))
+}
+pre_sim <- function(p) {
+  if (!is.list(p) || is.null(p$pares[["PROB-SIM"]])) return(FALSE)
+  x <- celdas_par(p, "PROB-SIM")
+  sum(x$c1) != sum(x$c2)
+}
+pre_una <- function(p) {
+  if (!is.list(p) || is.null(p$pares[["PROB-UNA"]])) return(FALSE)
+  x <- celdas_par(p, "PROB-UNA")
+  if (sum(x$c1) == sum(x$c2)) return(FALSE)
+  any(x$c1 == x$c2)                                 # en la canónica, C va con PROB-CER (I-6, 2026-10-27)
+}
+## PROB-CRU solo se sortea en la canónica (D, celdas sueltas) desde el 2026-10-27: sus ramas para tipos
+## agregados (aquí y en explica_cru) quedan fuera del sorteo, por si un rediseño lo devuelve.
+pre_cru <- function(p) {
+  if (!is.list(p) || is.null(p$pares[["PROB-CRU"]])) return(FALSE)
+  x <- celdas_par(p, "PROB-CRU")
+  if (sum(x$c1) == sum(x$c2)) return(FALSE)
+  if (isTRUE(p$es_canonica)) return(length(x$c1) == 1L)
+  x$c1[1] == x$c2[2] || x$c1[2] == x$c2[1]
+}
+pre_cer <- function(p) {
+  if (!is.list(p) || is.null(p$pares[["PROB-CER"]])) return(FALSE)
+  x <- celdas_par(p, "PROB-CER")
+  abs(sum(x$c1) - sum(x$c2)) == 1
+}
+explica_sim <- function(p) {
+  x <- celdas_par(p, "PROB-SIM")
+  paste0("Esta pareja cruza las mismas características que la correcta, pero en el orden «opuesto», y por eso ",
+         "parece que también debe coincidir. La tabla dice otra cosa: ", suma_txt(p$w, x$par[[1]], p$lab), "; ",
+         suma_txt(p$w, x$par[[2]], p$lab), ".")
+}
+explica_una <- function(p) {
+  x <- celdas_par(p, "PROB-UNA")
+  k <- which(x$c1 == x$c2)[1]
+  libre <- setdiff(DIMS, x$par[[1]]$d)
+  paste0("Si en cada tipo se lee solo la celda que corresponde a «", p$lab[[libre]][k], "», se ve ", x$c1[k],
+         " y ", x$c2[k], ": parecen iguales. Pero cada tipo reúne dos celdas de la tabla: ",
+         suma_txt(p$w, x$par[[1]], p$lab), "; ", suma_txt(p$w, x$par[[2]], p$lab), ".")
+}
+explica_cru <- function(p) {
+  x <- celdas_par(p, "PROB-CRU")
+  if (length(x$c1) == 1L) {
+    return(paste0("Cada ficha de esta opción ocupa una sola celda de la tabla: ", x$c1, " y ", x$c2,
+                  ". Que las dos celdas se crucen en la tabla no hace iguales sus valores."))
+  }
+  v <- if (x$c1[1] == x$c2[2]) x$c1[1] else x$c1[2]
+  paste0("Dos celdas que se cruzan en la tabla valen lo mismo (", v, " y ", v, "), y eso hace pensar que los ",
+         "tipos coinciden. Pero cada tipo reúne dos celdas: ", suma_txt(p$w, x$par[[1]], p$lab), "; ",
+         suma_txt(p$w, x$par[[2]], p$lab), ".")
+}
+explica_cer <- function(p) {
+  x <- celdas_par(p, "PROB-CER")
+  n1 <- sum(x$c1); n2 <- sum(x$c2)
+  paste0("Las cantidades difieren en una sola ficha: ", suma_txt(p$w, x$par[[1]], p$lab), "; ",
+         suma_txt(p$w, x$par[[2]], p$lab), ". Están cerca, pero no son iguales, así que, en cada extracción, las ",
+         "probabilidades $\\frac{",
+         n1, "}{", p$N, "}$ y $\\frac{", n2, "}{", p$N, "}$ son distintas.")
+}
+errores_conceptuales <- list(
+  list(codigo = "PROB-SIM", nombre = "Supone que las combinaciones opuestas coinciden",
+       descripcion_corta = "Elige la pareja que se ve simétrica a la correcta, sin contar sus fichas.",
+       descripcion_larga = paste("La forma de la tabla no decide la probabilidad: dos combinaciones «opuestas»",
+                                 "de características pueden tener cantidades muy distintas."),
+       causa_raiz = "Confía en la simetría de la tabla en lugar de leer los datos.",
+       precondicion = pre_sim, calcula = function(p, ...) calc_par(p, "PROB-SIM"), explica = explica_sim),
+  list(codigo = "PROB-UNA", nombre = "Lee una sola parte de cada tipo",
+       descripcion_corta = "Lee solo una de las dos celdas de cada tipo, las dos con el mismo rótulo, y no suma las otras dos.",
+       descripcion_larga = paste("Con celdas combinadas, el nombre de un tipo de ficha puede abarcar dos celdas;",
+                                 "la cantidad del tipo es la suma de todas ellas."),
+       causa_raiz = "No reconoce que un tipo de ficha puede reunir varias celdas de la tabla.",
+       precondicion = pre_una, calcula = function(p, ...) calc_par(p, "PROB-UNA"), explica = explica_una),
+  list(codigo = "PROB-CRU", nombre = "Compara celdas cruzadas sin sumar",
+       descripcion_corta = "Compara las celdas que se cruzan en la tabla en lugar de sumar las celdas de cada tipo.",
+       descripcion_larga = paste("Que dos celdas tengan el mismo valor no dice nada de los tipos completos:",
+                                 "hay que sumar las celdas que forman cada tipo antes de comparar."),
+       causa_raiz = "Busca valores iguales a simple vista en lugar de calcular la cantidad de cada tipo.",
+       precondicion = pre_cru, calcula = function(p, ...) calc_par(p, "PROB-CRU"), explica = explica_cru),
+  list(codigo = "PROB-CER", nombre = "Toma por iguales dos cantidades cercanas",
+       descripcion_corta = "Calcula o estima las cantidades y acepta como iguales dos que difieren en una ficha.",
+       descripcion_larga = paste("Dos probabilidades con el mismo denominador son iguales solo si los numeradores",
+                                 "son exactamente iguales; una ficha de diferencia ya las hace distintas."),
+       causa_raiz = "Confunde «casi iguales» con «iguales».",
+       vale_celda_suelta = TRUE,                  # sus textos no suponen tipos de dos celdas (C de la canónica)
+       precondicion = pre_cer, calcula = function(p, ...) calc_par(p, "PROB-CER"), explica = explica_cer))
+names(errores_conceptuales) <- vapply(errores_conceptuales, function(e) e$codigo, character(1))
+stopifnot(length(errores_conceptuales) >= 4)    # I-6, antes del sorteo: sin PROB-CRU fuera de la canónica,
+                                                 # sample(aplicables, 2) necesita PROB-UNA y PROB-CER
+## En la canónica, C y D son celdas sueltas (I-6, ajuste del profesor del 2026-10-27). C va con PROB-CER,
+## cuyos textos genéricos valen para una celda (11 y 10 difieren en una ficha). D va con PROB-CRU, cuyos
+## textos genéricos describen tipos de dos celdas y ahí serían falsos: se sobrescriben los cuatro campos
+## visibles, sin sumas ni datos que se quedan fuera (guardas tras la selección de errores; detractor
+## FASE 2C 2026-10-27, H1 de r1 y H1 de r2).
+TXT_CANON <- list(
+  "PROB-CRU" = list(
+    nombre = "Toma las celdas que se cruzan en la tabla",
+    descripcion_corta = paste("Ve que las dos fichas ocupan celdas que se cruzan en la tabla y elige la pareja por",
+                              "esa posición, sin comparar sus valores."),
+    descripcion_larga = paste("Elegir una pareja por la posición de sus celdas en la tabla no es comparar:",
+                              "al leer los valores, 8 y 20 son distintos."),
+    causa_raiz = "Elige por la posición de las celdas en la tabla, sin leer sus valores."))
+campo <- function(e, f) {
+  if (isTRUE(es_canonica) && !is.null(TXT_CANON[[e$codigo]][[f]])) TXT_CANON[[e$codigo]][[f]] else e[[f]]
+}
+
+## --- Construcción de las versiones no canónicas (I-5, I-7, I-8; familia F1) --
+## Cubo abstracto v[x, y, z]. Clave: los dos cruces de (Y, Z) sumando sobre X,
+## igualdad CONSTRUIDA (a + b = c + d). Distractores: el otro cruce de (Y, Z)
+## (PROB-SIM) y los dos cruces de (X, Y), cada uno con la trampa de un error
+## elegido por sample() entre los aplicables. Nada se remuestrea: cada valor sale
+## de un conjunto del que ya se quitaron los que romperían una invariante.
+construir_cubo <- function(err) {
+  r_resto <- 3:24
+  ## Celdas de la clave del mismo rango que las demás (detractor FASE 2C r5, H2; pasada 2 de §P7-D):
+  ## con la clave en 5..20 y el resto en 3..24, «descarta la pareja con un número < 5 o > 20» acertaba
+  ## el 46,7 %. a y b son independientes en 3..24 (con 8 <= a + b <= 46 para que haya c); cc deja
+  ## d = a + b - cc en el rango, distinta de a y b, y |b - cc| <= 15 para que los conjuntos desplazados
+  ## de PROB-CER no se vacíen (F1, sin remuestrear).
+  a <- pick(r_resto); b <- pick(r_resto[a + r_resto >= 8 & a + r_resto <= 46]); s <- a + b
+  c_ok <- r_resto[(s - r_resto) %in% r_resto & !(r_resto %in% c(a, b)) & abs(b - r_resto) <= 15]
+  stopifnot(length(c_ok) > 0)
+  cc <- pick(c_ok); d <- s - cc
+  ## Canal de estímulo (detractor FASE 2C r4, H1; decisión del profesor del 2026-10-27): la trampa
+  ## PROB-UNA es la única opción cuyos dos tipos repiten un valor de celda. El espejo {e, f | g, h} y la
+  ## pareja PROB-CER no repiten ninguno, y la clave tampoco (c_ok). Todo se excluye de los conjuntos de
+  ## elección, sin remuestrear (F1).
+  m_malo <- if (abs(b - cc) == 1L) 2L * (b - cc) else NA   # con ese m, Q PROB-CER se quedaría sin delta
+  ## Pareja P = (x1,y1) [e + a] frente a (x2,y2) [d + h]
+  if (err[1] == "PROB-UNA") {
+    if (pick(1:2) == 1L) {
+      e <- d; h <- pick(setdiff(r_resto, c(a, d, d - m_malo)))
+    } else {
+      h <- a; e <- pick(setdiff(r_resto, c(d, a, a + m_malo)))
+    }
+  } else {                                        # PROB-CER: e + a y d + h difieren en 1
+    deltas <- c(-1L, 1L)
+    deltas <- deltas[(d - a) + deltas != 0]
+    delta <- pick(deltas); k <- d - a + delta      # e = h + k
+    h <- pick(setdiff(r_resto[(r_resto + k) %in% r_resto], c(a, a - delta, cc, b - k)))
+    e <- h + k
+  }
+  m <- e - h                                      # espejo desigual  <=>  g - f != m
+  ## Pareja Q = (x1,y2) [c + g] frente a (x2,y1) [f + b]
+  if (err[2] == "PROB-UNA") {
+    if (pick(1:2) == 1L) {
+      f <- cc; g <- pick(setdiff(r_resto, c(b, cc + m, cc, e)))
+    } else {
+      g <- b; f <- pick(setdiff(r_resto, c(cc, b - m, b, h)))
+    }
+  } else {                                        # PROB-CER: c + g y f + b difieren en 1
+    deltas <- c(-1L, 1L)
+    deltas <- deltas[(b - cc) + deltas != m & (b - cc) + deltas != 0]
+    delta <- pick(deltas); k <- b - cc + delta     # g = f + k
+    f <- pick(setdiff(r_resto[(r_resto + k) %in% r_resto], c(cc, cc - delta, h, e - k)))
+    g <- f + k
+  }
+  v <- array(NA_real_, c(2, 2, 2))
+  v[1, 1, 2] <- a; v[2, 1, 2] <- b; v[1, 2, 1] <- cc; v[2, 2, 1] <- d
+  v[1, 1, 1] <- e; v[2, 1, 1] <- f; v[1, 2, 2] <- g; v[2, 2, 2] <- h
+  v
+}
+
+COLORES    <- list(c("blanca", "negra"), c("roja", "azul"), c("verde", "amarilla"), c("gris", "morada"))
+CATEGORIAS <- list(c("par", "impar"), c("oro", "plata"), c("alta", "baja"))
+FIGURAS    <- list(c("círculo", "cuadrado"), c("triángulo", "rombo"), c("pentágono", "hexágono"),
+                   c("círculo", "triángulo"))
+PROTAGONISTAS <- c("Mariana", "Julián", "Valentina", "Samuel", "la profesora Lucía", "el club de matemáticas",
+                   "el grupo de décimo", "el comité de bienestar estudiantil")
+JUEGOS <- c("un juego de mesa", "un bingo de figuras", "un juego de memoria", "un dominó de figuras",
+            "un juego de estrategia", "un juego de lotería")
+## Regla #11: ocho plantillas, ocho estructuras distintas.
+contextos <- list(
+  list(tipo = "accion_en_curso", plantilla = function(prot, juego) {
+    paste0(cap1(prot), " está preparando una actividad con las fichas de ", juego,
+           " y acaba de meterlas todas en una bolsa.") }),
+  list(tipo = "descubrimiento", plantilla = function(prot, juego) {
+    paste0("Mientras ordenaba el salón de clase, ", prot, " encontró una bolsa llena de fichas de ", juego, ".") }),
+  list(tipo = "situacion_problema", plantilla = function(prot, juego) {
+    paste0("Para decidir el orden de los turnos en ", juego, ", ", prot,
+           " metió todas las fichas en una bolsa y las revolvió.") }),
+  list(tipo = "periodistica", plantilla = function(prot, juego) {
+    paste0("El boletín del colegio contó que en la feria de juegos se sortearon premios sacando fichas de ",
+           juego, " de una bolsa preparada por ", prot, ".") }),
+  list(tipo = "perspectiva_estudiante", plantilla = function(prot, juego) {
+    paste0("Imagina que ", prot, " te entrega una bolsa con las fichas de ", juego,
+           " y te pide analizarla antes de jugar.") }),
+  list(tipo = "institucional", plantilla = function(prot, juego) {
+    paste0("Para la semana de la matemática, ", prot, " organizó un sorteo con las fichas de ", juego,
+           ", que puso en una bolsa.") }),
+  list(tipo = "pregunta_retorica", plantilla = function(prot, juego) {
+    paste0("¿Da lo mismo sacar una ficha que otra de una bolsa? Eso quiso averiguar ", prot,
+           " con las fichas de ", juego, ".") }),
+  list(tipo = "dialogo", plantilla = function(prot, juego) {
+    paste0("—Antes de jugar, revolvamos las fichas —propuso ", prot, ", y metió en una bolsa todas las fichas de ",
+           juego, ".") }))
+
+## --- Sorteo de la versión ----------------------------------------------------
+## Proporción de la canónica. El override de su residuo está firmado por alcance con P_CANON <= 0,10
+## (I-8, 2026-10-27): el exceso en la mezcla es P_CANON x 75 pp y el corte de +8 pp llega con 0,107.
+## Subirla exige otra firma del profesor.
+P_CANON <- 0.10
+stopifnot(P_CANON <= 0.10)
+es_canonica <- sample(c(TRUE, FALSE), 1, prob = c(P_CANON, 1 - P_CANON))
+if (es_canonica) {
+  w <- CANON_W
+  lab <- list(color = c("blanca", "negra"), categ = c("par", "impar"), figura = c("círculo", "cuadrado"))
+  pares <- list(clave = CANON_PARES$B, "PROB-SIM" = CANON_PARES$A, "PROB-CER" = CANON_PARES$C,
+                "PROB-CRU" = CANON_PARES$D)
+  enunciado <- CANON_ENUNCIADO
+  contexto_tipo <- "canonica"
+} else {
+  ## PROB-CRU solo en la canónica (decisión del profesor del 2026-10-27): su cruce caía en el espejo
+  aplicables <- setdiff(names(errores_conceptuales), c("PROB-SIM", "PROB-CRU"))   # el espejo va siempre
+  err_PQ <- sample(aplicables, 2)
+  v <- construir_cubo(err_PQ)
+  perm <- sample(DIMS)                                  # dimensión real de X, Y, Z
+  flip <- sample(c(FALSE, TRUE), 3, replace = TRUE)     # orden de los niveles
+  w <- array(NA_real_, c(2, 2, 2))
+  for (x in 1:2) for (y in 1:2) for (z in 1:2) {
+    lv <- c(x, y, z); lv <- ifelse(flip, 3L - lv, lv)
+    idx <- integer(3); idx[match(perm, DIMS)] <- lv
+    w[idx[1], idx[2], idx[3]] <- v[x, y, z]
+  }
+  a2r <- function(t) list(d = perm[t$d], l = ifelse(flip[t$d], 3L - t$l, t$l))
+  par_abs <- list(
+    clave  = list(tp(c(2, 3), c(1, 2)), tp(c(2, 3), c(2, 1))),
+    espejo = list(tp(c(2, 3), c(1, 1)), tp(c(2, 3), c(2, 2))),
+    P      = list(tp(c(1, 2), c(1, 1)), tp(c(1, 2), c(2, 2))),
+    Q      = list(tp(c(1, 2), c(1, 2)), tp(c(1, 2), c(2, 1))))
+  par_real <- lapply(par_abs, function(par) lapply(par, a2r))
+  pares <- list(clave = par_real$clave, "PROB-SIM" = par_real$espejo)
+  pares[[err_PQ[1]]] <- par_real$P
+  pares[[err_PQ[2]]] <- par_real$Q
+  lab <- list(color = sample(pick1(COLORES)), categ = sample(pick1(CATEGORIAS)),
+              figura = sample(pick1(FIGURAS)))
+  ctx <- pick1(contextos)
+  contexto_tipo <- ctx$tipo
+  enunciado <- paste0(ctx$plantilla(pick(PROTAGONISTAS), pick(JUEGOS)),
+                      " Todas las fichas son de igual tamaño y cada una es ", lab$color[1], " o ", lab$color[2],
+                      ". Cada ficha tiene dibujada una figura geométrica y está clasificada en una categoría, ",
+                      lab$categ[1], " o ", lab$categ[2],
+                      ". En la tabla se indica la cantidad de fichas de cada tipo que hay en la bolsa.")
+}
+pregunta <- PREGUNTA
+pares <- lapply(pares, ordenar_par)
+codigos_sel <- setdiff(names(pares), "clave")
+N <- sum(w)
+cuentas <- t(vapply(pares, function(par) c(n_tipo(w, par[[1]]), n_tipo(w, par[[2]])), numeric(2)))
+iguales <- cuentas[, 1] == cuentas[, 2]
+opciones_base <- vapply(pares, txt_opcion, character(1), lab = lab)
+params <- list(w = w, lab = lab, N = N, es_canonica = es_canonica, pares = pares)
+
+## --- Guardas (las invariantes del subproyecto, en ejecución) -----------------
+stopifnot(
+  all(w >= 1),                                     # I-7: ninguna celda vacía
+  sum(iguales) == 1, isTRUE(iguales[["clave"]]),   # I-5: una sola clave
+  length(unique(opciones_base)) == 4,              # regla #10: opciones únicas
+  all(rowSums(cuentas) < N))                       # I-7 (R2); defensa estructural: hoy la implica w >= 1
+if (es_canonica) {                                  # I-2: canónica verbatim
+  ## Celdas y enunciado contra literales del impreso escritos aquí, no contra CANON_W ni
+  ## CANON_ENUNCIADO: compararlos con la constante de la que se acaban de copiar no puede
+  ## fallar. 28217 y 306 son la suma de control y el largo del enunciado de ITEM_OFICIAL.md.
+  stopifnot(identical(unname(opciones_base), unname(CANON_OPCIONES[c("B", "A", "C", "D")])),
+            identical(as.vector(w), c(12, 16, 8, 10, 11, 20, 15, 8)),
+            sum(utf8ToInt(enunciado)) == 28217L, nchar(enunciado) == 306L, N == 100)
+  ## La suma simple no ve palabras permutadas («negras y blancas»); la ponderada por posición sí.
+  ## 4314626 sale del enunciado de ITEM_OFICIAL.md (detractor FASE 2C 2026-10-27, H6).
+  u_enun <- utf8ToInt(enunciado)
+  stopifnot(sum(seq_along(u_enun) * u_enun) == 4314626)
+} else {                                            # I-8: toda opción agregada
+  stopifnot(all(vapply(pares, function(par) all(vapply(par, function(t) length(t$d) == 2L, logical(1))),
+                       logical(1))))
+  ## Canal de estímulo (detractor r4, H1): solo la trampa PROB-UNA repite un valor de celda entre sus tipos.
+  repite <- vapply(pares, function(par) any(celdas_tipo(w, par[[1]]) %in% celdas_tipo(w, par[[2]])), logical(1))
+  stopifnot("solo PROB-UNA repite un valor de celda" = identical(names(which(repite)), "PROB-UNA"))
+}
+stopifnot(!any(grepl("estudiante|error|confundi|sum[oó]|olvid", opciones_base, ignore.case = TRUE)))  # I-1
+sel <- errores_conceptuales[codigos_sel]
+## La tercera condición es de consistencia: calcula() devuelve el texto del par asignado y no puede
+## fallar mientras calc_par() use txt_opcion(). La precondición sí puede (mutante M12 del verificador).
+stopifnot(length(sel) == 3,
+          all(vapply(sel, function(e) isTRUE(e$precondicion(params)), logical(1))),
+          all(vapply(sel, function(e) identical(e$calcula(params), opciones_base[[e$codigo]]), logical(1))))
+## Celdas sueltas (solo C y D de la canónica): no hay nada que sumar. Un error con celdas sueltas o
+## declara que sus textos genéricos valen para una celda (vale_celda_suelta) o trae en TXT_CANON los
+## cuatro campos visibles; y nada de lo que muestra habla de sumas ni de datos que se quedan fuera
+## (detractor FASE 2C 2026-10-27: H1 de r1; H1 de r2, la guarda solo léxica cubría 5 de 8 campos).
+## La lista léxica incluye el vocabulario de agregación («reúne», «varias celdas», «cada tipo»…): con
+## vale_celda_suelta = TRUE es la única guarda sobre los textos genéricos de PROB-CER (H2 de r3).
+CAMPOS_VISIBLES <- c("nombre", "descripcion_corta", "descripcion_larga", "causa_raiz")
+for (e_sel in sel) if (length(celdas_par(params, e_sel$codigo)$c1) == 1L) {
+  stopifnot("celdas sueltas: textos genéricos válidos o los cuatro campos en TXT_CANON" =
+              isTRUE(e_sel$vale_celda_suelta) ||
+              all(vapply(CAMPOS_VISIBLES, function(f) !is.null(TXT_CANON[[e_sel$codigo]][[f]]), logical(1))))
+  txt_sel <- c(vapply(CAMPOS_VISIBLES, function(f) campo(e_sel, f), character(1)), e_sel$explica(params))
+  stopifnot("análisis de celdas sueltas sin sumas" =
+              !any(grepl(paste0("\\bsum|deja fuera|una categoría|",              # sumas y datos fuera
+                                "\\bre[uú]n|varias celdas|dos celdas de|celdas combinadas|cada tipo"),  # agregación
+                         txt_sel, perl = TRUE, ignore.case = TRUE)))
+}
+## I-7: la pregunta es la del impreso en todas las versiones. 123 y 720499 salen de ITEM_OFICIAL.md
+## (largo y suma ponderada por posición; detractor FASE 2C 2026-10-27, H5 de r2).
+u_preg <- utf8ToInt(pregunta)
+stopifnot(nchar(pregunta) == 123L, sum(seq_along(u_preg) * u_preg) == 720499)
+
+## --- Mezcla interna (R/exams vuelve a mezclar con exshuffle: TRUE) -----------
+o <- sample(4)
+opciones_p1 <- unname(opciones_base[o])
+sol_p1 <- unname(iguales[o])
+codigo_opcion <- names(pares)[o]
+cuentas_o <- cuentas[o, , drop = FALSE]
+respuesta_correcta <- opciones_p1[sol_p1]
+n_clave <- cuentas[["clave", 1]]
+feedback_p1 <- ifelse(
+  sol_p1,
+  paste0("Verdadero. Cada tipo tiene ", cuentas_o[, 1], " fichas: en cada extracción, los dos tienen la misma ",
+         "probabilidad, $\\frac{", cuentas_o[, 1], "}{", N, "}$."),
+  paste0("Falso. Hay ", cuentas_o[, 1], " fichas de un tipo y ", cuentas_o[, 2],
+         " del otro: sus probabilidades son distintas."))
+## I-7: toda cifra n/N del feedback y de los análisis va con «en cada extracción» (detractores r3 H1 y r4 H3)
+txt_frac <- c(feedback_p1, vapply(sel, function(e) e$explica(params), character(1)))
+stopifnot("n/N con «en cada extracción»" = all(grepl("extracci", txt_frac[grepl("frac{", txt_frac, fixed = TRUE)])))
+
+reflexiones <- c(
+  "Antes de comparar probabilidades, pregúntate si los casos posibles son los mismos. Si lo son, comparar probabilidades es lo mismo que comparar cantidades.",
+  "Una tabla con celdas combinadas esconde sumas: el nombre de un tipo de ficha puede corresponder a varias celdas.",
+  "Que dos celdas coincidan no significa que dos tipos de ficha coincidan: el tipo completo puede reunir más de una celda.",
+  "Dos cantidades cercanas no son iguales. Con el mismo total de fichas, una sola ficha de diferencia ya cambia la probabilidad.",
+  "La simetría de una tabla engaña: dos combinaciones «opuestas» no tienen por qué tener la misma cantidad de fichas.")
+reflexion <- pick(reflexiones)
+
+## --- Tabla como imagen (Flujo B: Python), nombre neutral con sufijo por versión
+valores <- rbind(w[1, 1, ], w[1, 2, ], w[2, 1, ], w[2, 2, ])
+storage.mode(valores) <- "double"
+alt_tabla <- paste0(
+  "Tabla de doble entrada con la cantidad de fichas según su color, su categoría y la figura geométrica dibujada. ",
+  paste(vapply(1:4, function(i) {
+    ci <- (i + 1) %/% 2; ki <- 2 - i %% 2
+    paste0(cap1(lab$color[ci]), ", categoría ", lab$categ[ki], ": ", valores[i, 1], " con ", lab$figura[1],
+           " y ", valores[i, 2], " con ", lab$figura[2])
+  }, character(1)), collapse = "; "), ".")
+fig_id <- paste(sample(c(0:9, letters[1:6]), 6, replace = TRUE), collapse = "")
+archivo_tabla <- paste0("tabla_", fig_id, ".png")
+
+codigo_tabla_py <- r"---(
+import os
+import struct
+import zlib
+
+import numpy as np
+from matplotlib import font_manager as _fm
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+from matplotlib.figure import Figure
+from matplotlib.patches import PathPatch, Rectangle
+from matplotlib.path import Path
+from matplotlib.textpath import TextPath
+from matplotlib.transforms import Affine2D
+
+_LIENZO = (530.0, 244.0)
+_X = (10.08, 138.33, 265.35, 392.63, 519.37)
+_Y = (16.87, 52.30, 87.26, 123.37, 158.63, 194.15, 229.14)
+_RELLENO = (249, 233, 248)
+_TINTA_LINEA = (88, 24, 62)
+_TINTA_LINEA_FINA = (104, 56, 86)
+_TINTA_ENC = (122, 8, 48)
+_TINTA_NEGRA = (16, 16, 16)
+_TINTA = {"tit": _TINTA_ENC, "enc": _TINTA_ENC, "col1": _TINTA_NEGRA, "cat": _TINTA_NEGRA, "num": _TINTA_NEGRA}
+_GROSOR = {
+    "H0": 3.50, "H1": 3.27, "H2": 2.65, "H3": 2.55, "H4": 2.55, "H5": 2.75, "H6": 3.65,
+    "V0": 2.84, "V1": 1.94, "V2": 1.88, "V2t": 3.27, "V3": 1.64, "V4": 3.10,
+}
+_FINAS = ("H2", "H3", "H4", "H5", "V1", "V2", "V3")
+_ESTILOS = {
+    "ss3": {
+        "tit": dict(em=24.225, sx=0.814, d=0.803, dx=1.599, off=10.040),
+        "enc": dict(em=24.225, sx=0.814, d=0.803, dx=0.562, off=10.382),
+        "col1": dict(em=23.898, sx=0.834, d=0.777, dx=0.559, off=11.210),
+        "cat": dict(em=24.028, sx=0.783, d=0.45, dx=1.353, off=10.540),
+        "num": dict(em=24.606, sx=1.0, d=0.45, dx=0.008, off=9.784, k=0.914, gap=0.0),
+    },
+    "dejavu": {
+        "tit": dict(em=22.156, sx=0.690, d=0.831, dx=0.952, off=10.090),
+        "enc": dict(em=22.156, sx=0.690, d=0.831, dx=0.470, off=10.468),
+        "col1": dict(em=22.221, sx=0.703, d=0.775, dx=0.697, off=11.415),
+        "cat": dict(em=21.582, sx=0.751, d=0.45, dx=1.476, off=10.587),
+        "num": dict(em=21.490, sx=1.0, d=0.45, dx=-0.070, off=9.965, k=0.901, gap=0.0),
+    },
+}
+# Cuerpo de la tabla (categorías y números) en tipo normal, como en el impreso: decisión del profesor,
+# 2026-10-26. Encabezados y colores de la primera columna siguen en negrita.
+_ROL = {"tit": "bold", "enc": "bold", "col1": "bold", "cat": "reg", "num": "reg"}
+_ANCHO_DIGITO = {"0": 12.0, "1": 7.0, "2": 9.0, "3": 9.5, "4": 11.0, "5": 9.0, "6": 12.0, "7": 9.0, "8": 11.0,
+                 "9": 12.0, ",": 4.0, ".": 4.0, "-": 7.0}
+_HOLGURA_MIN = 8.0
+_CARPETAS = ("/usr/share/fonts/adobe-source-sans", "/usr/share/fonts/opentype/source-sans", "/usr/share/fonts/OTF",
+             "/usr/share/fonts/truetype/source-sans", "/usr/share/fonts/TTF", os.path.expanduser("~/.fonts"),
+             os.path.expanduser("~/.local/share/fonts"))
+_FUENTES = None
+
+
+def _buscar(familia, peso):
+    archivos = {"ss3": {400: "SourceSans3-Regular.otf", 700: "SourceSans3-Bold.otf"}}
+    nombres = {"ss3": ("Source Sans 3", "Source Sans Pro"), "dejavu": ("DejaVu Sans",)}
+    for carpeta in (_CARPETAS if familia in archivos else ()):
+        ruta = os.path.join(carpeta, archivos[familia][peso])
+        if os.path.exists(ruta):
+            return familia, _fm.FontProperties(fname=ruta)
+    try:
+        ruta = _fm.findfont(_fm.FontProperties(family=list(nombres[familia]), weight=peso), fallback_to_default=False)
+        return familia, _fm.FontProperties(fname=ruta)
+    except ValueError:
+        return None
+
+
+def _fuentes():
+    global _FUENTES
+    if _FUENTES is None:
+        bold = _buscar("ss3", 700) or _buscar("dejavu", 700)
+        reg = _buscar("ss3", 400) or _buscar("dejavu", 400)
+        _FUENTES = {"bold": bold, "reg": reg}
+    return _FUENTES
+
+
+def _estilo(cat):
+    familia, fp = _fuentes()[_ROL[cat]]
+    est = dict(_ESTILOS[familia][cat])
+    est.update(fp=fp, tinta=_TINTA[cat])
+    return est
+
+
+def _trazado(txt, est, es_numero=False):
+    if not txt.strip():
+        return None, (0.0, 0.0)
+    if es_numero:
+        verts, codes, x = [], [], 0.0
+        for ch in txt:
+            tp = TextPath((0, 0), ch, size=est["em"], prop=est["fp"])
+            if len(tp.vertices) == 0:
+                x += 0.3 * est["em"]
+                continue
+            bb = tp.get_extents()
+            esc = est["k"] * _ANCHO_DIGITO.get(ch, 0.8 * (bb.x1 - bb.x0)) / (bb.x1 - bb.x0)
+            v = tp.vertices.copy()
+            v[:, 0] = (v[:, 0] - bb.x0) * esc + x
+            verts.append(v)
+            codes.append(tp.codes)
+            x += (bb.x1 - bb.x0) * esc + est["gap"]
+        trazo = Path(np.concatenate(verts), np.concatenate(codes))
+        bb = trazo.get_extents()
+        return trazo, (bb.x0, bb.x1)
+    trazo = TextPath((0, 0), txt, size=est["em"], prop=est["fp"])
+    bb = trazo.get_extents()
+    return trazo, (bb.x0 * est["sx"], bb.x1 * est["sx"])
+
+
+def _ancho_tinta(txt, cat, es_numero=False):
+    est = _estilo(cat)
+    trazo, (x0, x1) = _trazado(txt, est, es_numero)
+    return 0.0 if trazo is None else (x1 - x0) + 2 * est["d"]
+
+
+def _fmt_num(v):
+    v = float(v)
+    return str(int(round(v))) if abs(v - round(v)) < 1e-9 else ("%g" % round(v, 2)).replace(".", ",")
+
+
+def _guardar_png_rgb(ruta, rgb, dpi):
+    h, w, _ = rgb.shape
+    crudo = b"".join(b"\x00" + rgb[i].tobytes() for i in range(h))
+
+    def chunk(tipo, datos):
+        return struct.pack(">I", len(datos)) + tipo + datos + struct.pack(">I", zlib.crc32(tipo + datos) & 0xFFFFFFFF)
+
+    ppm = int(round(dpi / 0.0254))
+    with open(ruta, "wb") as f:
+        f.write(b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 2, 0, 0, 0))
+                + chunk(b"pHYs", struct.pack(">IIB", ppm, ppm, 1)) + chunk(b"IDAT", zlib.compress(crudo, 9))
+                + chunk(b"IEND", b""))
+
+
+def _rgb(c):
+    return tuple(v / 255.0 for v in c)
+
+
+def dibujar_tabla_fichas(valores, titulo_columnas, encab_col1, encab_col2, figuras, colores, categorias,
+                         ruta, dpi=300):
+    val = np.asarray(valores, dtype=float)
+    if val.shape != (4, 2):
+        raise ValueError("'valores' debe ser una matriz 4 x 2; llegó con forma %s" % (val.shape,))
+    figuras, colores, categorias = ([str(t) for t in lista] for lista in (figuras, colores, categorias))
+    for nombre, lista in (("figuras", figuras), ("colores", colores), ("categorias", categorias)):
+        if len(lista) != 2:
+            raise ValueError("'%s' debe tener 2 elementos" % nombre)
+    titulo, enc1, enc2 = str(titulo_columnas), str(encab_col1), str(encab_col2)
+
+    canon = [_X[i + 1] - _X[i] for i in range(4)]
+    nums = [[_fmt_num(v) for v in val[:, j]] for j in range(2)]
+    ancho_txt = [
+        max([_ancho_tinta(enc1, "enc")] + [_ancho_tinta(t, "col1") for t in colores]),
+        max([_ancho_tinta(enc2, "enc")] + [_ancho_tinta(t, "cat") for t in categorias]),
+        max([_ancho_tinta(figuras[0], "enc")] + [_ancho_tinta(t, "num", True) for t in nums[0]]),
+        max([_ancho_tinta(figuras[1], "enc")] + [_ancho_tinta(t, "num", True) for t in nums[1]]),
+    ]
+    necesario = max(max(a + 2 * _HOLGURA_MIN for a in ancho_txt), (_ancho_tinta(titulo, "tit") + 2 * _HOLGURA_MIN) / 2.0)
+    anchos = canon if necesario <= max(canon) else [necesario] * 4
+    X = [_X[0]]
+    for a in anchos:
+        X.append(X[-1] + a)
+    Y = list(_Y)
+
+    ancho_u = max(_LIENZO[0], X[4] + (_LIENZO[0] - _X[4]))
+    alto_u = _LIENZO[1]
+    px_w, px_h = int(np.ceil(ancho_u * dpi / 100.0 - 1e-9)), int(np.ceil(alto_u * dpi / 100.0 - 1e-9))
+    ancho_u, alto_u = px_w * 100.0 / dpi, px_h * 100.0 / dpi
+
+    fig = Figure(figsize=(px_w / dpi, px_h / dpi), dpi=dpi, facecolor="white")
+    FigureCanvasAgg(fig)
+    ax = fig.add_axes([0, 0, 1, 1])
+    ax.set_xlim(0, ancho_u)
+    ax.set_ylim(0, alto_u)
+    ax.axis("off")
+
+    def yd(y):
+        return alto_u - y
+
+    def rect(x0, y_arriba, ancho, alto, color):
+        ax.add_patch(Rectangle((x0, yd(y_arriba + alto)), ancho, alto, facecolor=_rgb(color), edgecolor="none",
+                               linewidth=0, antialiased=True, snap=False))
+
+    rect(X[2], Y[0], X[4] - X[2], Y[1] - Y[0], _RELLENO)
+    rect(X[0], Y[1], X[4] - X[0], Y[2] - Y[1], _RELLENO)
+
+    g = _GROSOR
+
+    def horizontal(y, x0, x1, nombre):
+        rect(x0, y - g[nombre] / 2, x1 - x0, g[nombre], _TINTA_LINEA_FINA if nombre in _FINAS else _TINTA_LINEA)
+
+    def vertical(x, y0, y1, nombre):
+        rect(x - g[nombre] / 2, y0, g[nombre], y1 - y0, _TINTA_LINEA_FINA if nombre in _FINAS else _TINTA_LINEA)
+
+    vertical(X[0], Y[1] - g["H1"] / 2, Y[6] + g["H6"] / 2, "V0")
+    vertical(X[1], Y[1], Y[6], "V1")
+    vertical(X[2], Y[0] - g["H0"] / 2, Y[1], "V2t")
+    vertical(X[2], Y[1], Y[6], "V2")
+    vertical(X[3], Y[1], Y[6], "V3")
+    vertical(X[4], Y[0] - g["H0"] / 2, Y[6] + g["H6"] / 2, "V4")
+    horizontal(Y[0], X[2] - g["V2t"] / 2, X[4] + g["V4"] / 2, "H0")
+    horizontal(Y[1], X[0] - g["V0"] / 2, X[4] + g["V4"] / 2, "H1")
+    horizontal(Y[2], X[0], X[4], "H2")
+    horizontal(Y[3], X[1], X[4], "H3")
+    horizontal(Y[4], X[0], X[4], "H4")
+    horizontal(Y[5], X[1], X[4], "H5")
+    horizontal(Y[6], X[0] - g["V0"] / 2, X[4] + g["V4"] / 2, "H6")
+
+    def poner(txt, cat, cx, cy, es_numero=False):
+        est = _estilo(cat)
+        trazo, (x0, x1) = _trazado(txt, est, es_numero)
+        if trazo is None:
+            return
+        tr = Affine2D().scale(est["sx"], 1.0).translate(cx + est["dx"] - (x0 + x1) / 2.0, yd(cy + est["off"])) + ax.transData
+        lw = 2 * est["d"] * 0.72
+        ax.add_patch(PathPatch(trazo, transform=tr, facecolor=_rgb(est["tinta"]), edgecolor=_rgb(est["tinta"]),
+                               linewidth=lw, joinstyle="round", capstyle="round"))
+
+    cx_col = [(X[i] + X[i + 1]) / 2.0 for i in range(4)]
+    cy_fila = [(Y[i] + Y[i + 1]) / 2.0 for i in range(6)]
+    poner(titulo, "tit", (X[2] + X[4]) / 2.0, cy_fila[0])
+    for i, t in enumerate((enc1, enc2, figuras[0], figuras[1])):
+        poner(t, "enc", cx_col[i], cy_fila[1])
+    for i, t in enumerate(colores):
+        poner(t, "col1", cx_col[0], (Y[2 + 2 * i] + Y[4 + 2 * i]) / 2.0)
+    for fila in range(4):
+        poner(categorias[fila % 2], "cat", cx_col[1], cy_fila[2 + fila])
+        for j in range(2):
+            poner(nums[j][fila], "num", cx_col[2 + j], cy_fila[2 + fila], True)
+
+    fig.canvas.draw()
+    rgb = np.ascontiguousarray(np.asarray(fig.canvas.buffer_rgba())[:, :, :3])
+    carpeta = os.path.dirname(os.path.abspath(str(ruta)))
+    os.makedirs(carpeta, exist_ok=True)
+    _guardar_png_rgb(str(ruta), rgb, dpi)
+    fig.clear()
+    return str(ruta)
+)---"
+
+## La imagen se genera al tejer (exams2*). Los validadores que solo evalúan este
+## chunk no la necesitan y así no dejan PNG sueltos en su directorio de trabajo.
+if (isTRUE(getOption("knitr.in.progress"))) {
+  stopifnot(reticulate::py_module_available("matplotlib"))
+  reticulate::py_run_string(codigo_tabla_py)
+  reticulate::py$dibujar_tabla_fichas(valores, "Figura geométrica", "Color", "Categoría",
+                                      cap1(lab$figura), cap1(lab$color), cap1(lab$categ),
+                                      archivo_tabla, 300L)
+  stopifnot(file.exists(archivo_tabla))
+}
+
+## ==== FIN DEL BLOQUE P1 ====
+## Todo lo anterior es el data_generation del SCHOICE aprobado, con tres renombres (opciones_p1, sol_p1
+## y feedback_p1). Consume el RNG en el mismo orden, así que, con la misma semilla, la tabla, las cuatro
+## opciones y la clave de la Parte 1 coinciden con las del SCHOICE (R3; lo comprueba
+## verificar_espacio_cloze.R). Desde aquí solo sortean las Partes 2 a 6.
+
+## --- Partes 2 a 6: el total N y UNA sola dimensión de la misma bolsa (I-4, D2.3) --------------------
+## La clave de la Parte 1 equivale a un empate entre los totales de dos dimensiones distintas:
+## n(y1, z2) = n(y2, z1) si y solo si n(y1) = n(z1). Por eso estas partes trabajan con N y con los dos
+## niveles de UNA dimensión, sorteada sin mirar los roles X, Y, Z del generador, y nunca nombran tipos de
+## dos características (V11; hallazgos F-2 y F-3 del dry-run).
+n_nivel <- function(d, k) n_tipo(w, tp(d, k))
+## Las dimensiones Y y Z del generador nunca empatan: su diferencia es la del espejo (PROB-SIM), que es
+## desigual. X sí puede empatar, y con un empate la Parte 5 no tendría clave: se sortea entre las
+## dimensiones sin empate (el verificador mide cuánto se aparta eso del sorteo uniforme).
+dims_ok <- DIMS[vapply(DIMS, function(d) n_nivel(d, 1L) != n_nivel(d, 2L), logical(1))]
+stopifnot("al menos dos dimensiones sin empate" = length(dims_ok) >= 2L)
+dim_D <- pick(dims_ok)
+niv <- lab[[dim_D]]
+n_niv <- c(n_nivel(dim_D, 1L), n_nivel(dim_D, 2L))
+stopifnot(n_niv[1] != n_niv[2], sum(n_niv) == N)
+pl_color <- function(x) ifelse(grepl("[aeiou]$", x), paste0(x, "s"), paste0(x, "es"))
+ficha_de <- function(k) switch(dim_D,
+  color  = paste0("una ficha ", niv[k]),
+  categ  = paste0("una ficha de categoría ", niv[k]),
+  figura = paste0("una ficha con un ", niv[k]))
+fichas_de <- function(k) switch(dim_D,
+  color  = paste0("fichas ", pl_color(niv[k])),
+  categ  = paste0("fichas de categoría ", niv[k]),
+  figura = paste0("fichas con un ", niv[k]))
+ficha_no <- function(k) switch(dim_D,
+  color  = paste0("una ficha que no sea ", niv[k]),
+  categ  = paste0("una ficha que no sea de categoría ", niv[k]),
+  figura = paste0("una ficha que no tenga un ", niv[k]))
+regla_complemento <- switch(dim_D,
+  color  = paste0("Cada ficha de la bolsa es ", niv[1], " o ", niv[2], ": una ficha que no es ", niv[1], " es ",
+                  niv[2], ", y una que no es ", niv[2], " es ", niv[1], "."),
+  categ  = paste0("Cada ficha de la bolsa es de categoría ", niv[1], " o de categoría ", niv[2],
+                  ": una ficha que no es de categoría ", niv[1], " es de categoría ", niv[2],
+                  ", y una que no es de categoría ", niv[2], " es de categoría ", niv[1], "."),
+  figura = paste0("Cada ficha de la bolsa tiene un ", niv[1], " o un ", niv[2], ": una ficha que no tiene un ",
+                  niv[1], " tiene un ", niv[2], ", y una que no tiene un ", niv[2], " tiene un ", niv[1], "."))
+suma_nivel_txt <- function(k) paste0(paste(celdas_tipo(w, tp(dim_D, k)), collapse = " + "), " = ", n_niv[k])
+## Textos concretos de la Solution: nombran la característica sorteada, no «nivel» ni «dimensión»
+## (auditoría visual 6b, hallazgos 1 y 3; detractor FASE 2C r1, H1).
+cada_ficha_es <- switch(dim_D,
+  color  = paste0("cada ficha es ", niv[1], " o ", niv[2]),
+  categ  = paste0("cada ficha es de categoría ", niv[1], " o de categoría ", niv[2]),
+  figura = paste0("cada ficha tiene un ", niv[1], " o un ", niv[2]))
+ejemplo_complemento <- paste0("«", ficha_no(1L), "» es ", ficha_de(2L))
+
+## Parte 2 (identificar): casos posibles. Partes 3 y 4 (calcular): casos favorables de cada nivel, en un
+## orden de mención sorteado (F-7). Respuestas num enteras (F-6).
+ord34 <- sample(2L)
+kA <- ord34[1]; kB <- ord34[2]
+exsol_p2 <- N
+exsol_p3 <- n_niv[kA]
+exsol_p4 <- n_niv[kB]
+## «Al extraer una ficha» (detractor r1, H5): con dos fichas sin reposición, en la segunda quedan N - 1.
+texto_p2 <- paste("¿Cuántas fichas hay en total en la bolsa? Ese número es la cantidad de casos posibles al",
+                  "extraer una ficha. La respuesta es un número entero.")
+texto_p34 <- function(k) {
+  paste0("¿Cuántas ", fichas_de(k), " hay en la bolsa? Ese número es la cantidad de casos favorables del ",
+         "evento «sacar ", ficha_de(k), "» al extraer una ficha. La respuesta es un número entero.")
+}
+texto_p3 <- texto_p34(kA)
+texto_p4 <- texto_p34(kB)
+
+## Parte 5 (evaluar): comparar las dos probabilidades. Las dos opciones tienen las mismas palabras en
+## otro orden: ni el largo ni la primera palabra distinguen la clave.
+ord5 <- sample(2L)
+mayor <- which.max(n_niv)
+afirma_mas <- function(k) paste0("Es más probable sacar ", ficha_de(k), " que ", ficha_de(3L - k), ".")
+o5 <- sample(2L)
+nivel_p5 <- (1:2)[o5]                                   # nivel que cada opción declara más probable
+opciones_p5 <- vapply(nivel_p5, afirma_mas, character(1))
+sol_p5 <- nivel_p5 == mayor
+texto_p5 <- paste0("En cada extracción, ¿qué es más probable: sacar ", ficha_de(ord5[1]), " o sacar ",
+                   ficha_de(ord5[2]), "?")
+
+## Parte 6 (transferir): parejas de eventos de una extracción con la misma probabilidad. Una ficha que no
+## es de un nivel es del otro, así que tiene sus mismos casos favorables. La pareja «sacar [nivel 1]» y
+## «sacar [nivel 2]» no entra en el pool: la Parte 5, con sus dos opciones, ya dice que esos dos eventos
+## no son igual de probables (V11, fuga por contenido entre partes).
+ev_si <- function(k) list(txt = paste0("sacar ", ficha_de(k)), n = n_niv[k])
+ev_no <- function(k) list(txt = paste0("sacar ", ficha_no(k)), n = N - n_niv[k])
+parejas_p6 <- list(
+  si1_no2 = list(ev_si(1L), ev_no(2L)),
+  si2_no1 = list(ev_si(2L), ev_no(1L)),
+  si1_no1 = list(ev_si(1L), ev_no(1L)),
+  si2_no2 = list(ev_si(2L), ev_no(2L)),
+  no1_no2 = list(ev_no(1L), ev_no(2L)))
+igual_pool <- vapply(parejas_p6, function(p) p[[1]]$n == p[[2]]$n, logical(1))
+idx_T <- which(igual_pool); idx_F <- which(!igual_pool)
+stopifnot("pool de la Parte 6: dos parejas iguales y tres distintas" = length(idx_T) == 2L && length(idx_F) == 3L)
+nT <- pick(1:2)
+sel6 <- c(idx_T[sample.int(length(idx_T), nT)], idx_F[sample.int(length(idx_F), 4L - nT)])
+sel6 <- sel6[sample(4L)]
+giro6 <- sample(c(FALSE, TRUE), 4L, replace = TRUE)
+texto_pareja <- function(p, giro) {
+  e <- if (giro) rev(p) else p
+  paste0(cap1(e[[1]]$txt), " y ", e[[2]]$txt, ".")
+}
+opciones_p6 <- vapply(seq_along(sel6), function(i) texto_pareja(parejas_p6[[sel6[i]]], giro6[i]), character(1))
+sol_p6 <- unname(igual_pool[sel6])
+id_p6 <- names(parejas_p6)[sel6]
+## La primera frase declara que la tabla es exhaustiva: el enunciado no dice que solo haya dos figuras
+## (paso 8, H3), y la Parte 6 lo necesita.
+texto_p6 <- paste("La tabla incluye todas las fichas de la bolsa. En cada extracción, ¿cuáles de las siguientes",
+                  "parejas de eventos tienen la misma probabilidad? Puede haber más de una.")
+
+## --- Guardas de las Partes 2 a 6 (mutantes en verificar_espacio_cloze.R) ---------------------------
+textos_2a6 <- c(texto_p2, texto_p3, texto_p4, texto_p5, opciones_p5, texto_p6, opciones_p6)
+otros_niveles <- unlist(lab[setdiff(DIMS, dim_D)], use.names = FALSE)
+patron_otros <- paste0("\\b(", paste(otros_niveles, collapse = "|"), ")(s|es)?\\b")
+stopifnot(
+  "V11 por valor: las Partes 2 a 6 no imprimen cifras" = !any(grepl("[0-9]", textos_2a6)),
+  "F-3: las Partes 2 a 6 nombran una sola dimensión" =
+    !any(grepl(patron_otros, textos_2a6, perl = TRUE, ignore.case = TRUE)),
+  "F-4: cada parte define el evento de una sola extracción" =
+    all(grepl("en cada extracción|al extraer una ficha", tolower(c(texto_p2, texto_p3, texto_p4, texto_p5, texto_p6)))),
+  "I-1 y R7: sin vocabulario de error en las opciones" =
+    !any(grepl("estudiante|error|confundi|sum[oó]|olvid", c(opciones_p5, opciones_p6), ignore.case = TRUE)),
+  "Parte 5: una sola clave" = sum(sol_p5) == 1L,
+  "Parte 6: al menos una verdadera y una falsa" = sum(sol_p6) >= 1L && sum(!sol_p6) >= 1L,
+  "opciones únicas en las Partes 5 y 6" = anyDuplicated(opciones_p5) == 0L && anyDuplicated(opciones_p6) == 0L)
+
+## --- Gaps del cloze (regla #14: seis tipos, seis soluciones, seis ##ANSWERi## en orden) -------------
+exclozetype_str <- "schoice|num|num|num|schoice|mchoice"
+exsolution_str <- paste(mchoice2string(sol_p1), exsol_p2, exsol_p3, exsol_p4, mchoice2string(sol_p5),
+                        mchoice2string(sol_p6), sep = "|")
+extol_str <- paste(rep("0", 6L), collapse = "|")
+stopifnot(all(lengths(strsplit(c(exclozetype_str, exsolution_str, extol_str), "|", fixed = TRUE)) == 6L),
+          all(c(exsol_p2, exsol_p3, exsol_p4) == round(c(exsol_p2, exsol_p3, exsol_p4))))
+
+## --- Retroalimentación de las Partes 2 a 6 (toda cifra n/N con «en cada extracción», I-7) -----------
+feedback_p2 <- paste0("Hay ", N, " fichas en la bolsa: son los casos posibles al extraer una ficha.")
+fb_nivel <- function(k) {
+  paste0("Hay ", n_niv[k], " ", fichas_de(k), ": ", suma_nivel_txt(k), ". Son los casos favorables de sacar ",
+         ficha_de(k), " al extraer una ficha.")
+}
+feedback_p3 <- fb_nivel(kA)
+feedback_p4 <- fb_nivel(kB)
+frase_p5 <- paste0("En cada extracción, la probabilidad de sacar ", ficha_de(mayor), " es $\\frac{", n_niv[mayor],
+                   "}{", N, "}$ y la de sacar ", ficha_de(3L - mayor), " es $\\frac{", n_niv[3L - mayor], "}{", N,
+                   "}$: con los mismos casos posibles, es más probable el evento con más casos favorables.")
+feedback_p5 <- vapply(nivel_p5, function(k) {
+  if (k == mayor) return(paste0("Verdadero. ", frase_p5))
+  paste0("Falso. Hay menos ", fichas_de(k), " (", n_niv[k], ") que ", fichas_de(3L - k), " (", n_niv[3L - k],
+         "), así que, en cada extracción, sacar ", ficha_de(k), " es menos probable.")
+}, character(1))
+feedback_p6 <- vapply(seq_along(sel6), function(i) {
+  p <- parejas_p6[[sel6[i]]]
+  if (sol_p6[i]) {
+    return(paste0("Tienen la misma probabilidad. ", regla_complemento, " Los dos eventos reúnen las mismas ",
+                  p[[1]]$n, " fichas: en cada extracción, $\\frac{", p[[1]]$n, "}{", N, "}$ para los dos."))
+  }
+  paste0("No tienen la misma probabilidad: en cada extracción, un evento tiene ", p[[1]]$n,
+         " casos favorables y el otro ", p[[2]]$n, ".")
+}, character(1))
+txt_frac_cloze <- c(feedback_p2, feedback_p3, feedback_p4, feedback_p5, feedback_p6, frase_p5)
+stopifnot("n/N con «en cada extracción» (Partes 2 a 6)" =
+            all(grepl("extracci", txt_frac_cloze[grepl("frac{", txt_frac_cloze, fixed = TRUE)])))
+
+## Reflexiones del cloze: se sortean después del bloque P1 (F-1), aparte de la de la Parte 1.
+reflexiones_cloze <- c(
+  "Si todos los eventos salen de la misma bolsa, comparar sus probabilidades es comparar sus casos favorables: el total no cambia.",
+  paste0("Antes de contar, nombra el evento con precisión: ", ejemplo_complemento, ", y los dos eventos cuentan las mismas fichas."),
+  "Contar primero el total y después cada grupo de fichas te deja comprobar el trabajo: los grupos tienen que sumar el total.",
+  "Que solo haya dos posibilidades no las hace igual de probables: lo que decide es cuántas fichas tiene cada una.")
+reflexion_cloze <- pick(reflexiones_cloze)
+```
+
+Question
+========
+
+```{r enunciado, echo = FALSE, results = "asis"}
+cat(enunciado, "\n\n", sep = "")
+cat("![", alt_tabla, "](", archivo_tabla, "){width=100%}&#8203;\n\n", sep = "")
+cat("**Parte 1.** ", pregunta, "\n", sep = "")
+```
+
+##ANSWER1##
+
+```{r parte2, echo = FALSE, results = "asis"}
+cat("**Parte 2.** ", texto_p2, "\n", sep = "")
+```
+
+##ANSWER2##
+
+```{r parte3, echo = FALSE, results = "asis"}
+cat("**Parte 3.** ", texto_p3, "\n", sep = "")
+```
+
+##ANSWER3##
+
+```{r parte4, echo = FALSE, results = "asis"}
+cat("**Parte 4.** ", texto_p4, "\n", sep = "")
+```
+
+##ANSWER4##
+
+```{r parte5, echo = FALSE, results = "asis"}
+cat("**Parte 5.** ", texto_p5, "\n", sep = "")
+```
+
+##ANSWER5##
+
+```{r parte6, echo = FALSE, results = "asis"}
+cat("**Parte 6.** ", texto_p6, "\n", sep = "")
+```
+
+##ANSWER6##
+
+Answerlist
+----------
+```{r answerlist_q, echo = FALSE, results = "asis"}
+## Solo los gaps de elección (Partes 1, 5 y 6), en el orden de sus partes; los num no llevan entradas.
+for (x in c(opciones_p1, opciones_p5, opciones_p6)) cat("* ", x, "\n", sep = "")
+```
+
+Solution
+========
+
+```{r solucion, echo = FALSE, results = "asis"}
+cat("### Respuestas\n\n")
+cat("- **Parte 1.** La respuesta correcta es la que afirma: «", respuesta_correcta, "»\n", sep = "")
+cat("- **Parte 2.** ", N, " fichas.\n", sep = "")
+cat("- **Parte 3.** ", n_niv[kA], " ", fichas_de(kA), ".\n", sep = "")
+cat("- **Parte 4.** ", n_niv[kB], " ", fichas_de(kB), ".\n", sep = "")
+cat("- **Parte 5.** La afirmación verdadera es: «", opciones_p5[sol_p5], "»\n", sep = "")
+cat("- **Parte 6.** Tienen la misma probabilidad: ",
+    paste0("«", sub("\\.$", "", opciones_p6[sol_p6]), "»", collapse = "; "), ". No la tienen: ",
+    paste0("«", sub("\\.$", "", opciones_p6[!sol_p6]), "»", collapse = "; "), ".\n\n", sep = "")
+
+cat("### Procedimiento correcto\n\n")
+cat("**Parte 1.** Todas las fichas están en la misma bolsa, así que los casos posibles son los mismos para ",
+    "cualquier tipo de ficha: ", N, " fichas en total. La probabilidad de que una ficha extraída sea de un tipo ",
+    "es la cantidad de fichas de ese tipo dividida entre ", N, ". Como el denominador es el mismo, basta comparar ",
+    "cuántas fichas hay de cada tipo.\n\n", sep = "")
+cat(if (es_canonica) {
+  "Cada tipo de ficha nombrado en las opciones corresponde a una o dos celdas de la tabla; cuando son dos, hay que sumarlas:\n\n"
+} else {
+  "Cada tipo de ficha nombrado en las opciones reúne dos celdas de la tabla, y hay que sumarlas:\n\n"
+})
+cat("- ", suma_txt(w, pares$clave[[1]], lab), "; ", suma_txt(w, pares$clave[[2]], lab),
+    ". **Son iguales.**\n", sep = "")
+for (cod in sort(codigos_sel)) {
+  cat("- ", suma_txt(w, pares[[cod]][[1]], lab), "; ", suma_txt(w, pares[[cod]][[2]], lab),
+      ". Son distintas.\n", sep = "")
+}
+cat("\nSolo en la pareja «", sub("\\.$", "", respuesta_correcta), "» las dos cantidades coinciden (", n_clave,
+    " y ", n_clave, "), así que esas dos fichas tienen la misma probabilidad de ser elegidas: en cada extracción, ",
+    "$\\frac{", n_clave, "}{", N, "}$.\n\n", sep = "")
+cat("**Partes 2 a 5.** Al extraer una ficha, los casos posibles son las ", N, " fichas de la bolsa. Para contar las ",
+    fichas_de(1L), " se suman las cuatro celdas de la tabla que les corresponden: ", suma_nivel_txt(1L),
+    ". Lo mismo con las ", fichas_de(2L), ": ", suma_nivel_txt(2L), ". Las dos cantidades suman ", N, ". ",
+    frase_p5, "\n\n", sep = "")
+cat("**Parte 6.** ", regla_complemento, " Por eso «sacar ", ficha_no(1L), "» y «sacar ", ficha_de(2L),
+    "» son igual de probables, y también «sacar ", ficha_no(2L), "» y «sacar ", ficha_de(1L), "». Cualquier ",
+    "otra pareja de esta parte compara las ", fichas_de(1L), " con las ", fichas_de(2L),
+    ", que son cantidades distintas.\n\n", sep = "")
+
+cat("### Análisis de los distractores\n\n")
+cat("**Parte 1**\n\n")
+for (cod in sort(codigos_sel)) {
+  e <- errores_conceptuales[[cod]]
+  cat("**", e$codigo, " — ", campo(e, "nombre"), "**\n\n", sep = "")
+  cat("*Opción:* «", opciones_base[[cod]], "»\n\n", sep = "")
+  cat("*Lectura que lleva a elegirla:* ", campo(e, "descripcion_corta"), "\n\n", sep = "")
+  cat(e$explica(params), "\n\n", sep = "")
+  cat("*Por qué es un error:* ", campo(e, "descripcion_larga"), "\n\n", sep = "")
+  cat("*Causa raíz:* ", campo(e, "causa_raiz"), "\n\n", sep = "")
+}
+cat("**Parte 5 — Comparar sin contar.** La afirmación contraria puede venir de una suma mal hecha en las ",
+    "Partes 3 o 4. Quien supone que, como ", cada_ficha_es, ", los dos eventos son igual de probables, no ",
+    "tiene con qué decidir y termina eligiendo al azar. Con los mismos casos posibles, decide la cantidad de ",
+    "casos favorables.\n\n", sep = "")
+cat("**Parte 6 — Leer el «no» como si no estuviera.** Quien lee «", ficha_no(1L), "» como si dijera «",
+    ficha_de(1L), "» compara las cantidades equivocadas: marca parejas distintas como iguales y deja sin marcar ",
+    "las que sí lo son. Reescribir el evento sin el «no» antes de contar (", ejemplo_complemento,
+    ") evita el error.\n\n", sep = "")
+
+cat("### Propiedades del concepto\n\n")
+cat("- La probabilidad de un evento simple es el número de casos favorables dividido entre el número de casos posibles.\n")
+cat("- Si dos eventos salen de la misma bolsa, tienen los mismos casos posibles: es más probable el que tiene más ",
+    "casos favorables, y son igual de probables si tienen la misma cantidad.\n", sep = "")
+cat("- Si ", cada_ficha_es, ", el evento «sacar ", ficha_no(1L), "» reúne las mismas fichas que «sacar ",
+    ficha_de(2L), "»: los dos tienen la misma probabilidad.\n", sep = "")
+cat("- El enunciado dice que se eligen dos fichas, pero lo que se compara es la probabilidad de que salga cada tipo ",
+    "de ficha. Con los mismos casos posibles, dos tipos con la misma cantidad de fichas tienen la misma probabilidad ",
+    "de ser elegidos, se saque una ficha o se saquen dos.\n\n", sep = "")
+
+cat("### Caso específico\n\n")
+cat("En esta bolsa hay ", N, " fichas. Cada uno de los dos tipos de la respuesta correcta de la Parte 1 reúne ",
+    n_clave, " fichas, así que la probabilidad de que una ficha extraída sea de cualquiera de ellos es la misma, ",
+    "$\\frac{", n_clave, "}{", N, "}$. En las Partes 2 a 6, ", tolower(substr(frase_p5, 1L, 1L)),
+    substring(frase_p5, 2L), "\n\n", sep = "")
+
+cat("### Reflexión metacognitiva\n\n", reflexion, "\n\n", reflexion_cloze, "\n\n", sep = "")
+
+cat("### Estrategia para evitar el error\n\n")
+cat("- Antes de comparar, ubica en la tabla todas las celdas que corresponden a cada tipo de ficha. Si el tipo no ",
+    "menciona una de las características, suma las celdas de los dos valores de esa característica.\n", sep = "")
+cat("- Escribe la cantidad de cada tipo y compara los resultados exactos, no a simple vista.\n")
+cat("- Una celda que se repite no decide nada, ni a favor ni en contra: suma siempre las celdas de cada tipo. ",
+    "Desconfía también de las parejas que solo se ven simétricas.\n", sep = "")
+cat("- Si un evento dice «no», reescríbelo sin el «no» antes de contar (", ejemplo_complemento,
+    "), y comprueba que las cantidades de las Partes 3 y 4 sumen el total.\n\n", sep = "")
+```
+
+```{r feedback, echo = FALSE, results = "asis"}
+answerlist(c(feedback_p1, feedback_p2, feedback_p3, feedback_p4, feedback_p5, feedback_p6), markup = "markdown")
+```
+
+Meta-information
+================
+exname: probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1
+extype: cloze
+exclozetype: `r exclozetype_str`
+exsolution: `r exsolution_str`
+extol: `r extol_str`
+expoints: 3|1|1|1|1|1
+exshuffle: TRUE
+exextra[Type]: CLOZE
+exextra[Competencia]: Formulación y ejecución
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Frente a un problema que involucre información cuantitativa, plantea e implementa estrategias que lleven a soluciones adecuadas.
+exextra[Evidencia]: Resuelve un problema que involucra información cuantitativa o esquemática.
+exextra[Nivel]: 2
+exextra[Descriptor]: D2.3 — Compara la probabilidad de eventos simples (casos favorables/casos posibles) cuando los casos posibles son los mismos en ambos eventos y en contextos similares a los presentados en el aula.
+exextra[Contenido]: Estadística
+exextra[TemaEspecifico]: Probabilidad en tablas de doble entrada
+exextra[Estandar]: Resuelvo y formulo problemas a partir de un conjunto de datos presentados en tablas, diagramas de barras, diagramas circulares. (6°-7°, Pensamiento aleatorio)
+exextra[DOK]: 2
+exextra[Bloom]: Aplicar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_afirmacion
+exextra[ItemOriginal]: MAT-2026-07-032
+exextra[GradoSugerido]: 6°-7°

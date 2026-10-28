@@ -1,0 +1,136 @@
+
+╔═══════════════════════════════════════════════════════════════╗
+║  ARSENAL COMPLETO DE VALIDACIONES POST-RENDERIZADO            ║
+║  Activado automáticamente - NO HAY FORMA DE SALTARLO          ║
+╠═══════════════════════════════════════════════════════════════╣
+║  Archivo: probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1.Rmd║
+╚═══════════════════════════════════════════════════════════════╝
+
+┌───────────────────────────────────────────────────────────────┐
+│ FASE 2A: Coherencia Matemática                                │
+└───────────────────────────────────────────────────────────────┘
+  ✓ APROBADO
+  RESULTADO: APROBADO (0 errores)
+
+┌───────────────────────────────────────────────────────────────┐
+│ FASE 2B: Preview Visual (PDF → PNG)                           │
+└───────────────────────────────────────────────────────────────┘
+  ✓ Preview generado: 4 página(s)
+    → preview_probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1-0.png
+    → preview_probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1-1.png
+    → preview_probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1-2.png
+    → preview_probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1-3.png
+
+┌───────────────────────────────────────────────────────────────┐
+│ FASES 2C-2F: Arsenal Completo                                 │
+└───────────────────────────────────────────────────────────────┘
+  ARSENAL DE VALIDACIÓN COMPLETA POST-RENDERIZADO
+FASE 2C: Validación de Opciones Únicas
+FASE 2D: Validación de Ortografía Española
+  ✓ Ortografía de tildes correcta
+FASE 2E: Validación de Metadatos ICFES
+  ✓ exshuffle: TRUE (correcto)
+  ✓ Metadatos ICFES completos
+  ⚠️  Campo 'Tarea' no encontrado en Solution
+FASE 2F: Validación de Estructura Metacognitiva
+  ✓ Sección Solution presente
+  ⚠️  Falta: tabla de metadatos 
+  ⚠️  Falta: descripción de evaluación 
+  ⚠️  Falta: análisis de distractores 
+  ⚠️  Falta patrón ICFES: 'Es posible que los estudiantes...'
+  ✓ Pool de errores conceptuales presente
+  ⚠️  Variable 'letra_correcta' no encontrada
+  RESUMEN DEL ARSENAL DE VALIDACIÓN
+  FASE 2C (Opciones Únicas):       OK 
+  FASE 2D (Ortografía):            OK 
+  FASE 2E (Metadatos ICFES):       OK 
+  FASE 2F (Metacognición):         OK 
+  Total ERRORES:       0 
+  Total ADVERTENCIAS:  6 
+  ⚠️  VALIDACIÓN CON ADVERTENCIAS - Revisar antes de aprobar
+
+┌───────────────────────────────────────────────────────────────┐
+│ FASE 2G: Multi-semilla (100 semillas, Nivel 5) — regla #23    │
+└───────────────────────────────────────────────────────────────┘
+Semillas: 100 
+  Semillas probadas: 100
+  Fallos: 0
+  Tasa de éxito: 100.0%
+  RESULTADO: APROBADO (0 fallos en  100  semillas)
+  ✓ Multi-semilla: 100/100 semillas aprobadas
+
+┌───────────────────────────────────────────────────────────────┐
+│ FASE 2H: Stress Test Visual (10 semillas, renderizado + PNGs) │
+└───────────────────────────────────────────────────────────────┘
+║  Semillas: 10                                              ║
+  Anomalías encontradas: 0
+  Semillas probadas:    10
+  VEREDICTO:            PASA
+  ✓ Stress Test Visual: Sin anomalías críticas
+
+┌───────────────────────────────────────────────────────────────┐
+│ FASE 2I: Anti-\pandocbounded + coherencia Solution (E16-E17)  │
+└───────────────────────────────────────────────────────────────┘
+  ✓ FASE 2I: sin patrones de Error 16/17 detectados
+
+┌───────────────────────────────────────────────────────────────┐
+│ FASE 2J: Letter-independence en Solution (E19, regla #19)     │
+└───────────────────────────────────────────────────────────────┘
+  ✓ FASE 2J: Solution es letter-independent (regla #19)
+
+┌───────────────────────────────────────────────────────────────┐
+│ FASE 2K: Guard contador 'none' para tablas (E21, regla #20)   │
+└───────────────────────────────────────────────────────────────┘
+  ⊘ FASE 2K: el .Rmd no usa tablas markdown (guard no requerido)
+
+┌───────────────────────────────────────────────────────────────┐
+│ FASE 2L: Gráficas-opción en gap CLOZE (V5, Incidente G)       │
+└───────────────────────────────────────────────────────────────┘
+  ✓ FASE 2L: ninguna gráfica-opción dentro del gap CLOZE (V5 OK)
+
+┌───────────────────────────────────────────────────────────────┐
+│ FASE 2M: Auditoría visual HTML multi-semilla (schoice/cloze)  │
+└───────────────────────────────────────────────────────────────┘
+  Paso del workflow — ejecutar el auditor visual masivo:
+    /auditor-visual-html "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/probabilidad-fichas-tabla-doble-entrada-n2/cloze/probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1.Rmd" 24
+  (o agente subagent_type="auditor-visual-html"). Renderiza N
+  versiones, captura móvil 360px + desktop 1024px y detecta fugas de
+  markup, math sin renderizar, desbordes/responsividad y anomalías.
+
+┌───────────────────────────────────────────────────────────────┐
+│ FASE 2N: Detección estática diversidad cosmética (regla #22) │
+└───────────────────────────────────────────────────────────────┘
+  ✓ FASE 2N: señales estáticas OK (file.copy PNG no detectado; aleatorización presente).
+    Nota: verificación sustantiva COMPLETA solo via validar_diversidad_sustantiva.R (orquestador paso 9).
+
+┌───────────────────────────────────────────────────────────────┐
+│ FASE 2O: Glifos que rompen pdflatex (ERR_GLIFO_LATEX)         │
+└───────────────────────────────────────────────────────────────┘
+  ✓ FASE 2O: sin glifos que rompan pdflatex
+
+╔═══════════════════════════════════════════════════════════════╗
+║  RESUMEN FINAL DEL ARSENAL                                    ║
+╠═══════════════════════════════════════════════════════════════╣
+║  Errores totales:      0                                    ║
+║  Advertencias totales: 6                                    ║
+╚═══════════════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════════════╗
+║  ⚠️  VALIDACIÓN CON ADVERTENCIAS                              ║
+╠═══════════════════════════════════════════════════════════════╣
+║  Claude DEBE:                                                 ║
+║  1. Revisar TODAS las advertencias                            ║
+║  2. Ejecutar Read() sobre CADA preview PNG generado           ║
+║  3. Verificar las 5 coherencias VISUALMENTE                   ║
+║  4. Documentar hallazgos con checklist                        ║
+║  5. Solicitar aprobación del usuario                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+───────────────────────────────────────────────────────────────
+Previews a inspeccionar:
+/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/probabilidad-fichas-tabla-doble-entrada-n2/cloze/salida/preview_probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1-0.png
+/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/probabilidad-fichas-tabla-doble-entrada-n2/cloze/salida/preview_probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1-1.png
+/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/probabilidad-fichas-tabla-doble-entrada-n2/cloze/salida/preview_probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1-2.png
+/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/probabilidad-fichas-tabla-doble-entrada-n2/cloze/salida/preview_probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1-3.png
+───────────────────────────────────────────────────────────────
+

@@ -1,0 +1,114 @@
+
+==============================================================================
+E1 · La Parte 1 es el SCHOICE (R3): 100 semillas + cuota de 20 canónicas
+==============================================================================
+  OK: 100 semillas (9 canónicas) + 11 canónicas de cuota: tabla, opciones, clave, pregunta, fig_id, Python y .Random.seed idénticos al SCHOICE; las Partes 2 a 6 no pisan nada 
+
+Muestra: canonica n=100 | D_en_las_4 n=100 | D_en_2 n=100 | otro n=0 | no canónicas consecutivas n=300 | semillas recorridas 879 | errores 0
+
+==============================================================================
+E2 · Una sola clave por gap (I-5): verdad recalculada sin las funciones del .Rmd
+==============================================================================
+  OK: 600 versiones: N, casos favorables, clave de la Parte 5 y marcas de la Parte 6 coinciden con la verdad leída de la tabla y del texto; exsolution coherente; enumeración de dimensiones y selecciones sin fallos 
+  Empates de la dimensión X (excluida del sorteo en esa versión): 33 de 600 versiones medidas
+  Parte 1: una sola clave por la enumeración E1 de SUB/verificar_espacio.R (código idéntico, ver E1).
+
+==============================================================================
+E3 · V11: lo que muestran las Partes 2 a 6 no delata la Parte 1
+==============================================================================
+  OK: 600 versiones: las Partes 2 a 6 no imprimen cifras, nombran solo la dimensión sorteada, definen el evento en cada extracción y no repiten ninguna opción de la Parte 1 
+  Rol de la dimensión sorteada (300 no canónicas consecutivas): X 33.3 % | Y 36.3 % | Z 30.3 %
+  OK: D es independiente de los roles X/Y/Z (|p - 1/3| <= 3 errores típicos + 2 pp por los empates de X) 
+
+  Batería cruzada P1 x D (tasa de acierto en la Parte 1; azar 25 %):
+  regla                         D en 4    D en 2 no canónica  canónica    mezcla
+  nombra_D                       25.0%     23.5%     24.2% ( -0.8 pp)     17.8%    -1.4 pp
+  no_nombra_D                    25.0%     26.5%     25.8% ( +0.8 pp)     32.2%    +1.4 pp
+  repite_y_nombra_D              33.3%     23.5%     27.3% ( +2.3 pp)     23.7%    +1.9 pp
+  repite_y_no_nombra_D           25.0%     26.5%     25.8% ( +0.8 pp)     46.8%    +2.9 pp
+  compuesta_y_nombra_D           50.0%     36.8%     41.7% (+16.7 pp)      0.0%   +12.5 pp
+  compuesta_y_no_nombra_D        25.0%     38.2%     33.3% ( +8.3 pp)     25.0%    +7.5 pp
+  juntas_entre_nombra_D          36.7%     29.5%     32.9% ( +7.9 pp)      0.0%    +4.6 pp
+  juntas_entre_no_nombra_D       36.7%     37.0%     35.6% (+10.6 pp)     29.0%    +9.9 pp
+  Incremento máximo sobre la base atribuible a D: +3.0 pp (juntas_entre_no_nombra_D)
+
+==============================================================================
+E4 · R12: residuos firmados del SCHOICE, medidos sobre la Parte 1 del CLOZE
+==============================================================================
+  regla firmada                 D en 4    D en 2 no canónica  canónica    mezcla
+  repite                         33.3%     33.3%     33.3% ( +8.3 pp)     33.3%    +8.3 pp
+  compuesta_repite_y_molde       50.0%     50.0%     50.0% (+25.0 pp)      0.0%   +20.0 pp
+  celdas_mas_juntas              36.7%     32.0%     33.8% ( +8.8 pp)      0.0%    +5.4 pp
+  repite_y_juntas                48.8%     47.0%     47.9% (+22.9 pp)      0.0%   +18.1 pp
+  compuesta_y_juntas             71.0%     66.5%     68.0% (+43.0 pp)      0.0%   +36.2 pp
+  OK: repite: 33.3 % en las no canónicas, dentro de su firma (33.3 %) 
+  OK: compuesta_repite_y_molde: 50.0 % en las no canónicas, dentro de su firma (50.0 %) 
+  OK: celdas_mas_juntas: 33.8 % en las no canónicas, dentro de su firma (32.6 %) 
+  OK: repite_y_juntas: 47.9 % en las no canónicas, dentro de su firma (47.6 %) 
+  OK: compuesta_y_juntas: 68.0 % en las no canónicas, dentro de su firma (64.8 %) 
+  Las Partes 2 a 6 no imprimen cifras ni tipos de dos características: las reglas que ven la tabla
+  reciben lo mismo que en el SCHOICE. Lo nuevo que traen es la dimensión D, medido en E3.
+
+==============================================================================
+E5 · Versiones únicas sobre 300 semillas (objetivo >= 250)
+==============================================================================
+  OK: 300 de 300 versiones únicas (enunciado + tabla + textos de las seis partes) 
+
+==============================================================================
+E6 · Mutantes (contrato: sonda propia, materialización en el entorno, patrón único)
+==============================================================================
+  M1   cazado_por_su_sonda    V11 por valor (sin cifras)     semilla    1  -> V11 por valor
+      sonda real: V11 por valor: las Partes 2 a 6 no imprimen cifras
+  M2   cazado_por_su_sonda    F-3 (una sola dimensión)      semilla    2  -> F-3
+      sonda real: F-3: las Partes 2 a 6 nombran una sola dimensión
+  M3   cazado_por_su_sonda    F-4 (evento en cada extracción semilla    1  -> F-4
+      sonda real: F-4: cada parte define el evento de una sola extracción
+  M4   cazado_por_su_sonda    I-1 y R7 (sin vocabulario de e semilla    1  -> I-1 y R7
+      sonda real: I-1 y R7: sin vocabulario de error en las opciones
+  M5   cazado_por_su_sonda    Parte 5: una sola clave        semilla    1  -> Parte 5: una sola clave
+      sonda real: Parte 5: una sola clave
+  M6   cazado_por_su_sonda    Parte 6: al menos una verdader semilla    1  -> Parte 6: al menos una verdadera y una falsa
+      sonda real: Parte 6: al menos una verdadera y una falsa
+  M7   cazado_por_su_sonda    opciones únicas (Partes 5 y 6) semilla    1  -> opciones únicas
+      sonda real: opciones únicas en las Partes 5 y 6
+  M8   cazado_por_su_sonda    I-7 en las Partes 2 a 6 (n/N c semilla    1  -> n/N con «en cada extracción» (Partes 2 a 6)
+      sonda real: n/N con «en cada extracción» (Partes 2 a 6)
+  M9   cazado_por_su_sonda    Sin empate en la dimensión sor semilla   65  -> n_niv[1] != n_niv[2]
+      sonda real: n_niv[1] != n_niv[2] is not TRUE
+  M10  cazado_por_su_sonda    Verdad de la Parte 6 (compleme semilla    -  -> E2-verdad-P6
+      sonda real: E2-verdad-P6 s=1
+  M11  cazado_por_su_sonda    D independiente de los roles X semilla    -  -> E3-independencia
+      sonda real: E3-independencia
+  M12  cazado_por_su_sonda    R3: consumo del RNG del bloque semilla    -  -> E1
+      sonda real: E1 s=1 reflexion distinto
+  M13  cazado_por_su_sonda    Verdad de la Parte 5           semilla    -  -> E2-verdad-P5
+      sonda real: E2-verdad-P5 s=1
+  M14  cazado_por_su_sonda    P_CANON <= 0,10 (I-8)          semilla    1  -> P_CANON <= 0.1
+      sonda real: P_CANON <= 0.1 is not TRUE
+  M15  cazado_por_su_sonda    I-7: la pregunta del impreso   semilla    1  -> nchar(pregunta) == 123L
+      sonda real: nchar(pregunta) == 123L is not TRUE
+  M16  cazado_por_su_sonda    I-5: una sola clave en la Part semilla    1  -> sum(iguales) == 1
+      sonda real: sum(iguales) == 1 is not TRUE
+  M17  cazado_por_su_sonda    I-2: canónica verbatim (celdas semilla    7  -> identical(as.vector(w)
+      sonda real: identical(as.vector(w), c(12, 16, 8, 10, 11, 20, 15, 8)) is not TRUE
+  M18  cazado_por_su_sonda    I-1: opciones de la Parte 1 si semilla    1  -> estudiante|error
+      sonda real: !any(grepl("estudiante|error|confundi|sum[oó]|olvid", opciones_base,  
+  M19  cazado_por_su_sonda    V11: la pareja directa no entr semilla    1  -> pool de la Parte 6
+      sonda real: pool de la Parte 6: dos parejas iguales y tres distintas
+  M20  cazado_por_su_sonda    Seis gaps en exclozetype, exso semilla    1  -> lengths(strsplit(c(exclozetype_str
+      sonda real: all(lengths(strsplit(c(exclozetype_str, exsolution_str, extol_str),  .
+  M21  cazado_por_su_sonda    Al menos dos dimensiones sin e semilla    1  -> al menos dos dimensiones sin empate
+      sonda real: al menos dos dimensiones sin empate
+  M22  cazado_por_su_sonda    Los dos niveles suman N (inalc semilla    1  -> sum(n_niv) == N
+      sonda real: sum(n_niv) == N is not TRUE
+  M23  cazado_por_su_sonda    Respuestas num enteras (F-6)   semilla    1  -> == round(c(exsol_p2
+      sonda real: all(c(exsol_p2, exsol_p3, exsol_p4) == round(c(exsol_p2, exsol_p3,  ..
+  OK: 23/23 mutantes cazados por su propia sonda 
+  Guardas de la Parte 1 sin mutante aquí: las demás del SCHOICE (25/25 en SUB/salida/r6/verificar_espacio.txt);
+  el código es el mismo (E1), así que esos mutantes valen también para el CLOZE.
+
+==============================================================================
+RESULTADO
+==============================================================================
+V10: N/A (ninguna parte modifica la tabla ni cita un enunciado modificado).
+RESULTADO: APROBADO (0 fallos)

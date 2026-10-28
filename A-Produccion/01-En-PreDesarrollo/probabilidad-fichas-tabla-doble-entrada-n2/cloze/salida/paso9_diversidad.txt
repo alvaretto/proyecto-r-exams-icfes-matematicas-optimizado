@@ -1,0 +1,8 @@
+Diversidad sustantiva (CLOZE): 6 gap(s) medidos de 6 declarados (encabezados **Parte N.**) | 100 version(es) evaluadas | errores=0
+  gap p1   clave:  76 valor(es) unico(s) de 100  [ok]
+  gap p2   clave:  54 valor(es) unico(s) de 100  [ok]
+  gap p3   clave:  47 valor(es) unico(s) de 100  [ok]
+  gap p4   clave:  42 valor(es) unico(s) de 100  [ok]
+  gap p5   clave:  22 valor(es) unico(s) de 100  [baja]
+  gap p6   clave:  68 valor(es) unico(s) de 100  [ok]
+WARN_DIV_BAJA: la clave varia poco en p5. Ampliar rangos de aleatorizacion.

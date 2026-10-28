@@ -1,8 +1,16 @@
 # HANDOFF — `probabilidad-fichas-tabla-doble-entrada-n2`
 
 > Archivo de retorno (convención del repo). Frase disparadora: «Continúa con
-> probabilidad-fichas-tabla-doble-entrada-n2». Última actualización: 2026-10-28 (versionado e infraestructura). Si este archivo
+> probabilidad-fichas-tabla-doble-entrada-n2». Última actualización: 2026-10-28 (CLOZE hermano e infraestructura). Si este archivo
 > y `ejercicio_state.json` discrepan, manda el JSON y sus notas.
+>
+> **Hay un CLOZE hermano en `cloze/`**, aprobado para el aula el 2026-10-28. Para retomarlo, leer
+> [`cloze/HANDOFF.md`](cloze/HANDOFF.md), con la frase «Continúa con el CLOZE de
+> probabilidad-fichas-tabla-doble-entrada-n2». Lo que hay que saber de él:
+> - La Parte 1 del CLOZE es este SCHOICE.
+> - Sus firmas están en la sección «CLOZE hermano» y en la I-9 del [`.claude/CLAUDE.md`](.claude/CLAUDE.md).
+> - Pesos `3|1|1|1|1|1`: en Moodle la pregunta vale 8 puntos.
+> - Se exporta al aula con `cloze/exportar_moodle_cloze.R`.
 
 ## Qué es
 
@@ -97,7 +105,10 @@ cat ~/.cache/post-exams2-validation/"$(basename "$RMD" .Rmd)".txt
 
 Hay tres cosas que tener presentes:
 
-- El hook sella por su cuenta los pasos 5 y 6 sin nota: hay que añadirla después con `complete`.
+- ~~El hook sella por su cuenta los pasos 5 y 6 sin nota~~. Desde la v6.3 (2026-10-28) **no sella**: el
+  paso 6 se sella a mano con la nota que sugiere su informe, y el 5 solo cuando estén los 4 formatos.
+  Además, el ejercicio se deduce del `.Rmd`, no del directorio de la sesión. Las vistas previas y el
+  stress test quedan en `~/.cache/post-exams2-validation/<nombre>/<corrida>/`, ya no en el `cwd`.
 - No hay que poner comillas invertidas dentro del chunk, ni siquiera en comentarios: la 2D da un falso
   positivo y se salta 2G y 2H.
 - Para revisar los nombres de figura en el XML de Moodle hay que usar `[A-Za-z0-9_.-]+\.png`. Con

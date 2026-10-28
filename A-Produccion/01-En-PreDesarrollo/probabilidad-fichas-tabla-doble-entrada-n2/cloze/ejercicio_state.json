@@ -1,0 +1,164 @@
+{
+  "version": "2.0",
+  "ejercicio": "probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1",
+  "tipo": "cloze",
+  "timestamp_inicio": "2026-10-28T12:10:58.812931-05:00",
+  "timestamp_ultima_actualizacion": "2026-10-28T16:26:47.330764-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-10-28T12:10:58.856179-05:00",
+      "resultado": null,
+      "competencia": "Formulación y ejecución",
+      "componente": "Aleatorio",
+      "nivel": 2,
+      "descriptor": "D2.3",
+      "dok": 2,
+      "bloom": "Aplicar",
+      "solo": "Relacional",
+      "tipo_metacognicion": "evaluacion_afirmacion",
+      "fuente": "Heredado sin reclasificar (R14, K-3) de SUB/ejercicio_state.json (analisis_icfes del 2026-10-26) y SUB/ITEM_OFICIAL.md (ficha MAT-2026-07-032)",
+      "nota": "Discrepancia anotada: el JSON del SCHOICE registra tipo_metacognicion «Análisis de error ajeno (en la Solution, I-1)»; se usa el valor del .Rmd SCHOICE (evaluacion_afirmacion, decisión del profesor del 2026-10-27)"
+    },
+    "flujo_b": {
+      "requerido": true,
+      "completado": true,
+      "timestamp": "2026-10-28T12:10:58.997525-05:00",
+      "lenguaje": "python",
+      "origen": "herencia",
+      "nota": "WAIT_USER #1 y #2 resueltos por decisiones_humanas (decisión del profesor en el chat principal, 2026-10-28: «Sí, reutiliza la tabla Python del SCHOICE»). Se reutiliza sin cambios el Python embebido del data_generation del SCHOICE (firmas del 2026-10-26 y 2026-10-27: 96,8 %, cuerpo en tipo normal; H-3 sin relajar). No se regenera el graficador.",
+      "similitud_python": 96.8
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-10-28T16:24:31.568831-05:00",
+      "archivo": "probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1.Rmd",
+      "md5": "310c314673c5d188d1385f2148b3b1b0",
+      "nota": "Reapertura #1 (2026-10-28, decisión del profesor en el WAIT_USER #3): se añade expoints: 3|1|1|1|1|1 para que la Parte 1, la pregunta oficial, pese el triple. Es el único cambio: sin esa línea el md5 vuelve a ser 945560602547bcd7bce941c5a1ad7ccc, la versión que auditó la pasada r3 (comprobado también por r4). Verificador propio: salida/verificar_espacio_cloze_r4b.txt, que imprime el md5 310c3146… de la versión verificada, con la guarda E7 de los pesos y sus 4 mutantes muertos: APROBADO, 0 fallos."
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-10-28T16:02:50.089570-05:00",
+      "nota": "Reapertura #1: la Solution no cambia. Es la de la versión 945560602547bcd7bce941c5a1ad7ccc, revisada en las pasadas r1-r3 (H2 de r2 ya aplicado: «puede venir»); el cambio de la reapertura es solo la línea expoints de los metadatos."
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-10-28T16:24:46.302739-05:00",
+      "html": "OK",
+      "pdf": "OK",
+      "docx": "OK con limitación: ##ANSWERi## literales (exams2pandoc 2.4.2), no apto para estudiantes",
+      "moodle": "OK",
+      "nops": "N/A (exams2nops rechaza extype cloze)",
+      "nota": "Reapertura #1, 2026-10-28 15:44: render_cloze.R desde cloze/salida (salida/render_r4.log). Moodle del aula con exportar_moodle_cloze.R (n = 30; salida/exportar_r4b.log, 16:3x): pesos 3|1|1|1|1|1 en 30/30 preguntas, defaultgrade 8, 0 desplegables, 60 MULTICHOICE_V, 30 MULTIRESPONSE, 90 NUMERICAL, 0 imágenes dentro de un gap, figuras solo tabla_<hex>.png. Controles del exportador corregidos (aceptan cualquier peso; el de imágenes salta los \\} escapados) y su guarda de pesos; mutantes en salida/mutantes_exportador_r4.txt: M1-M5 mueren, y con los patrones anteriores M2 y M4 sobrevivían. Semilleros de cloze/ con MULTICHOICE_V y 100 versiones como máximo: prueba de 3 copias con pesos 3|1|1|1|1|1 y 0 desplegables."
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-10-28T16:24:31.628753-05:00",
+      "errores": 0,
+      "advertencias": 7,
+      "informe": "/home/bootcamp/.cache/post-exams2-validation/probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1/20261028-160113-595160/informe.txt",
+      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1/20261028-160113-595160/informe.txt · md5 310c314673c5d188d1385f2148b3b1b0 · 0 errores / 7 advertencias. Hook v6.3, disparado solo por un comando exams2html del .Rmd (n = 1) a las 16:01; ese render falló por un argumento (browse) que no admite, pero el hook analiza el .Rmd, no la salida. 2A APROBADO; 2G 100/100; 2H PASA (10 semillas); 2I, 2J, 2L, 2N y 2O OK; 2K N/A (sin tablas Markdown); 2M no se ejecutó, porque el cambio no altera el HTML (la auditoría visual 6b de 24 versiones es de la versión 94556060…, idéntica salvo expoints). Las 7 advertencias: las 6 heurísticas de 2E/2F y 2B «PDF no encontrado» (ese comando no generó PDF; el de la versión nueva está en salida/pdf, del render r4)."
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-10-28T16:24:46.363640-05:00",
+      "veredicto": "APROBAR_CON_CAMBIOS",
+      "reporte": "salida/detractor_fase2c_r4.md",
+      "nota": "Cuatro pasadas, cada una de un AgenteDetractor nuevo y sin name: r1 APROBAR_CON_CAMBIOS (cambios aplicados), r2 APROBAR_CON_CAMBIOS (H2 aplicado), r3 APROBAR_CON_CAMBIOS (sobre la versión 94556060…), r4 APROBAR_CON_CAMBIOS sobre la versión con expoints (310c3146…), sin CORRECCIÓN: 2 MEDIA (H1 firmas y sección del CLOZE en SUB, aplicados; H2 la pregunta vale 8 en Moodle, declarado) y 3 BAJA (H3 guarda E7 en el verificador, H4 patrón del exportador, H5 notas: aplicados). Citas de r4 verificadas: 29 OK, 0 problemas (hook SubagentStop: ENTREGA VERIFICADA 16:21:25). Posición de la clave de la Parte 5: uniforme por construcción (R/exams permuta cada gap), medida 47/100 (r4) y 141/300 (coordinador, p = 0,33)."
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-10-28T16:25:48.960166-05:00",
+      "veredicto": "CUMPLE_CON_OBSERVACIONES",
+      "nota": "Reapertura #1. El contenido visible es el de la versión 945560602547bcd7bce941c5a1ad7ccc (el md5 sin la línea expoints): AgenteValidadorVisual revisó sus 5 coherencias (CON_OBSERVACIONES) y la auditoría visual 6b dio APTO_CON_OBSERVACIONES (24 versiones a 360 y 1024 px). Lo nuevo es solo de calificación. Código: expoints con guardas (E7 del verificador con 4 mutantes; guarda de pesos del exportador con M1-M5). General: pesos 3|1|1|1|1|1 en Moodle y defaultgrade 8 (H2 de r4, declarado en los HANDOFF y en la I-9). HTML, PDF y DOCX ignoran los pesos sin aviso, como corresponde a formatos que no califican (r4)."
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-10-28T16:25:54.570656-05:00",
+      "versiones_unicas": 300,
+      "nota": "Reapertura #1: la generación es idéntica (el diff es solo expoints). E5 de salida/verificar_espacio_cloze_r4b.txt: 300/300 versiones únicas. Por gap, con validar_diversidad_sustantiva.R (N = 100, 13:40, mismo data_generation): p1 76, p2 54, p3 47, p4 42, p5 22, p6 68. El 22 de p5 es WARN_DIV_BAJA declarado: gap binario, con techo de 2 × 11 pares de rótulos."
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-10-28T16:26:02.132028-05:00",
+      "nota": "Reapertura #1: los exextra no cambian. Son literales del catálogo, idénticos al SCHOICE salvo Type: CLOZE (diff vacío). Nivel 2 y DOK 2 coherentes (DOK ≥ 3 ⇒ Nivel ≥ 3 no aplica). V1-V11 como en la versión 94556060…: V1 6 = 6 = 6; V2 ##ANSWER1-6## en orden; V3 por gap; V4 6 partes; V5 N/A; V6 240/240; V7 N/A; V8 6/6; V9 PASS; V10 N/A; V11 OK. Nuevo: expoints tiene 6 entradas para 6 gaps (E7)."
+    },
+    "aprobacion_usuario": {
+      "completado": true,
+      "timestamp": "2026-10-28T16:26:47.330764-05:00",
+      "veredicto": "aprobado para el aula",
+      "nota": "Aprobación del profesor en el WAIT_USER #3 (2026-10-28), condicionada a revalidar el cambio de pesos que él mismo pidió (expoints 3|1|1|1|1|1). Condición cumplida: FASE 2C r4 APROBAR_CON_CAMBIOS sin CORRECCIÓN, hallazgos aplicados y pasos 3-10 resellados con su evidencia. Con la misma decisión: H3 de r1 firmado como residuo estructural y K-1 confirmado (pool heredado). Aprobado para el aula, no para producción: la promoción espera la evidencia de aula."
+    }
+  },
+  "reaperturas": [
+    {
+      "timestamp": "2026-10-28T15:43:38.386509-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Decisión del profesor en el WAIT_USER #3 (2026-10-28): pesos por gap expoints 3|1|1|1|1|1 para que la Parte 1, la pregunta oficial, pese el triple. Aprobó para el aula condicionado a revalidar el cambio. H3 de r1 declarado residuo estructural.",
+      "reporte": null,
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render",
+        "detractor_fase2c",
+        "coherencias_5",
+        "validar_diversidad",
+        "validar_icfes"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-10-28T13:39:12.313469-05:00",
+          "archivo": "probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1.Rmd",
+          "md5": 94556060,
+          "exclozetype": "schoice|num|num|num|schoice|mchoice",
+          "n_partes": 6,
+          "nota": "Pasada 1 de corrección (12:56): textos de las Partes 2-6 y de la Solution pedidos por la auditoría 6b (hallazgos 1-3), el paso 8 (H2, H3) y el detractor r1 (H1, H2, H5); bloque P1 intacto. Pasada 2 (13:34:32): H2 del detractor r2, una palabra en el análisis de la Parte 5 de la Solution («suele venir» -> «puede venir»); sin cambios de RNG, guardas ni bloque P1. verificar_espacio_cloze.R APROBADO a las 13:35 (E1 R3 en 100 semillas + 11 canónicas de cuota, 23/23 mutantes por su sonda, 300/300 únicas)",
+          "pasada_correccion": 2
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-10-28T13:39:12.369299-05:00",
+          "secciones": "Respuestas por parte + Procedimiento correcto + Análisis de los distractores + Propiedades del concepto + Caso específico + Reflexión metacognitiva + Estrategia",
+          "nota": "Solution sin «nivel» ni «dimensión», parejas de la Parte 6 por contenido, casos posibles «al extraer una ficha»; n/N con «en cada extracción» (guardas I-7). Pasada 2 (13:34): «puede venir de una suma mal hecha» (H2 del detractor r2: «suele» afirmaba una frecuencia sin evidencia). Reportes: cloze/salida/detractor_fase2c_r1.md y detractor_fase2c_r2.md"
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-10-28T13:39:12.426830-05:00",
+          "html": "OK",
+          "pdf": "OK",
+          "docx": "OK con limitación: ##ANSWERi## literales (exams2pandoc 2.4.2, 6 marcadores en cloze1.docx; limitación compartida con los demás cloze del repo), no apto para estudiantes",
+          "moodle": "OK",
+          "nops": "N/A (cloze exercises)",
+          "nota": "Render de la versión final (md5 94556060) a las 13:34:57-13:35:11 desde cloze/salida con render_cloze.R (semillas 7 canónica, 2, 3). Moodle: 10 MULTICHOICE_V, 5 MULTIRESPONSE, 15 NUMERICAL, 0 imágenes en gaps, figuras tabla_<hex>.png; HTML sin ##ANSWER (3/3). Inspección visual con Read de TODAS las páginas de pdf/cloze1..3.pdf (5+4+4 = 13, pdftoppm -r 80 en salida/preview/final_cloze*.png) entre las 13:36 y las 13:39: sin desbordes, glifos ni fracciones rotas; cuentas de la Solution recalculadas a mano contra la tabla en las tres versiones (26/26, 59/41; 18/18, 60/46; 15/15, 45/39). PDF: opciones de cada parte en línea separadas por « / » (declarativo, punto 6 de r1). V6 y F4 sin cambios: la prosa de la Parte 6 y las marcas no se tocaron desde la medición de las 13:08"
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-10-28T13:39:12.483770-05:00",
+          "errores": 0,
+          "advertencias": 6,
+          "informe": "cloze/salida/arsenal_hook.txt",
+          "nota": "Hook v6.2 a mano con cwd = cloze/salida y dir absoluto de los PDF; informe 13:37:05, posterior al .Rmd (13:34:32, md5 94556060): 2A APROBADO, 2B preview generado (4 páginas), 2G 100/100, 2H PASA, 2I/2J/2L/2N/2O OK, 2K N/A; las 6 advertencias son las heurísticas de 2E/2F (Tarea, tabla de metadatos, descripción de evaluación, análisis de distractores, patrón «Es posible que…», letra_correcta). SUB/ejercicio_state.json sin cambios (md5 6a054782)"
+        },
+        "detractor_fase2c": {
+          "timestamp": "2026-10-28T14:09:04.286914-05:00",
+          "veredicto": "APROBAR_CON_CAMBIOS",
+          "pasadas": 3,
+          "reportes": "cloze/salida/detractor_fase2c_r1.md; cloze/salida/detractor_fase2c_r2.md; cloze/salida/detractor_fase2c_r3.md",
+          "nota": "r1 (12:55): APROBAR_CON_CAMBIOS; H1, H2, H4, H5 corregidos en la pasada 1. r2 (13:32, recuperado de la transcripción por el coordinador, 29 citas OK): APROBAR_CON_CAMBIOS sin CORRECCIÓN; H2 aplicado (13:34) y H1 atendido (13 páginas del PDF inspeccionadas, DOCX declarado). r3 (14:05, AgenteDetractor nuevo sin name, entrega verificada por el hook SubagentStop, 31 citas OK, 0 problemas, 2 avisos SIN_ARCHIVO): APROBAR_CON_CAMBIOS sin CORRECCIÓN y sin cambios al .Rmd; 0 fallos en 100 versiones nuevas exportadas a Moodle; H2 atendido con cloze/exportar_moodle_cloze.R; H1 (declarar el residuo en SUB/HANDOFF.md y SUB/.claude/CLAUDE.md) queda para el coordinador: esos archivos son de solo lectura para el orquestador (R2). §P7-D: 3 de 3 pasadas; cierre con residuo declarado: r1 H3 (la Parte 6 se resuelve sin la tabla: veredicto de cada plantilla invariante y la Parte 5 presupone n1 != n2), r1 H7 (WARN_DIV_BAJA en la Parte 5, 22/100, techo de los pools), r1 H8 (sin expoints: la Parte 1 vale 1/6), lectura condicional con |n1 - n2| = 1 (unos 4,6 % de la mezcla), exclusión de X cuando empata (33/600; 283/5500 en depuración), regla cruzada juntas_entre_no_nombra_D 35,6 % (+10,6 pp, n = 300; depuración con 4000: 31,7 %, +6,7 pp; incremento atribuible a D +0,7 pp)"
+        },
+        "coherencias_5": {
+          "timestamp": "2026-10-28T14:09:04.344142-05:00",
+          "veredicto": "CON_OBSERVACIONES",
+          "nota": "AgenteValidadorVisual (sonnet), 13:41-13:56, versión final md5 94556060: las 5 coherencias cumplen, 0 discrepancias en 3 HTML, 13 páginas de PDF y 5 versiones del XML recalculadas desde la tabla. Observaciones: MEDIA DOCX con ##ANSWERi## literales (declarado en el paso 5); BAJAS: opciones en línea con « / », cosmética de la plantilla PDF (Solution huérfano, 0.0.x), niveles separados por una ficha, nombre de pregunta con la ruta absoluta en el XML de validación (exportar_moodle_cloze.R usa edir)"
+        },
+        "validar_diversidad": {
+          "timestamp": "2026-10-28T14:09:04.400853-05:00",
+          "versiones_unicas": 300,
+          "nota": "E5 del verificador: 300/300 únicas. validar_diversidad_sustantiva.R (N = 100, 13:40): 6/6 gaps medidos; p1 76, p2 54, p3 47, p4 42, p5 22 (WARN_DIV_BAJA, declarado: gap binario, techo de 2 x 11 pares de rótulos, r1 H7), p6 68. validar_diagnosticidad.R (N = 100): PASS; H1 0 % en p1 y p6 (canónica exacta: A = B = 66 caracteres; no canónicas: las del agregado), H2/H3 ciegas por prefijo uniforme, H3b 5 % (p1) y 9 % (p6). 2G 100/100. Stress test visual N = 100: PASA, 0 anomalías (13:46-13:52)"
+        },
+        "validar_icfes": {
+          "timestamp": "2026-10-28T14:09:04.457188-05:00",
+          "nota": "V1 6 = 6 = 6; V2 ##ANSWER1-6## en orden, cada uno tras su parte (l. 868-898); V3 por gap (E2, 600 versiones; enteros); V4 6 partes; V5 N/A (la tabla va en el enunciado, sin gráficas-opción); V6 240/240 por contenido en 24 HTML (Partes 1, 5 y 6), con control positivo; V7 N/A; V8 6/6 variables (p5 baja, declarada); V9 PASS; V10 N/A; V11 OK (E3 en 600 versiones y álgebra de r3). Literalidad: Afirmación, Evidencia, Descriptor D2.3, Estándar y Competencia literales en catalogos-oficiales-mat (13:41); exextra idénticos al SCHOICE salvo Type: CLOZE. Nivel 2 y DOK 2: coherentes"
+        }
+      }
+    }
+  ]
+}

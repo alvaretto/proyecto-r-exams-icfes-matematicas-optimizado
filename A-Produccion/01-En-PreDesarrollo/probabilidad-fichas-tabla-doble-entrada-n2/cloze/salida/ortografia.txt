@@ -1,0 +1,2 @@
+
+✓ No se encontraron errores ortográficos en: ../probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_cloze_v1.Rmd 
