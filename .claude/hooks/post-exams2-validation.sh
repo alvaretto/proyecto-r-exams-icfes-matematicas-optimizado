@@ -28,9 +28,11 @@
 #
 # v6.3 (2026-10-28): el ejercicio se deduce del .Rmd, no del cwd. Hasta la v6.2 el hook tomaba el cwd
 # de la sesión por la carpeta del ejercicio: con la sesión abierta en otra carpeta sellaba los pasos 5
-# y 6 del ejercicio_state.json de esa carpeta, sin nota (25 de 42 estados del repo llevaban esa firma),
-# y dejaba el stress test, las vistas previas y los tabla_*.png que dibujan los validadores en su cwd
-# donde estuviera la sesión (p. ej. un stress_test_output/ de otro ejercicio en la raíz). Ahora manda
+# y 6 del ejercicio_state.json de esa carpeta, sin nota (20 estados del repo conservan esa firma; ver
+# HANDOFF_REPO.md), y dejaba el stress test, las vistas previas y lo que escriben los chunks en su cwd,
+# donde estuviera la sesión (medido el 2026-10-28: un stress_test_output/ en la raíz y, con la sesión
+# parada en la carpeta de proceso_recaudacion, su diagrama_flujo.png, un hermano que el ejercicio ya
+# tenía, sobrescrito por el ggsave de un chunk). Ahora manda
 # RMD_ABS, la ruta absoluta y canónica del .Rmd: de ahí salen EJ_DIR, PROJECT_DIR y el estado del
 # workflow. Cada corrida trabaja en $INFORME_DIR/<nombre>/<fecha>-<pid>/ (work/, preview/,
 # stress_test_output/, ORIGEN.txt, informe.txt; se conservan las 5 más recientes por ejercicio) y los
@@ -973,6 +975,10 @@ if [ -f "$STATE_FILE" ]; then
   # `next` es de solo lectura.
   echo "SELLADO DEL WORKFLOW (manual: el hook no escribe en $STATE_FILE):"
   if [ $ERRORES_TOTALES -eq 0 ]; then
+    # Si el paso 6 ya estaba sellado se dice antes del comando: re-sellarlo pisa su timestamp.
+    if bash "$WORKFLOW_SCRIPT" check "$EJ_DIR" arsenal_post_render >/dev/null 2>&1; then
+      echo "  arsenal_post_render ya está sellado; re-sellar solo si este informe sustituye al anterior:"
+    fi
     echo "  bash .claude/scripts/workflow-state.sh complete \"$EJ_DIR\" arsenal_post_render --nota \"informe $RUN_DIR/informe.txt · md5 $RMD_MD5 · $ERRORES_TOTALES errores / $ADVERTENCIAS_TOTALES advertencias\""
   else
     echo "  arsenal_post_render NO se sella: el arsenal tiene $ERRORES_TOTALES error(es); corregir y volver a renderizar."

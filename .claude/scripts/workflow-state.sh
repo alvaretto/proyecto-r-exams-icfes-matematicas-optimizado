@@ -31,7 +31,7 @@ declare -A PASO_COMANDO=(
     [generacion_rmd]="/generar-schoice o /generar-cloze"
     [retroalimentacion]="/skill-retroalimentacion"
     [renderizado_4_formatos]="exams2html/pdf/docx/nops"
-    [arsenal_post_render]="(automático via hook)"
+    [arsenal_post_render]="(hook post-render; sellar a mano con --nota)"
     [detractor_fase2c]="/adversario archivo.Rmd"
     [coherencias_5]="Documentar 5 coherencias"
     [validar_diversidad]="/validar-diversidad"
@@ -513,7 +513,7 @@ COMANDOS = {
     "generacion_rmd":       "/generar-schoice o /generar-cloze",
     "retroalimentacion":    "/skill-retroalimentacion",
     "renderizado_4_formatos": "exams2html/pdf/docx/nops",
-    "arsenal_post_render":  "(automático via hook)",
+    "arsenal_post_render":  "(hook post-render; sellar a mano con --nota)",
     "detractor_fase2c":     "/adversario archivo.Rmd",
     "coherencias_5":        "Documentar 5 coherencias",
     "validar_diversidad":   "/validar-diversidad",
@@ -771,7 +771,7 @@ PASOS DEL WORKFLOW (en orden):
   3.  generacion_rmd         → /generar-schoice o /generar-cloze
   4.  retroalimentacion      → /skill-retroalimentacion
   5.  renderizado_4_formatos → exams2html/pdf/docx/nops
-  6.  arsenal_post_render    → (automático via hook)
+  6.  arsenal_post_render    → hook post-render (corre solo; el paso se sella a mano, con --nota)
   7.  detractor_fase2c       → /adversario archivo.Rmd
   8.  coherencias_5          → Documentar 5 coherencias
   9.  validar_diversidad     → /validar-diversidad

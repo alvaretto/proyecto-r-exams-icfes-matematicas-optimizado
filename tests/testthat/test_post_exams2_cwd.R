@@ -31,6 +31,7 @@
 #   T5 la poda deja 5 corridas y no borra lo que no es una corrida
 #   T6 los validadores corren con el .Rprofile y el .Renviron del proyecto, solo si existen
 #   T7 la 2B toma el dir= correcto aunque edir= o texdir= vayan antes
+#   T8 si arsenal_post_render ya está sellado, la sugerencia lo dice antes del mismo comando
 # Mutantes (cada uno hace fallar el caso que se indica)
 #   M1 estado de vuelta a $CWD, con complete (la v6.2)        -> T1     M6  sin R_ENVIRON_USER  -> T6
 #   M2 las dos llamadas a complete, sobre la carpeta de B     -> T1     M7  dir= sin borde      -> T7
@@ -38,6 +39,7 @@
 #   M4 find "$CWD" -maxdepth 4 en la 2I                       -> T4         relativa, no RMD_ABS -> T3
 #   M5 validadores con cd "$CWD"                              -> T1     M9  sin poda            -> T5
 #                                                                       M10 nota -> <nombre>.txt -> T2
+#   M11 siempre dice «ya está sellado» -> T2     M12 nunca lo dice -> T8
 # =============================================================================
 library(testthat)
 
@@ -236,6 +238,7 @@ problemas_t2 <- function(e) {
   if (!contiene(ctx, "Siguiente: retroalimentacion"))
     p <- c(p, "el `next` no sale del estado de B (esperaba «Siguiente: retroalimentacion»)")
   if (contiene(ctx, "Siguiente: renderizado")) p <- c(p, "el `next` sale del estado de A")
+  if (contiene(ctx, "ya está sellado")) p <- c(p, "dice «ya está sellado» con el paso 6 pendiente")
   p
 }
 
@@ -338,6 +341,32 @@ problemas_t7 <- function(hook = HOOK) {
   p
 }
 
+# T8: el paso 6 de B ya está sellado (un ejercicio que se vuelve a renderizar): la sugerencia lo dice
+# antes del mismo comando, porque re-sellar pisa el timestamp; y el hook no toca el estado.
+problemas_t8 <- function(hook = HOOK) {
+  m <- nuevo_mundo()
+  wf <- file.path(m$proy, ".claude", "scripts", "workflow-state.sh")
+  for (paso in c("renderizado_4_formatos", "arsenal_post_render"))
+    system2("bash", shQuote(c(wf, "complete", m$B, paso)), stdout = FALSE, stderr = FALSE)
+  antes <- md5(file.path(m$B, "ejercicio_state.json"))
+  r <- correr_hook(m, render("../B/x.Rmd"), hook = hook)
+  despues <- md5(file.path(m$B, "ejercicio_state.json"))
+  corridas <- list.dirs(file.path(m$informes, "x"), recursive = FALSE)
+  ctx <- contexto(r)
+  if (is.null(ctx) || length(corridas) != 1L) return("el hook no entregó contexto o no hay una corrida única")
+  frase <- "arsenal_post_render ya está sellado; re-sellar solo si este informe sustituye al anterior:"
+  comando <- sprintf('complete "%s" arsenal_post_render --nota "informe %s · md5 %s · ',
+                     m$B, file.path(corridas, "informe.txt"), md5(m$rmd_b))
+  p <- character()
+  if (!contiene(ctx, frase)) p <- c(p, "con el paso 6 sellado la sugerencia no lo dice")
+  if (!contiene(ctx, comando)) p <- c(p, "falta el mismo comando complete")
+  if (contiene(ctx, frase) && contiene(ctx, comando) &&
+      regexpr(frase, ctx, fixed = TRUE, useBytes = TRUE)[[1]] > regexpr(comando, ctx, fixed = TRUE, useBytes = TRUE)[[1]])
+    p <- c(p, "la frase debe ir antes del comando")
+  if (!identical(antes, despues)) p <- c(p, "el hook modificó el estado de B")
+  p
+}
+
 # El escenario base del hook vivo se corre una vez y lo comparten T1, T2, T3 y T6.
 base_vivo <- local({
   e <- NULL
@@ -373,6 +402,10 @@ test_that("T6: los validadores corren con el .Rprofile y el .Renviron del proyec
 
 test_that("T7: la 2B toma el dir= correcto aunque edir= o texdir= vayan antes", {
   expect_equal(problemas_t7(), character(0))
+})
+
+test_that("T8: con arsenal_post_render ya sellado, la sugerencia lo dice antes del mismo comando", {
+  expect_equal(problemas_t8(), character(0))
 })
 
 # --- Los mutantes ------------------------------------------------------------------------------
@@ -432,7 +465,13 @@ MUTANTES <- list(
             caso_f = problemas_t5),
   M10 = list(desc = "la nota cita <nombre>.txt, no la copia de la corrida", caso = "T2",
              muta = function(t) aplicar(t, "informe $RUN_DIR/informe.txt · md5", "informe $INFORME · md5"),
-             caso_f = caso_base(problemas_t2))
+             caso_f = caso_base(problemas_t2)),
+  M11 = list(desc = "siempre dice «ya está sellado»", caso = "T2",
+             muta = function(t) aplicar(t, 'if bash "$WORKFLOW_SCRIPT" check "$EJ_DIR" arsenal_post_render >/dev/null 2>&1; then', "if true; then"),
+             caso_f = caso_base(problemas_t2)),
+  M12 = list(desc = "nunca dice «ya está sellado»", caso = "T8",
+             muta = function(t) aplicar(t, 'if bash "$WORKFLOW_SCRIPT" check "$EJ_DIR" arsenal_post_render >/dev/null 2>&1; then', "if false; then"),
+             caso_f = problemas_t8)
 )
 
 # Copia mutada del hook vivo en tempdir().

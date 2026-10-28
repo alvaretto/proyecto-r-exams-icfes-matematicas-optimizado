@@ -385,7 +385,7 @@ suites <- list(
     watch = c("post-exams2-validation", "test_post_exams2_informe")
   ),
   list(
-    nombre = "Hook post-render v6.3: el ejercicio sale del .Rmd y no del cwd; no escribe en el repo ni sella (7 casos + mutantes)",
+    nombre = "Hook post-render v6.3: el ejercicio sale del .Rmd y no del cwd; no escribe en el repo ni sella (8 casos + mutantes)",
     archivo = "tests/testthat/test_post_exams2_cwd.R",
     critico = TRUE,
     watch = c("post-exams2-validation", "workflow-state", "test_post_exams2_cwd")
