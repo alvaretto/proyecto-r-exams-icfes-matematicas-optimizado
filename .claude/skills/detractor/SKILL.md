@@ -1,5 +1,5 @@
 ---
-name: skill-detractor
+name: detractor
 description: >
   Revisión adversarial que confronta decisiones, código y ejercicios con fuentes de verdad y evidencia científica.
   Usa para auditoría de ejercicios .Rmd, revisión pre-promoción, o validar decisiones técnicas/pedagógicas.

@@ -4,7 +4,7 @@
 
 **Principio.** Antes de ejecutar un skill, leer su `model_recommendation`: `opus` o ausente → inline; `sonnet`/`haiku` → delegar con `Task(subagent_type="general-purpose", model=...)` e incluir en el prompt ruta, estado del workflow y resultados previos.
 
-- **Opus (inline):** generar-schoice, generar-cloze, skill-retroalimentacion, analizar-icfes, validar-pedagogico, skill-detractor.
+- **Opus (inline):** generar-schoice, generar-cloze, skill-retroalimentacion, analizar-icfes, validar-pedagogico, detractor.
 - **Sonnet:** generar-codigo-tikz/python/r, comparar-similitud-visual, refinar-codigo-grafico, diagnosticar-errores, corregir-graficos, corregir-error-imagen, analizar-imagen-grafica.
 - **Haiku:** validar-renderizado, validar-diversidad, validar-icfes, validar-coherencia, gestionar-estado-graficador, transferir-conocimiento-grafico, promover-ejercicio.
 - Los agentes con `model:` en su frontmatter ya tienen routing nativo.

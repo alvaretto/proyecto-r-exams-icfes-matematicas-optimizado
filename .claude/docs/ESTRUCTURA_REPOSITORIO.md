@@ -254,6 +254,7 @@ skills/
 ├── comparar-similitud-visual/   # Sonnet — puntuación similitud
 ├── corregir-error-imagen/       # Sonnet — ERR_G1 file not found
 ├── corregir-graficos/           # Sonnet — ERR_G1-G4
+├── detractor/                   # Opus — revisión adversarial 8 dominios
 ├── diagnosticar-errores/        # Sonnet — FASE 3 clasificación
 ├── generar-cloze/               # Opus — ejercicios CLOZE metacognitivos
 ├── generar-codigo-python/       # Sonnet — matplotlib
@@ -263,7 +264,6 @@ skills/
 ├── gestionar-estado-graficador/ # Haiku — workflow_state.json
 ├── promover-ejercicio/          # Haiku — mover a producción
 ├── refinar-codigo-grafico/      # Sonnet — iteración hasta ≥95%
-├── skill-detractor/             # Opus — revisión adversarial 8 dominios
 ├── skill-retroalimentacion/     # Opus — retroalimentación científica ICFES
 ├── transferir-conocimiento-grafico/ # Haiku — lecciones entre lenguajes
 ├── validar-coherencia/          # Haiku — FASE 2: 5 coherencias

@@ -37,7 +37,7 @@ Los model IDs actuales son:
 | **skill-retroalimentacion** | Diagnostico pedagogico de cada distractor con patron ICFES |
 | **analizar-icfes** | Clasificacion 6D + decision Flujo A/B + diseno estructura metacognitiva |
 | **validar-pedagogico** | 3 taxonomias cognitivas + evidencia cientifica |
-| **skill-detractor** | Revision adversarial multi-dominio con fuentes verificables |
+| **detractor** | Revision adversarial multi-dominio con fuentes verificables |
 
 ### Sonnet 4.5 (codigo estructurado)
 

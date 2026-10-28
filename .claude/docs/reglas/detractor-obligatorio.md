@@ -5,7 +5,7 @@
 
 ## Principio Fundamental
 
-**El skill-detractor DEBE invocarse AUTOMÁTICAMENTE en toda fase de revisión (visual, código, gramática, etc.). NO hay excepciones.**
+**El skill `detractor` (`/detractor`) DEBE invocarse AUTOMÁTICAMENTE en toda fase de revisión (visual, código, gramática, etc.). NO hay excepciones.**
 
 El detractor actúa como revisor adversarial que confronta decisiones con fuentes de verdad, documentación oficial y evidencia científica.
 
@@ -692,7 +692,7 @@ Con el detractor obligatorio:
 **Fecha**: 2026-09-13
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: NINGUNA
-**Skill asociado**: `.claude/skills/skill-detractor/SKILL.md`
+**Skill asociado**: `.claude/skills/detractor/SKILL.md`
 **Agente asociado**: `.claude/agents/agente-detractor.md`
 **Detractor heterogéneo**: `.claude/scripts/detractor-hetero.sh` · `/detractor-hetero`
 **Verificador de citas**: `.claude/scripts/verificar_citas_detractor.py` (hook `SubagentStop` en `.claude/settings.json`)

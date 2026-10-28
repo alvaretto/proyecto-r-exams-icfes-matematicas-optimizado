@@ -750,7 +750,7 @@ allowed-tools:
 | analizar-icfes | **Opus** | Clasificación 6 dimensiones ICFES |
 | generar-schoice | **Opus** | Ejercicios SCHOICE metacognitivos |
 | generar-cloze | **Opus** | Ejercicios CLOZE metacognitivos |
-| skill-detractor | **Opus** | Revisión adversarial 8 dominios |
+| detractor | **Opus** | Revisión adversarial 8 dominios |
 | skill-retroalimentacion | **Opus** | Retroalimentación científica ICFES |
 | validar-pedagogico | **Opus** | Análisis pedagógico profundo |
 | analizar-imagen-grafica | Sonnet | Extracción de elementos visuales |

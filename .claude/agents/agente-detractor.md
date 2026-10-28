@@ -399,4 +399,4 @@ fuentes_locales:
 
 **Version**: 1.0.0
 **Fecha**: 2026-02-06
-**Skill asociado**: `.claude/skills/skill-detractor/SKILL.md`
+**Skill asociado**: `.claude/skills/detractor/SKILL.md`

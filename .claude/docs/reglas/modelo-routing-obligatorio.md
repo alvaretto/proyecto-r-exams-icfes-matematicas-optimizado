@@ -62,7 +62,7 @@ Claude recibe el resultado del sub-agente y:
 | skill-retroalimentacion | Diagnóstico pedagógico de distractores |
 | analizar-icfes | Clasificación 6D + diseño estructura |
 | validar-pedagogico | 3 taxonomías cognitivas + evidencia |
-| skill-detractor | Revisión adversarial multi-dominio |
+| detractor | Revisión adversarial multi-dominio |
 
 ### Sonnet 4.5 — Delegar via Task(model="sonnet")
 

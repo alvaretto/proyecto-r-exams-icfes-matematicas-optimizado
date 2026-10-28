@@ -224,7 +224,7 @@ Ver `.claude/docs/COMANDOS_Y_SKILLS.md` para el catálogo completo. Resumen:
 | `/revisar-cloze` | skill | sonnet | Revisar .Rmd CLOZE existente |
 | `/skill-retroalimentacion` | skill | opus | Generar Solution científica |
 | `/validar-pedagogico` | skill | opus | Análisis pedagógico (consultivo) |
-| `/skill-detractor` | skill | opus | Revisión adversarial en 8 dominios (FASE 2C) |
+| `/detractor` | skill | opus | Revisión adversarial en 8 dominios (FASE 2C): `auditoria [target]` o una pregunta puntual |
 | `/detractor-hetero` | command | DeepSeek → GLM → GPT → local | Segundo detractor de otra familia de modelos (FASE 2C-bis; complementa, no sustituye) |
 | `/adversario` | command | sonnet | Auditoría adversarial |
 | `/auto-refinar-grafico` | skill | sonnet | Workflow B: TikZ→Python→R hasta 98% |

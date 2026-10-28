@@ -602,7 +602,7 @@ No proceder sin revisión detractor.
 
 ### Principio Fundamental
 
-**El skill-detractor DEBE invocarse AUTOMÁTICAMENTE en toda fase de revisión.**
+**El skill `detractor` (`/detractor`) DEBE invocarse AUTOMÁTICAMENTE en toda fase de revisión.**
 
 El detractor actúa como revisor adversarial que confronta decisiones con fuentes de verdad.
 
@@ -901,7 +901,7 @@ La FASE 2G solo se ejecuta si las fases anteriores no tienen errores.
 
 | Tier | Modelo | Cuándo usar | Ejemplos |
 |------|--------|-------------|----------|
-| **Opus 4.6** | `claude-opus-4-6` | Razonamiento profundo, generación .Rmd, revisión adversarial | generar-schoice, generar-cloze, skill-detractor, skill-retroalimentacion |
+| **Opus 4.6** | `claude-opus-4-6` | Razonamiento profundo, generación .Rmd, revisión adversarial | generar-schoice, generar-cloze, detractor, skill-retroalimentacion |
 | **Sonnet 4.5** | `claude-sonnet-4-5-20250929` | Generación de código gráfico, diagnóstico, comparación visual | generar-codigo-tikz/python/r, diagnosticar-errores, comparar-similitud-visual |
 | **Haiku 4.5** | `claude-haiku-4-5-20251001` | Validaciones mecánicas, estado, transferencia | validar-renderizado, validar-coherencia, estado-graficador, promover-ejercicio |
 
