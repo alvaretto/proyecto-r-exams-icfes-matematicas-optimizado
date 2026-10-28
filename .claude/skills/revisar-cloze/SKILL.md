@@ -155,7 +155,7 @@ El hook `post-exams2-validation.sh` se ejecuta automáticamente. Para CLOZE veri
 **Acción**: Leer la salida del hook. Si reporta errores → corregir → volver a PASO 5.
 
 ```bash
-.claude/scripts/workflow-state.sh complete <dir> arsenal_post_render
+.claude/scripts/workflow-state.sh complete <dir> arsenal_post_render --nota "<la que sugiere el informe del hook>"
 ```
 
 ### PASO 6B: Auditoría visual HTML masiva (AUTOMÁTICO)

@@ -62,7 +62,7 @@ EVENTO 3: Usuario/Claude intenta git push
 │   └─→ FALLAN: RECHAZAR push ❌
 
 EVENTO 4: Después de exams2*() (solo si el comando Bash termina con 0)
-└─→ PostToolUse Hook (Bash) → post-exams2-validation.sh (v6.2, 15 fases: 2A a 2O)
+└─→ PostToolUse Hook (Bash) → post-exams2-validation.sh (v6.3, 15 fases: 2A a 2O)
     ├─→ FASE 2A: Validar matemática (script R, Niveles 1-4)
     ├─→ FASE 2B: Generar preview PNG (magick)
     ├─→ FASES 2C-2F: Arsenal completo de validación
@@ -468,7 +468,7 @@ Acciones requeridas:
 │   ├── pre-edit-testing.sh              # RETIRADO (v3.8.0): ya no existe
 │   ├── post-edit-testing.sh             # RETIRADO (v3.8.0): ya no existe
 │   ├── pre-bash-testing.sh              # RETIRADO (v3.8.0): ya no existe
-│   └── post-exams2-validation.sh        # Arsenal post-render (v6.2: FASES 2A-2O)
+│   └── post-exams2-validation.sh        # Arsenal post-render (v6.3: FASES 2A-2O)
 ├── settings.json                         # Configuración de hooks
 └── docs/
     ├── ECOSISTEMA_TESTING.md            # Documentación completa

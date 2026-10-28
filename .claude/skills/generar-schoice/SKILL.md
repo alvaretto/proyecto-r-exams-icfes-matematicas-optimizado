@@ -158,10 +158,10 @@ Rscript -e 'library(exams); exams2nops("[archivo].Rmd", n=1, dir="salida")'
 
 ### PASO 9: Arsenal post-render (workflow paso 6, AUTOMÁTICO)
 
-El hook `post-exams2-validation.sh` ejecuta automáticamente FASES 2A-2O (entre ellas validación matemática, preview visual y multi-semilla). Corre después del render y solo si el comando termina con 0. Su informe llega al modelo; el detalle de las fases está en `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`. No requiere acción manual.
+El hook `post-exams2-validation.sh` ejecuta automáticamente FASES 2A-2O (entre ellas validación matemática, preview visual y multi-semilla). Corre después del render y solo si el comando termina con 0. Su informe llega al modelo; el detalle de las fases está en `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`. Desde la v6.3 el hook no sella ningún paso: tras leer el informe, y solo con 0 errores, hay que sellar el paso 6 a mano, con la nota que el propio informe sugiere (abajo).
 
 ```bash
-.claude/scripts/workflow-state.sh complete <dir> arsenal_post_render
+.claude/scripts/workflow-state.sh complete <dir> arsenal_post_render --nota "<la que sugiere el informe del hook>"
 ```
 
 ### PASO 10: Detractor FASE 2C (workflow paso 7, OBLIGATORIO)

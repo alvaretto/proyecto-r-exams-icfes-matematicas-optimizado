@@ -24,6 +24,8 @@
 
 ### Hook post-render (`.claude/hooks/post-exams2-validation.sh`, v6.2)
 
+- **Corregido después, en la v6.3:** el hook deduce el ejercicio del `.Rmd`, no sella y no escribe en el
+  repo. Ver «Auto-sello del hook post-render (corregido el 2026-10-28)», más abajo.
 - **El informe llega al modelo.**
   - Con exit 0, Claude Code manda el texto plano de un `PostToolUse` al log de depuración. Hasta la
     v6.1, nadie leía el informe.
@@ -67,6 +69,74 @@
 - `.claude/agents/orquestador-schoice.md`, Incidente A: la Solution no cita la letra; `exshuffle: TRUE`
   con opciones de texto.
 - La skill `.claude/skills/detractor/` (renombrada con `git mv`).
+
+## Auto-sello del hook post-render (corregido el 2026-10-28)
+
+**Causa.** Hasta la v6.2 el hook post-render tomaba el `cwd` de la sesión por la carpeta del ejercicio.
+Medido el 2026-10-28 sobre copias, con los validadores reales:
+
+- Tras cualquier render con 0 errores sellaba `renderizado_4_formatos` y `arsenal_post_render` en el
+  `ejercicio_state.json` de esa carpeta, sin nota y con 40-80 ms entre los dos sellos. Esos sellos no
+  prueban que alguien renderizara los cuatro formatos ni revisara el informe; con la sesión en otra
+  carpeta, sellaba el ejercicio equivocado. En la copia de `probabilidad-fichas…` volvió a fechar un sello
+  humano (con su nota) 14 horas después.
+- Dejaba en el `cwd` el stress test (`stress_test_output/`: 34 archivos y 3,3 MB) y las vistas previas.
+- Dejaba allí lo que escriben los chunks: con la sesión en la carpeta de `proceso_recaudacion…n2_v1`,
+  sobrescribía su `diagrama_flujo.png`, un hermano que el ejercicio ya tenía, con el `ggsave` de un chunk.
+
+**Corrección (v6.3).** Rama `fix/hook-post-render-cwd`, base `e7402c0d`:
+
+| Commit | Qué cambió |
+|---|---|
+| `f080964d` | Hook v6.3: `RMD_ABS` manda; corrida en `~/.cache/post-exams2-validation/<nombre>/<corrida>/` (`work/`, `preview/`, `stress_test_output/`, `ORIGEN.txt`, `informe.txt`; se conservan 5); no sella: sugiere el `complete` con nota |
+| `4dc5ebdb` | Validadores con el `.Rprofile` y el `.Renviron` del proyecto; `dir=` con borde de palabra; la nota cita `<corrida>/informe.txt` |
+| `3eedd9fc` | Suite 45 `test_post_exams2_cwd.R` (7 casos y 6 mutantes entonces) |
+| `43d4775a` | `workflow-state.sh status` marca la firma del auto-sello; suite 40 `test_workflow_state_status_sello.R` |
+| `c19675c7` | Cabecera con el caso medido; «ya está sellado» en la sugerencia (T8, M11, M12); el rótulo del paso 6 deja de decir «automático via hook» |
+| el commit `docs:` de esta línea | Índice 3.31.0, documento de cobertura 1.3, HOOKS_Y_TESTING, `CLAUDE.md` raíz y este archivo |
+
+- **Equivalencia medida** (copias de tres ejercicios reales, v6.2 frente a v6.3): los mismos conteos por
+  fase (E1 0 errores y 6 advertencias; E2 1 y 6, por un falso positivo propio de la 2D; E3 0 y 6), el mismo
+  informe salvo las rutas de las previews, la línea de salida del stress test y el bloque de sellado, y la
+  misma duración (34 s y 35 s). Con la v6.3 las
+  copias y el worktree quedan intactos; la v6.2 escribía en ellos.
+- **Merge pendiente en el checkout principal**, después del respaldo de la regla #17
+  (`tar -czf .claude.pre-<plataforma>-<TS>.tar.gz .claude/`) y de la suite completa
+  (`R_TESTS_FULL=1 Rscript tests/run_all_tests.R`), con las invariantes I-1 a I-10 verificadas.
+
+**Estados con la firma.** Criterio, el mismo que aplica `workflow-state.sh status`: los pasos 5 y 6
+completados, el 6 de 40 a 80 ms después del 5 y ninguno de los dos con más claves que `completado` y
+`timestamp` (es decir, sin nota). Calculados en el worktree de la rama (base `e7402c0d`) son **19**; en el
+checkout principal son **20**. La diferencia es el 20.º, `migraciones-exteriores-lineas-n2/Cloze`, un estado
+sin versionar que no está en ningún commit de ninguna rama (y por eso no existe en la base). Otros 5 estados
+(6 en el principal) tienen también los dos sellos a 40-80 ms pero con claves extra (`nota`, `formatos`,
+`detalle`…): alguien las añadió a mano, y `status` no los marca.
+
+ 1. `A-Produccion/01-En-PreDesarrollo/Lentes-radio/ejercicio_state.json`
+ 2. `A-Produccion/01-En-PreDesarrollo/Pearson/cloze_v1/ejercicio_state.json`
+ 3. `A-Produccion/01-En-PreDesarrollo/Pearson/cloze_v2/ejercicio_state.json`
+ 4. `A-Produccion/01-En-PreDesarrollo/Pearson/ejercicio_state.json`
+ 5. `A-Produccion/01-En-PreDesarrollo/Rango-Colesterol-Pacientes/Cloze/ejercicio_state.json`
+ 6. `A-Produccion/01-En-PreDesarrollo/SAI2-PS-26/Cloze/ejercicio_state.json`
+ 7. `A-Produccion/01-En-PreDesarrollo/SAI2-PS-26/Neg/ejercicio_state.json`
+ 8. `A-Produccion/01-En-PreDesarrollo/SAI2-PS-26/ejercicio_state.json`
+ 9. `A-Produccion/01-En-PreDesarrollo/area-jardin-lote-porcentaje-n4/cloze/ejercicio_state.json`
+10. `A-Produccion/01-En-PreDesarrollo/area-jardin-lote-porcentaje-n4/ejercicio_state.json`
+11. `A-Produccion/01-En-PreDesarrollo/excedente-almuerzo-proporcional-n4/cloze/ejercicio_state.json`
+12. `A-Produccion/01-En-PreDesarrollo/excedente-almuerzo-proporcional-n4/cloze_v2/ejercicio_state.json`
+13. `A-Produccion/01-En-PreDesarrollo/excedente-almuerzo-proporcional-n4/ejercicio_state.json`
+14. `A-Produccion/01-En-PreDesarrollo/migraciones-exteriores-lineas-n2/Cloze/ejercicio_state.json` — **sin versionar** (solo existe en el checkout principal)
+15. `A-Produccion/01-En-PreDesarrollo/plano-cartesiano-barco-n2/ejercicio_state.json`
+16. `A-Produccion/01-En-PreDesarrollo/sistema-ecuaciones-eliminacion-n4/cloze/ejercicio_state.json`
+17. `A-Produccion/01-En-PreDesarrollo/tasa-caminata-velocidad-maxima-n4/ejercicio_state.json`
+18. `A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4/cloze/ejercicio_state.json`
+19. `A-Produccion/02-En-Desarrollo/permutaciones-pescadores-venia-n4/ejercicio_state.json`
+20. `A-Produccion/03-En-Produccion/06-Estadística-Y-Probabilidad/Pensamiento-Aleatorio/01-Variables-Cualitativas_Distribucion-De-Frecuencias/ExportacionesGraficos-Tebailandia/exportaciones_graficos_tebailandia_aleatorio_interpretacion_representacion_n3_v1/ejercicio_state.json`
+
+**Qué hacer con ellos: no se editan.** Al retomar cada ejercicio se re-verifican por artefacto (los cuatro
+formatos existen y abren, y el informe del hook se leyó); `workflow-state.sh status <carpeta>` los marca
+con ⚠. El estado de `03-En-Produccion/` está en una carpeta inmutable: su re-verificación también es por
+artefacto, no por edición. Un sello nuevo lleva `--nota`; el hook v6.3 imprime el comando.
 
 ## Cómo verificar el estado
 

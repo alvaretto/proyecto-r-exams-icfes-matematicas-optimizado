@@ -100,7 +100,7 @@ Referencia completa: `.claude/docs/HOOKS_Y_TESTING.md`
 **Sistema automático permanente:**
 - Hooks ICFES en `.claude/settings.json`: gate `.Rmd` + recordatorio de tildes (PreToolUse), arsenal post-render (PostToolUse Bash) y citas del detractor (SubagentStop); los demás son de Ruflo
 - Gate mecánico: `pre-write-rmd-gate.sh` bloquea .Rmd sin `ejercicio_state.json`
-- Arsenal post-render v6.2 (FASES 2A-2O): su informe llega al modelo como JSON (`additionalContext`; `decision: block` si hay errores) y queda completo en `~/.cache/post-exams2-validation/`. Solo corre si el comando Bash termina con 0. Detalle: `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`
+- Arsenal post-render v6.3 (FASES 2A-2O): el ejercicio se deduce del .Rmd; no escribe en el repo ni sella pasos (sugiere el `complete` con nota). Su informe llega al modelo como JSON (`additionalContext`; `decision: block` si hay errores) y queda completo en `~/.cache/post-exams2-validation/`. Solo corre si el comando Bash termina con 0. Detalle: `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`
 - Suites en `tests/run_all_tests.R`; su tabla y sus cifras se generan en `.claude/docs/VALIDATOR_COBERTURA_ICFES.md` con `tests/sincronizar_doc_suites.R`, y un test falla si divergen
 - CI/CD con GitHub Actions
 - Tolerancia cero a regresiones
@@ -185,7 +185,7 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.30.1 (HANDOFF general del repo en `.claude/docs/HANDOFF_REPO.md`)
+**Versión**: 3.31.0 (hook post-render v6.3: el ejercicio por el .Rmd, sin escribir en el repo ni sellar)
 **Fecha**: 2026-10-28
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)

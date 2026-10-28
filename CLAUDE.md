@@ -24,10 +24,12 @@
    o `02-En-Desarrollo/`: respetar el gate `pre-write-rmd-gate.sh` (regla #16,
    `workflow-state-enforcement.md`). Requiere `ejercicio_state.json` con pasos previos
    completados.
-4. **Después de cada `exams2*()`**: el hook `post-exams2-validation.sh` (v6.2) ejecuta
+4. **Después de cada `exams2*()`**: el hook `post-exams2-validation.sh` (v6.3) ejecuta
    las FASES 2A-2O si el comando Bash termina con 0, y su informe le llega al modelo
    como JSON (`additionalContext`; `decision: block` si hay errores; detalle en
-   `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`). NO suprimir su salida ni acortar su
+   `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`). No sella pasos ni escribe en el repo: sus
+   artefactos (vistas previas, stress test, informe) van a `~/.cache/post-exams2-validation/`.
+   NO suprimir su salida ni acortar su
    timeout (300s desde 2026-08-13: subido de 120s para que quepa la muestra estándar
    N=100 de la regla #23, 170s medidos en el ejercicio más pesado del repo). Subirlo es
    legítimo; bajarlo corta la FASE 2G a media ejecución y Claude Code descarta el

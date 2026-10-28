@@ -92,7 +92,7 @@ workflow-state.sh complete <dir> validar_diversidad --versiones_unicas 287
 | 3 | `generacion_rmd` | `/generar-schoice` o `/generar-cloze` | Se desbloquea después de 1+2 |
 | 4 | `retroalimentacion` | `/skill-retroalimentacion` | — |
 | 5 | `renderizado_4_formatos` | `exams2html/pdf/docx/nops` | — |
-| 6 | `arsenal_post_render` | (automático via hook) | — |
+| 6 | `arsenal_post_render` | hook post-render (corre solo; se sella a mano con `complete … --nota`) | — |
 | 7 | `detractor_fase2c` | `/adversario archivo.Rmd` | — |
 | 8 | `coherencias_5` | Documentar 5 coherencias | — |
 | 9 | `validar_diversidad` | `/validar-diversidad` | — |

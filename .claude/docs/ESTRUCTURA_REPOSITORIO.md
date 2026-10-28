@@ -349,7 +349,7 @@ outputs/
     ├── tikz_output_v2.png
     ├── python_output_v1.png
     ├── r_output_v1.png
-    └── preview_nombre-0.png         # Generado por hook FASE 2B
+    └── preview_nombre-0.png         # Hasta la v6.2 lo generaba aquí el hook FASE 2B; hoy va a la caché
 ```
 
 **Limpieza**: Archivos temporales pueden eliminarse después de validación

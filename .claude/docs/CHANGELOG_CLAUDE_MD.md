@@ -8,6 +8,36 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.31.0 (2026-10-28)
+
+- **Hook post-render v6.3: el ejercicio se deduce del `.Rmd`, no del `cwd` de la sesión.**
+  - **Causa.** Hasta la v6.2 el hook trataba el `cwd` de la sesión como la carpeta del ejercicio:
+    - sellaba `renderizado_4_formatos` y `arsenal_post_render` sin nota, con 40-80 ms entre los dos sellos
+      (20 estados del repo conservan esa firma), también sobre el ejercicio equivocado;
+    - escribía allí el stress test (un `stress_test_output/` de 3,3 MB en la raíz del worktree), las vistas
+      previas y lo que escriben los chunks (medido: el `diagrama_flujo.png` de
+      `proceso_recaudacion…n2_v1`, un hermano que el ejercicio ya tenía, sobrescrito con la sesión parada
+      en su carpeta).
+  - **Corrección** (rama `fix/hook-post-render-cwd`, base `e7402c0d`):
+    - `f080964d`: v6.3. `RMD_ABS` manda; cada corrida trabaja en
+      `~/.cache/post-exams2-validation/<nombre>/<AAAAmmdd-HHMMSS>-<pid>/` (`work/`, `preview/`,
+      `stress_test_output/`, `ORIGEN.txt`, `informe.txt`; se conservan 5); no sella: sugiere el `complete`
+      con nota.
+    - `4dc5ebdb`: los validadores corren con el `.Rprofile` y el `.Renviron` del proyecto; `dir=` con borde de
+      palabra; la nota cita `<corrida>/informe.txt`.
+    - `3eedd9fc`: suite 45 `test_post_exams2_cwd.R`.
+    - `43d4775a`: `workflow-state.sh status` marca la firma del auto-sello; suite 40.
+    - `c19675c7`: cabecera con el caso medido, aviso de «ya está sellado» y rótulo del paso 6 sin «automático».
+  - **`status` marca los estados con la firma** (⚠): no se editan, se re-verifican por artefacto al retomar
+    cada ejercicio. Lista y cifra: `.claude/docs/HANDOFF_REPO.md`.
+  - **Suites.** La 40, `test_workflow_state_status_sello.R` (8 bloques; lleva embebido el mutante de quitar
+    el aviso y se comprobaron otros 5), y la 45, `test_post_exams2_cwd.R` (8 casos y 13 mutantes; contra la
+    v6.2 falla los 8). El runner pasa a 46 suites.
+  - **Equivalencia medida** con los validadores reales sobre copias de tres ejercicios reales: los mismos
+    conteos por fase (E1 0/6, E2 1/6 por un falso positivo propio de la 2D, E3 0/6); con la v6.3 las copias
+    quedan intactas y con la v6.2 se escriben.
+  - **Merge pendiente** en el checkout principal, tras el respaldo de la regla #17 y la suite completa.
+
 ### Cambios v3.30.1 (2026-10-28)
 
 - **HANDOFF general del repo:** `.claude/docs/HANDOFF_REPO.md`, para retomar el trabajo de

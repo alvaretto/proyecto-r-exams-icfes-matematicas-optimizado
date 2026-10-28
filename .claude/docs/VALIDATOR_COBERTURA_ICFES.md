@@ -85,18 +85,18 @@ En modo rápido (`R_TESTS_QUICK=1`, el del pre-push) corren siempre las 8 suites
 
 `post-exams2-validation.sh` (v6.3) es un hook `PostToolUse` sobre `Bash`, con timeout de 300 s (`.claude/settings.json`). Corre solo si el comando Bash termina con 0: si falla, Claude Code dispara `PostToolUseFailure` y el hook no corre (verificado el 2026-10-28).
 
-Se activa cuando el comando contiene una llamada `exams2*("archivo.Rmd")` (comillas dobles o simples), con ruta absoluta o relativa al `cwd` de la sesión. Si el primer argumento no es una cadena literal (una variable, `rep(...)`, `c(...)`), no se activa. Si el `.Rmd` no existe visto desde ese `cwd`, avisa al modelo de que el arsenal no corrió.
+Se activa cuando el comando contiene una llamada `exams2*("archivo.Rmd")` (comillas dobles o simples), con ruta absoluta o relativa al `cwd` de la sesión; el `cwd` solo sirve para resolver esa ruta, porque el ejercicio es la carpeta del `.Rmd` (v6.3). Si el primer argumento no es una cadena literal (una variable, `rep(...)`, `c(...)`), no se activa. Si el `.Rmd` no existe visto desde ese `cwd`, avisa al modelo de que el arsenal no corrió.
 
-Antes del arsenal hace `cd` a ese `cwd`. Hasta la v6.1, con ruta relativa y el proceso del hook en otro directorio (por ejemplo, invocado a mano desde la raíz), las fases 2I-2L callaban: 0 errores contra 2 con ruta absoluta, con el mismo `.Rmd`. Ejecuta 15 fases:
+**Dónde trabaja (v6.3).** El ejercicio sale del `.Rmd` (su ruta absoluta y canónica): de ahí salen su carpeta, el proyecto (`CLAUDE_PROJECT_DIR` o el repo git de esa carpeta) y su `ejercicio_state.json`. Cada corrida trabaja en `~/.cache/post-exams2-validation/<nombre>/<AAAAmmdd-HHMMSS>-<pid>/`: el arsenal corre en su subcarpeta `work/` (lo que escriban los chunks de los validadores cae ahí y no en el repo), con `R_PROFILE_USER` y `R_ENVIRON_USER` apuntando al `.Rprofile` y al `.Renviron` del proyecto, si existen; así reproduce el entorno de una sesión abierta en la raíz (la 2O corre con `--vanilla` y no los lee). Las vistas previas y el stress test quedan en `preview/` y `stress_test_output/` de esa corrida, junto con `ORIGEN.txt` (ruta y md5 del `.Rmd`) e `informe.txt`, y se conservan las 5 corridas más recientes de cada ejercicio. Hasta la v6.2 hacía `cd` al `cwd` de la sesión, trataba esa carpeta como el ejercicio y escribía allí. Hasta la v6.1, con ruta relativa y el proceso del hook en otro directorio (por ejemplo, invocado a mano desde la raíz), las fases 2I-2L callaban: 0 errores contra 2 con ruta absoluta, con el mismo `.Rmd`. Ejecuta 15 fases:
 
 | Fase | Qué hace | Efecto en el resumen |
 |------|----------|----------------------|
 | 2A | Coherencia matemática (`validar_coherencia_matematica.R`) | Error si el script falla |
-| 2B | Preview PDF → PNG con `magick -density 150` del PDF más reciente (menos de 5 min) | Error si la conversión falla; aviso si no hay PDF o falta `magick` |
+| 2B | Preview PDF → PNG con `magick -density 150` del PDF más reciente (menos de 5 min), en `<corrida>/preview/`; el informe da las rutas absolutas | Error si la conversión falla; aviso si no hay PDF o falta `magick` |
 | 2C-2F | `arsenal_validacion_completa.R`: opciones únicas (2C), ortografía (2D), metadatos ICFES (2E), estructura metacognitiva (2F) | Suma los totales que reporta el script |
 | 2G | Multi-semilla con N = 100 (regla #23, `validar_multisemilla.R`) | Error; solo corre si no hubo errores antes |
-| 2H | Stress test visual: 10 semillas con render real (`SOURCES/scripts_validacion/stress_test_visual.R`) | Error; solo corre si no hubo errores antes |
-| 2I | Errores 16-17: imagen Markdown sin `{width=...}`, `\pandocbounded` usado sin definir en los `.tex`, `exshuffle: TRUE` con letra en la Solution | Error |
+| 2H | Stress test visual: 10 semillas con render real (`SOURCES/scripts_validacion/stress_test_visual.R`), con su salida en `<corrida>/stress_test_output/` | Error; solo corre si no hubo errores antes |
+| 2I | Errores 16-17: imagen Markdown sin `{width=...}`, `\pandocbounded` usado sin definir en los `.tex` del render (los de `dir=`/`texdir=` que nombra el comando y los de la corrida; si el comando no nombra ninguno, el informe lo declara), `exshuffle: TRUE` con letra en la Solution | Error |
 | 2J | Letter-independence de la Solution (regla #19): `ERR_SOL_LETRA_R`, `ERR_SOL_LETRA_CAT`, `ERR_SOL_LETRA_LITERAL` | Error |
 | 2K | Tabla Markdown sin el guard del contador `none` (regla #20): `ERR_TABLA_NONE` | Error |
 | 2L | Imágenes dentro del gap de un CLOZE (V5, Incidente G): `ERR_CLOZE_V5` | Error |
@@ -104,7 +104,7 @@ Antes del arsenal hace `cd` a ese `cwd`. Hasta la v6.1, con ruta relativa y el p
 | 2N | Señales estáticas de diversidad cosmética (regla #22): `WARN_DIV_ESTATICA` | Aviso |
 | 2O | Glifos que rompen pdflatex (regla #25): `ERR_GLIFO_LATEX` en Markdown visible, `WARN_GLIFO_LATEX` en código R | Error o aviso |
 
-Al final suma errores y advertencias. Si en el `cwd` hay `ejercicio_state.json` y no hubo errores, sella los pasos 5 y 6 del workflow (`renderizado_4_formatos`, `arsenal_post_render`) y muestra el siguiente.
+Al final suma errores y advertencias. **No sella nada y no escribe en el repo** (v6.3). Si la carpeta del `.Rmd` tiene `ejercicio_state.json`, imprime el comando `workflow-state.sh complete <carpeta> arsenal_post_render --nota "informe <corrida>/informe.txt · md5 <md5 del .Rmd> · <E> errores / <W> advertencias"`, solo con 0 errores y avisando antes si el paso ya estaba sellado (re-sellar pisa su timestamp); recuerda que `renderizado_4_formatos` se sella solo con los cuatro formatos (HTML, PDF, DOCX y Moodle; NOPS es N/A en un cloze) y muestra el siguiente paso, que lee con `next`, de solo lectura. Hasta la v6.2 sellaba los pasos 5 y 6, sin nota, en el estado del `cwd` de la sesión; 20 estados del repo conservan esa firma y `workflow-state.sh status` la marca (ver `HANDOFF_REPO.md`, sección «Auto-sello del hook post-render»).
 
 Frente al validator genérico:
 - Se dispara solo tras cada render.
@@ -116,7 +116,7 @@ Frente al validator genérico:
 - `decision: "block"` + `reason`, si hay errores: Claude Code los pone junto al resultado del comando como «hook blocking error».
 - `systemMessage`: una línea para el usuario con los totales y la ruta del informe.
 
-El informe completo queda en `~/.cache/post-exams2-validation/<nombre>.txt`; con `POST_EXAMS2_INFORME_DIR` se cambia el directorio. Test: `tests/testthat/test_post_exams2_informe.R`, que corre el hook real con un proyecto falso; contra la v6.1 da 11 fallos y 4 errores.
+El informe completo queda en `~/.cache/post-exams2-validation/<nombre>.txt`; con `POST_EXAMS2_INFORME_DIR` se cambia el directorio. Desde la v6.3 se copia también a `<nombre>/<corrida>/informe.txt`, que es el que cita la nota del sello (el `<nombre>.txt` lo pisa el render siguiente del mismo ejercicio). Tests: `tests/testthat/test_post_exams2_informe.R`, que corre el hook real con un proyecto falso (contra la v6.1 da 11 fallos y 4 errores), y `tests/testthat/test_post_exams2_cwd.R` (v6.3: la sesión en la carpeta A y el render de un `.Rmd` de la B; 8 casos y 13 mutantes, y contra la v6.2 falla los 8 casos).
 
 **Lo que el hook NO hace:**
 - **No impide el render.** Corre después, con el `.Rmd` ya renderizado. `decision: "block"` no deshace nada: solo hace que el modelo reciba la orden de corregir.
@@ -165,5 +165,5 @@ R_TESTS_QUICK=1 Rscript tests/run_all_tests.R
 
 ---
 
-**Versión**: 1.2 (2026-10-28: hook v6.2, cuyo informe llega al modelo; la tabla de suites la genera `tests/sincronizar_doc_suites.R` y la vigila `tests/testthat/test_doc_suites_sincronizada.R`). La 1.1 describía el hook v6.1 con la tabla escrita a mano; la 1.0, el hook v6.0 con 10 fases y 19 suites.
+**Versión**: 1.3 (2026-10-28: hook v6.3, que deduce el ejercicio del `.Rmd`, trabaja en la caché y no sella ni escribe en el repo). La 1.2 describía el hook v6.2, cuyo informe llega al modelo, con la tabla de suites generada por `tests/sincronizar_doc_suites.R` y vigilada por `tests/testthat/test_doc_suites_sincronizada.R`; la 1.1, el hook v6.1 con la tabla escrita a mano; la 1.0, el hook v6.0 con 10 fases y 19 suites.
 **Fecha**: 2026-10-28

@@ -65,7 +65,7 @@ Detalles completos en `.claude/rules/workflow-state-enforcement.md`.
 
 ### 2. PostToolUse - Bash (exams2*)
 
-**Hook**: `.claude/hooks/post-exams2-validation.sh` (v6.2: 15 fases, de la 2A a la 2O)
+**Hook**: `.claude/hooks/post-exams2-validation.sh` (v6.3: 15 fases, de la 2A a la 2O)
 **Timeout**: 300 segundos (`.claude/settings.json`). Si se excede, Claude Code descarta toda su salida
 
 #### Cuándo se Ejecuta
@@ -102,16 +102,17 @@ Rscript .claude/scripts/validar_coherencia_matematica.R [archivo.Rmd]
 find output_pdf/ output/ -name "*.pdf" -type f
 
 # 2. Convierte a PNG
-magick -density 150 [pdf] -quality 90 preview_[nombre].png
+magick -density 150 [pdf] -quality 90 [corrida]/preview/preview_[nombre].png
 
-# 3. Soporta múltiples páginas
-preview_nombre-0.png
-preview_nombre-1.png
+# 3. Soporta múltiples páginas. Desde la v6.3 quedan en
+#    ~/.cache/post-exams2-validation/<nombre>/<corrida>/preview/
+[corrida]/preview/preview_nombre-0.png
+[corrida]/preview/preview_nombre-1.png
 ...
 ```
 
 **Reporta**:
-- Rutas de PNGs generados
+- Rutas ABSOLUTAS de los PNG generados (en `<corrida>/preview/`, dentro de `~/.cache/post-exams2-validation/<nombre>/`): el modelo hace `Read()` de esas rutas, no de un nombre relativo a su carpeta
 - **Emite instrucción OBLIGATORIA para Claude**:
   ```
   Claude DEBE:
@@ -126,7 +127,9 @@ preview_nombre-1.png
 Las fases 2C a 2O (arsenal, multi-semilla con N = 100, stress test visual con 10
 semillas y detectores estáticos) se describen en
 `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`, sección «El Hook post-exams2». La 2G y
-la 2H solo corren si no hubo errores antes.
+la 2H solo corren si no hubo errores antes. Desde la v6.3 el stress test deja su salida
+(`reporte.json`, `resumen.txt` y `pngs/`) en `<corrida>/stress_test_output/`, no en la carpeta de la
+sesión ni en la del ejercicio.
 
 **Cómo llega el informe al modelo (v6.2)**: el hook escribe en stdout un JSON con
 `additionalContext` (el informe, hasta 9 000 caracteres). Si hay errores añade
@@ -233,7 +236,7 @@ EVENTO 3: Usuario/Claude intenta git push
     └─→ Ejecuta SIEMPRE R_TESTS_QUICK=1 Rscript tests/run_all_tests.R (modo rápido)
 
 EVENTO 4: Después de exams2*() (solo si el comando Bash termina con 0)
-└─→ PostToolUse Hook (Bash) → post-exams2-validation.sh (v6.2, 15 fases: 2A a 2O)
+└─→ PostToolUse Hook (Bash) → post-exams2-validation.sh (v6.3, 15 fases: 2A a 2O)
     ├─→ FASE 2A: Validar matemática (script R, Niveles 1-4)
     ├─→ FASE 2B: Generar preview PNG (magick)
     │   └─→ Claude DEBE leer PNG + verificar + aprobar

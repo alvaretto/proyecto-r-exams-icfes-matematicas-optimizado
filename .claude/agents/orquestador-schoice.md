@@ -942,7 +942,7 @@ ya corrieron. No los doy por hechos leyendo `ejercicio_state.json`.
 | 3 | generacion_rmd | Construir `.Rmd` SCHOICE metacognitivo (lógica del skill /generar-schoice inline) | Read+Write inline | opus (yo mismo) |
 | 4 | retroalimentacion | Generar Solution con justificación + análisis diagnóstico de cada distractor | inline | opus (yo mismo) |
 | 5 | renderizado_4_formatos | `exams2html/pdf/pandoc/nops` (+ `exams2moodle` si hay opciones gráficas: es el único canal que expone el nombre de archivo — pre-flight 21 apartado (c)) | Bash | — |
-| 6 | arsenal_post_render | Hook automático FASES 2A-2O (2L = V5 CLOZE, N/A en schoice; **2N** = `WARN_DIV_ESTATICA`, regla #22; **2O** = `ERR_GLIFO_LATEX`, regla #25) | (automático) | — |
+| 6 | arsenal_post_render | Hook automático FASES 2A-2O (2L = V5 CLOZE, N/A en schoice; **2N** = `WARN_DIV_ESTATICA`, regla #22; **2O** = `ERR_GLIFO_LATEX`, regla #25). El hook corre solo pero desde la v6.3 no sella | Bash: `workflow-state.sh complete <dir> arsenal_post_render --nota "<la que sugiere el informe del hook>"` | — |
 | 6b | auditoria_visual_html | **Auditoría visual masiva** de ~24 versiones HTML (móvil 360px + desktop 1024px): fugas de markup, math sin renderizar, opciones duplicadas, desbordes/responsividad, anomalías cross-versión | Task `subagent_type="auditor-visual-html"` | sonnet |
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
