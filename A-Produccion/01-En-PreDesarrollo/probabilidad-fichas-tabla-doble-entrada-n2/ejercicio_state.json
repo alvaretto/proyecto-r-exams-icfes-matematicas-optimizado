@@ -1,0 +1,343 @@
+{
+  "version": "2.0",
+  "ejercicio": "probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_schoice_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-10-26T18:17:41.938218-05:00",
+  "timestamp_ultima_actualizacion": "2026-10-27T23:24:48.257666-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-10-26T18:24:19.811651-05:00",
+      "resultado": null,
+      "competencia": "Formulación y ejecución",
+      "componente": "Aleatorio",
+      "nivel": 2,
+      "descriptor": "D2.3",
+      "dok": 2,
+      "bloom": "Aplicar",
+      "solo": "Relacional",
+      "tipo_metacognicion": "Análisis de error ajeno (en la Solution, I-1)",
+      "fuente": "ClasificadorICFES (haiku) + ficha MAT-2026-07-032; rótulo del editor ignorado; 0 discrepancias de contenido"
+    },
+    "flujo_b": {
+      "requerido": true,
+      "completado": true,
+      "timestamp": "2026-10-27T21:45:44.449198-05:00",
+      "lenguaje": "python",
+      "similitud_python": 96.8,
+      "similitud_tikz": 98.1,
+      "similitud_r": 97.9,
+      "nota": "Python elegido por el profesor antes de ver la tabla (condicionado a >=98 y H-3). Juez opus: H-3 verificado celda a celda; metrica uniforme del juez (gris, blur 1.2, caja de tabla): Python RMSE 0.0649 SSIM 0.924 dE 5.7 (mejor de los tres; TikZ 0.0748/0.908/6.2; R 0.0767/0.903/6.2). Bajo lectura literal por escalones de la rubrica ninguno llega a 98 (familia tipografica)",
+      "similitud_python_firma_2026_10_26": 98.3,
+      "nota_firma_96_8": "Firma del profesor 2026-10-27 (WAIT_USER #3): se acepta el 96,8 de la rubrica del graficador tras el ajuste de peso que el mismo pidio (cuerpo en tipo normal, d=0.45). Registrado en .claude/CLAUDE.md local, tabla de decisiones. H-3 (celda a celda) sin relajar."
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-10-27T23:04:05.926017-05:00",
+      "archivo": "probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_schoice_v1.Rmd",
+      "nota": "Reapertura 8 (detractor r5, 2 ALTA en el estimulo; decision del profesor: pasada 2 numerica + firma de la compuesta). md5 4fa520bb. Pasada 2 de P7-D: celdas de la clave en 3..24 como las demas (a y b independientes, 8 <= a+b <= 46, |b-cc| <= 15), simulada antes sobre copia. Guarda duplicada del pool retirada; R2 declarada defensa estructural. Script de reemplazos: Rmd 3/3, verificador 10/10. verificar_espacio.R APROBADO (salida/r6): E1 10.401.300 combinaciones, 0 abortos (incluidos conjuntos vacios, H4); canal de estimulo exacto 1/3; E4c: fuera de 5-20 +1,6 pp, numero mayor -1,7, mayor o menor +0,9, celdas mas juntas +9,2 +- 6,4 (zona del corte, declarada; +8,0 con 2000 semillas), compuesta 1/2 firmada; P7 no canonica -2,1 pp; 25/25 mutantes."
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-10-27T23:07:18.470969-05:00",
+      "nota": "Reapertura 8. Solution leida en salida/r6: no canonica semilla 1 (v11, paginas 1-2) con la clave nueva (3+6 = 4+5 = 9, total 81; valores extremos 3 y 4 en la clave), PROB-CER 20/21, espejo 41/22, PROB-UNA 30/10 con 'alta: 6 y 6', todo verdadero; HTML a 360 px (movil_360_v11.png) sin desborde. Textos de la Solution sin cambios respecto de r5."
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-10-27T23:07:18.528788-05:00",
+      "formatos": "html(5) pdf(5) docx(2) nops(2) moodle(3)",
+      "nota": "Reapertura 8. salida/r6/, semillas 7, 1, 2, 3, 4. 20 archivos; 0 usos de pandocbounded; sin LTcaptype; PDF 3 paginas, NOPS 4; Moodle solo tabla_<hex>.png (patron con digitos), 3 claves."
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-10-27T23:07:18.586313-05:00",
+      "nota": "Reapertura 8. Hook a mano (salida/r6/arsenal_hook.txt): 0 errores, 8 advertencias. 2A APROBADO; 2D OK; 2G 100/100; 2H N=10 PASA; 2I, 2J, 2O OK. La advertencia nueva, 2N WARN_DIV_ESTATICA 'sin aleatorizacion', es FALSO POSITIVO del hook: corre con set -o pipefail y 'echo $DG_BLOCK | grep -q' recibe SIGPIPE cuando grep sale en la primera coincidencia; reproducido: con pipefail falla 5/5 tambien sobre el bloque de r5, que en su corrida paso (carrera). El bloque tiene sample() y pick(); la diversidad sustantiva se mide en el paso 9. Hook protegido: no se modifica desde el subproyecto."
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-10-27T23:23:01.330020-05:00",
+      "veredicto": "APROBAR_CON_CAMBIOS",
+      "reporte": "salida/r6/detractor_fase2c_r6.md",
+      "nota": "Sexto detractor del 2026-10-27, independiente, sobre md5 4fa520bb (version final). Citas verificadas 10/10. Sin CORRECCION: clave verdadera en todas las ramas (E1 exacto sobre 10.401.300 combinaciones). Cambios atendidos: H1 ALTA (cadenas firma de repeticion + celdas mas juntas, 47,6 % y 64,8 %, no nacidas de la pasada 2) firmado por alcance por el profesor (regla de parada) y medido en E4c contra la cifra firmada; H3 HANDOFF corregido. Declarados: H2 MEDIA (E4c exacto por enumeracion ponderada, pendiente; hoy compara contra la firma con 3 SE); H4 BAJA numeracion 0.0.x de la Solution en PDF = convencion del repo (6 de 10 ejemplos funcionales). Historia: r1 RECHAZAR, r2-r6 APROBAR_CON_CAMBIOS (reportes en salida/rN/)."
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-10-27T23:23:01.389201-05:00",
+      "veredicto": "CUMPLE_CON_OBSERVACIONES",
+      "nota": "AgenteValidadorVisual sobre salida/r6: 5/5 CUMPLE; abrio como imagen las paginas de Solution de las 4 no canonicas y la captura a 360 px; recalculo las 5 tablas. Unica observacion BAJO: la clave puede repetir un valor dentro de un mismo tipo (7+7 en la semilla 4); verdadero y sin efecto en la correccion."
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-10-27T23:23:01.448132-05:00",
+      "versiones_unicas": 271,
+      "nota": "salida/r6/: diversidad sustantiva N=100 PASS; diagnosticidad N=100 PASS; 271/300 unicas (30 canonicas = 1; 270 no canonicas distintas; 135 claves). Bateria P7 de opciones: no canonica -2,1 pp PASS; relacional en la mezcla +8,4 (residuo canonico firmado por alcance, P_CANON <= 0,10). Estimulo (E4b/E4c): repite 1/3 exacto y compuesta 1/2 firmadas; cadenas con celdas mas juntas firmadas por alcance (47,6 % / 64,8 %); fuera de 5-20, numero mayor y mayor o menor en ok. P7-D: 2 pasadas usadas, cierre con residuo declarado."
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-10-27T23:23:01.506366-05:00",
+      "nota": "salida/r6/paso10_cotejo.txt: bloque Meta-information identico al de r3-r5 (10/10 campos de la ficha MAT-2026-07-032; Afirmacion, Evidencia, D2.3 y Estandar literales en el catalogo); TipoMetacognicion evaluacion_afirmacion por decision del profesor. DOK 2, Nivel 2."
+    },
+    "aprobacion_usuario": {
+      "completado": true,
+      "timestamp": "2026-10-27T23:24:48.257666-05:00",
+      "veredicto": "aprobado para el aula",
+      "nota": "Aprobacion del profesor el 2026-10-27 (~23:35) en la sesion, sobre la version final md5 4fa520bb (renders salida/r6/). Aprobado para el aula, no para produccion: la promocion espera la evidencia de aula (Nivel 3). Residuos de diagnosticidad firmados en .claude/CLAUDE.md local. Sin git add ni commit hasta que el profesor lo pida."
+    }
+  },
+  "reaperturas": [
+    {
+      "timestamp": "2026-10-26T19:50:17.792033-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Ajuste del peso de la letra de la tabla decidido por el profesor (2026-10-26) y re-auditoría: los pasos 3-5 se sellaron en lote en 120 ms",
+      "reporte": null,
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-10-26T19:40:09.539896-05:00",
+          "archivo": "probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_schoice_v1.Rmd",
+          "nota": "Rmd escrito (opus inline). I-1..I-8 como guardas stopifnot en data_generation; canónica verbatim (I-2, p=0.10); no canónicas agregadas (I-8) con clave construida (I-5, F1); pool de 4 errores con sample() sobre aplicables (I-6); guarda R2 n1+n2<N y celdas>=1 (I-7); tabla Python embebida (PNG canónico md5 idéntico al preview del graficador). Smoke 100 semillas: 0 fallos, 1 clave en 100/100, 9 canónicas. Ortografía limpia; glifos OK; sin set.seed."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-10-26T19:40:09.598011-05:00",
+          "nota": "Solution letter-independent (awk regla #19 vacío), sin enumerar en orden de opciones; procedimiento con sumas por tipo; análisis por distractor (código, lectura, explicación con números, por qué es error, causa raíz); propiedades, caso específico, reflexión (pool de 5), estrategia; Answerlist de feedback alineado. Canónica: textos de C y D ajustados a celdas sueltas."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-10-26T19:40:09.656498-05:00",
+          "formatos": "html(5) pdf(5) docx(2) nops(2) moodle(3)",
+          "nota": "Semillas 7 (canónica),1,2,3,4 en salida/p5_*. .tex: pandocbounded solo como providecommand de la plantilla (0 usos); sin LTcaptype. PDF canónico revisado a ojo en sus 3 páginas (antes del ajuste de texto de C/D; tras el ajuste, verificado por pdftotext). Moodle: solo tabla_<hex>.png, 3 claves. exams2moodle con seed= falló por invocación (argumento no aceptado), no por el ejercicio; repetido con set.seed: OK."
+        }
+      }
+    },
+    {
+      "timestamp": "2026-10-26T19:59:18.573260-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Calibracion del grosor del cuerpo de la tabla dentro de la misma decision del profesor: d 0.25 -> 0.45 tras medir la curva peso-similitud (0.25: 94.2; 0.45: 96.8; 0.60: 97.3); 0.45 sigue siendo tipo normal y es la mas cercana al impreso",
+      "reporte": null,
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-10-26T19:57:57.184023-05:00",
+          "archivo": "probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_schoice_v1.Rmd",
+          "nota": "Reapertura 1 (orquestador nuevo). Ajuste de peso del profesor: _ROL num->reg (Source Sans 3 Regular en vez de Noto Sans Bold), dilatacion d 0.839/0.709->0.25 en cat y num (ss3 y dejavu), Noto retirada. Canonica (semilla 7) generada desde el .Rmd y comparada a ojo con orig_enunciado_tabla.png: 12|11, 8|15, 16|20, 10|8 y celdas combinadas identicas; cuerpo en tipo normal; encabezados y Blanca/Negra sin cambio. Rubrica del graficador 98.3->94.2 (estilos: masa de texto -20.9% frente al escaneo; H-3: 0 valores incorrectos, 0 faltantes, 0 sobrantes). Smoke N=100: 0 fallos, 9 canonicas, 1 clave 100/100, 4 unicas 100/100. Ortografia limpia, glifos OK, sin reseed, pool 4 con sample()."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-10-26T19:57:57.241719-05:00",
+          "nota": "Reapertura 1. Solution leida con read_exercise en semillas 7 (canonica), 2 (PROB-CRU) y 1 (PROB-UNA): sumas correctas, 6 secciones, regla 19 awk = 0. Corregidos 3 textos que afirmaban algo inexacto: PROB-UNA canonica (nombre, lectura y causa raiz: C son celdas sueltas), PROB-CRU canonica (causa raiz: elige por posicion, 8 y 20 no se ven iguales), PROB-UNA generica ('misma fila o columna' era falso en la semilla 1 -> 'mismo rotulo'); estrategia 'todas sus opciones' -> 'los dos valores de esa caracteristica'."
+        }
+      }
+    },
+    {
+      "timestamp": "2026-10-26T20:13:37.527747-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Guardas I-2 tautologicas: all(w == CANON_W) tras w <- CANON_W e identical(enunciado, CANON_ENUNCIADO) tras enunciado <- CANON_ENUNCIADO no podian fallar; ahora comparan con literales del impreso (celdas, suma de control y largo del enunciado). Detectado al disenar los mutantes M6/M7 del paso 9",
+      "reporte": null,
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-10-26T19:59:20.687926-05:00",
+          "archivo": "probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_schoice_v1.Rmd",
+          "nota": "Reapertura 2. d=0.45 en cat y num (ss3 y dejavu), resto igual que en la reapertura 1. El .Rmd es identico (cmp) a la copia con la que se midio la canonica: rubrica 96.8 (estilos 12.5), H-3 0 errores; comparada a ojo contra orig_enunciado_tabla.png en scratchpad/curva_peso.png: tipo normal, peso proximo al impreso. Smoke N=100 repetido: 0 fallos, 9 canonicas, 1 clave 100/100, 4 unicas 100/100."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-10-26T19:59:20.746171-05:00",
+          "nota": "Reapertura 2: la Solution no cambio desde su verificacion en la reapertura 1 (el unico cambio son los cuatro valores d del codigo Python; cmp contra la copia medida)."
+        }
+      }
+    },
+    {
+      "timestamp": "2026-10-27T21:21:54.156720-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "FASE 2C (detractor nuevo, 2026-10-27) RECHAZAR por H1 CORRECCION: en la canonica, C y D son celdas sueltas y su analisis en la Solution afirma sumas o datos dejados fuera que no existen (descripcion_corta generica de PROB-CRU, explica_cru/explica_una de rama canonica, descripcion_larga canonica de PROB-UNA). Se corrigen esos textos con guarda y mutante; en la misma pasada H5 (comillas invertidas que provocan el falso positivo 2D), H6 (suma de control ponderada del enunciado) y H7 (mutante de precondicion)",
+      "reporte": "A-Produccion/01-En-PreDesarrollo/probabilidad-fichas-tabla-doble-entrada-n2/salida/r1/detractor_fase2c_r1.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-10-26T20:16:26.263968-05:00",
+          "archivo": "probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_schoice_v1.Rmd",
+          "nota": "Reapertura 3. Unico cambio (diff contra la copia de la reapertura 2): guardas I-2 contra literales del impreso (celdas; suma de control 28217 y largo 306 del enunciado), en lugar de compararse con CANON_W y CANON_ENUNCIADO. verificar_espacio.R APROBADO: E1 12.993.248 combinaciones sin violaciones; E2 688 semillas, 0 abortos, 600 cubos en el espacio; mutantes M6 y M7 cazados por las guardas nuevas (antes eran tautologicas)."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-10-26T20:16:26.322293-05:00",
+          "nota": "Reapertura 3: la Solution no cambio (el diff solo toca la guarda canonica de data_generation); verificada en la reapertura 1 con read_exercise (semillas 7, 2 y 1)."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-10-26T20:19:19.554126-05:00",
+          "formatos": "html(5) pdf(5) docx(2) nops(2) moodle(3)",
+          "nota": "Reapertura 3. Comandos exams2*() con la ruta literal del .Rmd, salidas en salida/r1/. Semillas 7 (canonica), 1, 2, 3, 4. .tex: 0 usos de pandocbounded (solo el providecommand de la plantilla), sin LTcaptype. PDF canonico revisado a ojo en sus 3 paginas (Solution incluida) y pagina 1 de la semilla 2: sin desbordes, cuerpo de la tabla en tipo normal. DOCX con la tabla embebida; NOPS 4 paginas con tabla y opciones. Moodle: solo tabla_<hex>.png (3 sufijos distintos), 3 claves. HTML byte a byte identico al render previo a la guarda I-2 (5/5)."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-10-26T20:19:19.612017-05:00",
+          "nota": "Hook post-exams2-validation.sh invocado a mano (receta HANDOFF), salida completa leida, dos corridas iguales. 2A APROBADO; 2I, 2J, 2N, 2O OK; 2K y 2L N/A. 2D ERROR = FALSO POSITIVO demostrado: marca 'codigo', que solo es identificador R; el regex del arsenal que quita chunks no cruza las comillas invertidas de dos mensajes ValueError del codigo Python; control: copia con esas 2 lineas cambiadas -> 2D OK; original -> sigue marcando. Por ese falso positivo el hook omitio 2G y 2H: corridas a mano con sus mismos argumentos: 2G validar_multisemilla --n 100 APROBADO 100/100; 2H stress_test_visual --n 10 PASA, 0 anomalias (N=10 declarado, familia B). Advertencias: 2B (busca el PDF en otra ruta), 2E 'Tarea' y 2F plantilla antigua (5)."
+        }
+      }
+    },
+    {
+      "timestamp": "2026-10-27T21:45:44.509275-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Decisiones del profesor en WAIT_USER #3 (2026-10-27) y cambios del detractor r2 (APROBAR_CON_CAMBIOS): C de la canonica pasa a PROB-CER; override del residuo canonico por alcance con P_CANON <= 0.10 y guarda; tabla a width=100%; TipoMetacognicion evaluacion_afirmacion; guarda de celdas sueltas estructural (H1 r2: la lexica cubria 5 de 8 campos) y guarda de la pregunta literal (H5 r2)",
+      "reporte": "A-Produccion/01-En-PreDesarrollo/probabilidad-fichas-tabla-doble-entrada-n2/salida/r2/detractor_fase2c_r2.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render",
+        "detractor_fase2c",
+        "coherencias_5",
+        "validar_diversidad",
+        "validar_icfes"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-10-27T21:26:38.968240-05:00",
+          "archivo": "probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_schoice_v1.Rmd",
+          "nota": "Reapertura 4 (detractor FASE 2C 2026-10-27, RECHAZAR por H1). TXT_CANON sobrescribe nombre, descripcion_corta, descripcion_larga y causa_raiz de PROB-UNA y PROB-CRU en la canonica, y explica_una/explica_cru de rama canonica se reescriben: C y D son celdas sueltas, sin sumas ni datos dejados fuera. Guarda nueva tras la seleccion de errores (sin 'sum', 'deja fuera' ni 'una categoria' en el analisis de celdas sueltas); suma de control ponderada del enunciado 4314626 calculada desde ITEM_OFICIAL.md (H6); comillas invertidas del codigo Python y de comentarios retiradas (H5); comentario de consistencia en la guarda de calcula (H7). verificar_espacio.R APROBADO: E1 12.993.248 combinaciones sin violaciones; E2 688 semillas, 0 abortos; 12/12 mutantes cazados por su sonda (M10 defecto H1, M11 permutacion del enunciado, M12 precondicion); fila canonica de E4 promediada sobre las 80 semillas canonicas (H3: ultima_posicion en la mezcla +0,1 pp, antes +8,6 espurio). Smoke 300 semillas: 0 abortos, 30 canonicas. Ortografia limpia, glifos OK."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-10-27T21:29:13.942530-05:00",
+          "nota": "Reapertura 4. Solution canonica leida en salida/r2/pdf/v71.pdf (3 paginas, PNG en salida/r2/preview_canonica-*.png): analisis de PROB-CRU y PROB-UNA verdadero para celdas sueltas (8 y 20; 11 y 10), sin sumas ni datos dejados fuera; procedimiento, caso especifico, reflexion, estrategia y feedback por opcion coherentes (26=26; 8/20; 11/10; 20/28). No canonicas sin cambios de texto (el detractor de r1 verifico 1772 casos PROB-UNA y 1814 PROB-CRU, 0 fallos)."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-10-27T21:29:14.004447-05:00",
+          "formatos": "html(5) pdf(5) docx(2) nops(2) moodle(3)",
+          "nota": "Reapertura 4. salida/r2/, semillas 7 (canonica), 1, 2, 3, 4; comandos exams2*() con la ruta literal. .tex: 0 usos de pandocbounded, sin LTcaptype. PDF 3 paginas cada uno; NOPS 4 paginas. Moodle: solo tabla_<hex>.png (3 sufijos distintos), 3 claves (fraction=100). PDF canonico revisado a ojo en sus 3 paginas."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-10-27T21:29:14.065910-05:00",
+          "nota": "Reapertura 4. Hook post-exams2-validation.sh invocado a mano (receta HANDOFF), salida completa en salida/r2/arsenal_hook.txt: 0 errores, 7 advertencias. 2D OK (el falso positivo desaparecio al quitar las comillas invertidas del chunk), por eso el hook ya corrio 2G y 2H: 2G validar_multisemilla 100/100 APROBADO; 2H stress_test_visual N=10 (familia B, declarado) PASA, 0 anomalias. 2A APROBADO; 2I, 2J, 2N, 2O OK; 2K y 2L N/A. Advertencias: 2B (busca el PDF en otra ruta), 2E 'Tarea', 2F plantilla antigua (5)."
+        },
+        "detractor_fase2c": {
+          "timestamp": "2026-10-27T21:41:39.852808-05:00",
+          "veredicto": "APROBAR_CON_CAMBIOS",
+          "reporte": "salida/r2/detractor_fase2c_r2.md",
+          "nota": "Detractor nuevo e independiente (no escribio ni corrigio, no audito r1) sobre md5 52bb35e4. Citas verificadas 27/27 (verificar_citas_detractor.py exit 0; hook: ENTREGA VERIFICADA). Sin CORRECCION: barrido propio de 2000 semillas (203 canonicas) con conteo independiente, 0 fallos. H1 de r1 resuelto. Pendientes: H1 MEDIA guarda de celdas sueltas lexica, cubre 5 de 8 campos (comprobado: los 3 genericos pasan); H2 MEDIA C canonica -> PROB-CER (decide el profesor); H3 ALTA proceso: firma del 96,8 del Flujo B (bloquea paso 11); H4 MEDIA override por alcance con p_canon <= 0,10 (+7,5 pp esperados, corte +8 en 0,107); H5 BAJA guarda de la pregunta literal; H6 BAJA TipoMetacognicion y width. Se aplicaran en una sola reapertura junto con las decisiones del profesor."
+        },
+        "coherencias_5": {
+          "timestamp": "2026-10-27T21:41:39.915447-05:00",
+          "veredicto": "CUMPLE_5",
+          "nota": "AgenteValidadorVisual sobre salida/r2 (PDF v71 3 paginas, v11-v41, NOPS, alt de HTML): 5/5 CUMPLE; canonica y 4 no canonicas recalculadas a mano; frases nuevas de C y D verdaderas. BAJO: PROB-SIM 34/33 en semilla 2 ('pueden' lo hace verdadero); la pareja correcta va primero en el procedimiento; punto dentro de comillas a mitad de frase."
+        },
+        "validar_diversidad": {
+          "timestamp": "2026-10-27T21:41:39.979245-05:00",
+          "versiones_unicas": 271,
+          "nota": "salida/r2/paso9_*.txt y verificar_espacio.txt. Diversidad sustantiva N=100 PASS (72 claves); diagnosticidad N=100 PASS (H1 0 %, H2/H3 ciegas por prefijo uniforme, H3b 5 %); 271/300 unicas (30 canonicas = 1; 270 no canonicas todas distintas; 128 claves). Bateria P7 congelada: no canonica PASS -0,6 pp sobre techo nulo 26,8 %; mezcla max +7,1 pp (relacional, zona gris, residuo de la canonica pendiente de firma por alcance, H4 del detractor r2)."
+        },
+        "validar_icfes": {
+          "timestamp": "2026-10-27T21:41:40.044118-05:00",
+          "nota": "salida/r2/paso10_cotejo.txt: bloque Meta-information identico byte a byte al cotejado en salida/r1/paso10_cotejo.txt (10/10 campos iguales a la ficha MAT-2026-07-032; Afirmacion, Evidencia, Descriptor D2.3 y Estandar literales en el catalogo canonico). DOK 2, Nivel 2."
+        }
+      }
+    },
+    {
+      "timestamp": "2026-10-27T22:03:29.940497-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Detractor r3 (APROBAR_CON_CAMBIOS, sin CORRECCION): H1 MEDIA la Solution da n/N como probabilidad de ser elegidas con dos extracciones (verdadero solo en cada extraccion; con dos fichas P(al menos una) = 0,454 para 26/100); H2 MEDIA guarda lexica de celdas sueltas sin vocabulario de agregacion para PROB-CER (mutantes X1 y X2 sobrevivian); H3 BAJA el sorteo no esta anclado en el verificador; H4 BAJA registro. Endurecimientos autonomos (H-5)",
+      "reporte": "A-Produccion/01-En-PreDesarrollo/probabilidad-fichas-tabla-doble-entrada-n2/salida/r3/detractor_fase2c_r3.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-10-27T21:50:33.904939-05:00",
+          "archivo": "probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_schoice_v1.Rmd",
+          "nota": "Reapertura 5 (decisiones del profesor en WAIT_USER #3 y detractor r2). md5 632e09ea. C de la canonica con PROB-CER (vale_celda_suelta = TRUE; ramas canonicas de pre_una y explica_una retiradas, ya inalcanzables; TXT_CANON solo PROB-CRU). P_CANON <- 0.10 con stopifnot(P_CANON <= 0.10) (override por alcance). Guarda estructural de celdas sueltas (texto generico valido o los 4 campos en TXT_CANON) mas la lexica; guarda de la pregunta (123 caracteres, ponderada 720499 desde ITEM_OFICIAL.md). Tabla {width=100%}; TipoMetacognicion evaluacion_afirmacion. verificar_espacio.R APROBADO (salida/r3): E1 12.993.248 sin violaciones; E2 688 semillas, 0 abortos; 20/20 mutantes cazados por su sonda (M10a-d, M13-M17 nuevos); P7 no canonica -0,6 pp. Smoke 300 semillas: 0 abortos, 30 canonicas. Ortografia y glifos limpios; 0 comillas invertidas en el chunk."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-10-27T21:52:41.442015-05:00",
+          "nota": "Reapertura 5. Solution canonica leida en salida/r3/pdf/v71.pdf (3 paginas, PNG en salida/r3/preview_canonica-*.png): C analizada con PROB-CER (11 y 10 difieren en una ficha; textos genericos verdaderos), D con PROB-CRU y textos de celda suelta (8 y 20), A con PROB-SIM (20 y 28); procedimiento, caso especifico, reflexion, estrategia y feedback por opcion coherentes. No canonicas sin cambios de texto."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-10-27T21:52:41.507061-05:00",
+          "formatos": "html(5) pdf(5) docx(2) nops(2) moodle(3)",
+          "nota": "Reapertura 5. salida/r3/, semillas 7 (canonica), 1, 2, 3, 4; exams2*() con la ruta literal. Tabla a width=1\\linewidth en el .tex y width:100% en el HTML. .tex: 0 usos de pandocbounded, sin LTcaptype. PDF 3 paginas; NOPS 4. Moodle: solo tabla_<hex>.png (3 sufijos), 3 claves. PDF canonico revisado a ojo en sus 3 paginas."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-10-27T21:52:41.568048-05:00",
+          "nota": "Reapertura 5. Hook invocado a mano, salida completa en salida/r3/arsenal_hook.txt: 0 errores, 7 advertencias (2B ruta del PDF; 2E Tarea; 2F plantilla antigua x5). 2A APROBADO; 2D OK; 2G multisemilla 100/100; 2H stress test N=10 (familia B, declarado) PASA, 0 anomalias; 2I, 2J, 2N, 2O OK; 2K y 2L N/A."
+        }
+      }
+    },
+    {
+      "timestamp": "2026-10-27T22:28:09.421423-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Detractor r4 (APROBAR_CON_CAMBIOS con ALTA de diagnosticidad): canal de estimulo 'descarta la pareja cuyos tipos repiten un valor de celda' 66,4 % (+41,4 pp) en las no canonicas, replicado. Decision del profesor (2026-10-27): PROB-CRU solo en la canonica; no canonicas con PROB-UNA y PROB-CER sin repeticiones casuales (objetivo 1/3, +8,3 pp, firmado como residuo estructural). Mas H3 (guarda de 'en cada extraccion') y neutralizar la estrategia 'Desconfia de las coincidencias'. Pasada de diagnosticidad (P7-D)",
+      "reporte": "A-Produccion/01-En-PreDesarrollo/probabilidad-fichas-tabla-doble-entrada-n2/salida/r4/detractor_fase2c_r4.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-10-27T22:06:16.024861-05:00",
+          "archivo": "probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_schoice_v1.Rmd",
+          "nota_tipo_metacognicion": "analisis_icfes.tipo_metacognicion queda sustituido por la decision del profesor del 2026-10-27: exextra[TipoMetacognicion] = evaluacion_afirmacion (tarea del estudiante); el analisis de error ajeno sigue en la Solution (I-1). reopen no reabre analisis_icfes.",
+          "nota": "Reapertura 6 (detractor r3, APROBAR_CON_CAMBIOS). md5 bc4b370b. H1: toda cifra n/N de la Solution y del feedback dice 'en cada extraccion' o 'una ficha extraida' (procedimiento, conclusion, caso especifico, feedback de la clave, explica_cer); punto final de la opcion fuera de las comillas en la conclusion (BAJO de coherencias). H2: guarda lexica de celdas sueltas con vocabulario de agregacion (aplicada con script de reemplazos por la regla de edicion masiva: 2 aplicados, 0 fallidos). H3: verificador ancla el sorteo con P_CANON y E2 comprueba la proporcion de canonicas (11,6 %, z=+1,4). H4: guardias de I-6 e I-7 en .claude/CLAUDE.md. verificar_espacio.R APROBADO (salida/r4): 22/22 mutantes cazados por su sonda (M18-M19 = X1-X2 del detractor). Smoke 300: 0 abortos, 30 canonicas. Ortografia y glifos limpios; 0 comillas invertidas."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-10-27T22:08:16.504329-05:00",
+          "nota": "Reapertura 6. Solution canonica leida en salida/r4/pdf/v71.pdf (3 paginas, preview_canonica-*.png): toda cifra n/N con 'en cada extraccion' o 'una ficha extraida' (procedimiento, conclusion, caso especifico, feedback de la clave, explica_cer); conclusion sin el punto de la opcion dentro de las comillas; analisis de C (PROB-CER), D (PROB-CRU) y A (PROB-SIM) verdadero."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-10-27T22:08:16.562895-05:00",
+          "formatos": "html(5) pdf(5) docx(2) nops(2) moodle(3)",
+          "nota": "Reapertura 6. salida/r4/, semillas 7 (canonica), 1, 2, 3, 4; exams2*() con la ruta literal. 20 archivos; 0 usos de pandocbounded; sin LTcaptype; PDF 3 paginas, NOPS 4; Moodle solo tabla_<hex>.png (3), 3 claves. PDF canonico revisado a ojo (3 paginas) y HTML a 360 px (movil_360_v71.png)."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-10-27T22:08:16.625547-05:00",
+          "nota": "Reapertura 6. Hook a mano, salida en salida/r4/arsenal_hook.txt: 0 errores, 7 advertencias (2B ruta del PDF; 2E Tarea; 2F plantilla antigua x5). 2A APROBADO; 2D OK; 2G 100/100; 2H N=10 (familia B, declarado) PASA, 0 anomalias; 2I, 2J, 2N, 2O OK."
+        }
+      }
+    },
+    {
+      "timestamp": "2026-10-27T23:01:15.196964-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Detractor r5 (APROBAR_CON_CAMBIOS, 2 ALTA de diagnosticidad en el estimulo; segundo desplazamiento de canal, regla de parada). Decision del profesor (2026-10-27): pasada 2 de P7-D numerica (celdas de la clave del mismo rango 3..24 que las demas; simulada antes sobre copia: fuera de 5-20 -1,9 pp, numero mayor -1,3 pp, celdas mas juntas +8,0 pp) y firma de la regla compuesta (+25 pp) como residuo estructural. Mas H3 (registro) y H4 (E1 cuenta conjuntos vacios; guarda duplicada del pool)",
+      "reporte": "A-Produccion/01-En-PreDesarrollo/probabilidad-fichas-tabla-doble-entrada-n2/salida/r5/detractor_fase2c_r5.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-10-27T22:32:58.449917-05:00",
+          "archivo": "probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_schoice_v1.Rmd",
+          "nota": "Reapertura 7 (detractor r4 H1 ALTA, decision del profesor: PROB-CRU solo en la canonica). md5 afc260eb. Pasada de diagnosticidad 1 (P7-D). construir_cubo: no canonicas con PROB-UNA y PROB-CER; exclusiones en los conjuntos de eleccion (F1) para que el espejo y la pareja PROB-CER no repitan valores de celda (m_malo evita Q CER sin delta). Guardas nuevas: solo PROB-UNA repite un valor de celda (no canonicas); n/N con 'en cada extraccion' en feedback y analisis; pool >= 4 antes del sorteo. Estrategia de la Solution neutral ante celdas repetidas. Cambios aplicados con script de reemplazos (regla de edicion masiva): Rmd 7/7, verificador 16/16, 0 fallidos. verificar_espacio.R APROBADO (salida/r5): E1 3.982.576 combinaciones sin violaciones y canal de estimulo exacto 1/3 (+8,3 pp) en todas; E2 226 semillas, 0 abortos, canonicas 10,2 % (z=+0,1); E3b Solution con 'extraccion'; E4 P7 no canonica -0,6 pp PASS; E4b canal 33,3 % no canonica y canonica; 25/25 mutantes. Canal medido antes del cambio: 66,4 % (+41,4 pp)."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-10-27T22:35:23.299107-05:00",
+          "nota": "Reapertura 7. Solution leida en salida/r5: canonica (v71, 3 paginas) con la estrategia neutral ante celdas repetidas y n/N 'en cada extraccion'; no canonica semilla 2 (v21, paginas 1-2) con el generador nuevo: clave 19=19, PROB-CER 26/25, espejo 32/42, PROB-UNA 26/35 con 'triangulo: 14 y 14', todo verdadero frente a la tabla (total 112)."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-10-27T22:35:23.357985-05:00",
+          "formatos": "html(5) pdf(5) docx(2) nops(2) moodle(3)",
+          "nota": "Reapertura 7. salida/r5/, semillas 7, 1, 2, 3, 4. 20 archivos; 0 usos de pandocbounded; sin LTcaptype; PDF 3 paginas, NOPS 4; Moodle solo tabla_<hex>.png (3, verificado con patron que admite digitos), 3 claves. Previews: canonica 3 paginas y semilla 2."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-10-27T22:35:23.415972-05:00",
+          "nota": "Reapertura 7. Hook a mano, salida en salida/r5/arsenal_hook.txt: 0 errores, 7 advertencias (2B, 2E Tarea, 2F plantilla antigua x5). 2A APROBADO; 2D OK; 2G 100/100; 2H N=10 (familia B, declarado) PASA; 2I, 2J, 2N, 2O OK."
+        }
+      }
+    }
+  ]
+}

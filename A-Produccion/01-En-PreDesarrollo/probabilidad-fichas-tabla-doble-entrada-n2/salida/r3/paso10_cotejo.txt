@@ -1,0 +1,32 @@
+Cotejo del paso 10, reapertura 5 (2026-10-27T21:53:32-05:00).
+Diff del bloque Meta-information frente a la versión r2 (idéntica a la cotejada en salida/r1/paso10_cotejo.txt, ver salida/r2/paso10_cotejo.txt):
+21c21
+< exextra[TipoMetacognicion]: analisis_error
+---
+> exextra[TipoMetacognicion]: evaluacion_afirmacion
+
+Única diferencia: exextra[TipoMetacognicion] (analisis_error -> evaluacion_afirmacion), decisión del profesor del 2026-10-27 registrada en .claude/CLAUDE.md. No es un campo de la ficha MAT-2026-07-032 (ver 'Emitidos sin campo en la ficha' en salida/r1/paso10_cotejo.txt) y es un valor permitido por la regla #1 (texto íntegro, ejercicios-metacognitivos.md). Los 10 campos de la ficha siguen iguales carácter a carácter; Afirmación, Evidencia, Descriptor D2.3 y Estándar siguen literales en el catálogo. DOK 2, Nivel 2.
+
+Meta-information
+================
+exname: probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_schoice_v1
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Competencia]: Formulación y ejecución
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Frente a un problema que involucre información cuantitativa, plantea e implementa estrategias que lleven a soluciones adecuadas.
+exextra[Evidencia]: Resuelve un problema que involucra información cuantitativa o esquemática.
+exextra[Nivel]: 2
+exextra[Descriptor]: D2.3 — Compara la probabilidad de eventos simples (casos favorables/casos posibles) cuando los casos posibles son los mismos en ambos eventos y en contextos similares a los presentados en el aula.
+exextra[Contenido]: Estadística
+exextra[TemaEspecifico]: Probabilidad en tablas de doble entrada
+exextra[Estandar]: Resuelvo y formulo problemas a partir de un conjunto de datos presentados en tablas, diagramas de barras, diagramas circulares. (6°-7°, Pensamiento aleatorio)
+exextra[DOK]: 2
+exextra[Bloom]: Aplicar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_afirmacion
+exextra[ItemOriginal]: MAT-2026-07-032
+exextra[GradoSugerido]: 6°-7°

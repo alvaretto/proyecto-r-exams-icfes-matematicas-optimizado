@@ -1,0 +1,10 @@
+no canónicas: 2698 | canónicas: 302 | clave con coincidencia: 0 
+            estrato acierto espejo_coinc quedan
+1 PROB-CER>PROB-CRU    54.3        100.0    1.9
+2 PROB-CER>PROB-UNA    44.9         23.7    2.5
+3 PROB-CRU>PROB-CER    54.8        100.0    1.9
+4 PROB-CRU>PROB-UNA   100.0        100.0    1.0
+5 PROB-UNA>PROB-CER    45.3         22.1    2.5
+6 PROB-UNA>PROB-CRU   100.0        100.0    1.0
+no canónica: 66.4 % (+41.4 pp) | canónica: 33.3 % (+8.3 pp) | mezcla 10 %: 63.1 % (+38.1 pp)
+techo nulo (clave permutada, por linealidad): 25 %

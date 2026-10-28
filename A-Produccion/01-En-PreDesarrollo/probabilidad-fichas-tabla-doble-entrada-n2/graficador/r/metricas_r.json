@@ -1,0 +1,1202 @@
+[
+ {
+  "iteracion": 1,
+  "lenguaje": "r",
+  "puntuacion_total": 92.25,
+  "por_categoria": {
+   "colores": 18.09,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 14.14,
+   "estilos": 10.02,
+   "elementos": 10.0
+  },
+  "rmse_aux": 0.0534,
+  "cambios": "Primera pasada. Lienzo de 530 u (1590 px a 300 ppp; 1 u = 0,01 in = 3 px), rejilla de 6 filas x 4 columnas con columnas iguales de 127,4 u y filas de 35,4 u; relleno rosado #F8E9F7; texto como contornos de glifos (systemfonts) de Source Sans 3 Black/Semibold comprimidos en x (kx 0,69-0,72) con trazo; cifras en Source Sans 3 con avance tabular; lineas como rectangulos en png(type='cairo').",
+  "codigo": "output_r_v1.R",
+  "render": "output_r_v1.png",
+  "comparacion": "comparacion_r_v1.png",
+  "h3_cifras_y_rotulos_exactos": true,
+  "detalle": {
+   "colores": {
+    "d_relleno_pct": 0.39,
+    "d_papel_pct": 0.78,
+    "d_texto_encab_pct": 3.4,
+    "d_texto_encab_celdas": 2.15,
+    "d_texto_encab_solido": 4.65,
+    "d_texto_negro_pct": 1.06,
+    "d_texto_negro_celdas": 1.05,
+    "d_texto_negro_solido": 1.06,
+    "d_lineas_pct": 10.47,
+    "d_lineas_integral": 10.54,
+    "d_lineas_solido": 10.41,
+    "nucleos_lineas": {
+     "ext_H": [
+      [
+       68,
+       3,
+       43
+      ],
+      [
+       62,
+       0,
+       36
+      ],
+      2.2
+     ],
+     "ext_V": [
+      [
+       89,
+       23,
+       62
+      ],
+      [
+       62,
+       0,
+       36
+      ],
+      10.0
+     ],
+     "int_H": [
+      [
+       94,
+       60,
+       80
+      ],
+      [
+       55,
+       37,
+       51
+      ],
+      12.2
+     ],
+     "int_V": [
+      [
+       113,
+       89,
+       97
+      ],
+      [
+       63,
+       45,
+       59
+      ],
+      17.3
+     ]
+    },
+    "nucleo_texto_encab": [
+     [
+      117,
+      0,
+      40
+     ],
+     [
+      102,
+      0,
+      26
+     ]
+    ]
+   },
+   "posiciones": {
+    "max_pct_rango": 0.47,
+    "media_pct_rango": 0.16
+   },
+   "proporciones": {
+    "d_aspecto_pct": 0.19,
+    "d_columnas_max_pct": 0.73,
+    "d_filas_max_pct": 0.63,
+    "d_anchos_palabras_pct": 2.68,
+    "d_alturas_palabras_pct": 5.5
+   },
+   "estilos": {
+    "lineas": 2.98,
+    "E_lineas": 0.122,
+    "peso_texto": 3.24,
+    "E_texto": 0.081,
+    "tipografia": 1.7,
+    "borde_aa": 1.0,
+    "suavidad_escaneo": 1.1
+   }
+  }
+ },
+ {
+  "iteracion": 2,
+  "lenguaje": "r",
+  "puntuacion_total": 94.22,
+  "por_categoria": {
+   "colores": 18.68,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 14.19,
+   "estilos": 11.36,
+   "elementos": 10.0
+  },
+  "rmse_aux": 0.0516,
+  "cambios": "Anchos de columna medidos sobre el original (128,15/127,06/127,34/126,83) y filas de 35,3 u; cifras con Nimbus Sans Narrow Bold y espaciado proporcional por tinta; colores de linea por integral de tinta (#5C0036 exterior, #592848 interior); texto de encabezado #82003A; altura de mayusculas 17,8 u.",
+  "codigo": "output_r_v2.R",
+  "render": "output_r_v2.png",
+  "comparacion": "comparacion_r_v2.png",
+  "h3_cifras_y_rotulos_exactos": true,
+  "detalle": {
+   "colores": {
+    "d_relleno_pct": 0.39,
+    "d_papel_pct": 0.78,
+    "d_texto_encab_pct": 2.97,
+    "d_texto_encab_celdas": 0.91,
+    "d_texto_encab_solido": 5.03,
+    "d_texto_negro_pct": 0.98,
+    "d_texto_negro_celdas": 0.89,
+    "d_texto_negro_solido": 1.06,
+    "d_lineas_pct": 7.28,
+    "d_lineas_integral": 7.73,
+    "d_lineas_solido": 6.83,
+    "nucleos_lineas": {
+     "ext_H": [
+      [
+       68,
+       3,
+       43
+      ],
+      [
+       92,
+       0,
+       54
+      ],
+      6.0
+     ],
+     "ext_V": [
+      [
+       89,
+       23,
+       62
+      ],
+      [
+       92,
+       0,
+       54
+      ],
+      5.6
+     ],
+     "int_H": [
+      [
+       94,
+       60,
+       80
+      ],
+      [
+       89,
+       40,
+       72
+      ],
+      5.0
+     ],
+     "int_V": [
+      [
+       113,
+       89,
+       97
+      ],
+      [
+       95,
+       48,
+       79
+      ],
+      10.7
+     ]
+    },
+    "nucleo_texto_encab": [
+     [
+      117,
+      0,
+      40
+     ],
+     [
+      130,
+      0,
+      58
+     ]
+    ]
+   },
+   "posiciones": {
+    "max_pct_rango": 0.71,
+    "media_pct_rango": 0.17
+   },
+   "proporciones": {
+    "d_aspecto_pct": 0.2,
+    "d_columnas_max_pct": 0.15,
+    "d_filas_max_pct": 0.92,
+    "d_anchos_palabras_pct": 3.12,
+    "d_alturas_palabras_pct": 4.09
+   },
+   "estilos": {
+    "lineas": 3.5,
+    "E_lineas": 0.098,
+    "peso_texto": 3.75,
+    "E_texto": 0.047,
+    "tipografia": 2.0,
+    "borde_aa": 1.0,
+    "suavidad_escaneo": 1.1
+   }
+  }
+ },
+ {
+  "iteracion": 3,
+  "lenguaje": "r",
+  "puntuacion_total": 93.84,
+  "por_categoria": {
+   "colores": 19.0,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 13.33,
+   "estilos": 11.52,
+   "elementos": 10.0
+  },
+  "rmse_aux": 0.0529,
+  "cambios": "Pesos de texto mas ligeros tras compararlos a x4 con el original (Black sin trazo grueso, Semibold con 0,45); lineas interiores horizontales y verticales con tinte propio (#5F244B / #6F244D) y anchos reajustados a las integrales por canal; rectangulos pasados a poligonos.",
+  "codigo": "output_r_v3.R",
+  "render": "output_r_v3.png",
+  "comparacion": "comparacion_r_v3.png",
+  "h3_cifras_y_rotulos_exactos": true,
+  "detalle": {
+   "colores": {
+    "d_relleno_pct": 0.39,
+    "d_papel_pct": 0.78,
+    "d_texto_encab_pct": 1.63,
+    "d_texto_encab_celdas": 1.68,
+    "d_texto_encab_solido": 1.58,
+    "d_texto_negro_pct": 1.11,
+    "d_texto_negro_celdas": 1.15,
+    "d_texto_negro_solido": 1.06,
+    "d_lineas_pct": 6.42,
+    "d_lineas_integral": 5.46,
+    "d_lineas_solido": 7.38,
+    "nucleos_lineas": {
+     "ext_H": [
+      [
+       68,
+       3,
+       43
+      ],
+      [
+       98,
+       0,
+       60
+      ],
+      7.8
+     ],
+     "ext_V": [
+      [
+       89,
+       23,
+       62
+      ],
+      [
+       98,
+       0,
+       60
+      ],
+      5.6
+     ],
+     "int_H": [
+      [
+       94,
+       60,
+       80
+      ],
+      [
+       95,
+       36,
+       75
+      ],
+      5.6
+     ],
+     "int_V": [
+      [
+       113,
+       89,
+       97
+      ],
+      [
+       117,
+       44,
+       84
+      ],
+      10.5
+     ]
+    },
+    "nucleo_texto_encab": [
+     [
+      117,
+      0,
+      40
+     ],
+     [
+      110,
+      0,
+      40
+     ]
+    ]
+   },
+   "posiciones": {
+    "max_pct_rango": 0.47,
+    "media_pct_rango": 0.11
+   },
+   "proporciones": {
+    "d_aspecto_pct": 0.17,
+    "d_columnas_max_pct": 0.19,
+    "d_filas_max_pct": 0.92,
+    "d_anchos_palabras_pct": 5.47,
+    "d_alturas_palabras_pct": 4.71
+   },
+   "estilos": {
+    "lineas": 4.22,
+    "E_lineas": 0.065,
+    "peso_texto": 3.2,
+    "E_texto": 0.084,
+    "tipografia": 2.0,
+    "borde_aa": 1.0,
+    "suavidad_escaneo": 1.1
+   }
+  }
+ },
+ {
+  "iteracion": 4,
+  "lenguaje": "r",
+  "puntuacion_total": 96.04,
+  "por_categoria": {
+   "colores": 18.96,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 14.59,
+   "estilos": 12.49,
+   "elementos": 10.0
+  },
+  "rmse_aux": 0.0448,
+  "cambios": "Dispositivo ragg: bordes con antialias exacto (con cairo los rellenos se redondean al pixel, +-0,33 u); relleno #F8E7F6 (compromiso entre la zona limpia y el halo del escaneo); encabezado #780034, trazos 0,6-0,75 y kx 0,715-0,735.",
+  "codigo": "output_r_v4.R",
+  "render": "output_r_v4.png",
+  "comparacion": "comparacion_r_v4.png",
+  "h3_cifras_y_rotulos_exactos": true,
+  "detalle": {
+   "colores": {
+    "d_relleno_pct": 0.85,
+    "d_papel_pct": 0.78,
+    "d_texto_encab_pct": 2.33,
+    "d_texto_encab_celdas": 1.86,
+    "d_texto_encab_solido": 2.8,
+    "d_texto_negro_pct": 1.07,
+    "d_texto_negro_celdas": 1.09,
+    "d_texto_negro_solido": 1.06,
+    "d_lineas_pct": 6.11,
+    "d_lineas_integral": 4.46,
+    "d_lineas_solido": 7.76,
+    "nucleos_lineas": {
+     "ext_H": [
+      [
+       68,
+       3,
+       43
+      ],
+      [
+       98,
+       0,
+       60
+      ],
+      7.8
+     ],
+     "ext_V": [
+      [
+       89,
+       23,
+       62
+      ],
+      [
+       98,
+       0,
+       60
+      ],
+      5.6
+     ],
+     "int_H": [
+      [
+       94,
+       60,
+       80
+      ],
+      [
+       95,
+       36,
+       75
+      ],
+      5.6
+     ],
+     "int_V": [
+      [
+       113,
+       89,
+       97
+      ],
+      [
+       113,
+       39,
+       79
+      ],
+      12.0
+     ]
+    },
+    "nucleo_texto_encab": [
+     [
+      117,
+      0,
+      40
+     ],
+     [
+      120,
+      0,
+      52
+     ]
+    ]
+   },
+   "posiciones": {
+    "max_pct_rango": 0.47,
+    "media_pct_rango": 0.11
+   },
+   "proporciones": {
+    "d_aspecto_pct": 0.17,
+    "d_columnas_max_pct": 0.14,
+    "d_filas_max_pct": 0.72,
+    "d_anchos_palabras_pct": 2.2,
+    "d_alturas_palabras_pct": 4.09
+   },
+   "estilos": {
+    "lineas": 4.52,
+    "E_lineas": 0.052,
+    "peso_texto": 3.17,
+    "E_texto": 0.085,
+    "tipografia": 2.2,
+    "borde_aa": 1.5,
+    "suavidad_escaneo": 1.1
+   }
+  }
+ },
+ {
+  "iteracion": 5,
+  "lenguaje": "r",
+  "puntuacion_total": 96.82,
+  "por_categoria": {
+   "colores": 19.05,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 14.67,
+   "estilos": 13.1,
+   "elementos": 10.0
+  },
+  "rmse_aux": 0.042,
+  "cambios": "Pesos de texto por razon de tinta con umbral anti-ruido (trazo enc 0,8, lab 0,65, reg 0,9, cifras 0,55); verticales interiores mas finas en la fila de encabezados; linea bajo los encabezados mas estrecha.",
+  "codigo": "output_r_v5.R",
+  "render": "output_r_v5.png",
+  "comparacion": "comparacion_r_v5.png",
+  "h3_cifras_y_rotulos_exactos": true,
+  "detalle": {
+   "colores": {
+    "d_relleno_pct": 0.85,
+    "d_papel_pct": 0.78,
+    "d_texto_encab_pct": 2.21,
+    "d_texto_encab_celdas": 1.62,
+    "d_texto_encab_solido": 2.8,
+    "d_texto_negro_pct": 1.02,
+    "d_texto_negro_celdas": 0.98,
+    "d_texto_negro_solido": 1.06,
+    "d_lineas_pct": 5.66,
+    "d_lineas_integral": 4.04,
+    "d_lineas_solido": 7.29,
+    "nucleos_lineas": {
+     "ext_H": [
+      [
+       68,
+       3,
+       43
+      ],
+      [
+       98,
+       0,
+       60
+      ],
+      7.8
+     ],
+     "ext_V": [
+      [
+       89,
+       23,
+       62
+      ],
+      [
+       98,
+       0,
+       60
+      ],
+      5.6
+     ],
+     "int_H": [
+      [
+       94,
+       60,
+       80
+      ],
+      [
+       95,
+       36,
+       75
+      ],
+      5.6
+     ],
+     "int_V": [
+      [
+       113,
+       89,
+       97
+      ],
+      [
+       118,
+       46,
+       85
+      ],
+      10.2
+     ]
+    },
+    "nucleo_texto_encab": [
+     [
+      117,
+      0,
+      40
+     ],
+     [
+      120,
+      0,
+      52
+     ]
+    ]
+   },
+   "posiciones": {
+    "max_pct_rango": 0.47,
+    "media_pct_rango": 0.12
+   },
+   "proporciones": {
+    "d_aspecto_pct": 0.17,
+    "d_columnas_max_pct": 0.14,
+    "d_filas_max_pct": 0.68,
+    "d_anchos_palabras_pct": 0.97,
+    "d_alturas_palabras_pct": 4.09
+   },
+   "estilos": {
+    "lineas": 4.66,
+    "E_lineas": 0.046,
+    "peso_texto": 3.64,
+    "E_texto": 0.054,
+    "tipografia": 2.2,
+    "borde_aa": 1.5,
+    "suavidad_escaneo": 1.1
+   }
+  }
+ },
+ {
+  "iteracion": 6,
+  "lenguaje": "r",
+  "puntuacion_total": 96.99,
+  "por_categoria": {
+   "colores": 19.06,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 14.67,
+   "estilos": 13.25,
+   "elementos": 10.0
+  },
+  "rmse_aux": 0.0415,
+  "cambios": "Refactor sin cambio visual de fondo: fuentes candidatas por estilo (Source Sans 3/Pro, Nimbus Sans Narrow, texto del sistema) con medicion de respaldo, validacion de argumentos, funcion abrir_png; verticales interiores de cuerpo algo mas gruesas.",
+  "codigo": "output_r_v6.R",
+  "render": "output_r_v6.png",
+  "comparacion": "comparacion_r_v6.png",
+  "h3_cifras_y_rotulos_exactos": true,
+  "detalle": {
+   "colores": {
+    "d_relleno_pct": 0.85,
+    "d_papel_pct": 0.78,
+    "d_texto_encab_pct": 2.12,
+    "d_texto_encab_celdas": 1.43,
+    "d_texto_encab_solido": 2.8,
+    "d_texto_negro_pct": 1.02,
+    "d_texto_negro_celdas": 0.98,
+    "d_texto_negro_solido": 1.06,
+    "d_lineas_pct": 5.68,
+    "d_lineas_integral": 3.6,
+    "d_lineas_solido": 7.76,
+    "nucleos_lineas": {
+     "ext_H": [
+      [
+       68,
+       3,
+       43
+      ],
+      [
+       98,
+       0,
+       60
+      ],
+      7.8
+     ],
+     "ext_V": [
+      [
+       89,
+       23,
+       62
+      ],
+      [
+       98,
+       0,
+       60
+      ],
+      5.6
+     ],
+     "int_H": [
+      [
+       94,
+       60,
+       80
+      ],
+      [
+       95,
+       36,
+       75
+      ],
+      5.6
+     ],
+     "int_V": [
+      [
+       113,
+       89,
+       97
+      ],
+      [
+       113,
+       39,
+       79
+      ],
+      12.0
+     ]
+    },
+    "nucleo_texto_encab": [
+     [
+      117,
+      0,
+      40
+     ],
+     [
+      120,
+      0,
+      52
+     ]
+    ]
+   },
+   "posiciones": {
+    "max_pct_rango": 0.47,
+    "media_pct_rango": 0.12
+   },
+   "proporciones": {
+    "d_aspecto_pct": 0.17,
+    "d_columnas_max_pct": 0.15,
+    "d_filas_max_pct": 0.69,
+    "d_anchos_palabras_pct": 0.91,
+    "d_alturas_palabras_pct": 4.09
+   },
+   "estilos": {
+    "lineas": 4.76,
+    "E_lineas": 0.041,
+    "peso_texto": 3.69,
+    "E_texto": 0.051,
+    "tipografia": 2.2,
+    "borde_aa": 1.5,
+    "suavidad_escaneo": 1.1
+   }
+  }
+ },
+ {
+  "iteracion": 7,
+  "lenguaje": "r",
+  "puntuacion_total": 97.43,
+  "por_categoria": {
+   "colores": 19.06,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 14.9,
+   "estilos": 13.47,
+   "elementos": 10.0
+  },
+  "rmse_aux": 0.0411,
+  "cambios": "Acentos agudos minusculos bajados hasta casi la altura del ascendente (la fuente los dibuja ~1,7 u mas altos que el impreso); ancho de Blanca/Negra (kx 0,735).",
+  "codigo": "output_r_v7.R",
+  "render": "output_r_v7.png",
+  "comparacion": "comparacion_r_v7.png",
+  "h3_cifras_y_rotulos_exactos": true,
+  "detalle": {
+   "colores": {
+    "d_relleno_pct": 0.85,
+    "d_papel_pct": 0.78,
+    "d_texto_encab_pct": 2.12,
+    "d_texto_encab_celdas": 1.44,
+    "d_texto_encab_solido": 2.8,
+    "d_texto_negro_pct": 1.01,
+    "d_texto_negro_celdas": 0.96,
+    "d_texto_negro_solido": 1.06,
+    "d_lineas_pct": 5.68,
+    "d_lineas_integral": 3.6,
+    "d_lineas_solido": 7.76,
+    "nucleos_lineas": {
+     "ext_H": [
+      [
+       68,
+       3,
+       43
+      ],
+      [
+       98,
+       0,
+       60
+      ],
+      7.8
+     ],
+     "ext_V": [
+      [
+       89,
+       23,
+       62
+      ],
+      [
+       98,
+       0,
+       60
+      ],
+      5.6
+     ],
+     "int_H": [
+      [
+       94,
+       60,
+       80
+      ],
+      [
+       95,
+       36,
+       75
+      ],
+      5.6
+     ],
+     "int_V": [
+      [
+       113,
+       89,
+       97
+      ],
+      [
+       113,
+       39,
+       79
+      ],
+      12.0
+     ]
+    },
+    "nucleo_texto_encab": [
+     [
+      117,
+      0,
+      40
+     ],
+     [
+      120,
+      0,
+      52
+     ]
+    ]
+   },
+   "posiciones": {
+    "max_pct_rango": 0.47,
+    "media_pct_rango": 0.1
+   },
+   "proporciones": {
+    "d_aspecto_pct": 0.17,
+    "d_columnas_max_pct": 0.15,
+    "d_filas_max_pct": 0.69,
+    "d_anchos_palabras_pct": 0.89,
+    "d_alturas_palabras_pct": 2.74
+   },
+   "estilos": {
+    "lineas": 4.76,
+    "E_lineas": 0.041,
+    "peso_texto": 3.71,
+    "E_texto": 0.049,
+    "tipografia": 2.4,
+    "borde_aa": 1.5,
+    "suavidad_escaneo": 1.1
+   }
+  }
+ },
+ {
+  "iteracion": 8,
+  "lenguaje": "r",
+  "puntuacion_total": 97.5,
+  "por_categoria": {
+   "colores": 19.08,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 14.89,
+   "estilos": 13.53,
+   "elementos": 10.0
+  },
+  "rmse_aux": 0.0416,
+  "cambios": "Trazos afinados para que la razon de tinta por celda sea ~1 (enc 1,05, lab 0,8, reg 1,05, cifras 0,6; kx enc 0,73, reg 0,705).",
+  "codigo": "output_r_v8.R",
+  "render": "output_r_v8.png",
+  "comparacion": "comparacion_r_v8.png",
+  "h3_cifras_y_rotulos_exactos": true,
+  "detalle": {
+   "colores": {
+    "d_relleno_pct": 0.85,
+    "d_papel_pct": 0.78,
+    "d_texto_encab_pct": 2.03,
+    "d_texto_encab_celdas": 1.26,
+    "d_texto_encab_solido": 2.8,
+    "d_texto_negro_pct": 0.95,
+    "d_texto_negro_celdas": 0.83,
+    "d_texto_negro_solido": 1.06,
+    "d_lineas_pct": 5.67,
+    "d_lineas_integral": 3.58,
+    "d_lineas_solido": 7.76,
+    "nucleos_lineas": {
+     "ext_H": [
+      [
+       68,
+       3,
+       43
+      ],
+      [
+       98,
+       0,
+       60
+      ],
+      7.8
+     ],
+     "ext_V": [
+      [
+       89,
+       23,
+       62
+      ],
+      [
+       98,
+       0,
+       60
+      ],
+      5.6
+     ],
+     "int_H": [
+      [
+       94,
+       60,
+       80
+      ],
+      [
+       95,
+       36,
+       75
+      ],
+      5.6
+     ],
+     "int_V": [
+      [
+       113,
+       89,
+       97
+      ],
+      [
+       113,
+       39,
+       79
+      ],
+      12.0
+     ]
+    },
+    "nucleo_texto_encab": [
+     [
+      117,
+      0,
+      40
+     ],
+     [
+      120,
+      0,
+      52
+     ]
+    ]
+   },
+   "posiciones": {
+    "max_pct_rango": 0.47,
+    "media_pct_rango": 0.09
+   },
+   "proporciones": {
+    "d_aspecto_pct": 0.17,
+    "d_columnas_max_pct": 0.15,
+    "d_filas_max_pct": 0.69,
+    "d_anchos_palabras_pct": 0.96,
+    "d_alturas_palabras_pct": 1.39
+   },
+   "estilos": {
+    "lineas": 4.77,
+    "E_lineas": 0.04,
+    "peso_texto": 3.76,
+    "E_texto": 0.046,
+    "tipografia": 2.4,
+    "borde_aa": 1.5,
+    "suavidad_escaneo": 1.1
+   }
+  }
+ },
+ {
+  "iteracion": 9,
+  "lenguaje": "r",
+  "puntuacion_total": 97.74,
+  "por_categoria": {
+   "colores": 19.3,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 14.97,
+   "estilos": 13.48,
+   "elementos": 10.0
+  },
+  "rmse_aux": 0.0417,
+  "cambios": "Lineas por equivalencia pico-ancho: exteriores #52002E (mas oscuras y finas), interiores horizontales #6C345A y verticales #7D3E62 con anchos reajustados; el nucleo y la integral coinciden con el original.",
+  "codigo": "output_r_v9.R",
+  "render": "output_r_v9.png",
+  "comparacion": "comparacion_r_v9.png",
+  "h3_cifras_y_rotulos_exactos": true,
+  "detalle": {
+   "colores": {
+    "d_relleno_pct": 0.85,
+    "d_papel_pct": 0.78,
+    "d_texto_encab_pct": 2.03,
+    "d_texto_encab_celdas": 1.26,
+    "d_texto_encab_solido": 2.8,
+    "d_texto_negro_pct": 0.95,
+    "d_texto_negro_celdas": 0.83,
+    "d_texto_negro_solido": 1.06,
+    "d_lineas_pct": 4.36,
+    "d_lineas_integral": 3.61,
+    "d_lineas_solido": 5.12,
+    "nucleos_lineas": {
+     "ext_H": [
+      [
+       68,
+       3,
+       43
+      ],
+      [
+       82,
+       0,
+       46
+      ],
+      3.3
+     ],
+     "ext_V": [
+      [
+       89,
+       23,
+       62
+      ],
+      [
+       82,
+       0,
+       46
+      ],
+      6.5
+     ],
+     "int_H": [
+      [
+       94,
+       60,
+       80
+      ],
+      [
+       108,
+       52,
+       90
+      ],
+      4.3
+     ],
+     "int_V": [
+      [
+       113,
+       89,
+       97
+      ],
+      [
+       127,
+       65,
+       100
+      ],
+      6.3
+     ]
+    },
+    "nucleo_texto_encab": [
+     [
+      117,
+      0,
+      40
+     ],
+     [
+      120,
+      0,
+      52
+     ]
+    ]
+   },
+   "posiciones": {
+    "max_pct_rango": 0.47,
+    "media_pct_rango": 0.09
+   },
+   "proporciones": {
+    "d_aspecto_pct": 0.17,
+    "d_columnas_max_pct": 0.12,
+    "d_filas_max_pct": 0.56,
+    "d_anchos_palabras_pct": 0.96,
+    "d_alturas_palabras_pct": 1.39
+   },
+   "estilos": {
+    "lineas": 4.72,
+    "E_lineas": 0.043,
+    "peso_texto": 3.76,
+    "E_texto": 0.046,
+    "tipografia": 2.4,
+    "borde_aa": 1.5,
+    "suavidad_escaneo": 1.1
+   }
+  }
+ },
+ {
+  "iteracion": 10,
+  "lenguaje": "r",
+  "puntuacion_total": 97.86,
+  "por_categoria": {
+   "colores": 19.55,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 14.96,
+   "estilos": 13.35,
+   "elementos": 10.0
+  },
+  "rmse_aux": 0.0416,
+  "cambios": "Exteriores separadas en horizontales #50002E y verticales #600A38 (anisotropia medida en el escaneo); texto de encabezado a la mediana de pixeles solidos del original (#76002A); texto negro puro; interiores #643856/#7C4262 con anchos reajustados; respaldo de png() sin cairo; pruebas de estres y de knitr.",
+  "codigo": "output_r_v10.R",
+  "render": "output_r_v10.png",
+  "comparacion": "comparacion_r_v10.png",
+  "h3_cifras_y_rotulos_exactos": true,
+  "detalle": {
+   "colores": {
+    "d_relleno_pct": 0.85,
+    "d_papel_pct": 0.78,
+    "d_texto_encab_pct": 0.91,
+    "d_texto_encab_celdas": 1.31,
+    "d_texto_encab_solido": 0.51,
+    "d_texto_negro_pct": 0.84,
+    "d_texto_negro_celdas": 0.74,
+    "d_texto_negro_solido": 0.93,
+    "d_lineas_pct": 3.69,
+    "d_lineas_integral": 3.8,
+    "d_lineas_solido": 3.58,
+    "nucleos_lineas": {
+     "ext_H": [
+      [
+       68,
+       3,
+       43
+      ],
+      [
+       80,
+       0,
+       46
+      ],
+      2.9
+     ],
+     "ext_V": [
+      [
+       89,
+       23,
+       62
+      ],
+      [
+       96,
+       10,
+       56
+      ],
+      3.6
+     ],
+     "int_H": [
+      [
+       94,
+       60,
+       80
+      ],
+      [
+       100,
+       56,
+       86
+      ],
+      2.1
+     ],
+     "int_V": [
+      [
+       113,
+       89,
+       97
+      ],
+      [
+       125,
+       67,
+       99
+      ],
+      5.7
+     ]
+    },
+    "nucleo_texto_encab": [
+     [
+      117,
+      0,
+      40
+     ],
+     [
+      118,
+      0,
+      42
+     ]
+    ]
+   },
+   "posiciones": {
+    "max_pct_rango": 0.47,
+    "media_pct_rango": 0.09
+   },
+   "proporciones": {
+    "d_aspecto_pct": 0.17,
+    "d_columnas_max_pct": 0.1,
+    "d_filas_max_pct": 0.57,
+    "d_anchos_palabras_pct": 0.96,
+    "d_alturas_palabras_pct": 1.39
+   },
+   "estilos": {
+    "lineas": 4.63,
+    "E_lineas": 0.047,
+    "peso_texto": 3.72,
+    "E_texto": 0.049,
+    "tipografia": 2.4,
+    "borde_aa": 1.5,
+    "suavidad_escaneo": 1.1
+   }
+  }
+ }
+]

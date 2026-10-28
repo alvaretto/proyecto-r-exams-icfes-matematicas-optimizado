@@ -1,0 +1,15 @@
+=== Diagnosticidad de distractores (gaps de seleccion unica) ===
+Archivo: probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_schoice_v1.Rmd | semillas: 100 | umbral: 70 % | margen H1: 15 %
+
+gap      vers          H1 mas-larga          H1 mas-corta    H2 prefijo
+                  tasa (margen med)     tasa (margen med)          tasa
+unico     100              0% (    -)              0% (    -)            0%
+               H2/H3 CIEGAS: las 4 opciones comparten primera palabra en el 100% de las versiones
+                  -> el 0% de H2 NO es ausencia de senal, es ausencia de medicion; H3 no acumula
+               H3b contenido: la clave dice lo mismo ("una ficha blanca con un cuadrado y una ficha n...") en el 5% de 100 versiones
+
+NOTA DE ORDEN (informativa, no bloquea):
+  - unico: H2 y H3 no son aplicables (prefijo uniforme en el 100% de las versiones); la invariancia del tipo de clave la mide H3b
+
+PASS: ninguna sonda superficial supera el 70 %.
+exit=0

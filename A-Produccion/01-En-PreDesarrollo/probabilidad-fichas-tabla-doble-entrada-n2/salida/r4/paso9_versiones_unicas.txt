@@ -1,0 +1,5 @@
+variables presentes: enunciado = TRUE | w = TRUE | opciones = TRUE | sol = TRUE | es_canonica = TRUE 
+versiones únicas (enunciado + tabla + opciones + clave): 271 de 300
+canónicas entre las 300: 30 | huellas distintas entre las canónicas: 1 
+no canónicas: 270 | únicas entre ellas: 270 
+claves distintas por contenido: 128 

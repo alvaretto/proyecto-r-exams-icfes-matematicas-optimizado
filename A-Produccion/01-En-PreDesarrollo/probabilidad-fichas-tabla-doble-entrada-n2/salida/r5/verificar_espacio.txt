@@ -1,0 +1,277 @@
+
+==============================================================================
+E1 · Enumeración exacta del espacio no canónico
+==============================================================================
+  Tiempo: 27.2 s
+  Combinaciones alcanzables: 3.982.576
+Aviso:
+In prettyNum(.Internal(format(x, trim, digits, nsmall, width, 3L,  :
+  'big.mark' y 'decimal.mark' son ambos '.', lo cual puede ser confuso
+PROB-UNA>PROB-CER PROB-CER>PROB-UNA 
+          2059650           1922926 
+  OK: aborto_c_ok = 0 
+  OK: aborto_m0 = 0 
+  OK: repite_fuera_de_UNA = 0 
+  OK: celda_menor_1 = 0 
+  OK: clave_desigual = 0 
+  OK: segunda_igualdad = 0 
+  OK: R2_complementario = 0 
+  OK: lectura_exactamente_una_empata = 0 
+  OK: precondicion = 0 
+  Canal de estímulo exacto: en las 3.982.576 combinaciones solo PROB-UNA repite una celda; la regla «descarta la que repite» acierta 1/3 (+8,3 pp)
+Aviso:
+In prettyNum(.Internal(format(x, trim, digits, nsmall, width, 3L,  :
+  'big.mark' y 'decimal.mark' son ambos '.', lo cual puede ser confuso
+
+==============================================================================
+E2 · Muestreo por cuotas (N = 100 por estrato) y pertenencia al espacio de E1
+==============================================================================
+  Semillas recorridas: 226 | canónicas encontradas: 23 (10.2 %) | abortos: 0 
+PROB-UNA>PROB-CER PROB-CER>PROB-UNA 
+              100               100 
+  OK: cuotas completas: 100 por estrato 
+  OK: proporción de canónicas 10.2 % frente a P_CANON = 0.10 (z = +0.1) 
+  OK: los 200 cubos muestreados están en el espacio enumerado 
+  OK: exactamente una clave en las 200 versiones 
+  §P4 · molde (dimensiones) de la clave en la muestra no canónica:
+
+categ+figura  color+categ color+figura 
+          75           60           65 
+
+==============================================================================
+E3 · Instancia canónica contra ITEM_OFICIAL.md
+==============================================================================
+  OK: enunciado verbatim 
+  OK: pregunta verbatim 
+  OK: las cuatro opciones verbatim 
+  OK: la clave es el contenido de B 
+  OK: tabla celda a celda 
+  OK: rótulos 
+               al_menos_una.clave exactamente_una.clave ambas.clave
+clave    26 26                  1                     1           1
+PROB-SIM 20 28                  0                     0           0
+PROB-CER 11 10                  0                     0           0
+PROB-CRU  8 20                  0                     0           0
+  OK: solo la clave empata, con las tres lecturas 
+  OK: R2: ningún par complementario en la canónica 
+  OK: Solution: cada n/N dice «en cada extracción» o «una ficha extraída» (canónica y 2 no canónicas) 
+
+==============================================================================
+E4 · Batería §P7 congelada — muestra no canónica (estratos por err_PQ)
+==============================================================================
+
+========================================
+BATERIA DE ELIMINACION — cierre por familias, veredicto por EXCESO
+========================================
+Versiones: 200 | Reglas: 16 | Cortes: ruido 2.0 % / canal 8.0 %
+
+-- Reglas (ordenadas por tasa) --
+  descartar_mas_cortas         [magnitud     ] tasa 27.5 %   aplicable 100.0 %
+  dos_mas_largas               [magnitud     ] tasa 27.5 %   aplicable 100.0 %
+  molde_categoria_figura       [formato      ] tasa 26.1 %   aplicable 70.5 %
+  cruzada_en_su_molde (relacional) [formato      ] tasa 25.5 %   aplicable 100.0 %
+  con_categoria                [lexico       ] tasa 25.5 %   aplicable 67.0 %
+  ultima_posicion              [posicion     ] tasa 25.5 %   aplicable 100.0 %
+  mas_larga_unica              [magnitud     ] tasa 25.0 %   aplicable 0.0 %
+  mas_corta_unica              [magnitud     ] tasa 25.0 %   aplicable 0.0 %
+  prefijo_unico_3_palabras     [lexico       ] tasa 25.0 %   aplicable 0.0 %
+  token_exclusivo              [lexico       ] tasa 25.0 %   aplicable 0.0 %
+  molde_color_figura           [formato      ] tasa 24.5 %   aplicable 67.0 %
+  sin_categoria                [lexico       ] tasa 24.5 %   aplicable 67.0 %
+  primera_posicion             [posicion     ] tasa 24.5 %   aplicable 100.0 %
+  molde_color_categoria        [formato      ] tasa 24.4 %   aplicable 62.5 %
+  descartar_mas_largas         [magnitud     ] tasa 22.5 %   aplicable 100.0 %
+  dos_mas_cortas               [magnitud     ] tasa 22.5 %   aplicable 100.0 %
+
+-- Calibracion contra el techo nulo --
+  Maximo observado : 27.5 %  (regla 'descartar_mas_cortas')
+  Techo nulo       : 28.1 %  (media del maximo con la clave permutada, 400 replicas)
+  Techo nulo p95   : 31.0 %
+  Ruido (sd)       : 1.6 %   -> margen exigido 2.0 sd = +3.1 pp
+  EXCESO           : -0.6 pp   <-- ESTO decide el veredicto
+  Exceso ATOMICO   : +2.5 pp  (la regla top sobre su propio nulo exacto, 25.0 %;
+                     no depende del numero de reglas). Si esta cifra es grande y
+                     el EXCESO no, sospechar bateria RELLENADA con reglas que
+                     ningun estudiante usaria: suben el techo sin mover el maximo.
+  [informativo, NO decide] tasa absoluta 27.5 % frente al viejo umbral 70.0 %
+  La tasa absoluta crece con el NUMERO DE REGLAS: medido sobre 468 items
+  oficiales, la misma poblacion da 27,4 % con 19 reglas y 34,8 % con 25, y
+  su techo nulo se mueve con ella. El exceso es lo invariante.
+
+-- Cobertura por familias de dimension --
+  magnitud       CON SONDA                  tamano relativo: la mas larga/corta, la mayor/menor, la de mas cifras
+  divisibilidad  no aplicable (declarada)   estructura aritmetica: par/impar, multiplo de 5/10, entero vs decimal
+  signo          no aplicable (declarada)   signo y sentido: negativo/positivo, aumenta/disminuye, si/no
+  posicion       CON SONDA                  lugar: cuadrante, orden, celda de la grilla, primera/ultima
+  formato        CON SONDA                  molde: unidades, notacion, tipo de grafico, presencia de cifras
+  lexico         CON SONDA                  vocabulario: token exclusivo de la clave, registro, prefijo
+
+  Justificaciones declaradas:
+    divisibilidad: las opciones no contienen cifras: nombran tipos de ficha
+    signo: las opciones no tienen polaridad (ni sí/no, ni aumenta/disminuye, ni signos)
+
+-- VEREDICTO --
+  PASS (exit 0)
+  Exceso -0.6 pp sobre el techo nulo (28.1 %), por debajo del corte de ruido
+  (+2.0 pp) incluso sumando 2.0 sd del ruido medido (+3.1 pp), y las seis
+  familias tienen sonda o declaracion. Este PASS si acredita.
+
+
+  Por estrato (tasa de acierto de la regla; azar = 25 %):
+                                 PROB-CER>PROB-UNA PROB-UNA>PROB-CER
+mas_larga_unica                               25.0              25.0
+mas_corta_unica                               25.0              25.0
+descartar_mas_largas                          19.0              26.0
+descartar_mas_cortas                          31.0              24.0
+dos_mas_cortas                                19.0              26.0
+dos_mas_largas                                31.0              24.0
+molde_color_figura                            21.2              27.8
+molde_color_categoria                         24.5              24.2
+molde_categoria_figura                        29.2              23.0
+cruzada_en_su_molde (relacional)              26.5              24.5
+con_categoria                                 28.7              22.2
+sin_categoria                                 21.2              27.8
+prefijo_unico_3_palabras                      25.0              25.0
+token_exclusivo                               25.0              25.0
+primera_posicion                              18.0              31.0
+ultima_posicion                               31.0              20.0
+
+  Máximo por estrato: 31.0 % (descartar_mas_cortas, PROB-CER>PROB-UNA)
+
+==============================================================================
+E4 · Canónica, sobre sus 23 semillas de E2 (residuo declarado: override firmado de §P7-E, I-8)
+==============================================================================
+  Posición interna de la clave en las canónicas (1..4): 6 / 8 / 4 / 5 
+                                 no_canonica canonica exceso_canonica_pp
+mas_larga_unica                       25.0 %   25.0 %               +0.0
+mas_corta_unica                       25.0 %   25.0 %               +0.0
+descartar_mas_largas                  22.5 %   50.0 %              +25.0
+descartar_mas_cortas                  27.5 %    0.0 %              -25.0
+dos_mas_cortas                        22.5 %   50.0 %              +25.0
+dos_mas_largas                        27.5 %    0.0 %              -25.0
+molde_color_figura                    24.5 %   50.0 %              +25.0
+molde_color_categoria                 24.4 %   25.0 %               +0.0
+molde_categoria_figura                26.1 %   25.0 %               +0.0
+cruzada_en_su_molde (relacional)      25.5 %  100.0 %              +75.0
+con_categoria                         25.5 %    0.0 %              -25.0
+sin_categoria                         24.5 %   50.0 %              +25.0
+prefijo_unico_3_palabras              25.0 %   25.0 %               +0.0
+token_exclusivo                       25.0 %   25.0 %               +0.0
+primera_posicion                      24.5 %   26.1 %               +1.1
+ultima_posicion                       25.5 %   21.7 %               -3.3
+                                 mezcla_10pct exceso_mezcla_pp
+mas_larga_unica                        25.0 %             +0.0
+mas_corta_unica                        25.0 %             +0.0
+descartar_mas_largas                   25.2 %             +0.3
+descartar_mas_cortas                   24.8 %             -0.2
+dos_mas_cortas                         25.2 %             +0.3
+dos_mas_largas                         24.8 %             -0.2
+molde_color_figura                     27.1 %             +2.1
+molde_color_categoria                  24.4 %             -0.6
+molde_categoria_figura                 26.0 %             +1.0
+cruzada_en_su_molde (relacional)       33.0 %             +8.0
+con_categoria                          22.9 %             -2.0
+sin_categoria                          27.1 %             +2.1
+prefijo_unico_3_palabras               25.0 %             +0.0
+token_exclusivo                        25.0 %             +0.0
+primera_posicion                       24.7 %             -0.3
+ultima_posicion                        25.1 %             +0.1
+  Largos de las opciones canónicas: A 66 · B 66 · C 102 · D 102 
+  Las reglas de posición miden el orden INTERNO: R/exams (exshuffle: TRUE) y Moodle vuelven a mezclar.
+
+==============================================================================
+E4b · Canal de estímulo: «descarta la pareja cuyos dos tipos repiten un valor de celda»
+==============================================================================
+  no canónica: 33.3 % (+8.3 pp) | canónica: 33.3 % (+8.3 pp) | mezcla: 33.3 % (+8.3 pp)
+  Residuo estructural firmado (2026-10-27): 1/3, el nivel del ítem oficial con esta regla.
+  OK: canal de estímulo dentro de la firma (<= 1/3) 
+
+==============================================================================
+E5 · Mutantes (sonda declarada, en memoria sobre el chunk; patrón exactamente una vez)
+==============================================================================
+ id   invariante                                                          
+ M1   I-5 igualdad de la clave construida                                 
+ M2   I-5 exclusión que deja desigual el espejo                           
+ M3   I-7 R2 (ningún par complementario)                                  
+ M4   I-7 celdas >= 1                                                     
+ M5   I-1 sin vocabulario de error en las opciones                        
+ M6   I-2 tabla canónica = impreso                                        
+ M7   I-2 enunciado canónico = impreso                                    
+ M8   I-6 pool de errores >= 4                                            
+ M9   I-8 toda opción agregada fuera de la canónica                       
+ M11  I-2 enunciado canónico sin permutar palabras                        
+ M12  I-6 precondición del error elegido                                  
+ M13  I-6 C canónica con PROB-CER: textos genéricos válidos para una celda
+ M14  Solution canónica de D sin sumas (explicación)                      
+ M15  I-7 pregunta del impreso sin permutar palabras                      
+ M16  I-8 override del residuo canónico: P_CANON <= 0,10                  
+ M17  I-6 C canónica no vuelve a PROB-UNA                                 
+ M18  C canónica (PROB-CER) sin vocabulario de agregación                 
+ M19  C canónica (PROB-CER) sin la causa raíz de dos celdas               
+ M10a Solution canónica de D: override de nombre                          
+ M10b Solution canónica de D: override de descripcion_corta               
+ M10c Solution canónica de D: override de descripcion_larga               
+ M10d Solution canónica de D: override de causa_raiz                      
+ M20  I-7 «en cada extracción» en el feedback                             
+ M21  Canal de estímulo: el espejo no repite celdas                       
+ M22  I-6 PROB-CRU solo en la canónica                                    
+ sonda                                        semilla veredicto          
+ sum(iguales) == 1                              1     cazado_por_su_sonda
+ sum(iguales) == 1                            339     cazado_por_su_sonda
+ rowSums(cuentas) < N                           1     cazado_por_su_sonda
+ all(w >= 1)                                    8     cazado_por_su_sonda
+ estudiante|error|confundi                      1     cazado_por_su_sonda
+ as.vector(w)                                   7     cazado_por_su_sonda
+ utf8ToInt(enunciado)                           7     cazado_por_su_sonda
+ length(errores_conceptuales) >= 4              1     cazado_por_su_sonda
+ vapply(pares                                   1     cazado_por_su_sonda
+ seq_along(u_enun)                              7     cazado_por_su_sonda
+ precondicion                                   1     cazado_por_su_sonda
+ textos genéricos válidos o los cuatro campos   7     cazado_por_su_sonda
+ análisis de celdas sueltas sin sumas           7     cazado_por_su_sonda
+ seq_along(u_preg)                              1     cazado_por_su_sonda
+ P_CANON <= 0.1                                 1     cazado_por_su_sonda
+ precondicion                                   7     cazado_por_su_sonda
+ análisis de celdas sueltas sin sumas           7     cazado_por_su_sonda
+ análisis de celdas sueltas sin sumas           7     cazado_por_su_sonda
+ textos genéricos válidos o los cuatro campos   7     cazado_por_su_sonda
+ textos genéricos válidos o los cuatro campos   7     cazado_por_su_sonda
+ textos genéricos válidos o los cuatro campos   7     cazado_por_su_sonda
+ textos genéricos válidos o los cuatro campos   7     cazado_por_su_sonda
+ n/N con «en cada extracción»                   1     cazado_por_su_sonda
+ solo PROB-UNA repite un valor de celda        30     cazado_por_su_sonda
+ precondicion                                   2     cazado_por_su_sonda
+ mensaje                                                               
+ sum(iguales) == 1 is not TRUE                                         
+ sum(iguales) == 1 is not TRUE                                         
+ all(rowSums(cuentas) < N) is not TRUE                                 
+ all(w >= 1) is not TRUE                                               
+ !any(grepl("estudiante|error|confundi|sum[oó]|olvid", opciones_base, .
+ identical(as.vector(w), c(12, 16, 8, 10, 11, 20, 15, 8)) is not TRUE  
+ sum(utf8ToInt(enunciado)) == 28217L is not TRUE                       
+ length(errores_conceptuales) >= 4 is not TRUE                         
+ all(vapply(pares, function(par) all(vapply(par, function(t) length(t$d
+ sum(seq_along(u_enun) * u_enun) == 4314626 is not TRUE                
+ all(vapply(sel, function(e) isTRUE(e$precondicion(params)), logical(1)
+ celdas sueltas: textos genéricos válidos o los cuatro campos en TXT_CA
+ análisis de celdas sueltas sin sumas                                  
+ sum(seq_along(u_preg) * u_preg) == 720499 is not TRUE                 
+ P_CANON <= 0.1 is not TRUE                                            
+ all(vapply(sel, function(e) isTRUE(e$precondicion(params)), logical(1)
+ análisis de celdas sueltas sin sumas                                  
+ análisis de celdas sueltas sin sumas                                  
+ celdas sueltas: textos genéricos válidos o los cuatro campos en TXT_CA
+ celdas sueltas: textos genéricos válidos o los cuatro campos en TXT_CA
+ celdas sueltas: textos genéricos válidos o los cuatro campos en TXT_CA
+ celdas sueltas: textos genéricos válidos o los cuatro campos en TXT_CA
+ n/N con «en cada extracción»                                          
+ solo PROB-UNA repite un valor de celda                                
+ solo PROB-UNA repite un valor de celda                                
+
+  Sin prueba de detección propia: I-3 (Nivel/DOK: metadatos, se cotejan en el paso 10); I-4 (misma bolsa: estructural, todo n_tipo() sale de la misma tabla w); opciones únicas (estructural: las cuatro parejas son distintas y los rótulos de cada dimensión también).
+
+==============================================================================
+RESULTADO
+==============================================================================
+RESULTADO: APROBADO (0 errores)
+exit=0

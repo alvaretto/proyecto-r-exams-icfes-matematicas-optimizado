@@ -1,0 +1,22 @@
+=== exextra emitidos por el .Rmd frente a la ficha (ITEM_OFICIAL.md) ===
+  Competencia     IGUAL (carácter a carácter)
+  Componente      IGUAL (carácter a carácter)
+  Afirmacion      IGUAL (carácter a carácter)
+  Evidencia       IGUAL (carácter a carácter)
+  Nivel           IGUAL (carácter a carácter)
+  Descriptor      IGUAL (carácter a carácter)
+  Contenido       IGUAL (carácter a carácter)
+  TemaEspecifico  IGUAL (carácter a carácter)
+  Estandar        IGUAL (carácter a carácter)
+  GradoSugerido   IGUAL (carácter a carácter)
+  Emitidos sin campo en la ficha: {'Type': 'SCHOICE', 'DOK': '2', 'Bloom': 'Aplicar', 'SOLO': 'Relacional', 'TipoMetacognicion': 'analisis_error', 'ItemOriginal': 'MAT-2026-07-032'}
+  De la ficha, no emitidos: ['Genérico', 'Aprendizaje', '¿Qué evalúa?', 'Tarea', 'Descripción Breve']
+  Estructura R/exams: {'exname': 'probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_schoice_v1', 'extype': 'schoice', 'exsolution': '`r mchoice2string(sol)`', 'exshuffle': 'TRUE', 'extol': '0'}
+
+=== Literalidad contra el catálogo canónico ===
+  Afirmacion: LITERAL  [('evidencias-mat.json', 'afirmaciones_oficiales/Formulación y ejecución/texto_oficial')]
+  Evidencia: LITERAL  [('evidencias-mat.json', 'evidencias_oficiales/FyE_E3/texto_oficial')]
+  Descriptor (texto): LITERAL  [('niveles-mat.json', 'niveles_oficiales/N2/2'), ('niveles-mat.json', 'mapeo_codigos_proyecto_a_oficial/D2.3/texto_oficial')]
+    objeto del catálogo: {'lista': 'niveles_oficiales/N2'}
+  Estandar (texto): LITERAL  [('estandares-mat-ebc.json', 'estandares_oficiales_por_pensamiento_grado/Aleatorio_6-7/6')]
+  Código del descriptor emitido: D2.3

@@ -1,0 +1,3 @@
+Diversidad sustantiva: 100/100 versiones evaluadas | respuesta correcta: 72 valor(es) unico(s) | errores=0 indeterminadas=0
+PASS: la respuesta correcta varia suficientemente (diversidad sustantiva confirmada).
+exit=0

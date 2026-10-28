@@ -1,0 +1,15 @@
+no canónicas: 1797 | canónicas: 203 
+                         no_canonica exceso_nc item_oficial exceso_oficial
+base_repite                   33.3 %      +8.3       33.3 %           +8.3
+compuesta_repite_y_molde      50.0 %     +25.0        0.0 %          -25.0
+fuera_5_20                    46.7 %     +21.7       25.0 %           +0.0
+numero_mayor                  35.4 %     +10.4       50.0 %          +25.0
+mayor_o_menor                 35.4 %     +10.4       50.0 %          +25.0
+celdas_mas_juntas             46.6 %     +21.6        0.0 %          -25.0
+                         mezcla_10
+base_repite                   +8.3
+compuesta_repite_y_molde     +20.0
+fuera_5_20                   +19.5
+numero_mayor                 +11.9
+mayor_o_menor                +11.9
+celdas_mas_juntas            +17.0

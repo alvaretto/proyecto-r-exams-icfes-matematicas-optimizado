@@ -1,0 +1,26 @@
+Cotejo del paso 10, reapertura 7 (2026-10-27T22:35:27-05:00).
+Bloque Meta-information IDÉNTICO byte a byte al de r4 (salida/r4/paso10_cotejo.txt, igual a r3): los 10 campos de la ficha siguen iguales.
+
+Meta-information
+================
+exname: probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_schoice_v1
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Competencia]: Formulación y ejecución
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Frente a un problema que involucre información cuantitativa, plantea e implementa estrategias que lleven a soluciones adecuadas.
+exextra[Evidencia]: Resuelve un problema que involucra información cuantitativa o esquemática.
+exextra[Nivel]: 2
+exextra[Descriptor]: D2.3 — Compara la probabilidad de eventos simples (casos favorables/casos posibles) cuando los casos posibles son los mismos en ambos eventos y en contextos similares a los presentados en el aula.
+exextra[Contenido]: Estadística
+exextra[TemaEspecifico]: Probabilidad en tablas de doble entrada
+exextra[Estandar]: Resuelvo y formulo problemas a partir de un conjunto de datos presentados en tablas, diagramas de barras, diagramas circulares. (6°-7°, Pensamiento aleatorio)
+exextra[DOK]: 2
+exextra[Bloom]: Aplicar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_afirmacion
+exextra[ItemOriginal]: MAT-2026-07-032
+exextra[GradoSugerido]: 6°-7°

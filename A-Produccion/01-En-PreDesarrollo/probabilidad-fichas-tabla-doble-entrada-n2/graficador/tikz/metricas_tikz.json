@@ -1,0 +1,466 @@
+[
+ {
+  "iteracion": 1,
+  "puntuacion_total": 93.4,
+  "por_categoria": {
+   "colores": 18.6,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 15.0,
+   "estilos": 9.8,
+   "elementos": 10.0
+  },
+  "rmse_aux": {
+   "valor": 3689.04,
+   "normalizado": 0.0562911,
+   "procedimiento": "gris, mitad de tamaño, blur 0x1, caja de la tabla (525x229 px del escaneo)"
+  },
+  "cambios": "Primera construcción. Geometría medida sobre el escaneo (4 columnas de 127,25 px, 6 filas de 35,5 px; línea gruesa en el contorno exterior y bajo «Figura geométrica»). Helvetica Narrow Bold comprimida en horizontal (xscale) y engrosada con trazo de contorno (modo de texto 2 de PDF); una sola tinta (80,16,52) y un solo ancho por tipo de línea. Anchos de columna adaptativos medidos por LaTeX.",
+  "detalle": {
+   "colores": {
+    "blanco_celdas": 1.06,
+    "relleno_encabezado": 0.32,
+    "texto_negro_lum<40_media": 0.55,
+    "trazo_encabezado_lum<130_media": 0.68,
+    "trazo_encabezado_lum<60_media": 5.03,
+    "linea_gruesa_lum<70_media": 1.34,
+    "linea_fina_lum<130_media": 12.11
+   },
+   "posiciones": {
+    "max_desv_pct": 0.939,
+    "n": 53
+   },
+   "valores": {
+    "textos_presentes": 19
+   },
+   "proporciones": {
+    "aspecto_pct": 0.025,
+    "fronteras_columnas_max_pct_del_rango": 0.2,
+    "fronteras_filas_max_pct_del_rango": 0.18
+   },
+   "estilos": {
+    "err_integral_lineas_pct": 13.9,
+    "err_astas_pct": 15.2,
+    "err_cobertura_pct": 9.3,
+    "err_ancho_texto_pct": 5.8,
+    "err_alto_texto_px": 0.74,
+    "penalizaciones": {
+     "lineas": 1.78,
+     "astas": 1.02,
+     "cobertura": 0.87,
+     "tamano": 0.54,
+     "familia_tipografica": 1.0
+    }
+   },
+   "elementos": {
+    "nota": "18 textos, 4 encabezados, 2 combinadas, sin celda sobre las columnas 1-2, nada extra"
+   }
+  }
+ },
+ {
+  "iteracion": 2,
+  "puntuacion_total": 95.5,
+  "por_categoria": {
+   "colores": 18.5,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 15.0,
+   "estilos": 12.0,
+   "elementos": 10.0
+  },
+  "rmse_aux": {
+   "valor": 3366.53,
+   "normalizado": 0.0513699,
+   "procedimiento": "gris, mitad de tamaño, blur 0x1, caja de la tabla (525x229 px del escaneo)"
+  },
+  "cambios": "Trazo del encabezado más grueso (astas 4,2 px) y cuerpo de letra por clase; línea base 1 px más arriba; anchos de línea por orientación (en el escaneo las verticales llevan entre un 14 % y un 22 % menos de tinta que las horizontales); tinta de línea (88,13,58); argumento opcional `estilo` para afinar.",
+  "detalle": {
+   "colores": {
+    "blanco_celdas": 1.06,
+    "relleno_encabezado": 0.32,
+    "texto_negro_lum<40_media": 0.55,
+    "trazo_encabezado_lum<130_media": 0.85,
+    "trazo_encabezado_lum<60_media": 5.7,
+    "linea_gruesa_lum<70_media": 4.36,
+    "linea_fina_lum<130_media": 11.04
+   },
+   "posiciones": {
+    "max_desv_pct": 0.939,
+    "n": 53
+   },
+   "valores": {
+    "textos_presentes": 19
+   },
+   "proporciones": {
+    "aspecto_pct": 0.025,
+    "fronteras_columnas_max_pct_del_rango": 0.19,
+    "fronteras_filas_max_pct_del_rango": 0.19
+   },
+   "estilos": {
+    "err_integral_lineas_pct": 7.4,
+    "err_astas_pct": 4.9,
+    "err_cobertura_pct": 9.8,
+    "err_ancho_texto_pct": 5.1,
+    "err_alto_texto_px": 0.89,
+    "penalizaciones": {
+     "lineas": 0.48,
+     "astas": 0,
+     "cobertura": 0.95,
+     "tamano": 0.53,
+     "familia_tipografica": 1.0
+    }
+   },
+   "elementos": {
+    "nota": "18 textos, 4 encabezados, 2 combinadas, sin celda sobre las columnas 1-2, nada extra"
+   }
+  }
+ },
+ {
+  "iteracion": 3,
+  "puntuacion_total": 97.0,
+  "por_categoria": {
+   "colores": 18.9,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 15.0,
+   "estilos": 13.1,
+   "elementos": 10.0
+  },
+  "rmse_aux": {
+   "valor": 3147.99,
+   "normalizado": 0.0480352,
+   "procedimiento": "gris, mitad de tamaño, blur 0x1, caja de la tabla (525x229 px del escaneo)"
+  },
+  "cambios": "Clase propia para las cifras (12,4 pt, sx 0,80); tinta de la línea fina más clara (125,40,92) con anchos 1,25/1,05 pt, como en el escaneo (pico 72-132 frente a 21-24 de la gruesa); línea base por clase (título 2 px más arriba); encabezado 11,8 pt con trazo 0,90.",
+  "detalle": {
+   "colores": {
+    "blanco_celdas": 1.06,
+    "relleno_encabezado": 0.32,
+    "texto_negro_lum<40_media": 0.55,
+    "trazo_encabezado_lum<130_media": 0.0,
+    "trazo_encabezado_lum<60_media": 5.35,
+    "linea_gruesa_lum<70_media": 4.36,
+    "linea_fina_lum<130_media": 7.31
+   },
+   "posiciones": {
+    "max_desv_pct": 0.469,
+    "n": 53
+   },
+   "valores": {
+    "textos_presentes": 19
+   },
+   "proporciones": {
+    "aspecto_pct": 0.025,
+    "fronteras_columnas_max_pct_del_rango": 0.2,
+    "fronteras_filas_max_pct_del_rango": 0.19
+   },
+   "estilos": {
+    "err_integral_lineas_pct": 6.8,
+    "err_astas_pct": 7.1,
+    "err_cobertura_pct": 5.1,
+    "err_ancho_texto_pct": 4.3,
+    "err_alto_texto_px": 0.63,
+    "penalizaciones": {
+     "lineas": 0.36,
+     "astas": 0.21,
+     "cobertura": 0.02,
+     "tamano": 0.31,
+     "familia_tipografica": 1.0
+    }
+   },
+   "elementos": {
+    "nota": "18 textos, 4 encabezados, 2 combinadas, sin celda sobre las columnas 1-2, nada extra"
+   }
+  }
+ },
+ {
+  "iteracion": 4,
+  "puntuacion_total": 96.8,
+  "por_categoria": {
+   "colores": 19.1,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 15.0,
+   "estilos": 12.7,
+   "elementos": 10.0
+  },
+  "rmse_aux": {
+   "valor": 3120.58,
+   "normalizado": 0.047617,
+   "procedimiento": "gris, mitad de tamaño, blur 0x1, caja de la tabla (525x229 px del escaneo)"
+  },
+  "cambios": "Fondo blanco opaco más grande que la caja del dibujo (el PNG de exams::tex2image salía con una columna semitransparente) y caja fijada con \\useasboundingbox; ligaduras ff/fi/fl rotas; sin líneas en blanco ni mediciones repetidas; línea gruesa (76,11,48); texto más ligero (trazos 0,30/0,34/0,85) para igualar la cobertura de tinta.",
+  "detalle": {
+   "colores": {
+    "blanco_celdas": 1.06,
+    "relleno_encabezado": 0.32,
+    "texto_negro_lum<40_media": 0.55,
+    "trazo_encabezado_lum<130_media": 0.32,
+    "trazo_encabezado_lum<60_media": 5.35,
+    "linea_gruesa_lum<70_media": 0.85,
+    "linea_fina_lum<130_media": 7.31
+   },
+   "posiciones": {
+    "max_desv_pct": 0.469,
+    "n": 53
+   },
+   "valores": {
+    "textos_presentes": 19
+   },
+   "proporciones": {
+    "aspecto_pct": 0.025,
+    "fronteras_columnas_max_pct_del_rango": 0.2,
+    "fronteras_filas_max_pct_del_rango": 0.19
+   },
+   "estilos": {
+    "err_integral_lineas_pct": 7.5,
+    "err_astas_pct": 8.8,
+    "err_cobertura_pct": 4.2,
+    "err_ancho_texto_pct": 5.2,
+    "err_alto_texto_px": 0.63,
+    "penalizaciones": {
+     "lineas": 0.5,
+     "astas": 0.38,
+     "cobertura": 0,
+     "tamano": 0.42,
+     "familia_tipografica": 1.0
+    }
+   },
+   "elementos": {
+    "nota": "18 textos, 4 encabezados, 2 combinadas, sin celda sobre las columnas 1-2, nada extra"
+   }
+  }
+ },
+ {
+  "iteracion": 5,
+  "puntuacion_total": 97.3,
+  "por_categoria": {
+   "colores": 19.4,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 15.0,
+   "estilos": 13.0,
+   "elementos": 10.0
+  },
+  "rmse_aux": {
+   "valor": 3061.08,
+   "normalizado": 0.0467091,
+   "procedimiento": "gris, mitad de tamaño, blur 0x1, caja de la tabla (525x229 px del escaneo)"
+  },
+  "cambios": "Manchado horizontal opcional (tres copias desplazadas ±δ) para engrosar las astas verticales sin engordar los trazos horizontales; segmento y=51,5 de las columnas 3-4 con su propio grosor; anchos 1,55/1,38/1,28/1,08 pt; tinta fina (116,58,90). Con el manchado desactivado, equivale a v4 más las líneas.",
+  "detalle": {
+   "colores": {
+    "blanco_celdas": 1.06,
+    "relleno_encabezado": 0.32,
+    "texto_negro_lum<40_media": 0.55,
+    "trazo_encabezado_lum<130_media": 0.23,
+    "trazo_encabezado_lum<60_media": 5.35,
+    "linea_gruesa_lum<70_media": 2.12,
+    "linea_fina_lum<130_media": 3.34
+   },
+   "posiciones": {
+    "max_desv_pct": 0.469,
+    "n": 53
+   },
+   "valores": {
+    "textos_presentes": 19
+   },
+   "proporciones": {
+    "aspecto_pct": 0.025,
+    "fronteras_columnas_max_pct_del_rango": 0.2,
+    "fronteras_filas_max_pct_del_rango": 0.23
+   },
+   "estilos": {
+    "err_integral_lineas_pct": 5.9,
+    "err_astas_pct": 8.7,
+    "err_cobertura_pct": 4.2,
+    "err_ancho_texto_pct": 5.2,
+    "err_alto_texto_px": 0.79,
+    "penalizaciones": {
+     "lineas": 0.18,
+     "astas": 0.37,
+     "cobertura": 0,
+     "tamano": 0.49,
+     "familia_tipografica": 1.0
+    }
+   },
+   "elementos": {
+    "nota": "18 textos, 4 encabezados, 2 combinadas, sin celda sobre las columnas 1-2, nada extra"
+   }
+  }
+ },
+ {
+  "iteracion": 6,
+  "puntuacion_total": 97.9,
+  "por_categoria": {
+   "colores": 19.4,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 15.0,
+   "estilos": 13.5,
+   "elementos": 10.0
+  },
+  "rmse_aux": {
+   "valor": 2878.37,
+   "normalizado": 0.0439212,
+   "procedimiento": "gris, mitad de tamaño, blur 0x1, caja de la tabla (525x229 px del escaneo)"
+  },
+  "cambios": "Parámetros del texto elegidos por barrido (unos 280 renders de laboratorio, fuera de la carpeta entregable): Par/Impar en Helvetica Narrow c (11,6 pt, manchado 0,7 px), cifras 13 pt con manchado 0,5, encabezado con manchado 0,7; el dígito 1 se estrecha al 70 % (los del impreso son proporcionales); color del texto de encabezado (112,5,44).",
+  "detalle": {
+   "colores": {
+    "blanco_celdas": 1.06,
+    "relleno_encabezado": 0.32,
+    "texto_negro_lum<40_media": 0.55,
+    "trazo_encabezado_lum<130_media": 3.52,
+    "trazo_encabezado_lum<60_media": 2.31,
+    "linea_gruesa_lum<70_media": 2.12,
+    "linea_fina_lum<130_media": 3.34
+   },
+   "posiciones": {
+    "max_desv_pct": 0.469,
+    "n": 53
+   },
+   "valores": {
+    "textos_presentes": 19
+   },
+   "proporciones": {
+    "aspecto_pct": 0.025,
+    "fronteras_columnas_max_pct_del_rango": 0.2,
+    "fronteras_filas_max_pct_del_rango": 0.23
+   },
+   "estilos": {
+    "err_integral_lineas_pct": 5.9,
+    "err_astas_pct": 1.0,
+    "err_cobertura_pct": 4.8,
+    "err_ancho_texto_pct": 4.3,
+    "err_alto_texto_px": 0.58,
+    "penalizaciones": {
+     "lineas": 0.18,
+     "astas": 0,
+     "cobertura": 0,
+     "tamano": 0.29,
+     "familia_tipografica": 1.0
+    }
+   },
+   "elementos": {
+    "nota": "18 textos, 4 encabezados, 2 combinadas, sin celda sobre las columnas 1-2, nada extra"
+   }
+  }
+ },
+ {
+  "iteracion": 7,
+  "puntuacion_total": 97.9,
+  "por_categoria": {
+   "colores": 19.4,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 15.0,
+   "estilos": 13.5,
+   "elementos": 10.0
+  },
+  "rmse_aux": {
+   "valor": 2741.25,
+   "normalizado": 0.0418288,
+   "procedimiento": "gris, mitad de tamaño, blur 0x1, caja de la tabla (525x229 px del escaneo)"
+  },
+  "cambios": "Rótulo combinado con su propia escala horizontal (ancho 158 px = impreso) y línea base del título corregida; rótulos Blanca/Negra con trazo 0,32 y línea base 0,5 px más arriba.",
+  "detalle": {
+   "colores": {
+    "blanco_celdas": 1.06,
+    "relleno_encabezado": 0.32,
+    "texto_negro_lum<40_media": 0.55,
+    "trazo_encabezado_lum<130_media": 3.52,
+    "trazo_encabezado_lum<60_media": 2.31,
+    "linea_gruesa_lum<70_media": 2.12,
+    "linea_fina_lum<130_media": 3.34
+   },
+   "posiciones": {
+    "max_desv_pct": 0.469,
+    "n": 53
+   },
+   "valores": {
+    "textos_presentes": 19
+   },
+   "proporciones": {
+    "aspecto_pct": 0.025,
+    "fronteras_columnas_max_pct_del_rango": 0.2,
+    "fronteras_filas_max_pct_del_rango": 0.23
+   },
+   "estilos": {
+    "err_integral_lineas_pct": 5.9,
+    "err_astas_pct": 1.0,
+    "err_cobertura_pct": 4.7,
+    "err_ancho_texto_pct": 4.2,
+    "err_alto_texto_px": 0.68,
+    "penalizaciones": {
+     "lineas": 0.18,
+     "astas": 0,
+     "cobertura": 0,
+     "tamano": 0.32,
+     "familia_tipografica": 1.0
+    }
+   },
+   "elementos": {
+    "nota": "18 textos, 4 encabezados, 2 combinadas, sin celda sobre las columnas 1-2, nada extra"
+   }
+  }
+ },
+ {
+  "iteracion": 8,
+  "puntuacion_total": 98.1,
+  "por_categoria": {
+   "colores": 19.5,
+   "posiciones": 20.0,
+   "valores": 20.0,
+   "proporciones": 15.0,
+   "estilos": 13.7,
+   "elementos": 10.0
+  },
+  "rmse_aux": {
+   "valor": 2683.89,
+   "normalizado": 0.0409536,
+   "procedimiento": "gris, mitad de tamaño, blur 0x1, caja de la tabla (525x229 px del escaneo)"
+  },
+  "cambios": "Final. Corregido un defecto de las versiones anteriores: las mediciones de ancho solo cubrían la primera etiqueta de cada grupo (tex_esc no vectorizada), lo que afectaba al ensanche adaptativo de las columnas pero no a la canónica. Ajustes finales: segmento y=51,5 de las columnas 3-4 a 1,30 pt, verticales finas a 1,00 pt, encabezado con trazo 0,40 y manchado 0,65 px. Código reescrito con comentarios y sin <<-.",
+  "detalle": {
+   "colores": {
+    "blanco_celdas": 1.06,
+    "relleno_encabezado": 0.32,
+    "texto_negro_lum<40_media": 0.55,
+    "trazo_encabezado_lum<130_media": 3.18,
+    "trazo_encabezado_lum<60_media": 2.18,
+    "linea_gruesa_lum<70_media": 2.12,
+    "linea_fina_lum<130_media": 3.34
+   },
+   "posiciones": {
+    "max_desv_pct": 0.469,
+    "n": 53
+   },
+   "valores": {
+    "textos_presentes": 19
+   },
+   "proporciones": {
+    "aspecto_pct": 0.025,
+    "fronteras_columnas_max_pct_del_rango": 0.2,
+    "fronteras_filas_max_pct_del_rango": 0.23
+   },
+   "estilos": {
+    "err_integral_lineas_pct": 4.5,
+    "err_astas_pct": 2.9,
+    "err_cobertura_pct": 3.9,
+    "err_ancho_texto_pct": 4.2,
+    "err_alto_texto_px": 0.68,
+    "penalizaciones": {
+     "lineas": 0,
+     "astas": 0,
+     "cobertura": 0,
+     "tamano": 0.32,
+     "familia_tipografica": 1.0
+    }
+   },
+   "elementos": {
+    "nota": "18 textos, 4 encabezados, 2 combinadas, sin celda sobre las columnas 1-2, nada extra"
+   }
+  }
+ }
+]

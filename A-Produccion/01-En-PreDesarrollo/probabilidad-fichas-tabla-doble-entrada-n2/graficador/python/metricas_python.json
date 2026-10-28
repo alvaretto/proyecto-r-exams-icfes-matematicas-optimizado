@@ -1,0 +1,420 @@
+[
+  {
+    "iteracion": 1,
+    "lenguaje": "python",
+    "timestamp": "2026-10-26T19:23:30-05:00",
+    "archivo": "output_python_v1.py",
+    "render": "output_python_v1.png",
+    "comparacion": "comparacion_python_v1.png",
+    "zoom": "zoom_python_v1.png",
+    "puntuacion_total": 90.5,
+    "por_categoria": {
+      "colores": {
+        "puntuacion": 17.7,
+        "maximo": 20,
+        "criterio_aplicado": "Distancia RGB máxima 3.35 % entre las medias de relleno, fondo, tinta de encabezado, tinta del cuerpo y líneas gruesas (relleno 0.88, encabezado 2.17, cuerpo 2.25, líneas 3.35; fondo blanco puro frente al papel 252: 1.30). Núcleo oscuro del texto del escaneo 16.0 % y líneas finas 13.4 % se informan por separado (recorte del escáner e inclinación del escaneo)."
+      },
+      "posiciones": {
+        "puntuacion": 19.3,
+        "maximo": 20,
+        "criterio_aplicado": "Mayor desvío: 5.0 u horizontal y 3.4 u vertical sobre 514 x 217 u (1.54 % del rango); líneas: 0.38 u horizontales y 0.19 u verticales (el escaneo está inclinado ~0,15 grados)."
+      },
+      "valores": {
+        "puntuacion": 20.0,
+        "maximo": 20,
+        "criterio_aplicado": "8 números y 10 rótulos en su celda, con sus tildes: verificado a ojo celda por celda sobre el render (y ampliado) frente al original. El OCR (tesseract spa) no discrimina: en la versión final acierta 15 de 19 celdas y en el propio original también 15 de 19 (fallos distintos)."
+      },
+      "proporciones": {
+        "puntuacion": 15.0,
+        "maximo": 15,
+        "criterio_aplicado": "Relación de aspecto de la caja de la tabla: original 2.3687, render 2.3704 (0.07 % de diferencia)."
+      },
+      "estilos": {
+        "puntuacion": 8.5,
+        "maximo": 15,
+        "criterio_aplicado": "IoU medio de la tinta por rótulo 0.509 (deducción tipográfica -3.5); error de masa de líneas 6.2 % (ded. -0.5) y de texto 24.4 % (ded. -2.0); contraste líneas finas/gruesas -0 frente a 49 del original (ded. -0.5)."
+      },
+      "elementos": {
+        "puntuacion": 10.0,
+        "maximo": 10,
+        "criterio_aplicado": "Seis filas x cuatro columnas, celda combinada de «Figura geométrica», «Blanca» y «Negra» combinadas, relleno rosado, bordes: nada falta ni sobra."
+      }
+    },
+    "rmse_aux": {
+      "rmse_gris_recorte_0a1": 0.204,
+      "magick_compare_rmse_gris_mitad_blur_0x1": "5018.06 (0.0765707)",
+      "nota": "Evidencia auxiliar, no decide: el escaneo tiene textura de papel y desenfoque (el original contra sí mismo suavizado con σ = 1 px da 0,07), que un render limpio no debe imitar."
+    },
+    "cambios": [
+      "Versión base. Rejilla medida sobre el escaneo (ajuste lineal de la luminancia de cada línea: X = 10,08 / 138,33 / 265,35 / 392,63 / 519,37 u; Y = 16,87 / 52,30 / 87,26 / 123,37 / 158,63 / 194,15 / 229,14 u) en un lienzo de 530 x 244 u (1590 x 732 px a 300 dpi), como el recorte original.",
+      "Función pura dibujar_tabla_fichas(...) con matplotlib sin pyplot (Figure + FigureCanvasAgg) y PNG RGB propio sin canal alfa.",
+      "Celdas combinadas y líneas por segmento: sin celda sobre las columnas 1-2 de la fila 1; sin línea entre Par e Impar en la columna 1; grosor propio por línea (marco exterior más grueso).",
+      "Texto como TextPath de Source Sans 3 comprimido en horizontal (sx) con negrita añadida por contorno (d); dígitos con avance tabular; colores muestreados del escaneo: relleno (250,237,249), tinta de bordes (66,8,42), de encabezados (124,13,54)."
+    ],
+    "recomendacion": "considerar_validar_o_iterar"
+  },
+  {
+    "iteracion": 2,
+    "lenguaje": "python",
+    "timestamp": "2026-10-26T19:23:31-05:00",
+    "archivo": "output_python_v2.py",
+    "render": "output_python_v2.png",
+    "comparacion": "comparacion_python_v2.png",
+    "zoom": "zoom_python_v2.png",
+    "puntuacion_total": 92.3,
+    "por_categoria": {
+      "colores": {
+        "puntuacion": 17.5,
+        "maximo": 20,
+        "criterio_aplicado": "Distancia RGB máxima 4.62 % entre las medias de relleno, fondo, tinta de encabezado, tinta del cuerpo y líneas gruesas (relleno 0.69, encabezado 0.71, cuerpo 0.73, líneas 4.62; fondo blanco puro frente al papel 252: 1.30). Núcleo oscuro del texto del escaneo 14.8 % y líneas finas 7.7 % se informan por separado (recorte del escáner e inclinación del escaneo)."
+      },
+      "posiciones": {
+        "puntuacion": 19.3,
+        "maximo": 20,
+        "criterio_aplicado": "Mayor desvío: 2.0 u horizontal y 3.4 u vertical sobre 514 x 217 u (1.55 % del rango); líneas: 0.38 u horizontales y 0.19 u verticales (el escaneo está inclinado ~0,15 grados)."
+      },
+      "valores": {
+        "puntuacion": 20.0,
+        "maximo": 20,
+        "criterio_aplicado": "8 números y 10 rótulos en su celda, con sus tildes: verificado a ojo celda por celda sobre el render (y ampliado) frente al original. El OCR (tesseract spa) no discrimina: en la versión final acierta 15 de 19 celdas y en el propio original también 15 de 19 (fallos distintos)."
+      },
+      "proporciones": {
+        "puntuacion": 15.0,
+        "maximo": 15,
+        "criterio_aplicado": "Relación de aspecto de la caja de la tabla: original 2.3687, render 2.3704 (0.07 % de diferencia)."
+      },
+      "estilos": {
+        "puntuacion": 10.5,
+        "maximo": 15,
+        "criterio_aplicado": "IoU medio de la tinta por rótulo 0.561 (deducción tipográfica -2.5); error de masa de líneas 13.1 % (ded. -1.0) y de texto 6.7 % (ded. -0.5); contraste líneas finas/gruesas 0 frente a 49 del original (ded. -0.5)."
+      },
+      "elementos": {
+        "puntuacion": 10.0,
+        "maximo": 10,
+        "criterio_aplicado": "Seis filas x cuatro columnas, celda combinada de «Figura geométrica», «Blanca» y «Negra» combinadas, relleno rosado, bordes: nada falta ni sobra."
+      }
+    },
+    "rmse_aux": {
+      "rmse_gris_recorte_0a1": 0.186,
+      "magick_compare_rmse_gris_mitad_blur_0x1": "4304.55 (0.0656832)",
+      "nota": "Evidencia auxiliar, no decide: el escaneo tiene textura de papel y desenfoque (el original contra sí mismo suavizado con σ = 1 px da 0,07), que un render limpio no debe imitar."
+    },
+    "cambios": [
+      "Dígitos con ancho proporcional por dígito, medido en el impreso (0:12, 1:7, 2:9, 5:9, 6:12, 8:11 u; 3, 4, 7 y 9 estimados por forma), porque los números de dos cifras se tocan; «Par/Impar» y dígitos en peso Regular con contorno.",
+      "Colores: relleno (249,233,248); tinta de bordes (96,22,64); tinta de encabezados (122,8,48). El relleno medido es mucho más claro que el #F5D3EA del encargo (con #F5D3EA el RMSE de paso bajo sube un 16 %)."
+    ],
+    "recomendacion": "considerar_validar_o_iterar"
+  },
+  {
+    "iteracion": 3,
+    "lenguaje": "python",
+    "timestamp": "2026-10-26T19:23:32-05:00",
+    "archivo": "output_python_v3.py",
+    "render": "output_python_v3.png",
+    "comparacion": "comparacion_python_v3.png",
+    "zoom": "zoom_python_v3.png",
+    "puntuacion_total": 93.0,
+    "por_categoria": {
+      "colores": {
+        "puntuacion": 17.5,
+        "maximo": 20,
+        "criterio_aplicado": "Distancia RGB máxima 4.62 % entre las medias de relleno, fondo, tinta de encabezado, tinta del cuerpo y líneas gruesas (relleno 0.69, encabezado 0.82, cuerpo 1.90, líneas 4.62; fondo blanco puro frente al papel 252: 1.30). Núcleo oscuro del texto del escaneo 14.8 % y líneas finas 7.7 % se informan por separado (recorte del escáner e inclinación del escaneo)."
+      },
+      "posiciones": {
+        "puntuacion": 20.0,
+        "maximo": 20,
+        "criterio_aplicado": "Mayor desvío: 2.0 u horizontal y 2.0 u vertical sobre 514 x 217 u (0.92 % del rango); líneas: 0.38 u horizontales y 0.19 u verticales (el escaneo está inclinado ~0,15 grados)."
+      },
+      "valores": {
+        "puntuacion": 20.0,
+        "maximo": 20,
+        "criterio_aplicado": "8 números y 10 rótulos en su celda, con sus tildes: verificado a ojo celda por celda sobre el render (y ampliado) frente al original. El OCR (tesseract spa) no discrimina: en la versión final acierta 15 de 19 celdas y en el propio original también 15 de 19 (fallos distintos)."
+      },
+      "proporciones": {
+        "puntuacion": 15.0,
+        "maximo": 15,
+        "criterio_aplicado": "Relación de aspecto de la caja de la tabla: original 2.3687, render 2.3704 (0.07 % de diferencia)."
+      },
+      "estilos": {
+        "puntuacion": 10.5,
+        "maximo": 15,
+        "criterio_aplicado": "IoU medio de la tinta por rótulo 0.640 (deducción tipográfica -2.5); error de masa de líneas 13.1 % (ded. -1.0) y de texto 5.8 % (ded. -0.5); contraste líneas finas/gruesas 0 frente a 49 del original (ded. -0.5)."
+      },
+      "elementos": {
+        "puntuacion": 10.0,
+        "maximo": 10,
+        "criterio_aplicado": "Seis filas x cuatro columnas, celda combinada de «Figura geométrica», «Blanca» y «Negra» combinadas, relleno rosado, bordes: nada falta ni sobra."
+      }
+    },
+    "rmse_aux": {
+      "rmse_gris_recorte_0a1": 0.168,
+      "magick_compare_rmse_gris_mitad_blur_0x1": "3583.53 (0.0546811)",
+      "nota": "Evidencia auxiliar, no decide: el escaneo tiene textura de papel y desenfoque (el original contra sí mismo suavizado con σ = 1 px da 0,07), que un render limpio no debe imitar."
+    },
+    "cambios": [
+      "Calibración por momentos del texto: em, sx, d, dx y off por categoría ajustados para igualar centroide, dispersión (σx, σy) y área de tinta de cada rótulo medidos en el escaneo.",
+      "Posición por categoría respecto del centro de la celda (el texto del impreso queda 2-3 u por debajo del centro)."
+    ],
+    "recomendacion": "considerar_validar_o_iterar"
+  },
+  {
+    "iteracion": 4,
+    "lenguaje": "python",
+    "timestamp": "2026-10-26T19:23:33-05:00",
+    "archivo": "output_python_v4.py",
+    "render": "output_python_v4.png",
+    "comparacion": "comparacion_python_v4.png",
+    "zoom": "zoom_python_v4.png",
+    "puntuacion_total": 95.9,
+    "por_categoria": {
+      "colores": {
+        "puntuacion": 18.4,
+        "maximo": 20,
+        "criterio_aplicado": "Distancia RGB máxima 2.10 % entre las medias de relleno, fondo, tinta de encabezado, tinta del cuerpo y líneas gruesas (relleno 0.69, encabezado 0.76, cuerpo 1.94, líneas 2.10; fondo blanco puro frente al papel 252: 1.30). Núcleo oscuro del texto del escaneo 14.8 % y líneas finas 10.7 % se informan por separado (recorte del escáner e inclinación del escaneo)."
+      },
+      "posiciones": {
+        "puntuacion": 20.0,
+        "maximo": 20,
+        "criterio_aplicado": "Mayor desvío: 2.0 u horizontal y 1.0 u vertical sobre 514 x 217 u (0.46 % del rango); líneas: 0.35 u horizontales y 0.11 u verticales (el escaneo está inclinado ~0,15 grados)."
+      },
+      "valores": {
+        "puntuacion": 20.0,
+        "maximo": 20,
+        "criterio_aplicado": "8 números y 10 rótulos en su celda, con sus tildes: verificado a ojo celda por celda sobre el render (y ampliado) frente al original. El OCR (tesseract spa) no discrimina: en la versión final acierta 15 de 19 celdas y en el propio original también 15 de 19 (fallos distintos)."
+      },
+      "proporciones": {
+        "puntuacion": 15.0,
+        "maximo": 15,
+        "criterio_aplicado": "Relación de aspecto de la caja de la tabla: original 2.3687, render 2.3704 (0.07 % de diferencia)."
+      },
+      "estilos": {
+        "puntuacion": 12.5,
+        "maximo": 15,
+        "criterio_aplicado": "IoU medio de la tinta por rótulo 0.695 (deducción tipográfica -1.5); error de masa de líneas 1.5 % (ded. 0.0) y de texto 5.6 % (ded. -0.5); contraste líneas finas/gruesas 0 frente a 49 del original (ded. -0.5)."
+      },
+      "elementos": {
+        "puntuacion": 10.0,
+        "maximo": 10,
+        "criterio_aplicado": "Seis filas x cuatro columnas, celda combinada de «Figura geométrica», «Blanca» y «Negra» combinadas, relleno rosado, bordes: nada falta ni sobra."
+      }
+    },
+    "rmse_aux": {
+      "rmse_gris_recorte_0a1": 0.1628,
+      "magick_compare_rmse_gris_mitad_blur_0x1": "3334.4 (0.0508797)",
+      "nota": "Evidencia auxiliar, no decide: el escaneo tiene textura de papel y desenfoque (el original contra sí mismo suavizado con σ = 1 px da 0,07), que un render limpio no debe imitar."
+    },
+    "cambios": [
+      "Tipografía por rol: dígitos en Noto Sans (el «1» de Source Sans 3 lleva pie y el impreso no; IoU de dígitos 0,55 -> 0,68) y letras en Source Sans 3 (Noto pone serifas a la «I»); calibración separada por familia, con DejaVu Sans como respaldo.",
+      "Grosor de las líneas por masa de tinta (luminancia) del escaneo; snap=False para no redondear a píxeles."
+    ],
+    "recomendacion": "validar"
+  },
+  {
+    "iteracion": 5,
+    "lenguaje": "python",
+    "timestamp": "2026-10-26T19:23:34-05:00",
+    "archivo": "output_python_v5.py",
+    "render": "output_python_v5.png",
+    "comparacion": "comparacion_python_v5.png",
+    "zoom": "zoom_python_v5.png",
+    "puntuacion_total": 97.3,
+    "por_categoria": {
+      "colores": {
+        "puntuacion": 19.3,
+        "maximo": 20,
+        "criterio_aplicado": "Distancia RGB máxima 1.30 % entre las medias de relleno, fondo, tinta de encabezado, tinta del cuerpo y líneas gruesas (relleno 0.69, encabezado 0.76, cuerpo 0.69, líneas 0.67; fondo blanco puro frente al papel 252: 1.30). Núcleo oscuro del texto del escaneo 14.8 % y líneas finas 4.7 % se informan por separado (recorte del escáner e inclinación del escaneo)."
+      },
+      "posiciones": {
+        "puntuacion": 20.0,
+        "maximo": 20,
+        "criterio_aplicado": "Mayor desvío: 2.0 u horizontal y 1.0 u vertical sobre 514 x 217 u (0.46 % del rango); líneas: 0.35 u horizontales y 0.11 u verticales (el escaneo está inclinado ~0,15 grados)."
+      },
+      "valores": {
+        "puntuacion": 20.0,
+        "maximo": 20,
+        "criterio_aplicado": "8 números y 10 rótulos en su celda, con sus tildes: verificado a ojo celda por celda sobre el render (y ampliado) frente al original. El OCR (tesseract spa) no discrimina: en la versión final acierta 15 de 19 celdas y en el propio original también 15 de 19 (fallos distintos)."
+      },
+      "proporciones": {
+        "puntuacion": 15.0,
+        "maximo": 15,
+        "criterio_aplicado": "Relación de aspecto de la caja de la tabla: original 2.3687, render 2.3704 (0.07 % de diferencia)."
+      },
+      "estilos": {
+        "puntuacion": 13.0,
+        "maximo": 15,
+        "criterio_aplicado": "IoU medio de la tinta por rótulo 0.694 (deducción tipográfica -1.5); error de masa de líneas 2.7 % (ded. 0.0) y de texto 6.3 % (ded. -0.5); contraste líneas finas/gruesas 26 frente a 49 del original (ded. 0.0)."
+      },
+      "elementos": {
+        "puntuacion": 10.0,
+        "maximo": 10,
+        "criterio_aplicado": "Seis filas x cuatro columnas, celda combinada de «Figura geométrica», «Blanca» y «Negra» combinadas, relleno rosado, bordes: nada falta ni sobra."
+      }
+    },
+    "rmse_aux": {
+      "rmse_gris_recorte_0a1": 0.1589,
+      "magick_compare_rmse_gris_mitad_blur_0x1": "3325.83 (0.0507489)",
+      "nota": "Evidencia auxiliar, no decide: el escaneo tiene textura de papel y desenfoque (el original contra sí mismo suavizado con σ = 1 px da 0,07), que un render limpio no debe imitar."
+    },
+    "cambios": [
+      "Tintas de línea por contraste: marco y líneas gruesas (88,24,62); líneas interiores finas más claras (104,56,86), como en el impreso, con anchos que conservan la masa de tinta.",
+      "Tinta del cuerpo (12,12,12): la distancia de color de las líneas gruesas baja de 2,1 % a 0,7 %."
+    ],
+    "recomendacion": "validar"
+  },
+  {
+    "iteracion": 6,
+    "lenguaje": "python",
+    "timestamp": "2026-10-26T19:23:35-05:00",
+    "archivo": "output_python_v6.py",
+    "render": "output_python_v6.png",
+    "comparacion": "comparacion_python_v6.png",
+    "zoom": "zoom_python_v6.png",
+    "puntuacion_total": 98.2,
+    "por_categoria": {
+      "colores": {
+        "puntuacion": 19.2,
+        "maximo": 20,
+        "criterio_aplicado": "Distancia RGB máxima 1.47 % entre las medias de relleno, fondo, tinta de encabezado, tinta del cuerpo y líneas gruesas (relleno 0.69, encabezado 0.67, cuerpo 1.47, líneas 0.68; fondo blanco puro frente al papel 252: 1.30). Núcleo oscuro del texto del escaneo 14.8 % y líneas finas 4.7 % se informan por separado (recorte del escáner e inclinación del escaneo)."
+      },
+      "posiciones": {
+        "puntuacion": 20.0,
+        "maximo": 20,
+        "criterio_aplicado": "Mayor desvío: 2.0 u horizontal y 2.0 u vertical sobre 514 x 217 u (0.92 % del rango); líneas: 0.35 u horizontales y 0.11 u verticales (el escaneo está inclinado ~0,15 grados)."
+      },
+      "valores": {
+        "puntuacion": 20.0,
+        "maximo": 20,
+        "criterio_aplicado": "8 números y 10 rótulos en su celda, con sus tildes: verificado a ojo celda por celda sobre el render (y ampliado) frente al original. El OCR (tesseract spa) no discrimina: en la versión final acierta 15 de 19 celdas y en el propio original también 15 de 19 (fallos distintos)."
+      },
+      "proporciones": {
+        "puntuacion": 15.0,
+        "maximo": 15,
+        "criterio_aplicado": "Relación de aspecto de la caja de la tabla: original 2.3687, render 2.3704 (0.07 % de diferencia)."
+      },
+      "estilos": {
+        "puntuacion": 14.0,
+        "maximo": 15,
+        "criterio_aplicado": "IoU medio de la tinta por rótulo 0.753 (deducción tipográfica -1.0); error de masa de líneas 2.7 % (ded. 0.0) y de texto 3.5 % (ded. 0.0); contraste líneas finas/gruesas 26 frente a 49 del original (ded. 0.0)."
+      },
+      "elementos": {
+        "puntuacion": 10.0,
+        "maximo": 10,
+        "criterio_aplicado": "Seis filas x cuatro columnas, celda combinada de «Figura geométrica», «Blanca» y «Negra» combinadas, relleno rosado, bordes: nada falta ni sobra."
+      }
+    },
+    "rmse_aux": {
+      "rmse_gris_recorte_0a1": 0.1495,
+      "magick_compare_rmse_gris_mitad_blur_0x1": "3122.98 (0.0476535)",
+      "nota": "Evidencia auxiliar, no decide: el escaneo tiene textura de papel y desenfoque (el original contra sí mismo suavizado con σ = 1 px da 0,07), que un render limpio no debe imitar."
+    },
+    "cambios": [
+      "Refinamiento directo por búsqueda local de em, sx, d, dx y off por categoría: minimiza el RMSE desenfocado (σ = 1 u) por rótulo, el IoU de la tinta y el error de masa; el área al 50 % subestimaba el peso visual del escaneo.",
+      "Mejora el IoU medio de la tinta (0,69 -> 0,75) y el RMSE por rótulo."
+    ],
+    "recomendacion": "validar"
+  },
+  {
+    "iteracion": 7,
+    "lenguaje": "python",
+    "timestamp": "2026-10-26T19:23:36-05:00",
+    "archivo": "output_python_v7.py",
+    "render": "output_python_v7.png",
+    "comparacion": "comparacion_python_v7.png",
+    "zoom": "zoom_python_v7.png",
+    "puntuacion_total": 98.3,
+    "por_categoria": {
+      "colores": {
+        "puntuacion": 19.3,
+        "maximo": 20,
+        "criterio_aplicado": "Distancia RGB máxima 1.30 % entre las medias de relleno, fondo, tinta de encabezado, tinta del cuerpo y líneas gruesas (relleno 0.69, encabezado 0.67, cuerpo 0.16, líneas 0.69; fondo blanco puro frente al papel 252: 1.30). Núcleo oscuro del texto del escaneo 14.8 % y líneas finas 4.7 % se informan por separado (recorte del escáner e inclinación del escaneo)."
+      },
+      "posiciones": {
+        "puntuacion": 20.0,
+        "maximo": 20,
+        "criterio_aplicado": "Mayor desvío: 2.0 u horizontal y 2.0 u vertical sobre 514 x 217 u (0.92 % del rango); líneas: 0.35 u horizontales y 0.11 u verticales (el escaneo está inclinado ~0,15 grados)."
+      },
+      "valores": {
+        "puntuacion": 20.0,
+        "maximo": 20,
+        "criterio_aplicado": "8 números y 10 rótulos en su celda, con sus tildes: verificado a ojo celda por celda sobre el render (y ampliado) frente al original. El OCR (tesseract spa) no discrimina: en la versión final acierta 15 de 19 celdas y en el propio original también 15 de 19 (fallos distintos)."
+      },
+      "proporciones": {
+        "puntuacion": 15.0,
+        "maximo": 15,
+        "criterio_aplicado": "Relación de aspecto de la caja de la tabla: original 2.3687, render 2.3704 (0.07 % de diferencia)."
+      },
+      "estilos": {
+        "puntuacion": 14.0,
+        "maximo": 15,
+        "criterio_aplicado": "IoU medio de la tinta por rótulo 0.751 (deducción tipográfica -1.0); error de masa de líneas 2.7 % (ded. 0.0) y de texto 3.0 % (ded. 0.0); contraste líneas finas/gruesas 26 frente a 49 del original (ded. 0.0)."
+      },
+      "elementos": {
+        "puntuacion": 10.0,
+        "maximo": 10,
+        "criterio_aplicado": "Seis filas x cuatro columnas, celda combinada de «Figura geométrica», «Blanca» y «Negra» combinadas, relleno rosado, bordes: nada falta ni sobra."
+      }
+    },
+    "rmse_aux": {
+      "rmse_gris_recorte_0a1": 0.1492,
+      "magick_compare_rmse_gris_mitad_blur_0x1": "3114.32 (0.0475215)",
+      "nota": "Evidencia auxiliar, no decide: el escaneo tiene textura de papel y desenfoque (el original contra sí mismo suavizado con σ = 1 px da 0,07), que un render limpio no debe imitar."
+    },
+    "cambios": [
+      "Tinta del cuerpo (16,16,16): distancia de color 1,47 % -> 0,16 %.",
+      "Rótulos vacíos sin error, creación de la carpeta de salida, devolución de la ruta; verificación de casos límite (1-3 dígitos, 25 y 13 caracteres, 2795 px con letras M y W, dpi 150)."
+    ],
+    "recomendacion": "validar"
+  },
+  {
+    "iteracion": 8,
+    "lenguaje": "python",
+    "timestamp": "2026-10-26T19:23:37-05:00",
+    "archivo": "output_python_v8.py",
+    "render": "output_python_v8.png",
+    "comparacion": "comparacion_python_v8.png",
+    "zoom": "zoom_python_v8.png",
+    "puntuacion_total": 98.3,
+    "por_categoria": {
+      "colores": {
+        "puntuacion": 19.3,
+        "maximo": 20,
+        "criterio_aplicado": "Distancia RGB máxima 1.30 % entre las medias de relleno, fondo, tinta de encabezado, tinta del cuerpo y líneas gruesas (relleno 0.69, encabezado 0.67, cuerpo 0.20, líneas 0.69; fondo blanco puro frente al papel 252: 1.30). Núcleo oscuro del texto del escaneo 14.8 % y líneas finas 4.7 % se informan por separado (recorte del escáner e inclinación del escaneo)."
+      },
+      "posiciones": {
+        "puntuacion": 20.0,
+        "maximo": 20,
+        "criterio_aplicado": "Mayor desvío: 1.4 u horizontal y 2.0 u vertical sobre 514 x 217 u (0.92 % del rango); líneas: 0.35 u horizontales y 0.11 u verticales (el escaneo está inclinado ~0,15 grados)."
+      },
+      "valores": {
+        "puntuacion": 20.0,
+        "maximo": 20,
+        "criterio_aplicado": "8 números y 10 rótulos en su celda, con sus tildes: verificado a ojo celda por celda sobre el render (y ampliado) frente al original. El OCR (tesseract spa) no discrimina: en la versión final acierta 15 de 19 celdas y en el propio original también 15 de 19 (fallos distintos)."
+      },
+      "proporciones": {
+        "puntuacion": 15.0,
+        "maximo": 15,
+        "criterio_aplicado": "Relación de aspecto de la caja de la tabla: original 2.3687, render 2.3704 (0.07 % de diferencia)."
+      },
+      "estilos": {
+        "puntuacion": 14.0,
+        "maximo": 15,
+        "criterio_aplicado": "IoU medio de la tinta por rótulo 0.760 (deducción tipográfica -1.0); error de masa de líneas 2.7 % (ded. 0.0) y de texto 2.7 % (ded. 0.0); contraste líneas finas/gruesas 26 frente a 49 del original (ded. 0.0)."
+      },
+      "elementos": {
+        "puntuacion": 10.0,
+        "maximo": 10,
+        "criterio_aplicado": "Seis filas x cuatro columnas, celda combinada de «Figura geométrica», «Blanca» y «Negra» combinadas, relleno rosado, bordes: nada falta ni sobra."
+      }
+    },
+    "rmse_aux": {
+      "rmse_gris_recorte_0a1": 0.149,
+      "magick_compare_rmse_gris_mitad_blur_0x1": "3113.46 (0.0475084)",
+      "nota": "Evidencia auxiliar, no decide: el escaneo tiene textura de papel y desenfoque (el original contra sí mismo suavizado con σ = 1 px da 0,07), que un render limpio no debe imitar."
+    },
+    "cambios": [
+      "Dígitos en Noto Sans Bold sin contorno añadido (d = 0,03): con el peso natural la forma del «1», «2» y «5» se parece más al impreso que con Medium engrosado (RMSE por rótulo de los dígitos 0,0475 -> 0,0432; IoU 0,744 -> 0,762).",
+      "Recalibración de em, k, dx y off de los dígitos; el resto del código no cambia."
+    ],
+    "recomendacion": "validar"
+  }
+]
