@@ -299,6 +299,12 @@ suites <- list(
               "test_fase2i_pandocbounded_detector")
   ),
   list(
+    nombre = "Hook post-render: activacion, 2N y 2O sin carrera de SIGPIPE (pipefail)",
+    archivo = "tests/testthat/test_post_exams2_pipefail.R",
+    critico = TRUE,
+    watch = c("post-exams2-validation", "diversidad-sustantiva", "test_post_exams2_pipefail")
+  ),
+  list(
     nombre = "is_latex_output() es FALSE en los pipelines de R/exams",
     archivo = "tests/testthat/test_is_latex_output_rexams.R",
     critico = TRUE,

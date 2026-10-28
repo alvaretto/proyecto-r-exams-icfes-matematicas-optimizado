@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# post-exams2-validation.sh (v6.0)
+# post-exams2-validation.sh (v6.1: activación, 2N y 2O sin `echo | grep -q` bajo pipefail)
 # Hook PostToolUse: ARSENAL COMPLETO DE VALIDACIONES POST-RENDERIZADO
 #
 # Se activa AUTOMÁTICAMENTE después de CADA comando Bash que contenga exams2*
@@ -47,8 +47,11 @@ if [ -z "$COMMAND" ]; then
   exit 0
 fi
 
-# Solo proceder si el comando contiene exams2
-if ! echo "$COMMAND" | grep -q 'exams2'; then
+# Solo proceder si el comando contiene exams2.
+# Here-string, no `echo | grep -q`: con `set -o pipefail`, en un comando de más de ~30 KB echo
+# recibía SIGPIPE y el hook entero se saltaba sin avisar (con 37 KB, 19 de 20 corridas;
+# 2026-10-28, tests/testthat/test_post_exams2_pipefail.R).
+if ! grep -q 'exams2' <<< "$COMMAND"; then
   exit 0
 fi
 
@@ -600,9 +603,13 @@ if [ -n "$RMD_FILE" ]; then
     DG_BLOCK=$(awk '/^```\{r/,/^```\s*$/' "$RMD_FILE" 2>/dev/null | head -80 || true)
   fi
   DIV_WARN=0
+  # grep lee el bloque por here-string, no por `echo | grep -q`: con `set -o pipefail`, grep -q
+  # sale en la primera coincidencia, echo recibe SIGPIPE en bloques de más de ~30 KB y la tubería
+  # falla. Eso daba «sin aleatorización» falso y callaba la señal 1 (2026-10-27;
+  # tests/testthat/test_post_exams2_pipefail.R).
   # Señal 1: file.copy( usado para PNGs que se referencian en el answerlist
-  if echo "$DG_BLOCK" | grep -qE 'file\.copy\('; then
-    if echo "$DG_BLOCK" | grep -qE 'file\.copy\(.*\.png|\.png.*file\.copy'; then
+  if grep -qE 'file\.copy\(' <<< "$DG_BLOCK"; then
+    if grep -qE 'file\.copy\(.*\.png|\.png.*file\.copy' <<< "$DG_BLOCK"; then
       echo "  WARN_DIV_ESTATICA: se usa file.copy() para PNGs en data_generation."
       echo "    -> Los PNGs estáticos producen contenido idéntico en todas las semillas."
       echo "    -> Si son opciones gráficas, deben generarse dinámicamente (ggplot2/TikZ/reticulate)."
@@ -611,7 +618,7 @@ if [ -n "$RMD_FILE" ]; then
     fi
   fi
   # Señal 2: ausencia total de funciones de aleatorización en data_generation
-  if ! echo "$DG_BLOCK" | grep -qE 'sample\(|runif\(|rnorm\(|rbinom\(|rpois\(|rexp\(|rgeom\(|rhyper\(|runif\(|pick_int\(|safe_sample\('; then
+  if ! grep -qE 'sample\(|runif\(|rnorm\(|rbinom\(|rpois\(|rexp\(|rgeom\(|rhyper\(|runif\(|pick_int\(|safe_sample\(' <<< "$DG_BLOCK"; then
     echo "  WARN_DIV_ESTATICA: no se detecta ninguna función de aleatorización en data_generation."
     echo "    -> Sin sample()/runif()/rnorm() la respuesta correcta puede ser invariante entre versiones."
     echo "    -> Ejecutar: Rscript .claude/scripts/validar_diversidad_sustantiva.R \"$RMD_FILE\" --n 100"
@@ -670,10 +677,12 @@ if [ -f "$RMD_PATH" ]; then
       echo "$GLIFOS_OUT" | grep -v '^$' | sed 's/^/     /'
       echo "     Ver .claude/rules/glifos-latex-prohibidos.md"
     elif [ $GLIFOS_EXIT -eq 0 ]; then
-      if echo "$GLIFOS_OUT" | grep -q "WARN_GLIFO_LATEX"; then
+      # Here-string por la misma razón que en la 2N: con una salida de más de ~30 KB, `echo | grep -q`
+      # fallaba por SIGPIPE y la 2O decía «sin glifos» (2026-10-28).
+      if grep -q "WARN_GLIFO_LATEX" <<< "$GLIFOS_OUT"; then
         ADVERTENCIAS_TOTALES=$((ADVERTENCIAS_TOTALES + 1))
         echo "$GLIFOS_OUT" | grep -v '^$' | sed 's/^/  ⚠️   /'
-      elif echo "$GLIFOS_OUT" | grep -q "INFO_GLIFO_COMENTARIO"; then
+      elif grep -q "INFO_GLIFO_COMENTARIO" <<< "$GLIFOS_OUT"; then
         echo "$GLIFOS_OUT" | grep INFO_GLIFO_COMENTARIO | sed 's/^/  ⊘ /'
         echo "     No suma nada: los comentarios R no llegan a LaTeX (medido)."
       else

@@ -65,9 +65,10 @@ de aula dirá si alguien los explota.**
 - **Numeración «0.0.x» de los encabezados de la Solution en el PDF** (H4 r6): es la convención del repo
   (6 de 10 ejemplos funcionales). `### … {-}` la quitaría, pero hay que comprobarlo en el PDF y supone
   otra ronda.
-- **Defecto del hook, fuera del subproyecto:** la FASE 2N de `post-exams2-validation.sh` da falsos
-  «sin aleatorización». El hook usa `set -o pipefail` y `echo "$DG_BLOCK" | grep -q` recibe SIGPIPE.
-  Arreglo: `grep -qE … <<< "$DG_BLOCK"`. El hook está protegido: se cambia solo con permiso.
+- ~~Defecto del hook en la FASE 2N~~ **resuelto el 2026-10-27** a pedido del profesor (hook v6.1,
+  here-string). El 2026-10-28 se corrigió también el mismo patrón en la activación del hook y en la 2O.
+  Test: `tests/testthat/test_post_exams2_pipefail.R`. La advertencia 2N de `salida/r6/` es anterior al
+  arreglo.
 
 ## El hook post-render
 
