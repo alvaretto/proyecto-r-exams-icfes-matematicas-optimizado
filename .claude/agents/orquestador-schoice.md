@@ -137,7 +137,7 @@ Estas son **inviolables**. Si una decisión las contradice, paro y pido instrucc
 ```json
 {
   "ruta_destino": "A-Produccion/01-En-PreDesarrollo/<nombre-dir>",
-  "nombre_ejercicio": "<tema>_metacognitivo_<competencia>_n<2|3|4>_schoice_v<N>",
+  "nombre_ejercicio": "<tema>_<componente>_<competencia>_n<2|3|4>_schoice_v<N>",
   "entrada": "<ruta a imagen ICFES original | texto del enunciado>",
   "modo": "ejecutar | dry-run",
   "decisiones_humanas": {
@@ -1292,7 +1292,7 @@ Cuando termine, devuelvo un mensaje JSON de una sola línea + reporte humano:
 Task(
   subagent_type="orquestador-schoice",
   prompt='{"ruta_destino": "A-Produccion/01-En-PreDesarrollo/mediana-grupo-impar",'
-         ' "nombre_ejercicio": "mediana_grupo_impar_metacognitivo_argumentacion_n3_schoice_v1",'
+         ' "nombre_ejercicio": "mediana_grupo_impar_aleatorio_argumentacion_n3_schoice_v1",'
          ' "entrada": "/path/imagen_icfes_estaturas.png",'
          ' "modo": "ejecutar",'
          ' "opciones_extra": {"patron_metacognitivo": "auto", "max_reintentos_por_fase": 3}}'

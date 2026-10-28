@@ -1,6 +1,6 @@
 # Invariantes locales — `probabilidad-fichas-tabla-doble-entrada-n2`
 
-> Regla #17 / Incidente `INC-CLAUDE-LOCAL` (pre-flight 19 del orquestador). Estas invariantes
+> Regla #17 / Incidente `INC-CLAUDE-LOCAL` (pre-flight 19 de `orquestador-schoice`, 23 de `orquestador-cloze`). Estas invariantes
 > **prevalecen sobre el criterio genérico** dentro de este subproyecto. Si alguna contradice una
 > regla del repo raíz, gana la del raíz y el conflicto **se reporta**, no se resuelve en silencio.
 > Las fijó el profesor al encargar el ejercicio (2026-10-26). Relajar cualquiera exige su firma
@@ -86,7 +86,7 @@ combinadas», «cada tipo»). Poner esa marca en un error cuyos textos genérico
 relaja I-6. Mutantes M10a-d, M13, M14, M17-M19 de `verificar_espacio.R`.
 
 `calcula()` pura, `precondicion` por versión y selección por `sample()` sobre los aplicables (regla
-#1; pre-flight 20 del orquestador).
+#1; pre-flight `INC-POOL-TAMANO`: el 20 de `orquestador-schoice`, el 24 de `orquestador-cloze`).
 
 ## I-7 · Redacción del impreso
 

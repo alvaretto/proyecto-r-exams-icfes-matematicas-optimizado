@@ -93,8 +93,20 @@ test_that("Validación de datos generados aleatoriamente (una instancia)", {
   # Multiplicación intermedia con tolerancia 0.01
   expect_equal(resp5, valor_total * resp4, tolerance = 0.01)
 
-  # Resultado final coincide con intermedio a 2 decimales
-  expect_equal(resp6, .redondear_matematico(valor_total * resp4, 2), tolerance = 1e-8)
+  # Resultado final = producto redondeado a 2 decimales. El ejercicio (inmutable, en 03-En-Produccion)
+  # lo calcula en Python con round(), que en un empate x.xx5 redondea al par sobre el valor binario;
+  # .redondear_matematico() redondea .5 hacia arriba. En un empate las dos difieren en 0,01, y el test
+  # fallaba según la instancia sorteada: 1616 de las 49410 combinaciones posibles (3,3 %), todas en
+  # empates. No se puede fijar la semilla: el ejercicio resiembra el RNG con el reloj (`INC-RNG-RESEED`).
+  # Fuera de un empate se exige el valor exacto; en un empate vale cualquiera de los dos vecinos.
+  x6 <- valor_total * resp4
+  if (abs((x6 * 100) %% 1 - 0.5) > 1e-6) {
+    expect_equal(resp6, .redondear_matematico(x6, 2), tolerance = 1e-8)
+  } else {
+    expect_true(isTRUE(all.equal(resp6, floor(x6 * 100) / 100)) ||
+                  isTRUE(all.equal(resp6, ceiling(x6 * 100) / 100)),
+                info = sprintf("empate en %.6f: resp6 = %.2f no es ninguno de los dos vecinos", x6, resp6))
+  }
 
   # Año dentro de 1950-2023 (extraer del enunciado de Question en HTML)
   qtxt <- paste(ex$question, collapse = "\n")

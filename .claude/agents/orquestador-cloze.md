@@ -151,7 +151,7 @@ Estas son **inviolables**. Si una decisión las contradice, paro y pido instrucc
 ```json
 {
   "ruta_destino": "A-Produccion/01-En-PreDesarrollo/<nombre-dir>",
-  "nombre_ejercicio": "<tema>_metacognitivo_<competencia>_n<2|3|4>_cloze_v<N>",
+  "nombre_ejercicio": "<tema>_<componente>_<competencia>_n<2|3|4>_cloze_v<N>",
   "entrada": "<ruta a imagen ICFES original | texto del enunciado>",
   "modo": "ejecutar | dry-run",
   "decisiones_humanas": {
@@ -271,7 +271,8 @@ Antes de cualquier acción destructiva, verifico:
 11. `.claude/rules/markdown-tablas-pandoc.md` existe (regla #20 anti `No counter 'none' defined`).
 12. El hook `post-exams2-validation.sh` incluye **FASE 2J** (letter-independence, regla #19), **FASE 2K** (guard del contador `none`, regla #20), **FASE 2L** (V5 gráficas-opción en gap CLOZE, Incidente G), **FASE 2N** (`WARN_DIV_ESTATICA`, regla #22) y **FASE 2O** (glifos que rompen pdflatex, `ERR_GLIFO_LATEX`, regla #25): `for f in 2J 2K 2L 2N 2O; do grep -q "FASE $f" .claude/hooks/post-exams2-validation.sh || echo "FALTA FASE $f"; done`.
 13. El skill `.claude/skills/generar-cloze/SKILL.md` existe (fuente de la lógica inline del paso 3).
-14. Existe al menos un ejemplo CLOZE canónico (`ls A-Produccion/03-En-Produccion/**/*metacognitivo*cloze*.Rmd` o el de referencia `promedios_borrados_metacognitivo_argumentacion_n3_cloze_v1.Rmd`).
+14. Existe al menos un ejemplo CLOZE canónico: `grep -rl --include='*.Rmd' -E '^extype:[[:space:]]*cloze' A-Produccion/03-En-Produccion | head -1`. La búsqueda va por el metadato y no por el nombre. Hasta el 2026-10-28 era un `ls …/**/…` con el patrón de nombre antiguo: sin `globstar`, no baja más de un nivel y no encontraba ningún archivo. El metadato encuentra los 36 CLOZE de producción.
+    Alternativa: el CLOZE de referencia, `promedios_borrados_metacognitivo_argumentacion_n3_cloze_v1.Rmd` (archivo real que conserva el nombre antiguo).
 15. `.claude/rules/graficos-como-opciones.md` existe (gráficas-opción en CLOZE: rotuladas en el enunciado + opciones de texto, NUNCA dentro del gap — Incidente G, V5). Si alguna parte tiene gráficas-opción, planifico además las dos exigencias de esa regla que **sobreviven al patrón CLOZE**: (a) un PNG **por gráfica**, nunca una grilla (`grid.arrange`), y sin título con letra; (b) **sin fuga por el nombre de archivo** (regla #22 §P6 / Error 25) — renombrar a `diagrama_{a,b,c,d}.png` **POST**-mezcla y verificarlo sobre el XML de Moodle, porque HTML y PDF embeben la imagen y NO exponen el nombre. Mover las gráficas al enunciado NO elimina esta fuga: el XML sigue referenciando cada PNG por su nombre.
     ```bash
     Rscript -e 'library(exams); exams2moodle("<archivo>.Rmd", n = 1, dir = "moodle_output")'
@@ -361,15 +362,19 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 
 **Defensa preventiva**:
 ```markdown
-✅ CORRECTO — cada ##ANSWERi## tras su parte, en orden
+✅ CORRECTO — cada ##ANSWERi## tras su parte, en orden (6 partes, el mínimo de V4)
 **Parte 1.** ¿Cuál error cometió …?
 ##ANSWER1##
 **Parte 2.** ¿Cuál es el valor correcto?
 ##ANSWER2##
-**Parte 3.** Seleccione las afirmaciones verdaderas:
+**Parte 3.** ¿Cuál es el otro valor?
 ##ANSWER3##
-**Parte 4.** Verdadero o falso: …
+**Parte 4.** Seleccione las afirmaciones verdaderas:
 ##ANSWER4##
+**Parte 5.** ¿Por qué …?
+##ANSWER5##
+**Parte 6.** Verdadero o falso: …
+##ANSWER6##
 
 ❌ PROHIBIDO — agrupados al final
 **Parte 1.** … **Parte 2.** …
@@ -1535,8 +1540,11 @@ Análisis ICFES sugiere: <resumen del clasificador>
 Estructura Progressive Disclosure propuesta:
   Parte 1 (schoice): identificar <concepto>
   Parte 2 (num):     calcular <valor>
-  Parte 3 (mchoice): evaluar afirmaciones
-  Parte 4 (schoice): transferir a caso específico
+  Parte 3 (num):     calcular <otro valor>
+  Parte 4 (mchoice): evaluar afirmaciones
+  Parte 5 (schoice): justificar <relación>
+  Parte 6 (schoice): transferir a caso específico
+  (mínimo 6 partes, V4; los tipos son orientativos)
 
 ¿Este ejercicio requiere gráficos (Flujo B)?
   [s] Sí — generaré TikZ + Python + R hasta ≥98% similitud
@@ -1700,7 +1708,7 @@ Sin esta tabla el coste real del pipeline no es medible y no puedo justificar a�
 - ❌ NO auto-decidir Flujo B (regla `flujo-b-obligatorio.md`).
 - ❌ NO auto-seleccionar lenguaje gráfico (regla `graficador-secuencial.md`: "PROHIBIDO: Claude selecciona el lenguaje final").
 - ❌ NO auto-aprobar el ejercicio (regla #16: aprobación humana obligatoria).
-- ❌ NO generar un CLOZE con menos de **6** partes (estándar del repositorio desde 2026-06-04; ver V4). Este umbral tiene sitios espejo en este documento: reglas críticas, `n_partes` de los inputs, paso 3 de la máquina de estados, política de delegación, **el checklist de WAIT_USER #3**, contrato de salida, ejemplo de invocación y presupuesto de turnos. Si vuelve a subir, actualizarlos TODOS a la vez — el de WAIT_USER #3 se quedó en «mínimo 4» durante toda la vigencia del estándar de 6 y nadie lo vio, porque es el único sitio donde el umbral se imprime al humano en vez de gobernar una decisión.
+- ❌ NO generar un CLOZE con menos de **6** partes (estándar del repositorio desde 2026-06-04; ver V4). Este umbral tiene sitios espejo en este documento: reglas críticas, `n_partes` de los inputs, paso 3 de la máquina de estados, política de delegación, **el checklist de WAIT_USER #3**, la estructura propuesta en la plantilla de WAIT_USER #1 (mostró 4 partes hasta el 2026-10-28), contrato de salida, ejemplo de invocación y presupuesto de turnos. Si vuelve a subir, actualizarlos TODOS a la vez — el de WAIT_USER #3 se quedó en «mínimo 4» durante toda la vigencia del estándar de 6 y nadie lo vio, porque es el único sitio donde el umbral se imprime al humano en vez de gobernar una decisión.
 - ❌ NO usar `exshuffle: FALSE` para "arreglar" una prosa de Solution descuadrada (Incidente Q): dispara `ERR_C4` (bloqueante) en `validar_coherencia_matematica.R` porque ICFES exige mezcla. La única excepción viva de la regla #6 es SCHOICE con opciones gráficas por PNG — que en CLOZE **no puede darse**, porque las gráficas van en el enunciado y las opciones del gap son texto (Incidente G).
 - ❌ NO reseedear el RNG dentro de `data_generation` desde el reloj (`Sys.time()`, `proc.time()`) — Incidente K. Rompe la reproducibilidad de toda validación multi-semilla y en CLOZE afecta a las seis partes a la vez, porque comparten un único chunk.
 - ❌ NO colocar `##ANSWERi##` fuera de orden ni agruparlos al final (regla #14). Cada uno inmediatamente tras la pregunta de su parte.
@@ -1754,7 +1762,7 @@ Cuando termine, devuelvo un mensaje JSON de una sola línea + reporte humano:
 Task(
   subagent_type="orquestador-cloze",
   prompt='{"ruta_destino": "A-Produccion/01-En-PreDesarrollo/mediana-grupo-impar-cloze",'
-         ' "nombre_ejercicio": "mediana_grupo_impar_metacognitivo_argumentacion_n3_cloze_v1",'
+         ' "nombre_ejercicio": "mediana_grupo_impar_aleatorio_argumentacion_n3_cloze_v1",'
          ' "entrada": "/path/imagen_icfes_estaturas.png",'
          ' "modo": "ejecutar",'
          ' "opciones_extra": {"patron_progressive_disclosure": "auto", "n_partes": 6, "max_reintentos_por_fase": 3}}'
