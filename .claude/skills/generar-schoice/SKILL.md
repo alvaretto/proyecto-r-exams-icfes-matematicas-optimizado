@@ -158,7 +158,7 @@ Rscript -e 'library(exams); exams2nops("[archivo].Rmd", n=1, dir="salida")'
 
 ### PASO 9: Arsenal post-render (workflow paso 6, AUTOMÁTICO)
 
-El hook `post-exams2-validation.sh` ejecuta automáticamente FASES 2A-2H (validación matemática, preview visual, multi-semilla). No requiere acción manual.
+El hook `post-exams2-validation.sh` ejecuta automáticamente FASES 2A-2O (entre ellas validación matemática, preview visual y multi-semilla). Corre después del render y solo si el comando termina con 0. Su informe llega al modelo; el detalle de las fases está en `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`. No requiere acción manual.
 
 ```bash
 .claude/scripts/workflow-state.sh complete <dir> arsenal_post_render
@@ -267,7 +267,7 @@ exshuffle: FALSE
 
 La sección Solution del .Rmd **NUNCA** debe identificar opciones por su letra/posición. SIEMPRE por contenido o código de error.
 
-### Patrones prohibidos (bloquean compilación vía FASE 2J)
+### Patrones prohibidos (la FASE 2J los marca como error bloqueante después del render)
 
 ```rmd
 ### Respuesta correcta: Opción `r letra_correcta`
@@ -492,7 +492,7 @@ Si forzar premisas siempre verdaderas (Patrón B aplicado a todos los distractor
       ↓
 5. renderizado 4 formatos (exams2html/pdf/docx/nops)
       ↓
-6. arsenal post-render (hook automático FASES 2A-2H)
+6. arsenal post-render (hook automático FASES 2A-2O)
       ↓
 7. adversario (detractor FASE 2C) ──→ si RECHAZAR → volver a 5
       ↓

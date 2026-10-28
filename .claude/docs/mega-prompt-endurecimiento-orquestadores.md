@@ -24,7 +24,7 @@ CANON_REPO:
   - .claude/docs/INDICE_LECCIONES.md
 VALIDADORES:      .claude/scripts/{validar_multisemilla,validar_diversidad_sustantiva,validar_diagnosticidad,validar_coherencia_matematica,arsenal_validacion_completa,corregir_ortografia_espanol}.R
 TEST_INFRA:       tests/testthat/test_infraestructura_claude.R   # invariantes I-1..I-9
-RUNNER_COMPLETO:  R_TESTS_FULL=1 Rscript tests/run_all_tests.R   # 24 suites
+RUNNER_COMPLETO:  R_TESTS_FULL=1 Rscript tests/run_all_tests.R   # suites: ver .claude/docs/VALIDATOR_COBERTURA_ICFES.md
 CATALOGO_ICFES:   /home/bootcamp/Proyectos-2026/Todo-Pajaro/Alineacion-curricular-de-items/Matematicas/catalogos-oficiales-mat/
 SANDBOX:          <scratchpad de la sesión>                       # único lugar para mutantes
 ```
@@ -98,7 +98,7 @@ grep -oE 'FASE 2[A-Z]' "$F" | sort -u \
 |---|---|---|
 | D1 | Conteo de reglas obsoleto («16», «19», «20») | `grep -oE '(las\|los) [0-9]{1,2} reglas'` → son **22** |
 | D2 | `A-Produccion/Ejemplos-Funcionales-Rmd/` | No existe: viven bajo `03-En-Produccion/` |
-| D3 | «FASES 2A-2M» / «2A-2J» | El hook llega a **2N** |
+| D3 | «FASES 2A-2M» / «2A-2J» | El hook llega a **2O** |
 | D4 | Numeración de pre-flight fuera de orden | Swap **físico**, sin renumerar (rompería refs cruzadas) |
 | D5 | Párrafo del índice de incidentes copiado del gemelo | Queda auto-referente y falso |
 | D6 | Incidente citado por **letra** en vez de ID estable | Las letras no coinciden entre gemelos |

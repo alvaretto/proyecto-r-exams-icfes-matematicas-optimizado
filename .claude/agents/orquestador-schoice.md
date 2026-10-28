@@ -318,7 +318,7 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 **Defensa preventiva**:
 - Si Solution referencia `r letra_correcta` o "Opción [A-D]" → `exshuffle: FALSE` + mezcla interna `sample()`.
 - `letra_correcta` se calcula DESPUÉS del `sample()`.
-- Validar con 20 semillas dispersas que coincide en TODAS.
+- Validar con 100 semillas (regla #23) que coincide en TODAS.
 
 ### Incidente B · `INC-PANDOCBOUNDED` — `\pandocbounded` undefined en PDF (Error 16)
 
@@ -368,7 +368,7 @@ Antes de generar el `.Rmd`, **reviso obligatoriamente** los siguientes patrones 
 ### Incidente D · `INC-SINO-BINARIO` — Distractores Sí/No: coherencia condicional + gotcha sample (sesión 2026-05-12)
 
 **Sesión**: 2026-05-12, ejercicio `Comparacion-Lineas-Temporales-Schoice`. Análisis del HTML renderizado detectó 4 bugs sistémicos en el pool de errores que pasaron las FASES 2A-2J originales sin detección
-(2A-2J era el arsenal completo **en aquella fecha**; hoy llega a 2N — el dato es histórico, no un
+(2A-2J era el arsenal completo **en aquella fecha**; hoy llega a 2O — el dato es histórico, no un
 rango obsoleto):
 
 1. **Incoherencia conclusión-justificación** (~50% de semillas): un distractor con `descripcion_corta` fija "No, porque…" + justificación construida con `pais_perdedor` / `pais_ganador` produce "No, porque Pa supera a Pb" cuando `afirmacion=FALSE` (la justificación apoya "Sí" pero la conclusión declara "No").

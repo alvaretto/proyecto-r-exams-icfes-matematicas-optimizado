@@ -10,8 +10,9 @@
 > - Validación post-renderizado: `.claude/hooks/post-exams2-validation.sh` (PostToolUse).
 > - Bloqueo de commit/push: git hooks nativos en `.git/hooks/pre-commit` y
 >   `.git/hooks/pre-push` (ver `.claude/rules/testing-obligatorio.md`).
-> - Runner único: `Rscript tests/run_all_tests.R` (12 suites, modo quick
->   disponible con `R_TESTS_QUICK=1`).
+> - Runner único: `Rscript tests/run_all_tests.R` (las suites y sus cifras:
+>   `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`; modo rápido con `R_TESTS_QUICK=1`,
+>   el que corre el pre-push).
 >
 > Para documentación vigente ver `HOOKS_Y_TESTING.md`.
 
@@ -22,6 +23,8 @@ Este documento describe cómo el sistema de testing se ejecuta **automáticament
 ---
 
 ## 🔄 Diagrama de Flujo Completo
+
+> ⚠️ RETIRADO (v3.8.0): los EVENTOS 1, 2 y 3 describen hooks (`pre-edit-testing.sh`, `post-edit-testing.sh`, `pre-bash-testing.sh`) que no existen en .claude/hooks/ ni los carga .claude/settings.json; se conservan como historia. Vigente: el EVENTO 4. Hoy el commit lo cubre `.git/hooks/pre-commit` (ortografía; tests solo con `PRECOMMIT_TESTS=1`) y el push, `.git/hooks/pre-push` (siempre `R_TESTS_QUICK=1`).
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -58,11 +61,14 @@ EVENTO 3: Usuario/Claude intenta git push
 │   ├─→ PASAN: Permitir push ✅
 │   └─→ FALLAN: RECHAZAR push ❌
 
-EVENTO 4: Después de exams2*()
-└─→ PostToolUse Hook (Bash) → post-exams2-validation.sh
+EVENTO 4: Después de exams2*() (solo si el comando Bash termina con 0)
+└─→ PostToolUse Hook (Bash) → post-exams2-validation.sh (v6.2, 15 fases: 2A a 2O)
     ├─→ FASE 2A: Validar matemática (script R, Niveles 1-4)
     ├─→ FASE 2B: Generar preview PNG (magick)
-    └─→ FASE 2G: Multi-semilla rápida (20 semillas, Nivel 5)
+    ├─→ FASES 2C-2F: Arsenal completo de validación
+    ├─→ FASE 2G: Multi-semilla (100 semillas, Nivel 5; regla #23; solo si no hubo errores antes)
+    ├─→ FASE 2H: Stress test visual (10 semillas, render real; solo si no hubo errores antes)
+    └─→ FASES 2I-2O: detectores estáticos y recordatorios
 ```
 
 ---
@@ -70,6 +76,8 @@ EVENTO 4: Después de exams2*()
 ## 📋 Hooks Configurados (settings.json)
 
 ### 1. PreToolUse - Write|Edit
+
+> ⚠️ RETIRADO (v3.8.0): este hook no existe en .claude/hooks/ ni lo carga .claude/settings.json; se conserva como historia. Hoy, de los hooks ICFES, antes de escribir corren el gate `pre-write-rmd-gate.sh` (regla #16) y el recordatorio de tildes.
 
 **Hook:** `pre-edit-testing.sh`
 
@@ -99,6 +107,8 @@ EVENTO 4: Después de exams2*()
 
 ### 2. PostToolUse - Write|Edit
 
+> ⚠️ RETIRADO (v3.8.0): este hook no existe en .claude/hooks/ ni lo carga .claude/settings.json; se conserva como historia.
+
 **Hook:** `post-edit-testing.sh`
 
 **Cuándo se ejecuta:**
@@ -124,6 +134,8 @@ EVENTO 4: Después de exams2*()
    - Permite continuar
 
 ### 3. PreToolUse - Bash
+
+> ⚠️ RETIRADO (v3.8.0): este hook no existe en .claude/hooks/ ni lo carga .claude/settings.json; se conserva como historia. Hoy: `.git/hooks/pre-commit` (ortografía; tests solo con `PRECOMMIT_TESTS=1`) y `.git/hooks/pre-push` (siempre `R_TESTS_QUICK=1 Rscript tests/run_all_tests.R`).
 
 **Hook:** `pre-bash-testing.sh`
 
@@ -194,6 +206,8 @@ git push origin main
 
 ## 🚦 Comportamiento por Escenario
 
+> ⚠️ RETIRADO (v3.8.0): los Escenarios 1 y 2 y el paso 2 del Escenario 3 describen hooks (`pre-edit-testing.sh`, `post-edit-testing.sh`, `pre-bash-testing.sh`) que no existen en .claude/hooks/ ni los carga .claude/settings.json; se conservan como historia. Vigente: el paso 4 del Escenario 3 (`post-exams2-validation.sh`).
+
 ### Escenario 1: Claude Edita Script de Validación
 
 ```
@@ -227,7 +241,7 @@ git push origin main
    → pre-bash-testing.sh "git commit -m '...'"
    → Detecta: comando git commit
    → Ejecuta: Rscript tests/run_all_tests.R
-   → Suite completa: 10 suites, 82+ tests
+   → Suite completa: N suites, N tests
 
 3. Resultado:
    - Si TODO PASA:
@@ -294,7 +308,11 @@ Los hooks tienen acceso a:
 
 ### Reportes Automáticos
 
-Cada hook reporta su estado:
+Cada hook reporta su estado.
+
+> ⚠️ RETIRADO (v3.8.0): este hook no existe en .claude/hooks/ ni lo carga .claude/settings.json; se conserva como historia.
+
+Informes de `pre-edit-testing.sh` y `post-edit-testing.sh`:
 
 ```
 🔍 Verificando tests antes de editar...
@@ -305,19 +323,29 @@ Cada hook reporta su estado:
 → Script de validación matemática modificado
 → Ejecutando tests de validación matemática...
 ✅ Todos los tests pasaron después del cambio
+```
 
-🔒 BLOQUEO PRE-COMMIT ACTIVADO
-Ejecutando suite completa de tests...
+Informe vigente del git hook `.git/hooks/pre-commit` con `PRECOMMIT_TESTS=1`. Sin esa
+variable imprime «Tests omitidos (activar con PRECOMMIT_TESTS=1)» y solo revisa la
+ortografía:
 
-========================================
-  SUITE DE TESTING COMPLETA
-========================================
+```
+═══════════════════════════════════════
+  PRE-COMMIT: Validación Obligatoria
+═══════════════════════════════════════
 
-Suites ejecutadas: 10
-✓ Exitosas: 10
+📝 Validando ortografía en archivos .Rmd...
+   ✓ ejercicio.Rmd
+
+🧪 Ejecutando tests de regresión...
+
+...
+
+Suites ejecutadas: N
+✓ Exitosas: N
 ✗ Fallidas: 0
 
-✅ TESTS PASARON - COMMIT PERMITIDO
+✅ PRE-COMMIT: Validación exitosa
 ```
 
 ### Logs de Testing
@@ -333,16 +361,16 @@ Todos los hooks generan logs en tiempo real visibles para:
 Con este sistema **permanentemente activo**, se garantiza:
 
 1. ✅ **Ningún cambio rompedor llega a código**
-   - Tests se ejecutan ANTES y DESPUÉS de editar
+   - El gate de `.Rmd` frena la escritura sin workflow; el pre-push corre la suite en modo rápido y el CI la suite completa
 
 2. ✅ **100% de cobertura se mantiene**
    - Tests de regresión validan que nada se rompa
 
-3. ✅ **Commits solo con tests pasando**
-   - Imposible hacer commit con tests fallidos
+3. ✅ **Commits con ortografía validada**
+   - El pre-commit rechaza `.Rmd` con errores ortográficos; los tests corren solo con `PRECOMMIT_TESTS=1`
 
-4. ✅ **Push solo con validación completa**
-   - Suite completa se ejecuta antes de push
+4. ✅ **Push solo con la suite en modo rápido pasando**
+   - El pre-push corre `R_TESTS_QUICK=1 Rscript tests/run_all_tests.R`; la suite completa (`R_TESTS_FULL=1`) es manual
 
 5. ✅ **Validación automática de .Rmd**
    - FASE 2A (matemática) + FASE 2B (preview) automáticas
@@ -351,13 +379,15 @@ Con este sistema **permanentemente activo**, se garantiza:
    - Hooks bloquean cambios peligrosos
 
 7. ✅ **CI/CD adicional en remoto**
-   - GitHub Actions ejecuta tests en cada push/PR
+   - GitHub Actions ejecuta la suite completa en push y PR a `main` o `develop`, y a diario (02:00 UTC)
 
 ---
 
 ## 🚨 Mensajes de Error y Acciones
 
 ### Error en PreToolUse (Edit)
+
+> ⚠️ RETIRADO (v3.8.0): este hook no existe en .claude/hooks/ ni lo carga .claude/settings.json; se conserva como historia.
 
 ```
 ❌ ==============================================
@@ -378,6 +408,8 @@ ACCIÓN REQUERIDA:
 - Esperar instrucciones
 
 ### Error en PostToolUse (Edit)
+
+> ⚠️ RETIRADO (v3.8.0): este hook no existe en .claude/hooks/ ni lo carga .claude/settings.json; se conserva como historia.
 
 ```
 ❌ ==============================================
@@ -401,6 +433,8 @@ Archivo: .claude/scripts/validar_coherencia_matematica.R
 - Verificar que tests pasen
 
 ### Error en PreBash (Commit)
+
+> ⚠️ RETIRADO (v3.8.0): este hook no existe en .claude/hooks/ ni lo carga .claude/settings.json; se conserva como historia. Hoy el rechazo lo hace el git hook `.git/hooks/pre-commit` (ortografía; tests solo con `PRECOMMIT_TESTS=1`).
 
 ```
 ❌ ==============================================
@@ -431,10 +465,10 @@ Acciones requeridas:
 ├── rules/
 │   └── testing-obligatorio.md           # Esta regla (documentación completa)
 ├── hooks/
-│   ├── pre-edit-testing.sh              # Validación pre-edición
-│   ├── post-edit-testing.sh             # Validación post-edición
-│   ├── pre-bash-testing.sh              # Bloqueo commit/push
-│   └── post-exams2-validation.sh        # Validación matemática + preview
+│   ├── pre-edit-testing.sh              # RETIRADO (v3.8.0): ya no existe
+│   ├── post-edit-testing.sh             # RETIRADO (v3.8.0): ya no existe
+│   ├── pre-bash-testing.sh              # RETIRADO (v3.8.0): ya no existe
+│   └── post-exams2-validation.sh        # Arsenal post-render (v6.2: FASES 2A-2O)
 ├── settings.json                         # Configuración de hooks
 └── docs/
     ├── ECOSISTEMA_TESTING.md            # Documentación completa
@@ -464,17 +498,15 @@ tests/
 
 ### Actualizar Hooks
 
-1. Editar archivo de hook (ej. `pre-edit-testing.sh`)
+1. Editar archivo de hook (ej. `post-exams2-validation.sh`)
 2. Los tests de regresión validan automáticamente que el hook funciona
-3. Commit y push con sistema automático validando
+3. Commit y push con los git hooks nativos validando
 
 ### Agregar Nuevos Tests
 
-1. Crear `test_nuevo_componente.R`
-2. Sistema detecta que es archivo crítico (test_*.R)
-3. Pre-edit ejecuta suite completa
-4. Post-edit valida que el nuevo test funciona
-5. Commit solo se permite si todo pasa
+1. Crear `tests/testthat/test_nuevo_componente.R`
+2. Registrarlo en `tests/run_all_tests.R` (añadir entrada en `suites`)
+3. Al próximo push, CI lo ejecuta automáticamente (el CI llama al runner)
 
 ### Deshabilitar Temporalmente (PROHIBIDO)
 
@@ -500,7 +532,8 @@ cat .claude/settings.json | grep -A 20 "hooks"
 # 3. Probar manualmente
 Rscript tests/run_all_tests.R
 
-# 4. Intentar commit de prueba (debería bloquear si hay tests fallidos)
+# 4. Intentar commit de prueba (el pre-commit revisa la ortografía de los .Rmd en stage;
+#    corre tests solo con PRECOMMIT_TESTS=1)
 git commit -m "test" --allow-empty
 ```
 

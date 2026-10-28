@@ -4,23 +4,25 @@
 
 **Sistema de validación automática PERMANENTE** con tolerancia cero a regresiones.
 
-- **2 hooks activos** cargados por `settings.json` (PreToolUse: gate .Rmd + recordatorio tildes; PostToolUse: arsenal post-render)
-- **100% cobertura** de tests (12 suites, 130+ tests unitarios)
+- **Hooks ICFES** cargados por `settings.json`: gate `.Rmd` + recordatorio de tildes (PreToolUse), arsenal post-render (PostToolUse Bash) y citas del detractor (SubagentStop, regla #9); los demás son de Ruflo
+- **100% cobertura** de tests (suites en `tests/run_all_tests.R`; tabla y cifras en `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`, sección «Suites de Test»)
 - **CI/CD automático** con GitHub Actions (un job llama a `run_all_tests.R`)
 - **Bloqueo proactivo** de `.Rmd` sin `ejercicio_state.json` vía gate mecánico
 - **Validación matemática + arsenal + preview visual** automática después de renderizar
 
 > Nota (v3.8.0, 2026-04-10): los hooks `pre-edit-testing.sh` y `post-edit-testing.sh`
-> fueron eliminados. Nunca estuvieron cargados en `settings.json`. Los git hooks
-> nativos (`.git/hooks/pre-commit`, `.git/hooks/pre-push`) siguen siendo los
-> responsables de bloquear commits/push con tests fallando — ver
+> fueron eliminados (nunca estuvieron cargados en `settings.json`) y `pre-bash-testing.sh`
+> también se retiró. Los git hooks nativos (`.git/hooks/pre-commit`,
+> `.git/hooks/pre-push`) siguen siendo los responsables de bloquear el commit
+> (ortografía de los `.Rmd` en stage; tests solo con `PRECOMMIT_TESTS=1`) y el push
+> (suite en modo rápido, `R_TESTS_QUICK=1`) — ver
 > `.claude/rules/testing-obligatorio.md`.
 
 ---
 
 ## 📋 Índice
 
-1. [Los 2 Hooks Configurados](#los-2-hooks-configurados)
+1. [Hooks ICFES Configurados](#hooks-icfes-configurados)
 2. [Sistema de Testing (100% Cobertura)](#sistema-de-testing-100-cobertura)
 3. [Flujo Automático Completo](#flujo-automático-completo)
 4. [Garantías del Sistema](#garantías-del-sistema)
@@ -28,14 +30,17 @@
 
 ---
 
-## Los 2 Hooks Configurados
+## Hooks ICFES Configurados
 
 **Configuración**: @.claude/settings.json
 
-> Los únicos hooks que Claude Code carga desde `settings.json` son los dos
-> descritos abajo. Commits/push se protegen con git hooks nativos en
-> `.git/hooks/pre-commit` y `.git/hooks/pre-push` (ver
-> `.claude/rules/testing-obligatorio.md`).
+> Los hooks ICFES que Claude Code carga desde `settings.json` son los dos
+> descritos abajo (PreToolUse: gate + recordatorio de tildes; PostToolUse Bash:
+> arsenal post-render) y un SubagentStop que verifica las citas del detractor
+> (`.claude/scripts/verificar_citas_detractor.py`, regla #9). Los demás son de Ruflo
+> (`.claude/helpers/hook-handler.cjs`, `auto-memory-hook.mjs`). Commits/push se
+> protegen con git hooks nativos en `.git/hooks/pre-commit` y
+> `.git/hooks/pre-push` (ver `.claude/rules/testing-obligatorio.md`).
 
 ### 1. PreToolUse - Write/Edit: Gate de .Rmd + recordatorio de tildes
 
@@ -60,12 +65,14 @@ Detalles completos en `.claude/rules/workflow-state-enforcement.md`.
 
 ### 2. PostToolUse - Bash (exams2*)
 
-**Hook**: `.claude/hooks/post-exams2-validation.sh`
-**Timeout**: 120 segundos
-**Status**: "Validando matemática + preview visual..."
+**Hook**: `.claude/hooks/post-exams2-validation.sh` (v6.2: 15 fases, de la 2A a la 2O)
+**Timeout**: 300 segundos (`.claude/settings.json`). Si se excede, Claude Code descarta toda su salida
 
 #### Cuándo se Ejecuta
-Después de cualquier comando `Bash` exitoso
+Después de un comando `Bash` que termina con 0 (evento PostToolUse). Si el comando
+falla, Claude Code dispara PostToolUseFailure y el hook no corre. El hook corre
+después del render: no lo impide ni lo deshace. Si no encuentra el `.Rmd` desde el
+directorio de la sesión, avisa al modelo de que el arsenal no corrió.
 
 #### Detecta
 Comandos `exams2pdf()`, `exams2html()`, `exams2pandoc()`, `exams2nops()`
@@ -114,6 +121,21 @@ preview_nombre-1.png
   4. Solicitar aprobación del usuario
   ```
 
+##### FASES 2C-2O y entrega del informe al modelo
+
+Las fases 2C a 2O (arsenal, multi-semilla con N = 100, stress test visual con 10
+semillas y detectores estáticos) se describen en
+`.claude/docs/VALIDATOR_COBERTURA_ICFES.md`, sección «El Hook post-exams2». La 2G y
+la 2H solo corren si no hubo errores antes.
+
+**Cómo llega el informe al modelo (v6.2)**: el hook escribe en stdout un JSON con
+`additionalContext` (el informe, hasta 9 000 caracteres). Si hay errores añade
+`decision: "block"` y `reason`, que Claude Code muestra como «hook blocking error», y
+siempre un `systemMessage` de una línea para el usuario. El informe completo queda en
+`~/.cache/post-exams2-validation/<nombre>.txt`. Hasta la v6.1 el informe no llegaba:
+el texto plano de un PostToolUse con exit 0 va al log de depuración. Por eso la
+instrucción «Claude DEBE…» solo le llega al modelo desde la v6.2.
+
 ---
 
 ## Sistema de Testing (100% Cobertura)
@@ -121,29 +143,17 @@ preview_nombre-1.png
 **Documentación completa**: @.claude/docs/ECOSISTEMA_TESTING.md
 **Regla obligatoria**: @.claude/rules/testing-obligatorio.md
 
-### Las 12 Suites de Tests
+### Las Suites de Tests
 
-| Suite | Archivo | Tests | Cubre |
-|-------|---------|-------|-------|
-| **Validación Matemática** | `test_validacion_matematica.R` | 5 | Script validación, metadatos ICFES, coherencia |
-| **Ortografía Española** | `test_ortografia_espanol.R` | 5 | Tildes, metadatos ASCII, variables |
-| **Renderizado 4 Formatos** | `test_renderizado_4_formatos.R` | 6 | HTML, PDF, DOCX, NOPS |
-| **Aleatorización** | `test_aleatorization_diversity.R` | 4 | exshuffle, 250+ versiones, rangos |
-| **Flujo B Graficador** | `test_flujo_b_graficador.R` | 6 | workflow_state.json, aprobaciones, similitud |
-| **Regresión** | `test_regression_suite.R` | 7 | Ejemplos funcionales, scripts, hooks |
-| **Distintividad Visual _neg_** | `test_neg_visual_distinctness.R` | 3 | Colores únicos, digest opciones, lógica negativa |
-| **Media-Mediana-Moda** | `test_media_mediana_moda.R` | 3 | Precondiciones, filtro genérico, 100 semillas |
-| **Validación Semántica (Nivel 4)** | `test_validacion_semantica.R` | 35 | 3 capas, 21 keywords, regresión EST-MTC-04 |
-| **Correctitud Respuesta (Nivel 5)** | `test_correctitud_respuesta.R` | 14 | 5A-5E, cross-check, unicidad, rangos |
-| **CLOZE N3 (Trigonometría)** | `test_cloze_n3.R` | 6 | Estructura CLOZE nivel 3 |
-| **Stress Test Visual Multi-Semilla** | `test_stress_test_visual.R` | 15 | Extracción, anomalías, renderizado masivo |
-| **TOTAL** | 12 archivos | **130+** | **100%** |
+La tabla de suites (archivo y qué cubre cada una) y sus cifras viven en
+`.claude/docs/VALIDATOR_COBERTURA_ICFES.md`, sección «Suites de Test». La genera
+`tests/sincronizar_doc_suites.R` y un test falla si diverge del runner, así que no
+se copia aquí.
 
 > El runner (`run_all_tests.R`) marca como pesadas las suites con campo
 > `watch` y las salta en modo `R_TESTS_QUICK=1` cuando ningún archivo
-> cambiado coincide con los patrones de la suite. Esto aplica hoy a:
-> Renderizado, Aleatorización, Regresión, Media-Mediana-Moda, CLOZE N3 y
-> Stress Test Visual.
+> cambiado coincide con los patrones de la suite. Cuáles son hoy: sección
+> «Suites de Test» del mismo documento.
 
 ### Ejecutor Principal
 
@@ -161,10 +171,10 @@ Rscript tests/run_all_tests.R
 ========================================
 
 Ejecutando suite: Validación Matemática
-✓ test_validacion_matematica.R [5 tests, ~3.2s]
+✓ test_validacion_matematica.R [N tests, ~Ns]
 
 Ejecutando suite: Ortografía Española
-✓ test_ortografia_espanol.R [5 tests, ~2.1s]
+✓ test_ortografia_espanol.R [N tests, ~Ns]
 
 ...
 
@@ -172,15 +182,15 @@ Ejecutando suite: Ortografía Española
   RESUMEN FINAL
 ========================================
 
-Suites ejecutadas: 10
-✓ Exitosas: 10
+Suites ejecutadas: N
+✓ Exitosas: N
 ✗ Fallidas: 0
 
-Tests totales: 82+
-✓ Pasados: 82+
+Tests totales: N
+✓ Pasados: N
 ✗ Fallidos: 0
 
-⏱  Tiempo total: ~28.4s
+⏱  Tiempo total: ~Ns
 
 ========================================
 ✅ TODOS LOS TESTS PASARON
@@ -219,18 +229,22 @@ EVENTO 2: Usuario/Claude intenta git commit
     └─→ (Opcional) Ejecuta tests con PRECOMMIT_TESTS=1
 
 EVENTO 3: Usuario/Claude intenta git push
-└─→ .git/hooks/pre-push (git hook nativo)
-    └─→ Ejecuta Rscript tests/run_all_tests.R (modo quick disponible)
+└─→ .git/hooks/pre-push (git hook nativo; delega en .claude/hooks/pre-push.sh)
+    └─→ Ejecuta SIEMPRE R_TESTS_QUICK=1 Rscript tests/run_all_tests.R (modo rápido)
 
-EVENTO 4: Después de exams2*()
-└─→ PostToolUse Hook (Bash) → post-exams2-validation.sh
+EVENTO 4: Después de exams2*() (solo si el comando Bash termina con 0)
+└─→ PostToolUse Hook (Bash) → post-exams2-validation.sh (v6.2, 15 fases: 2A a 2O)
     ├─→ FASE 2A: Validar matemática (script R, Niveles 1-4)
     ├─→ FASE 2B: Generar preview PNG (magick)
     │   └─→ Claude DEBE leer PNG + verificar + aprobar
     ├─→ FASES 2C-2F: Arsenal completo de validación
-    ├─→ FASE 2G: Multi-semilla rápida (20 semillas, Nivel 5)
-    └─→ FASE 2H: Stress test visual multi-semilla
-        └─→ Solo si FASES anteriores sin errores
+    ├─→ FASE 2G: Multi-semilla (100 semillas, Nivel 5; regla #23)
+    │   └─→ Solo si las fases anteriores no dieron errores
+    ├─→ FASE 2H: Stress test visual (10 semillas, render real)
+    │   └─→ Solo si las fases anteriores no dieron errores
+    ├─→ FASES 2I-2O: detectores estáticos y recordatorios
+    └─→ Informe al modelo: JSON con additionalContext
+        (más decision: block si hay errores)
 ```
 
 ---
@@ -256,7 +270,7 @@ EVENTO 4: Después de exams2*()
 
 6. PostToolUse Hook:
    → post-exams2-validation.sh
-   → FASES 2A-2H automáticas (ver sección siguiente)
+   → FASES 2A-2O automáticas (15 fases; ver VALIDATOR_COBERTURA_ICFES.md)
 ```
 
 #### Escenario 2: Usuario Hace Commit
@@ -295,8 +309,9 @@ EVENTO 4: Después de exams2*()
    → Reporta: "PNG generado en [ruta]"
    → Emite: "Claude DEBE leer PNG y verificar 5 coherencias"
 
-   FASES 2C-2H:
-   → Arsenal, multi-semilla, stress test visual
+   FASES 2C-2O:
+   → Arsenal, multi-semilla (N = 100), stress test visual (10 semillas)
+     y detectores estáticos
 
 4. Claude ejecuta automáticamente:
    → Read("preview.png")
@@ -312,16 +327,16 @@ EVENTO 4: Después de exams2*()
 Con este sistema permanentemente activo:
 
 ✅ **1. Ningún cambio rompedor llega a código**
-- Tests se ejecutan ANTES y DESPUÉS de editar
+- El gate de `.Rmd` frena la escritura sin workflow; el pre-push corre la suite en modo rápido y el CI la suite completa
 
 ✅ **2. 100% de cobertura se mantiene**
 - Tests de regresión validan que nada se rompa
 
-✅ **3. Commits solo con tests pasando**
-- Imposible hacer commit con tests fallidos
+✅ **3. Commits con ortografía validada**
+- El pre-commit rechaza `.Rmd` con errores ortográficos; los tests corren solo con `PRECOMMIT_TESTS=1`
 
-✅ **4. Push solo con validación completa**
-- Suite completa se ejecuta antes de push
+✅ **4. Push solo con la suite en modo rápido pasando**
+- El pre-push corre `R_TESTS_QUICK=1 Rscript tests/run_all_tests.R`; la suite completa (`R_TESTS_FULL=1`) es manual
 
 ✅ **5. Validación automática de .Rmd**
 - FASE 2A (matemática) + FASE 2B (preview) automáticas
@@ -330,7 +345,7 @@ Con este sistema permanentemente activo:
 - Hooks bloquean cambios peligrosos
 
 ✅ **7. CI/CD adicional en remoto**
-- GitHub Actions ejecuta tests en cada push/PR
+- GitHub Actions ejecuta la suite completa en push y PR a `main` o `develop`, y a diario (02:00 UTC)
 
 ---
 
@@ -342,40 +357,37 @@ Con este sistema permanentemente activo:
 
 **Triggers**:
 - Push a `main` o `develop`
-- Pull Requests
+- Pull requests a `main` o `develop`
 - Daily cron: 02:00 UTC
 
-**Jobs** (7 paralelos):
-1. Validación matemática
-2. Ortografía española
-3. Renderizado 4 formatos
-4. Aleatorización
-5. Flujo B graficador
-6. Regresión
-7. Suite completa
+**Job** (uno solo, `tests-full`):
+1. Instala R y las dependencias del sistema y de R
+2. Ejecuta la suite completa: `Rscript tests/run_all_tests.R`
+3. Sube los resultados como artefacto
 
-**Configuración**:
+**Configuración** (extracto de `ci-testing.yml`):
 ```yaml
-strategy:
-  fail-fast: true  # Abortar si algún job falla
-  matrix:
-    suite:
-      - validacion_matematica
-      - ortografia_espanol
-      - renderizado_4_formatos
-      - aleatorization_diversity
-      - flujo_b_graficador
-      - regression_suite
-      - completa
+jobs:
+  tests-full:
+    runs-on: ubuntu-latest
+    name: Suite completa (run_all_tests.R)
+    steps:
+      # ... checkout, setup R, dependencias
+      - name: Run full test suite
+        run: Rscript tests/run_all_tests.R
 ```
 
-**Política**: Tolerancia cero → Pipeline falla si cualquier job falla
+**Política**: Tolerancia cero → el pipeline falla si el job falla
 
 ---
 
 ### Métricas y Reportes
 
-Cada hook reporta su estado en tiempo real:
+Cada hook reporta su estado en tiempo real.
+
+> ⚠️ RETIRADO (v3.8.0): este hook no existe en .claude/hooks/ ni lo carga .claude/settings.json; se conserva como historia.
+
+Informes de `pre-edit-testing.sh` y `post-edit-testing.sh`:
 
 ```
 🔍 Verificando tests antes de editar...
@@ -386,19 +398,29 @@ Cada hook reporta su estado en tiempo real:
 → Script de validación matemática modificado
 → Ejecutando tests de validación matemática...
 ✅ Todos los tests pasaron después del cambio
+```
 
-🔒 BLOQUEO PRE-COMMIT ACTIVADO
-Ejecutando suite completa de tests...
+Informe vigente del git hook `.git/hooks/pre-commit` con `PRECOMMIT_TESTS=1`. Sin esa
+variable imprime «Tests omitidos (activar con PRECOMMIT_TESTS=1)» y solo revisa la
+ortografía:
 
-========================================
-  SUITE DE TESTING COMPLETA
-========================================
+```
+═══════════════════════════════════════
+  PRE-COMMIT: Validación Obligatoria
+═══════════════════════════════════════
 
-Suites ejecutadas: 6
-✓ Exitosas: 6
+📝 Validando ortografía en archivos .Rmd...
+   ✓ ejercicio.Rmd
+
+🧪 Ejecutando tests de regresión...
+
+...
+
+Suites ejecutadas: N
+✓ Exitosas: N
 ✗ Fallidas: 0
 
-✅ TESTS PASARON - COMMIT PERMITIDO
+✅ PRE-COMMIT: Validación exitosa
 ```
 
 ---
@@ -430,7 +452,8 @@ cat .claude/settings.json | grep -A 20 "hooks"
 # 3. Probar manualmente suite completa
 Rscript tests/run_all_tests.R
 
-# 4. Intentar commit de prueba (debería bloquear si hay tests fallidos)
+# 4. Intentar commit de prueba (el pre-commit revisa la ortografía de los .Rmd en stage;
+#    corre tests solo con PRECOMMIT_TESTS=1)
 git commit -m "test" --allow-empty
 ```
 
@@ -439,6 +462,8 @@ git commit -m "test" --allow-empty
 ## 🚨 Mensajes de Error y Acciones
 
 ### Error en PreToolUse (Edit)
+
+> ⚠️ RETIRADO (v3.8.0): este hook no existe en .claude/hooks/ ni lo carga .claude/settings.json; se conserva como historia.
 
 ```
 ❌ ==============================================
@@ -461,6 +486,8 @@ ACCIÓN REQUERIDA:
 ---
 
 ### Error en PostToolUse (Edit)
+
+> ⚠️ RETIRADO (v3.8.0): este hook no existe en .claude/hooks/ ni lo carga .claude/settings.json; se conserva como historia.
 
 ```
 ❌ ==============================================
@@ -486,6 +513,8 @@ Archivo: .claude/scripts/validar_coherencia_matematica.R
 ---
 
 ### Error en PreBash (Commit)
+
+> ⚠️ RETIRADO (v3.8.0): este hook no existe en .claude/hooks/ ni lo carga .claude/settings.json; se conserva como historia. Hoy el rechazo lo hace el git hook `.git/hooks/pre-commit` (ortografía; tests solo con `PRECOMMIT_TESTS=1`).
 
 ```
 ❌ ==============================================

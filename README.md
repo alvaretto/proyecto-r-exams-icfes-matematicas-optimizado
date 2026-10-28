@@ -651,7 +651,7 @@ Rscript tests/run_all_tests.R
 
 Ejecutando: Validación Matemática
 --------------------------------------------------
-✓ Validación Matemática completado en 2.34 segundos
+✓ Validación Matemática completado en N segundos
 
 ...
 
@@ -659,10 +659,10 @@ Ejecutando: Validación Matemática
   REPORTE FINAL
 ========================================
 
-Suites ejecutadas: 6
-✓ Exitosas: 6
+Suites ejecutadas: N
+✓ Exitosas: N
 ✗ Fallidas: 0
-Tiempo total: 12.45 segundos
+Tiempo total: N segundos
 
 Cobertura de testing: 100.0%
 🎉 ¡OBJETIVO DE 100% ALCANZADO!
@@ -692,14 +692,7 @@ El repositorio incluye configuración de GitHub Actions (`.github/workflows/ci-t
 - ✅ Cada pull request
 - ✅ Diariamente a las 02:00 UTC
 
-**Jobs Paralelos:**
-1. Tests de Validación Matemática
-2. Tests de Ortografía
-3. Tests de Renderizado 4 Formatos
-4. Tests de Aleatorización y Diversidad
-5. Tests de Flujo B (Graficador)
-6. Tests de Regresión
-7. Reporte de Cobertura
+**Job único** (`tests-full`): ejecuta la suite completa con `Rscript tests/run_all_tests.R`, el mismo runner que se usa en local.
 
 **Política:** Tolerancia cero a regresiones. Si algún test falla, el pipeline completo falla.
 
@@ -715,21 +708,13 @@ El repositorio incluye configuración de GitHub Actions (`.github/workflows/ci-t
 #### Proceso de Contribución
 
 1. **Antes de cada commit:** Hook pre-commit valida ortografía automáticamente
-2. **Después de cada `exams2*()`:** Hook post-exams2 valida matemática + genera preview PNG
+2. **Después de cada `exams2*()`:** Hook post-exams2 corre sus 15 fases (2A-2O: matemática, preview PNG, arsenal, multi-semilla, stress test visual y detectores estáticos; detalle en [`.claude/docs/VALIDATOR_COBERTURA_ICFES.md`](.claude/docs/VALIDATOR_COBERTURA_ICFES.md)) y entrega su informe al modelo
 3. **Antes de cada push:** Ejecutar `Rscript tests/run_all_tests.R` localmente
 4. **Antes de cada merge:** CI/CD ejecuta suite completa automáticamente
 
 ### 📊 Métricas de Calidad
 
-| Componente | Tests | Tiempo Promedio | Crítico |
-|------------|-------|-----------------|---------|
-| Validación Matemática | 5 tests | ~2.5s | ✅ Sí |
-| Ortografía Española | 5 tests | ~1.5s | ✅ Sí |
-| Renderizado 4 Formatos | 6 tests | ~8.0s | ✅ Sí |
-| Aleatorización | 4 tests | ~5.0s | ✅ Sí |
-| Flujo B | 6 tests | ~1.0s | ✅ Sí |
-| Regresión | 7 tests | ~10.0s | ✅ Sí |
-| **TOTAL** | **33+ tests** | **~28.0s** | - |
+La tabla de suites y sus cifras viven en [`.claude/docs/VALIDATOR_COBERTURA_ICFES.md`](.claude/docs/VALIDATOR_COBERTURA_ICFES.md), sección «Suites de Test». La genera `tests/sincronizar_doc_suites.R` y un test falla si diverge del runner, así que no se copia aquí.
 
 ### 📚 Documentación Completa
 

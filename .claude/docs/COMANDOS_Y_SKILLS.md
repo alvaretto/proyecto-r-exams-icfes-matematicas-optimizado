@@ -52,7 +52,7 @@
 **Qué hace** (pasos 4-11 secuenciales):
 4. `/skill-retroalimentacion` — Solution científica
 5. Renderizado 4 formatos (HTML/PDF/DOCX/NOPS)
-6. Arsenal post-render automático (FASES 2A-2H)
+6. Arsenal post-render automático (FASES 2A-2O)
 7. `/adversario` — Detractor FASE 2C
 8. Documenta 5 coherencias visualmente
 9. `/validar-diversidad` — 250+ versiones únicas
@@ -131,7 +131,7 @@ Detecta automáticamente en qué paso quedó el workflow y retoma desde ahí.
 6. Genera .Rmd metacognitivo
 7. `/skill-retroalimentacion` — Solution científica
 8. Renderizado 4 formatos (HTML/PDF/DOCX/NOPS)
-9. Arsenal post-render automático (FASES 2A-2H)
+9. Arsenal post-render automático (FASES 2A-2O)
 10. `/adversario` — Detractor FASE 2C
 11. Documenta 5 coherencias
 12. `/validar-diversidad` — 250+ versiones únicas
@@ -177,7 +177,7 @@ exextra[Componente]: [clasificación]
 8. Genera .Rmd CLOZE metacognitivo
 9. `/skill-retroalimentacion` — Solution científica
 10. Renderizado 4 formatos (NOPS falla con num/string = esperado)
-11. Arsenal post-render automático (FASES 2A-2H)
+11. Arsenal post-render automático (FASES 2A-2O)
 12. `/adversario` — Detractor FASE 2C
 13. Documenta 5 coherencias
 14. `/validar-diversidad` — 250+ versiones únicas

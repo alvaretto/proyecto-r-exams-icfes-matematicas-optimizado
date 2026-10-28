@@ -245,7 +245,10 @@ test_that("ninguna cita del repo describe el formato viejo con 'metacognitivo'",
   citas <- list.files(file.path(repo_root, ".claude"), pattern = "\\.md$",
                       recursive = TRUE, full.names = TRUE)
   citas <- setdiff(citas, excepciones)
-  citas <- citas[!grepl("/_backups/|/docs/CHANGELOG\\.md$|/docs/casos-resueltos/", citas)]
+  # `.claude/backups/` guarda las copias que exige la regla #17 (fuera de git): una
+  # copia del CHANGELOG es tan histórica como el original. Sin `_?`, el respaldo del
+  # 2026-10-28 daba rojo en local y verde en la CI, que no tiene ese directorio.
+  citas <- citas[!grepl("/_?backups/|/docs/CHANGELOG\\.md$|/docs/casos-resueltos/", citas)]
   skip_if(length(citas) == 0, "no se encontraron archivos que revisar")
 
   # DISCRIMINADOR: sólo se persiguen las líneas que ESPECIFICAN el formato, no

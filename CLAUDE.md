@@ -6,9 +6,9 @@
 ## Fuente de verdad operativa
 
 - **Reglas, workflow, hooks y skills ICFES:** ver `@.claude/CLAUDE.md`.
-  Ese archivo es el índice central con las **16 reglas críticas obligatorias**, las
+  Ese archivo es el índice central con las **reglas críticas obligatorias**, las
   rutas a `rules/`, `hooks/`, `skills/`, y los procedimientos de validación
-  (FASES 1, 2A-2H, 3) y promoción.
+  (FASES 1, 2A-2O, 3) y promoción.
 - **Esta sección raíz (más abajo)** es la configuración de plataforma instalada por
   Ruflo (claude-flow v3). Sirve para descubrir herramientas MCP, swarm y memoria.
   Es **secundaria**: cuando una recomendación Ruflo entre en conflicto con una regla
@@ -24,11 +24,14 @@
    o `02-En-Desarrollo/`: respetar el gate `pre-write-rmd-gate.sh` (regla #16,
    `workflow-state-enforcement.md`). Requiere `ejercicio_state.json` con pasos previos
    completados.
-4. **Después de cada `exams2*()`**: el hook `post-exams2-validation.sh` ejecuta
-   FASES 2A-2H automáticamente. NO suprimir su salida ni acortar su timeout (300s
-   desde 2026-08-13: subido de 120s para que quepa la muestra estándar N=100 de la
-   regla #23, 170s medidos en el ejercicio más pesado del repo). Subirlo es legítimo;
-   bajarlo corta la FASE 2G a media ejecución.
+4. **Después de cada `exams2*()`**: el hook `post-exams2-validation.sh` (v6.2) ejecuta
+   las FASES 2A-2O si el comando Bash termina con 0, y su informe le llega al modelo
+   como JSON (`additionalContext`; `decision: block` si hay errores; detalle en
+   `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`). NO suprimir su salida ni acortar su
+   timeout (300s desde 2026-08-13: subido de 120s para que quepa la muestra estándar
+   N=100 de la regla #23, 170s medidos en el ejercicio más pesado del repo). Subirlo es
+   legítimo; bajarlo corta la FASE 2G a media ejecución y Claude Code descarta el
+   informe entero.
 5. **Tildes obligatorias** en texto visible al estudiante (regla #7,
    `ortografia-espanol.md`). NO usar `git commit --no-verify` para evadir el hook
    de ortografía.
@@ -39,7 +42,7 @@
    (Ruflo, claude-flow, ruv-swarm, flow-nexus), hacer snapshot con `tar -czf
    .claude.pre-<plataforma>-<TS>.tar.gz .claude/`. Después: ejecutar
    `Rscript tests/testthat/test_infraestructura_claude.R` para verificar
-   invariantes I-1 a I-7. Si fallan, revertir antes de continuar. Ver
+   invariantes I-1 a I-10. Si fallan, revertir antes de continuar. Ver
    `.claude/rules/infraestructura-protegida.md` y `.claude/docs/ADR/001-convivencia-ruflo-icfes.md`.
 
 ## Pointer obligatorio

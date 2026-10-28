@@ -481,7 +481,7 @@ El sistema detecta automáticamente errores de ortografía antes de cada commit.
 
 **TODOS los cambios son validados automáticamente. Tolerancia cero a regresiones.**
 
-### Sistema de 2 Hooks Activos + Git hooks nativos
+### Hooks ICFES de `settings.json` + Git hooks nativos
 
 > v3.8.0 (2026-04-10): los hooks `pre-edit-testing.sh`, `post-edit-testing.sh`
 > y `pre-bash-testing.sh` **nunca** estuvieron cargados en `settings.json` y
@@ -489,48 +489,40 @@ El sistema detecta automáticamente errores de ortografía antes de cada commit.
 > nativos (`.git/hooks/pre-commit`, `.git/hooks/pre-push`). Detalles en
 > `.claude/docs/HOOKS_Y_TESTING.md` y `.claude/rules/testing-obligatorio.md`.
 
-#### 1. PreToolUse - Write/Edit
+#### 1. PreToolUse - `Write|Edit|MultiEdit`
 **Hook**: `.claude/hooks/pre-write-rmd-gate.sh`
 
 - Gate mecánico para `.Rmd` en `01-En-PreDesarrollo/` y `02-En-Desarrollo/`.
 - Verifica `ejercicio_state.json` + pasos `analisis_icfes` y `flujo_b` completados.
 - exit 2 bloquea el tool call con instrucciones concretas en stderr.
+- Recordatorio de tildes (regla #7): un `echo` en `settings.json`.
 
 #### 2. PostToolUse - Bash (exams2*)
 **Hook**: `.claude/hooks/post-exams2-validation.sh`
 
 - FASE 2A: Validación matemática automática (Niveles 1-4).
 - FASE 2B: Preview PNG automático (magick).
-- FASES 2C-2H: Arsenal, multi-semilla y stress test visual.
+- FASES 2C-2O: arsenal estático (2C-2F), multi-semilla con N = 100 (2G), stress test visual (2H) y detectores 2I-2O.
 - Claude DEBE: Leer PNG + Verificar 5 coherencias + Solicitar aprobación.
+
+#### 3. SubagentStop: `verificar_citas_detractor.py`
+- Verifica las citas del detractor (regla #9).
 
 #### Git hooks nativos (NO cargados por Claude)
 - `.git/hooks/pre-commit`: valida ortografía en .Rmd modificados. Tests opcionales con `PRECOMMIT_TESTS=1`.
-- `.git/hooks/pre-push`: ejecuta `Rscript tests/run_all_tests.R` (modo quick soportado con `R_TESTS_QUICK=1`).
+- `.git/hooks/pre-push`: ejecuta `Rscript tests/run_all_tests.R` siempre en modo rápido (`R_TESTS_QUICK=1`); la suite completa (`R_TESTS_FULL=1`) se corre a mano y en la CI.
 - **⚠️ PROHIBIDO**: `git commit --no-verify`.
 
 ### Cobertura de Tests
 
-| Suite | Tests | Cobertura |
-|-------|-------|-----------|
-| Validación matemática | 5 | 100% |
-| Ortografía española | 5 | 100% |
-| Renderizado 4 formatos | 6 | 100% |
-| Aleatorización | 4 | 100% |
-| Flujo B Graficador | 6 | 100% |
-| Regresión | 7 | 100% |
-| Distintividad Visual _neg_ | 3 | 100% |
-| Media-Mediana-Moda | 3 | 100% |
-| Validación Semántica (Nivel 4) | 35 | 100% |
-| Correctitud Respuesta (Nivel 5) | 14 | 100% |
-| **TOTAL** | **82+** | **100%** |
+Tabla de suites, generada desde el runner `tests/run_all_tests.R`: `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`.
 
 ### Garantías del Sistema
 
 ✅ Ningún cambio rompedor llega a código
 ✅ 100% de cobertura se mantiene
-✅ Commits solo con tests pasando
-✅ Push solo con validación completa
+✅ Commits con la ortografía de los `.Rmd` validada (tests con `PRECOMMIT_TESTS=1`)
+✅ Push con tests en modo rápido; la suite completa corre en la CI
 ✅ Validación automática de .Rmd
 ✅ Claude no puede romper el sistema
 ✅ CI/CD adicional en remoto
@@ -862,14 +854,14 @@ El script `validar_multisemilla.R` ejecuta el .Rmd N veces con diferentes semill
 
 | Modo | Semillas | Uso |
 |------|----------|-----|
-| Rápido | 20 | Hook automático (FASE 2G) |
+| Estándar (sin `--n`) | 100 | Hook automático (FASE 2G) y pre-promoción (regla #23) |
 | Exhaustivo | 100 | Pre-promoción |
 
 ```bash
-# Rápido (hook automático)
-Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd --n 20
+# Estándar (el del hook automático): sin --n ya corre 100
+Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd
 
-# Exhaustivo (pre-promoción)
+# Exhaustivo (pre-promoción): fuerza max(n, 100), con n = valor de --n
 Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd --modo exhaustivo
 ```
 
@@ -879,7 +871,7 @@ Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd --modo exhaustivo
 FASE 2A: Coherencia matemática (Niveles 1-4)
 FASE 2B: Preview visual (PDF → PNG)
 FASES 2C-2F: Arsenal estático
-FASE 2G: Multi-semilla rápida (20 semillas, Nivel 5) ← NUEVO
+FASE 2G: Multi-semilla (100 semillas, Nivel 5; regla #23)
 ```
 
 La FASE 2G solo se ejecuta si las fases anteriores no tienen errores.

@@ -237,7 +237,7 @@ Casos que NO son excepciones (deben cumplir igual):
    - Si está en prosa → reformular para identificar por contenido.
    - Si está en `cat("**Opción ", l, ...)` → reemplazar por `cat("**", err$codigo, " — ", err$nombre, "**\n\n*Argumento:* \"", err$descripcion_corta, "\"\n\n", ...)`.
 3. Re-renderizar y validar 4 formatos.
-4. Validar 20 semillas (FASE 2G).
+4. Validar 100 semillas (FASE 2G, regla #23).
 5. Actualizar `ejercicio_state.json` si está en pipeline de desarrollo.
 
 ---

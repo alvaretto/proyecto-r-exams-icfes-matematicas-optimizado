@@ -8,8 +8,8 @@
 #   Rscript validar_multisemilla.R archivo.Rmd [--n 100] [--modo rapido|exhaustivo]
 #
 # Modos:
-#   rapido     - 20 semillas (default, para hook automático)
-#   exhaustivo - 100 semillas (pre-promoción)
+#   rapido     - N semillas (default 100, regla #23; el hook FASE 2G pasa --n 100)
+#   exhaustivo - max(N, 100) semillas (pre-promoción)
 #
 # Códigos de salida:
 #   0 = Sin fallos

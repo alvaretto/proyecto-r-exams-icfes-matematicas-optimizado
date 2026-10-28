@@ -2995,7 +2995,7 @@ Verificado que el fallo es **del script, no del ejercicio**:
 | con un ejemplo canónico intacto de `Ejemplos-Funcionales-Rmd/` | 1 |
 | sin argumentos | 1 |
 
-`post-exams2-validation.sh` (FASE 2G) lo invoca exactamente así:
+`post-exams2-validation.sh` (FASE 2G) lo invocaba así el 2026-08-09 (hoy con `--n 100`, regla #23):
 
 ```bash
 MULTISEED_OUTPUT=$(cd "$CWD" && Rscript "$SCRIPT_MULTISEMILLA" "$RMD_FILE" --n 20 2>&1)

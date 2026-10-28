@@ -176,8 +176,8 @@ Detectados automáticamente por `validar_coherencia_matematica.R` (sub-niveles 5
 # Validación rápida (1 semilla)
 Rscript .claude/scripts/validar_coherencia_matematica.R archivo.Rmd
 
-# Multi-semilla rápida (20 semillas)
-Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd --n 20
+# Multi-semilla (100 semillas, regla #23; sin --n ya corre 100)
+Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd
 
 # Multi-semilla exhaustiva (100 semillas)
 Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd --modo exhaustivo

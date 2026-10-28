@@ -24,6 +24,8 @@ Esta regla garantiza que el sistema NUNCA se rompa debido a cambios en el códig
 
 ### FASE 1: Antes de Editar/Escribir Código
 
+> ⚠️ RETIRADO (v3.8.0): este hook no existe en .claude/hooks/ ni lo carga .claude/settings.json; se conserva como historia. Hoy, de los hooks ICFES, antes de escribir corren el gate de `.Rmd` (`pre-write-rmd-gate.sh`, regla #16) y el recordatorio de tildes.
+
 **Hook:** `PreToolUse` (Edit/Write)
 
 ```
@@ -46,6 +48,8 @@ Reportar cobertura actual al usuario
 
 ### FASE 2: Después de Cambios en Código
 
+> ⚠️ RETIRADO (v3.8.0): este hook no existe en .claude/hooks/ ni lo carga .claude/settings.json; se conserva como historia. Hoy no hay hook ICFES de tests tras editar: los tests corren en el pre-push (modo rápido) y en el CI.
+
 **Hook:** `PostToolUse` (Edit/Write)
 
 ```
@@ -63,40 +67,41 @@ Reportar resultado al usuario
 
 ### FASE 3: Antes de Commit
 
-**Hook:** `PreToolUse` (Bash con git commit)
+**Hook:** git `pre-commit` nativo (`.git/hooks/pre-commit`; no es un hook de Claude Code)
 
 ```
 Usuario/Claude intenta → git commit
     ↓
-BLOQUEAR si:
-    - Hay tests fallando
-    - Cobertura < 100%
-    - No se ejecutaron tests después del último cambio
+REVISAR la ortografía de los .Rmd en stage:
+    Rscript .claude/scripts/corregir_ortografia_espanol.R
     ↓
-EJECUTAR suite completa:
+SOLO con PRECOMMIT_TESTS=1 (o hooks.precommit-tests=true):
     Rscript tests/run_all_tests.R
     ↓
-SI FALLA → RECHAZAR commit + Mostrar errores
+SI ALGO FALLA → RECHAZAR commit + Mostrar errores
 SI PASA → PERMITIR commit
 ```
 
 ### FASE 4: Antes de Push
 
-**Hook:** `PreToolUse` (Bash con git push)
+**Hook:** git `pre-push` nativo (`.git/hooks/pre-push` → `.claude/hooks/pre-push.sh`)
 
 ```
 Usuario/Claude intenta → git push
     ↓
-VERIFICAR:
-    1. Todos los commits tienen tests pasando
-    2. CI/CD está configurado
-    3. No hay cambios sin commit
+EJECUTAR, en orden:
+    1. git lfs pre-push
+    2. Aviso de cambios sin commit
+    3. Detección de archivos cambiados
     ↓
-EJECUTAR suite completa final
+EJECUTAR SIEMPRE el modo rápido:
+    R_TESTS_QUICK=1 Rscript tests/run_all_tests.R
     ↓
 SI FALLA → RECHAZAR push + Instrucciones de corrección
 SI PASA → PERMITIR push
 ```
+
+La suite completa (`R_TESTS_FULL=1 Rscript tests/run_all_tests.R`) es manual: obligatoria antes de promover o de un push relevante.
 
 ---
 
@@ -243,19 +248,23 @@ printf '%s\n' "refs/heads/<rama> <local_sha> refs/heads/<rama> <remote_sha>" \
 
 **Archivo:** `.claude/settings.json`
 
-Los hooks de Claude Code se limitan a recordatorios y validación post-exams2:
+Los hooks ICFES de Claude Code son: el gate de `.Rmd` y el recordatorio de tildes (PreToolUse), la validación post-exams2 (PostToolUse Bash) y la verificación de citas del detractor (SubagentStop, regla #9). Los demás son de Ruflo (`.claude/helpers/`). Extracto con solo las entradas ICFES (se omiten las de Ruflo):
 
 ```json
 {
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Write|Edit",
+        "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "echo 'TILDES: más ángulo función gráfica dispersión...'",
-            "statusMessage": "Recordatorio de tildes"
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/pre-write-rmd-gate.sh\"",
+            "timeout": 5000
+          },
+          {
+            "type": "command",
+            "command": "echo 'TILDES OBLIGATORIAS en texto visible al estudiante: ...'"
           }
         ]
       }
@@ -266,9 +275,19 @@ Los hooks de Claude Code se limitan a recordatorios y validación post-exams2:
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/post-exams2-validation.sh",
-            "timeout": 120,
-            "statusMessage": "Validando matemática + preview visual..."
+            "command": "bash \"${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/post-exams2-validation.sh\"",
+            "timeout": 300000
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -I \"${CLAUDE_PROJECT_DIR:-.}/.claude/scripts/verificar_citas_detractor.py\" --hook",
+            "timeout": 60
           }
         ]
       }
@@ -277,6 +296,8 @@ Los hooks de Claude Code se limitan a recordatorios y validación post-exams2:
 }
 ```
 
+El timeout del hook de render es de 300 s (`300000` en `settings.json`).
+
 **Nota:** Los tests pre-commit/push se manejan via git hooks nativos, no via Claude Code hooks.
 
 ---
@@ -284,6 +305,8 @@ Los hooks de Claude Code se limitan a recordatorios y validación post-exams2:
 ## 🤖 Comportamiento de Claude
 
 ### Cuando Claude Edita Código
+
+> ⚠️ RETIRADO (v3.8.0): este hook no existe en .claude/hooks/ ni lo carga .claude/settings.json; se conserva como historia.
 
 ```
 1. Claude detecta necesidad de Edit/Write
@@ -298,9 +321,9 @@ Los hooks de Claude Code se limitan a recordatorios y validación post-exams2:
 
 ```
 1. Usuario ejecuta: git commit -m "mensaje"
-2. Hook PRE-COMMIT bloquea ejecución
-3. Ejecuta: Rscript tests/run_all_tests.R
-4. SI FALLA → Commit rechazado + mostrar errores
+2. El git hook pre-commit revisa la ortografía de los .Rmd en stage
+3. Solo con PRECOMMIT_TESTS=1: ejecuta Rscript tests/run_all_tests.R
+4. SI ALGO FALLA → Commit rechazado + mostrar errores
 5. SI PASA → Commit permitido
 ```
 
@@ -308,8 +331,8 @@ Los hooks de Claude Code se limitan a recordatorios y validación post-exams2:
 
 ```
 1. Claude ejecuta comando git
-2. Hook intercepta comando
-3. Ejecuta suite completa
+2. Los git hooks nativos corren solos (pre-commit al commit, pre-push al push)
+3. Antes de un push relevante, Claude corre la suite completa: R_TESTS_FULL=1 Rscript tests/run_all_tests.R
 4. Claude informa resultado al usuario
 5. Solo procede si tests pasan
 ```
@@ -319,6 +342,8 @@ Los hooks de Claude Code se limitan a recordatorios y validación post-exams2:
 ## 🚨 Mensajes de Bloqueo
 
 ### Cuando Tests Fallan en Edit
+
+> ⚠️ RETIRADO (v3.8.0): este hook no existe en .claude/hooks/ ni lo carga .claude/settings.json; se conserva como historia.
 
 ```
 ❌ ============================================
@@ -395,8 +420,8 @@ Con este sistema implementado, se garantiza:
 2. ✅ **100% de cobertura se mantiene permanentemente**
 3. ✅ **Tests se ejecutan automáticamente sin intervención**
 4. ✅ **Errores se detectan ANTES de commit**
-5. ✅ **Claude no puede hacer cambios que rompan tests**
-6. ✅ **Usuario no puede hacer commit con tests fallando**
+5. ✅ **Claude no puede subir cambios que rompan la suite en modo rápido (pre-push)**
+6. ✅ **El commit con errores ortográficos en `.Rmd` se rechaza (y con tests fallando si `PRECOMMIT_TESTS=1`)**
 7. ✅ **CI/CD valida adicionalmente en remoto**
 
 ---
@@ -404,6 +429,8 @@ Con este sistema implementado, se garantiza:
 ## ⚠️ Casos Especiales
 
 ### Actualizar Tests Mismos
+
+> ⚠️ RETIRADO (v3.8.0): este hook no existe en .claude/hooks/ ni lo carga .claude/settings.json; se conserva como historia. Hoy lo cubren el pre-push (modo rápido) y el CI (suite completa).
 
 ```
 Si se modifica un archivo test_*.R:

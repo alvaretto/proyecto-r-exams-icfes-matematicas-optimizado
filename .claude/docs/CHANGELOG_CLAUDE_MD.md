@@ -8,6 +8,56 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.30.0 (2026-10-28)
+
+- **El informe del hook post-render llega al modelo (hook v6.2).** Con exit 0, Claude Code manda el
+  texto plano de un `PostToolUse` al log de depuración: el arsenal imprimía su informe y nadie lo leía
+  (prueba: 116 líneas y 6 errores a mano, nada en la sesión). Ahora el hook escribe un único JSON:
+  - `additionalContext` con el informe sin marcos, de 9 000 caracteres como máximo; Claude Code corta
+    en 10 000 y del exceso solo muestra 2 000.
+  - `decision: block` + `reason` si hay errores.
+  - `systemMessage` para el usuario.
+
+  El informe completo queda en `~/.cache/post-exams2-validation/<nombre>.txt`. Prueba viva en la
+  sesión: llegaron la razón y el informe (7 errores). Con el comando fallido no corrió, porque Claude
+  Code dispara `PostToolUseFailure` y el hook solo está en `PostToolUse`.
+- **Dos silencios menos en el hook.**
+  - Si no encuentra el `.Rmd` desde el cwd de la sesión, ahora avisa al modelo en vez de salir callado.
+  - Hace `cd` a ese cwd antes del arsenal. Con ruta relativa y el proceso del hook en otro directorio,
+    las fases 2I-2L callaban: 0 errores contra 2 con ruta absoluta, mismo `.Rmd`.
+- **La 2G dice lo que corre:** «100/100 semillas aprobadas». Decía «20/20» después de correr
+  `--n 100`. La cabecera del hook también quitó «no hay forma de saltarse estas validaciones».
+- Test nuevo: `tests/testthat/test_post_exams2_informe.R`, 36 expectativas. Corre el hook real con un
+  proyecto falso; contra la v6.1, 11 fallos y 4 errores.
+- **Tabla de suites generada y vigilada.** `tests/sincronizar_doc_suites.R` reescribe desde
+  `tests/run_all_tests.R` la tabla y las cifras de `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`, que
+  pasa a la v1.2. `tests/testthat/test_doc_suites_sincronizada.R` falla en cuatro casos:
+  - si el documento y el runner divergen;
+  - si las fases del documento no son las del hook;
+  - si el documento no nombra la versión del hook;
+  - si un documento vivo (los dos `CLAUDE.md`, los de testing, el manual, comandos y las skills de
+    generar y revisar) nombra el arsenal con un rango que no termina en la última fase del hook.
+
+  Origen: el documento decía 19 suites con 42 en el runner. Cada comprobación se prueba también por
+  mutación.
+- **`test_nomenclatura_rmd.R` ignora `.claude/backups/`.** Excluía `/_backups/` pero no
+  `.claude/backups/`, el directorio de la regla #17. Una copia del CHANGELOG daba rojo en local y
+  verde en la CI. Mutación: la misma línea en un documento vivo sigue fallando.
+- `validar_multisemilla.R`: su comentario de cabecera decía «20 semillas (default)» y el código usa
+  100.
+- **Deriva documental corregida.**
+  - Índice: «12 suites, 130+ tests» y «2 hooks activos». Ahora no da cifras: remite a la tabla generada
+    y nombra los hooks ICFES reales, incluido el `SubagentStop` de citas.
+  - `CLAUDE.md` raíz: «16 reglas», «FASES 2A-2H» e «I-1 a I-7».
+  - Además, los documentos de testing y de workflow que describían 2A-2H, 20 semillas, pre-push
+    completo, 7 jobs de CI o hooks de testing retirados como activos: `HOOKS_Y_TESTING.md`,
+    `FLUJO_AUTOMATICO_TESTING.md`, `ECOSISTEMA_TESTING.md`, `REGLAS_CRITICAS.md`,
+    `ESTRUCTURA_REPOSITORIO.md`, `MANUAL_USUARIO.md`, `TROUBLESHOOTING.md`, `COMANDOS_Y_SKILLS.md`,
+    `README.md`, las reglas íntegras de testing, correctitud y letter-independence, cuatro skills,
+    los dos orquestadores y `/validate`. Las secciones que describían hooks retirados llevan la marca
+    «RETIRADO (v3.8.0)» y se conservan como historia.
+- Respaldo y reversión: `.claude/backups/2026-10-28-informe-visible/` (README con los pasos).
+
 ### Cambios v3.29.1 (2026-10-20)
 
 - **El hook de citas también corre en sesiones abiertas en subcarpetas.** Claude Code lee el

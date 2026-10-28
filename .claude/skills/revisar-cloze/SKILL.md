@@ -246,7 +246,7 @@ Presentar resumen completo:
 |------|--------|---------|
 | 4. Retroalimentación | ✅ | Solution con 6 subsecciones |
 | 5. Renderizado | ✅ | HTML/PDF/DOCX (NOPS: N/A) |
-| 6. Arsenal | ✅ | FASES 2A-2H sin errores |
+| 6. Arsenal | ✅ | FASES 2A-2O sin errores |
 | 7. Detractor | ✅ | Veredicto: APROBAR |
 | 8. Coherencias | ✅ | 5/5 verificadas |
 | 9. Diversidad | ✅ | N versiones únicas |

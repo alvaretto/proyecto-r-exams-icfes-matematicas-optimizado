@@ -32,7 +32,7 @@
 │  - .claude/skills/<X>/    ← skills ICFES            │
 │  - .claude/hooks/*.sh     ← gate + post-validation  │
 │  - .claude/scripts/       ← workflow-state.sh, ... │
-│  - tests/testthat/        ← 13 suites               │
+│  - tests/testthat/        ← suites de test          │
 └─────────────────────────────────────────────────────┘
                        ↑
                        │ (convivencia, ADR-001)
@@ -130,12 +130,12 @@ exams2pandoc("archivo.Rmd", n=1, type="docx", dir="salida")
 exams2nops("archivo.Rmd", n=1, dir="salida")
 ```
 
-El hook `post-exams2-validation.sh` se dispara automáticamente y ejecuta FASES 2A-2H.
+El hook `post-exams2-validation.sh` se dispara automáticamente y ejecuta FASES 2A-2O.
 
 ### 3.2 Tests testthat
 
 ```bash
-# Todas las suites (modo completo, ~5-10 min)
+# Todas las suites (modo completo; 1309 s el 2026-10-28)
 Rscript tests/run_all_tests.R
 
 # Modo quick (solo suites con cambios watch, ~40s)
@@ -244,7 +244,7 @@ RepositorioMatematicasICFES_R_Exams/
 │   │   └── Ejemplos-Funcionales-Rmd/  ← INMUTABLE (fuente de verdad)
 │   └── Ejemplos-Funcionales-Rmd/      ← INMUTABLE
 ├── tests/
-│   └── testthat/                ← 13 suites
+│   └── testthat/                ← suites de test
 ├── docus/
 │   └── Base-de--Conocimiento-ICFES-Matematicas/
 │       ├── Infografía Principal.md

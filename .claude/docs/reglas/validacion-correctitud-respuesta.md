@@ -139,7 +139,7 @@ La FASE 2G se ejecuta automáticamente en `post-exams2-validation.sh`:
 FASE 2A: Coherencia matemática (Niveles 1-4)
 FASE 2B: Preview visual (PDF → PNG)
 FASES 2C-2F: Arsenal estático
-FASE 2G: Multi-semilla rápida (20 semillas, Nivel 5) ← NUEVO
+FASE 2G: Multi-semilla (100 semillas, Nivel 5; regla #23)
 ```
 
 La FASE 2G solo se ejecuta si las fases anteriores no tienen errores.

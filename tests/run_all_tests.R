@@ -377,6 +377,13 @@ suites <- list(
     archivo = "tests/testthat/test_post_exams2_informe.R",
     critico = TRUE,
     watch = c("post-exams2-validation", "test_post_exams2_informe")
+  ),
+  list(
+    nombre = "Documento de cobertura sincronizado: tabla de suites generada desde el runner, fases y version del hook",
+    archivo = "tests/testthat/test_doc_suites_sincronizada.R",
+    critico = TRUE,
+    watch = c("run_all_tests", "VALIDATOR_COBERTURA_ICFES", "sincronizar_doc_suites",
+              "post-exams2-validation", "tests/testthat/test_")
   )
 )
 

@@ -95,12 +95,13 @@ exams2nops("[archivo].Rmd", n = 1, dir = "salida")
 
 ### PASO 6: Arsenal post-render (AUTOMÁTICO)
 
-El hook `post-exams2-validation.sh` se ejecuta automáticamente después de cada `exams2*()`. Incluye:
+El hook `post-exams2-validation.sh` se ejecuta automáticamente después de cada `exams2*()`, solo si el comando Bash termina con 0. Incluye:
 - FASE 2A: Validación matemática
 - FASE 2B: Preview visual (PDF → PNG)
 - FASES 2C-2F: Arsenal estático
-- FASE 2G: Multi-semilla rápida (20 semillas)
-- FASE 2H: Stress test visual
+- FASE 2G: Multi-semilla (100 semillas, regla #23)
+- FASE 2H: Stress test visual (10 semillas, render real)
+- FASES 2I-2O: detectores de imágenes sin width, letra en la Solution, tablas, gráficas-opción en gap CLOZE, diversidad estática y glifos; 2M es un recordatorio
 
 **Acción**: Leer la salida del hook. Si reporta errores → corregir → volver a PASO 5.
 
@@ -194,7 +195,7 @@ Presentar resumen completo al usuario:
 |------|--------|---------|
 | 4. Retroalimentación | ✅ | Solution con 6 subsecciones |
 | 5. Renderizado | ✅ | HTML/PDF/DOCX/NOPS |
-| 6. Arsenal | ✅ | FASES 2A-2H sin errores |
+| 6. Arsenal | ✅ | FASES 2A-2O sin errores |
 | 7. Detractor | ✅ | Veredicto: APROBAR |
 | 8. Coherencias | ✅ | 5/5 verificadas |
 | 9. Diversidad | ✅ | N versiones únicas |

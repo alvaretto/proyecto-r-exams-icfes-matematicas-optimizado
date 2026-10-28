@@ -742,7 +742,7 @@ aplicable — y agravado, porque un CLOZE puede tener varias sub-partes con conc
 una con su propio pool.
 
 **Los cuatro bugs del incidente original** (detectados sobre el HTML, tras pasar las FASES 2A-2J —
-que era el arsenal completo **en aquella fecha**, mayo de 2026; hoy llega a 2N: el dato es
+que era el arsenal completo **en aquella fecha**, mayo de 2026; hoy llega a 2O: el dato es
 histórico, no un rango obsoleto):
 incoherencia conclusión↔justificación cuando la justificación usa variables con roles invertibles;
 premisa imposible por contradecir una restricción del generador; `sample(x, n)` con `length(x)==1`

@@ -302,11 +302,11 @@ Rscript tests/run_all_tests.R
 
 Ejecutando: Validación Matemática
 --------------------------------------------------
-✓ Validación Matemática completado en 2.34 segundos
+✓ Validación Matemática completado en N segundos
 
 Ejecutando: Ortografía Española
 --------------------------------------------------
-✓ Ortografía Española completado en 1.56 segundos
+✓ Ortografía Española completado en N segundos
 
 ...
 
@@ -314,10 +314,10 @@ Ejecutando: Ortografía Española
   REPORTE FINAL
 ========================================
 
-Suites ejecutadas: 10
-✓ Exitosas: 10
+Suites ejecutadas: N
+✓ Exitosas: N
 ✗ Fallidas: 0
-Tiempo total: 18.5 segundos
+Tiempo total: N segundos
 
 Cobertura de testing: 100.0%
 🎉 ¡OBJETIVO DE 100% ALCANZADO!
@@ -358,16 +358,9 @@ El archivo `.github/workflows/ci-testing.yml` ejecuta automáticamente:
 - ✅ Cada pull request a `main` o `develop`
 - ✅ Diariamente a las 02:00 UTC (cron schedule)
 
-**Jobs Paralelos:**
-1. `test-validacion-matematica` - Tests de validación matemática
-2. `test-ortografia` - Tests de ortografía
-3. `test-renderizado-4-formatos` - Tests de renderizado
-4. `test-aleatorization-diversity` - Tests de aleatorización
-5. `test-flujo-b` - Tests de Flujo B
-6. `test-regression` - Tests de regresión
-7. `coverage-report` - Generación de reporte de cobertura
+**Job:** uno solo, `tests-full` (nombre: «Suite completa (run_all_tests.R)»). Instala R y las dependencias, ejecuta `Rscript tests/run_all_tests.R` (la suite completa, el mismo runner que en local) y sube los resultados como artefacto.
 
-**Resultado:** Si algún job falla, el pipeline completo falla (política de tolerancia cero).
+**Resultado:** Si el job falla, el pipeline falla (política de tolerancia cero).
 
 ---
 
@@ -398,7 +391,9 @@ El archivo `.github/workflows/ci-testing.yml` ejecuta automáticamente:
 | Aleatorización | ~5.0s | ✅ Sí |
 | Flujo B | ~1.0s | ✅ Sí |
 | Regresión | ~10.0s | ✅ Sí |
-| **TOTAL** | **~28.0s** | - |
+| **Suma de estas seis suites** | **~28.0s** | - |
+
+Esta tabla cubre solo seis suites. El tiempo de la suite completa depende de cuántas haya (sección «Suites de Test» de `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`) y se mide con `R_TESTS_FULL=1 Rscript tests/run_all_tests.R`; el runner imprime «Tiempo total» al final.
 
 ---
 
@@ -418,9 +413,8 @@ El archivo `.github/workflows/ci-testing.yml` ejecuta automáticamente:
    - Si falla: Corregir ortografía con `--fix` antes de reintentar
 
 2. **Después de cada `exams2*()`:**
-   - Hook `post-exams2-validation` ejecuta validación matemática automáticamente
-   - Hook genera preview PNG automáticamente
-   - Claude DEBE leer el PNG y verificar 5 coherencias
+   - Hook `post-exams2-validation` ejecuta sus 15 fases (2A-2O): matemática, preview PNG, arsenal, multi-semilla, stress test visual y detectores estáticos (detalle en `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`, sección «El Hook post-exams2»)
+   - Su informe llega al modelo (v6.2); Claude DEBE leer el PNG y verificar 5 coherencias
 
 3. **Antes de cada push:**
    - Ejecutar `Rscript tests/run_all_tests.R` localmente
@@ -458,19 +452,7 @@ El archivo `.github/workflows/ci-testing.yml` ejecuta automáticamente:
    )
    ```
 
-3. **Agregar job a `.github/workflows/ci-testing.yml`:**
-   ```yaml
-   test-nuevo-componente:
-     runs-on: ubuntu-latest
-     name: Tests de Nuevo Componente
-     steps:
-       - uses: actions/checkout@v3
-       - name: Run nuevo componente tests
-         run: |
-           library(testthat)
-           test_file("tests/testthat/test_nuevo_componente.R")
-         shell: Rscript {0}
-   ```
+3. **El CI no necesita un job nuevo:** `.github/workflows/ci-testing.yml` tiene un solo job (`tests-full`) que ejecuta `Rscript tests/run_all_tests.R`, así que recoge la suite registrada en el paso 2.
 
 4. **Actualizar documentación:**
    - Agregar sección en este archivo (ECOSISTEMA_TESTING.md)
@@ -509,8 +491,8 @@ El archivo `.github/workflows/ci-testing.yml` ejecuta automáticamente:
 │                                                             │
 │              🎯 COBERTURA: 100% ALCANZADA                    │
 │                                                             │
-│   ✓ 10 Suites de Testing Implementadas                     │
-│   ✓ 82+ Tests Unitarios Ejecutándose                       │
+│   ✓ Suites de Testing en tests/run_all_tests.R             │
+│   ✓ Tests Unitarios Ejecutándose                           │
 │   ✓ CI/CD Configurado (GitHub Actions)                     │
 │   ✓ Hooks Automáticos Operacionales                        │
 │   ✓ Tolerancia Cero a Regresiones                          │

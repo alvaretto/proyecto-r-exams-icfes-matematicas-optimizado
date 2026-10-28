@@ -1,7 +1,7 @@
 # HANDOFF — `probabilidad-fichas-tabla-doble-entrada-n2`
 
 > Archivo de retorno (convención del repo). Frase disparadora: «Continúa con
-> probabilidad-fichas-tabla-doble-entrada-n2». Última actualización: 2026-10-27 ~23:30. Si este archivo
+> probabilidad-fichas-tabla-doble-entrada-n2». Última actualización: 2026-10-28 (notas del hook). Si este archivo
 > y `ejercicio_state.json` discrepan, manda el JSON y sus notas.
 
 ## Qué es
@@ -72,16 +72,20 @@ de aula dirá si alguien los explota.**
 
 ## El hook post-render
 
-`post-exams2-validation.sh` no muestra su salida en la sesión. Invocación manual (timeout de Bash
-600000 ms):
+Desde la v6.2 (2026-10-28), `post-exams2-validation.sh` le entrega su informe al modelo como contexto
+adicional tras cada render que termina con 0. El informe completo queda en
+`~/.cache/post-exams2-validation/<nombre>.txt`. Hasta la v6.1 no se veía en la sesión: los informes de
+`salida/r1` … `r6` se obtuvieron a mano. Para correrlo a mano (timeout de Bash 600000 ms), con la
+salida JSON descartada y el informe leído del disco:
 
 ```bash
 RMD=<ruta absoluta del .Rmd>; D=$(dirname "$RMD")
-python3 - "$RMD" "$D" <<'PY' | bash .claude/hooks/post-exams2-validation.sh
+python3 - "$RMD" "$D" <<'PY' | bash .claude/hooks/post-exams2-validation.sh > /dev/null
 import json, sys
 rmd, d = sys.argv[1], sys.argv[2]
 print(json.dumps({"tool_input": {"command": f"Rscript -e 'exams::exams2html(\"{rmd}\")'"}, "cwd": d}))
 PY
+cat ~/.cache/post-exams2-validation/"$(basename "$RMD" .Rmd)".txt
 ```
 
 Hay tres cosas que tener presentes:

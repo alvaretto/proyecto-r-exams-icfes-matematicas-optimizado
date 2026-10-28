@@ -31,7 +31,7 @@ RepositorioMatematicasICFES_R_Exams/
 │
 ├── tests/                             # ECOSISTEMA DE TESTING
 │   ├── run_all_tests.R               # Ejecutor principal (chmod +x)
-│   └── testthat/                     # Suites de tests (12 suites, 110+ tests)
+│   └── testthat/                     # Suites de tests (lista y cifras en .claude/docs/VALIDATOR_COBERTURA_ICFES.md)
 │
 ├── outputs/                           # Archivos temporales de renderizado
 │   ├── output_pdf/                   # PDFs generados
@@ -45,7 +45,7 @@ RepositorioMatematicasICFES_R_Exams/
 │       └── *_output_vN.png           # Previews generados
 │
 ├── .github/workflows/                 # CI/CD
-│   └── ci-testing.yml                # GitHub Actions (7 jobs paralelos)
+│   └── ci-testing.yml                # GitHub Actions (un solo job: tests-full)
 │
 ├── renv/                              # Gestión de dependencias R
 ├── README.md                          # Documentación principal
@@ -210,13 +210,13 @@ docs/
 ---
 
 ##### `hooks/`
-**Contenido**: 2 hooks activos cargados por `settings.json` (chmod +x)
+**Contenido**: los dos hooks que carga `settings.json`, más `pre-push.sh` (lo invoca git) y la plantilla `pre-commit-ortografia.sh` (chmod +x)
 
 ```
 hooks/
 ├── pre-write-rmd-gate.sh            # Gate .Rmd: exige ejercicio_state.json (PreToolUse)
-├── post-exams2-validation.sh        # FASE 2A-2H tras exams2* (PostToolUse)
-└── pre-commit-ortografia.sh         # Usado por .git/hooks/pre-commit (no por Claude)
+├── post-exams2-validation.sh        # FASES 2A-2O tras exams2* (PostToolUse)
+└── pre-commit-ortografia.sh         # Plantilla de instalación; .git/hooks/pre-commit no la invoca
 ```
 
 **Configurados en**: @.claude/settings.json
@@ -311,21 +311,9 @@ tests/
 ├── run_all_tests.R                  # Ejecutor principal (chmod +x)
 ├── testthat.R                       # Runner de testthat
 └── testthat/
-    ├── test_validacion_matematica.R      # 5 tests
-    ├── test_ortografia_espanol.R         # 5 tests
-    ├── test_renderizado_4_formatos.R     # 6 tests
-    ├── test_aleatorization_diversity.R   # 4 tests
-    ├── test_flujo_b_graficador.R         # 6 tests
-    ├── test_regression_suite.R           # 7 tests
-    ├── test_neg_visual_distinctness.R    # 3 tests
-    ├── test_media_mediana_moda.R         # 3 tests
-    ├── test_validacion_semantica.R       # 35 tests
-    ├── test_correctitud_respuesta.R      # 14 tests
-    ├── test_cloze_n3.R                   # tests CLOZE nivel 3
-    └── test_stress_test_visual.R         # 28 tests
 ```
 
-**Total**: 12 suites, 110+ tests unitarios
+**Suites y cifras**: la tabla se genera desde `tests/run_all_tests.R` y vive en `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`.
 
 **Ejecución**:
 ```bash
@@ -376,7 +364,7 @@ outputs/
 
 ```
 .github/workflows/
-└── ci-testing.yml                   # 7 jobs paralelos
+└── ci-testing.yml                   # Un solo job: tests-full
 ```
 
 **Triggers**:
@@ -384,16 +372,9 @@ outputs/
 - Pull Requests
 - Daily cron: 02:00 UTC
 
-**Jobs**:
-1. Validación matemática
-2. Ortografía española
-3. Renderizado 4 formatos
-4. Aleatorización
-5. Flujo B graficador
-6. Regresión
-7. Suite completa
+**Job**: uno solo, `tests-full` (push y PR a `main` y `develop`; cron diario a las 02:00 UTC).
 
-**Política**: Tolerancia cero → falla si cualquier job falla
+**Política**: Tolerancia cero → falla si el job falla
 
 ---
 
@@ -503,8 +484,7 @@ Total de archivos críticos:
 ├── Documentación:            14+ archivos
 ├── Hooks:                     4 scripts
 ├── Scripts de validación:     3+ scripts
-├── Suites de tests:          12 suites
-├── Tests unitarios:          110+ tests
+├── Suites de tests:          ver .claude/docs/VALIDATOR_COBERTURA_ICFES.md
 ├── Comandos manuales:         7 comandos
 ├── Skills automáticos:       23 skills (con model_recommendation)
 ├── Agentes especializados:    6 agentes (con modelo asignado)
@@ -526,7 +506,7 @@ Estado del sistema:          ACTIVO Y PERMANENTE
    → .Rmd + graficos (si aplica, Flujo B)
 
 3. Validar automaticamente (Niveles 1+2)
-   → Hooks ejecutan FASE 2A + 2B
+   → El hook post-render ejecuta las FASES 2A-2O
    → Claude verifica 5 coherencias
    → Tests automaticos + Detractor
 

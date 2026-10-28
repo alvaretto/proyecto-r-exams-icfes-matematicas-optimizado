@@ -60,7 +60,7 @@ Consolidado: `.claude/docs/REGLAS_CRITICAS.md` (leer bajo demanda). Cada ruta `.
 14. **Routing de modelos obligatorio** (Opus/Sonnet/Haiku por complejidad) → .claude/rules/modelo-routing-obligatorio.md
 15. **Stress Test Visual** (FASE 2H: renderizado masivo + análisis anomalías) → .claude/skills/stress-test-visual/SKILL.md
 16. **Workflow State Enforcement** (gate mecánico PreToolUse + estado persistente) → .claude/rules/workflow-state-enforcement.md
-17. **Infraestructura `.claude/` protegida** (backups + verificación de invariantes I-1 a I-7 antes/después de plataformas externas) → .claude/rules/infraestructura-protegida.md
+17. **Infraestructura `.claude/` protegida** (backups + verificación de invariantes I-1 a I-10 antes/después de plataformas externas) → .claude/rules/infraestructura-protegida.md
 18. **Markdown-imágenes-PDF (atributo `{width=...}` obligatorio)** → .claude/rules/markdown-imagenes-pdf.md
     Toda imagen `.png/.jpg/.svg/.pdf` emitida vía Markdown (directa o `cat()`) en `.Rmd` DEBE incluir atributo `{width=...}`. Pandoc ≥3.2.1 sin width envuelve el `\includegraphics` en `\pandocbounded`. **Actualizado 2026-08-15**: R/exams ≥ 2.4-1 ya define ese macro como **no-op** en todas sus plantillas, así que el `Undefined control sequence` **ya no se reproduce** con las plantillas del paquete (sí con plantilla propia). La regla sigue vigente por otra razón: al ser no-op, `\pandocbounded` **no controla el tamaño**. En la misma pasada se retiró el **Patrón B** (condicional `is_latex_output()`), que **pierde la imagen en el PDF**. Coupled con regla #6 ampliada. Errores 16-17 documentados.
 19. **Solution letter-independence** (NUNCA `r letra_correcta` ni "Opción [A-D]" en Solution) → .claude/rules/solution-letter-independence.md
@@ -98,9 +98,10 @@ Referencia completa: `.claude/docs/COMANDOS_Y_SKILLS.md`
 Referencia completa: `.claude/docs/HOOKS_Y_TESTING.md`
 
 **Sistema automático permanente:**
-- 2 hooks activos (PreToolUse: gate .Rmd + recordatorio tildes; PostToolUse: arsenal post-render)
+- Hooks ICFES en `.claude/settings.json`: gate `.Rmd` + recordatorio de tildes (PreToolUse), arsenal post-render (PostToolUse Bash) y citas del detractor (SubagentStop); los demás son de Ruflo
 - Gate mecánico: `pre-write-rmd-gate.sh` bloquea .Rmd sin `ejercicio_state.json`
-- 100% cobertura de tests (12 suites, 130+ tests)
+- Arsenal post-render v6.2 (FASES 2A-2O): su informe llega al modelo como JSON (`additionalContext`; `decision: block` si hay errores) y queda completo en `~/.cache/post-exams2-validation/`. Solo corre si el comando Bash termina con 0. Detalle: `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`
+- Suites en `tests/run_all_tests.R`; su tabla y sus cifras se generan en `.claude/docs/VALIDATOR_COBERTURA_ICFES.md` con `tests/sincronizar_doc_suites.R`, y un test falla si divergen
 - CI/CD con GitHub Actions
 - Tolerancia cero a regresiones
 
@@ -177,14 +178,14 @@ A-Produccion/
 - **Settings Claude**: `.claude/settings.json`
 - **CI/CD**: `.github/workflows/ci-testing.yml`
 - **Tests**: `tests/testthat/` (suites enganchadas a `tests/run_all_tests.R`)
-- **Hooks**: `.claude/hooks/` (2 scripts activos cargados por settings.json)
+- **Hooks**: `.claude/hooks/` (`pre-write-rmd-gate.sh` y `post-exams2-validation.sh` los carga settings.json; `pre-push.sh` lo invoca `.git/hooks/pre-push`; `pre-commit-ortografia.sh` es plantilla de instalación)
 
 ---
 
 ## 📌 Metainformación
 
-**Versión**: 3.29.1 (hook de citas también en `~/.claude/settings.json`: el del repo no carga desde subcarpetas)
-**Fecha**: 2026-10-20
+**Versión**: 3.30.0 (hook post-render v6.2: su informe llega al modelo; tabla de suites generada y vigilada)
+**Fecha**: 2026-10-28
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)
 **Copia íntegra del índice anterior (v3.24.0) y script de reversión**: `.claude/backups/2026-09-07-recorte-contexto/`

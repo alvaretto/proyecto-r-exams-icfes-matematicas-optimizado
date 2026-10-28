@@ -188,9 +188,9 @@ done
 
 ## FASE 4: Unit Testing — Suite Completa
 
-### 4A. Modo rápido (pre-push)
+### 4A. Suite completa (manual; el pre-push corre solo el modo rápido)
 ```bash
-echo "=== Suite Completa (19 suites) ==="
+echo "=== Suite Completa ==="
 R_TESTS_FULL=1 Rscript tests/run_all_tests.R 2>&1
 ```
 
@@ -323,7 +323,7 @@ fi
 ║  FASE 1: Lint (R + Bash)                             ║
 ║  FASE 2: Types/Schemas (JSON + Invariantes I-1..7)   ║
 ║  FASE 3: Style (Ortografía + Reglas #18 #19)         ║
-║  FASE 4: Unit (19 suites, 130+ tests)                ║
+║  FASE 4: Unit (suite completa, R_TESTS_FULL=1)       ║
 ║  FASE 5: E2E (Workflows completos de usuario)        ║
 ╚══════════════════════════════════════════════════════╝
 ```
@@ -339,11 +339,11 @@ fi
 ## Uso Diario
 
 ```bash
-# Validación rápida (pre-commit):
+# Validación rápida (la del pre-push; el pre-commit solo corre tests con PRECOMMIT_TESTS=1):
 R_TESTS_QUICK=1 Rscript tests/run_all_tests.R
 
-# Validación completa (pre-push o CI):
-Rscript tests/run_all_tests.R
+# Validación completa (manual, antes de promover; la del CI):
+R_TESTS_FULL=1 Rscript tests/run_all_tests.R
 
 # Validación ultra-completa (5 fases):
 /validate
