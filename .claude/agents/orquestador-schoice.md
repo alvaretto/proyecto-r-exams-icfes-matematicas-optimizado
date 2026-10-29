@@ -156,7 +156,7 @@ Estas son **inviolables**. Si una decisión las contradice, paro y pido instrucc
 - `modo: "dry-run"` → **auditoría real, no solo impresión del plan**. Un dry-run que solo imprime las filas de la máquina de estados no puede fallar y por tanto no informa de nada. Ejecuto, en este orden, únicamente operaciones de LECTURA:
   1. **Los 25 pre-flight checks de verdad** (numerados 1–12, 12b, 12c y 13–23; todos son read-only: existencia de archivos, `bash -n` de los hooks, `Rscript -e 'packageVersion("exams")'`). Reporto cada uno OK/FALLA. Si alguno falla, el dry-run termina en `preflight_failed` — que es justo la información que el usuario quería antes de gastar tokens.
   2. **Estado de `ruta_destino`**: ¿existe?, ¿está bajo un directorio permitido?, ¿hay `ejercicio_state.json`? Si lo hay, digo desde qué paso reanudaría y cuáles ya están completados — recordando que `2b`, `2c` y `6b` **no** se persisten (§ "Qué se persiste y qué no").
-  3. **Nomenclatura**: contraste contra el regex, indicando si el warning saltará y por qué (puede ser deliberado — ver `INC-CLAUDE-LOCAL`).
+  3. **Nomenclatura**: contraste contra el regex del filtro 3b de `.claude/hooks/pre-write-rmd-gate.sh` (el mismo que vigila `test_nomenclatura_rmd.R`). **El gate bloquea** (exit 2) la creación de un `.Rmd` cuyo nombre no conforma, así que una discrepancia la reporto como FALLA bloqueante: el modo `ejecutar` no podría escribir el `.Rmd`. El filtro solo deja pasar la **edición** de un `.Rmd` que ya existe en disco (legacy anterior al 2026-08-10); si el `.claude/` local declara deliberado un nombre así (`INC-CLAUDE-LOCAL`), lo reporto como legacy editable, sabiendo que con ese nombre no se puede crear otro archivo (por ejemplo, su `_v2`).
   4. **`entrada`**: si es una ruta, compruebo que existe y es legible; si es texto, reporto su longitud.
   5. **Smoke sobre el `.Rmd` existente, si lo hay** (caso reanudación): `validar_diversidad_sustantiva.R --n 100` y `validar_diagnosticidad.R --n 100`. Es barato y detecta de inmediato un ítem que ya está roto.
   6. **Plan**: las 16 filas de la máquina de estados, los 3 `WAIT_USER` con la decisión que pediré en cada uno, y el presupuesto de turnos estimado.
@@ -607,10 +607,17 @@ familia —una variante CLOZE, un `_neg_`, un ejercicio hermano— la hereda.
 **Tratamiento correcto**:
 - En el paso de generación, **emitir o auditar** todos los campos del pool. Si un campo no se emite
   en ninguna parte, o lo elimino, o lo compruebo igualmente.
-- Todo texto de un pool debe ser **ASCII-seguro para LaTeX**. Peligrosos habituales: U+2212 (`−`,
-  signo menos tipográfico), U+2264/U+2265 (`≤` `≥`), U+00D7 (`×`) fuera de modo matemático. Las
-  rayas U+2014 (`—`) sí compilan.
-- Comprobación: `grep -nP '[\x{2212}\x{2264}\x{2265}\x{00D7}]' <archivo.Rmd>`.
+- Todo texto que el pool emita debe **compilar en pdflatex** según la regla #25
+  (`.claude/rules/glifos-latex-prohibidos.md`). No basta con que sea «ASCII»: las tildes son
+  obligatorias (regla #7) y compilan. Los rompedores habituales en pools son U+2212 (`−`, signo
+  menos tipográfico) y U+2264/U+2265 (`≤` `≥`). **El modo matemático no los salva**: `$a ≤ b$`
+  falla igual; dentro de `$…$` van los comandos (`-`, `\le`, `\ge`, `\times`).
+  Medidos como seguros en texto visible (no se tocan): U+00D7 (`×`), U+00F7 (`÷`), U+2014 (`—`) y las tildes.
+- Comprobación: el detector único de la regla #25, el mismo de la FASE 2O, y no una lista de glifos
+  propia: `Rscript .claude/scripts/validar_glifos_latex.R <archivo.Rmd>`. Un `ERR_GLIFO_LATEX`
+  (Markdown visible) ya bloquea. Cada `WARN_GLIFO_LATEX` (código R o metadatos) que caiga en un campo
+  que este ítem **emite** lo trato como error: es justo el caso de este incidente, y el detector no
+  puede saber qué cadenas R llegan al output.
 - Si el pool está duplicado en varios `.Rmd` de la misma familia (patrón obligado por la
   auto-contención), corregirlo en **todos** para que no diverjan.
 
@@ -919,7 +926,7 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
    - Si se detecta incoherencia interna en cualquier semilla → ABORTAR y aplicar Patrón A antes de continuar.
 6. **Si escribí un `verificar_render.R` con pruebas de mutación** (Incidente P): compruebo que cada mutante declara su `sonda_esperada`, que la fase falla si el rechazo vino de otra sonda, y que la guarda de "mutante mal construido" se evalúa sobre el ENTORNO, no sobre el texto del `.Rmd`. Un `APROBADO (0 errores)` cuyos mutantes murieron por la sonda equivocada NO es evidencia.
 7. **Si el `.Rmd` usa tablas Markdown** (Incidente E, regla #20): inspecciono el `.tex` generado y, si contiene `\LTcaptype{none}`, verifico que el `.Rmd` trae la guardia `@ifundefined{c@none}`. Lo tenía documentado como incidente pero fuera de esta lista, y es un fallo que **solo aparece en el entorno del usuario** (RStudio bundlea pandoc ≥3.7; la terminal, 3.6): si no lo compruebo aquí, no lo compruebo en ninguna parte.
-8. **Si el `.Rmd` reutiliza un pool de otro ejercicio** (Incidente O): `grep -nP '[\x{2212}\x{2264}\x{2265}\x{00D7}]' <archivo.Rmd>` sobre los campos que este ítem SÍ emite → debe ser vacío. Un campo que en el origen era dato muerto nunca se probó contra LaTeX.
+8. **Si el `.Rmd` reutiliza un pool de otro ejercicio** (Incidente O): `Rscript .claude/scripts/validar_glifos_latex.R <archivo.Rmd>` → sin `ERR_GLIFO_LATEX`, y ningún `WARN_GLIFO_LATEX` en un campo que este ítem SÍ emite. Un campo que en el origen era dato muerto nunca se probó contra LaTeX. Uso el detector y no una lista propia porque una lista a mano se desactualiza: la anterior marcaba `×`, que la regla #25 midió como seguro.
 9. **Si el ítem tiene opciones gráficas** (pre-flight 21 apartado (c), regla #22 §P6 / Error 25): exporto a Moodle y compruebo que ningún PNG conserva un nombre de rol — `grep -ohE 'diagrama_[^."/]+\.png' moodle_output/*.xml | sort -u | grep -vE '^diagrama_[a-z](_[0-9a-f]+)?\.png$'` debe salir vacío: solo quedan `diagrama_a`.. `_d`, con su sufijo hexadecimal por versión (regla #4 v6.1). HTML y PDF **no** sirven para esto: embeben la imagen y no exponen el nombre.
 10. Solo después de estas verificaciones, marco renderizado_4_formatos como completado.
 

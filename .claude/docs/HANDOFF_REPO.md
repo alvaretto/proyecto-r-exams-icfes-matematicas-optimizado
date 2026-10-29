@@ -1,7 +1,7 @@
 # HANDOFF — repositorio (infraestructura `.claude/`, tests y documentación)
 
 > Archivo de retorno para el trabajo que no pertenece a un ejercicio; cada ejercicio lleva su propio
-> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-10-28, al cierre de la tarde.
+> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-10-29 (orquestadores, v3.31.1).
 > Si este archivo y el código discrepan, manda el código: verificar antes de actuar.
 
 ## Estado al cierre del 2026-10-28
@@ -27,6 +27,22 @@
 | `f080964d` … `c622dea0` | 12:35-13:34 | Hook post-render v6.3. Se hizo en un worktree y se integró con merge fast-forward a las 15:42. Ver «Auto-sello del hook post-render» |
 | `6f0a4d3a` | 17:07 | CLOZE de `probabilidad-fichas-tabla-doble-entrada-n2`, aprobado para el aula. Su retorno está en `cloze/HANDOFF.md` |
 | `80d8e0ac` | 17:37 | `test_cloze_n3.R` sin falsos rojos por empates de redondeo. En los orquestadores: patrón de nombre, 6 partes y pre-flight 14 |
+
+## 2026-10-29: orquestadores alineados con el gate y la regla #25 (v3.31.1, sin commit)
+
+- **Qué:** el punto 3 del dry-run de los dos orquestadores llamaba «warning» al filtro 3b del gate de
+  nomenclatura, que bloquea (exit 2). Su incidente `INC-CAMPO-NO-EMITIDO` daba `×` por rompedor con una
+  lista de glifos propia, y decía que el modo matemático protegía; el detector de la regla #25 midió lo
+  contrario. Los dos remiten ahora al detector.
+- **Guardas:** bloques nuevos en `test_glifos_latex.R` (G1-G3) y en `test_nomenclatura_rmd.R`, con
+  mutantes. Los dos suman su `watch` en `tests/run_all_tests.R`, para que el pre-push rápido los corra
+  cuando cambia un orquestador.
+- **Detalle y verificación:** `CHANGELOG_CLAUDE_MD.md` § v3.31.1.
+- **Archivos:** los dos `.claude/agents/orquestador-*.md`, `.claude/docs/reglas/glifos-latex-prohibidos.md`,
+  `tests/testthat/test_glifos_latex.R`, `tests/testthat/test_nomenclatura_rmd.R`, `tests/run_all_tests.R`,
+  `.claude/docs/VALIDATOR_COBERTURA_ICFES.md` (cifras), `.claude/docs/CHANGELOG_CLAUDE_MD.md`, la
+  metainformación de `.claude/CLAUDE.md` y este archivo. El respaldo es git: estaban limpios en `39923879`.
+- **Rige desde el commit.** Un subagente carga su definición de `HEAD` (ver pendiente 7).
 
 ## Qué cambió y dónde está el detalle
 
@@ -226,6 +242,9 @@ Rscript tests/testthat/test_post_exams2_cwd.R      # el ejercicio sale del .Rmd;
    `~/.cursor/worktrees/`. No se tocaron.
 6. ~~Una suite completa limpia (46/46) después de `80d8e0ac`~~. **Cerrado:** el 2026-10-28 corrió sobre
    `a25a7d0d` y dio 46/46, en 1357 s (cobertura del 100 %, según el runner).
+7. **Commit de la v3.31.1** (2026-10-29), con la lista de archivos de la sección de ese día y sin los
+   cambios ajenos del pendiente 4. Hasta entonces los orquestadores que se lancen siguen cargando el texto
+   viejo. Antes del push conviene la suite completa (`R_TESTS_FULL=1`), que no se corrió.
 
 ## Respaldos del día (fuera de git, regla #17)
 

@@ -98,6 +98,12 @@ Los **29 archivos legacy** del allowlist, ninguno de los cuales admite compañí
 
 ---
 
+## Historial
+
+**2026-10-29** — Los dos orquestadores (`orquestador-schoice.md`, Incidente O, y `orquestador-cloze.md`, Incidente R, más su «Validación realista») trataban `×` (U+00D7) como rompedor en una lista de glifos propia y decían que el modo matemático protegía. Se reemplazó la lista por este detector, y `test_glifos_latex.R` vigila ahora que ningún documento operativo lo contradiga: clases `grep` con glifos medidos como seguros, o un `U+XXXX` seguro presentado como peligroso.
+
+---
+
 **Versión:** 1.0
 **Fecha:** 2026-08-15
 **Estado:** ACTIVO Y OBLIGATORIO

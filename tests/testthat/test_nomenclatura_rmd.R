@@ -202,6 +202,103 @@ test_that("el gate NO bloquea la edición de un legacy que ya existe en disco", 
 })
 
 # =============================================================================
+context("Los orquestadores describen el filtro 3b como bloqueo, no como aviso")
+
+# ORIGEN (2026-10-29): el punto 3 del dry-run de los dos orquestadores
+# (`.claude/agents/orquestador-{schoice,cloze}.md`) pedía contrastar el nombre
+# «indicando si el warning saltará». Pero el filtro 3b de `pre-write-rmd-gate.sh`
+# no avisa: BLOQUEA (exit 2) la creación de un `.Rmd` con nombre fuera de formato.
+# Un orquestador que lo trata como aviso reporta como advertencia lo que, en el
+# modo `ejecutar`, le impediría escribir el archivo.
+#
+# Complementa al contexto de arriba, «El gate bloquea de verdad (control
+# positivo)»: aquel prueba el exit 2 EJECUTANDO el gate; éste prueba que el texto
+# que le explica al agente cómo se comporta el gate diga lo mismo. Son cosas
+# distintas: el gate puede bloquear y la prosa seguir diciendo «warning».
+#
+# El helper es PURO (líneas de texto) para poder aplicarlo también a mutantes.
+# «bloquea» y «exit 2» se buscan como palabras enteras: «FALLA bloqueante» sola no
+# basta para decir que el gate bloquea.
+descripcion_3b_defectuosa <- function(lineas) {
+  puntos <- which(grepl("**Nomenclatura**", lineas, fixed = TRUE))
+  if (!length(puntos))
+    return("ninguna línea contiene «**Nomenclatura**» (el punto 3 del dry-run)")
+  exige <- c("bloquea" = "\\bbloquea\\b", "exit 2" = "\\bexit\\s+2\\b")
+  defectos <- character(0)
+  for (i in puntos) {
+    breve <- substr(trimws(lineas[i]), 1, 100)
+    if (grepl("warning|aviso|advertencia", lineas[i], ignore.case = TRUE))
+      defectos <- c(defectos, sprintf("línea %d: lo llama warning/aviso/advertencia: %s", i, breve))
+    for (palabra in names(exige))
+      if (!grepl(exige[[palabra]], lineas[i], ignore.case = TRUE, perl = TRUE))
+        defectos <- c(defectos, sprintf("línea %d: no dice «%s»: %s", i, palabra, breve))
+  }
+  defectos
+}
+
+test_that("los orquestadores describen el filtro 3b como bloqueo, no como aviso", {
+  # Una falla única y por la causa prevista: un mutante que muere por OTRA sonda no
+  # prueba la guarda (Incidente P de los orquestadores, INC-MUTANTE-SONDA).
+  solo <- function(d, causa) length(d) == 1L && grepl(causa, d, fixed = TRUE)
+
+  # --- Controles del discriminador (patrón del repo) -------------------------
+  # Texto REAL de orquestador-{schoice,cloze}.md en 39923879 (antes del fix).
+  vieja_schoice <- paste0("  3. **Nomenclatura**: contraste contra el regex, indicando si el ",
+    "warning saltará y por qué (puede ser deliberado — ver `INC-CLAUDE-LOCAL`).")
+  vieja_cloze <- paste0("  3. **Nomenclatura**: contraste contra el regex, indicando si el ",
+    "warning saltará y por qué (puede ser deliberado — ver Incidente `INC-CLAUDE-LOCAL`).")
+  for (vieja in c(vieja_schoice, vieja_cloze)) {
+    d <- descripcion_3b_defectuosa(vieja)
+    expect_true(length(d) == 3L && any(grepl("warning/aviso", d, fixed = TRUE)) &&
+                  any(grepl("«bloquea»", d, fixed = TRUE)) &&
+                  any(grepl("«exit 2»", d, fixed = TRUE)),
+      info = paste0("El discriminador NO caza el texto viejo del dry-run (el filtro 3b ",
+                    "como warning): está roto. Dijo: [", paste(d, collapse = " | "), "]"))
+  }
+
+  # Texto POSTERIOR al fix (schoice; se omite la cola sobre la edición de un legacy).
+  nueva <- paste0("  3. **Nomenclatura**: contraste contra el regex del filtro 3b de ",
+    "`.claude/hooks/pre-write-rmd-gate.sh` (el mismo que vigila `test_nomenclatura_rmd.R`). ",
+    "**El gate bloquea** (exit 2) la creación de un `.Rmd` cuyo nombre no conforma, así que ",
+    "una discrepancia la reporto como FALLA bloqueante: el modo `ejecutar` no podría ",
+    "escribir el `.Rmd`.")
+  d <- descripcion_3b_defectuosa(nueva)
+  expect_equal(length(d), 0L,
+    info = paste0("FALSO POSITIVO: el discriminador rechaza el texto que describe el ",
+                  "filtro 3b como bloqueo (exit 2). Dijo: [", paste(d, collapse = " | "), "]"))
+
+  # Un mutante por cada condición: cada uno debe morir por SU causa.
+  d <- descripcion_3b_defectuosa(sub("(exit 2)", "(código de salida)", nueva, fixed = TRUE))
+  expect_true(solo(d, "«exit 2»"),
+    info = paste0("No caza un punto 3 que ya no dice exit 2. Dijo: [", paste(d, collapse = " | "), "]"))
+  d <- descripcion_3b_defectuosa(sub("**El gate bloquea**", "**El gate avisa**", nueva, fixed = TRUE))
+  expect_true(solo(d, "«bloquea»"),
+    info = paste0("No caza un punto 3 que ya no dice que el gate bloquea (¿aceptó «bloqueante» ",
+                  "como si fuera «bloquea»?). Dijo: [", paste(d, collapse = " | "), "]"))
+  d <- descripcion_3b_defectuosa(sub("FALLA bloqueante", "advertencia", nueva, fixed = TRUE))
+  expect_true(solo(d, "warning/aviso"),
+    info = paste0("No caza un punto 3 que vuelve a llamar advertencia al bloqueo. Dijo: [",
+                  paste(d, collapse = " | "), "]"))
+  d <- descripcion_3b_defectuosa(sub("**Nomenclatura**", "**Nombre**", nueva, fixed = TRUE))
+  expect_true(solo(d, "ninguna línea"),
+    info = paste0("No avisa cuando desaparece el punto 3 (la guarda quedaría muda). Dijo: [",
+                  paste(d, collapse = " | "), "]"))
+
+  # --- Barrido real ----------------------------------------------------------
+  agentes <- file.path(repo_root, ".claude", "agents",
+                       c("orquestador-schoice.md", "orquestador-cloze.md"))
+  skip_if_not(all(file.exists(agentes)), "faltan los orquestadores en .claude/agents/")
+  for (a in agentes) {
+    d <- descripcion_3b_defectuosa(readLines(a, warn = FALSE, encoding = "UTF-8"))
+    expect_equal(length(d), 0L,
+      info = paste0(basename(a), ": el punto 3 del dry-run no describe el filtro 3b como ",
+                    "el bloqueo que es (pre-write-rmd-gate.sh, exit 2):\n  - ",
+                    paste(d, collapse = "\n  - "),
+                    "\nVer el contexto «El gate bloquea de verdad (control positivo)» más arriba."))
+  }
+})
+
+# =============================================================================
 context("Las citas del formato no divergen de la fuente")
 
 test_that("el gate usa exactamente el regex canónico", {

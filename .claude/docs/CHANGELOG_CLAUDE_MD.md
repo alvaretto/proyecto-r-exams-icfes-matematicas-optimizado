@@ -8,6 +8,46 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.31.1 (2026-10-29)
+
+- **Los dos orquestadores dejan de contradecir al gate de nomenclatura y a la regla #25.** Las dos
+  contradicciones las encontró el dry-run de `orquestador-schoice` sobre `totales-promedios-reciclaje-n3`
+  (§ 6.5 de su reporte), en `orquestador-schoice.md` y en su gemelo `orquestador-cloze.md`.
+  - **Nomenclatura.** El punto 3 del dry-run pedía contrastar el nombre «indicando si el warning
+    saltará». El filtro 3b de `pre-write-rmd-gate.sh` no avisa: bloquea con exit 2 la creación de un
+    `.Rmd` fuera de formato. El punto 3 lo dice ahora y reporta la discrepancia como FALLA bloqueante; la
+    edición de un legacy que ya existe en disco sigue permitida.
+  - **Glifos.** El incidente `INC-CAMPO-NO-EMITIDO` (O en SCHOICE, R en CLOZE) y su punto de «Validación
+    realista» traían una lista propia, `grep -nP '[\x{2212}\x{2264}\x{2265}\x{00D7}]'`, que daba `×` por
+    rompedor «fuera de modo matemático». El detector midió lo contrario en las dos cosas: `×` compila en
+    texto visible y el modo matemático no salva (`$a ≤ b$` falla igual). Ahora los dos remiten a
+    `validar_glifos_latex.R`, el detector de la FASE 2O: `ERR_GLIFO_LATEX` bloquea, y un `WARN_GLIFO_LATEX`
+    en un campo que el ejercicio emite se trata como error.
+  - **Guardas, con mutantes.**
+    - `test_glifos_latex.R`, bloque «los orquestadores y las reglas no contradicen al detector de glifos
+      (regla #25)». G1: ninguna clase `grep` con `\x{HHHH}` contiene un glifo que el detector mide como
+      seguro, en todo `.claude/{agents,commands,rules,skills,docs/reglas}`. G2: el incidente y el punto
+      «reutiliza un pool» remiten al detector, y el incidente dice que el modo matemático no salva. G3: un
+      `U+XXXX` seguro no aparece sin «seguro» o «compila» en su línea. Qué rompe sale de `es_rompedor()`
+      del detector; la prueba no copia la lista.
+    - `test_nomenclatura_rmd.R`, contexto «Los orquestadores describen el filtro 3b como bloqueo, no como
+      aviso».
+    - Contra las copias de `39923879`, las cuatro guardas fallan en los dos orquestadores (G1: 2
+      hallazgos, G2: 3, G3: 1, nomenclatura: 3, en cada uno); con los textos nuevos, 0. Los controles
+      embebidos matan además un mutante por condición.
+  - **El pre-push rápido no las habría corrido.** El `watch` de las dos suites no incluía los
+    orquestadores. Se añadieron `orquestador-schoice` y `orquestador-cloze` a la de nomenclatura, y el
+    ámbito de G1 a la de glifos. Simulado con el criterio de `.suite_afectada()`: antes, un push que solo
+    cambiaba un orquestador saltaba las dos suites; ahora corren las dos.
+  - **Verificado:** `test_glifos_latex.R`, `test_nomenclatura_rmd.R`, `test_doc_suites_sincronizada.R` y
+    `test_contrato_entrega_orquestadores.R` en verde con `tests/run_one_suite.R`; `test_infraestructura_claude.R`
+    (I-1..I-10) en verde; `sincronizar_doc_suites.R --check` al día (46 suites; 419 bloques `test_that`,
+    antes 417). La suite completa (`R_TESTS_FULL=1`) no se corrió.
+  - **Rige desde el commit.** Un subagente carga su definición de `HEAD`: un orquestador lanzado antes
+    del commit, o en una sesión que ya lo tenía registrado, sigue con el texto viejo.
+  - El texto íntegro de la regla #25 (`.claude/docs/reglas/glifos-latex-prohibidos.md`) estrena una
+    sección «Historial» con la entrada. La versión compacta no cambia, porque la norma no cambió.
+
 ### Cambios v3.31.0 (2026-10-28)
 
 - **Hook post-render v6.3: el ejercicio se deduce del `.Rmd`, no del `cwd` de la sesión.**

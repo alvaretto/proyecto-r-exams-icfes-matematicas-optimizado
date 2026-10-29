@@ -185,8 +185,8 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.31.0 (hook post-render v6.3: el ejercicio por el .Rmd, sin escribir en el repo ni sellar)
-**Fecha**: 2026-10-28
+**Versión**: 3.31.1 (orquestadores alineados con el gate de nomenclatura y la regla #25, con guardas)
+**Fecha**: 2026-10-29
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)
 **Copia íntegra del índice anterior (v3.24.0) y script de reversión**: `.claude/backups/2026-09-07-recorte-contexto/`

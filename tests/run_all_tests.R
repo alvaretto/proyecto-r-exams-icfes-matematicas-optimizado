@@ -238,7 +238,11 @@ suites <- list(
     archivo = "tests/testthat/test_nomenclatura_rmd.R",
     critico = TRUE,
     watch = c("NOMENCLATURA_ARCHIVOS_RMD", "pre-write-rmd-gate", "nomenclatura-legacy",
-              "test_nomenclatura_rmd", "\\.Rmd$", "generar-schoice", "generar-cloze")
+              "test_nomenclatura_rmd", "\\.Rmd$", "generar-schoice", "generar-cloze",
+              # Agente y comando de cada orquestador: el punto 3 del dry-run y las citas del
+              # formato. Hasta el 2026-10-29 el pre-push rápido no corría esta suite si solo
+              # cambiaban ellos.
+              "orquestador-schoice", "orquestador-cloze")
   ),
   list(
     nombre = "Muestra estándar de validación N=100 (regla #23)",
@@ -331,7 +335,10 @@ suites <- list(
     critico = TRUE,
     watch = c("validar_glifos_latex", "post-exams2-validation",
               "glifos-latex-legacy", "glifos-latex-prohibidos",
-              "test_glifos_latex")
+              "test_glifos_latex",
+              # Ámbito de las guardas G1-G3 (2026-10-29): cualquier documento operativo
+              # que pueda volver a escribir una lista de glifos propia.
+              "\\.claude/(agents|commands|rules|skills|docs/reglas)/.*\\.md$")
   ),
   list(
     nombre = "render_html_shots: capturas moviles truncadas en silencio",
