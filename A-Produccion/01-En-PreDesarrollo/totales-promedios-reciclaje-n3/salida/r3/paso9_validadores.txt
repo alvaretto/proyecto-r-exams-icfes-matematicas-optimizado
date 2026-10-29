@@ -1,0 +1,29 @@
+== diversidad sustantiva
+Diversidad sustantiva: 100/100 versiones evaluadas | respuesta correcta: 95 valor(es) unico(s) | errores=0 indeterminadas=0
+PASS: la respuesta correcta varia suficientemente (diversidad sustantiva confirmada).
+exit_div=0
+== diagnosticidad
+=== Diagnosticidad de distractores (gaps de seleccion unica) ===
+Archivo: totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd | semillas: 100 | umbral: 70 % | margen H1: 15 %
+
+gap      vers          H1 mas-larga          H1 mas-corta    H2 prefijo
+                  tasa (margen med)     tasa (margen med)          tasa
+unico     100              0% (   2%)              0% (   1%)            0%
+               H2/H3 CIEGAS: las 4 opciones comparten primera palabra en el 100% de las versiones
+                  -> el 0% de H2 NO es ausencia de senal, es ausencia de medicion; H3 no acumula
+               H3b contenido: la clave dice lo mismo ("la sede primaria ganó el concurso porque despu...") en el 6% de 100 versiones
+
+NOTA DE ORDEN (informativa, no bloquea):
+  - unico: H2 y H3 no son aplicables (prefijo uniforme en el 100% de las versiones); la invariancia del tipo de clave la mide H3b
+
+PASS: ninguna sonda superficial supera el 70 %.
+exit_diag=0
+== multisemilla
+  Fallos: 0
+  Tasa de éxito: 100.0%
+============================================
+
+  RESULTADO: APROBADO (0 fallos en  100  semillas)
+exit_ms=0
+== unicas 300
+versiones unicas: 271 / 300

@@ -1,0 +1,648 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## =============================================================================
+## MAT-2026-07-050 — pregunta impresa 50, SAI «Nivelación 6», grado 10, Sesión 2.
+## Fuente verbatim: ITEM_OFICIAL.md. Invariantes L-1..L-5: .claude/CLAUDE.md local.
+## Tabla Markdown con tabla_responsiva() (Flujo B = n, decisión del profesor, 2026-10-29).
+## Notación: G = la sede que gana (mayor total), P = la que pierde; n = cursos,
+## a = promedio por curso, T = n * a, D = T_G - T_P (la cifra de la clave).
+## Ramas (L-3): CURSOS (gana la de más cursos y menor promedio, la del impreso) y
+## PROMEDIO (gana la de mayor promedio y menos cursos).
+## =============================================================================
+library(exams)
+
+## --- Utilidades (familia F5: muestreo seguro) --------------------------------
+pick  <- function(x) x[sample.int(length(x), 1L)]     # vectores, también de longitud 1
+pick1 <- function(x) x[[sample.int(length(x), 1L)]]   # listas
+cap1  <- function(s) paste0(toupper(substr(s, 1L, 1L)), substring(s, 2L))
+pond  <- function(s) { u <- utf8ToInt(s); sum(seq_along(u) * as.numeric(u)) }   # suma ponderada por posición
+cursos_txt <- function(x) paste0(x, if (x == 1) " curso" else " cursos")
+participaron_txt <- function(x) if (x == 1) "participó 1 curso" else paste("participaron", x, "cursos")
+## H1 (FASE 2C, ronda 1): cifras en kilos que salen de un cálculo directo con la tabla (pura).
+## La razón sin sustento no cita ninguna, para que su diagnóstico no engañe.
+calculos_tabla <- function(p) unique(c(p$delta, p$aG + p$aP, p$nG * p$delta, p$nP * p$delta,
+  p$k * p$aG, p$k * p$aP, p$TG, p$TP, p$nG * p$aP, p$nP * p$aG))
+
+## --- Familia F2: tabla responsiva (copia de .claude/scripts/snippets_familias_rmd.R,
+## sin su rama is_latex_output(), que bajo R/exams nunca se ejecuta). Aborta si el ancho
+## de contenido supera 85 caracteres: en el PDF una tabla pipe no parte sus celdas.
+tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0), ancho_max_pdf = 85) {
+  df2 <- data.frame(lapply(df, as.character), stringsAsFactors = FALSE, check.names = FALSE)
+  if (length(bold_rows)) for (r in bold_rows)
+    df2[r, ] <- lapply(df2[r, , drop = FALSE], function(x) paste0("**", x, "**"))
+  anchos_col <- vapply(seq_along(df2), function(j)
+    max(nchar(c(names(df2)[j], df2[[j]]))), numeric(1))
+  ancho <- sum(anchos_col) + 2L * length(anchos_col) + 1L
+  if (!is.null(ancho_max_pdf) && ancho > ancho_max_pdf)
+    stop(sprintf(paste0(
+      "tabla_responsiva(): la tabla mide %d caracteres de ancho y en el PDF de R/exams ",
+      "una tabla pipe no parte el texto: se saldría del margen (límite medido: %d). ",
+      "Use lista_responsiva(), acorte las celdas o, si ya revisó el PDF, pase ",
+      "ancho_max_pdf = NULL."), as.integer(ancho), ancho_max_pdf), call. = FALSE)
+  md <- paste(knitr::kable(df2, format = "markdown", align = align), collapse = "\n")
+  paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; margin:0.6em 0;\"}\n\n",
+         md, "\n\n:::\n")
+}
+
+## --- Instancia canónica (L-1, L-5): literales del impreso --------------------
+CANON_ENUNCIADO <- paste(
+  "En un colegio se realiza un concurso de reciclaje que premiará a la sede que recoja la mayor cantidad",
+  "de papel. La tabla muestra la cantidad de cursos que participaron y el promedio de papel recogido por",
+  "curso en la sede primaria y en la sede secundaria.")
+PREGUNTA <- "De acuerdo con la información anterior, ¿cuál de las siguientes afirmaciones es VERDADERA?"
+CANON_OPCIONES <- c(
+  A = "La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria.",
+  B = paste("La sede primaria ganó el concurso porque participaron más cursos y aunque el promedio fue menor,",
+            "el total fue de 20 kilos más."),
+  C = "La sede secundaria ganó porque, aunque participaron menos cursos, tuvo mayor promedio con 5 kilos de más.",
+  D = paste("La sede secundaria ganó el concurso porque en ella hubo un curso que recogió más que los otros,",
+            "aumentando la cantidad de papel recogida en todo el colegio."))
+
+## --- Contextos (regla #11: ocho plantillas, ocho estructuras) -----------------
+CONJUNTOS <- list(
+  list(tipo = "sede", encab = "Sede", nombres = c("la sede primaria", "la sede secundaria"),
+       filas = c("Primaria", "Secundaria")),
+  list(tipo = "sede", encab = "Sede", nombres = c("la sede norte", "la sede sur"), filas = c("Norte", "Sur")),
+  list(tipo = "sede", encab = "Sede", nombres = c("la sede urbana", "la sede rural"), filas = c("Urbana", "Rural")),
+  list(tipo = "sede", encab = "Sede", nombres = c("la sede central", "la sede campestre"),
+       filas = c("Central", "Campestre")),
+  list(tipo = "sede", encab = "Sede", nombres = c("la sede El Bosque", "la sede La Pradera"),
+       filas = c("El Bosque", "La Pradera")),
+  list(tipo = "jornada", encab = "Jornada", nombres = c("la jornada de la mañana", "la jornada de la tarde"),
+       filas = c("Mañana", "Tarde")))
+MATERIALES <- c("papel", "cartón", "plástico")
+PROTAGONISTAS <- c("la profesora Marta", "el profesor Andrés", "la coordinadora del proyecto ambiental",
+                   "la personera estudiantil", "el grupo ecológico", "el rector")
+## Toda plantilla declara el criterio del concurso: gana la mayor cantidad TOTAL (guarda abajo).
+contextos <- list(
+  list(tipo = "institucional", plantilla = function(t, m, p) {
+    paste0("En un colegio se realiza un concurso de reciclaje que premiará a la ", t,
+           " que recoja la mayor cantidad de ", m, ".") }),
+  list(tipo = "periodistica", plantilla = function(t, m, p) {
+    paste0("El periódico escolar anunció un concurso de reciclaje: el premio será para la ", t,
+           " que recoja la mayor cantidad de ", m, ".") }),
+  list(tipo = "dialogo", plantilla = function(t, m, p) {
+    paste0("—Ganará la ", t, " que recoja la mayor cantidad de ", m, " —anunció ", p,
+           " al abrir el concurso de reciclaje del colegio.") }),
+  list(tipo = "perspectiva_estudiante", plantilla = function(t, m, p) {
+    paste0("Imagina que haces parte del comité ambiental de tu colegio, que organizó un concurso de ",
+           "reciclaje para premiar a la ", t, " que recoja la mayor cantidad de ", m, ".") }),
+  list(tipo = "situacion_problema", plantilla = function(t, m, p) {
+    paste0(cap1(p), " debe entregar el premio del concurso de reciclaje del colegio a la ", t,
+           " que recoja la mayor cantidad de ", m, ".") }),
+  list(tipo = "pregunta_retorica", plantilla = function(t, m, p) {
+    paste0("¿Qué ", t, " del colegio ganará el concurso de reciclaje? El premio será para la que recoja ",
+           "la mayor cantidad de ", m, ".") }),
+  list(tipo = "accion_en_curso", plantilla = function(t, m, p) {
+    paste0(cap1(p), " está revisando los resultados del concurso de reciclaje del colegio, que premiará a la ",
+           t, " que recoja la mayor cantidad de ", m, ".") }),
+  list(tipo = "descubrimiento", plantilla = function(t, m, p) {
+    paste0("Al revisar las planillas del concurso de reciclaje, ", p, " recordó que el premio es para la ", t,
+           " que recoja la mayor cantidad de ", m, ".") }))
+
+## --- Espacio de parámetros (familia F1: se enumera y se sortea; nada se remuestrea)
+N_CURSOS  <- 3:8
+PROMEDIOS <- 20:60
+espacio_rama <- function(rama) {
+  g <- expand.grid(nG = N_CURSOS, nP = N_CURSOS, aG = PROMEDIOS, aP = PROMEDIOS)
+  g <- if (rama == "CURSOS") g[g$nG > g$nP & g$aG < g$aP, ] else g[g$nG < g$nP & g$aG > g$aP, ]
+  g$k <- abs(g$nG - g$nP); g$delta <- abs(g$aG - g$aP)
+  g$TG <- g$nG * g$aG; g$TP <- g$nP * g$aP; g$D <- g$TG - g$TP
+  ## Ventaja parcial: lo que aporta el punto fuerte de cada sede. D = parcialG - parcialP.
+  g$parcialG <- if (rama == "CURSOS") g$k * g$aG else g$nG * g$delta
+  g$parcialP <- if (rama == "CURSOS") g$nP * g$delta else g$k * g$aP
+  ok <- g$k <= 3 & g$delta >= 2 & g$delta <= 15 & g$D >= 6 & g$D <= 0.3 * g$TP
+  ok <- ok & g$D != g$aG & g$D != g$aP                 # L-2: el dato aislado de G nunca es D
+  ok <- ok & g$D != g$delta & g$D != g$parcialP        # L-2 y canal 8: la resta y la ventaja de P tampoco
+  g <- g[ok, ]
+  ## Canal 3: si la cifra de la ventaja de P ya es un número de la tabla (k = 1 en la rama
+  ## PROMEDIO: k * aP = aP), el distractor de G no cita otro dato aislado.
+  g$p_tabla <- g$parcialP == g$aG | g$parcialP == g$aP | g$parcialP == g$nG | g$parcialP == g$nP
+  ## Canal 2: ¿hay una cifra falsa del lado de G por debajo de D y distinta de la de P?
+  g$hay_debajo <- (g$delta < g$D & g$delta != g$parcialP) |
+                  (!g$p_tabla & ((g$aG < g$D & g$aG != g$parcialP) | (g$aP < g$D & g$aP != g$parcialP)))
+  rownames(g) <- NULL
+  g
+}
+
+## --- Moldes de las afirmaciones (L-1). Cada molde declara lo que afirma (L-2) ---
+## perfil M = más cursos y menor promedio; perfil P = menos cursos y mayor promedio.
+## Las cuatro opciones comparten el cierre «su total fue más alto que el de O en x kilos»: todas
+## citan una cifra y nombran las dos sedes (canales 4 y 5). Ronda 3 (variante C, decisión del
+## profesor en el WAIT_USER #3 de la ronda 2): la cifra va en el complemento del comparativo, que
+## mide la diferencia. El cierre anterior, «su total fue de x kilos más que el de O», traía la
+## cláusula completa «su total fue de x kilos», que admitía esa otra lectura (regla #13 v1.1).
+## Medido en la ronda 2: «superó en x kilos al de O» abría un canal léxico (+18,1 pp en la rama
+## CURSOS, «la que MÁS comparte»; +14,3 pp en la rama PROMEDIO, «la que MENOS comparte») y «fue mayor
+## que», otro (+21,1 / +16,4 pp); este cierre conserva «más». Los moldes tienen largos parecidos; en
+## la canónica, en cambio, A es la más corta y D la más larga.
+cierre <- function(x, O) paste0("su total fue más alto que el de ", O, " en ", x, " kilos.")
+## Regla #13 v1.1: toda lectura razonable cuenta. lecturas_de() da las lecturas que admite el TEXTO
+## de una afirmación: siempre «diferencia» (la cifra es T_S - T_O) y, si el texto trae una cláusula
+## completa con la cifra («fue de N kilos», «recogió N kilos»), también «total» (la cifra es T_S).
+## El cierre de arriba no la trae; la clave de la canónica sí («el total fue de 20 kilos más»).
+lecturas_de <- function(texto) c("diferencia", if (grepl("(fue de|recogió) [0-9]+ kilos", texto)) "total")
+MOLDES <- list(
+  M_a = list(perfil = "M", afirma = "dif_total", f = function(S, O, x, m) paste0(cap1(S),
+    " ganó el concurso porque participaron más cursos y, aunque el promedio fue menor, ", cierre(x, O))),
+  M_b = list(perfil = "M", afirma = "dif_total", f = function(S, O, x, m) paste0(cap1(S),
+    " ganó el concurso porque, aunque su promedio fue menor, participaron más cursos y ", cierre(x, O))),
+  P_a = list(perfil = "P", afirma = "dif_total", f = function(S, O, x, m) paste0(cap1(S),
+    " ganó el concurso porque, aunque participaron menos cursos, tuvo mayor promedio y ", cierre(x, O))),
+  P_b = list(perfil = "P", afirma = "dif_total", f = function(S, O, x, m) paste0(cap1(S),
+    " ganó el concurso porque tuvo mayor promedio y, aunque participaron menos cursos, ", cierre(x, O))),
+  N_a = list(perfil = NA, afirma = "dif_total", f = function(S, O, x, m) paste0(cap1(S),
+    " ganó el concurso porque, al sumar lo que recogieron todos y cada uno de sus cursos, ", cierre(x, O))),
+  N_b = list(perfil = NA, afirma = "dif_total", f = function(S, O, x, m) paste0(cap1(S),
+    " ganó el concurso porque, después de juntar lo que recogieron todos sus cursos, ", cierre(x, O))),
+  U_a = list(perfil = NA, afirma = "sin_sustento", f = function(S, O, x, m) paste0(cap1(S),
+    " ganó el concurso porque, al sumar solo lo que recogieron sus cursos más grandes, ", cierre(x, O))),
+  U_b = list(perfil = NA, afirma = "sin_sustento", f = function(S, O, x, m) paste0(cap1(S),
+    " ganó el concurso porque en ella hubo un curso que recogió más que los otros, y ", cierre(x, O))),
+  U_c = list(perfil = NA, afirma = "sin_sustento", f = function(S, O, x, m) paste0(cap1(S),
+    " ganó el concurso porque en sus cursos hay más alumnos para recoger, y por eso ", cierre(x, O))),
+  U_d = list(perfil = NA, afirma = "sin_sustento", f = function(S, O, x, m) paste0(cap1(S),
+    " ganó el concurso porque sus cursos reciclaron durante más días que los demás, y ", cierre(x, O))),
+  ## Solo para la estructura de la opción C de la canónica (su texto es el del impreso).
+  P_ven = list(perfil = "P", afirma = "dif_prom", f = function(S, O, x, m) paste0(cap1(S),
+    " ganó el concurso porque, aunque participaron menos cursos, tuvo mayor promedio con ", x,
+    " kilos de más.")))
+
+## --- Función de verdad PURA (L-2): sin sample() ni estado --------------------
+## Evalúa cada parte de la afirmación con los datos y con la lectura indicada (regla #13 v1.1:
+## «diferencia» o «total», ver lecturas_de()); una razón que la tabla no puede sustentar vale NA,
+## y una afirmación solo es verdadera si TODAS sus partes lo son.
+verdad <- function(af, d, lectura = "diferencia") {
+  stopifnot(lectura %in% c("diferencia", "total"))
+  n <- c(G = d$nG, P = d$nP); a <- c(G = d$aG, P = d$aP); tt <- n * a
+  S <- af$sede; O <- setdiff(c("G", "P"), S)
+  v <- c(gana = tt[[S]] > tt[[O]])
+  if (!is.na(af$perfil)) {
+    v <- c(v, perfil = if (af$perfil == "M") n[[S]] > n[[O]] && a[[S]] < a[[O]] else
+                                             n[[S]] < n[[O]] && a[[S]] > a[[O]])
+  }
+  v <- c(v, parte = switch(af$afirma,
+    dif_total    = if (lectura == "total") tt[[S]] == af$x else tt[[S]] - tt[[O]] == af$x,
+    dif_prom     = a[[S]] - a[[O]] == af$x,
+    dif_cursos   = n[[S]] - n[[O]] == af$x,
+    sin_sustento = NA))
+  isTRUE(all(v))
+}
+
+## --- Pool de errores conceptuales (regla #1; al menos 4, L-1) -----------------------
+## calcula(): la cifra que produce la lectura errónea (pura; usa solo los datos y la
+## presentación elegida, nunca el azar). explica(): análisis con los números de la versión.
+ventaja_txt <- function(p) if (p$rama == "CURSOS") "tener mayor promedio" else "tener más cursos"
+no_gano <- function(p) paste0(cap1(p$nomP), " no ganó: recogió ", p$TP, " kilos, menos que los ", p$TG,
+                              " de ", p$nomG, ".")
+errores_conceptuales <- list(
+  list(codigo = "ERR-DATO", lado = "G", nombre = "Toma un dato aislado de la tabla",
+       descripcion_corta = "Toma un número que ya está en la tabla como si fuera la diferencia entre los totales.",
+       descripcion_larga = paste("Los promedios de la tabla describen un curso típico de cada grupo; cuánto más",
+                                 "recogió un grupo que el otro solo se sabe al calcular y restar los totales."),
+       causa_raiz = "Busca la respuesta entre los datos impresos en lugar de calcular con ellos.",
+       precondicion = function(p) isTRUE(p$fuente_dato %in% c("aG", "aP")) && p[[p$fuente_dato]] != p$D,
+       calcula = function(p) {
+         if (!isTRUE(p$fuente_dato %in% c("aG", "aP"))) stop("calcula(ERR-DATO): fuera de contexto")
+         p[[p$fuente_dato]] },
+       explica = function(p, af) paste0("La cifra ", af$x, " kilos es el promedio de ",
+         if (p$fuente_dato == "aG") p$nomG else p$nomP, ", un dato de la tabla, no la diferencia entre los ",
+         "totales. ", cap1(p$nomG), " recogió $", p$nG, " \\times ", p$aG, " = ", p$TG, "$ kilos y ", p$nomP,
+         ", $", p$nP, " \\times ", p$aP, " = ", p$TP, "$ kilos: la diferencia es ", p$D, " kilos.")),
+  list(codigo = "ERR-RESTA", lado = "G", nombre = "Resta los promedios",
+       descripcion_corta = "Resta los dos promedios y toma esa resta como la diferencia entre los totales.",
+       descripcion_larga = paste("La resta de los promedios compara un curso típico con otro; cuando los grupos",
+                                 "tienen distinta cantidad de cursos, la diferencia entre los totales es otra."),
+       causa_raiz = "Opera con los promedios como si fueran totales.",
+       precondicion = function(p) p$delta != p$D,
+       calcula = function(p) { if (p$delta == p$D) stop("calcula(ERR-RESTA): fuera de contexto"); p$delta },
+       explica = function(p, af) paste0("La cifra ", af$x, " sale de restar los promedios: $",
+         max(p$aG, p$aP), " - ", min(p$aG, p$aP), " = ", p$delta, "$. Esa resta compara un curso típico de cada ",
+         p$tipo, ", no las ", p$tipo, "s completas: como participaron ", p$nG, " y ", p$nP,
+         " cursos, la diferencia entre los totales es $", p$TG, " - ", p$TP, " = ", p$D, "$ kilos.")),
+  list(codigo = "ERR-PARCIAL", lado = "G", nombre = "Cuenta solo la ventaja de quien gana",
+       descripcion_corta = paste("Calcula lo que aporta el punto fuerte del grupo que gana y olvida lo que aporta",
+                                 "el punto fuerte del otro."),
+       descripcion_larga = paste("Cada grupo tiene una ventaja: uno, más cursos; el otro, mayor promedio. La",
+                                 "diferencia entre los totales es lo que aporta una ventaja menos lo que aporta",
+                                 "la otra."),
+       causa_raiz = "Considera solo una de las dos cantidades que forman el total.",
+       precondicion = function(p) p$parcialG != p$D,
+       calcula = function(p) { if (p$parcialG == p$D) stop("calcula(ERR-PARCIAL): fuera de contexto"); p$parcialG },
+       explica = function(p, af) {
+         if (p$rama == "CURSOS") {
+           paste0("La cifra $", p$k, " \\times ", p$aG, " = ", af$x, "$ cuenta solo lo que ",
+             if (p$k == 1) "aporta el curso" else paste0("aportan los ", p$k, " cursos"), " de más de ", p$nomG,
+             " y olvida que en ", p$nomP, " cada curso recogió, en promedio, ", p$delta, " kilos más: $", p$nP,
+             " \\times ", p$delta, " = ", p$parcialP, "$ kilos que compensan parte de esa ventaja. La diferencia ",
+             "es $", af$x, " - ", p$parcialP, " = ", p$D, "$ kilos.")
+         } else {
+           paste0("La cifra $", p$nG, " \\times ", p$delta, " = ", af$x, "$ cuenta solo la ventaja de promedio de ",
+             p$nomG, " en sus ", p$nG, " cursos y olvida que en ", p$nomP, " ", participaron_txt(p$k),
+             if (p$k == 1) " más, que aporta $" else " más, que aportan $", p$k, " \\times ", p$aP, " = ",
+             p$parcialP, "$ kilos. La diferencia es $",
+             af$x, " - ", p$parcialP, " = ", p$D, "$ kilos.")
+         } }),
+  ## ERR-TOTAL (x = T_G): salió en la ronda 2, porque con el cierre «su total fue de x kilos más que
+  ## el de O» la lectura «su total fue de x kilos» lo volvía verdadero. Repuesto en la ronda 3 con el
+  ## cierre del comparativo, que no admite esa lectura (guarda de la regla #13 v1.1, abajo).
+  list(codigo = "ERR-TOTAL", lado = "G", nombre = "Confunde el total con la diferencia",
+       descripcion_corta = "Calcula el total del grupo que gana y lo presenta como la diferencia con el otro.",
+       descripcion_larga = paste("El total de un grupo dice cuánto recogió; para saber cuánto más recogió que el",
+                                 "otro hay que restarle el total del otro."),
+       causa_raiz = "Se detiene a mitad del procedimiento: calcula un total, pero no compara.",
+       precondicion = function(p) p$TG != p$D,
+       calcula = function(p) { if (p$TG == p$D) stop("calcula(ERR-TOTAL): fuera de contexto"); p$TG },
+       explica = function(p, af) paste0("La cifra ", af$x, " es el total de ", p$nomG, " ($", p$nG, " \\times ",
+         p$aG, " = ", p$TG, "$ kilos), no la diferencia: falta restarle el total de ", p$nomP, ", y $", p$TG,
+         " - ", p$TP, " = ", p$D, "$ kilos.")),
+  list(codigo = "ERR-PROM", lado = "P", nombre = "Compara solo los promedios",
+       descripcion_corta = paste("Ve el mayor promedio y concluye que ganó quien lo tiene, sin tener en cuenta que",
+                                 "allí participaron menos cursos."),
+       descripcion_larga = paste("Un promedio más alto no garantiza un total más alto: el total también depende",
+                                 "de cuántos cursos participaron."),
+       causa_raiz = "Toma el promedio como criterio del concurso, cuando el criterio es la cantidad total.",
+       precondicion = function(p) p$rama == "CURSOS" && isTRUE(p$fuente_padv %in% c("delta", "parcialP")),
+       calcula = function(p) {
+         if (!isTRUE(p$fuente_padv %in% c("delta", "parcialP"))) stop("calcula(ERR-PROM): fuera de contexto")
+         p[[p$fuente_padv]] },
+       explica = function(p, af) {
+         if (af$molde == "P_ven") {
+           paste0("Es cierto que el promedio de ", p$nomP, " es ", p$delta, " kilos mayor, pero allí participaron ",
+             "menos cursos: su total, $", p$nP, " \\times ", p$aP, " = ", p$TP, "$ kilos, es menor que el de ",
+             p$nomG, ", ", p$TG, " kilos. ", cap1(p$nomP), " no ganó.")
+         } else {
+           paste0("Es cierto que el promedio de ", p$nomP, " es ", p$delta, " kilos mayor. La cifra $", p$nP,
+             " \\times ", p$delta, " = ", af$x, "$ suma esa ventaja en sus ", p$nP, " cursos, pero olvida que en ",
+             p$nomG, " ", participaron_txt(p$k), if (p$k == 1) " más, que aporta $" else " más, que aportan $",
+             p$k, " \\times ", p$aG, " = ",
+             p$parcialG, "$ kilos. ", no_gano(p))
+         } }),
+  list(codigo = "ERR-CURSOS", lado = "P", nombre = "Compara solo la cantidad de cursos",
+       descripcion_corta = paste("Ve que en un grupo participaron más cursos y concluye que ganó, sin tener en",
+                                 "cuenta que su promedio es menor."),
+       descripcion_larga = paste("Más cursos no garantizan un total más alto: el total también depende de cuánto",
+                                 "recogió, en promedio, cada curso."),
+       causa_raiz = "Toma la cantidad de cursos como criterio del concurso, cuando el criterio es la cantidad total.",
+       precondicion = function(p) p$rama == "PROMEDIO" && identical(p$fuente_padv, "parcialP"),
+       calcula = function(p) {
+         if (!identical(p$fuente_padv, "parcialP")) stop("calcula(ERR-CURSOS): fuera de contexto")
+         p$parcialP },
+       explica = function(p, af) paste0("Es cierto que en ", p$nomP, " ", participaron_txt(p$k),
+         " más. La cifra $", p$k, " \\times ", p$aP, " = ", af$x, "$ cuenta solo lo que ",
+         if (p$k == 1) "aporta el curso" else "aportan los cursos", " de más, pero olvida que en ", p$nomG,
+         " cada curso recogió, en promedio, ", p$delta, " kilos más: $", p$nG, " \\times ", p$delta, " = ",
+         p$parcialG, "$ kilos. ", no_gano(p))),
+  list(codigo = "ERR-INVENTA", lado = "P", nombre = "Inventa una explicación que no sale de la tabla",
+       descripcion_corta = paste("Elige una razón que suena posible, aunque la tabla no da ningún dato para",
+                                 "sostenerla."),
+       descripcion_larga = paste("La tabla solo informa cuántos cursos participaron y cuánto recogió, en",
+                                 "promedio, cada curso. No dice qué recogió un curso en particular, cuántos",
+                                 "alumnos tiene ni cuántos días recicló: una afirmación apoyada en eso no se",
+                                 "puede justificar con la tabla."),
+       causa_raiz = "Completa con suposiciones la información que la tabla no da, en lugar de calcular con la que sí da.",
+       precondicion = function(p) TRUE,
+       calcula = function(p) {
+         if (!is.na(p$y) && (p$y == p$D || p$y %in% calculos_tabla(p)))
+           stop("calcula(ERR-INVENTA): fuera de contexto")
+         p$y },
+       explica = function(p, af) {
+         razon <- switch(af$molde,
+           U_a = paste0("Sobre lo recogido, la tabla da solo el promedio por curso de cada ", p$tipo,
+                        "; no dice cuánto recogió cada ",
+                        "curso ni cuántos alumnos tiene, así que no permite saber cuáles son los más grandes ni sumar ",
+                        "solo lo que ellos recogieron."),
+           U_b = paste0("Sobre lo recogido, la tabla da solo el promedio por curso de cada ", p$tipo,
+                        "; no dice cuánto recogió cada ",
+                        "curso, así que no permite afirmar que hubo un curso destacado."),
+           U_c = paste0("La tabla no dice cuántos alumnos tiene cada curso, y aunque lo dijera, el concurso se ",
+                        "decide por los kilos recogidos."),
+           U_d = paste0("La tabla no dice durante cuántos días recicló cada curso, y el concurso se decide por los ",
+                        "kilos recogidos."))
+         ## H1 (FASE 2C, ronda 1): «no sale de ningún cálculo con la tabla» era falso en el 2,84 % de
+         ## las versiones. Esta frase la garantiza la construcción (la cifra nunca es D).
+         cifra <- if (is.na(af$x)) "" else paste0(" La cifra de ", af$x, " kilos tampoco es la diferencia ",
+                                                  "entre los totales, que es de ", p$D, " kilos.")
+         paste0(razon, cifra, " Además, ", p$nomP, " no ganó: recogió ", p$TP, " kilos, menos que los ", p$TG,
+                " de ", p$nomG, ".")
+       }))
+names(errores_conceptuales) <- vapply(errores_conceptuales, function(e) e$codigo, character(1))
+stopifnot("regla #1: pool de al menos 4 errores" = length(errores_conceptuales) >= 4)
+
+## --- Sorteo de la versión ----------------------------------------------------
+## L-5: la canónica sale con probabilidad 0,10 (decisión del profesor, 2026-10-29).
+P_CANON <- 0.10
+stopifnot("L-5: P_CANON <= 0,10" = P_CANON <= 0.10)
+es_canonica <- sample(c(TRUE, FALSE), 1, prob = c(P_CANON, 1 - P_CANON))
+## L-3: la canónica va en la rama CURSOS; las demás la sortean con 4/9 para CURSOS, de modo
+## que la frecuencia global de CURSOS sea 0,10 + 0,90 * 4/9 = 0,50.
+rama <- if (es_canonica) "CURSOS" else sample(c("CURSOS", "PROMEDIO"), 1, prob = c(4, 5) / 9)
+if (es_canonica) {
+  conj <- CONJUNTOS[[1]]; mat <- "papel"; gi <- 1L
+  d <- list(nG = 5, nP = 4, aG = 40, aP = 45)
+  b_debajo <- 1L; lado_gdis <- "encima"; contexto_tipo <- "canonica"    # cifras 5 < 20 (D) < 40
+} else {
+  conj <- pick1(CONJUNTOS); mat <- pick(MATERIALES); gi <- pick(1:2)   # P4: la fila de G se sortea
+  ## Canal de magnitud (§P7, «cifra mediana»): el lugar de D entre las cuatro cifras citadas se
+  ## sortea. b_debajo = cuántas cifras de distractor quedan por debajo de D (lugar de D = b + 1).
+  ## La cifra de la ventaja de P (parcialP) la fija el dato, así que se filtran las combinaciones
+  ## compatibles con b (F1: se filtra un conjunto finito; nada se remuestrea).
+  b_debajo <- pick(0:3)
+  esp <- espacio_rama(rama)
+  pa_deb <- esp$parcialP < esp$D
+  compatible <- switch(as.character(b_debajo), "0" = !pa_deb, "1" = rep(TRUE, nrow(esp)),
+                       "2" = pa_deb | esp$hay_debajo, "3" = pa_deb & esp$hay_debajo)
+  esp <- esp[compatible, ]
+  stopifnot("F1: espacio de parámetros no vacío" = nrow(esp) > 0)
+  f <- esp[sample.int(nrow(esp), 1L), ]
+  d <- list(nG = f$nG, nP = f$nP, aG = f$aG, aP = f$aP)
+  ctx <- pick1(contextos); contexto_tipo <- ctx$tipo
+}
+d$rama <- rama
+d$k <- abs(d$nG - d$nP); d$delta <- abs(d$aG - d$aP)
+d$TG <- d$nG * d$aG; d$TP <- d$nP * d$aP; d$D <- d$TG - d$TP
+d$parcialG <- if (rama == "CURSOS") d$k * d$aG else d$nG * d$delta
+d$parcialP <- if (rama == "CURSOS") d$nP * d$delta else d$k * d$aP
+perfil_G <- if (rama == "CURSOS") "M" else "P"
+perfil_P <- if (rama == "CURSOS") "P" else "M"
+nomG <- conj$nombres[gi]; nomP <- conj$nombres[3L - gi]
+stopifnot("L-3: cursos y promedio en sentidos opuestos" = (d$nG - d$nP) * (d$aG - d$aP) < 0,
+          "L-3: gana G" = d$TG > d$TP)
+if (es_canonica) stopifnot("L-3: la canónica va en la rama CURSOS" = rama == "CURSOS")
+
+afirmacion <- function(molde, sede, x, codigo) {
+  mo <- MOLDES[[molde]]
+  S <- if (sede == "G") nomG else nomP
+  O <- if (sede == "G") nomP else nomG
+  list(molde = molde, sede = sede, x = x, codigo = codigo, perfil = mo$perfil, afirma = mo$afirma,
+       texto = mo$f(S, O, x, mat))
+}
+
+if (es_canonica) {
+  fuente_dato <- "aG"; fuente_padv <- "delta"          # D de la canónica no cita cifra: no hay y
+  afs <- list(
+    clave = afirmacion("M_a", "G", d$D, "CLAVE"),
+    gdis  = afirmacion("N_a", "G", d$aG, "ERR-DATO"),
+    padv  = afirmacion("P_ven", "P", d$delta, "ERR-PROM"),
+    psin  = afirmacion("U_b", "P", NA_real_, "ERR-INVENTA"))
+  ## Textos del impreso, con sus rarezas («la sede de secundaria», «ganó porque»).
+  afs$clave$texto <- CANON_OPCIONES[["B"]]; afs$gdis$texto <- CANON_OPCIONES[["A"]]
+  afs$padv$texto  <- CANON_OPCIONES[["C"]]; afs$psin$texto <- CANON_OPCIONES[["D"]]
+} else {
+  ## Moldes: como en el impreso, de las dos afirmaciones de G una da el perfil de la sede y la
+  ## otra no; cuál de las dos es la clave se sortea. Así las de perfil son siempre dos (una de
+  ## cada sede) y las que no lo dan, otras dos (la de G y la sin sustento): ni el tipo de molde
+  ## ni el vocabulario compartido delatan la clave (L-1; §P7, «la que más comparte»).
+  moldes_de <- function(t, p) if (t == "neutro") c("N_a", "N_b") else if (p == "M") c("M_a", "M_b") else c("P_a", "P_b")
+  tipo_clave <- pick(c("perfil", "neutro")); tipo_gdis <- if (tipo_clave == "perfil") "neutro" else "perfil"
+  molde_clave <- pick(moldes_de(tipo_clave, perfil_G))
+  molde_gdis  <- pick(moldes_de(tipo_gdis, perfil_G))
+  ## Lados respecto de D: el de la ventaja de P lo fija el dato; G y U se reparten el resto.
+  lado_padv <- if (d$parcialP < d$D) "debajo" else "encima"
+  faltan <- b_debajo - (lado_padv == "debajo")
+  repartos <- list(c(gdis = "encima", psin = "encima"), c(gdis = "debajo", psin = "encima"),
+                   c(gdis = "encima", psin = "debajo"), c(gdis = "debajo", psin = "debajo"))
+  repartos <- Filter(function(z) sum(z == "debajo") == faltan && (z[["gdis"]] == "encima" || f$hay_debajo),
+                     repartos)
+  stopifnot("F1: reparto de lados posible" = length(repartos) > 0)
+  lados <- pick1(repartos); lado_gdis <- lados[["gdis"]]
+  ## Cifra falsa del lado de G: tipo de error sorteado entre los aplicables (regla #1).
+  cand_g <- data.frame(codigo = c("ERR-DATO", "ERR-DATO", "ERR-RESTA", "ERR-PARCIAL", "ERR-TOTAL"),
+                       fuente = c("aG", "aP", "delta", "parcialG", "TG"),
+                       x = c(d$aG, d$aP, d$delta, d$parcialG, d$TG), stringsAsFactors = FALSE)
+  cand_g <- cand_g[cand_g$x != d$D, ]                               # L-2: la cifra falsa nunca es D
+  ## Canal 3: un solo dato de la tabla entre las opciones. Esto también impide que la cifra de G
+  ## repita la de P (canal 8): parcialP solo coincide con un candidato de G cuando es aG o aP.
+  if (f$p_tabla) cand_g <- cand_g[cand_g$codigo != "ERR-DATO", ]
+  lado_ok <- if (lado_gdis == "debajo") cand_g$x < d$D else cand_g$x > d$D
+  stopifnot("canal 2: hay cifra falsa del lado sorteado" = any(lado_ok))
+  cand_g <- cand_g[lado_ok, ]
+  cod_gdis <- pick(unique(cand_g$codigo))
+  fila_g <- cand_g[cand_g$codigo == cod_gdis, ]
+  fila_g <- fila_g[sample.int(nrow(fila_g), 1L), ]
+  fuente_dato <- if (cod_gdis == "ERR-DATO") fila_g$fuente else NA_character_
+  ## Ventaja de P (la única que P sí tiene en la tabla), con su ventaja parcial como cifra.
+  cod_padv <- if (rama == "CURSOS") "ERR-PROM" else "ERR-CURSOS"
+  molde_padv <- pick(moldes_de("perfil", perfil_P)); fuente_padv <- "parcialP"
+  ## Razón sin sustento, con una cifra inventada del lado que toca y que no repite ninguna otra
+  ## cifra de las opciones ni de la tabla.
+  molde_psin <- pick(c("U_a", "U_b", "U_c", "U_d"))
+  ## H1 (FASE 2C, ronda 1): tampoco cita una cifra que salga de un cálculo directo con la tabla.
+  usadas <- c(d$D, fila_g$x, d$parcialP, d$nG, d$nP, d$aG, d$aP, calculos_tabla(d))
+  rango_y <- setdiff(if (lados[["psin"]] == "debajo") 2:(d$D - 1) else (d$D + 1):(d$D + 40), usadas)
+  stopifnot("F1: hay cifra para la razón sin sustento" = length(rango_y) > 0)
+  y <- pick(rango_y)
+  stopifnot("H1: la cifra de la razón sin sustento no sale de un cálculo con la tabla" =
+              !(y %in% calculos_tabla(d)))
+  afs <- list(
+    clave = afirmacion(molde_clave, "G", d$D, "CLAVE"),
+    gdis  = afirmacion(molde_gdis, "G", fila_g$x, cod_gdis),
+    padv  = afirmacion(molde_padv, "P", d$parcialP, cod_padv),
+    psin  = afirmacion(molde_psin, "P", y, "ERR-INVENTA"))
+}
+
+## Regla #13 v1.1 (H2 de la FASE 2C ronda 1, adaptada al cierre de la ronda 3): ninguna lectura que
+## el texto admite cambia el veredicto de una opción. La lectura «diferencia» la vigila L-2, más abajo;
+## aquí se comparan las otras con ella. La canónica es verbatim (L-1, regla #24 H-2): su clave admite
+## «el total fue de 20 kilos», que la vuelve falsa sin volver verdadera ninguna otra opción
+## (declarado en el HANDOFF); por eso solo su clave queda exceptuada.
+cambia_veredicto <- function(a) {
+  alt <- setdiff(lecturas_de(a$texto), "diferencia")
+  length(alt) > 0L && any(vapply(alt, function(le) verdad(a, d, le), logical(1)) != verdad(a, d))
+}
+cambian <- vapply(afs, cambia_veredicto, logical(1))
+if (es_canonica) cambian[["clave"]] <- FALSE
+stopifnot("regla #13 v1.1: ninguna lectura que admite el texto cambia el veredicto" = !any(cambian))
+## En las no canónicas la cifra aparece una sola vez y solo en el complemento del comparativo.
+if (!es_canonica) stopifnot("regla #13 v1.1: la cifra va solo en el complemento «en x kilos»" =
+  all(vapply(afs, function(a) grepl(paste0(" en ", a$x, " kilos\\.$"), a$texto) &&
+                                lengths(regmatches(a$texto, gregexpr("[0-9]+", a$texto))) == 1L, logical(1))))
+
+## --- Enunciado y tabla -------------------------------------------------------
+if (es_canonica) {
+  enunciado <- CANON_ENUNCIADO
+} else {
+  enunciado <- paste0(ctx$plantilla(conj$tipo, mat, pick(PROTAGONISTAS)),
+                      " La tabla muestra la cantidad de cursos que participaron y el promedio de ", mat,
+                      " recogido por curso en ", conj$nombres[1], " y en ", conj$nombres[2], ".")
+}
+pregunta <- PREGUNTA
+n_fila <- if (gi == 1L) c(d$nG, d$nP) else c(d$nP, d$nG)
+a_fila <- if (gi == 1L) c(d$aG, d$aP) else c(d$aP, d$aG)
+tabla_df <- data.frame(conj$filas, paste(n_fila, "cursos"), paste(a_fila, "kilos"), stringsAsFactors = FALSE)
+## L-1 (decisión del profesor tras la FASE 2C): la canónica conserva la rareza del impreso
+## («recogido» en el enunciado, «recolectado» en el encabezado); las demás usan un solo verbo.
+verbo_tabla <- if (es_canonica) "recolectado" else "recogido"
+names(tabla_df) <- c(conj$encab, "Cantidad de cursos", paste("Promedio de", mat, verbo_tabla, "por curso"))
+if (!es_canonica) stopifnot("L-1: un solo verbo en el enunciado y en el encabezado" =
+                              !grepl("recolect", paste(c(enunciado, names(tabla_df)), collapse = " ")))
+tabla_md_df <- tabla_df
+tabla_md_df[[1]] <- paste0("**", tabla_md_df[[1]], "**")             # la primera columna va en negrita
+tabla_md <- tabla_responsiva(tabla_md_df, align = c("c", "c", "c"))
+
+## --- Guardas (las invariantes del subproyecto, en ejecución) -----------------
+textos <- vapply(afs, function(a) a$texto, character(1))   # sin acentos graves: el arsenal 2D corta los chunks en el primero
+verdaderas <- vapply(afs, verdad, logical(1), d = d)
+stopifnot("L-2: una sola afirmación verdadera, la clave" = sum(verdaderas) == 1L && isTRUE(verdaderas[["clave"]]))
+nombra <- ifelse(startsWith(textos, cap1(nomG)), "G", ifelse(startsWith(textos, cap1(nomP)), "P", NA))
+stopifnot("L-1: reparto 2 + 2" = identical(unname(nombra), c("G", "G", "P", "P")),
+          "L-1: sin vocabulario de error" =
+            !any(grepl("estudiante|error|equivoc|confundi|olvid", textos, ignore.case = TRUE)),
+          "regla #10: opciones únicas" = length(unique(textos)) == 4L)
+cifras <- unlist(lapply(afs, function(a) if (is.na(a$x)) NULL else a$x))
+stopifnot("canal 8: cifras distintas entre opciones" = !anyDuplicated(cifras))
+stopifnot("criterio: gana la mayor cantidad total" =
+            grepl(paste0("la mayor cantidad", if (es_canonica) "" else paste0(" de ", mat)), enunciado, fixed = TRUE))
+## La pregunta es la del impreso en todas las versiones: 90 y 380886 salen de ITEM_OFICIAL.md.
+stopifnot("pregunta del impreso" = nchar(pregunta) == 90L && pond(pregunta) == 380886)
+if (es_canonica) {
+  ## Contra sumas de control calculadas desde ITEM_OFICIAL.md, no contra las constantes de
+  ## las que se copió: compararlas consigo mismas no podría fallar.
+  celdas <- paste(c(names(tabla_df), as.vector(t(as.matrix(tabla_df)))), collapse = "|")
+  stopifnot("L-1: canónica verbatim (enunciado)" = nchar(enunciado) == 254L && pond(enunciado) == 2996052,
+            "L-1: canónica verbatim (tabla)" = nchar(celdas) == 119L && pond(celdas) == 695221,
+            "L-1: canónica verbatim (opciones)" =
+              all(vapply(textos, nchar, 0L) == c(126L, 88L, 105L, 156L)) &&
+              all(vapply(textos, pond, 0) == c(750351, 373876, 532900, 1156926)))
+}
+params <- c(d, list(nomG = nomG, nomP = nomP, tipo = conj$tipo, mat = mat, fuente_dato = fuente_dato,
+                    fuente_padv = fuente_padv, y = if (es_canonica) NA_real_ else y))
+sel <- errores_conceptuales[c(afs$gdis$codigo, afs$padv$codigo, afs$psin$codigo)]
+stopifnot("regla #1: precondiciones de los errores elegidos" =
+            all(vapply(sel, function(e) isTRUE(e$precondicion(params)), logical(1))),
+          "regla #1: calcula() reproduce la cifra de cada distractor" =
+            identical(unname(vapply(sel, function(e) as.numeric(e$calcula(params)), 0)),
+                      as.numeric(c(afs$gdis$x, afs$padv$x, afs$psin$x))))
+
+## --- Mezcla interna (R/exams vuelve a mezclar con exshuffle: TRUE) -----------
+o <- sample(4L)
+opciones <- unname(textos[o])
+sol <- unname(verdaderas[o])
+rol_opcion <- names(afs)[o]
+respuesta_correcta <- opciones[sol]
+fb <- c(
+  clave = paste0("Verdadero. ", cap1(nomG), " recogió $", d$nG, " \\times ", d$aG, " = ", d$TG, "$ kilos y ",
+                 nomP, ", $", d$nP, " \\times ", d$aP, " = ", d$TP, "$ kilos: ganó por $", d$TG, " - ", d$TP, " = ",
+                 d$D, "$ kilos."),
+  gdis  = paste0("Falso. ", cap1(nomG), " sí ganó, pero por ", d$D, " kilos, no por ", afs$gdis$x, "."),
+  padv  = paste0("Falso. ", cap1(nomP), " recogió ", d$TP, " kilos, menos que los ", d$TG, " de ", nomG, ": ",
+                 ventaja_txt(d), " no le bastó."),
+  psin  = paste0("Falso. ", cap1(nomP), " no ganó (", d$TP, " kilos frente a ", d$TG, "), y la razón que da no ",
+                 "sale de la tabla, que solo informa la cantidad de cursos y el promedio por curso de cada ",
+                 conj$tipo, "."))
+feedback <- unname(fb[rol_opcion])
+
+reflexiones <- c(
+  "Antes de comparar, pregúntate qué mide cada número: un promedio describe un curso típico; un total, el grupo completo.",
+  "Cuando cada grupo tiene una ventaja distinta, no decidas por la que más llama la atención: calcula cuánto aporta cada una.",
+  "Una afirmación puede apoyarse en un dato cierto y llegar a una conclusión falsa: revisa las dos partes.",
+  "Si una afirmación cita una cifra, compruébala con tus cálculos antes de aceptarla.",
+  "Si la tabla no trae un dato, ninguna afirmación puede justificarse con él.")
+reflexion <- pick(reflexiones)
+```
+
+Question
+========
+
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
+```{r enunciado, echo = FALSE, results = "asis"}
+cat(enunciado, "\n\n", sep = "")
+cat(tabla_md, "\n", sep = "")
+cat(pregunta, "\n", sep = "")
+```
+
+```{r opciones, echo = FALSE, results = "asis"}
+answerlist(opciones, markup = "markdown")
+```
+
+Solution
+========
+
+```{r solucion, echo = FALSE, results = "asis"}
+cat("**Respuesta correcta**\n\n")
+cat("La respuesta correcta es la que afirma: «", respuesta_correcta, "»\n\n", sep = "")
+
+cat("**Procedimiento correcto**\n\n")
+cat("El concurso premia a la ", conj$tipo, " que recoja la mayor cantidad de ", mat, ", es decir, el mayor ",
+    "**total**. La tabla no da los totales: da cuántos cursos participaron y cuánto recogió, en promedio, cada ",
+    "curso. El total de cada ", conj$tipo, " es la cantidad de cursos multiplicada por el promedio por curso:\n\n",
+    sep = "")
+for (r in 1:2) {
+  cat("- ", cap1(conj$nombres[r]), ": $", n_fila[r], " \\times ", a_fila[r], " = ", n_fila[r] * a_fila[r],
+      "$ kilos.\n", sep = "")
+}
+cat("\nGanó ", nomG, ", con $", d$TG, " - ", d$TP, " = ", d$D, "$ kilos más. ",
+    if (rama == "CURSOS") {
+      paste0("Su promedio era menor (", d$aG, " kilos frente a ", d$aP, "), pero participaron más cursos (",
+             d$nG, " frente a ", d$nP, "), y eso pesó más.")
+    } else {
+      paste0("Participaron menos cursos (", d$nG, " frente a ", d$nP, "), pero su promedio era mayor (", d$aG,
+             " kilos frente a ", d$aP, "), y eso pesó más.")
+    }, "\n\n", sep = "")
+cat("Las dos afirmaciones que dan el triunfo a ", nomP, " son falsas, porque esa ", conj$tipo, " no ganó. De las ",
+    "dos que se lo dan a ", nomG, ", solo una cita la diferencia correcta, ", d$D, " kilos.\n\n", sep = "")
+
+cat("**Análisis de los distractores**\n\n")
+for (r in c("gdis", "padv", "psin")) {
+  e <- errores_conceptuales[[afs[[r]]$codigo]]
+  cat("**", e$codigo, " — ", e$nombre, "**\n\n", sep = "")
+  cat("*Afirmación:* «", afs[[r]]$texto, "»\n\n", sep = "")
+  cat("*Lectura que lleva a elegirla:* ", e$descripcion_corta, "\n\n", sep = "")
+  cat(e$explica(params, afs[[r]]), "\n\n", sep = "")
+  cat("*Por qué es un error:* ", e$descripcion_larga, "\n\n", sep = "")
+  cat("*Causa raíz:* ", e$causa_raiz, "\n\n", sep = "")
+}
+
+cat("**Propiedades del concepto**\n\n")
+cat("- El total de un grupo es la cantidad de elementos multiplicada por el promedio: con la cantidad de cursos y ",
+    "el promedio por curso se reconstruye el total.\n", sep = "")
+cat("- Un promedio más alto no garantiza un total más alto, ni más cursos garantizan un total más alto: el total ",
+    "depende de las dos cantidades a la vez.\n", sep = "")
+cat("- Cuando un grupo tiene más cursos y el otro mayor promedio, solo el cálculo de los totales decide quién ",
+    "recogió más.\n\n", sep = "")
+
+cat("**Caso específico**\n\n")
+cat("En esta versión, ", nomG, " recogió $", d$nG, " \\times ", d$aG, " = ", d$TG, "$ kilos y ", nomP, " recogió $",
+    d$nP, " \\times ", d$aP, " = ", d$TP, "$ kilos. La diferencia es $", d$TG, " - ", d$TP, " = ", d$D,
+    "$ kilos a favor de ", nomG, ".\n\n", sep = "")
+
+cat("**Reflexión metacognitiva**\n\n", reflexion, "\n\n", sep = "")
+
+cat("**Estrategia para evitar el error**\n\n")
+cat("- Identifica el criterio del concurso, la cantidad total, y calcula el total de cada grupo antes de leer las ",
+    "afirmaciones.\n", sep = "")
+cat("- Descarta las afirmaciones cuya conclusión contradice tus cálculos, aunque su razón mencione un dato cierto ",
+    "de la tabla.\n", sep = "")
+cat("- Entre las que quedan, verifica cada cifra: debe coincidir con la diferencia entre los totales.\n")
+cat("- Desconfía de las razones que la tabla no puede sustentar, como lo que hizo un curso en particular.\n\n")
+```
+
+```{r feedback, echo = FALSE, results = "asis"}
+answerlist(feedback, markup = "markdown")
+```
+
+Meta-information
+================
+exname: totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Competencia]: Argumentación
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Valida procedimientos y estrategias matemáticas utilizadas para dar solución a problemas.
+exextra[Evidencia]: Plantea afirmaciones que sustentan o refutan una interpretación dada a la información disponible en el marco de la solución de un problema.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.10 — Justifica afirmaciones utilizando planteamientos y operaciones aritméticas o haciendo uso directo de un concepto, es decir, a partir de un único argumento.
+exextra[Contenido]: Estadística
+exextra[TemaEspecifico]: Promedio y total de datos
+exextra[Estandar]: Predigo y justifico razonamientos y conclusiones usando información estadística. (6°-7°, Pensamiento aleatorio)
+exextra[DOK]: 2
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_afirmacion
+exextra[ItemOriginal]: MAT-2026-07-050
+exextra[GradoSugerido]: 6°-7°

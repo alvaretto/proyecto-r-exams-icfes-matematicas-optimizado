@@ -1,0 +1,164 @@
+{
+  "version": "2.0",
+  "ejercicio": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-10-29T06:13:12.230996-05:00",
+  "timestamp_ultima_actualizacion": "2026-10-29T12:20:33.050879-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-10-29T06:28:35.968381-05:00",
+      "resultado": null,
+      "competencia": "Argumentación",
+      "componente": "Aleatorio",
+      "evidencia": "Arg_E1",
+      "nivel": 3,
+      "descriptor": "D3.10",
+      "dok": 2,
+      "bloom": "Evaluar",
+      "solo": "Relacional",
+      "nota": "ClasificadorICFES (haiku) 2026-10-29: coincide con ITEM_OFICIAL.md en los cuatro campos del catálogo (Afirmación, Evidencia Arg_E1, D3.10, Estándar Aleatorio_6-7 8.º); DOK 2, Bloom Evaluar, SOLO Relacional; sin discrepancias de CONTENIDO (L-4)"
+    },
+    "flujo_b": {
+      "requerido": false,
+      "completado": true,
+      "timestamp": "2026-10-29T06:28:36.029000-05:00",
+      "nota": "Decisión del profesor 2026-10-29 (WAIT_USER #1, preconfirmada): tabla Markdown con tabla_responsiva() y guarda newcounter{none}; H-1: el JPG muestra solo una tabla 3x2 sin celdas combinadas"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-10-29T10:41:55.623323-05:00",
+      "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd",
+      "nota": "Ronda 3 (reapertura 2, variante C del profesor): cierre «su total fue más alto que el de O en x kilos»; ERR-TOTAL repuesto en el pool y en cand_g; lecturas_de() + verdad(lectura) + guarda regla #13 v1.1 (ninguna lectura que admite el texto cambia el veredicto; en la canónica solo su clave verbatim queda exceptuada, H-2) + guarda estructural de la cifra; sustituye la guarda H2 de la ronda 2. md5 cd94b59adfdea7b9c92dc074ce0a1435. verificar_espacio.R exit 3 PENDIENTE DE FIRMA (5; 0 fallos): 16 mutantes sobre data_generation cazados por su sonda (M16-M18 nuevos) + M12 y M15 de medición; 89 916 textos no canónicos sin lectura «total» (oráculo léxico propio: 0); salida/verificar_espacio_ronda3.txt; smoke 1000 semillas 0 errores"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-10-29T10:41:55.680600-05:00",
+      "nota": "Solution ronda 3: H4 de la ronda 2 corregida («Sobre lo recogido, la tabla da solo…» en U_a y U_b); explica() de ERR-TOTAL con el producto y la resta de la versión; regla #19 awk vacío; PDF de la semilla 3 (ERR-TOTAL) revisado a ojo en sus 3 páginas, Solution y feedback incluidos"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-10-29T10:41:55.737940-05:00",
+      "nota": "Ronda 3: HTML, PDF, DOCX, NOPS y Moodle (n=3) exit 0 en salida/r3/; PDF realistas semillas 3 (ERR-TOTAL), 7 y 5001 (canónicas), 109, 211 y 449; .tex del ejercicio sin uso de pandocbounded (solo la definición no-op del maestro) y LTcaptype{none} con guarda c@none en 7/7; 0 secciones numeradas; Moodle: 3 preguntas con fracción 100 en la clave, identificada por contenido; glifos OK; ortografía limpia"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-10-29T10:41:55.795249-05:00",
+      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1/20261029-104026-574891/informe.txt · md5 cd94b59adfdea7b9c92dc074ce0a1435 · 0 errores / 7 advertencias (heurísticas 2E/2F; 2B sin PDF en el comando disparador, PDF revisado a mano); 2G 100/100, 2H 10 semillas 0 anomalías"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-10-29T11:07:29.829215-05:00",
+      "veredicto": "APROBAR_CON_CAMBIOS",
+      "nota": "FASE 2C r3: AgenteDetractor NUEVO sin name (ni el de r1 ni el de r2), md5 cd94b59adfdea7b9c92dc074ce0a1435; 0 objeciones de CORRECCIÓN (oráculo de texto sobre 1 677 264 textos de opción y 7700 versiones reales; Solution y feedback sin afirmaciones falsas, 795 canónicas); juzga que «en x kilos» no admite la lectura «total»; 11 citas OK, hook ENTREGA VERIFICADA; H1 ALTA de diagnosticidad AL PROFESOR (cifra atípica T_G de ERR-TOTAL: S_U + 3 pistas + atípica 77,3 % en la mezcla, depuración); H2 MEDIA (veredictos en el borde según el bloque de semillas; canal de largo en las dos ramas, margen ≤ 2,7 %); H3 BAJA (causa raíz de ERR-TOTAL); reporte salida/fase2c_r3_detractor.md"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-10-29T11:21:18.254712-05:00",
+      "nota": "AgenteValidadorVisual r3: 5/5 coherencias CUMPLE sobre md5 cd94b59a; oráculo propio de texto en 31 200 versiones (1000 HTML, 200 Moodle, 30 000 de texto), 67 PDF, 40 DOCX y 30 NOPS; ERR-TOTAL en el 17,5 %, falso con la lectura de diferencia; 26 defectos sembrados detectados; 4 BAJA (lectura «total» residual de ERR-TOTAL, no CORRECCIÓN; cursos_txt sin uso; causa raíz de ERR-TOTAL = H3 del detractor; encabezado huérfano al pie en 11/60 PDF); COHERENCIAS_CON_OBSERVACIONES"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-10-29T11:21:18.311812-05:00",
+      "versiones_unicas": 271,
+      "nota": "271/300 únicas (opciones ordenadas; las ~30 canónicas cuentan como una); validar_diversidad_sustantiva --n 100 PASS (95 valores de D); validar_diagnosticidad --n 100 PASS (H1 0 %, margen mediano 2 %; H2/H3 ciegas por prefijo uniforme; H3b 6 %); multisemilla 100/100; H1 por rama 0/0; verificar_espacio exit 3 PENDIENTE DE FIRMA (11; 0 fallos): S1 PROMEDIO +8,4 pp y atajos combinados de O-1 hasta 81,5 % (CURSOS); R_dif +5,2/+6,1 pp; §P7-B margen ≤ 2,5 % en todos los estratos; salida/verificar_espacio_ronda3_tras_fase2c.txt"
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-10-29T11:21:18.371289-05:00",
+      "nota": "exextra sin cambios en la ronda 3 y cotejados de nuevo con un script: Afirmación y Evidencia literales en evidencias-mat.json, texto de D3.10 en niveles-mat.json, Estándar en estandares-mat-ebc.json; idénticos a ITEM_OFICIAL.md; Nivel 3, DOK 2, Bloom Evaluar, SOLO Relacional (DOK ≥ 3 ⇒ Nivel ≥ 3 no aplica; Nivel 3 coherente); exname/extype/exsolution dinámico/exshuffle TRUE/extol presentes"
+    },
+    "aprobacion_usuario": {
+      "completado": true,
+      "timestamp": "2026-10-29T12:20:33.050879-05:00",
+      "veredicto": "aprobado para el aula",
+      "nota": "Aprobación del profesor el 2026-10-29 en la sesión (WAIT_USER #3 de la ronda 3, variante C), sobre la versión md5 cd94b59a (renders en salida/r3/). Aprobado para el aula, no para producción: la promoción espera la evidencia de aula (Nivel 3). O-1 corregido, con su alcance nuevo, y residuos firmados en el .claude/CLAUDE.md local."
+    }
+  },
+  "reaperturas": [
+    {
+      "timestamp": "2026-10-29T08:24:55.719670-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "FASE 2C RECHAZAR (ronda 1): H1 CORRECCIÓN en la Solution de ERR-INVENTA (cifra que sí sale de un cálculo en el 2,84 %); además H2, H4-H7. H3 cerrado con override O-1 firmado por el profesor.",
+      "reporte": "A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/salida/fase2c_r1_detractor.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-10-29T06:56:27.052871-05:00",
+          "archivo": null,
+          "nota": "Rmd escrito por el orquestador (opus) 2026-10-29; L-1..L-5 aplicadas; verificar_espacio.R APROBADO (0 fallos): enumeración de 3116 combinaciones sin segunda verdadera, 12 mutantes cazados por su sonda; 3 pasadas de diagnosticidad (§P7-D agotado); salida/verificar_espacio_pasada3.txt"
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-10-29T06:56:27.109433-05:00",
+          "nota": "Solution con respuesta por contenido (regla #19), procedimiento con productos en math, análisis de los 3 distractores por código (orden por categoría, no por posición), propiedades, caso específico, reflexión (pool de 5) y estrategia; retroalimentación por opción con answerlist"
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-10-29T06:56:27.165913-05:00",
+          "nota": "HTML/PDF/DOCX/NOPS exit 0 (salida/); PDF realista en 7 semillas (11,22,33,44,55, canónica 7, PROMEDIO 9): pandocbounded solo como providecommand de la plantilla, LTcaptype con guarda none, páginas leídas; Solution sin letras; canónica con sus rarezas en HTML"
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-10-29T06:56:27.222887-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1/20261029-065530-183184/informe.txt · md5 20201631e1fddf5478d3b2de2fe83b89 · 0 errores / 7 advertencias · corrido a mano (el hook no se dispara en subagente): 0 errores, 7 avisos heredados (2B sin PDF por nombre, 2E Tarea, 2F tabla de metadatos/descripción/patrón/letra_correcta); 2G 100 % en 100 semillas; 2H sin anomalías"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-10-29T10:29:10.109655-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "WAIT_USER #3 de la ronda 2, respuesta r: el profesor pide la variante C (cierre «su total fue más alto que el de O en x kilos» y ERR-TOTAL repuesto) para cumplir la regla #13 v1.1 y bajar R_dif; incluye la H4 de la ronda 2 y la medición del atajo combinado de O-1, cuya premisa resultó falsa.",
+      "reporte": "A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/salida/fase2c_r2_detractor.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render",
+        "detractor_fase2c",
+        "coherencias_5",
+        "validar_diversidad",
+        "validar_icfes"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-10-29T08:43:00.429850-05:00",
+          "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd",
+          "nota": "Ronda 2 (reapertura 1, FASE 2C r1 RECHAZAR): H1 frase garantizada + calculos_tabla() en usadas + guarda + M13; H2 ERR-TOTAL fuera del pool + guarda H2 + M16 (variante 'superó en' medida y descartada: canal léxico +18,1 pp CURSOS, +14,3 pp PROMEDIO); H4; H6; L-1 verbo único + guarda + M14. verificar_espacio.R APROBADO 0 fallos, 15 mutantes por su sonda (salida/verificar_espacio_ronda2.txt); barrido de 1000 semillas sin defectos"
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-10-29T08:43:00.489920-05:00",
+          "nota": "Solution ronda 2: H1 frase verdadera por construcción (887/887 no canónicas), H4 concordancia (0/1000), H7 encabezados en negrita (sin ###), regla #19 limpia (awk vacío), análisis por papel sin orden posicional"
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-10-29T08:44:55.012374-05:00",
+          "nota": "Ronda 2: HTML, PDF, DOCX, NOPS y Moodle (n=3) exit 0 en salida/r2/; PDF realistas semillas 7 (canónica), 211, 137, 449, 5001 y 109; .tex del ejercicio sin uso de pandocbounded (solo la definición no-op del maestro), LTcaptype{none} con guarda c@none; 0 encabezados numerados (H7); páginas 1-3 de las semillas 109 y 7 revisadas a ojo, Solution incluida"
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-10-29T08:44:55.069932-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1/20261029-084353-351695/informe.txt · md5 c2e2e4fb552d37bc06aae39202588b66 · 0 errores / 7 advertencias (heurísticas 2E/2F; 2B sin PDF en el comando disparador, PDF revisado a mano); 2G 100/100, 2H 10 semillas 0 anomalías"
+        },
+        "detractor_fase2c": {
+          "timestamp": "2026-10-29T09:14:57.677854-05:00",
+          "veredicto": "APROBAR_CON_CAMBIOS",
+          "nota": "FASE 2C r2: AgenteDetractor NUEVO sin name, md5 c2e2e4fb552d37bc06aae39202588b66; 0 objeciones de CORRECCIÓN (630 592 configuraciones con oráculo de texto); 16 citas OK, hook ENTREGA VERIFICADA; H1 ALTA de diagnosticidad AL PROFESOR (R_dif +9,6 pp PROMEDIO tras quitar ERR-TOTAL; premisa de O-1 falsa: S_U con una pista 71-79 %); H2 y H3 MEDIA atendidas en verificar_espacio.R (exit 3) y HANDOFF; H4 BAJA pendiente; reporte salida/fase2c_r2_detractor.md"
+        },
+        "coherencias_5": {
+          "timestamp": "2026-10-29T09:14:57.736108-05:00",
+          "nota": "AgenteValidadorVisual: 5/5 coherencias CUMPLE sobre md5 c2e2e4fb; oráculo propio 360 versiones + 60 forzadas k=3, 19 mutantes; 6 PDF, NOPS, DOCX, HTML y Moodle leídos; 3 BAJA cosméticas (título huérfano al pie en 2/6 PDF, tabla HTML sin bordes, fórmula partida); COHERENCIAS_CON_OBSERVACIONES"
+        },
+        "validar_diversidad": {
+          "timestamp": "2026-10-29T09:14:57.793630-05:00",
+          "versiones_unicas": 287,
+          "nota": "287/300 únicas; validar_diversidad_sustantiva --n 100 PASS (95 valores de D); validar_diagnosticidad --n 100 PASS (H1 0 % margen med 2 %, H2/H3 ciegas por prefijo uniforme, H3b 6 %); multisemilla 100/100; H1 por rama 0/0; lugar de D 23-29 % por puesto; verificar_espacio exit 3 por residuos pendientes de firma (S1 y R_dif en PROMEDIO, premisa O-1), §P7-B PROMEDIO inexplotable"
+        },
+        "validar_icfes": {
+          "timestamp": "2026-10-29T09:14:57.854362-05:00",
+          "nota": "exextra literales en el catálogo canónico (Evidencia = evidencias_oficiales/Arg_E1, Afirmación = afirmaciones_oficiales/Argumentación, Descriptor = D3.10, Estándar en estandares-mat-ebc.json) y en ITEM_OFICIAL.md; Nivel 3, DOK 2, Bloom Evaluar (=> Nivel >= 3 se cumple), SOLO Relacional; exname/extype/exsolution dinámico/exshuffle TRUE/extol presentes. Cotejo hecho a mano contra los JSON"
+        }
+      }
+    }
+  ]
+}
