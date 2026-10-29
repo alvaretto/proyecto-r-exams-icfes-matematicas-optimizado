@@ -197,7 +197,71 @@ Suite: `tests/testthat/test_correctitud_respuesta.R`
 
 ---
 
-**Versión**: 1.0
-**Fecha**: 2026-02-14
+## Afirmaciones y prosa de la Solution (v1.1, 2026-10-29)
+
+Los sub-niveles 5A-5E comparan **valores**; ninguno evalúa si un **texto** es verdadero. Esta
+sección fija lo que hay que exigir cuando la clave o la Solution son proposiciones.
+
+### Origen
+
+- Ejercicio `A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/` (MAT-2026-07-050,
+  SCHOICE de evaluación de afirmaciones), **FASE 2C ronda 1 del 2026-10-29: `RECHAZAR`**. El
+  arsenal post-render había dado **0 errores**. Reporte íntegro del detractor en
+  `salida/fase2c_r1_detractor.md` de ese subproyecto (20 citas verificadas).
+- **H1 (CORRECCIÓN).** La Solution afirmaba que la cifra de la «razón sin sustento» «no sale de
+  ningún cálculo con la tabla», y en el 2,84 % de las versiones no canónicas sí salía de uno (una
+  ventaja parcial, una suma o un producto). En la semilla 109 la Solution se contradecía: usaba
+  ese número unas líneas antes como resultado de un cálculo.
+- **H2.** «Su total fue de 318 kilos más que el de…» admitía la lectura «su total fue de 318
+  kilos» cuando la cifra era el total de la sede ganadora; con esa lectura un distractor quedaba
+  verdadero y la clave falsa. Pasaba en el 17 % de las versiones.
+
+### Por qué no lo ve el Nivel 5
+
+`ERR_ANS_B..E` comparan la opción marcada con `sol`, `opciones*` o `valor_correcto`, y la
+unicidad por valor o por hash; ninguno lee el contenido proposicional de un texto. La regla #9
+(`detractor-obligatorio.md`) ya clasifica «Solution falsa» como CORRECCIÓN binaria, pero solo la
+detecta el detractor.
+
+### Las tres exigencias
+
+- **Opciones-afirmación** (`evaluacion_afirmacion`). Cada afirmación lleva una **función de verdad
+  pura** sobre los datos de la versión, y `data_generation` incluye `stopifnot(sum(verdaderas) == 1, verdaderas[clave])`. La unicidad de
+  la verdadera se **construye** de forma determinista (familia F1 de la regla #21) en vez de
+  resamplear hasta que se cumpla, y se **verifica** enumerando el espacio de parámetros cuando es
+  finito; si no lo es, con la muestra estándar N = 100 (regla #23). La verificación necesita un
+  **mutante** que revierta la construcción: si el mutante no hace fallar la verificación, esta no
+  prueba nada.
+- **Toda lectura razonable cuenta.** Si una frase admite otra lectura que cambia su valor de
+  verdad («fue de N kilos más que» leída como «fue de N kilos»), se reescribe de modo que solo
+  tenga una («superó en N kilos a»). No basta con que la lectura prevista sea correcta: el
+  estudiante puede leer la otra, y entonces la clave o un distractor cambia de signo.
+- **Afirmaciones absolutas de la Solution.** Frases como «no sale de ningún cálculo» o «no está en
+  la tabla», dichas sobre cifras sorteadas, se garantizan **por construcción** con su propio
+  `stopifnot`, o se reescriben en términos que se puedan verificar. Un «ninguno» o un «siempre»
+  sobre una cifra sorteada es una afirmación sobre todo el espacio de versiones: o se prueba, o
+  no se escribe.
+
+### Lo que ya estaba verificado en ese ítem (invariante local L-2)
+
+Para las opciones, la enumeración de 3116 combinaciones no halló ninguna con dos afirmaciones
+verdaderas, y 12 mutantes murieron por su sonda. El detractor encontró una sola afirmación
+verdadera, la marcada, en 2000 de 2000 versiones; un oráculo que solo lee el HTML, en 401 de 401.
+Aun así el detractor halló H1 y H2: esas verificaciones evalúan la lectura prevista de cada
+afirmación, y ninguna cubría las lecturas alternativas de una frase (H2) ni las afirmaciones
+absolutas de la Solution (H1). El arreglo de H1 y H2 se verifica en la ronda 2 de su FASE 2C (ver
+el `HANDOFF.md` del subproyecto).
+
+### Relación con otras reglas
+
+- Regla #9: la CORRECCIÓN es binaria (`RECHAZAR`); una Solution falsa o una segunda clave no se
+  compensan con diagnosticidad.
+- Regla #21, familia F1: la unicidad se construye de forma determinista, no se busca por
+  reintento.
+
+---
+
+**Versión**: 1.1
+**Fecha**: 2026-10-29 (v1.1 — afirmaciones y prosa de la Solution; v1.0 — 2026-02-14)
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: NINGUNA

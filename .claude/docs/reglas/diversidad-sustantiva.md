@@ -457,6 +457,8 @@ por la regla #24 **H-5 relajar nunca es autónomo**: exige decisión humana regi
 con la cifra, y **la batería se deja en rojo**. El día que alguien la haga reportar `PASS` para
 poder cerrar, el gate queda apagado para siempre.
 
+**Alcance del override (2026-10-29).** Todo override firmado declara su **alcance**: la cifra medida o el parámetro que lo acota. Precedentes: `P_CANON <= 0.10` en `probabilidad-fichas-tabla-doble-entrada-n2`, y O-1 «hasta +16,7 pp» en `totales-promedios-reciclaje-n3`. Si una medición posterior supera ese alcance, o aparece otro canal por encima de +8 pp, el override no lo cubre y vuelve al humano: estirarlo en silencio sobre un canal que creció sería relajar sin firma (regla #24 H-5).
+
 #### Por qué NO se cableó dentro de `validar_diagnosticidad.R`
 
 Se evaluó y se descartó **a propósito**. Sus sondas H1/H2/H3/H3b son genéricas porque miden
@@ -665,6 +667,10 @@ Ver Errores 33 y 34; v1.6 2026-08-15)
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo archivo `.Rmd` SCHOICE o CLOZE en desarrollo o revisión.
+
+### Cambios 2026-10-29 (sin cambio de versión)
+
+- 2026-10-29 — §P7-E: alcance del override.
 
 ### Cambios v1.8 (2026-09-13) — §P7-F: enumerar el espacio antes de rediseñar
 

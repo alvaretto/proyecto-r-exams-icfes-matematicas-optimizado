@@ -4,6 +4,8 @@
 
 **Regla de generación.** Todo texto visible al estudiante lleva tildes correctas DESDE EL PRIMER BORRADOR: `paste0()` de contextos y errores (`descripcion_corta/larga`, `causa_raiz`), reflexiones, `sol_texts`, Markdown de Question/Solution y encabezados.
 
+**Concordancia dinámica** (2026-10-29). Si una cantidad o un sujeto se sortean, el número y el género también se resuelven por rama (`1 curso aporta` / `2 cursos aportan`; `los`/`las` según el sustantivo sorteado). El corrector de tildes no la revisa.
+
 **Frecuentes:** más, según, así, después, también, además · ángulo, gráfica, función, número, cálculo, método, código, análisis, máximo, mínimo · solución, ecuación, relación, información, distribución, sección, versión, opción, intersección, exclusión, unión, omisión, confusión, reflexión, operación, expresión, región, interpretación, formulación, argumentación · matemático, estadística, único, numérico · realizó, preguntó, organizó, descubrió, publicó, encuestó, identificó, excluyó, confundió, cometió, aplicó, interpretó, calculó · cafetería, boletín, periódico, compañeros, jóvenes, área, comité · ¿Cuál?, ¿Qué?, cómo (interrogativo).
 
 **Sin tilde (excepciones):** nombres de variables R; identificadores de R-exams (`exname`, `exsection`, `extype`, `exsolution`, `exshuffle`, `extol`) y las **claves** `exextra[Nombre]`, siempre ASCII; inglés técnico; demostrativos "Esta/Este".

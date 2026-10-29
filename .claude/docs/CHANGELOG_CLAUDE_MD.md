@@ -8,6 +8,52 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.32.0 (2026-10-29)
+
+- **Las lecciones del ciclo de `totales-promedios-reciclaje-n3` pasan a norma, solo donde hacía falta.**
+  Criterio: un defecto general (no propio del ítem), grave o repetido, que ningún gate automático detecta y
+  que ninguna regla cubría. No se crea ninguna regla numerada nueva: son ampliaciones.
+  - **Regla #13 v1.1: afirmaciones y prosa de la Solution.** Los códigos del Nivel 5 comparan valores; no
+    leen si un texto es verdadero. En la FASE 2C ronda 1 el arsenal dio 0 errores con dos defectos dentro.
+    Uno era una Solution que afirmaba que una cifra «no sale de ningún cálculo con la tabla», falsa en el
+    2,84 % de las versiones no canónicas (H1, CORRECCIÓN). El otro, una opción que otra lectura volvía
+    verdadera en el 17 % (H2). La regla exige tres cosas:
+    - una función de verdad pura por afirmación, con `stopifnot(sum(verdaderas) == 1, verdaderas[clave])`,
+      y la unicidad construida (F1) y enumerada con un mutante que revierta la construcción;
+    - reescribir toda frase con una segunda lectura que cambie su verdad;
+    - garantizar por construcción, o no escribir, las afirmaciones absolutas de la Solution sobre cifras
+      sorteadas.
+  - **Regla #7: concordancia dinámica.** Si la cantidad o el sujeto se sortean, el número y el género se
+    resuelven por rama. Hay dos casos: `rango_colesterol` (2026-06-03) y «participó 1 curso más, que
+    aportan», que apareció en el 25,7 % de 401 versiones (2026-10-29). El corrector de tildes no revisa la
+    concordancia.
+  - **Regla #8 v1.2: una guarda nueva entra en su `watch`.** Las guardas de la v3.31.1 no habrían corrido en
+    el pre-push rápido hasta que se añadieron los orquestadores al `watch` de sus suites.
+  - **Regla #22, solo el texto íntegro: alcance del override (§P7-E).** Todo override firmado declara su
+    alcance; si una medición posterior lo supera, vuelve al humano. No cambia la norma, porque ya lo implica
+    H-5, y el íntegro es lectura obligatoria antes de declarar un override. Precedentes: `P_CANON <= 0.10` y
+    O-1 «hasta +16,7 pp».
+  - **Los dos orquestadores: «Cierre de cada ronda».**
+    - Guardar el reporte de cada FASE 2C en `salida/fase2c_r<N>_detractor.md`; es el `--reporte` de un
+      `reopen`.
+    - Escribir el `HANDOFF.md` con el veredicto ya conocido: uno anunció el WAIT_USER #3 con un `RECHAZAR`
+      pendiente.
+    - No correr la suite completa dentro del presupuesto (se cortó a los 590 s) y dejarla a quien invoca.
+- **Lo que no se convirtió en regla, y por qué:**
+  - H6 (`calcula()` sin `stop()`) ya es `codigo-rmd` #8.
+  - H7 (encabezados numerados en el PDF) ya está en `patrones-errores-conocidos.md`, con `{.unnumbered}`.
+  - H5 (sondas sin umbral) lo cubre la semántica de veredictos de §P7.
+  - La normalización de «recogido»/«recolectado» es una decisión del ítem; generalizarla relajaría la
+    regla #24 H-2.
+- **Presupuesto de contexto:** las compactas miden 2248 (#13), 2198 (#7) y 1675 (#8) caracteres, todas por
+  debajo de 5000; `rules/` suma 41 637, por debajo de 60 000.
+- **Verificado:** `test_presupuesto_contexto_reglas.R`, `test_glifos_latex.R`, `test_nomenclatura_rmd.R`,
+  `test_contrato_entrega_orquestadores.R` y `test_doc_suites_sincronizada.R` en verde con `run_one_suite.R`;
+  `test_infraestructura_claude.R` (I-1..I-10) en verde; `sincronizar_doc_suites.R --check` al día. La suite
+  completa no se corrió.
+- **Pendiente de verificar:** el arreglo de H1 y H2 en `totales-promedios-reciclaje-n3`, en la ronda 2 de su
+  FASE 2C, que está en curso.
+
 ### Cambios v3.31.1 (2026-10-29)
 
 - **Los dos orquestadores dejan de contradecir al gate de nomenclatura y a la regla #25.** Las dos

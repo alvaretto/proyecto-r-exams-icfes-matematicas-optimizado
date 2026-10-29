@@ -103,6 +103,12 @@ SI PASA → PERMITIR push
 
 La suite completa (`R_TESTS_FULL=1 Rscript tests/run_all_tests.R`) es manual: obligatoria antes de promover o de un push relevante.
 
+**Guarda nueva ⇒ su `watch` (v1.2, 2026-10-29).** Al añadir una guarda a una suite que declara `watch` en `tests/run_all_tests.R`, los archivos que esa guarda vigila deben entrar en ese `watch`.
+
+- **Caso.** Se añadieron guardas sobre el texto de los orquestadores a `tests/testthat/test_glifos_latex.R` y `tests/testthat/test_nomenclatura_rmd.R` (commit `7c36722d`), pero el `watch` de esas suites no incluía `orquestador-schoice` ni `orquestador-cloze`. Simulado con el criterio de `.suite_afectada()` (`grepl` de cada patrón sobre la lista de archivos cambiados): un push que solo cambiaba un orquestador saltaba las dos suites en modo quick; con los patrones añadidos corren las dos, y un `.R` ajeno sigue sin dispararlas.
+- **Método para comprobarlo.** Extraer la lista `suites` de `tests/run_all_tests.R` con `parse()` (sin ejecutar el runner) y aplicar a una lista de archivos cambiados simulada el mismo `any(sapply(watch, function(p) any(grepl(p, cambiados))))`.
+- **Por qué importa.** La CI corre el runner completo y lo vería, pero después del push; el pre-push existe para verlo antes.
+
 ---
 
 ## 🛠️ Implementación de Hooks
@@ -464,8 +470,9 @@ Si se modifica un archivo test_*.R:
 
 ---
 
-**Versión:** 1.1
-**Fecha:** 2026-07-29 (v1.1 — sección 2 reescrita contra el hook real: fuente
+**Versión:** 1.2
+**Fecha:** 2026-10-29 (v1.2 — guarda nueva ⇒ su `watch`; ver FASE 4;
+2026-07-29 v1.1 — sección 2 reescrita contra el hook real: fuente
 canónica versionada en `.claude/hooks/pre-push.sh` + wrapper en `.git/hooks/`,
 contrato de stdin y trampa de `git lfs pre-push` (falso verde del modo quick),
 regla de detección incompleta, `R_TESTS_FULL=1` y `PREPUSH_DEBUG_DETECT=1`;

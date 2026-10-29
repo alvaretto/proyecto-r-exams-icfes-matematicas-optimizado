@@ -15,4 +15,10 @@
 
 Multi-semilla: `Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd --n 100` (FASE 2G del hook; tasa de éxito exigida 100 %). Test: `test_correctitud_respuesta.R`.
 
-**Versión**: 1.0 · compacta desde 2026-09-29 · Excepciones: NINGUNA.
+## Afirmaciones y prosa de la Solution (v1.1, 2026-10-29)
+Esos códigos comparan **valores**: no evalúan si un **texto** es verdadero (el arsenal dio 0 errores con dos defectos dentro: una Solution falsa en el 2,84 % de las versiones y una opción que otra lectura volvía verdadera). Por eso:
+- **Opciones-afirmación** (`evaluacion_afirmacion`): cada afirmación tiene una **función de verdad pura** sobre los datos de la versión, y `data_generation` lleva `stopifnot(sum(verdaderas) == 1, verdaderas[clave])`. La unicidad se construye (F1) y se verifica enumerando el espacio (si no es finito, N = 100), con un mutante que revierta la construcción.
+- **Toda lectura razonable cuenta:** si una frase admite otra lectura que cambia su verdad («fue de N kilos más que» leída como «fue de N kilos»), se reescribe («superó en N kilos a»).
+- **Afirmaciones absolutas de la Solution** sobre cifras sorteadas («no sale de ningún cálculo», «no está en la tabla») se garantizan por construcción con su `stopifnot`, o se reescriben en términos verificables.
+
+**Versión**: 1.1 (2026-10-29: afirmaciones y prosa de la Solution) · compacta desde 2026-09-29 · Excepciones: NINGUNA.

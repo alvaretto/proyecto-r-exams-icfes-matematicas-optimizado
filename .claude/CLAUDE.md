@@ -185,7 +185,7 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.31.1 (orquestadores alineados con el gate de nomenclatura y la regla #25, con guardas)
+**Versión**: 3.32.0 (lecciones del ítem 50 en las reglas #7, #8 y #13 y en los orquestadores)
 **Fecha**: 2026-10-29
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)

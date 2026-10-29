@@ -28,7 +28,7 @@
 | `6f0a4d3a` | 17:07 | CLOZE de `probabilidad-fichas-tabla-doble-entrada-n2`, aprobado para el aula. Su retorno está en `cloze/HANDOFF.md` |
 | `80d8e0ac` | 17:37 | `test_cloze_n3.R` sin falsos rojos por empates de redondeo. En los orquestadores: patrón de nombre, 6 partes y pre-flight 14 |
 
-## 2026-10-29: orquestadores alineados con el gate y la regla #25 (v3.31.1, sin commit)
+## 2026-10-29: orquestadores alineados con el gate y la regla #25 (v3.31.1, `7c36722d`) y lecciones en norma (v3.32.0, sin commit)
 
 - **Qué:** el punto 3 del dry-run de los dos orquestadores llamaba «warning» al filtro 3b del gate de
   nomenclatura, que bloquea (exit 2). Su incidente `INC-CAMPO-NO-EMITIDO` daba `×` por rompedor con una
@@ -43,6 +43,14 @@
   `.claude/docs/VALIDATOR_COBERTURA_ICFES.md` (cifras), `.claude/docs/CHANGELOG_CLAUDE_MD.md`, la
   metainformación de `.claude/CLAUDE.md` y este archivo. El respaldo es git: estaban limpios en `39923879`.
 - **Rige desde el commit.** Un subagente carga su definición de `HEAD` (ver pendiente 7).
+- **v3.32.0 (sin commit):** las lecciones del ciclo del ítem 50 pasan a norma solo donde hacía falta:
+  - regla #13 v1.1 (afirmaciones y prosa de la Solution);
+  - regla #7 (concordancia dinámica);
+  - regla #8 v1.2 (una guarda nueva entra en su `watch`);
+  - alcance del override, en el íntegro de la #22;
+  - «Cierre de cada ronda», en los dos orquestadores.
+
+  Qué no se volvió regla y por qué: `CHANGELOG_CLAUDE_MD.md` § v3.32.0.
 
 ## Qué cambió y dónde está el detalle
 
@@ -242,9 +250,14 @@ Rscript tests/testthat/test_post_exams2_cwd.R      # el ejercicio sale del .Rmd;
    `~/.cursor/worktrees/`. No se tocaron.
 6. ~~Una suite completa limpia (46/46) después de `80d8e0ac`~~. **Cerrado:** el 2026-10-28 corrió sobre
    `a25a7d0d` y dio 46/46, en 1357 s (cobertura del 100 %, según el runner).
-7. **Commit de la v3.31.1** (2026-10-29), con la lista de archivos de la sección de ese día y sin los
-   cambios ajenos del pendiente 4. Hasta entonces los orquestadores que se lancen siguen cargando el texto
-   viejo. Antes del push conviene la suite completa (`R_TESTS_FULL=1`), que no se corrió.
+7. ~~Commit de la v3.31.1~~: hecho en `7c36722d`. **Pendientes**, para cuando termine el ciclo del
+   orquestador del ítem 50:
+   - el commit de la v3.32.0: los 9 archivos de su viñeta, más `CHANGELOG_CLAUDE_MD.md`, el índice y este
+     archivo; sin los cambios ajenos del pendiente 4;
+   - la suite completa (`R_TESTS_FULL=1`);
+   - el push.
+
+   Hasta el commit, los orquestadores que se lancen siguen cargando el texto anterior.
 
 ## Respaldos del día (fuera de git, regla #17)
 

@@ -59,6 +59,28 @@ No es aceptable generar sin tildes y corregir después. La generación con tilde
 | `Que` (interrogativo) | `¿Qué` | Pregunta retórica (agregar ¿) |
 | `como` (interrogativo) | `cómo` | Reflexiones metacognitivas |
 
+### Concordancia en textos dinámicos (2026-10-29)
+
+**Norma.** Si una cantidad o un sujeto se sortean, el número y el género también se resuelven por rama (`1 curso aporta` / `2 cursos aportan`; `los`/`las` según el sustantivo sorteado). El corrector de tildes no la revisa.
+
+**Patrón.** El verbo y el sustantivo dependen de la cantidad sorteada, así que la frase se arma por rama y no se deja fija en la plantilla:
+
+```r
+frase_cursos <- if (k == 1) {
+  "participó 1 curso más, que aporta"
+} else {
+  paste0("participaron ", k, " cursos más, que aportan")
+}
+```
+
+Para el género, el artículo se elige junto con el sustantivo en la misma estructura de datos (por ejemplo, cada elemento del pool lleva su `articulo` y su `sustantivo`), nunca se fija en la plantilla.
+
+**Casos medidos.**
+- 2026-06-03: el profesor pidió artículo `los`/`las` según el contexto en `rango_colesterol` (concordancia de género).
+- 2026-10-29, `totales-promedios-reciclaje-n3`: «participó 1 curso más, que aportan» apareció en el 25,7 % de 401 versiones (concordancia de número). Lo hallaron por separado el detractor, el auditor visual y el validador del paso 8.
+
+**Por qué no basta el validador.** `corregir_ortografia_espanol.R` revisa tildes con un diccionario; no revisa la concordancia de número ni de género. Un texto puede salir «limpio» y concordar mal.
+
 ---
 
 ## Palabras Frecuentes

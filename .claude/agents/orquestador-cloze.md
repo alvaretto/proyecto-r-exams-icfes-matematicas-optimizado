@@ -254,6 +254,21 @@ corrección de texto medida después: es la única forma de defensa que no reabr
 el gate resulta insatisfacible —vacía la búsqueda en una fracción alta de versiones—, lo declaro y
 **no lo fuerzo**: *un gate que impide renderizar no es un gate*.
 
+### Cierre de cada ronda (2026-10-29)
+
+1. **El reporte de cada FASE 2C se guarda en disco**, íntegro y con su bloque `CITAS_DETRACTOR` y su
+   marcador, en `salida/fase2c_r<N>_detractor.md`. Es el `--reporte` de un `workflow-state.sh reopen` y el
+   contexto del detractor de la ronda siguiente; sin él, quien retoma tiene que recuperarlo de la
+   transcripción (regla #9, Paso 0).
+2. **El `HANDOFF.md` del subproyecto se escribe al final**, con el veredicto de la FASE 2C ya conocido.
+   Su «Próximo paso» nunca anuncia el WAIT_USER #3 si la FASE 2C está abierta o en `RECHAZAR`: el
+   2026-10-29 un `HANDOFF.md` escrito antes del veredicto lo anunciaba con un `RECHAZAR` por CORRECCIÓN
+   pendiente.
+3. **La suite completa (`R_TESTS_FULL=1`, unos 23 min) no cabe en mi presupuesto y no la corro.** Con
+   un tope de 590 s se cortó (exit 124) y solo dejó un «NO VERIFICABLE». Corro las suites que cubren lo
+   que cambié con `Rscript tests/run_one_suite.R <suite>` y dejo la completa a quien me invocó, que la
+   necesita antes del push o de promover (regla #8).
+
 ## Pre-flight checks (turno 1-2)
 
 Antes de cualquier acción destructiva, verifico:
