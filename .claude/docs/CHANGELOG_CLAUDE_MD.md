@@ -8,6 +8,25 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.32.1 (2026-10-29)
+
+- **Regla #13 v1.2: la instancia canónica conserva el impreso, y las reescrituras se miden.** Dos hallazgos
+  de las rondas 2 y 3 de `totales-promedios-reciclaje-n3` precisan la exigencia «toda lectura razonable
+  cuenta» de la v1.1.
+  - **Conflicto entre reglas, resuelto por el profesor** el 2026-10-29 en la aprobación del ítem: prevalece
+    H-2. La clave canónica verbatim («el total fue de 20 kilos más») admite una lectura que la vuelve falsa
+    sin volver verdadera otra opción. La v1.1 pedía reescribirla y la regla #24 H-2 lo prohíbe; las dos
+    decían «sin excepciones». Desde ahora, la canónica no se reescribe: su lectura alternativa se declara
+    como residuo, siempre que la función de verdad confirme que no crea una segunda clave. La compacta pasa
+    a «Excepciones: la instancia canónica, por H-2».
+  - **El ejemplo de la v1.1 era dañino en ese ítem.** La v1.1 proponía reescribir como «superó en N kilos
+    a», y en la ronda 2 eso abrió un canal léxico de +18,1 pp (CURSOS) y +14,3 pp (PROMEDIO). La reescritura
+    adoptada, «fue más alto que el de O en N kilos», no abrió ninguno: en 89 916 textos no canónicos,
+    ninguno admite la lectura «total». La exigencia ya no fija una frase: pide reescribir y medir la
+    reescritura con la batería.
+- **El ítem queda aprobado para el aula** (11/11) con O-1 corregido y sus residuos firmados, en su
+  `.claude/CLAUDE.md` local. Se versiona en su propio commit.
+
 ### Cambios v3.32.0 (2026-10-29)
 
 - **Las lecciones del ciclo de `totales-promedios-reciclaje-n3` pasan a norma, solo donde hacía falta.**

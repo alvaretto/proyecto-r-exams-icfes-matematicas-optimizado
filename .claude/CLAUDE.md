@@ -185,7 +185,7 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.32.0 (lecciones del ítem 50 en las reglas #7, #8 y #13 y en los orquestadores)
+**Versión**: 3.32.1 (regla #13 v1.2: la canónica conserva el impreso y las reescrituras se miden)
 **Fecha**: 2026-10-29
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)

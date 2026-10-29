@@ -252,6 +252,24 @@ afirmación, y ninguna cubría las lecturas alternativas de una frase (H2) ni la
 absolutas de la Solution (H1). El arreglo de H1 y H2 se verifica en la ronda 2 de su FASE 2C (ver
 el `HANDOFF.md` del subproyecto).
 
+### v1.2 (2026-10-29): la instancia canónica y las reescrituras medidas
+
+Dos hallazgos del mismo ítem, en sus rondas 2 y 3, precisaron la segunda exigencia.
+
+- **Una reescritura puede abrir un canal.** En la ronda 2 se probó a reescribir el cierre como «su total
+  superó en *x* kilos al de *O*». La batería §P7 congelada subió a +18,1 pp en la rama CURSOS y a +14,3 pp
+  en la rama PROMEDIO: un canal léxico. La reescritura que se adoptó en la ronda 3, «su total fue más alto
+  que el de *O* en *x* kilos», no abrió ninguno. En 89 916 textos no canónicos, ninguno admite la lectura
+  «total». Por eso la exigencia ya no propone una frase fija: pide reescribir y medir la reescritura con la
+  batería.
+- **La instancia canónica no se reescribe.** Su clave verbatim, «el total fue de 20 kilos más», admite la
+  lectura «el total fue de 20 kilos», que la volvería falsa sin volver verdadera ninguna otra opción. La
+  v1.1 pedía reescribirla, y la regla #24 H-2 lo prohíbe; las dos decían «sin excepciones». El profesor
+  decidió el 2026-10-29 que **prevalece H-2**. La lectura alternativa de la canónica se declara como
+  residuo, siempre que la función de verdad confirme que no crea una segunda clave. En el verificador de
+  ese ítem, la canónica es la única excepción de la guarda de lecturas; ningún mutante la retira, y eso
+  queda declarado.
+
 ### Relación con otras reglas
 
 - Regla #9: la CORRECCIÓN es binaria (`RECHAZAR`); una Solution falsa o una segunda clave no se
@@ -261,7 +279,7 @@ el `HANDOFF.md` del subproyecto).
 
 ---
 
-**Versión**: 1.1
-**Fecha**: 2026-10-29 (v1.1 — afirmaciones y prosa de la Solution; v1.0 — 2026-02-14)
+**Versión**: 1.2
+**Fecha**: 2026-10-29 (v1.2 — la canónica conserva el impreso y las reescrituras se miden; v1.1 — afirmaciones y prosa de la Solution; v1.0 — 2026-02-14)
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: NINGUNA
