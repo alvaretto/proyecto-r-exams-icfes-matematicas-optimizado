@@ -1,7 +1,7 @@
 # HANDOFF — repositorio (infraestructura `.claude/`, tests y documentación)
 
 > Archivo de retorno para el trabajo que no pertenece a un ejercicio; cada ejercicio lleva su propio
-> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-10-29 (v3.31.1 y v3.32.0; suite completa 46/46).
+> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-10-30 (v3.33.0: suite completa 46/46 sobre `e9c85009` y push).
 > Si este archivo y el código discrepan, manda el código: verificar antes de actuar.
 
 ## Estado al cierre del 2026-10-28
@@ -65,6 +65,12 @@
   - **Defecto previo visto en esa medición, sin tocar:** a 320 px desbordan la tabla, ya sin separación,
     `grafica-circular-consumo-agua` v1 y v2 y `migraciones-exteriores`; `Rango-Colesterol-Pacientes` también
     a 360 px.
+  - **Suite completa sobre `e9c85009` (2026-10-30):** 46/46 en 1266,3 s (cobertura del 100 %, según el
+    runner). El árbol solo tenía los cambios ajenos del pendiente 4, y la suite no escribió nada en él.
+    Hubo pruebas sueltas omitidas dentro de suites que sí corrieron (por ejemplo, «Archivo _neg_ no
+    encontrado» en la de distintividad visual `_neg_`); ninguna suite se saltó.
+  - **Push:** `8efdf504..e9c85009`. El pre-push rápido corrió 20 suites y saltó 26 sin cambios; las 20
+    pasaron.
 
 ## Qué cambió y dónde está el detalle
 
@@ -267,6 +273,9 @@ Rscript tests/testthat/test_post_exams2_cwd.R      # el ejercicio sale del .Rmd;
 7. ~~Commits de la v3.31.1 y la v3.32.0, suite completa y push~~. **Cerrado el 2026-10-29:** `7c36722d` y
    `e5adae39`. Suite completa sobre `e5adae39`: 46/46 (1360,7 s). El push de los dos y del commit de este
    archivo va a continuación. Los orquestadores de sesiones nuevas ya cargan el texto corregido.
+8. ~~Suite completa y push de la v3.33.0 (`e9c85009`)~~. **Cerrado el 2026-10-30:** 46/46 (1266,3 s) y push
+   `8efdf504..e9c85009`; detalle en § «2026-10-29», v3.33.0. El commit de este archivo se empuja a
+   continuación.
 
 ## Respaldos del día (fuera de git, regla #17)
 
