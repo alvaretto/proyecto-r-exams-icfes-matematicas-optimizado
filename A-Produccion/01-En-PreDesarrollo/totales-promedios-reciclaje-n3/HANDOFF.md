@@ -1,6 +1,6 @@
 # HANDOFF — `totales-promedios-reciclaje-n3` (MAT-2026-07-050)
 
-> Estado al 2026-10-29. Antes de tocar nada, leer [`ITEM_OFICIAL.md`](ITEM_OFICIAL.md) y las invariantes
+> Estado al 2026-10-30 (la caja de la pregunta en el Moodle del colegio, medida ese día). Antes de tocar nada, leer [`ITEM_OFICIAL.md`](ITEM_OFICIAL.md) y las invariantes
 > [`.claude/CLAUDE.md`](.claude/CLAUDE.md), que prevalecen sobre este archivo. Versionado desde `17dfc787`
 > (versión aprobada en la ronda 3, md5 `cd94b59a…`). **Vigente: md5 `e293d5c812b1f9790e2bb777b62de9a5`
 > (ronda 4b), 11 de 11, aprobada para el aula el 2026-10-29:** ver § «Rondas 4 y 4b».
@@ -358,6 +358,7 @@ exit 4; antes, «PENDIENTE DE FIRMA (11; 0 fallos)» permanente. En la ronda 4b 
 | 6b r4 (100 HTML a 360, 320 y 1024 px) | `APTO_CON_OBSERVACIONES`: B1, B2 y B3 corregidos; la regresión del relleno, MEDIA | `salida/r4/6b_auditoria_visual.md` |
 | Paso 8 r4 | `COHERENCIAS_CON_OBSERVACIONES`: 5/5, 0 fallos en 130 HTML, 46 PDF, 12 DOCX y 24 Moodle | `salida/paso8_r4_coherencias.md` |
 | FASE 2C r4b (md5 `e293d5c8…`) | `APROBAR_CON_CAMBIOS`, 0 CORRECCIÓN, 0 críticas, 0 altas | `salida/fase2c_r4b_detractor.md` |
+| Caja de la pregunta en el Moodle del colegio (2026-10-30, md5 `e293d5c8…`, N = 100) | 270 px a 320 y 310 px a 360; 0/100 tablas fuera de su caja, con Roboto y con Noto Sans | `salida/r4b/medicion_qtext_moodle.md` |
 
 **Residuos de las rondas 4 y 4b, para otro ciclo (ninguno toca la clave, las opciones ni la Solution):**
 - ~~**MEDIA, deuda de la familia F2 (H2 r4, H4 r4b)**~~. **Resuelta en el repo el 2026-10-29** (regla #21
@@ -365,10 +366,15 @@ exit 4; antes, «PENDIENTE DE FIRMA (11; 0 fallos)» permanente. En la ronda 4b 
   defecto**. Medida en los 7 ejercicios que llaman a la F2, la misma variante saca la tabla de su caja a
   360 px en `grafica-circular-consumo-agua` v2 (de 0/20 a 12/20). Queda para el próximo ciclo de este
   `.Rmd` actualizar el comentario de su copia local («la función de snippets_familias_rmd.R no lo tiene»).
-- **BAJA, H2 r4b:** el espacio duro sube el ancho mínimo de la tabla en las 12/100 versiones de «El Bosque» /
-  «La Pradera» (hasta +21,4 px). Con cajas de 240 px o más, igual que la versión aprobada; con cajas más
-  estrechas, peor (a 230 px, 49 contra 37). Falta medir el ancho real de `.qtext` en el Moodle del colegio a
-  320 px.
+- ~~**BAJA, H2 r4b**~~. **No aparece en el Moodle del colegio: medido el 2026-10-30**
+  (`salida/r4b/medicion_qtext_moodle.md`). El espacio duro sube el ancho mínimo de la tabla en las 12/100
+  versiones de «El Bosque» / «La Pradera» (hasta +21,4 px), y eso solo pesaba con cajas de menos de 240 px. En
+  el Moodle del colegio (Moodle 5.1.7, tema Boost) la caja de la tabla (`.qtext`) mide 270 px a 320 px y
+  310 px a 360 px. Con las 100 versiones del md5 `e293d5c8…`, ninguna tabla sale de su caja (0/100 a 320 y a
+  360 px, con Roboto, la letra de Android, y con Noto Sans). La más ancha es la canónica (225,6 px con Roboto);
+  las de «El Bosque»/«La Pradera» llegan a 209,9 px. El medidor marca 49/100 con una caja de 200 px. Queda
+  para el próximo ciclo de este `.Rmd` anotar ese umbral en el comentario del espacio duro, como pedía la FASE
+  2C r4b.
 - **BAJA, paso 8 r4, código muerto:** `contexto_tipo` y el campo `tipo` de cada plantilla, la rama `dif_cursos`
   de `verdad()`, `b_debajo` y `lado_gdis` en la rama canónica (`lado_gdis` sí lo lee el verificador) y el
   parámetro `m` de `MOLDES`.
@@ -436,5 +442,8 @@ exit 4; antes, «PENDIENTE DE FIRMA (11; 0 fallos)» permanente. En la ronda 4b 
     4b» quedan para otro ciclo.
 13. **Siguiente hito: la aplicación en el aula** con estudiantes reales (Nivel 3); la promoción a
     `03-En-Produccion/` se pide solo con esa evidencia (`/promover-ejercicio`).
+14. ~~Medir el ancho real de `.qtext` en el Moodle del colegio a 320 px (H2 r4b)~~. **Hecho el 2026-10-30:**
+    270 px, por encima del umbral de 240 px; 0/100 tablas fuera de su caja (`salida/r4b/medicion_qtext_moodle.md`).
+    El hito pendiente sigue siendo el 13.
 
 Aprobado para llevarlo al aula el 2026-10-29 (md5 `e293d5c8…`, ronda 4b); no está en producción.
