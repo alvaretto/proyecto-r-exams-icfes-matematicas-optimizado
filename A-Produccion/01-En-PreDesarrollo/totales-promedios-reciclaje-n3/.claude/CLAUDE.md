@@ -67,6 +67,8 @@ Guardias en `data_generation`:
   «olvidó»…);
 - un `stopifnot` del reparto 2 + 2: exactamente dos opciones nombran a G como ganadora y dos a P;
 - un `stopifnot` de la canónica: frases y celdas comparadas contra literales de `ITEM_OFICIAL.md`.
+  Esa guarda mira `tabla_df`; desde la ronda 4, `verificar_espacio.R` repite la suma de control sobre la
+  tabla que se muestra (`tabla_md`, sin el relleno, la negrita ni el espacio duro), con el mutante M20.
 
 ## L-2 · Exactamente una afirmación verdadera por versión
 
@@ -226,3 +228,9 @@ discretas, sin margen en el sentido de §P7-B.
 **Alcance.** Si una medición posterior supera cualquiera de estas cifras, o aparece otro canal por encima
 de +8 pp, vuelve al profesor (regla #22 §P7-E, alcance del override). No cubre ningún defecto de
 CORRECCIÓN.
+
+**Guarda ejecutable (ronda 4, H1 de la FASE 2C r4).** `verificar_espacio.R` lleva estas cifras como
+`FIRMA_O1`, `FIRMA_S1_PROMEDIO` y `FIRMA_LARGO`, y las compara redondeadas a un decimal, como se firmaron.
+Hasta lo firmado da OK; por encima, PENDIENTE DE FIRMA (exit 3). El mutante M19 fuerza ERR-TOTAL y debe
+sacar alguna cifra de lo firmado. Antes de la ronda 4 el verificador comparaba con el 50 % de la premisa
+tachada y salía siempre con exit 3, así que no distinguía «dentro del alcance» de «lo superó».

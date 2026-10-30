@@ -1,0 +1,129 @@
+diff --git a/A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd b/A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd
+index ef491a8d..3a004879 100644
+--- a/A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd
++++ b/A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd
+@@ -15,7 +15,6 @@ pick  <- function(x) x[sample.int(length(x), 1L)]     # vectores, también de lo
+ pick1 <- function(x) x[[sample.int(length(x), 1L)]]   # listas
+ cap1  <- function(s) paste0(toupper(substr(s, 1L, 1L)), substring(s, 2L))
+ pond  <- function(s) { u <- utf8ToInt(s); sum(seq_along(u) * as.numeric(u)) }   # suma ponderada por posición
+-cursos_txt <- function(x) paste0(x, if (x == 1) " curso" else " cursos")
+ participaron_txt <- function(x) if (x == 1) "participó 1 curso" else paste("participaron", x, "cursos")
+ ## H1 (FASE 2C, ronda 1): cifras en kilos que salen de un cálculo directo con la tabla (pura).
+ ## La razón sin sustento no cita ninguna, para que su diagnóstico no engañe.
+@@ -25,7 +24,12 @@ calculos_tabla <- function(p) unique(c(p$delta, p$aG + p$aP, p$nG * p$delta, p$n
+ ## --- Familia F2: tabla responsiva (copia de .claude/scripts/snippets_familias_rmd.R,
+ ## sin su rama is_latex_output(), que bajo R/exams nunca se ejecuta). Aborta si el ancho
+ ## de contenido supera 85 caracteres: en el PDF una tabla pipe no parte sus celdas.
+-tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0), ancho_max_pdf = 85) {
++## Ronda 4 (B1 del 6b, ronda 3): la tabla de R/exams y la de Moodle no traen relleno de celda, y
++## las cabeceras quedaban a 4 px entre sí. Cada celda va en un <span> con relleno propio, después
++## de medir el ancho: pandoc lo conserva en HTML y Moodle, y en PDF y DOCX deja solo el texto. El
++## estilo va en línea, y no en un <style>, para no tocar las demás tablas de la página de Moodle.
++tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0), ancho_max_pdf = 85,
++                             relleno = "display:inline-block; padding:0.2em 0.6em;") {
+   df2 <- data.frame(lapply(df, as.character), stringsAsFactors = FALSE, check.names = FALSE)
+   if (length(bold_rows)) for (r in bold_rows)
+     df2[r, ] <- lapply(df2[r, , drop = FALSE], function(x) paste0("**", x, "**"))
+@@ -38,6 +42,10 @@ tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0), ancho_max
+       "una tabla pipe no parte el texto: se saldría del margen (límite medido: %d). ",
+       "Use lista_responsiva(), acorte las celdas o, si ya revisó el PDF, pase ",
+       "ancho_max_pdf = NULL."), as.integer(ancho), ancho_max_pdf), call. = FALSE)
++  if (!is.null(relleno)) {
++    envolver <- function(x) paste0("<span style=\"", relleno, "\">", x, "</span>")
++    df2[] <- lapply(df2, envolver); names(df2) <- envolver(names(df2))
++  }
+   md <- paste(knitr::kable(df2, format = "markdown", align = align), collapse = "\n")
+   paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; margin:0.6em 0;\"}\n\n",
+          md, "\n\n:::\n")
+@@ -65,8 +73,10 @@ CONJUNTOS <- list(
+   list(tipo = "sede", encab = "Sede", nombres = c("la sede urbana", "la sede rural"), filas = c("Urbana", "Rural")),
+   list(tipo = "sede", encab = "Sede", nombres = c("la sede central", "la sede campestre"),
+        filas = c("Central", "Campestre")),
++  ## Ronda 4 (B2 del 6b, ronda 3): espacio duro en las celdas, para que a 360 px «El Bosque» no se
++  ## parta en dos renglones. Pandoc lo pasa a «~» en LaTeX.
+   list(tipo = "sede", encab = "Sede", nombres = c("la sede El Bosque", "la sede La Pradera"),
+-       filas = c("El Bosque", "La Pradera")),
++       filas = c("El Bosque", "La Pradera")),
+   list(tipo = "jornada", encab = "Jornada", nombres = c("la jornada de la mañana", "la jornada de la tarde"),
+        filas = c("Mañana", "Tarde")))
+ MATERIALES <- c("papel", "cartón", "plástico")
+@@ -249,11 +259,14 @@ errores_conceptuales <- list(
+        descripcion_corta = "Calcula el total del grupo que gana y lo presenta como la diferencia con el otro.",
+        descripcion_larga = paste("El total de un grupo dice cuánto recogió; para saber cuánto más recogió que el",
+                                  "otro hay que restarle el total del otro."),
+-       causa_raiz = "Se detiene a mitad del procedimiento: calcula un total, pero no compara.",
++       ## Ronda 4 (H3 de la FASE 2C, ronda 3): la afirmación sí compara; lo que falta es restar.
++       causa_raiz = "Se detiene a mitad del procedimiento: calcula un total, pero no le resta el del otro grupo.",
+        precondicion = function(p) p$TG != p$D,
+        calcula = function(p) { if (p$TG == p$D) stop("calcula(ERR-TOTAL): fuera de contexto"); p$TG },
+-       explica = function(p, af) paste0("La cifra ", af$x, " es el total de ", p$nomG, " ($", p$nG, " \\times ",
+-         p$aG, " = ", p$TG, "$ kilos), no la diferencia: falta restarle el total de ", p$nomP, ", y $", p$TG,
++       ## Ronda 4 (B3 del 6b, ronda 3): sin paréntesis alrededor de la fórmula, que a 360 px dejaba
++       ## el «(» solo al final del renglón.
++       explica = function(p, af) paste0("La cifra ", af$x, " es el total de ", p$nomG, ": $", p$nG, " \\times ",
++         p$aG, " = ", p$TG, "$ kilos. No es la diferencia: falta restarle el total de ", p$nomP, ", y $", p$TG,
+          " - ", p$TP, " = ", p$D, "$ kilos.")),
+   list(codigo = "ERR-PROM", lado = "P", nombre = "Compara solo los promedios",
+        descripcion_corta = paste("Ve el mayor promedio y concluye que ganó quien lo tiene, sin tener en cuenta que",
+@@ -561,10 +574,18 @@ Solution
+ ========
+ 
+ ```{r solucion, echo = FALSE, results = "asis"}
+-cat("**Respuesta correcta**\n\n")
++## Ronda 4 (paso 8 de la ronda 3): un encabezado en negrita quedaba solo al pie de la página en 11 de
++## 60 PDF. Tras cada uno va el cierre que LaTeX pone tras un título de sección (\nobreak y
++## \@afterheading), que no deja cortar la página entre el encabezado y lo que sigue, tampoco ante una
++## lista. Es un bloque {=latex}: pandoc lo descarta en HTML, Moodle y DOCX. Las comillas invertidas
++## salen de intToUtf8(96), porque el arsenal 2D corta el chunk en la primera que encuentra.
++valla <- strrep(intToUtf8(96L), 3L)
++encabezado <- function(t) cat("**", t, "**\n\n", valla, "{=latex}\n",
++  "\\nobreak\\makeatletter\\@afterindenttrue\\@afterheading\\makeatother\n", valla, "\n\n", sep = "")
++encabezado("Respuesta correcta")
+ cat("La respuesta correcta es la que afirma: «", respuesta_correcta, "»\n\n", sep = "")
+ 
+-cat("**Procedimiento correcto**\n\n")
++encabezado("Procedimiento correcto")
+ cat("El concurso premia a la ", conj$tipo, " que recoja la mayor cantidad de ", mat, ", es decir, el mayor ",
+     "**total**. La tabla no da los totales: da cuántos cursos participaron y cuánto recogió, en promedio, cada ",
+     "curso. El total de cada ", conj$tipo, " es la cantidad de cursos multiplicada por el promedio por curso:\n\n",
+@@ -584,10 +605,10 @@ cat("\nGanó ", nomG, ", con $", d$TG, " - ", d$TP, " = ", d$D, "$ kilos más. "
+ cat("Las dos afirmaciones que dan el triunfo a ", nomP, " son falsas, porque esa ", conj$tipo, " no ganó. De las ",
+     "dos que se lo dan a ", nomG, ", solo una cita la diferencia correcta, ", d$D, " kilos.\n\n", sep = "")
+ 
+-cat("**Análisis de los distractores**\n\n")
++encabezado("Análisis de los distractores")
+ for (r in c("gdis", "padv", "psin")) {
+   e <- errores_conceptuales[[afs[[r]]$codigo]]
+-  cat("**", e$codigo, " — ", e$nombre, "**\n\n", sep = "")
++  encabezado(paste0(e$codigo, " — ", e$nombre))
+   cat("*Afirmación:* «", afs[[r]]$texto, "»\n\n", sep = "")
+   cat("*Lectura que lleva a elegirla:* ", e$descripcion_corta, "\n\n", sep = "")
+   cat(e$explica(params, afs[[r]]), "\n\n", sep = "")
+@@ -595,7 +616,7 @@ for (r in c("gdis", "padv", "psin")) {
+   cat("*Causa raíz:* ", e$causa_raiz, "\n\n", sep = "")
+ }
+ 
+-cat("**Propiedades del concepto**\n\n")
++encabezado("Propiedades del concepto")
+ cat("- El total de un grupo es la cantidad de elementos multiplicada por el promedio: con la cantidad de cursos y ",
+     "el promedio por curso se reconstruye el total.\n", sep = "")
+ cat("- Un promedio más alto no garantiza un total más alto, ni más cursos garantizan un total más alto: el total ",
+@@ -603,14 +624,15 @@ cat("- Un promedio más alto no garantiza un total más alto, ni más cursos gar
+ cat("- Cuando un grupo tiene más cursos y el otro mayor promedio, solo el cálculo de los totales decide quién ",
+     "recogió más.\n\n", sep = "")
+ 
+-cat("**Caso específico**\n\n")
++encabezado("Caso específico")
+ cat("En esta versión, ", nomG, " recogió $", d$nG, " \\times ", d$aG, " = ", d$TG, "$ kilos y ", nomP, " recogió $",
+     d$nP, " \\times ", d$aP, " = ", d$TP, "$ kilos. La diferencia es $", d$TG, " - ", d$TP, " = ", d$D,
+     "$ kilos a favor de ", nomG, ".\n\n", sep = "")
+ 
+-cat("**Reflexión metacognitiva**\n\n", reflexion, "\n\n", sep = "")
++encabezado("Reflexión metacognitiva")
++cat(reflexion, "\n\n", sep = "")
+ 
+-cat("**Estrategia para evitar el error**\n\n")
++encabezado("Estrategia para evitar el error")
+ cat("- Identifica el criterio del concurso, la cantidad total, y calcula el total de cada grupo antes de leer las ",
+     "afirmaciones.\n", sep = "")
+ cat("- Descarta las afirmaciones cuya conclusión contradice tus cálculos, aunque su razón mencione un dato cierto ",

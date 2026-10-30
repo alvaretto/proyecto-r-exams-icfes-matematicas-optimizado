@@ -1,0 +1,39 @@
+--- r4_7d5855da.Rmd
++++ totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd
+@@ -25,11 +25,16 @@
+ ## sin su rama is_latex_output(), que bajo R/exams nunca se ejecuta). Aborta si el ancho
+ ## de contenido supera 85 caracteres: en el PDF una tabla pipe no parte sus celdas.
+ ## Ronda 4 (B1 del 6b, ronda 3): la tabla de R/exams y la de Moodle no traen relleno de celda, y
+-## las cabeceras quedaban a 4 px entre sí. Cada celda va en un <span> con relleno propio, después
+-## de medir el ancho: pandoc lo conserva en HTML y Moodle, y en PDF y DOCX deja solo el texto. El
+-## estilo va en línea, y no en un <style>, para no tocar las demás tablas de la página de Moodle.
++## las cabeceras quedaban a 4 px entre sí. Cada celda va en un <span> con estilo propio, puesto
++## después de medir el ancho: pandoc lo conserva en HTML y Moodle, y en PDF y DOCX deja solo el
++## texto. El estilo va en línea, y no en un <style>, para no tocar las demás tablas de la página de
++## Moodle. Variante local: la función de snippets_familias_rmd.R no lo tiene.
++## Medido en 100 versiones (salida/r4/medicion_relleno_tabla.md): 0,6 em por lado en cada celda hacía
++## que la tabla no cupiera en su caja a 360 px en 49/100 versiones (0/100 sin relleno). Con 0,5 em
++## solo a la izquierda de las columnas 2 y 3 y las cabeceras al 90 %, 0/100 a 360 px y 9/100 a
++## 320 px, igual que sin relleno, con 11 a 13,5 px entre cabeceras.
+ tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0), ancho_max_pdf = 85,
+-                             relleno = "display:inline-block; padding:0.2em 0.6em;") {
++                             separacion = "0.5em", tam_cabecera = "0.9em") {
+   df2 <- data.frame(lapply(df, as.character), stringsAsFactors = FALSE, check.names = FALSE)
+   if (length(bold_rows)) for (r in bold_rows)
+     df2[r, ] <- lapply(df2[r, , drop = FALSE], function(x) paste0("**", x, "**"))
+@@ -42,9 +47,12 @@
+       "una tabla pipe no parte el texto: se saldría del margen (límite medido: %d). ",
+       "Use lista_responsiva(), acorte las celdas o, si ya revisó el PDF, pase ",
+       "ancho_max_pdf = NULL."), as.integer(ancho), ancho_max_pdf), call. = FALSE)
+-  if (!is.null(relleno)) {
+-    envolver <- function(x) paste0("<span style=\"", relleno, "\">", x, "</span>")
+-    df2[] <- lapply(df2, envolver); names(df2) <- envolver(names(df2))
++  if (!is.null(separacion)) {
++    envolver <- function(x, j, cab) paste0("<span style=\"display:inline-block;",
++      if (j > 1L) paste0(" padding-left:", separacion, ";") else "",
++      if (cab) paste0(" font-size:", tam_cabecera, ";") else "", "\">", x, "</span>")
++    for (j in seq_along(df2)) df2[[j]] <- envolver(df2[[j]], j, FALSE)
++    names(df2) <- vapply(seq_along(df2), function(j) envolver(names(df2)[j], j, TRUE), "")
+   }
+   md <- paste(knitr::kable(df2, format = "markdown", align = align), collapse = "\n")
+   paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; margin:0.6em 0;\"}\n\n",

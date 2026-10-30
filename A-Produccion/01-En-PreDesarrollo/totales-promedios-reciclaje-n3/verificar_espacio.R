@@ -18,6 +18,9 @@
 ## Ronda 3 (variante C): cierre «su total fue más alto que el de O en x kilos», ERR-TOTAL repuesto,
 ##        lecturas del texto (regla #13 v1.1: enumeración de textos, oráculo léxico propio, exposición
 ##        a la lectura «total», canónica), mutantes M16-M18 y cuotas del distractor de G por rama.
+## Ronda 4 (FASE 2C r4): el alcance firmado de «O-1 corregido» como tabla de cifras (H1, mutante M19)
+##        y la canónica cotejada también sobre la tabla mostrada, tabla_md (H3, mutante M20).
+## Ronda 4b (FASE 2C r4b, H1): guarda estructural de los encabezados de la Solution (mutantes M21, M22).
 ## Uso: Rscript --no-init-file verificar_espacio.R [ruta.Rmd]     (exit 1 si algo falla; 3 = pendiente de firma)
 ##      VERIF_N=<n> solo para depuración (regla #23): corre E1-E4 hasta las sondas y sale; la cifra
 ##      oficial es la de N = 100, el default.
@@ -165,6 +168,35 @@ if (is.null(envC)) falla("canónica no encontrada en 300 semillas") else {
                     "que no vuelve verdadera ninguna opción (cambian: %s; verdaderas con «total»: %d)"),
              s, paste(names(cv)[cv], collapse = ","), sum(vt)))
 }
+## H3 de la FASE 2C r4: la suma de control de la canónica la calcula el .Rmd sobre tabla_df, antes de
+## tabla_responsiva(); aquí se repite sobre lo que se muestra (tabla_md), sin el relleno de la ronda 4,
+## la negrita ni el espacio duro. Mismas cifras de ITEM_OFICIAL.md (119 caracteres, 695221).
+celdas_md <- function(md) {
+  f <- grep("^\\|", strsplit(md, "\n", fixed = TRUE)[[1]], value = TRUE)
+  f <- f[!grepl("^\\|[-:| ]+\\|$", f)]
+  x <- unlist(lapply(f, function(r) trimws(strsplit(sub("^\\|", "", sub("\\|$", "", r)), "|", fixed = TRUE)[[1]])))
+  gsub(" ", " ", gsub("<span[^>]*>|</span>|\\*\\*", "", x))
+}
+canon_tabla_ok <- function(env) { cm <- paste(celdas_md(env$tabla_md), collapse = "|")
+  nchar(cm) == 119L && env$pond(cm) == 695221 }
+if (!is.null(envC)) ok(canon_tabla_ok(envC), sprintf("H3 r4: canónica verbatim sobre la tabla mostrada (tabla_md), semilla %d", s))
+## H1 de la FASE 2C r4b: la corrección del encabezado huérfano al pie del PDF (ronda 4: 14/60 -> 0/60)
+## pasa a guarda estructural. En la Solution, todo encabezado en negrita sale de encabezado(), y
+## encabezado() emite el bloque {=latex} con \nobreak y \@afterheading. M21 y M22 la revierten.
+encabezados_ok <- function(lin) {
+  i0 <- grep("^```\\{r solucion", lin); i1 <- which(lin == "```"); i1 <- i1[i1 > i0][1]
+  if (length(i0) != 1L || is.na(i1)) return(FALSE)
+  sol <- lin[(i0 + 1):(i1 - 1)]; j <- grep("^encabezado <- function", sol)
+  def <- paste(sol[c(j, j + 1L)], collapse = "")
+  sueltos <- grep("cat\\(\"\\*\\*[[:alpha:]]", sol)             # cat("**Título**"), fuera de encabezado()
+  length(j) == 1L && grepl("{=latex}", def, fixed = TRUE) && grepl("nobreak", def, fixed = TRUE) &&
+    grepl("@afterheading", def, fixed = TRUE) && !length(sueltos) && length(grep("^\\s*encabezado\\(", sol)) >= 8L
+}
+ok(encabezados_ok(l), "H1 r4b: los 8 encabezados de la Solution salen de encabezado(), con \\nobreak y \\@afterheading")
+l_m21 <- sub("\\\\nobreak\\\\makeatletter\\\\@afterindenttrue\\\\@afterheading\\\\makeatother", "", l, fixed = TRUE)
+ok(!identical(l_m21, l) && !encabezados_ok(l_m21), "M21 (quita \\nobreak y \\@afterheading de encabezado()): la sonda H1 r4b lo detecta")
+l_m22 <- sub("encabezado(\"Caso específico\")", "cat(\"**Caso específico**\\n\\n\")", l, fixed = TRUE)
+ok(!identical(l_m22, l) && !encabezados_ok(l_m22), "M22 (un encabezado vuelve a cat(\"**…**\")): la sonda H1 r4b lo detecta")
 ## H6 (FASE 2C, ronda 1): todo calcula() se detiene fuera de contexto (codigo-rmd #8).
 p0 <- list(nG = 5, nP = 4, aG = 40, aP = 45, k = 1, delta = 5, TG = 200, TP = 180, D = 20, parcialG = 40,
            parcialP = 20, y = 33, fuente_dato = NA_character_, fuente_padv = NA_character_, rama = "CURSOS")
@@ -315,9 +347,29 @@ ok(all(vapply(c(NAT, CU$CURSOS, CU$PROMEDIO), c3_v, TRUE)),
    "canal 3: en toda versión, a lo sumo un distractor cita un dato de la tabla en kilos, y nunca la clave")
 s1_v <- function(x) sc(!(vapply(x$opciones, cif, 0) %in% x$tabla), x$clave)
 COTA_S1 <- 1 / 3 - 1 / 4 + 0.01
+## H1 de la FASE 2C r4: el alcance firmado de «O-1 corregido» (.claude/CLAUDE.md local, WAIT_USER #3 de
+## la ronda 3, md5 cd94b59a…) pasa de prosa a guarda. Las semillas de E1 y E2 son fijas, así que las
+## cifras son deterministas: hasta lo firmado es OK; por encima vuelve al profesor (exit 3). Antes se
+## comparaba con el 50 % de la premisa tachada, y el exit 3 permanente no distinguía «dentro del
+## alcance» de «lo superó». El mutante M19 sube la cuota de ERR-TOTAL y debe salir de lo firmado.
+FIRMA_O1 <- rbind(
+  "S_U + S1 (par de G sin la cifra de la tabla)"                = c(CURSOS = 0.710, PROMEDIO = 0.550),
+  "S_U + suma (par de G sin la cifra que es suma de otras dos)" = c(CURSOS = 0.605, PROMEDIO = 0.620),
+  "S_U + S1 + suma (las dos pistas)"                            = c(CURSOS = 0.790, PROMEDIO = 0.670),
+  "S_U + atípica"                                               = c(CURSOS = 0.515, PROMEDIO = 0.580),
+  "S_U + S1 + suma + atípica"                                   = c(CURSOS = 0.815, PROMEDIO = 0.745))
+FIRMA_S1_PROMEDIO <- 0.084                                  # residuo firmado: S1 en la rama PROMEDIO, +8,4 pp
+FIRMA_LARGO <- c(exceso = 0.104, chars = 0.027, palabras = 0.065)   # declarado sin firma (§P7-B)
+FIRMADOS <- character(0)
+## Las cifras se firmaron redondeadas a un decimal (en %); se comparan igual, para que 33,42 % no exceda 33,4 %.
+hasta <- function(x, lim) round(100 * x, 1) <= round(100 * lim, 1)
+firmado <- function(msg) { FIRMADOS <<- c(FIRMADOS, msg); cat("  OK (alcance firmado):", msg, "\n") }
 juzga <- function(s, est, tasa) {
   ex <- tasa - 0.25
   if (ex <= 0.08) return(invisible(ok(TRUE, sprintf("H5: %s, %s: %.1f %% (%+.1f pp; obliga > +8)", s, est, 100 * tasa, 100 * ex))))
+  if (s == "S1 descarta cifras de la tabla" && est == "rama PROMEDIO" && hasta(ex, FIRMA_S1_PROMEDIO))
+    return(invisible(firmado(sprintf("O-1 corregido: %s, %s: %.1f %% (%+.1f pp; firmado hasta +8,4 pp)",
+                                     s, est, 100 * tasa, 100 * ex))))
   if (startsWith(s, "S1 ") && ex <= COTA_S1) {
     ## H2 de la FASE 2C r2 (regla #24 H-5): por encima de +8 pp NO es APROBADO; queda pendiente de firma
     ## y el verificador sale con exit 3. Por encima de la cota del diseño, FALLA.
@@ -340,13 +392,12 @@ for (b in c("CURSOS", "PROMEDIO")) {
   su <- TAB["S_U la sede de la razón sin sustento pierde", b]
   ok(su - 1 / 3 <= 0.167 + 1e-9, sprintf("O-1: S_U, rama %s: %.1f %%, %+.1f pp atribuibles (alcance firmado: +16,7)",
                                          b, 100 * su, 100 * (su - 1 / 3)))
-  ## O-1 firmó «aun con el atajo, elegir entre las dos opciones de G exige calcular D» (50 %). Si una
-  ## pista superficial lo supera, la premisa firmada es falsa y vuelve al profesor (FASE 2C r2, H1).
-  for (s in c("S_U + S1 (par de G sin la cifra de la tabla)", "S_U + suma (par de G sin la cifra que es suma de otras dos)",
-              "S_U + S1 + suma (las dos pistas)", "S_U + atípica", "S_U + S1 + suma + atípica")) {
-    t <- TAB[s, b]
-    if (t <= 0.5 + 1e-9) ok(TRUE, sprintf("O-1: %s, rama %s: %.1f %% (<= 50 %% firmado)", s, b, 100 * t))
-    else pendiente(sprintf("O-1: %s, rama %s: %.1f %%, por encima del 50 %% que supone la premisa firmada", s, b, 100 * t))
+  ## La premisa original de O-1 (50 %) resultó falsa en la ronda 2; rige el alcance de «O-1 corregido».
+  for (s in rownames(FIRMA_O1)) {
+    t <- TAB[s, b]; lim <- FIRMA_O1[s, b]
+    if (hasta(t, lim)) firmado(sprintf("O-1 corregido: %s, rama %s: %.1f %% (firmado hasta %.1f %%)", s, b, 100 * t, 100 * lim))
+    else pendiente(sprintf("O-1 corregido: %s, rama %s: %.1f %%, por encima de lo firmado (%.1f %%): vuelve al profesor",
+                           s, b, 100 * t, 100 * lim))
   }
   for (s in c("R_dif la cifra que es diferencia de otras dos", "Atípica: descarta la cifra que dobla a todas las demás")) {
     ex <- TAB[s, b] - 0.25
@@ -438,6 +489,11 @@ for (est in list(list("mezcla natural", NAT), list("rama CURSOS", CU$CURSOS), li
                                       est[[1]], 100 * res$exceso, 100 * mmax, 100 * tmax))
       cat(sprintf("  RESIDUO DECLARADO §P7-B (%s): exceso %+.1f pp por reglas de largo con margen máximo %.1f %% en caracteres y %.1f %% en palabras, < 15 %% (inexplotable); sin ellas, exceso %+.1f pp (%s)\n",
                   est[[1]], 100 * res$exceso, 100 * mmax, 100 * tmax, 100 * res2$exceso, res2$regla_top))
+      ## H1 de la FASE 2C r4: «O-1 corregido» declara este canal con sus cifras; superarlas vuelve al profesor.
+      msg_l <- sprintf("canal de largo (%s): %+.1f pp, márgenes %.1f %% y %.1f %%; declarado hasta +10,4 pp, 2,7 %% y 6,5 %%",
+                       est[[1]], 100 * res$exceso, 100 * mmax, 100 * tmax)
+      if (hasta(res$exceso, FIRMA_LARGO[["exceso"]]) && hasta(mmax, FIRMA_LARGO[["chars"]]) &&
+          hasta(tmax, FIRMA_LARGO[["palabras"]])) firmado(msg_l) else pendiente(msg_l)
     } else falla(sprintf("§P7-A %s: exceso %+.1f pp (obliga > +8); sin reglas de largo %+.1f pp, margen máx %.1f %% (caracteres) y %.1f %% (palabras)",
                          est[[1]], 100 * res$exceso, 100 * res2$exceso, 100 * mmax, 100 * tmax))
   }
@@ -550,6 +606,32 @@ mm <- mutar(list(c('if (f$p_tabla) cand_g <- cand_g[cand_g$codigo != "ERR-DATO",
 V <- list(); for (s in 3000L + seq_len(TOPE)) { r <- correr(s, mm$expr); if (is.null(r$err) && !r$env$es_canonica) V[[length(V) + 1]] <- rasgos(r$env); if (length(V) >= N) break }
 n_c3 <- sum(!vapply(V, c3_v, TRUE))
 ok(n_c3 > 0, sprintf("M15 (quita el filtro del canal 3): la guarda del canal 3 lo detecta en %d de %d versiones", n_c3, length(V)))
+## Mutante de medición M19 (H1 de la FASE 2C r4): con ERR-TOTAL como distractor de G siempre que se
+## pueda, la cifra atípica sale más a menudo y algún atajo de O-1 debe salir de lo firmado.
+mm <- mutar(list(c("cod_gdis <- pick(unique(cand_g$codigo))",
+                   'cod_gdis <- if ("ERR-TOTAL" %in% cand_g$codigo) "ERR-TOTAL" else pick(unique(cand_g$codigo))')))
+if (!is.null(mm$error)) falla(paste("M19 MAL CONSTRUIDO:", mm$error)) else {
+  CM <- list(CURSOS = list(), PROMEDIO = list())
+  for (s in 1000L + seq_len(TOPE)) {
+    if (all(lengths(CM) >= N)) break
+    r <- correr(s, mm$expr); if (!is.null(r$err) || isTRUE(r$env$es_canonica)) next
+    x <- rasgos(r$env); if (length(CM[[x$rama]]) < N) CM[[x$rama]][[length(CM[[x$rama]]) + 1]] <- x
+  }
+  TM <- cbind(CURSOS = sondas(CM$CURSOS), PROMEDIO = sondas(CM$PROMEDIO))[rownames(FIRMA_O1), colnames(FIRMA_O1)]
+  sup <- !hasta(TM, FIRMA_O1); peor <- which.max(TM - FIRMA_O1)
+  ok(any(sup), sprintf("M19 (ERR-TOTAL siempre que se pueda): sale de lo firmado en %d de %d cifras de O-1 corregido (mayor exceso: %s, rama %s, %.1f %% frente a %.1f %%)",
+                       sum(sup), length(sup), rownames(TM)[row(TM)[peor]], colnames(TM)[col(TM)[peor]], 100 * TM[peor], 100 * FIRMA_O1[peor]))
+}
+## Mutante de medición M20 (H3 de la FASE 2C r4): una celda de la canónica cambia DESPUÉS de tabla_df.
+## La guarda del .Rmd no lo ve (mira tabla_df); la sonda H3 r4 sobre tabla_md sí.
+mm <- mutar(list(c('x, "</span>")', 'sub("45", "46", x), "</span>")')))
+if (!is.null(mm$error)) falla(paste("M20 MAL CONSTRUIDO:", mm$error)) else {
+  envM <- NULL
+  for (s in 1:300) { r <- correr(s, mm$expr); if (is.null(r$err) && isTRUE(r$env$es_canonica)) { envM <- r$env; break } }
+  ok(!is.null(envM) && grepl("46 kilos", envM$tabla_md, fixed = TRUE) && !canon_tabla_ok(envM),
+     "M20 (cambia una celda de la canónica en tabla_md, no en tabla_df): el .Rmd no lo caza y la sonda H3 r4 sí")
+}
+if (length(FIRMADOS)) cat("\nDentro del alcance firmado de O-1 corregido (2026-10-29):\n", paste0("  - ", FIRMADOS, "\n"), sep = "")
 if (length(RESIDUOS)) cat("\nResiduos declarados §P7-B (margen < 15 %: inexplotables, no son defecto):\n",
                           paste0("  - ", RESIDUOS, "\n"), sep = "")
 if (length(PENDIENTES)) cat("\nPendientes de firma del profesor (> +8 pp o premisa firmada superada; exit 3):\n",

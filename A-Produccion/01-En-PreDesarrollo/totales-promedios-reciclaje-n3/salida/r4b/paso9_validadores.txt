@@ -1,0 +1,14 @@
+== md5 e293d5c812b1f9790e2bb777b62de9a5
+== diversidad sustantiva
+Diversidad sustantiva: 100/100 versiones evaluadas | respuesta correcta: 95 valor(es) unico(s) | errores=0 indeterminadas=0
+PASS: la respuesta correcta varia suficientemente (diversidad sustantiva confirmada).
+exit_div=0
+== diagnosticidad
+unico     100              0% (   2%)              0% (   1%)            0%
+               H2/H3 CIEGAS: las 4 opciones comparten primera palabra en el 100% de las versiones
+               H3b contenido: la clave dice lo mismo ("la sede primaria ganó el concurso porque despu...") en el 6% de 100 versiones
+  - unico: H2 y H3 no son aplicables (prefijo uniforme en el 100% de las versiones); la invariancia del tipo de clave la mide H3b
+PASS: ninguna sonda superficial supera el 70 %.
+exit_diag=0
+== unicas 300
+versiones unicas (opciones ordenadas): 271 / 300

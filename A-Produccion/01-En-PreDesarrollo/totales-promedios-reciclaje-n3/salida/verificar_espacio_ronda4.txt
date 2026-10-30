@@ -1,0 +1,202 @@
+=== verificar_espacio.R — totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd ===
+
+[E1] Mezcla natural, N = 100
+  OK: 100/100 versiones sin error 
+  rama CURSOS (canónica incluida): 44 % · canónicas: 9/100
+  OK: L-3: frecuencia global de la rama CURSOS cerca de 50 % (tolerancia ±12 pp a N = 100) 
+  versiones únicas (opciones): 98/100
+
+[E2] Cuotas por rama, N = 100 cada una (semillas 1001.., tope 600 )
+  OK: estrato CURSOS: n = 100 (n < 20 sería NO CONCLUYENTE) 
+  OK: estrato PROMEDIO: n = 100 (n < 20 sería NO CONCLUYENTE) 
+  OK: se encontró la instancia canónica 
+
+[E3] Enumeración del espacio de parámetros
+  OK: rama CURSOS: 2134 combinaciones válidas, 2000 con cifra de G bajo D 
+  OK: L-3 sin dominancia y gana G (CURSOS) 
+  OK: rama PROMEDIO: 982 combinaciones válidas, 823 con cifra de G bajo D 
+  OK: L-3 sin dominancia y gana G (PROMEDIO) 
+  OK: L-2: en 3116 combinaciones x todos los moldes y cifras, la clave es la única verdadera (0 violaciones) 
+  OK: L-2.3: en la rama PROMEDIO la frase «G ganó porque ... mayor promedio con δ kilos de más» es verdadera en 982/982 (por eso no se usa para G) 
+  OK: H1/F1: en las 3116 combinaciones queda cifra admisible para la razón sin sustento, debajo y encima de D (0 sin ella) 
+  OK: H1: toda cifra posible del distractor de G ya la excluyen la tabla o calculos_tabla() 
+  OK: regla #13 v1.1: de 89916 textos no canónicos (todos los moldes y cifras), ninguno admite la lectura «total» (0) 
+  OK: regla #13 v1.1, oráculo léxico propio: ninguna cifra va en una cláusula que la presente como cantidad (0 de 89916) 
+  OK: exposición a la lectura «total»: solo la cifra T_G (ERR-TOTAL) la volvería verdadera 
+  exposición declarada (el texto no admite esa lectura): leída «en x kilos» como el total, la cifra falsa de G sería verdadera en 8536 de 39116 configuraciones de G en CURSOS y 3928 de 19640 en PROMEDIO (todas con x = T_G)
+  OK: regla #13 v1.1, canónica (semilla 7): solo la clave verbatim cambia con la lectura «el total fue de 20 kilos», que no vuelve verdadera ninguna opción (cambian: clave; verdaderas con «total»: 0) 
+  OK: H6: los 7 calcula() se detienen fuera de contexto 
+  OK: L-2.3: el distractor de G nunca usa un molde de ventaja 
+  OK: tabla: ancho máximo 81 de 85 en las 18 combinaciones de contexto y material 
+
+[E4] Diagnosticidad
+                                                            mezcla CURSOS
+H1 clave única más larga (margen 15 %)                         0.0    0.0
+H1 clave única más corta (margen 15 %)                         0.0    0.0
+clave es la más larga (sin margen)                            32.0   33.0
+clave es la más corta (sin margen)                            10.3   12.0
+canal 2: cifra falsa de G menor que D                         45.0   57.0
+S1 descarta cifras de la tabla                                32.0   28.2
+S1b se queda con cifras de la tabla                            9.0   15.0
+S2 par de la sede de la fila 1                                27.0   22.5
+S3 par de la sede de más cursos                               22.0   50.0
+S4 par de la sede de mayor promedio                           28.0    0.0
+S5 más cursos + menor cifra del par                           30.0   43.0
+S6 mayor promedio + menor cifra del par                       25.0    0.0
+S7 G real + menor cifra del par (cota canal 2)                55.0   43.0
+S_U la sede de la razón sin sustento pierde                   50.0   50.0
+S_todos elige la opción con «todos»                           41.2   44.0
+R_dif la cifra que es diferencia de otras dos                 29.2   30.2
+S_U + S1 (par de G sin la cifra de la tabla)                  61.0   71.0
+S_U + suma (par de G sin la cifra que es suma de otras dos)   58.5   60.5
+Atípica: descarta la cifra que dobla a todas las demás        26.9   25.1
+S_U + S1 + suma (las dos pistas)                              68.0   79.0
+S_U + atípica                                                 63.0   51.5
+S_U + S1 + suma + atípica                                     77.0   81.5
+D es la menor cifra (frecuencia)                              22.0   24.0
+D es la 2.ª cifra (frecuencia)                                33.0   23.0
+D es la 3.ª cifra (frecuencia)                                19.0   24.0
+D es la 4.ª cifra (frecuencia)                                26.0   29.0
+única opción sin cifra (frecuencia)                            9.0    0.0
+clave con token exclusivo (frecuencia)                       100.0  100.0
+                                                            PROMEDIO canonica
+H1 clave única más larga (margen 15 %)                           0.0      0.0
+H1 clave única más corta (margen 15 %)                           0.0      0.0
+clave es la más larga (sin margen)                              41.2      0.0
+clave es la más corta (sin margen)                              16.8      0.0
+canal 2: cifra falsa de G menor que D                           54.0      0.0
+S1 descarta cifras de la tabla                                  33.4     50.0
+S1b se queda con cifras de la tabla                              3.2      0.0
+S2 par de la sede de la fila 1                                  28.5     50.0
+S3 par de la sede de más cursos                                  0.0     50.0
+S4 par de la sede de mayor promedio                             50.0      0.0
+S5 más cursos + menor cifra del par                              0.0    100.0
+S6 mayor promedio + menor cifra del par                         46.0      0.0
+S7 G real + menor cifra del par (cota canal 2)                  46.0    100.0
+S_U la sede de la razón sin sustento pierde                     50.0     50.0
+S_todos elige la opción con «todos»                             54.0     25.0
+R_dif la cifra que es diferencia de otras dos                   31.1     25.0
+S_U + S1 (par de G sin la cifra de la tabla)                    55.0    100.0
+S_U + suma (par de G sin la cifra que es suma de otras dos)     62.0     50.0
+Atípica: descarta la cifra que dobla a todas las demás          26.8     33.3
+S_U + S1 + suma (las dos pistas)                                67.0    100.0
+S_U + atípica                                                   58.0    100.0
+S_U + S1 + suma + atípica                                       74.5    100.0
+D es la menor cifra (frecuencia)                                24.0      0.0
+D es la 2.ª cifra (frecuencia)                                  25.0    100.0
+D es la 3.ª cifra (frecuencia)                                  24.0      0.0
+D es la 4.ª cifra (frecuencia)                                  27.0      0.0
+única opción sin cifra (frecuencia)                              0.0    100.0
+clave con token exclusivo (frecuencia)                         100.0    100.0
+  cuota del tipo de error del distractor de G, por rama (%):
+            CURSOS PROMEDIO
+ERR-DATO        27        3
+ERR-RESTA       45       57
+ERR-PARCIAL     19       23
+ERR-TOTAL        9       17
+  OK: ERR-TOTAL alcanzable en las dos ramas 
+  largo medio por papel (mezcla): clave 156 · gdis 153 · padv 154 · psin 157
+  §P7-B (mezcla): clave única más larga en 22 versiones, margen mediano 1.9 % (máx 2.0 %); única más corta en 7, margen mediano 0.7 %
+  largo medio por papel (CURSOS): clave 160 · gdis 160 · padv 159 · psin 158
+  §P7-B (CURSOS): clave única más larga en 23 versiones, margen mediano 1.9 % (máx 2.5 %); única más corta en 8, margen mediano 0.9 %
+  largo medio por papel (PROMEDIO): clave 160 · gdis 160 · padv 160 · psin 158
+  §P7-B (PROMEDIO): clave única más larga en 32 versiones, margen mediano 1.9 % (máx 2.0 %); única más corta en 13, margen mediano 0.7 %
+  (las tasas de acierto se comparan con el azar, 25 %; «canal 2» y las frecuencias no son tasas de acierto)
+  OK: canal 2: en las no canónicas la cifra falsa de G queda por debajo de D cerca del 50 % 
+  OK: canal 2 en la rama CURSOS: «menor cifra del par ganador» -7.0 pp sobre el 50 % de quien ya sabe qué sede ganó (obliga > +8) 
+  OK: lugar de D entre las cifras, rama CURSOS: puesto 1 en el 24 % (25 % ± 12) 
+  OK: lugar de D entre las cifras, rama CURSOS: puesto 2 en el 23 % (25 % ± 12) 
+  OK: lugar de D entre las cifras, rama CURSOS: puesto 3 en el 24 % (25 % ± 12) 
+  OK: lugar de D entre las cifras, rama CURSOS: puesto 4 en el 29 % (25 % ± 12) 
+  OK: H1 clave única más larga (margen 15 %) en la rama CURSOS: 0 % (bloquea el 100 %; aviso desde 90 %) 
+  OK: H1 clave única más corta (margen 15 %) en la rama CURSOS: 0 % (bloquea el 100 %; aviso desde 90 %) 
+  OK: canal 2 en la rama PROMEDIO: «menor cifra del par ganador» -4.0 pp sobre el 50 % de quien ya sabe qué sede ganó (obliga > +8) 
+  OK: lugar de D entre las cifras, rama PROMEDIO: puesto 1 en el 24 % (25 % ± 12) 
+  OK: lugar de D entre las cifras, rama PROMEDIO: puesto 2 en el 25 % (25 % ± 12) 
+  OK: lugar de D entre las cifras, rama PROMEDIO: puesto 3 en el 24 % (25 % ± 12) 
+  OK: lugar de D entre las cifras, rama PROMEDIO: puesto 4 en el 27 % (25 % ± 12) 
+  OK: H1 clave única más larga (margen 15 %) en la rama PROMEDIO: 0 % (bloquea el 100 %; aviso desde 90 %) 
+  OK: H1 clave única más corta (margen 15 %) en la rama PROMEDIO: 0 % (bloquea el 100 %; aviso desde 90 %) 
+  OK: canal 3: en toda versión, a lo sumo un distractor cita un dato de la tabla en kilos, y nunca la clave 
+  OK: H5: S1 descarta cifras de la tabla, rama CURSOS: 28.2 % (+3.2 pp; obliga > +8) 
+  RESIDUO PENDIENTE DE FIRMA (§P7-D agotado): S1 descarta cifras de la tabla, rama PROMEDIO: 33.4 % (+8.4 pp; cota del diseño +8,3 pp)
+  OK: H5: S1b se queda con cifras de la tabla, rama CURSOS: 15.0 % (-10.0 pp; obliga > +8) 
+  OK: H5: S1b se queda con cifras de la tabla, rama PROMEDIO: 3.2 % (-21.8 pp; obliga > +8) 
+  OK: H5: S2 par de la sede de la fila 1, rama CURSOS: 22.5 % (-2.5 pp; obliga > +8) 
+  OK: H5: S2 par de la sede de la fila 1, rama PROMEDIO: 28.5 % (+3.5 pp; obliga > +8) 
+  OK: H5: S1 descarta cifras de la tabla, mezcla ponderada: 33.0 % (+8.0 pp; obliga > +8) 
+  OK: H5: S2 par de la sede de la fila 1, mezcla ponderada: 28.2 % (+3.2 pp; obliga > +8) 
+  OK: H5: S3 par de la sede de más cursos, mezcla ponderada: 25.0 % (+0.0 pp; obliga > +8) 
+  OK: H5: S4 par de la sede de mayor promedio, mezcla ponderada: 25.0 % (+0.0 pp; obliga > +8) 
+  OK: H5: S5 más cursos + menor cifra del par, mezcla ponderada: 27.2 % (+2.2 pp; obliga > +8) 
+  OK: H5: S6 mayor promedio + menor cifra del par, mezcla ponderada: 23.0 % (-2.0 pp; obliga > +8) 
+  OK: O-1: S_U, rama CURSOS: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7) 
+  PENDIENTE DE FIRMA: O-1: S_U + S1 (par de G sin la cifra de la tabla), rama CURSOS: 71.0 %, por encima del 50 % que supone la premisa firmada 
+  PENDIENTE DE FIRMA: O-1: S_U + suma (par de G sin la cifra que es suma de otras dos), rama CURSOS: 60.5 %, por encima del 50 % que supone la premisa firmada 
+  PENDIENTE DE FIRMA: O-1: S_U + S1 + suma (las dos pistas), rama CURSOS: 79.0 %, por encima del 50 % que supone la premisa firmada 
+  PENDIENTE DE FIRMA: O-1: S_U + atípica, rama CURSOS: 51.5 %, por encima del 50 % que supone la premisa firmada 
+  PENDIENTE DE FIRMA: O-1: S_U + S1 + suma + atípica, rama CURSOS: 81.5 %, por encima del 50 % que supone la premisa firmada 
+  OK: R_dif la cifra que es diferencia de otras dos, rama CURSOS: +5.2 pp (obliga > +8) 
+  OK: Atípica: descarta la cifra que dobla a todas las demás, rama CURSOS: +0.1 pp (obliga > +8) 
+  OK: O-1: S_U, rama PROMEDIO: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7) 
+  PENDIENTE DE FIRMA: O-1: S_U + S1 (par de G sin la cifra de la tabla), rama PROMEDIO: 55.0 %, por encima del 50 % que supone la premisa firmada 
+  PENDIENTE DE FIRMA: O-1: S_U + suma (par de G sin la cifra que es suma de otras dos), rama PROMEDIO: 62.0 %, por encima del 50 % que supone la premisa firmada 
+  PENDIENTE DE FIRMA: O-1: S_U + S1 + suma (las dos pistas), rama PROMEDIO: 67.0 %, por encima del 50 % que supone la premisa firmada 
+  PENDIENTE DE FIRMA: O-1: S_U + atípica, rama PROMEDIO: 58.0 %, por encima del 50 % que supone la premisa firmada 
+  PENDIENTE DE FIRMA: O-1: S_U + S1 + suma + atípica, rama PROMEDIO: 74.5 %, por encima del 50 % que supone la premisa firmada 
+  OK: R_dif la cifra que es diferencia de otras dos, rama PROMEDIO: +6.1 pp (obliga > +8) 
+  OK: Atípica: descarta la cifra que dobla a todas las demás, rama PROMEDIO: +1.8 pp (obliga > +8) 
+  OK: O-1: S_todos estructural: en toda versión no canónica, una sola opción dice «todos» y es de G (medido: CURSOS 44.0 %, PROMEDIO 54.0 %; 50 % por construcción) 
+  batería §P7 (48 reglas) mezcla natural n=100: máx 33.0 % (cifra mediana), techo nulo 32.7 %, exceso +0.3 pp -> PASS
+      top: cifra mediana 33.0% · sede de la opción más larga (relacional) 32.5% · quedarse con 'total' 31.8% · par con más palabras en común (relacional) 31.0%
+  OK: §P7-B mezcla natural: «la más larga» acierta 28.0 %; margen máximo de largo 2.0 % < 15 % (inexplotable) 
+  OK: §P7-A mezcla natural: exceso +0.3 pp (obliga > +8) 
+  batería §P7 (48 reglas) rama CURSOS    n=100: máx 33.5 % (sede de la opción más larga (relacional)), techo nulo 32.8 %, exceso +0.7 pp -> PASS
+      top: sede de la opción más larga (relacional) 33.5% · la mas larga (chars) 31.0% · el numero mayor 29.0% · siempre la 2a 29.0%
+  OK: §P7-B rama CURSOS: «la más larga» acierta 31.0 %; margen máximo de largo 2.5 % < 15 % (inexplotable) 
+  OK: §P7-A rama CURSOS: exceso +0.7 pp (obliga > +8) 
+  batería §P7 (48 reglas) rama PROMEDIO  n=100: máx 43.0 % (la mas larga (chars)), techo nulo 32.6 %, exceso +10.4 pp -> BLOQUEA
+      top: la mas larga (chars) 43.0% · molde atipico (n tokens) 41.0% · sede de la opción más larga (relacional) 37.5% · siempre la 1a 32.0%
+  OK: §P7-B rama PROMEDIO: «la más larga» acierta 43.0 %; margen máximo de largo 2.0 % < 15 % (inexplotable) 
+  margen de «molde atipico» en palabras (rama PROMEDIO): acierta en 41 versiones, mediano 3.3 %, máximo 6.5 %
+  RESIDUO DECLARADO §P7-B (rama PROMEDIO): exceso +10.4 pp por reglas de largo con margen máximo 2.0 % en caracteres y 6.5 % en palabras, < 15 % (inexplotable); sin ellas, exceso -0.1 pp (siempre la 1a)
+  canónica (enumeración exacta, 24 órdenes): máx 100.0 % (la que MAS comparte); exceso en la mezcla = 0,10 x +75.0 pp = +7.5 pp
+      top: la que MAS comparte 100.0% · quedarse con 'total' 100.0% · cifra mediana 100.0% · mas digitos 50.0% · primer numero PAR 50.0% 
+
+[E5] Mutantes
+  OK: M1 (revierte la construcción de la unicidad (filtros de D)) cazado por su sonda «L-2: una sola afirmación verdadera» en la semilla 498
+  OK: M2 (permite la dominancia en la rama CURSOS) cazado por su sonda «L-3: cursos y promedio en sentidos opuestos» en la semilla 6
+  OK: M3 (la razón sin sustento nombra a G) cazado por su sonda «L-1: reparto 2 + 2» en la semilla 1
+  OK: M4 (normaliza la rareza «la sede de secundaria» (H-2)) cazado por su sonda «L-1: canónica verbatim (opciones)» en la semilla 7
+  OK: M5 (cambia una celda de la canónica (45 -> 46)) cazado por su sonda «L-1: canónica verbatim (tabla)» en la semilla 7
+  OK: M6 (sube la proporción de la canónica) cazado por su sonda «L-5: P_CANON <= 0,10» en la semilla 1
+  OK: M7 (mete «estudiantes» en un molde) cazado por su sonda «L-1: sin vocabulario de error» en la semilla 2
+  OK: M8 (pone la canónica en la rama PROMEDIO) cazado por su sonda «L-3: la canónica va en la rama CURSOS» en la semilla 7
+  OK: M9 (cambia VERDADERA por verdadera) cazado por su sonda «pregunta del impreso» en la semilla 1
+  OK: M10 (una plantilla omite el criterio del concurso) cazado por su sonda «criterio: gana la mayor cantidad total» en la semilla 1
+  OK: M11 (quita el filtro del canal 3: la cifra de G puede repetir la de P) cazado por su sonda «canal 8: cifras distintas entre opciones» en la semilla 19
+  OK: M13 (revierte la exclusión de los cálculos con la tabla (H1)) cazado por su sonda «H1: la cifra de la razón sin sustento» en la semilla 109
+  OK: M14 (las no canónicas vuelven a «recolectado» en el encabezado) cazado por su sonda «L-1: un solo verbo en el enunciado y en el encabezado» en la semilla 1
+  OK: M16 (vuelve al cierre «su total fue de x kilos más que el de O» (lectura alternativa)) cazado por su sonda «regla #13 v1.1: ninguna lectura que admite el texto cambia el veredicto» en la semilla 1
+  OK: M17 (ERR-TOTAL con el cierre «fue de T_G kilos más que» (ERR-TOTAL y la lectura alternativa)) cazado por su sonda «regla #13 v1.1: ninguna lectura que admite el texto cambia el veredicto» en la semilla 3
+  OK: M18 (una razón sin sustento cita otra cifra («durante 5 días más»)) cazado por su sonda «regla #13 v1.1: la cifra va solo en el complemento» en la semilla 5
+  OK: M12 (fija D como la menor cifra): la sonda S7 lo detecta, +50.0 pp > +8 
+  OK: M15 (quita el filtro del canal 3): la guarda del canal 3 lo detecta en 5 de 100 versiones 
+
+Residuos declarados §P7-B (margen < 15 %: inexplotables, no son defecto):
+  - §P7-B rama PROMEDIO: +10.4 pp por reglas de largo, margen máximo 2.0 % en caracteres y 6.5 % en palabras (inexplotable)
+
+Pendientes de firma del profesor (> +8 pp o premisa firmada superada; exit 3):
+  - S1 descarta cifras de la tabla, rama PROMEDIO: 33.4 % (+8.4 pp); cota del diseño +8,3 pp (+1 pp de coincidencias)
+  - O-1: S_U + S1 (par de G sin la cifra de la tabla), rama CURSOS: 71.0 %, por encima del 50 % que supone la premisa firmada
+  - O-1: S_U + suma (par de G sin la cifra que es suma de otras dos), rama CURSOS: 60.5 %, por encima del 50 % que supone la premisa firmada
+  - O-1: S_U + S1 + suma (las dos pistas), rama CURSOS: 79.0 %, por encima del 50 % que supone la premisa firmada
+  - O-1: S_U + atípica, rama CURSOS: 51.5 %, por encima del 50 % que supone la premisa firmada
+  - O-1: S_U + S1 + suma + atípica, rama CURSOS: 81.5 %, por encima del 50 % que supone la premisa firmada
+  - O-1: S_U + S1 (par de G sin la cifra de la tabla), rama PROMEDIO: 55.0 %, por encima del 50 % que supone la premisa firmada
+  - O-1: S_U + suma (par de G sin la cifra que es suma de otras dos), rama PROMEDIO: 62.0 %, por encima del 50 % que supone la premisa firmada
+  - O-1: S_U + S1 + suma (las dos pistas), rama PROMEDIO: 67.0 %, por encima del 50 % que supone la premisa firmada
+  - O-1: S_U + atípica, rama PROMEDIO: 58.0 %, por encima del 50 % que supone la premisa firmada
+  - O-1: S_U + S1 + suma + atípica, rama PROMEDIO: 74.5 %, por encima del 50 % que supone la premisa firmada
+
+=== RESULTADO: PENDIENTE DE FIRMA (11; 0 fallos) ===

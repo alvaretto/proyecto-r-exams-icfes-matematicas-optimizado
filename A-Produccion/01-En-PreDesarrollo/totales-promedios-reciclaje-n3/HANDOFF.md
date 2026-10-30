@@ -1,8 +1,9 @@
 # HANDOFF — `totales-promedios-reciclaje-n3` (MAT-2026-07-050)
 
 > Estado al 2026-10-29. Antes de tocar nada, leer [`ITEM_OFICIAL.md`](ITEM_OFICIAL.md) y las invariantes
-> [`.claude/CLAUDE.md`](.claude/CLAUDE.md), que prevalecen sobre este archivo. El subproyecto no está
-> versionado todavía (`??` en git).
+> [`.claude/CLAUDE.md`](.claude/CLAUDE.md), que prevalecen sobre este archivo. Versionado desde `17dfc787`
+> (versión aprobada en la ronda 3, md5 `cd94b59a…`). **Vigente: md5 `e293d5c812b1f9790e2bb777b62de9a5`
+> (ronda 4b), 11 de 11, aprobada para el aula el 2026-10-29:** ver § «Rondas 4 y 4b».
 
 ## Qué se hizo
 
@@ -288,7 +289,7 @@ cuentan como una).
 ## FASE 2C, ronda 3: APROBAR_CON_CAMBIOS (2026-10-29)
 
 - **Quién y qué auditó:** un detractor nuevo (ni el de la ronda 1 ni el de la ronda 2), lanzado sin `name:`, sobre el
-  md5 `cd94b59a…`, el vigente.
+  md5 `cd94b59a…`, el vigente en la ronda 3 (desde la ronda 4b el vigente es `e293d5c8…`).
 - **Reporte:** íntegro en `salida/fase2c_r3_detractor.md`, con 11 citas verificadas (0 problemas); el hook registró
   «ENTREGA VERIFICADA».
 - **Corrección limpia:** su oráculo lee el texto y la tabla mostrados: 1 677 264 textos de opción (todo el espacio) y
@@ -311,6 +312,61 @@ cuentan como una).
   (17,5 %, no es CORRECCIÓN), `cursos_txt` sin uso (línea 18), la causa raíz de ERR-TOTAL (la H3 del detractor) y un
   encabezado en negrita huérfano al pie en 11 de 60 PDF.
 - **Pasos 7 a 10 sellados:** 10 de 11. La suite completa no se corrió en esta ronda (la corre el coordinador).
+
+## Rondas 4 y 4b: los 6 bajos de la ronda 3, antes del aula (2026-10-29)
+
+**Decisión del profesor (2026-10-29):** corregir ahora, antes de llevarlo al aula, los 6 hallazgos bajos que
+la ronda 3 dejó para otro ciclo. En el aula se usan celulares, que es donde fallaban dos de ellos.
+Reaperturas #3 (ronda 4) y #4 (ronda 4b), las dos desde `generacion_rmd`. La aprobación de la ronda 3 queda
+des-sellada hasta la nueva decisión.
+
+| Hallazgo (ronda 3) | Corrección | Evidencia |
+|---|---|---|
+| H3 del detractor: la causa raíz de ERR-TOTAL decía «no compara» | «…calcula un total, pero no le resta el del otro grupo» | verdadera en las 22/100 versiones con ERR-TOTAL (FASE 2C r4b) |
+| Paso 8: `cursos_txt` sin uso | retirada | `.Random.seed` idéntico tras el chunk en las semillas 1-1000 (FASE 2C r4) |
+| Paso 8: encabezado en negrita huérfano al pie del PDF | `encabezado()`: tras cada encabezado, bloque `{=latex}` con `\nobreak` y `\@afterheading` (el cierre de un título de sección de LaTeX) | semillas 700001-700060: 14 → 0 (el paso 8 contó 11: su detector no veía las ligaduras «fl»/«fi»); FASE 2C r4: 18/100 → 0/100; FASE 2C r4b: r3 42, r4b 0, mutante sin el bloque 51 |
+| 6b B1: cabeceras de la tabla a 4 px | `<span>` por celda: cabeceras al 90 % y 0,5 em a la izquierda de las columnas 2 y 3 | separación mínima entre cabeceras 11,2-13,5 px (r3: 4-5,8) |
+| 6b B2: «El / Bosque» partido a 360 px | espacio duro (U+00A0) solo en las celdas de «El Bosque» y «La Pradera»; en LaTeX sale `~` | 0/12 versiones partidas a 360, 320 y 1024 px |
+| 6b B3: «(» huérfano en la Solution de ERR-TOTAL | `explica()` sin paréntesis alrededor de la fórmula | 0 casos en las 22 versiones con ERR-TOTAL a 360, 320 y 1024 px |
+
+**Ronda 4b: regresión propia corregida.** El primer relleno de B1 (0,6 em por lado en todas las celdas) hacía
+que la tabla no cupiera en su caja a 360 px en 49/100 versiones (0/100 en la versión aprobada) y a 320 px en
+100/100 (9/100). Se midieron 9 variantes en 100 versiones (`salida/r4/medicion_relleno_tabla.md`): cualquier
+relleno en las columnas 2 y 3 lleva la cifra a 320 px a 49/100, salvo que se compense bajando las cabeceras al
+90 %. Con esa variante (F05), 0/100 a 360 px y 9/100 a 320 px (las canónicas, igual que en la versión aprobada).
+
+**Invariancia.** Opciones, clave, `exsolution`, feedback, enunciado y celdas idénticos a la versión aprobada en
+las semillas 1-1000 (FASE 2C r4); Question idéntica en 100/100 versiones pareadas, con 9 canónicas (FASE 2C r4b).
+Por eso §P7, O-1 corregido y la canónica (H-2) no cambian: 271/300 únicas, diversidad y diagnosticidad PASS.
+
+**Guardas nuevas en `verificar_espacio.R`** (no tocan el `.Rmd`; salida `salida/verificar_espacio_ronda4b.txt`:
+`APROBADO (0 fallos)`, antes «PENDIENTE DE FIRMA (11; 0 fallos)» permanente):
+- H1 de la FASE 2C r4: el alcance firmado de «O-1 corregido» como tabla (`FIRMA_O1`, `FIRMA_S1_PROMEDIO`,
+  `FIRMA_LARGO`), comparada a un decimal como se firmó; el mutante M19 (ERR-TOTAL siempre que se pueda) saca
+  3 de las 10 cifras de lo firmado.
+- H3 de la FASE 2C r4: la suma de control de la canónica también sobre la tabla mostrada (`tabla_md`); el
+  mutante M20 cambia una celda después de `tabla_df`, y la guarda del `.Rmd` no lo ve.
+- H1 de la FASE 2C r4b: guarda estructural de los 8 encabezados de la Solution; mutantes M21 y M22.
+
+| Revisión | Veredicto | Reporte |
+|---|---|---|
+| Arsenal (r4 / r4b) | 0 errores, 6 / 7 advertencias heurísticas | informes en `~/.cache/post-exams2-validation/` |
+| FASE 2C r4 (md5 `7d5855da…`) | `APROBAR_CON_CAMBIOS`, 0 CORRECCIÓN; H1 y H3 hechos en el verificador | `salida/fase2c_r4_detractor.md` |
+| 6b r4 (100 HTML a 360, 320 y 1024 px) | `APTO_CON_OBSERVACIONES`: B1, B2 y B3 corregidos; la regresión del relleno, MEDIA | `salida/r4/6b_auditoria_visual.md` |
+| Paso 8 r4 | `COHERENCIAS_CON_OBSERVACIONES`: 5/5, 0 fallos en 130 HTML, 46 PDF, 12 DOCX y 24 Moodle | `salida/paso8_r4_coherencias.md` |
+| FASE 2C r4b (md5 `e293d5c8…`) | `APROBAR_CON_CAMBIOS`, 0 CORRECCIÓN, 0 críticas, 0 altas | `salida/fase2c_r4b_detractor.md` |
+
+**Residuos de las rondas 4 y 4b, para otro ciclo (ninguno toca la clave, las opciones ni la Solution):**
+- **MEDIA, deuda de la familia F2 (H2 r4, H4 r4b):** la separación de cabeceras vive solo en la copia local de
+  `tabla_responsiva()`; la canónica de `.claude/scripts/snippets_familias_rmd.R` no la tiene. Llevarla allí, con
+  su caso en `test_tabla_responsiva_pdf.R`, es tarea del repo, no de este ejercicio.
+- **BAJA, H2 r4b:** el espacio duro sube el ancho mínimo de la tabla en las 12/100 versiones de «El Bosque» /
+  «La Pradera» (hasta +21,4 px). Con cajas de 240 px o más, igual que la versión aprobada; con cajas más
+  estrechas, peor (a 230 px, 49 contra 37). Falta medir el ancho real de `.qtext` en el Moodle del colegio a
+  320 px.
+- **BAJA, paso 8 r4, código muerto:** `contexto_tipo` y el campo `tipo` de cada plantilla, la rama `dif_cursos`
+  de `verdad()`, `b_debajo` y `lado_gdis` en la rama canónica (`lado_gdis` sí lo lee el verificador) y el
+  parámetro `m` de `MOLDES`.
 
 ## Próximo paso
 
@@ -369,4 +425,11 @@ cuentan como una).
 10. **Siguiente hito: la aplicación en el aula** con estudiantes reales (Nivel 3). La promoción a
     `03-En-Produccion/` se pide solo con esa evidencia (`/promover-ejercicio`).
 
-Aprobado para llevarlo al aula el 2026-10-29; no está en producción.
+11. **Rondas 4 y 4b (2026-10-29):** los 6 bajos corregidos, ver § «Rondas 4 y 4b».
+12. **Decisión del profesor en el WAIT_USER #3 de las rondas 4 y 4b (2026-10-29): `a`, aprobado para el aula**
+    en la versión md5 `e293d5c8…`. `aprobacion_usuario` queda sellado: 11 de 11. Los residuos de § «Rondas 4 y
+    4b» quedan para otro ciclo.
+13. **Siguiente hito: la aplicación en el aula** con estudiantes reales (Nivel 3); la promoción a
+    `03-En-Produccion/` se pide solo con esa evidencia (`/promover-ejercicio`).
+
+Aprobado para llevarlo al aula el 2026-10-29 (md5 `e293d5c8…`, ronda 4b); no está en producción.
