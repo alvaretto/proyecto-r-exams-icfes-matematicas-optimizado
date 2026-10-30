@@ -94,7 +94,8 @@ stopifnot(max(valores) - min(valores) == objetivo)
 
 **Familia (helper):**
 ```r
-tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0), ancho_max_pdf = 85) {
+tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0), ancho_max_pdf = 85,
+                             separacion = NULL, tam_cabecera = "0.9em") {   # separación: v1.4, opcional
   df2 <- data.frame(lapply(df, as.character), stringsAsFactors = FALSE, check.names = FALSE)
   if (length(bold_rows)) for (r in bold_rows)
     df2[r, ] <- lapply(df2[r, , drop = FALSE], function(x) paste0("**", x, "**"))  # negrita nativa
@@ -103,6 +104,13 @@ tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0), ancho_max
   ancho <- sum(anchos_col) + 2L * length(anchos_col) + 1L
   if (!is.null(ancho_max_pdf) && ancho > ancho_max_pdf)
     stop("tabla_responsiva(): la tabla mide ", ancho, " caracteres de ancho ... use lista_responsiva()")
+  if (!is.null(separacion)) {   # v1.4: un <span> por celda, DESPUÉS de medir el ancho
+    envolver <- function(x, j, cab) paste0("<span style=\"display:inline-block;",
+      if (j > 1L) paste0(" padding-left:", separacion, ";") else "",
+      if (cab && !is.null(tam_cabecera)) paste0(" font-size:", tam_cabecera, ";") else "", "\">", x, "</span>")
+    for (j in seq_along(df2)) df2[[j]] <- envolver(df2[[j]], j, FALSE)
+    names(df2) <- vapply(seq_along(df2), function(j) envolver(names(df2)[j], j, TRUE), "")
+  }
   md <- paste(knitr::kable(df2, format = "markdown", align = align), collapse = "\n")
   if (knitr::is_latex_output()) md   # RAMA MUERTA: siempre FALSE bajo R/exams (ver aviso arriba)
   else paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; margin:0.6em 0;\"}\n\n",
@@ -156,6 +164,50 @@ mide 85 o 92).
 **Test:** `tests/testthat/test_tabla_responsiva_pdf.R` (límite exacto 85/86, independencia del `align`,
 formato de la lista y, si hay `pdflatex`, la calibración con el pipeline real: 85 sin desborde, 97 con
 desborde, la lista de frases largas sin desborde).
+
+### Separación de cabeceras en HTML y Moodle: opcional y medida (v1.4, 2026-10-29)
+
+**Síntoma:** la tabla que emiten `exams2html` y Moodle no trae relleno de celda. Las cabeceras quedan a
+4-6 px entre sí y se leen casi como una sola frase («Sede Cantidad de cursos Promedio de …»). Lo reportó
+la auditoría visual del ítem 50 (`totales-promedios-reciclaje-n3`) en 100 de 100 versiones.
+
+**Arreglo:** `tabla_responsiva(..., separacion = "0.5em")` envuelve cada celda en un `<span>` con estilo
+en línea:
+- `padding-left` = `separacion` desde la columna 2; la columna 1 no lleva relleno;
+- las cabeceras van a `tam_cabecera`, por defecto `0.9em`.
+
+El `<span>` se pone **después** de medir el ancho, así que la guarda del PDF sigue midiendo el texto.
+Pandoc lo conserva en HTML y Moodle, y en LaTeX y DOCX deja solo el texto (`{\textbf{El~Bosque}}`).
+No va en un `<style>`, porque en Moodle afectaría a todas las tablas de la página.
+
+**Por qué es opcional, y no el comportamiento por defecto.** A 320-360 px una tabla suele estar ya en su
+ancho mínimo: todo relleno horizontal la empuja fuera de su caja, y el estudiante tiene que desplazarla
+para ver la última columna.
+- En el ítem 50, el primer relleno (0,6 em por lado en cada celda) dejaba la tabla fuera de su caja a 360 px
+  en 49/100 versiones, frente a 0/100 sin relleno.
+- La variante de arriba (0,5 em solo a la izquierda y cabeceras al 90 %) daba 0/100 a 360 px y 9/100 a
+  320 px, igual que sin relleno, con 11-13,5 px entre cabeceras.
+
+Esa misma variante **no generaliza**. Medido el 2026-10-29 en los 7 ejercicios de `01-En-PreDesarrollo/`
+que llaman a la F2. Son 20 versiones por ejercicio, con las mismas semillas sin y con la separación:
+140 renders reales; el N es menor de 100 por costo, y se declara según la regla #23, familia B.
+
+| Ejercicio | Fuera de su caja a 360 px (sin → con) | A 320 px | Separación mínima a 360 px |
+|---|---|---|---|
+| grafica-circular-consumo-agua v1 | 0 → 0 | 20 → 20 | 4,0 → 11,2 px |
+| **grafica-circular-consumo-agua v2** | **0 → 12** | 20 → 20 | 4,2 → 11,2 px |
+| Rango-Colesterol-Pacientes CLOZE | 20 → 20 | 20 → 20 | 4,0 → 11,2 px |
+| migraciones-exteriores CLOZE | 0 → 0 | 20 → 20 | 6,6 → 14,2 px |
+| tasa-caminata SCHOICE, CLOZE v1 y v2 | 0 → 0 | 0 → 0 | 173 → 184 px |
+
+**Regla de uso:**
+- Activarla solo después de medir el ejercicio con y sin ella, con las mismas semillas, a 360 y a 320 px.
+- Se mantiene solo si no aumenta las tablas fuera de su caja.
+
+El método y la medición del ítem 50 están en
+`A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/HANDOFF.md`, § «Rondas 4 y 4b», y en
+`salida/r4/medicion_relleno_tabla.md` de esa misma carpeta. La tabla también deja ver que tres de esos ejercicios ya desbordan
+a 320 px sin separación, y uno incluso a 360 px. Es un defecto previo, fuera de esta versión.
 
 ---
 
@@ -268,7 +320,7 @@ Por la auto-contención de los `.Rmd` (R-exams copia el ejercicio a un edir temp
 | Familia | Verificación |
 |---|---|
 | 1 (sin cuelgue) | `tests/testthat/test_data_generation_no_hang.R` (estático + runtime timeout) |
-| 2 (tablas responsivas) | render 4 formatos + grep `overflow-x` (HTML/Moodle) + `<w:tbl>` (DOCX) + `tests/testthat/test_tabla_responsiva_pdf.R` (margen del PDF, v1.3) |
+| 2 (tablas responsivas) | render 4 formatos + grep `overflow-x` (HTML/Moodle) + `<w:tbl>` (DOCX) + `tests/testthat/test_tabla_responsiva_pdf.R` (margen del PDF, v1.3; separación opcional de cabeceras y su conversión con pandoc, v1.4) + si se activa la separación, medición pareada a 360 y 320 px |
 | 3 (ecuaciones responsivas) | igual que F2 (divs por ecuación) |
 | 4 (marcas cloze) | verificador marca-vs-verdad sobre XML Moodle |
 | 5 (sample escalar) | cubierto por F1 + análisis estático de `sample(` en `calcula()` |
@@ -276,8 +328,10 @@ Por la auto-contención de los `.Rmd` (R-exams copia el ejercicio a un edir temp
 
 ---
 
-**Versión:** 1.3
-**Fecha:** 2026-10-22 (v1.3 — la Familia 2 no advertía que en el PDF de R/exams una tabla pipe no
+**Versión:** 1.4
+**Fecha:** 2026-10-29 (v1.4 — separación opcional de cabeceras en `tabla_responsiva()`, desactivada por
+defecto porque en otro ejercicio desborda la tabla; ver § «Separación de cabeceras en HTML y Moodle»);
+2026-10-22 (v1.3 — la Familia 2 no advertía que en el PDF de R/exams una tabla pipe no
 parte el texto de sus celdas: guarda de ancho calibrada en `tabla_responsiva()` y helper
 `lista_responsiva()`; ver § «En el PDF la tabla no parte el texto de sus celdas»); 2026-08-15 (v1.2 — **corrección factual**: la Familia 2 afirmaba que
 `knitr::is_latex_output()` es el «ÚNICO discriminador (TRUE = PDF/NOPS)» bajo R/exams. Medido:

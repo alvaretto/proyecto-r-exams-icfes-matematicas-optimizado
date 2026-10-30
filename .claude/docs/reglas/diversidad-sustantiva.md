@@ -459,6 +459,25 @@ poder cerrar, el gate queda apagado para siempre.
 
 **Alcance del override (2026-10-29).** Todo override firmado declara su **alcance**: la cifra medida o el parámetro que lo acota. Precedentes: `P_CANON <= 0.10` en `probabilidad-fichas-tabla-doble-entrada-n2`, y O-1 «hasta +16,7 pp» en `totales-promedios-reciclaje-n3`. Si una medición posterior supera ese alcance, o aparece otro canal por encima de +8 pp, el override no lo cubre y vuelve al humano: estirarlo en silencio sobre un canal que creció sería relajar sin firma (regla #24 H-5).
 
+**La guarda del alcance (v1.9, 2026-10-29).** El alcance escrito en prosa no vigila nada: hay que
+cablearlo en el verificador del ejercicio, con tres estados distintos.
+- **Dentro de lo firmado:** el canal se reporta **«rojo, cubierto por el override»** y el verificador
+  sale con un código propio (en `totales-promedios-reciclaje-n3`, exit 4). Nunca `OK`, `PASS` ni
+  `APROBADO`: la batería sigue en rojo, como manda el párrafo anterior.
+- **Por encima de lo firmado, o un canal nuevo por encima de +8 pp:** **pendiente de firma**, con su
+  propio código (exit 3). Vuelve al humano.
+- **Fallo de una guarda:** exit 1, como siempre.
+
+Las cifras se guardan **tal como se firmaron**, con la misma precisión: se compara el valor redondeado
+a un decimal, para que 33,42 % no exceda un 33,4 % firmado. Un **mutante** que empuje un canal por
+encima de lo firmado debe sacar la salida del estado «cubierto».
+
+Origen: ítem 50, rondas 4 y 4b. Los dos estados equivocados se dieron el mismo día. Primero, un
+«pendiente de firma» **permanente**, porque el verificador seguía comparando con la premisa tachada: no
+distinguía «dentro del alcance» de «lo superó» (Errores 35-37, otra invariante en prosa sin guarda).
+Después, al cablear las cifras, el verificador pasó a decir `APROBADO (0 fallos)` con exit 0. Así quedó
+en un commit, que es justo el gate apagado contra el que advierte esta sección.
+
 #### Por qué NO se cableó dentro de `validar_diagnosticidad.R`
 
 Se evaluó y se descartó **a propósito**. Sus sondas H1/H2/H3/H3b son genéricas porque miden
@@ -652,8 +671,10 @@ Si por diseño pedagógico un ejercicio necesita comparar exactamente los mismos
 
 ---
 
-**Versión:** 1.8
-**Fecha:** 2026-09-13 (v1.8 — nuevo **§P7-F**: el espacio de diseño puede tener UNA SOLA
+**Versión:** 1.9
+**Fecha:** 2026-10-29 (v1.9 — §P7-E: el alcance de un override firmado se cablea en el verificador
+con tres estados, rojo cubierto, pendiente de firma y fallo, y nunca como PASS; origen: ítem 50,
+rondas 4 y 4b); 2026-09-13 (v1.8 — nuevo **§P7-F**: el espacio de diseño puede tener UNA SOLA
 combinación viable (matriz `teorema × magnitud pedida` de `teorema-coseno-datos-suficientes-n3`,
 donde sólo la rama oficial admite clave única y distractor del mismo molde); enumerar antes de
 rediseñar, en vez de perseguir una rama estructuralmente imposible. Nota de **cobertura NOMINAL**
@@ -668,9 +689,11 @@ Ver Errores 33 y 34; v1.6 2026-08-15)
 **Excepciones:** NINGUNA
 **Aplica a:** todo archivo `.Rmd` SCHOICE o CLOZE en desarrollo o revisión.
 
-### Cambios 2026-10-29 (sin cambio de versión)
+### Cambios v1.9 (2026-10-29) — §P7-E: alcance del override y su guarda
 
-- 2026-10-29 — §P7-E: alcance del override.
+- §P7-E: alcance del override (todo override declara la cifra o el parámetro que lo acota).
+- §P7-E: la guarda del alcance. Tres estados en el verificador: rojo cubierto, pendiente de firma y
+  fallo, con las cifras guardadas tal como se firmaron y un mutante que las exceda. Nunca PASS.
 
 ### Cambios v1.8 (2026-09-13) — §P7-F: enumerar el espacio antes de rediseñar
 

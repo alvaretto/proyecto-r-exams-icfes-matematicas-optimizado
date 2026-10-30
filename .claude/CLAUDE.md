@@ -185,7 +185,7 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.32.1 (regla #13 v1.2: la canónica conserva el impreso y las reescrituras se miden)
+**Versión**: 3.33.0 (regla #22 v1.9: el alcance de un override se cablea sin volverlo PASS; regla #21 v1.4: separación opcional de cabeceras en la F2)
 **Fecha**: 2026-10-29
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)

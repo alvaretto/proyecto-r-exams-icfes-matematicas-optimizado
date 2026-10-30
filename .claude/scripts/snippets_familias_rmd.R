@@ -60,7 +60,25 @@ construir_valores_con_rango <- function(rango_objetivo, n, lo, hi) {
 # eso la función ABORTA si el ancho supera ancho_max_pdf. Con frases en las celdas,
 # usar lista_responsiva(). ancho_max_pdf = NULL desactiva la guarda: solo después de
 # revisar el PDF.
-tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0), ancho_max_pdf = 85) {
+# separacion y tam_cabecera (2026-10-29, ítem 50, B1 de su auditoría visual): la tabla
+# de exams2html y la de Moodle no traen relleno de celda, y las cabeceras quedaban a
+# 4-6 px entre sí, leídas casi como una sola frase. Cada celda va en un <span> con
+# estilo en línea, puesto DESPUÉS de medir el ancho (la guarda del PDF mide el texto):
+# padding-left = separacion desde la columna 2, y las cabeceras a tam_cabecera. Pandoc
+# lo conserva en HTML y Moodle y en LaTeX y DOCX deja solo el texto. No va en un
+# <style>: afectaría a todas las tablas de la página de Moodle. Medido en 100
+# versiones del ítem 50: 0,6 em por lado en cada celda desbordaba la caja a 360 px en
+# 49/100 (0/100 sin relleno), porque a 320-360 px la tabla ya está en su ancho
+# mínimo; con 0,5 em solo a la izquierda y las cabeceras al 90 %, 0/100 a 360 px y
+# 9/100 a 320 px, como sin relleno, con 11-13,5 px entre cabeceras.
+# NO VIENE ACTIVADA (separacion = NULL emite la tabla de siempre, sin <span>): en otra
+# tabla esa misma variante SÍ desborda. Medido el 2026-10-29 en los 7 ejercicios que
+# llaman a la F2 (20 versiones cada uno, sin la separación y con ella): a 360 px,
+# grafica-circular-consumo-agua v2 pasa de 0/20 a 12/20 tablas fuera de su caja; los
+# otros 6 no cambian. Activarla (separacion = "0.5em") solo tras medir el ejercicio con
+# y sin ella, mismas semillas, a 360 y 320 px: regla #21, Familia 2.
+tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0), ancho_max_pdf = 85,
+                             separacion = NULL, tam_cabecera = "0.9em") {
   df2 <- data.frame(lapply(df, as.character), stringsAsFactors = FALSE, check.names = FALSE)
   if (length(bold_rows)) for (r in bold_rows)
     df2[r, ] <- lapply(df2[r, , drop = FALSE], function(x) paste0("**", x, "**"))
@@ -73,6 +91,13 @@ tabla_responsiva <- function(df, align = NULL, bold_rows = integer(0), ancho_max
       "una tabla pipe no parte el texto: se saldría del margen (límite medido: %d). ",
       "Use lista_responsiva(), acorte las celdas o, si ya revisó el PDF, pase ",
       "ancho_max_pdf = NULL."), as.integer(ancho), ancho_max_pdf), call. = FALSE)
+  if (!is.null(separacion)) {
+    envolver <- function(x, j, cab) paste0("<span style=\"display:inline-block;",
+      if (j > 1L) paste0(" padding-left:", separacion, ";") else "",
+      if (cab && !is.null(tam_cabecera)) paste0(" font-size:", tam_cabecera, ";") else "", "\">", x, "</span>")
+    for (j in seq_along(df2)) df2[[j]] <- envolver(df2[[j]], j, FALSE)
+    names(df2) <- vapply(seq_along(df2), function(j) envolver(names(df2)[j], j, TRUE), "")
+  }
   md <- paste(knitr::kable(df2, format = "markdown", align = align), collapse = "\n")
   # ⚠️ RAMA MUERTA (anotado 2026-08-15): `knitr::is_latex_output()` es SIEMPRE FALSE
   # bajo R/exams — los 5 pipelines tejen a Markdown y delegan la conversión en pandoc,

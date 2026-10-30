@@ -20,6 +20,14 @@
 #      caracteres no desborda, la de 97 sí, y la lista de frases largas tampoco
 #      desborda. Es la calibración del 2026-10-22; si exams o pandoc cambian, este
 #      bloque avisa.
+#   6. Separación de cabeceras (2026-10-29, ítem 50), OPCIONAL: por defecto la tabla
+#      sale como siempre, sin <span> (la variante desborda en otros ejercicios); con
+#      separacion = "0.5em", cada celda va en un <span> con padding-left desde la
+#      columna 2 y las cabeceras al 90 %, y la columna 1 no lleva relleno.
+#   7. La guarda del PDF mide el texto, no el <span>: con la separación, 85 sigue
+#      pasando y 86 abortando, aunque la línea emitida sea mucho más larga.
+#   8. Con pandoc (si está): el <span> llega al HTML y desaparece en LaTeX y en DOCX,
+#      que conservan el texto de las celdas.
 # =============================================================================
 
 library(testthat)
@@ -59,11 +67,62 @@ numerica <- function(k) {
 
 context("Familia F2: tabla_responsiva() y el margen del PDF")
 
-test_that("una tabla corta sale como antes, sin error", {
+test_that("una tabla corta sale como antes, sin error ni <span> (por defecto)", {
   df <- data.frame(Mes = c("Enero", "Febrero"), Vasos = c(3, 4))
   out <- fam$tabla_responsiva(df, align = c("l", "c"))
   expect_true(grepl("::: {style=", out, fixed = TRUE))
   expect_true(grepl("|Mes", gsub(" ", "", out), fixed = TRUE))
+  expect_false(grepl("<span", out, fixed = TRUE))
+})
+
+## Celdas de la línea pipe i (1 = cabecera, 2 = separador, 3.. = cuerpo).
+celdas_pipe <- function(out, i) {
+  l <- grep("^\\|", strsplit(out, "\n", fixed = TRUE)[[1]], value = TRUE)[i]
+  trimws(strsplit(sub("^\\|", "", sub("\\|$", "", l)), "|", fixed = TRUE)[[1]])
+}
+
+test_that("separación de cabeceras (opcional): <span> por celda, relleno desde la columna 2, cabeceras al 90 %", {
+  df <- data.frame(Sede = c("Norte", "Sur"), Cursos = c("6 cursos", "5 cursos"),
+                   Promedio = c("40 kilos", "45 kilos"))
+  out <- fam$tabla_responsiva(df, align = c("c", "c", "c"), separacion = "0.5em")
+  cab <- celdas_pipe(out, 1); cue <- celdas_pipe(out, 3)
+  expect_identical(cab[1], '<span style="display:inline-block; font-size:0.9em;">Sede</span>')
+  expect_identical(cab[2], '<span style="display:inline-block; padding-left:0.5em; font-size:0.9em;">Cursos</span>')
+  expect_identical(cue[1], '<span style="display:inline-block;">Norte</span>')
+  expect_identical(cue[3], '<span style="display:inline-block; padding-left:0.5em;">40 kilos</span>')
+  expect_identical(lengths(regmatches(out, gregexpr("<span", out, fixed = TRUE))), 9L)
+  # Los parámetros mandan, y tam_cabecera = NULL no deja un «font-size:;» vacío.
+  out2 <- fam$tabla_responsiva(df, separacion = "1em", tam_cabecera = NULL)
+  expect_true(grepl("padding-left:1em;", out2, fixed = TRUE))
+  expect_false(grepl("font-size", out2, fixed = TRUE))
+  # La negrita de bold_rows queda dentro del <span>.
+  out3 <- fam$tabla_responsiva(df, bold_rows = 1L, separacion = "0.5em")
+  expect_true(grepl('<span style="display:inline-block;">**Norte**</span>', out3, fixed = TRUE))
+})
+
+test_that("la guarda del PDF mide el texto, no el <span>: 85 pasa y 86 aborta igual", {
+  out <- expect_silent(fam$tabla_responsiva(tabla_de_ancho(85), separacion = "0.5em"))
+  expect_gt(max(nchar(strsplit(out, "\n", fixed = TRUE)[[1]])), 85L)   # la línea emitida es más larga
+  expect_error(fam$tabla_responsiva(tabla_de_ancho(86), separacion = "0.5em"), "mide 86 caracteres")
+  expect_silent(fam$tabla_responsiva(numerica(7), separacion = "0.5em"))
+})
+
+test_that("con pandoc: el <span> llega al HTML y desaparece en LaTeX y DOCX", {
+  pandoc <- Sys.which("pandoc")
+  skip_if(!nzchar(pandoc), "sin pandoc")
+  df <- data.frame(Sede = c("El Bosque", "Sur"), Cursos = c("6 cursos", "5 cursos"), check.names = FALSE)
+  md <- tempfile(fileext = ".md"); writeLines(fam$tabla_responsiva(df, separacion = "0.5em"), md, useBytes = TRUE)
+  conv <- function(to, ...) system2(pandoc, c("-f", "markdown", "-t", to, "--wrap=none", md, ...), stdout = TRUE)
+  html <- paste(conv("html"), collapse = "\n")
+  expect_true(grepl('<span style="display:inline-block; padding-left:0.5em; font-size:0.9em;">Cursos</span>', html, fixed = TRUE))
+  tex <- paste(conv("latex"), collapse = "\n")
+  expect_false(any(vapply(c("span", "padding", "font-size", "inline-block"), grepl, NA, tex, fixed = TRUE)))
+  expect_true(grepl("El~Bosque", tex, fixed = TRUE) && grepl("6 cursos", tex, fixed = TRUE))
+  docx <- tempfile(fileext = ".docx"); conv("docx", "-o", docx)
+  d <- tempfile(); utils::unzip(docx, "word/document.xml", exdir = d)
+  xml <- paste(readLines(file.path(d, "word", "document.xml"), warn = FALSE, encoding = "UTF-8"), collapse = "")
+  expect_false(any(vapply(c("span", "padding", "font-size"), grepl, NA, xml, fixed = TRUE)))
+  expect_true(grepl("6 cursos", xml, fixed = TRUE) && grepl("Cursos", xml, fixed = TRUE))
 })
 
 test_that("la serie numérica de la calibración: 85 caracteres pasa, 97 aborta", {

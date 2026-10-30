@@ -231,6 +231,8 @@ CORRECCIÓN.
 
 **Guarda ejecutable (ronda 4, H1 de la FASE 2C r4).** `verificar_espacio.R` lleva estas cifras como
 `FIRMA_O1`, `FIRMA_S1_PROMEDIO` y `FIRMA_LARGO`, y las compara redondeadas a un decimal, como se firmaron.
-Hasta lo firmado da OK; por encima, PENDIENTE DE FIRMA (exit 3). El mutante M19 fuerza ERR-TOTAL y debe
-sacar alguna cifra de lo firmado. Antes de la ronda 4 el verificador comparaba con el 50 % de la premisa
-tachada y salía siempre con exit 3, así que no distinguía «dentro del alcance» de «lo superó».
+Hasta lo firmado, el canal sigue EN ROJO y el verificador lo reporta «ROJO, cubierto por O-1 corregido»
+(exit 4), nunca PASS: la regla #22 §P7-E deja la batería en rojo bajo un override. Por encima, PENDIENTE
+DE FIRMA (exit 3). El mutante M19 fuerza ERR-TOTAL y debe sacar alguna cifra de lo firmado. Antes de la
+ronda 4 el verificador comparaba con el 50 % de la premisa tachada y salía siempre con exit 3, así que no
+distinguía «dentro del alcance» de «lo superó».

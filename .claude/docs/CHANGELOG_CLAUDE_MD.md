@@ -8,6 +8,43 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.33.0 (2026-10-29)
+
+Decisiones de las rondas 4 y 4b del ítem 50 (`totales-promedios-reciclaje-n3`), que llevaron a
+cambiar dos reglas.
+
+- **Regla #22 v1.9, §P7-E: la guarda del alcance de un override.** El alcance firmado de un override se
+  cablea en el verificador del ejercicio, con sus cifras tal como se firmaron (a un decimal). Hay tres
+  estados distintos:
+  - **«rojo cubierto»**, con código de salida propio; nunca PASS;
+  - **pendiente de firma**, si una cifra supera lo firmado o aparece un canal nuevo;
+  - **fallo**.
+
+  Un mutante tiene que sacar el ejercicio del estado «cubierto». En el ítem 50 se dieron los dos
+  estados equivocados el mismo día:
+  - primero, un «pendiente de firma» permanente que no distinguía «dentro del alcance» de «lo superó»;
+  - después, un `APROBADO (0 fallos)` con exit 0, que apagaba el gate contra el que advierte §P7-E y
+    quedó así en `8efdf504`.
+
+  Es la tercera vez que una invariante en prosa queda sin guarda ejecutable (Errores 35-37). El
+  verificador del ítem 50 ahora sale con «EN ROJO BAJO OVERRIDE FIRMADO», exit 4.
+- **Regla #21 v1.4, Familia 2: separación opcional de cabeceras.**
+  - `tabla_responsiva()` canónica gana `separacion` y `tam_cabecera`: un `<span>` por celda, puesto después
+    de medir el ancho, con 0,5 em a la izquierda desde la columna 2 y las cabeceras al 90 %.
+  - **No viene activada.** Medida en los 7 ejercicios que llaman a la F2 (20 versiones cada uno, con y sin
+    la separación), saca la tabla de su caja a 360 px en `grafica-circular-consumo-agua` v2 (de 0/20 a
+    12/20). En el ítem 50 no la sacaba.
+  - Se activa solo tras medir el ejercicio con y sin ella, a 360 y 320 px.
+  - `test_tabla_responsiva_pdf.R` suma 3 bloques: la salida por defecto sin `<span>`, la variante, que la
+    guarda del PDF mida el texto, y que pandoc conserve el `<span>` en HTML y lo quite en LaTeX y DOCX.
+    Dos mutantes de la función, medir después de envolver y relleno en la columna 1, rompen 6 y 3 bloques.
+- **Sin norma nueva**, por no cumplir el criterio (general, grave o repetida, invisible a los gates y sin
+  cobertura):
+  - El arreglo del encabezado de la Solution que queda solo al pie del PDF: cosmético, y solo en el PDF.
+  - El espacio duro en rótulos de varias palabras: menor.
+  - Medir un arreglo visual contra la versión aprobada: ya lo cubre la auditoría visual 6b, que fue la que
+    detectó la regresión. Queda como memoria de trabajo.
+
 ### Cambios v3.32.1 (2026-10-29)
 
 - **Regla #13 v1.2: la instancia canónica conserva el impreso, y las reescrituras se miden.** Dos hallazgos

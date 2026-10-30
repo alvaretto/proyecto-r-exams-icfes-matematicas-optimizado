@@ -25,7 +25,7 @@ El agente `validator` del Context Engineering global tiene la función de "crear
 La lista vive en `tests/run_all_tests.R`; la columna «Qué valida» copia su campo `nombre`.
 
 <!-- SUITES:INICIO — generado por tests/sincronizar_doc_suites.R; no editar a mano -->
-Cifras (derivadas del runner): 46 suites, 419 bloques `test_that` y 8 suites sin `watch`.
+Cifras (derivadas del runner): 46 suites, 422 bloques `test_that` y 8 suites sin `watch`.
 
 | # | Archivo | Qué valida |
 |---|---------|-----------|

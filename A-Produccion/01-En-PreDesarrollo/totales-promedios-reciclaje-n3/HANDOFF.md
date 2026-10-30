@@ -340,7 +340,10 @@ las semillas 1-1000 (FASE 2C r4); Question idéntica en 100/100 versiones paread
 Por eso §P7, O-1 corregido y la canónica (H-2) no cambian: 271/300 únicas, diversidad y diagnosticidad PASS.
 
 **Guardas nuevas en `verificar_espacio.R`** (no tocan el `.Rmd`; salida `salida/verificar_espacio_ronda4b.txt`:
-`APROBADO (0 fallos)`, antes «PENDIENTE DE FIRMA (11; 0 fallos)» permanente):
+«EN ROJO BAJO OVERRIDE FIRMADO (13 canales dentro del alcance de O-1 corregido; 0 fallos, 0 pendientes)»,
+exit 4; antes, «PENDIENTE DE FIRMA (11; 0 fallos)» permanente. En la ronda 4b llegó a decir «APROBADO
+(0 fallos)» con exit 0, y así quedó en el commit `8efdf504`; se corrigió el mismo 2026-10-29 porque la regla
+#22 §P7-E deja la batería en rojo bajo un override, y un PASS apagaría el gate):
 - H1 de la FASE 2C r4: el alcance firmado de «O-1 corregido» como tabla (`FIRMA_O1`, `FIRMA_S1_PROMEDIO`,
   `FIRMA_LARGO`), comparada a un decimal como se firmó; el mutante M19 (ERR-TOTAL siempre que se pueda) saca
   3 de las 10 cifras de lo firmado.
@@ -357,9 +360,11 @@ Por eso §P7, O-1 corregido y la canónica (H-2) no cambian: 271/300 únicas, di
 | FASE 2C r4b (md5 `e293d5c8…`) | `APROBAR_CON_CAMBIOS`, 0 CORRECCIÓN, 0 críticas, 0 altas | `salida/fase2c_r4b_detractor.md` |
 
 **Residuos de las rondas 4 y 4b, para otro ciclo (ninguno toca la clave, las opciones ni la Solution):**
-- **MEDIA, deuda de la familia F2 (H2 r4, H4 r4b):** la separación de cabeceras vive solo en la copia local de
-  `tabla_responsiva()`; la canónica de `.claude/scripts/snippets_familias_rmd.R` no la tiene. Llevarla allí, con
-  su caso en `test_tabla_responsiva_pdf.R`, es tarea del repo, no de este ejercicio.
+- ~~**MEDIA, deuda de la familia F2 (H2 r4, H4 r4b)**~~. **Resuelta en el repo el 2026-10-29** (regla #21
+  v1.4): la `tabla_responsiva()` canónica tiene `separacion` y `tam_cabecera`, pero **desactivados por
+  defecto**. Medida en los 7 ejercicios que llaman a la F2, la misma variante saca la tabla de su caja a
+  360 px en `grafica-circular-consumo-agua` v2 (de 0/20 a 12/20). Queda para el próximo ciclo de este
+  `.Rmd` actualizar el comentario de su copia local («la función de snippets_familias_rmd.R no lo tiene»).
 - **BAJA, H2 r4b:** el espacio duro sube el ancho mínimo de la tabla en las 12/100 versiones de «El Bosque» /
   «La Pradera» (hasta +21,4 px). Con cajas de 240 px o más, igual que la versión aprobada; con cajas más
   estrechas, peor (a 230 px, 49 contra 37). Falta medir el ancho real de `.qtext` en el Moodle del colegio a

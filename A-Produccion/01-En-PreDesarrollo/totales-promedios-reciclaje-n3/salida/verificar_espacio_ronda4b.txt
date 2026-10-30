@@ -123,7 +123,7 @@ ERR-TOTAL        9       17
   OK: H1 clave única más corta (margen 15 %) en la rama PROMEDIO: 0 % (bloquea el 100 %; aviso desde 90 %) 
   OK: canal 3: en toda versión, a lo sumo un distractor cita un dato de la tabla en kilos, y nunca la clave 
   OK: H5: S1 descarta cifras de la tabla, rama CURSOS: 28.2 % (+3.2 pp; obliga > +8) 
-  OK (alcance firmado): O-1 corregido: S1 descarta cifras de la tabla, rama PROMEDIO: 33.4 % (+8.4 pp; firmado hasta +8,4 pp) 
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S1 descarta cifras de la tabla, rama PROMEDIO: 33.4 % (+8.4 pp; firmado hasta +8,4 pp) 
   OK: H5: S1b se queda con cifras de la tabla, rama CURSOS: 15.0 % (-10.0 pp; obliga > +8) 
   OK: H5: S1b se queda con cifras de la tabla, rama PROMEDIO: 3.2 % (-21.8 pp; obliga > +8) 
   OK: H5: S2 par de la sede de la fila 1, rama CURSOS: 22.5 % (-2.5 pp; obliga > +8) 
@@ -134,20 +134,20 @@ ERR-TOTAL        9       17
   OK: H5: S4 par de la sede de mayor promedio, mezcla ponderada: 25.0 % (+0.0 pp; obliga > +8) 
   OK: H5: S5 más cursos + menor cifra del par, mezcla ponderada: 27.2 % (+2.2 pp; obliga > +8) 
   OK: H5: S6 mayor promedio + menor cifra del par, mezcla ponderada: 23.0 % (-2.0 pp; obliga > +8) 
-  OK: O-1: S_U, rama CURSOS: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7) 
-  OK (alcance firmado): O-1 corregido: S_U + S1 (par de G sin la cifra de la tabla), rama CURSOS: 71.0 % (firmado hasta 71.0 %) 
-  OK (alcance firmado): O-1 corregido: S_U + suma (par de G sin la cifra que es suma de otras dos), rama CURSOS: 60.5 % (firmado hasta 60.5 %) 
-  OK (alcance firmado): O-1 corregido: S_U + S1 + suma (las dos pistas), rama CURSOS: 79.0 % (firmado hasta 79.0 %) 
-  OK (alcance firmado): O-1 corregido: S_U + atípica, rama CURSOS: 51.5 % (firmado hasta 51.5 %) 
-  OK (alcance firmado): O-1 corregido: S_U + S1 + suma + atípica, rama CURSOS: 81.5 % (firmado hasta 81.5 %) 
+  ROJO, cubierto por O-1 corregido: O-1: S_U, rama CURSOS: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7) 
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 (par de G sin la cifra de la tabla), rama CURSOS: 71.0 % (firmado hasta 71.0 %) 
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + suma (par de G sin la cifra que es suma de otras dos), rama CURSOS: 60.5 % (firmado hasta 60.5 %) 
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 + suma (las dos pistas), rama CURSOS: 79.0 % (firmado hasta 79.0 %) 
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + atípica, rama CURSOS: 51.5 % (firmado hasta 51.5 %) 
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 + suma + atípica, rama CURSOS: 81.5 % (firmado hasta 81.5 %) 
   OK: R_dif la cifra que es diferencia de otras dos, rama CURSOS: +5.2 pp (obliga > +8) 
   OK: Atípica: descarta la cifra que dobla a todas las demás, rama CURSOS: +0.1 pp (obliga > +8) 
-  OK: O-1: S_U, rama PROMEDIO: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7) 
-  OK (alcance firmado): O-1 corregido: S_U + S1 (par de G sin la cifra de la tabla), rama PROMEDIO: 55.0 % (firmado hasta 55.0 %) 
-  OK (alcance firmado): O-1 corregido: S_U + suma (par de G sin la cifra que es suma de otras dos), rama PROMEDIO: 62.0 % (firmado hasta 62.0 %) 
-  OK (alcance firmado): O-1 corregido: S_U + S1 + suma (las dos pistas), rama PROMEDIO: 67.0 % (firmado hasta 67.0 %) 
-  OK (alcance firmado): O-1 corregido: S_U + atípica, rama PROMEDIO: 58.0 % (firmado hasta 58.0 %) 
-  OK (alcance firmado): O-1 corregido: S_U + S1 + suma + atípica, rama PROMEDIO: 74.5 % (firmado hasta 74.5 %) 
+  ROJO, cubierto por O-1 corregido: O-1: S_U, rama PROMEDIO: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7) 
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 (par de G sin la cifra de la tabla), rama PROMEDIO: 55.0 % (firmado hasta 55.0 %) 
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + suma (par de G sin la cifra que es suma de otras dos), rama PROMEDIO: 62.0 % (firmado hasta 62.0 %) 
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 + suma (las dos pistas), rama PROMEDIO: 67.0 % (firmado hasta 67.0 %) 
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + atípica, rama PROMEDIO: 58.0 % (firmado hasta 58.0 %) 
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 + suma + atípica, rama PROMEDIO: 74.5 % (firmado hasta 74.5 %) 
   OK: R_dif la cifra que es diferencia de otras dos, rama PROMEDIO: +6.1 pp (obliga > +8) 
   OK: Atípica: descarta la cifra que dobla a todas las demás, rama PROMEDIO: +1.8 pp (obliga > +8) 
   OK: O-1: S_todos estructural: en toda versión no canónica, una sola opción dice «todos» y es de G (medido: CURSOS 44.0 %, PROMEDIO 54.0 %; 50 % por construcción) 
@@ -164,7 +164,7 @@ ERR-TOTAL        9       17
   OK: §P7-B rama PROMEDIO: «la más larga» acierta 43.0 %; margen máximo de largo 2.0 % < 15 % (inexplotable) 
   margen de «molde atipico» en palabras (rama PROMEDIO): acierta en 41 versiones, mediano 3.3 %, máximo 6.5 %
   RESIDUO DECLARADO §P7-B (rama PROMEDIO): exceso +10.4 pp por reglas de largo con margen máximo 2.0 % en caracteres y 6.5 % en palabras, < 15 % (inexplotable); sin ellas, exceso -0.1 pp (siempre la 1a)
-  OK (alcance firmado): canal de largo (rama PROMEDIO): +10.4 pp, márgenes 2.0 % y 6.5 %; declarado hasta +10,4 pp, 2,7 % y 6,5 % 
+  OK: §P7-B, dentro de lo declarado en O-1 corregido: canal de largo (rama PROMEDIO): +10.4 pp, márgenes 2.0 % y 6.5 %; declarado hasta +10,4 pp, 2,7 % y 6,5 % 
   canónica (enumeración exacta, 24 órdenes): máx 100.0 % (la que MAS comparte); exceso en la mezcla = 0,10 x +75.0 pp = +7.5 pp
       top: la que MAS comparte 100.0% · quedarse con 'total' 100.0% · cifra mediana 100.0% · mas digitos 50.0% · primer numero PAR 50.0% 
 
@@ -190,21 +190,22 @@ ERR-TOTAL        9       17
   OK: M19 (ERR-TOTAL siempre que se pueda): sale de lo firmado en 3 de 10 cifras de O-1 corregido (mayor exceso: S_U + atípica, rama CURSOS, 68.5 % frente a 51.5 %) 
   OK: M20 (cambia una celda de la canónica en tabla_md, no en tabla_df): el .Rmd no lo caza y la sonda H3 r4 sí 
 
-Dentro del alcance firmado de O-1 corregido (2026-10-29):
+En rojo, cubiertos por el override firmado «O-1 corregido» (2026-10-29; regla #22 §P7-E):
   - O-1 corregido: S1 descarta cifras de la tabla, rama PROMEDIO: 33.4 % (+8.4 pp; firmado hasta +8,4 pp)
+  - O-1: S_U, rama CURSOS: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7)
   - O-1 corregido: S_U + S1 (par de G sin la cifra de la tabla), rama CURSOS: 71.0 % (firmado hasta 71.0 %)
   - O-1 corregido: S_U + suma (par de G sin la cifra que es suma de otras dos), rama CURSOS: 60.5 % (firmado hasta 60.5 %)
   - O-1 corregido: S_U + S1 + suma (las dos pistas), rama CURSOS: 79.0 % (firmado hasta 79.0 %)
   - O-1 corregido: S_U + atípica, rama CURSOS: 51.5 % (firmado hasta 51.5 %)
   - O-1 corregido: S_U + S1 + suma + atípica, rama CURSOS: 81.5 % (firmado hasta 81.5 %)
+  - O-1: S_U, rama PROMEDIO: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7)
   - O-1 corregido: S_U + S1 (par de G sin la cifra de la tabla), rama PROMEDIO: 55.0 % (firmado hasta 55.0 %)
   - O-1 corregido: S_U + suma (par de G sin la cifra que es suma de otras dos), rama PROMEDIO: 62.0 % (firmado hasta 62.0 %)
   - O-1 corregido: S_U + S1 + suma (las dos pistas), rama PROMEDIO: 67.0 % (firmado hasta 67.0 %)
   - O-1 corregido: S_U + atípica, rama PROMEDIO: 58.0 % (firmado hasta 58.0 %)
   - O-1 corregido: S_U + S1 + suma + atípica, rama PROMEDIO: 74.5 % (firmado hasta 74.5 %)
-  - canal de largo (rama PROMEDIO): +10.4 pp, márgenes 2.0 % y 6.5 %; declarado hasta +10,4 pp, 2,7 % y 6,5 %
 
 Residuos declarados §P7-B (margen < 15 %: inexplotables, no son defecto):
   - §P7-B rama PROMEDIO: +10.4 pp por reglas de largo, margen máximo 2.0 % en caracteres y 6.5 % en palabras (inexplotable)
 
-=== RESULTADO: APROBADO (0 fallos) ===
+=== RESULTADO: EN ROJO BAJO OVERRIDE FIRMADO (13 canales dentro del alcance de O-1 corregido; 0 fallos, 0 pendientes) ===

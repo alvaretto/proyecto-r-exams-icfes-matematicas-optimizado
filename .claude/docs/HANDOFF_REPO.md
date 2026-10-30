@@ -53,6 +53,18 @@
   - «Cierre de cada ronda», en los dos orquestadores.
 
   Qué no se volvió regla y por qué: `CHANGELOG_CLAUDE_MD.md` § v3.32.0.
+- **v3.33.0 (2026-10-29, noche), tras las rondas 4 y 4b del ítem 50:**
+  - **Regla #22 v1.9:** el alcance de un override se cablea en el verificador como «rojo cubierto», con
+    exit propio. Nunca como PASS.
+  - **Regla #21 v1.4:** separación opcional de cabeceras en la `tabla_responsiva()` canónica. Viene
+    **desactivada**, porque en `grafica-circular-consumo-agua` v2 saca la tabla de su caja a 360 px.
+  - **Archivos:** `.claude/scripts/snippets_familias_rmd.R`, `tests/testthat/test_tabla_responsiva_pdf.R`
+    (+3 bloques), las dos capas de las reglas #21 y #22, `VALIDATOR_COBERTURA_ICFES.md` (422 bloques),
+    `CHANGELOG_CLAUDE_MD.md` y la metainformación de `.claude/CLAUDE.md`.
+  - **Detalle y qué no se volvió regla:** `CHANGELOG_CLAUDE_MD.md` § v3.33.0.
+  - **Defecto previo visto en esa medición, sin tocar:** a 320 px desbordan la tabla, ya sin separación,
+    `grafica-circular-consumo-agua` v1 y v2 y `migraciones-exteriores`; `Rango-Colesterol-Pacientes` también
+    a 360 px.
 
 ## Qué cambió y dónde está el detalle
 

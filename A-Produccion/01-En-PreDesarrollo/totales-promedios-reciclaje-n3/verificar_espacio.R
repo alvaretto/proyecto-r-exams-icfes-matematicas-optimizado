@@ -21,7 +21,10 @@
 ## Ronda 4 (FASE 2C r4): el alcance firmado de «O-1 corregido» como tabla de cifras (H1, mutante M19)
 ##        y la canónica cotejada también sobre la tabla mostrada, tabla_md (H3, mutante M20).
 ## Ronda 4b (FASE 2C r4b, H1): guarda estructural de los encabezados de la Solution (mutantes M21, M22).
-## Uso: Rscript --no-init-file verificar_espacio.R [ruta.Rmd]     (exit 1 si algo falla; 3 = pendiente de firma)
+## Uso: Rscript --no-init-file verificar_espacio.R [ruta.Rmd]
+##      exit 1 = algo falla; 3 = pendiente de firma (un canal supera lo firmado o es nuevo); 4 = EN ROJO
+##      bajo override firmado (todo dentro del alcance de «O-1 corregido»); 0 = sin canales en rojo.
+##      Regla #22 §P7-E: un canal aceptado por override sigue en rojo; nunca se reporta como PASS.
 ##      VERIF_N=<n> solo para depuración (regla #23): corre E1-E4 hasta las sondas y sale; la cifra
 ##      oficial es la de N = 100, el default.
 ## =============================================================================
@@ -363,7 +366,9 @@ FIRMA_LARGO <- c(exceso = 0.104, chars = 0.027, palabras = 0.065)   # declarado 
 FIRMADOS <- character(0)
 ## Las cifras se firmaron redondeadas a un decimal (en %); se comparan igual, para que 33,42 % no exceda 33,4 %.
 hasta <- function(x, lim) round(100 * x, 1) <= round(100 * lim, 1)
-firmado <- function(msg) { FIRMADOS <<- c(FIRMADOS, msg); cat("  OK (alcance firmado):", msg, "\n") }
+## Regla #22 §P7-E: la batería se deja en rojo; el override no la vuelve PASS. Dentro del alcance firmado
+## el canal se reporta como ROJO CUBIERTO (exit 4), y por encima como PENDIENTE DE FIRMA (exit 3).
+firmado <- function(msg) { FIRMADOS <<- c(FIRMADOS, msg); cat("  ROJO, cubierto por O-1 corregido:", msg, "\n") }
 juzga <- function(s, est, tasa) {
   ex <- tasa - 0.25
   if (ex <= 0.08) return(invisible(ok(TRUE, sprintf("H5: %s, %s: %.1f %% (%+.1f pp; obliga > +8)", s, est, 100 * tasa, 100 * ex))))
@@ -390,8 +395,8 @@ for (s in c("S1 descarta cifras de la tabla", "S2 par de la sede de la fila 1", 
 pendiente <- function(msg) { PENDIENTES <<- c(PENDIENTES, msg); cat("  PENDIENTE DE FIRMA:", msg, "\n") }
 for (b in c("CURSOS", "PROMEDIO")) {
   su <- TAB["S_U la sede de la razón sin sustento pierde", b]
-  ok(su - 1 / 3 <= 0.167 + 1e-9, sprintf("O-1: S_U, rama %s: %.1f %%, %+.1f pp atribuibles (alcance firmado: +16,7)",
-                                         b, 100 * su, 100 * (su - 1 / 3)))
+  msg_su <- sprintf("O-1: S_U, rama %s: %.1f %%, %+.1f pp atribuibles (alcance firmado: +16,7)", b, 100 * su, 100 * (su - 1 / 3))
+  if (su - 1 / 3 <= 0.167 + 1e-9) firmado(msg_su) else falla(msg_su)
   ## La premisa original de O-1 (50 %) resultó falsa en la ronda 2; rige el alcance de «O-1 corregido».
   for (s in rownames(FIRMA_O1)) {
     t <- TAB[s, b]; lim <- FIRMA_O1[s, b]
@@ -493,7 +498,7 @@ for (est in list(list("mezcla natural", NAT), list("rama CURSOS", CU$CURSOS), li
       msg_l <- sprintf("canal de largo (%s): %+.1f pp, márgenes %.1f %% y %.1f %%; declarado hasta +10,4 pp, 2,7 %% y 6,5 %%",
                        est[[1]], 100 * res$exceso, 100 * mmax, 100 * tmax)
       if (hasta(res$exceso, FIRMA_LARGO[["exceso"]]) && hasta(mmax, FIRMA_LARGO[["chars"]]) &&
-          hasta(tmax, FIRMA_LARGO[["palabras"]])) firmado(msg_l) else pendiente(msg_l)
+          hasta(tmax, FIRMA_LARGO[["palabras"]])) ok(TRUE, paste("§P7-B, dentro de lo declarado en O-1 corregido:", msg_l)) else pendiente(msg_l)
     } else falla(sprintf("§P7-A %s: exceso %+.1f pp (obliga > +8); sin reglas de largo %+.1f pp, margen máx %.1f %% (caracteres) y %.1f %% (palabras)",
                          est[[1]], 100 * res$exceso, 100 * res2$exceso, 100 * mmax, 100 * tmax))
   }
@@ -631,12 +636,14 @@ if (!is.null(mm$error)) falla(paste("M20 MAL CONSTRUIDO:", mm$error)) else {
   ok(!is.null(envM) && grepl("46 kilos", envM$tabla_md, fixed = TRUE) && !canon_tabla_ok(envM),
      "M20 (cambia una celda de la canónica en tabla_md, no en tabla_df): el .Rmd no lo caza y la sonda H3 r4 sí")
 }
-if (length(FIRMADOS)) cat("\nDentro del alcance firmado de O-1 corregido (2026-10-29):\n", paste0("  - ", FIRMADOS, "\n"), sep = "")
+if (length(FIRMADOS)) cat("\nEn rojo, cubiertos por el override firmado «O-1 corregido» (2026-10-29; regla #22 §P7-E):\n", paste0("  - ", FIRMADOS, "\n"), sep = "")
 if (length(RESIDUOS)) cat("\nResiduos declarados §P7-B (margen < 15 %: inexplotables, no son defecto):\n",
                           paste0("  - ", RESIDUOS, "\n"), sep = "")
 if (length(PENDIENTES)) cat("\nPendientes de firma del profesor (> +8 pp o premisa firmada superada; exit 3):\n",
                             paste0("  - ", PENDIENTES, "\n"), sep = "")
 
 cat("\n=== RESULTADO:", if (length(fallos)) sprintf("FALLA (%d)", length(fallos)) else
-  if (length(PENDIENTES)) sprintf("PENDIENTE DE FIRMA (%d; 0 fallos)", length(PENDIENTES)) else "APROBADO (0 fallos)", "===\n")
-quit(status = if (length(fallos)) 1L else if (length(PENDIENTES)) 3L else 0L)   # 3 = pendiente de firma
+  if (length(PENDIENTES)) sprintf("PENDIENTE DE FIRMA (%d; 0 fallos)", length(PENDIENTES)) else
+  if (length(FIRMADOS)) sprintf("EN ROJO BAJO OVERRIDE FIRMADO (%d canales dentro del alcance de O-1 corregido; 0 fallos, 0 pendientes)", length(FIRMADOS)) else
+  "APROBADO (0 fallos)", "===\n")
+quit(status = if (length(fallos)) 1L else if (length(PENDIENTES)) 3L else if (length(FIRMADOS)) 4L else 0L)
