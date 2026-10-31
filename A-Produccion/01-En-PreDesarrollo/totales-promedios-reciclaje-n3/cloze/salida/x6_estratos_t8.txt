@@ -1,0 +1,8 @@
+md5 del .Rmd: f98f9dda47e4f3cafc4e8b4e82cc956b 
+mezcla   n = 100 · X6 con la clave sorteada 23.0 % (-2.0 pp) · exacta sobre las 3 claves 24.9 % (-0.1 pp) · por clave: +1.0 / +1.0 / -2.2
+CURSOS   n = 100 · X6 con la clave sorteada 26.8 % (+1.8 pp) · exacta sobre las 3 claves 26.3 % (+1.3 pp) · por clave: +2.0 / +2.0 / +0.0
+PROMEDIO n = 100 · X6 con la clave sorteada 33.5 % (+8.5 pp) · exacta sobre las 3 claves 31.0 % (+6.0 pp) · por clave: +9.0 / +9.0 / +0.0
+claves (en el orden de «por clave»):
+  Lo que recogió ese grado dividido en partes iguales entre sus cursos.
+  Lo que recogió ese grado dividido entre el número de sus cursos.
+  Lo que recogió ese grado dividido entre la cantidad de cursos de ese mismo grado.

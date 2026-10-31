@@ -1,0 +1,22 @@
+bloques NO de la Parte 2 en r8 (suma de 24 versiones): 1560; bloques no-Parte-2 que cambian entre r3 y r8: 0; bloques de la Parte 2 que cambian: 282
+
+B) ecuación + kilos|cursos, por grupo (casos, cortes) [r3 == r8, JSON byte-idéntico]:
+   ('S', 'Procedimiento correcto', '') (288, 53)
+   ('S', 'Caso específico', '') (240, 17)
+   ('S', 'Estrategia para evitar el erro', 'fb-a') (144, 15)
+   ('S', 'Estrategia para evitar el erro', 'fb-f') (144, 28)
+   ('S', 'Parte 6 · Afirmaciones falsas', '') (66, 11)
+   ('S', 'Estrategia para evitar el erro', 'fb-c') (48, 24)
+   ('S', 'Estrategia para evitar el erro', 'fb-d') (48, 24)
+   ('S', 'Estrategia para evitar el erro', 'fb-e') (48, 20)
+   ('S', 'Parte 1 · ERR-RESTA — Resta lo', '') (28, 0)
+   ('S', 'Parte 1 · ERR-CURSOS — Compara', '') (28, 1)
+   ('S', 'Parte 1 · ERR-PROM — Compara s', '') (20, 2)
+   ('S', 'Parte 1 · ERR-DATO — Toma un d', '') (16, 2)
+   ('S', 'Parte 1 · ERR-TOTAL — Confunde', '') (16, 1)
+   ('S', 'Parte 1 · ERR-PARCIAL — Cuenta', '') (8, 0)
+subconjunto de grupos B con 594 casos y 129 cortes: None
+B en toda la Solution: 1142 casos, 198 cortes
+B en Partes 3 a 6 de la Solution (fb-c..f + Procedimiento + Caso + Parte 6 falsas): 882 casos, 177 cortes
+
+grupos de píxeles con media muy cromática (fuera del contorno de la caja): 0 []

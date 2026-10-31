@@ -33,7 +33,7 @@ H2_LIBRES <- c(
   fila_par  = 'sample.int(nrow(ep), 1L)',
   grados    = 'sample.int(4L, 2L)',
   gi_m3     = 'sample.int(2L, 1L)',
-  tipo_p2   = 'sample(names(P2), 1L)',
+  tipo_p2   = 'sample.int(2L, size = 1L)',   # tanda 8 (decisión b): un solo tipo; sorteo conservado sin uso (RNG)
   clave_p2  = 'pick(q2$clave)',
   dis_p2    = 'sample.int(length(q2$distractores), 3L)',
   orden     = 'sample.int(4L)',

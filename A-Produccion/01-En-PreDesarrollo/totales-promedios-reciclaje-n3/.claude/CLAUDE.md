@@ -482,6 +482,42 @@ se firmaron (un decimal).
   A1 en la rama CURSOS, en +8 pp o menos («ok»); ninguna por encima de lo firmado y ninguna celda no firmada por encima de
   +8 pp; MC25, MC26 y MC27, cazados por su sonda; 0 fallos; los 12 pendientes son de la Parte 2 (H1).
 
+**L-C6 · Override del residuo de la Parte 2 «promedio» (tanda 8, 2026-10-31; decisión «b» del profesor).** La Parte 2 tiene solo
+el tipo «promedio» (cambio de F-4 firmado). `cloze/verificar_espacio_cloze.R` (E8) lleva el alcance firmado regla por regla como
+`FIRMA_P2`, con las cifras exactas de `cloze/salida/bateria_v2_898608dd.txt`, comparadas a un decimal. La medida es la exacta de L-C4
+v2 (`medir_p2_exacta`: 30 combinaciones × 100 portadores; banco y pregunta de la semilla 1, como en `cloze/salida/medir_bateria_v2.R`).
+Dentro de lo firmado, «ROJO, cubierto» (exit 4), nunca PASS; por encima, o con otra regla de la Parte 2 por encima de +8 pp,
+pendiente (exit 3).
+
+| Regla | Firmada | Exacta en `f98f9dda…` | Mutante: sale de «cubierto» (misma medida, 10 portadores) |
+|---|---|---|---|
+| P2-R2 · la que más palabras comparte con las otras tres | +21,9 | +21,9 | MC31: las tres claves repiten palabras de todos los distractores; +72,5 pp |
+| P2-R1 · par con más palabras en común | +13,6 | +13,6 | MC32: las tres claves terminan en «y luego entre dos veces»; +21,4 pp |
+| P2-E8c · descarta la única con una palabra visible que no tiene otra opción | +13,5 | +13,5 | MC33: cada distractor lleva tres palabras visibles exclusivas; +75,0 pp |
+| P2-E5c · descarta la de más palabras en común con el párrafo del otro colegio | +11,1 | +11,1 | MC34: los cinco distractores repiten el párrafo; +75,0 pp |
+| P2-M3c · descarta la única con sus tres últimas palabras | +10,0 | +10,0 | MC35: las claves 1 y 2 terminan como la 3 y la moda; +15,0 pp |
+
+Ninguna otra de las 268 reglas de la Parte 2 pasa de +8 pp (P2-R3, +7,5, en zona gris). Las cinco cifras no se movieron al quitar
+el otro tipo (`cloze/salida/bateria_v2_f98f9dda.txt`).
+
+**L-C7 · Override de la regla por token de la Parte 6, por estrato (tanda 8; decisión «b» del profesor).** La familia «las que dicen
+*t* son verdaderas» y su contraria (P6-V «t»), fuera de la batería congelada. `FIRMA_P6_TOKEN` (E8): mezcla 0,0; rama CURSOS +25,0;
+rama PROMEDIO +25,0; *k*′ = 1 +16,4; *k*′ ≥ 2 +16,7 pp. Se mide sobre la misma enumeración exacta de L-C5 (100 Partes 1) con la misma
+función que dio las cifras (`vocab_p6_tokens` de la batería). Cada regla por token (token, papel y sentido) por encima de +8 pp y
+dentro de la cifra de su estrato: «ROJO, cubierto» (exit 4); por encima, pendiente (exit 3).
+
+| Exige | Guarda (E8) | Mutante |
+|---|---|---|
+| Ninguna regla por token por encima de la cifra de su estrato | `p6_token_juzgar()` sobre la enumeración exacta: 1176 reglas por estrato | MC36: HP dice «sin duda» solo cuando es verdadera; «duda» +25,0 pp en la mezcla (firmado 0,0) |
+
+- **Alcance, leído literal.** La firma es por estrato y para la familia. En `f98f9dda…` pasan de +8 pp 54 reglas por token en cada
+  estrato de rama y de *k*′, y ninguna en la mezcla; todas quedan dentro de la cifra de su estrato (las mayores, de la afirmación de
+  ventaja: «participado», «tantos cursos como», «tenido»; las menores, +8,4 pp). Si la firma cubría solo el máximo de cada estrato,
+  las otras 53 de cada uno necesitan firma regla por regla (§P7-E): pregunta del WAIT_USER #3 de la tanda 8.
+
+**MC19 y MC30 (tanda 8).** MC19 (L-C3, X6 en la canónica) muta ahora las tres claves «promedio»: X6 +75,0 pp. MC30 se retiró con el
+tipo retirado de la Parte 2: su guarda ya no existe.
+
 ### Decisión del profesor tras la tanda 2 (2026-10-30)
 
 > **Firmada por el profesor el 2026-10-30**, en la pausa posterior a la tanda 2 del `orquestador-cloze`, que se
@@ -825,4 +861,99 @@ se firmaron (un decimal).
   todo se declara como residuo con su cifra exacta y va al profesor (`cloze/salida/bateria_v2_898608dd.txt`).
 - **Sin cambio en L-C5** ni en la Parte 1. Pendientes al cerrar la tanda: la auditoría visual 6b, la FASE 2C r3 (detractor
   nuevo), los pasos 8 a 10 y el WAIT_USER #3.
+
+### Decisión del profesor tras la tanda 7 (2026-10-31)
+
+> **Firmada por el profesor el 2026-10-31**, en la pausa posterior a la tanda 7 del `orquestador-cloze` (md5
+> `898608dd2a625c54b905684d4bbdb827`; §P7-D agotado). Respuesta literal: «b · 1 sí · 2 sí · 3 sí · commit y push de los
+> dos». Regla #24 **H-5**: queda por escrito quién decidió, cuándo y con qué cifras.
+
+1. **(b) La Parte 2 queda solo con el tipo «promedio». Cambio de F-4, firmado.**
+   - Se quita «comparar». En la tanda 7 conservaba vocabulario exclusivo de la clave (+75,0 pp) y tenía 22 reglas por encima
+     de +8 pp. Su concepto, comparar totales, ya lo evalúan la Parte 1 y las Partes 3 a 5.
+   - **Override firmado: residuo de la Parte 2 «promedio»** (§P7-D agotado). Cifras exactas de
+     `cloze/salida/bateria_v2_898608dd.txt`:
+
+     | Regla | Qué hace | Exceso firmado |
+     |---|---|---|
+     | P2-R2 | la que más palabras comparte con las otras tres | +21,9 pp |
+     | P2-R1 | par con más palabras en común (elige una del par) | +13,6 pp |
+     | P2-E8c | contraria de P2-E8 (la única con una palabra del texto visible que no tiene otra opción) | +13,5 pp |
+     | P2-E5c | contraria de P2-E5 (más palabras en común con el párrafo del otro colegio) | +11,1 pp |
+     | P2-M3c | contraria de P2-M3 (la única con sus tres últimas palabras) | +10,0 pp |
+
+   - Esas cifras se midieron con «comparar» todavía en el sorteo. Si al quitarlo alguna cifra exacta, medida con el código,
+     supera la firmada, o aparece otra regla de la Parte 2 por encima de +8 pp, vuelve al profesor (aclaración iii de §P7-E).
+   - **Override firmado: Parte 6, regla por token**, fuera de la batería:
+     - en la mezcla, 0,0 pp;
+     - en los estratos de *k*′, +16,4 y +16,7 pp: es una restricción de K1, ya firmada;
+     - en los estratos de rama, +25,0 pp: reproduce el contenido lógico de la afirmación de ventaja (RL3).
+2. **(1 sí)** Aclaración en el texto íntegro de §P7-F, tercer caso: igualar el vocabulario de las opciones sobre el molde de
+   la clave desplaza el canal al relacional. La escribe el coordinador.
+3. **(2 sí)** Aclaración en el texto íntegro de §P7-E, familia léxica: la exclusividad del vocabulario se calcula sobre todas
+   las versiones juntas. La escribe el coordinador.
+4. **(3 sí)** Se arregla `post-exams2-validation.sh` para que resuelva una ruta relativa después de un `cd` o un `setwd()`
+   del propio comando. Lo hace Codex en un worktree aparte y se aplica después de la tanda 8. Hasta entonces, los
+   `exams2*` del CLOZE van con la ruta absoluta del `.Rmd`.
+5. **(commit y push de los dos)** `bc860ba9` (arreglo de `validar_diagnosticidad.R`) y `8e75b132` (el CLOZE tras la
+   tanda 7), en el remoto.
+
+### Tanda 8 (2026-10-31): Parte 2 solo «promedio», L-C6 y L-C7 cableadas (detenida antes de la FASE 2C r3)
+
+> Lo hizo el `orquestador-cloze` tras la decisión «b · 1 sí · 2 sí · 3 sí». Reapertura #4 desde `generacion_rmd`. md5
+> `898608dd…` → `f98f9dda47e4f3cafc4e8b4e82cc956b`. Su script abortó antes de escribir este registro: lo escribe el
+> coordinador desde su reporte. Evidencia en `cloze/salida/`: `bateria_v2_f98f9dda.txt`, `verificar_espacio_cloze_r8b.txt`,
+> `rng_tanda8.txt`, `x6_estratos_t8.txt`, `6b_r8/`, `retro_r8.txt`, `render_r8.log`, `exportar_r8.log`, `stress_n100_r8/`,
+> `suites_r8.txt`.
+
+- **Lo firmado, medido con el código.** Las cinco reglas de L-C6 dan exactamente lo firmado (+21,9; +13,6; +13,5; +11,1;
+  +10,0 pp). La regla por token de la Parte 6 da por estrato lo firmado en L-C7: mezcla 0,0; CURSOS +25,0; PROMEDIO +25,0;
+  *k*′ = 1 +16,4; *k*′ ≥ 2 +16,7 pp.
+- **Sin efectos colaterales.** El RNG se conserva con `invisible(sample.int(2L, size = 1L))` en el lugar del sorteo retirado;
+  E1 111/111; L-C5 idéntica; `validar_diagnosticidad.R` PASS con la Parte 6 excluida.
+- **Inventario de L-C7 (coordinador, desde `verificar_espacio_cloze_r8b.txt`).** 216 celdas «ROJO, cubierto»: 54 reglas por
+  token (directas y contrarias) en cada estrato de rama y de *k*′, ninguna en la mezcla y ninguna por encima de la cifra de su
+  estrato. En cada estrato toman solo dos valores: 46 reglas en el máximo y 8 en su mitad (+12,5; +12,5; +8,2; +8,4 pp).
+- **6b:** APTO_CON_OBSERVACIONES (N = 24, declarado), con dos BAJO tipográficos: «sirven» sola en su línea a 360 px (24/24) y
+  «cuadrado.» sola a 320 px (15/96).
+- **X6 en la rama PROMEDIO:** +8,5 pp en la puerta, con una muestra de n = 100; +6,0 pp en la medida exacta. Pendiente de
+  decisión del profesor.
+- **Decisión 3 (hook):** Codex llegó a su límite de uso (hasta el 2026-11-25). Hizo el arreglo un `implementador` y lo terminó
+  el coordinador. Está aplicado, con `test_post_exams2_cwd.R` en 16 bloques y verde, y sin commit.
+- **Pendiente:**
+  - FASE 2C r3, con un detractor nuevo y sin `name:`.
+  - Paso 8: hay que reconstruir el oráculo de coherencias para el banco actual.
+  - Sellar los pasos 7 a 10. Los pasos 9 y 10 ya están medidos, pero sin sellar.
+  - WAIT_USER #3.
+  - El orquestador agotó sus 65 turnos, así que la próxima tanda se parte en dos.
+
+### Decisión del profesor tras la tanda 8 (2026-10-31)
+
+> **Firmada por el profesor el 2026-10-31**, en la pausa posterior a la tanda 8 del `orquestador-cloze` (md5
+> `f98f9dda47e4f3cafc4e8b4e82cc956b`). Respuesta literal: «Va», dada sobre la lista de pendientes del coordinador, que traía
+> las tres recomendaciones de abajo. Regla #24 **H-5**: queda por escrito quién decidió, cuándo y con qué cifras.
+
+1. **X6 en la rama PROMEDIO de la Parte 1 (L-C2): se mide exacta sobre el sorteo de la Parte 2.**
+   - La puerta lo medía con la clave sorteada en la muestra de 100: +8,5 pp, pendiente. Exacta sobre las tres claves y con las
+     mismas Partes 1: +6,0 pp (`cloze/salida/x6_estratos_t8.txt`).
+   - Es el método de L-C4 v2 y de L-C6 (`medir_p2_exacta` integra el sorteo de la Parte 2) y la excepción de enumeración
+     exhaustiva de la regla #23. El orquestador no lo había cambiado porque, sin firma, eso relajaba una guarda (H-5).
+   - Alcance: X5, X6 y X10, las reglas cruzadas que leen el sorteo de la Parte 2, se miden exactas sobre ese sorteo en la mezcla
+     y en las dos ramas. X6 y X10 se integran sobre las 3 claves; X5, además, sobre los C(5,3) tríos de distractores. La
+     canónica sigue con L-C3. Si alguna pasa de +8 pp, queda pendiente y vuelve al profesor.
+   - **Dato que el coordinador no mostró al pedir la decisión.** Por clave, X6 da +9,0, +9,0 y +0,0 pp. Está en el mismo
+     archivo y en el HANDOFF. La cifra exacta, +6,0, es su promedio, porque la clave se sortea uniforme entre las tres. Si el
+     profesor quiere leerla clave por clave, la decisión vuelve a él.
+2. **L-C7: la firma pasa a ser regla por regla.**
+   - La lista es `cloze/firma_p6_palabras_f98f9dda.tsv` (md5 `2aa8e742…`). Salió por código de
+     `cloze/salida/verificar_espacio_cloze_r8b.txt` y tiene 216 reglas: 54 por estrato de rama y de *k*′, ninguna en la mezcla.
+     Cada una lleva su cifra exacta a un decimal.
+   - Una regla dentro de su cifra y de la de su estrato queda «ROJO, cubierto» (exit 4). Una regla por palabra por encima de
+     +8 pp que no esté en la lista, o que pase de su cifra, queda pendiente (exit 3), aunque no llegue a la cifra del estrato.
+   - Con esto L-C7 se endurece: con la firma por estrato, una palabra nueva que llegara al máximo quedaba cubierta sin firma.
+3. **6b: los dos BAJO tipográficos quedan como residuo declarado.** «sirven» queda sola en su línea a 360 px (24/24) y
+   «cuadrado.» a 320 px (15/96), en `cloze/salida/6b_r8/`.
+
+Las decisiones 1 y 2 se cablean en `cloze/verificar_espacio_cloze.R` (E8), cada una con su mutante. Lo registra la tanda que lo
+aplique.
 

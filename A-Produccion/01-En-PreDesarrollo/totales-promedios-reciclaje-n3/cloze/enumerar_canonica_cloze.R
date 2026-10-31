@@ -28,7 +28,6 @@
 SORTEOS_CONTROLADOS <- c(
   rama_par = 'sample(c("CURSOS", "PROMEDIO"), 1L)',
   orden_h  = 'sample.int(3L)',
-  tipo_p2  = 'sample(names(P2), 1L)',
   clave_p2 = 'pick(q2$clave)',
   v_c      = 'sample(c(TRUE, FALSE), 1L)',
   c6       = 'pick1(cand_c)')
@@ -36,11 +35,14 @@ SORTEOS_LIBRES <- c(
   fila_par  = 'sample.int(nrow(ep), 1L)',
   grados    = 'sample.int(4L, 2L)',
   gi_m3     = 'sample.int(2L, 1L)',
+  tipo_p2   = 'sample.int(2L, size = 1L)',
   dis_p2    = 'sample.int(length(q2$distractores), 3L)',
   orden     = 'sample.int(4L)',
   reflexion = 'pick(reflexiones_cloze)')
 ## Llamadas que hace cada hoja de cada sorteo libre (gi_par y m3 comparten texto; o2 y o6 también).
-LLAMADAS_LIBRES <- c(fila_par = 1L, grados = 1L, gi_m3 = 2L, dis_p2 = 1L, orden = 2L, reflexion = 1L)
+## Tanda 8 (decisión b del profesor, 2026-10-31): la Parte 2 tiene un solo tipo; el sorteo que lo elegía se conserva sin
+## uso para no mover el RNG y pasa a LIBRE (no decide ninguna regla). Antes era CONTROLADO y la canónica tenía 192 hojas.
+LLAMADAS_LIBRES <- c(fila_par = 1L, grados = 1L, gi_m3 = 2L, tipo_p2 = 1L, dis_p2 = 1L, orden = 2L, reflexion = 1L)
 .comprobar_libres <- function(ST) {
   vistos <- vapply(names(SORTEOS_LIBRES), function(k) sum(ST$libres == SORTEOS_LIBRES[[k]]), 0L)
   mal <- names(vistos)[vistos != LLAMADAS_LIBRES[names(vistos)]]

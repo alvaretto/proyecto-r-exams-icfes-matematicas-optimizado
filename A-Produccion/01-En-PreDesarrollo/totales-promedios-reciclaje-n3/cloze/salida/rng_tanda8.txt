@@ -1,0 +1,7 @@
+anterior: rmd_898608dd.Rmd 898608dd2a625c54b905684d4bbdb827 
+nuevo:    totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd f98f9dda47e4f3cafc4e8b4e82cc956b 
+semillas: 1..100 + 20 canónicas (1001-1178); tipo en el anterior: comparar 69 · promedio 51
+objetos que cambian (semillas): clave2_expl 120 · compara_p2 120 · expl2 120 · P2 120 · clave_p2 69 · dis_p2 69 · feedback_p2 69 · op2 69 · opciones_p2 69 · q2 69 · sin_rotulo 69 · texto_p2 69 · textos_2a6 69 · tipo_p2 69 
+objetos que cambian fuera de la lista permitida: ninguno 
+fallos: 0 
+RESULTADO: OK — Parte 1, Partes 3 a 6, marca/orden/índices de la Parte 2, exsolution y .Random.seed final idénticos

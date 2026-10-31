@@ -1,0 +1,28 @@
+capturas terminadas en 50 s; trabajos: 120
+ERRORES de captura: 0
+mathjax: {'timeout': 48, 'mj': 72} | iw por modo: {'plain320': [320], 'plain360': [360], 'plain1024': [1024], 'box320': [320], 'box360': [360]}
+s01 box320    H=10603 solY=2478 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s02 box320    H=10561 solY=2480 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s03 box320    H=10489 solY=2521 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s04 box320    H=10489 solY=2476 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s05 box320    H=10736 solY=2521 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s06 box320    H=10446 solY=2455 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s07 box320    H=10423 solY=2388 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s08 box320    H=10648 solY=2478 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s09 box320    H=10804 solY=2566 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s10 box320    H=10356 solY=2478 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s11 box320    H=10716 solY=2478 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s12 box320    H=10291 solY=2503 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s13 box320    H=10401 solY=2433 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s14 box320    H=10691 solY=2476 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s15 box320    H=10336 solY=2458 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s16 box320    H=10651 solY=2480 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s17 box320    H=10581 solY=2455 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s18 box320    H=10581 solY=2455 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s19 box320    H=10736 solY=2566 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s20 box320    H=10628 solY=2458 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s21 box320    H=10696 solY=2458 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s22 box320    H=10448 solY=2435 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s23 box320    H=10651 solY=2435 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+s24 box320    H=10446 solY=2478 box=  270 sw= 320 scroll=0/2 tdwrap=0 spills=0 leaks=0 gapmin=4 partes=[1, 2, 3, 4, 5, 6]
+python3 capturar_cdp_6b_r3.py ./html . "$TMP/fonts.conf" 0 "$TMP/cap"  85,38s user 6,16s system 101% cpu 1:30,04 total

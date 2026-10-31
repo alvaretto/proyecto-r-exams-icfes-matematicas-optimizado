@@ -1,19 +1,57 @@
 # HANDOFF — CLOZE `totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1`
 
 > Frase disparadora: «Continúa con el CLOZE de totales-promedios-reciclaje-n3».
-> Última actualización: 2026-10-31, tanda 7 del `orquestador-cloze` (L-C4 v2 y pasada 3 de §P7-D, md5 `898608dd…`;
-> detenida tras el paso 6). Antes: tanda 6, **detenida tras la FASE 2C r2 (`APROBAR_CON_CAMBIOS`)**:
-> pasos 3 a 6 resellados sobre el md5 `42f725bf…` (pasada 2 de §P7-D, H1 y H3); L-C5 con las cifras exactas del código. El
-> detractor encontró, fuera de la batería congelada, un canal de +75,0 pp en la Parte 2: vuelve al profesor. Antes: tanda 5 (detenida en el paso A), tanda 4 (reparto de H2 no viable), tanda 3 (FASE 2C r1 `RECHAZAR`).
+> Última actualización: 2026-10-31, tanda 8 del `orquestador-cloze` (decisión b: la Parte 2 solo con «promedio»; leyes L-C6 y
+> L-C7; md5 `f98f9dda…`), detenida antes de la FASE 2C r3, y decisión del profesor tras ella («Va», 2026-10-31: X6 exacta,
+> L-C7 regla por regla, residuo de la 6b). Antes: tanda 7 (L-C4 v2 y pasada 3 de §P7-D, md5 `898608dd…`), tanda 6
+> (FASE 2C r2 `APROBAR_CON_CAMBIOS`), tanda 5 (detenida en el paso A), tanda 4 (reparto de H2 no viable), tanda 3 (FASE 2C r1 `RECHAZAR`).
 > Si este archivo y `ejercicio_state.json` discrepan, manda el JSON. Las invariantes del SCHOICE (L-1 a L-5,
 > «O-1 corregido»), las firmas del CLOZE (F-1 a F-4), las decisiones del profesor y las leyes del CLOZE (L-C1 a L-C5)
 > están en [`../.claude/CLAUDE.md`](../.claude/CLAUDE.md) § «CLOZE hermano». El ítem verbatim, en
 > [`../ITEM_OFICIAL.md`](../ITEM_OFICIAL.md).
 
-## Estado: 6/11 (reapertura #3; pasos 3 a 6 resellados en la tanda 7, cada uno con su propio comando; `detractor_fase2c` NO sellado: falta la FASE 2C r3)
+## Estado: tanda 8 cerrada (reapertura #4; pasos 1 a 6 sellados; 7 a 11 pendientes)
 
-`.Rmd`: md5 **`898608dd2a625c54b905684d4bbdb827`** (antes `42f725bf…`). No está aprobado: faltan la auditoría visual 6b, la
-FASE 2C r3, las 5 coherencias, la diversidad, la validación ICFES y la aprobación del profesor. **No usar en clase.**
+`.Rmd`: md5 **`f98f9dda47e4f3cafc4e8b4e82cc956b`** (antes `898608dd…`). No está aprobado. **No usar en clase.**
+
+## Decisión del profesor tras la tanda 8 (2026-10-31, «Va»; texto completo en `../.claude/CLAUDE.md`)
+
+1. **X6 exacta (L-C2).** X5, X6 y X10 se miden exactas sobre el sorteo de la Parte 2 en la mezcla y en las dos ramas. X6 en
+   PROMEDIO pasa de +8,5 pp (muestra) a +6,0 pp (exacta). Por clave da +9,0, +9,0 y +0,0 pp: es un dato que no se mostró al
+   pedir la decisión y está declarado en el registro.
+2. **L-C7 regla por regla.** La lista es `firma_p6_palabras_f98f9dda.tsv`: 216 reglas, 54 por estrato de rama y de *k*′. Si
+   aparece una palabra por encima de +8 pp que no esté en la lista, queda pendiente.
+3. **6b:** los dos BAJO tipográficos quedan como residuo declarado.
+
+Las decisiones 1 y 2 todavía no están cableadas en `verificar_espacio_cloze.R`: es el paso 0 de «Próximo paso».
+
+## Tanda 8 (2026-10-31): decisión b del profesor — la Parte 2 solo con «promedio»; overrides L-C6 y L-C7
+
+- **Reapertura #4** desde `generacion_rmd` (`workflow-state.sh reopen`, `--reporte salida/bateria_v2_898608dd.txt`).
+- **Qué se quitó:** el banco del otro tipo de la Parte 2, sus funciones de verdad y su guarda, sus cinco entradas de `expl2`, su
+  entrada de `clave2_expl` y los dos condicionales de la Solution (párrafo «Parte 2.» y encabezado). Sin código muerto: queda una sola
+  `clave2_expl` y un solo encabezado («Parte 2 · Lecturas del promedio que no sirven»).
+- **RNG conservado.** El sorteo que elegía el tipo se conserva sin uso, `invisible(sample.int(2L, size = 1L))` (mismo consumo que
+  `sample()` de dos elementos), y `tipo_p2 <- "promedio"` queda como rótulo del registro (lo leen la batería congelada y el
+  verificador). `salida/rng_tanda8.txt` (`rng_tanda8.R`): en 120 semillas (1..100 y 20 canónicas), la Parte 1, las Partes 3 a 6, la
+  marca, el orden y los índices sorteados de la Parte 2, `exsolution` y el `.Random.seed` final son idénticos al md5 anterior; solo
+  cambian los objetos del banco de la Parte 2 (69 versiones eran del tipo retirado). Las dos puertas pasan ese sorteo a LIBRE
+  (`enumerar_canonica_cloze.R`: la canónica baja de 192 a 96 hojas; `enumerar_h2_cloze.R`: mismo número de llamadas).
+- **Parte 2 vuelta a medir, exacta, ejecutando el código** (`salida/bateria_v2_f98f9dda.txt`, `medir_bateria_v2_t8.R`): P2-R2 +21,9,
+  P2-R1 +13,6, P2-E8c +13,5, P2-E5c +11,1 y P2-M3c +10,0 pp, **iguales a lo firmado**; ninguna otra de las 268 reglas pasa de +8 pp
+  (P2-R3 +7,5 en zona gris). Regla por token de la Parte 6: mezcla +0,0, CURSOS +25,0, PROMEDIO +25,0, *k*′ = 1 +16,4, *k*′ ≥ 2
+  +16,7 pp, **iguales a lo firmado**; pasan de +8 pp 54 reglas por token en cada estrato de rama y de *k*′.
+- **Leyes nuevas** (registro en `../.claude/CLAUDE.md` § «Leyes del CLOZE»): L-C6 (`FIRMA_P2`, mutantes MC31 a MC35) y L-C7
+  (`FIRMA_P6_TOKEN`, mutante MC36). MC19 rehecho con las claves «promedio»; MC30 retirado con el tipo retirado.
+- **Canónica (exacta):** X5 −25,0, X6 −25,0, X10 −33,3 pp (ya no en rojo); X9 +25,0 y X11 +12,5 pp, dentro de lo firmado.
+- **Nuevo, pendiente de firma (F-2 y L-C2):** X6 («más palabras en común con la clave de la Parte 2») en la rama PROMEDIO de la Parte
+  1: **+8,5 pp** en la muestra de la puerta (n = 100, clave sorteada; en la tanda 7, +6,2). Exacta sobre las tres claves, con las
+  mismas Partes 1: +6,0 pp; por clave +9,0 / +9,0 / +0,0 (`salida/x6_estratos_t8.txt`). Lo abre la decisión b (todas las claves de la
+  Parte 2 son ahora de «promedio»). §P7-D está agotado: no se corrige; va al profesor. No se cambió la puerta de muestra a exacta,
+  porque eso relaja una guarda (H-5).
+- **Medido antes de sellar** (se sella en su orden): paso 9 (`salida/diversidad_sustantiva_r8.txt`, `diagnosticidad_r8.txt` con p6
+  excluida por mchoice, `diagnosticidad_por_rama_r8.txt`); paso 10 (`salida/v1_v4_r8.txt`; literalidad de los `exextra` contra el
+  catálogo, sin cambios en `Meta-information`).
 
 ## Tanda 7 (2026-10-31): L-C4 v2 y pasada 3 de §P7-D (la última) en la Parte 2 — detenida tras el paso 6
 
@@ -343,6 +381,9 @@ propia. Motivo: la clave de la Parte 1 nombra a la sede ganadora y cita *D* = *T
   en el 33-63 %. Coincidencias sin relación natural; las relaciones naturales están excluidas (0/330); X3 da
   23-24 %, por debajo del azar.
 - **Parte 2:** clave conceptual fija por tipo (V8, fija-justificada): 6 textos de clave.
+- **Firmados (decisión b, tanda 8):** el residuo de la Parte 2 «promedio» (L-C6, cinco reglas) y la regla por palabra de la
+  Parte 6 (L-C7, regla por regla desde la decisión «Va»: `firma_p6_palabras_f98f9dda.tsv`).
+- **6b de la tanda 8 (decisión «Va»):** «sirven» queda sola en su línea a 360 px (24/24) y «cuadrado.» a 320 px (15/96).
 - **La vara §P7** está medida sobre opción múltiple simple; aplicarla gap a gap no está calibrado para CLOZE.
 
 ## Uso en el aula (cuando esté aprobado)
@@ -376,12 +417,10 @@ convierte un ` ` escrito en el texto en el carácter literal: comprobar con `gr
 
 ## Próximo paso
 
-1. **Decisión del profesor sobre H1 y H2 de la FASE 2C r2** (regla de parada de §P7-D: el arreglo de H1 de la r1 cerró la batería
-   y abrió el mismo canal con otra palabra):
-   - (a) gastar la **última** pasada de §P7-D en la Parte 2: «dividido entre» en 4 o 5 distractores «promedio», con operandos
-     equivocados y siempre falsos (propuesta del detractor, con su `expl2`), y «promedio» sin «por curso» en los distractores
-     «comparar»; volver a medir L-C4, las sondas de H1 y H2, las cruzadas y la canónica; detractor nuevo;
-   - (b) firmar H1 (+75,0 pp en «promedio») y H2 (+25,0 pp en «comparar») como residuo (§P7-E), con sus cifras exactas;
-   - (c) otra.
-2. Sellar 7 a 10 según la decisión (el paso 8 ya tiene artefacto: `salida/coherencias_r3/`); H4 en la nota del paso 9.
+0. **Cablear las decisiones 1 y 2 de «Va» en `verificar_espacio_cloze.R` (E8)**, cada una con su mutante. Después, el
+   verificador debe dar exit 4, sin pendientes.
+1. **FASE 2C r3** (`AgenteDetractor` nuevo, sin `name:`) sobre el md5 de la tanda 8 y con el verificador del paso 0; reporte en
+   `salida/fase2c_r3_detractor.md`.
+2. Pasos 8 a 10 sobre el md5 final, cada uno sellado tras su artefacto. El paso 8 necesita reconstruir el oráculo de
+   coherencias para el banco actual.
 3. WAIT_USER #3 solo con la FASE 2C cerrada.

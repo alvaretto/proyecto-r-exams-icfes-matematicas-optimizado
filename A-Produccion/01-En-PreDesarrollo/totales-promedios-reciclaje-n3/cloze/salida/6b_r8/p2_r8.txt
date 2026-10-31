@@ -1,0 +1,53 @@
+== Parte 2 (24 versiones) ==
+incidencias: 0
+posición de la clave (0 = primera opción): {0: 3, 1: 4, 2: 4, 3: 13} | por versión: [(1, 3), (2, 0), (3, 3), (4, 2), (5, 0), (6, 3), (7, 3), (8, 3), (9, 1), (10, 1), (11, 3), (12, 1), (13, 3), (14, 2), (15, 2), (16, 3), (17, 3), (18, 0), (19, 3), (20, 1), (21, 3), (22, 2), (23, 3), (24, 3)]
+uso de opciones (claves K y distractores D) sobre 96: {'Lo que recogió ese grado dividido en partes iguales entre sus ': 9, 'Lo que recogió ese grado dividido entre el promedio de sus cur': 16, 'Lo que recogió ese grado dividido entre el número de sus curso': 6, 'Lo que recogió ese grado dividido entre la cantidad de cursos ': 9, 'Lo que recogió la mayoría de los cursos de ese mismo grado.': 12}
+claves usadas: [('Lo que recogió ese grado dividido entre la cantidad de cursos de ese mismo grado.', 9), ('Lo que recogió ese grado dividido en partes iguales entre sus cursos.', 9), ('Lo que recogió ese grado dividido entre el número de sus cursos.', 6)]
+retroalimentación por distractor, textos distintos vistos (esperado 1 cada uno): {'la cantidad de cursos de ambos grados.': 1, 'tes iguales entre sus cursos y luego ent': 1, 'el número de sus cursos al cuadrado.': 1, 'el promedio de sus cursos.': 1, 'de ese mismo grado.': 1}
+materiales: Counter({'cartón': 10, 'plástico': 9, 'papel': 5})
+== fugas de markup / math / mojibake en texto visible (patrón, versión) == 0
+== palabras sin tilde (SINTILDE) == 0
+
+== depuración v1: HTML del enunciado y de las opciones ==
+ ('<p><strong>Parte 2.</strong> ¿Qué indica, en la tabla del otro colegio, el promedio de papel recogido por curso de un grado?</p>', '<p>Lo que recogió ese grado dividido entre la cantidad de cursos de ambos grados. / Lo que recogió ese grado dividido en partes iguales entre sus cursos y luego entre dos. / Lo que recogió ese grado dividido entre el número de sus cursos al cuadrado. / Lo que recogió ese grado dividido entre el número de sus cursos.</p>')
+
+== resumen_metricas: líneas r8/r3: 120 120
+  r8: anomalías (scroll/tdwrap/spills/leaks/partes): 0 [] | gapmin distinto de 4: []
+  r3: anomalías (scroll/tdwrap/spills/leaks/partes): 0 [] | gapmin distinto de 4: []
+  plain320: H r3 min/media/max = 8798/9025/9282 | r8 = 9067/9250/9534 | n=24/24
+  plain360: H r3 min/media/max = 7848/8010/8168 | r8 = 7989/8160/8386 | n=24/24
+  plain1024: H r3 min/media/max = 3678/3768/3840 | r8 = 3732/3798/3858 | n=24/24
+  box320: H r3 min/media/max = 10493/10724/11051 | r8 = 10291/10558/10804 | n=24/24
+  box360: H r3 min/media/max = 9305/9504/9818 | r8 = 9148/9361/9665 | n=24/24
+
+== líneas Parte 2 @ 320 (modo box) ==
+  n_op: r3 = 96 | r8 = 96
+  op_orf: r3 = 22 | r8 = 15
+  op_2: r3 = 47 | r8 = 43
+  op_3: r3 = 49 | r8 = 53
+  op_1: r3 = 0 | r8 = 0
+  head_orf: r3 = 0 | r8 = 0
+  head_n: r3 = 24 | r8 = 24
+  q2_orf: r3 = 0 | r8 = 0
+  q2_n: r3 = 48 | r8 = 48
+  q2_lines: r3 = Counter({3: 24, 6: 15, 5: 9}) | r8 = Counter({3: 24, 5: 24})
+  bl_n: r3 = 72 | r8 = 72
+  bl_orf: r3 = 26 | r8 = 0
+  bl_lines: r3 = Counter({6: 41, 5: 20, 7: 6, 4: 5}) | r8 = Counter({7: 45, 6: 15, 8: 12})
+  bl_max: r3 = 7 | r8 = 8
+
+== líneas Parte 2 @ 360 (modo box) ==
+  n_op: r3 = 96 | r8 = 96
+  op_orf: r3 = 10 | r8 = 0
+  op_2: r3 = 83 | r8 = 80
+  op_3: r3 = 13 | r8 = 16
+  op_1: r3 = 0 | r8 = 0
+  head_orf: r3 = 9 | r8 = 24
+  head_n: r3 = 24 | r8 = 24
+  q2_orf: r3 = 0 | r8 = 0
+  q2_n: r3 = 48 | r8 = 48
+  q2_lines: r3 = Counter({2: 15, 6: 15, 3: 9, 5: 9}) | r8 = Counter({3: 24, 5: 24})
+  bl_n: r3 = 72 | r8 = 72
+  bl_orf: r3 = 27 | r8 = 0
+  bl_lines: r3 = Counter({5: 46, 4: 20, 6: 6}) | r8 = Counter({6: 45, 5: 15, 7: 12})
+  bl_max: r3 = 6 | r8 = 7

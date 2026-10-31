@@ -1,0 +1,29 @@
+md5 del .Rmd: f98f9dda47e4f3cafc4e8b4e82cc956b 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+exams2html(n = 24, seed = <vector>, mathjax = TRUE): OK 
+tiempo (s): 11.4 
+archivos html: 24 
+Rscript --no-init-file render_6b_r8.R  10,65s user 0,82s system 98% cpu 11,643 total

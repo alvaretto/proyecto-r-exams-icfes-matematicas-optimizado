@@ -1,0 +1,35 @@
+errores: 0 [] | iw: [(320, 320), (360, 360)]
+
+== A) número en texto plano + unidad ('15 kilos')  (320 y 360, 24 semillas; MathML nativo): 154 cortes de 2014 casos ==
+   S | Estrategia para evitar el error    cortes  27 /  384  (semillas: 18)
+   S | Parte 1 · ERR-INVENTA — Inventa un cortes  23 /  186  (semillas: 18)
+   Q | Parte 1.                           cortes  20 /  382  (semillas: 15)
+   S | Parte 1 · ERR-CURSOS — Compara sol cortes  20 /  112  (semillas: 13)
+   S | Parte 1 · ERR-RESTA — Resta los pr cortes  18 /   56  (semillas: 14)
+   S | Parte 1 · ERR-PROM — Compara solo  cortes  17 /   96  (semillas: 10)
+   S | Procedimiento correcto             cortes  13 /  288  (semillas: 10)
+   S | Respuestas                         cortes  12 /  192  (semillas: 9)
+   S | Parte 1 · ERR-TOTAL — Confunde el  cortes   3 /    8  (semillas: 3)
+   S | Parte 1 · ERR-DATO — Toma un dato  cortes   1 /   24  (semillas: 1)
+   Q |                                    cortes   0 /  192  (semillas: 0)
+   S | Caso específico                    cortes   0 /   48  (semillas: 0)
+   S | Parte 1 · ERR-PARCIAL — Cuenta sol cortes   0 /   12  (semillas: 0)
+   S | Parte 6 · Afirmaciones falsas      cortes   0 /   34  (semillas: 0)
+   ubicaciones con corte (top 10): [(('S', 'Estrategia para evitar el erro', 'fb-a'), 27), (('S', 'Parte 1 · ERR-CURSOS — Compara', 'Es cierto que en la '), 16), (('S', 'Parte 1 · ERR-PROM — Compara s', 'Es cierto que el pro'), 13), (('S', 'Respuestas', 'Parte 1. La respuest'), 12), (('S', 'Procedimiento correcto', 'Las dos afirmaciones'), 8), (('S', 'Parte 1 · ERR-INVENTA — Invent', 'Sobre lo recogido, l'), 8), (('Q', 'Parte 1. De acuerdo con la inf', 'La sede secundaria g'), 5), (('S', 'Parte 1 · ERR-INVENTA — Invent', 'La tabla no dice cuá'), 5), (('S', 'Parte 1 · ERR-INVENTA — Invent', 'Afirmación: «La sede'), 5), (('S', 'Parte 1 · ERR-INVENTA — Invent', 'La tabla no dice dur'), 4)]
+
+== B) ecuación (MathML) + unidad ('= 224 / kilos')  (320 y 360, 24 semillas; MathML nativo): 198 cortes de 1142 casos ==
+   S | Estrategia para evitar el error    cortes 111 /  432  (semillas: 24)
+   S | Procedimiento correcto             cortes  53 /  288  (semillas: 24)
+   S | Caso específico                    cortes  17 /  240  (semillas: 13)
+   S | Parte 6 · Afirmaciones falsas      cortes  11 /   66  (semillas: 10)
+   S | Parte 1 · ERR-DATO — Toma un dato  cortes   2 /   16  (semillas: 2)
+   S | Parte 1 · ERR-PROM — Compara solo  cortes   2 /   20  (semillas: 2)
+   S | Parte 1 · ERR-CURSOS — Compara sol cortes   1 /   28  (semillas: 1)
+   S | Parte 1 · ERR-TOTAL — Confunde el  cortes   1 /   16  (semillas: 1)
+   S | Parte 1 · ERR-PARCIAL — Cuenta sol cortes   0 /    8  (semillas: 0)
+   S | Parte 1 · ERR-RESTA — Resta los pr cortes   0 /   28  (semillas: 0)
+   ubicaciones con corte (top 10): [(('S', 'Estrategia para evitar el erro', 'fb-f'), 28), (('S', 'Estrategia para evitar el erro', 'fb-c'), 24), (('S', 'Estrategia para evitar el erro', 'fb-d'), 24), (('S', 'Estrategia para evitar el erro', 'fb-e'), 20), (('S', 'Estrategia para evitar el erro', 'fb-a'), 15), (('S', 'Parte 6 · Afirmaciones falsas', '«Si al grado que gan'), 10), (('S', 'Caso específico', 'En el otro colegio, '), 10), (('S', 'Procedimiento correcto', 'Ganó el grado séptim'), 8), (('S', 'Caso específico', 'En la Parte 1, la se'), 7), (('S', 'Procedimiento correcto', 'La sede secundaria: '), 6)]
+
+== C) puntuación tras ecuación  (320 y 360, 24 semillas; MathML nativo): 0 cortes de 28 casos ==
+   S | Parte 1 · ERR-RESTA — Resta los pr cortes   0 /   28  (semillas: 0)
+   ubicaciones con corte (top 10): []

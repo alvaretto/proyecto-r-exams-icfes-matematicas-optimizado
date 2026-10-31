@@ -1,0 +1,5 @@
+semillas: 100 · fallos: 0 
+expl2 usados en 100 semillas: 5 de 5 ( ambos, cuadrado, entre_promedio, luego_dos, moda )
+Solution: encabezado único de la Parte 2: TRUE · sin condicional por tipo: TRUE 
+clave2_expl: El promedio por curso es el total del grado dividido entre la cantidad de cursos: lo que le tocaría a cada curso si el total se repartiera por igual. 
+RESULTADO: OK

@@ -1,0 +1,36 @@
+errores: 0 []
+iw: [(320, 320), (360, 360)]
+
+=== Parte 2, opciones únicas @ 320 (líneas | semillas) ===
+[2 lín] Lo que recogió la mayoría de los // cursos de ese mismo grado.  | n=12 01,02,06,08… <<fin-de-linea-en-palabra-funcional:los>>
+[3 lín] Lo que recogió ese grado dividido // entre la cantidad de cursos de // ambos grados.  | n=13 01,05,07,08… <<fin-de-linea-en-palabra-funcional:de>>
+[3 lín] Lo que recogió ese grado dividido // entre la cantidad de cursos de ese // mismo grado.  | n=9 01,03,11,12… 
+[3 lín] Lo que recogió ese grado dividido en // partes iguales entre sus cursos y // luego entre dos.  | n=16 01,03,04,05… <<fin-de-linea-en-palabra-funcional:en,y>>
+[3 lín] Lo que recogió ese grado dividido // entre el número de sus cursos al // cuadrado.  | n=15 02,03,04,05… <<ORFANA-ultima-linea;fin-de-linea-en-palabra-funcional:al>>
+[2 lín] Lo que recogió ese grado dividido // entre el promedio de sus cursos.  | n=16 02,03,04,06… 
+[2 lín] Lo que recogió ese grado dividido en // partes iguales entre sus cursos.  | n=9 02,04,05,06… <<fin-de-linea-en-palabra-funcional:en>>
+[2 lín] Lo que recogió ese grado dividido // entre el número de sus cursos.  | n=6 07,10,13,14… 
+
+=== Parte 2, opciones únicas @ 360 (líneas | semillas) ===
+[2 lín] Lo que recogió la mayoría de los cursos de // ese mismo grado.  | n=12 01,02,06,08… <<fin-de-linea-en-palabra-funcional:de>>
+[2 lín] Lo que recogió ese grado dividido entre la // cantidad de cursos de ambos grados.  | n=13 01,05,07,08… <<fin-de-linea-en-palabra-funcional:la>>
+[2 lín] Lo que recogió ese grado dividido entre la // cantidad de cursos de ese mismo grado.  | n=9 01,03,11,12… <<fin-de-linea-en-palabra-funcional:la>>
+[3 lín] Lo que recogió ese grado dividido en // partes iguales entre sus cursos y luego // entre dos.  | n=16 01,03,04,05… <<fin-de-linea-en-palabra-funcional:en>>
+[2 lín] Lo que recogió ese grado dividido entre el // número de sus cursos al cuadrado.  | n=15 02,03,04,05… <<fin-de-linea-en-palabra-funcional:el>>
+[2 lín] Lo que recogió ese grado dividido entre el // promedio de sus cursos.  | n=16 02,03,04,06… <<fin-de-linea-en-palabra-funcional:el>>
+[2 lín] Lo que recogió ese grado dividido en // partes iguales entre sus cursos.  | n=9 02,04,05,06… <<fin-de-linea-en-palabra-funcional:en>>
+[2 lín] Lo que recogió ese grado dividido entre el // número de sus cursos.  | n=6 07,10,13,14… <<fin-de-linea-en-palabra-funcional:el>>
+
+=== Solution Parte 2: viñetas y encabezado ===
+@320 s01 [2] Parte 2 · Lecturas del promedio que // no sirven 
+@320 s01 [7] «Lo que recogió ese grado dividido // en partes iguales entre sus // cursos y luego entre dos.» Dividir // otra vez entre dos da la mitad del // promedio: el promedio es lo // recogido dividido entre el número // de cursos, sin más divisiones. 
+@320 s01 [8] «Lo que recogió la mayoría de los // cursos de ese mismo grado.» Lo // que recogió la mayoría de los // cursos, si más de la mitad recogió // lo mismo, es la moda, y puede ser // distinto del promedio, que reparte // por igual entre los cursos lo que // recogió el grado. 
+@320 s01 [7] «Lo que recogió ese grado dividido // entre la cantidad de cursos de // ambos grados.» Dividir entre los // cursos de los dos grados da // menos que el promedio de ese // grado: lo recogido se reparte solo // entre sus propios cursos. 
+@320 s02 [6] «Lo que recogió ese grado dividido // entre el número de sus cursos al // cuadrado.» Dividir entre el número // de cursos al cuadrado da el // promedio dividido otra vez entre // los cursos, no el promedio. 
+@320 s02 [7] «Lo que recogió ese grado dividido // entre el promedio de sus cursos.» // Dividir lo que recogió el grado // entre su promedio da la cantidad // de cursos, no el promedio: el // promedio es lo recogido dividido // entre el número de cursos. 
+@360 s01 [2] Parte 2 · Lecturas del promedio que no // sirven <<ORFANA>>
+@360 s01 [6] «Lo que recogió ese grado dividido en // partes iguales entre sus cursos y luego // entre dos.» Dividir otra vez entre dos da // la mitad del promedio: el promedio es lo // recogido dividido entre el número de // cursos, sin más divisiones. 
+@360 s01 [7] «Lo que recogió la mayoría de los // cursos de ese mismo grado.» Lo que // recogió la mayoría de los cursos, si más // de la mitad recogió lo mismo, es la // moda, y puede ser distinto del promedio, // que reparte por igual entre los cursos lo // que recogió el grado. 
+@360 s01 [6] «Lo que recogió ese grado dividido entre // la cantidad de cursos de ambos // grados.» Dividir entre los cursos de los // dos grados da menos que el promedio // de ese grado: lo recogido se reparte // solo entre sus propios cursos. 
+@360 s02 [5] «Lo que recogió ese grado dividido entre // el número de sus cursos al cuadrado.» // Dividir entre el número de cursos al // cuadrado da el promedio dividido otra // vez entre los cursos, no el promedio. 
+@360 s02 [6] «Lo que recogió ese grado dividido entre // el promedio de sus cursos.» Dividir lo // que recogió el grado entre su promedio // da la cantidad de cursos, no el // promedio: el promedio es lo recogido // dividido entre el número de cursos. 

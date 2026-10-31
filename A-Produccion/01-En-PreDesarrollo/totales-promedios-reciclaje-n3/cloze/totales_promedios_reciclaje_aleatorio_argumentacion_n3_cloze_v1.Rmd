@@ -663,27 +663,20 @@ intro_par <- paste0("Las Partes 2 a 6 se refieren a otro colegio, donde el concu
                     " y en el grado ", nom_grado[2], ".")
 
 ## --- Parte 2 (schoice): el concepto, sin cifras ni nombres (F-4) -----------------------------------------
-## Clave conceptual fija por tipo de pregunta, declarada bajo V8. Tres paráfrasis de la clave, de largos
-## distintos, para que su largo no ocupe siempre el mismo puesto; tres distractores de un pool de cinco.
-## Sin dos puntos ni signo igual en las opciones: van dentro de un gap de Moodle.
-## Pasada 1 (§P7-D, 2026-10-30): (a) largos rehechos, porque «la más larga» acertaba el 56,7 % en el tipo
-## «promedio» (+31,7 pp, margen hasta 32 %); (b) fuera «cada», «todos», «uno», «menor», «mayor», «solo», «hay» y
-## «para»: cada una solo la tiene un molde de la Parte 1 y movía las reglas cruzadas X5 y X6 (+23 y +10 pp en la rama
-## PROMEDIO). Las claves conservan su concepto.
-## Pasada 2 (§P7-D, tanda 6, 2026-10-31; H1 de la FASE 2C r1): todas las reglas de la batería L-C4 de la Parte 2 a
-## +8 pp o menos, exactas y por tipo (antes: «total» +75 y +45 pp; «Lo que recogió» +45; el condicional +50; las
-## palabras de la pregunta y de las Partes 3 a 5 hasta +55). Dentro de cada tipo, las ocho opciones llevan las mismas
-## palabras del estímulo: «Lo que recogió», «grado» y «sus cursos» en «promedio»; «grado», «del» y «otro» en
-## «comparar». Ninguna lleva «total», coma ni condicional, ni empieza por «Únicamente», ni dice «sin tener en cuenta»
-## o «exactamente». Por largo, una clave queda entre las cortas, otra en el medio y otra entre las largas. Las claves
-## «promedio» comparten con las opciones de la Parte 1 lo mismo que su G-distractor (X6 y X10 de la canónica).
-## Pasada 3 (§P7-D, la última; tanda 7, 2026-10-31; H1 y H2 de la FASE 2C r2, decisión «a · 1 sí · 2 sí»): medida con la
-## batería L-C4 v2 (vocabulario por token —palabras y expresiones de 2 y 3 palabras— con su contraria, y el párrafo del
-## otro colegio y todo el texto visible como estímulo). «promedio»: las ocho opciones empiezan igual («Lo que recogió ese
-## grado dividido», salvo la moda), y cada palabra o expresión de las claves aparece en los distractores en la misma
-## proporción (en 1 clave de 3 ⇔ en 1 o 2 distractores de 5; en 2 ⇔ en 3 o 4; en 3 ⇔ en 4 o 5); cuatro distractores dividen
-## con un operando equivocado y son falsos por su función de verdad (valor_p2, guarda abajo). «comparar»: ningún
-## distractor dice «por curso» ni «curso». Los nombres de los distractores son los de su retroalimentación (expl2).
+## Decisión (b) del profesor (2026-10-31, tras la tanda 7; cambio de F-4 firmado): la Parte 2 tiene un solo tipo de
+## pregunta, qué indica el promedio por curso. El otro tipo, qué se cotejaba para decidir el ganador, se retiró: ese
+## concepto (los totales) ya lo evalúan la Parte 1 y las Partes 3 a 5. Clave conceptual fija, declarada bajo V8: tres
+## paráfrasis de largos distintos, para que su largo no ocupe siempre el mismo puesto; tres distractores de un pool de
+## cinco. Sin dos puntos ni signo igual en las opciones: van dentro de un gap de Moodle.
+## Pasada 1 (§P7-D, 2026-10-30): largos rehechos («la más larga» acertaba +31,7 pp) y fuera las palabras que solo tenía
+## un molde de la Parte 1 (movían las reglas cruzadas X5 y X6). Pasada 2 (tanda 6; H1 de la FASE 2C r1): las ocho
+## opciones llevan las mismas palabras del estímulo («Lo que recogió», «grado» y «sus cursos»), sin «total», coma ni
+## condicional; una clave entre las cortas, otra en el medio y otra entre las largas. Pasada 3 (la última; tanda 7; H1
+## de la FASE 2C r2), medida con la batería L-C4 v2: las ocho opciones empiezan igual («Lo que recogió ese grado
+## dividido», salvo la moda) y cada palabra o expresión de las claves aparece en los distractores en la misma proporción;
+## cuatro distractores dividen con un operando equivocado y son falsos por su función de verdad (valor_p2, guarda abajo).
+## Residuo firmado (decisión b; ley L-C6 de verificar_espacio_cloze.R): P2-R2 +21,9, P2-R1 +13,6, P2-E8c +13,5, P2-E5c
+## +11,1 y P2-M3c +10,0 pp. Los nombres de los distractores son los de su retroalimentación (expl2).
 P2 <- list(
   promedio = list(
     pregunta = paste0("¿Qué indica, en la tabla del otro colegio, el promedio de ", mat,
@@ -696,37 +689,24 @@ P2 <- list(
       luego_dos      = "Lo que recogió ese grado dividido en partes iguales entre sus cursos y luego entre dos.",
       cuadrado       = "Lo que recogió ese grado dividido entre el número de sus cursos al cuadrado.",
       ambos          = "Lo que recogió ese grado dividido entre la cantidad de cursos de ambos grados.",
-      moda           = "Lo que recogió la mayoría de los cursos de ese mismo grado.")),
-  comparar = list(
-    pregunta = "¿Qué se compara en la tabla del otro colegio al decidir qué grado ganó el concurso?",
-    clave = c("La cantidad de cursos multiplicada por el promedio de un grado y lo mismo del otro grado.",
-              "La cantidad de cursos por el promedio de un grado y lo mismo del otro grado.",
-              "El promedio multiplicado por la cantidad de cursos de un grado y lo mismo del otro grado."),
-    distractores = c(
-      promedio     = "El promedio de un grado y lo mismo del otro grado.",
-      cociente     = "El promedio dividido por la cantidad de cursos de un grado y lo mismo del otro grado.",
-      cociente_inv = "La cantidad de cursos dividida por el promedio de un grado y lo mismo del otro grado.",
-      resta        = "La cantidad de cursos menos el promedio de un grado y lo mismo del otro grado.",
-      cruzado      = "La cantidad de cursos de un grado multiplicada por el promedio del otro grado, y al revés.")))
-## Funciones de verdad de la Parte 2 (tanda 7). «promedio»: el valor que describe cada distractor para un grado de la tabla
-## mostrada (n y a de su fila; n2 y a2, del otro grado); la definición del promedio por curso es (n · a) / n = a. La moda no
-## sale de la tabla: se evalúa sobre un testigo compatible con ella (n − 1 cursos con a − 1 kilos y uno con a + n − 1, cuyo
-## promedio es a; la mayoría recogió a − 1). «comparar»: la cantidad que cada distractor compara para un grado; el criterio
-## del concurso es el total n · a. Puras: no usan el azar.
+      moda           = "Lo que recogió la mayoría de los cursos de ese mismo grado.")))
+## Funciones de verdad de la Parte 2 (tanda 7): el valor que describe cada distractor para un grado de la tabla mostrada
+## (n y a de su fila; n2 y a2, del otro grado); la definición del promedio por curso es (n * a) / n = a. La moda no sale
+## de la tabla: se evalúa sobre un testigo compatible con ella (n - 1 cursos con a - 1 kilos y uno con a + n - 1, cuyo
+## promedio es a; la mayoría recogió a - 1). Puras: no usan el azar.
 valor_p2 <- list(
   entre_promedio = function(n, a, n2, a2) (n * a) / a,
   luego_dos      = function(n, a, n2, a2) (n * a) / n / 2,
   cuadrado       = function(n, a, n2, a2) (n * a) / n^2,
   ambos          = function(n, a, n2, a2) (n * a) / (n + n2),
   moda           = function(n, a, n2, a2) { x <- c(rep(a - 1, n - 1), a + n - 1); as.numeric(names(which.max(table(x)))) })
-compara_p2 <- list(
-  promedio     = function(n, a, n2, a2) a,
-  cociente     = function(n, a, n2, a2) a / n,
-  cociente_inv = function(n, a, n2, a2) n / a,
-  resta        = function(n, a, n2, a2) n - a,
-  cruzado      = function(n, a, n2, a2) n * a2)
-tipo_p2 <- sample(names(P2), 1L)
-q2 <- P2[[tipo_p2]]
+## Decisión (b): aquí se sorteaba el tipo de pregunta de la Parte 2 entre dos. El sorteo se conserva sin uso para no mover
+## el RNG: sample() de dos elementos llama a sample.int(2L, 1L), así que con la misma semilla las Partes 3 a 6 salen
+## iguales que antes de la decisión (comprobado en salida/rng_tanda8.txt). tipo_p2 queda como rótulo del registro de
+## la versión: lo leen la batería L-C4 congelada y el verificador.
+invisible(sample.int(2L, size = 1L))
+tipo_p2 <- "promedio"
+q2 <- P2$promedio
 clave_p2 <- pick(q2$clave)
 dis_p2 <- q2$distractores[sample.int(length(q2$distractores), 3L)]
 op2 <- c(clave = clave_p2, dis_p2)
@@ -834,10 +814,6 @@ stopifnot(
     all(vapply(names(valor_p2), function(id) all(vapply(1:2, function(i) valor_p2[[id]](n_fila_par[i], a_fila_par[i],
       n_fila_par[3L - i], a_fila_par[3L - i]) != a_fila_par[i], NA)), NA)) &&
     all((n_fila_par * a_fila_par) / n_fila_par == a_fila_par),
-  "Parte 2: ningún distractor «comparar» compara los totales (función de verdad, tanda 7)" =
-    setequal(names(compara_p2), names(P2$comparar$distractores)) &&
-    all(vapply(names(compara_p2), function(id) any(vapply(1:2, function(i) compara_p2[[id]](n_fila_par[i], a_fila_par[i],
-      n_fila_par[3L - i], a_fila_par[3L - i]) != T_fila_par[i], NA)), NA)),
   "L-3 (caso paralelo): sin dominancia y gana el grado G'" =
     (dp$nG - dp$nP) * (dp$aG - dp$aP) < 0 && dp$TG > dp$TP && T_fila_par[gi_par] == dp$TG,
   "Parte 6: hipótesis sin empate" = dp$aG != dp$D && dp$aP != dp$D,
@@ -872,18 +848,10 @@ expl2 <- c(
   cuadrado       = "Dividir entre el número de cursos al cuadrado da el promedio dividido otra vez entre los cursos, no el promedio.",
   ambos          = "Dividir entre los cursos de los dos grados da menos que el promedio de ese grado: lo recogido se reparte solo entre sus propios cursos.",
   moda           = paste("Lo que recogió la mayoría de los cursos, si más de la mitad recogió lo mismo, es la moda, y puede ser",
-                         "distinto del promedio, que reparte por igual entre los cursos lo que recogió el grado."),
-  promedio       = "Un promedio mayor no garantiza un total mayor si en ese grado participaron menos cursos.",
-  cociente       = "Dividir el promedio entre la cantidad de cursos no da ningún total: el total es su producto.",
-  cociente_inv   = "Dividir la cantidad de cursos entre el promedio no da ningún total: el total es su producto.",
-  resta          = "Restar el promedio de la cantidad de cursos no da ningún total: el total es su producto.",
-  cruzado        = "Multiplicar los cursos de un grado por el promedio del otro mezcla los dos grados: el total de cada grado usa sus propios cursos y su propio promedio.")
-clave2_expl <- c(
-  promedio = paste("El promedio por curso es el total del grado dividido entre la cantidad de cursos: lo que le",
-                   "tocaría a cada curso si el total se repartiera por igual."),
-  comparar = paste("Gana el grado que recogió más en total, y el total de cada grado es la cantidad de cursos",
-                   "multiplicada por el promedio por curso."))
-feedback_p2 <- unname(ifelse(sol_p2, paste("Verdadero.", clave2_expl[[tipo_p2]]),
+                         "distinto del promedio, que reparte por igual entre los cursos lo que recogió el grado."))
+clave2_expl <- paste("El promedio por curso es el total del grado dividido entre la cantidad de cursos: lo que le",
+                     "tocaría a cada curso si el total se repartiera por igual.")
+feedback_p2 <- unname(ifelse(sol_p2, paste("Verdadero.", clave2_expl),
                              paste("Falso.", expl2[names(op2)[o2]])))
 fb_total_par <- function(r) paste0("En el grado ", nom_grado[r], " participaron ", n_fila_par[r], ED,
   "cursos y cada uno recogió, en promedio, ", a_fila_par[r], ED, "kilos: $", n_fila_par[r], " \\times ",
@@ -1017,10 +985,7 @@ cat("\nGanó ", nomG, ", con $", d$TG, " - ", d$TP, " = ", d$D, "$ kilos más. "
     }, "\n\n", sep = "")
 cat("Las dos afirmaciones que dan el triunfo a ", nomP, " son falsas, porque esa ", conj$tipo, " no ganó. De las ",
     "dos que se lo dan a ", nomG, ", solo una cita la diferencia correcta, ", d$D, " kilos.\n\n", sep = "")
-cat("Parte 2. ", clave2_expl[[tipo_p2]], " ",
-    if (tipo_p2 == "promedio") "No dice cuánto recogió cada curso en particular." else
-      "Comparar solo los promedios, o solo la cantidad de cursos, puede llevar a una conclusión falsa.",
-    "\n\n", sep = "")
+cat("Parte 2. ", clave2_expl, " No dice cuánto recogió cada curso en particular.\n\n", sep = "")
 cat("Partes 3 a 5. En el otro colegio, el total de cada grado también es la cantidad de cursos multiplicada por ",
     "el promedio por curso:\n\n", sep = "")
 for (r in 1:2) {
@@ -1051,8 +1016,7 @@ for (r in c("gdis", "padv", "psin")) {
   cat("*Por qué es un error:* ", e$descripcion_larga, "\n\n", sep = "")
   cat("*Causa raíz:* ", e$causa_raiz, "\n\n", sep = "")
 }
-encabezado(if (tipo_p2 == "promedio") "Parte 2 · Lecturas del promedio que no sirven" else
-             "Parte 2 · Comparaciones que no deciden qué grado ganó")
+encabezado("Parte 2 · Lecturas del promedio que no sirven")
 for (nm in setdiff(names(op2), "clave")) cat("- «", op2[[nm]], "» ", expl2[[nm]], "\n", sep = "")
 cat("\n")
 encabezado("Parte 6 · Afirmaciones falsas")
