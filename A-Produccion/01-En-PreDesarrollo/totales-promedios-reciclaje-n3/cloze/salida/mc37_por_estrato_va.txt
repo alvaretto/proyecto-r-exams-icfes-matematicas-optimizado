@@ -1,0 +1,2 @@
+original mezcla n=200 -2.5 pp · CURSOS n=76 -1.8 pp · PROMEDIO n=105 +1.1 pp · canonica n=19 -25.0 pp
+mutado   mezcla n=200 +8.5 pp · CURSOS n=76 +38.2 pp · PROMEDIO n=105 -25.0 pp · canonica n=19 +75.0 pp

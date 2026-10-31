@@ -957,3 +957,65 @@ tipo retirado de la Parte 2: su guarda ya no existe.
 Las decisiones 1 y 2 se cablean en `cloze/verificar_espacio_cloze.R` (E8), cada una con su mutante. Lo registra la tanda que lo
 aplique.
 
+### Tanda «Va» (2026-10-31): las decisiones 1 y 2, cableadas en el verificador
+
+> La hizo el coordinador tras la decisión «Va». El `.Rmd` no cambió (md5 `f98f9dda…`): solo cambió
+> `cloze/verificar_espacio_cloze.R`. Evidencia: `cloze/salida/verificar_espacio_cloze_va.txt`, exit 4: «EN ROJO BAJO OVERRIDE
+> FIRMADO», 327 cifras dentro de lo firmado, 0 fallos y 0 pendientes.
+
+**Cómo se hizo.**
+- El encargo (`cloze/salida/encargo_verificador_va.md`) fue a DeepSeek por `delegar.sh`. Codex no tiene cuota hasta el
+  2026-11-25.
+- DeepSeek escribió el cableado (+136/−27) y lo corrió una vez (`cloze/salida/verificador_va.txt`, interrumpida en E3).
+  Después se quedó 9 minutos colgado en una llamada al proxy. Su proceso había sobrevivido al cierre de la sesión anterior.
+- El coordinador lo detuvo a las 13:30 y completó el diff en lugar de relanzarlo.
+
+**Defectos del diff de DeepSeek, corregidos por el coordinador:**
+1. **La FALLA del sorteo de la Parte 2 estaba en la comprobación, no en el sorteo.** La comprobación tomaba los distractores
+   con `opciones_p2[-sol_p2]`. `sol_p2` es lógico, así que el índice quedaba en 0/−1 y quitaba siempre la opción 1. Por eso
+   fallaban las 74 de 100 versiones con la clave fuera de la posición 1. La medida exacta no usa esa línea. Con `!sol_p2`
+   pasan 300 de 300.
+2. **MC37 estaba en E3, antes de `mutar()` y de `filas_mut`.** La corrida se interrumpía ahí. Pasó a E6, después de MC17.
+3. **MC38 salía siempre `mal_construido`.** Comprobaba su llegada con `all(grepl("justamente", …))` sobre un vector que lleva
+   `""` en las dos redacciones «por cursos». Además, su comentario justificaba la semilla 2 con una premisa falsa: las
+   redacciones BP salen en las dos ramas y `h2_exacta()` ramifica la rama del otro colegio. Ahora usa la semilla 1, como MC36.
+4. **De diseño: MC37 medía solo la mezcla.** Daba +8,5 pp, «cazado» por medio punto. La mutación abre X6 en la rama CURSOS
+   (+38,2 pp) y la vuelve antipredictiva en la PROMEDIO (−25,0 pp). Ahora juzga los tres estratos que juzga la puerta.
+
+**Decisión 1 (L-C2).** Quedó en E3, donde vive la batería cruzada, y no en E8, como decía el registro de la decisión.
+- `medir_exacta_p2()` integra el sorteo de la Parte 2 con el banco de la semilla 1: 3 claves × C(5,3) tríos, 30
+  combinaciones equiprobables. Es una sola función, en la puerta y en MC37.
+- El supuesto del sorteo se comprueba con `ok()` en las 300 versiones de la mezcla y de las dos ramas.
+
+| Regla, exacta (exceso en pp) | Mezcla | Rama CURSOS | Rama PROMEDIO |
+|---|---|---|---|
+| X5 más palabras en común con todo el texto de las Partes 2 a 6 | 20,8 % (−4,2) | 22,1 % (−2,9) | 18,6 % (−6,4) |
+| X6 más palabras en común con la clave de la Parte 2 | 24,9 % (−0,1) | 26,3 % (+1,3) | 31,0 % (+6,0) |
+| X10 S_U + más palabras en común con la clave de la Parte 2 | 42,7 % (−7,3) | 46,0 % (−4,0) | 52,7 % (+2,7) |
+
+- X6 por clave: en la mezcla, +1,0 / +1,0 / −2,2; en CURSOS, +2,0 / +2,0 / +0,0; en PROMEDIO, +9,0 / +9,0 / +0,0 pp. Son las
+  cifras de `cloze/salida/x6_estratos_t8.txt`.
+- Las nueve celdas salen «ok». Al lado se imprime la cifra de la muestra: X6 en la rama PROMEDIO da 33,5 % (+8,5 pp).
+
+**Decisión 2 (L-C7, E8).** `p6_token_juzgar()` lee `cloze/firma_p6_palabras_f98f9dda.tsv` con su md5 comprobado (216 filas).
+Una regla por palabra por encima de +8 pp queda «cubierta» solo si está en la lista y no pasa ni su cifra ni el tope de su
+estrato (`FIRMA_P6_TOKEN`, que se conserva como cota). Fuera de la lista, o por encima, queda pendiente. En `f98f9dda…`, las
+216 reglas de la lista existen en la enumeración exacta y salen cubiertas: 54 en cada estrato de rama y de *k*′, ninguna en la
+mezcla. Ninguna regla queda cubierta fuera de la lista y ninguna queda pendiente. `p6_token_juzgar_estrato()` conserva la
+regla anterior solo para el contraste de MC38.
+
+| Ley | Exige | Guarda | Mutante |
+|---|---|---|---|
+| L-C2, decisión «Va» 1 | X5, X6 y X10, exactas sobre el sorteo de la Parte 2, en la mezcla y en cada rama; por encima de +8 pp, pendiente | E3: `medir_exacta_p2()` y `veredicto_cruzado()`; el supuesto del sorteo, con `ok()` | MC37: las tres claves ganan «aunque fue menor»; X6 exacta, en la mezcla +8,5 pp (n = 200), en CURSOS +38,2 (n = 76) y en PROMEDIO −25,0 (n = 105): pendiente |
+| L-C7, decisión «Va» 2 | Regla por regla: «cubierta» solo dentro de su cifra de la lista y del tope de su estrato; fuera de la lista o por encima, pendiente | E8: `p6_token_juzgar()` con el md5 de la lista; las 216 de la lista salen cubiertas y ninguna fuera de ella | MC36: «duda», fuera de la lista, +25,0 pp en la mezcla. MC38: «justamente» en las dos redacciones BP; «justamente»c, +25,0 pp en CURSOS, queda pendiente con la firma regla por regla y cubierta con la de estrato; 12 reglas pasan de cubiertas a pendientes |
+
+- **Reparto de las 327 cifras cubiertas:** 13 de «O-1 corregido», 2 de L-C3 (X9 y X11 en la canónica), 24 de la decisión 2 a,
+  67 de L-C5, 5 de L-C6 y 216 de L-C7.
+- **Lo demás no cambió.** Contra la r8b, con las etiquetas normalizadas: E1, E2, E4, E5, L-C3, L-C4, L-C5, L-C6, MC1 a MC35, MP1
+  y MP2 dan una salida idéntica.
+- **MC36 con una sola Parte 1:** 160 reglas por palabra pendientes, frente a 128 en la r8b. Se mide como MC25 a MC27, con una
+  sola Parte 1, y con la firma regla por regla queda pendiente toda cifra que en esa Parte 1 pase la de la lista. Su veredicto
+  lo decide «duda».
+- **X6 por clave, +9,0 / +9,0 / +0,0 en la rama PROMEDIO:** sigue siendo el dato que el profesor no vio al decidir. Si quiere
+  leer X6 clave por clave, la decisión vuelve a él.
+

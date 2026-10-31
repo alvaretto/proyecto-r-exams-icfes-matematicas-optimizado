@@ -1,0 +1,7 @@
+md5: f98f9dda47e4f3cafc4e8b4e82cc956b 
+banco: claves 3 · distractores 5 
+clase de sol_p2: logical 
+posición de la clave de la Parte 2 (1..4): 26 24 28 22 
+con -sol_p2: pasan 26 de 100; las que pasan tienen la clave en la posición: 1 
+con !sol_p2: pasan 100 de 100
+ejemplo, sol_p2 = FALSE FALSE FALSE TRUE  -> -sol_p2 = 0 0 0 -1  -> quedan: 3 opciones (siempre sin la 1)

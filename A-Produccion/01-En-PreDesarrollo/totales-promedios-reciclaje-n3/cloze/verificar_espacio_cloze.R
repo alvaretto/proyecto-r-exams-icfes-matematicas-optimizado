@@ -38,13 +38,16 @@
 ##       contrarias; mutantes MC28 (vocabulario exclusivo de la clave) y MC29 (función de verdad de la Parte 2).
 ##       Tanda 8 (decisión b del profesor, 2026-10-31): la Parte 2 tiene solo el tipo «promedio»; MC30 se retiró con el
 ##       tipo quitado (su guarda ya no existe) y MC19 muta las tres claves «promedio». L-C6: el residuo firmado de la
-##       Parte 2, regla por regla (FIRMA_P2), mutantes MC31 a MC35. L-C7: la regla por token de la Parte 6, por estrato
-##       (FIRMA_P6_TOKEN), sobre la enumeración exacta de L-C5, mutante MC36.
+##       Parte 2, regla por regla (FIRMA_P2), mutantes MC31 a MC35. L-C7: la regla por palabra de la Parte 6, firmada
+##       regla por regla (firma_p6_palabras_f98f9dda.tsv, con FIRMA_P6_TOKEN como tope del estrato), sobre la
+##       enumeración exacta de L-C5, mutantes MC36 y MC38.
+##       Tras la tanda 8 (decisión «Va» del profesor, 2026-10-31): X5, X6 y X10 exactas sobre el sorteo de la Parte 2
+##       (MC37); L-C7 regla por regla (firma_p6_palabras_f98f9dda.tsv, MC38).
 ## Salida: exit 1 = algo falla; 3 = pendiente de firma (una cifra firmada superada o un canal cruzado > +8 pp
 ##   fuera de lo firmado); 4 = EN ROJO bajo override firmado («O-1 corregido» extendido por F-2 y X9 en la
 ##   canónica por L-C3, X6, X9, X10 y X11; la canónica de la Parte 1 regla por regla por la decisión 2 a; todo dentro
-##   de lo firmado, H2 en la Parte 6 por «H2 a», L-C5, y el residuo de la Parte 2 y la regla por token de la Parte 6 por
-##   la decisión b, L-C6 y L-C7; regla #22 §P7-E: nunca PASS); 0 = sin rojo.
+##   de lo firmado, H2 en la Parte 6 por «H2 a», L-C5, el residuo de la Parte 2 por la decisión b y la regla por palabra
+##   de la Parte 6 firmada regla por regla por la decisión «Va», L-C6 y L-C7; regla #22 §P7-E: nunca PASS); 0 = sin rojo.
 ## =============================================================================
 suppressMessages(library(exams))
 args_all <- commandArgs(trailingOnly = FALSE)
@@ -356,14 +359,57 @@ XT <- sapply(list(mezcla = NAT, CURSOS = CU$CURSOS, PROMEDIO = CU$PROMEDIO, cano
   vapply(XREG, function(r) mean(vapply(L, function(x) sc(r$f(x), x$clave), 0)), 0))
 print(round(100 * XT, 1))
 BASES_X <- vapply(XREG, function(r) r$base, 0)
+## Decisión «Va» del profesor (2026-10-31): X5, X6 y X10 se miden EXACTAS sobre el sorteo de la Parte 2. Su banco es fijo
+## (tanda 8: solo el tipo «promedio»): 3 claves (paráfrasis) y 5 distractores; cada versión muestra una clave uniforme y un
+## trío de distractores (C(5,3) = 10 tríos equiprobables), el mismo supuesto de medir_p2_exacta(). Una sola función mide la
+## cifra exacta, aquí y en el mutante MC37; la clave de la combinación va en la posición 1 (las reglas cuentan palabras o
+## combinan con S_U, el orden de las opciones no importa).
+REGLA_X5 <- "X5 más palabras en común con todo el texto de las Partes 2 a 6"
+REGLA_X6 <- "X6 más palabras en común con la clave de la Parte 2"
+REGLA_X10 <- "X10 S_U + más palabras en común con la clave de la Parte 2"
+BANCO_P2 <- correr(EXPR_C, 1L)$P2$promedio
+## sol_p2 es LÓGICO: los distractores son opciones_p2[!sol_p2]. Con «-sol_p2» el índice sería 0/-1 y quitaría siempre la
+## opción 1, no la clave (primera corrida de la tanda «Va»: FALLA en las 74 de 100 versiones con la clave en otra posición).
+sup_sorteo_p2 <- function(L) all(vapply(L, function(x) {
+  k <- x$opciones_p2[x$sol_p2]; d <- x$opciones_p2[!x$sol_p2]
+  is.logical(x$sol_p2) && length(k) == 1L && k %in% BANCO_P2$clave && all(d %in% BANCO_P2$distractores) && length(unique(c(k, d))) == 4L }, NA))
+ok(sup_sorteo_p2(NAT) && sup_sorteo_p2(CU$CURSOS) && sup_sorteo_p2(CU$PROMEDIO),
+   sprintf("sorteo de la Parte 2: en las %d versiones de mezcla, CURSOS y PROMEDIO, la clave mostrada está entre las 3 del banco y los 3 distractores mostrados entre los 5",
+           length(NAT) + length(CU$CURSOS) + length(CU$PROMEDIO)))
+combinaciones_p2 <- function(banco) { cl <- unique(unname(banco$clave)); di <- unique(unname(banco$distractores))
+  combos <- list()
+  for (i in seq_along(cl)) for (s in utils::combn(length(di), 3L, simplify = FALSE)) combos[[length(combos) + 1L]] <- c(cl[i], di[s])
+  combos }
+medir_exacta_p2 <- function(L, regla, banco) mean(vapply(L, function(x) mean(vapply(combinaciones_p2(banco), function(op_p2) {
+  y <- x; y$opciones_p2 <- op_p2; y$sol_p2 <- 1L; sc(regla(y), y$clave) }, 0)), 0))
+NOM_EXACTAS <- c(REGLA_X5, REGLA_X6, REGLA_X10)
+XT_EX <- sapply(list(mezcla = NAT, CURSOS = CU$CURSOS, PROMEDIO = CU$PROMEDIO), function(L)
+  vapply(XREG[NOM_EXACTAS], function(r) medir_exacta_p2(L, r$f, BANCO_P2), 0))
+cat("  Exactas sobre el sorteo de la Parte 2 (3 claves × C(5,3) tríos = 30 combinaciones equiprobables):\n")
+print(round(100 * XT_EX, 1))
 ## L-C2 (decisión 3.1 a del profesor, 2026-10-30): un canal cruzado de más de +8 pp que siga abierto no se cierra
 ## solo: queda PENDIENTE DE FIRMA (exit 3) y vuelve al profesor. Una sola función decide, aquí y en el mutante MC17.
 veredicto_cruzado <- function(ex) if (ex <= 0.08) "ok" else "pendiente"
 for (i in seq_along(XREG)) for (est in c("mezcla", "CURSOS", "PROMEDIO")) {
   ex <- XT[i, est] - XREG[[i]]$base
   msg <- sprintf("%s, %s: %.1f %% (%+.1f pp sobre %.0f %%)", names(XREG)[i], est, 100 * XT[i, est], 100 * ex, 100 * XREG[[i]]$base)
+  if (names(XREG)[i] %in% NOM_EXACTAS) {
+    ex <- XT_EX[names(XREG)[i], est] - XREG[[i]]$base
+    msg <- sprintf("%s, %s: exacta sobre el sorteo de la Parte 2 (decisión «Va» del profesor, 2026-10-31) %.1f %% (%+.1f pp sobre %.0f %%); en la muestra %.1f %%",
+                   names(XREG)[i], est, 100 * XT_EX[names(XREG)[i], est], 100 * ex, 100 * XREG[[i]]$base, 100 * XT[i, est])
+  }
   if (veredicto_cruzado(ex) == "ok") ok(TRUE, "batería cruzada: ", msg) else pendiente("canal cruzado > +8 pp (F-2 y L-C2: vuelve al profesor): ", msg)
 }
+## X6 exacta por clave en cada estrato (el mismo desglose de salida/x6_estratos_t8.txt).
+for (est in c("mezcla", "CURSOS", "PROMEDIO")) {
+  L <- list(mezcla = NAT, CURSOS = CU$CURSOS, PROMEDIO = CU$PROMEDIO)[[est]]
+  pc <- vapply(unique(unname(BANCO_P2$clave)), function(k)
+    medir_exacta_p2(L, XREG[[REGLA_X6]]$f, list(clave = k, distractores = BANCO_P2$distractores)), 0)
+  cat(sprintf("  X6 exacta, %-8s n = %3d: %.1f %% (%+.1f pp); por clave: %s\n", est, length(L),
+              100 * XT_EX[REGLA_X6, est], 100 * (XT_EX[REGLA_X6, est] - XREG[[REGLA_X6]]$base),
+              paste(sprintf("%+.1f", 100 * (pc - XREG[[REGLA_X6]]$base)), collapse = " / ")))
+}
+## Su mutante, MC37, está en E6, después de MC17: necesita mutar() y filas_mut, que se definen allí.
 ## L-C3 (decisión 3.2 a y «a · aclaración sí» del profesor, 2026-10-30): override de X6, X9, X10 y X11 en la
 ## canónica, con sus cifras de ENUMERACIÓN EXACTA. Cubiertas por dominancia: en la canónica, el atajo firmado de
 ## «O-1 corregido» ya acierta el 100 %. Firmar el máximo de una batería no cubre las demás reglas: el alcance va
@@ -372,9 +418,7 @@ for (i in seq_along(XREG)) for (est in c("mezcla", "CURSOS", "PROMEDIO")) {
 ## «canonica» de la tabla de arriba (n = 30) es solo informativa. Dentro del alcance, «rojo cubierto» (exit 4),
 ## nunca PASS (regla #22 §P7-E); por encima, o si cualquier otra regla pasa de +8 pp, PENDIENTE DE FIRMA (exit 3).
 ## Se comparan redondeadas a un decimal, como se firmaron.
-REGLA_X6 <- "X6 más palabras en común con la clave de la Parte 2"
 REGLA_X9 <- "X9 S_U + la que nombra la ventaja del grado ganador"
-REGLA_X10 <- "X10 S_U + más palabras en común con la clave de la Parte 2"
 REGLA_X11 <- "X11 S_U + más palabras en común con las verdaderas de la Parte 6"
 FIRMA_CANON <- stats::setNames(c(16.7, 25.0, 16.7, 12.5), c(REGLA_X6, REGLA_X9, REGLA_X10, REGLA_X11))   # pp, exactas
 stopifnot("las reglas firmadas en la canónica existen en la batería congelada" = all(names(FIRMA_CANON) %in% names(XREG)))
@@ -668,6 +712,33 @@ if (is.null(m12$error)) {
   ok(ver17 == "cazado_por_su_sonda", sprintf("MC17 (L-C2: abre un canal cruzado; la rama del otro colegio copia la de la Parte 1): la batería lo deja PENDIENTE DE FIRMA (%s) — %s", d17, ver17))
   filas_mut[["MC17"]] <- c("MC17", "batería cruzada > +8 pp: pendiente (L-C2)", d17, ver17, NA)
 }
+## MC37 (L-C2 exacta, decisión «Va» del profesor, 2026-10-31): las tres claves de la Parte 2 ganan «aunque fue menor»
+## (las mismas tres sustituciones de MC19). Su sonda es X6 EXACTA sobre el sorteo, con la misma función de la puerta
+## (medir_exacta_p2) y el banco del código mutado, en las semillas 1 a 200 (las de medir_mut), y en los MISMOS tres
+## estratos que juzga la puerta: la mezcla y cada rama de la Parte 1 (sin la canónica, como CU). veredicto_cruzado() tiene
+## que dejarla PENDIENTE DE FIRMA en alguno. Medida solo en la mezcla, la mutación se diluye: abre X6 en la rama CURSOS
+## (+38,2 pp) y la vuelve antipredictiva en la PROMEDIO (−25,0 pp), y la mezcla queda en +8,5 pp, medio punto sobre el umbral.
+m37 <- mutar(list(
+  c('"Lo que recogió ese grado dividido en partes iguales entre sus cursos."',
+    '"Lo que recogió ese grado dividido en partes iguales entre sus cursos aunque fue menor."'),
+  c('"Lo que recogió ese grado dividido entre el número de sus cursos."',
+    '"Lo que recogió ese grado dividido entre el número de sus cursos aunque fue menor."'),
+  c('"Lo que recogió ese grado dividido entre la cantidad de cursos de ese mismo grado."',
+    '"Lo que recogió ese grado dividido entre la cantidad de cursos de ese mismo grado aunque fue menor."')))
+if (!is.null(m37$error)) { falla("MC37 MAL CONSTRUIDO: ", m37$error); filas_mut[["MC37"]] <- c("MC37", "L-C2 exacta", "-", "mal_construido", NA) } else {
+  en37 <- correr(m37$expr, 1L); b37 <- if (is.null(en37$.err)) en37$P2$promedio else NULL
+  llego37 <- !is.null(b37) && all(endsWith(b37$clave, "aunque fue menor."))
+  L37 <- list(); for (z in 1:200) { en <- correr(m37$expr, z); if (is.null(en$.err)) L37[[length(L37) + 1L]] <- rec(en) }
+  E37 <- list(mezcla = L37, CURSOS = Filter(function(x) !x$canon && x$rama == "CURSOS", L37),
+              PROMEDIO = Filter(function(x) !x$canon && x$rama == "PROMEDIO", L37))
+  llego37 <- llego37 && all(lengths(E37) >= 20L)   # regla #23: un estrato con n < 20 no concluye
+  ex37 <- if (llego37) vapply(E37, function(L) medir_exacta_p2(L, XREG[[REGLA_X6]]$f, b37) - XREG[[REGLA_X6]]$base, 0) else NA_real_
+  v37 <- if (llego37) vapply(ex37, veredicto_cruzado, "") else NA
+  d37 <- if (llego37) paste(sprintf("%s %+.1f pp (n = %d) -> %s", names(E37), 100 * ex37, lengths(E37), v37), collapse = "; ") else "-"
+  ver37 <- if (!llego37) "mal_construido" else if (any(v37 == "pendiente")) "cazado_por_su_sonda" else "no_detectado"
+  ok(ver37 == "cazado_por_su_sonda", sprintf("MC37 (L-C2 exacta: las tres claves de la Parte 2 ganan «aunque fue menor»): la batería deja X6 exacta PENDIENTE DE FIRMA en algún estrato (%s) — %s", d37, ver37))
+  filas_mut[["MC37"]] <- c("MC37", "batería cruzada exacta > +8 pp: pendiente (L-C2)", d37, ver37, NA)
+}
 ## MC18 a MC21 (L-C3, tanda 3): un mutante por regla firmada en la canónica, medido con la MISMA enumeración exacta
 ## que la puerta (sin semillas: no hay «primera muerte» que buscar). Cada uno tiene que sacar SU regla de «cubierto»;
 ## se informa qué otras reglas salen con él. La materialización se comprueba en el entorno de las hojas.
@@ -942,28 +1013,46 @@ for (mx in MUT_H2) {
   filas_mut[[mx$id]] <- c(mx$id, sprintf("L-C5: %s %s (%s) fuera de «cubierto»", mx$base, mx$papel, mx$estrato), d, ver, muerte)
 }
 cat("  L-C5: la puerta es una sola función (h2_juzgar) para todas las celdas; MC25, MC26 y MC27 la prueban en K1, D2 y RL2. Las demás celdas firmadas no tienen mutante propio y se declara.\n")
-## ---- L-C7 (tanda 8; decisión b del profesor, 2026-10-31): la regla por token de la Parte 6, por estrato -----------------
-## Override firmado de la familia «las que dicen t son verdaderas» y su contraria (P6-V «t»), fuera de la batería congelada:
-## por estrato, la cifra firmada es el máximo de la familia (mezcla 0,0; rama CURSOS y rama PROMEDIO +25,0; k′ = 1 +16,4;
-## k′ ≥ 2 +16,7 pp). Se mide con la MISMA enumeración exacta de L-C5 (H2X) y la misma función que dio las cifras firmadas
-## (EB$vocab_p6_tokens, exploratoria de salida/medir_bateria_v2.R). Cada regla por token (token, papel y sentido): +8 pp o
-## menos, «ok»; por encima de +8 pp y dentro de la cifra de su estrato, «ROJO, cubierto» (exit 4), nunca PASS; por encima de
-## la cifra, PENDIENTE (exit 3). Mutante MC36.
+## ---- L-C7 (tanda 8; decisión b del profesor, 2026-10-31) -----------------------------------------------------------
+## Override firmado de la familia «las que dicen t son verdaderas» y su contraria (P6-V «t»), fuera de la batería
+## congelada: REGLA POR REGLA, con la lista firma_p6_palabras_f98f9dda.tsv (216 filas: estrato, id, papel, firmado_pp y
+## aplica_pct; decisión «Va» del profesor, 2026-10-31, md5 comprobado) y el tope del estrato (FIRMA_P6_TOKEN)
+## conservado como cota. Se mide con la MISMA enumeración exacta de L-C5 (H2X) y la misma función que dio las cifras
+## firmadas (EB$vocab_p6_tokens, exploratoria de salida/medir_bateria_v2.R). Cada regla por palabra (palabra, papel y
+## sentido): +8 pp o menos, «ok»; por encima de +8 pp, dentro de su cifra firmada y del tope de su estrato, «ROJO,
+## cubierto» (exit 4), nunca PASS; por encima de la cifra o fuera de la lista, PENDIENTE (exit 3). Mutantes MC36 y MC38.
 FIRMA_P6_TOKEN <- c(mezcla = 0.0, CURSOS = 25.0, PROMEDIO = 25.0, k1 = 16.4, k2 = 16.7)
+FIRMA_P6_TSV <- file.path(DIR, "firma_p6_palabras_f98f9dda.tsv")
+stopifnot("la lista firmada regla por regla está en su md5" = unname(tools::md5sum(FIRMA_P6_TSV)) == "2aa8e7426b325d8fed9f8c6144608164")
+FIRMA_P6_PALABRAS <- utils::read.delim(FIRMA_P6_TSV, quote = "", stringsAsFactors = FALSE, encoding = "UTF-8")
+ok(nrow(FIRMA_P6_PALABRAS) == 216L, "L-C7: la lista firmada regla por regla tiene 216 filas (estrato, id, papel, firmado_pp, aplica_pct)")
 p6_token_tabla <- function(A) do.call(rbind, lapply(names(H2_ESTRATOS), function(e) { sx <- H2_ESTRATOS[[e]](A); if (!any(sx)) return(NULL)
   VT <- EB$vocab_p6_tokens(h2_registros(A[sx, , drop = FALSE]), A$w[sx] / sum(A$w[sx])); VT$estrato <- rep(e, nrow(VT)); VT }))
-p6_token_juzgar <- function(VT) { ex <- 100 * VT$exceso; f <- unname(FIRMA_P6_TOKEN[VT$estrato])
+firma_p6_f <- function(e, id, pp) { j <- which(FIRMA_P6_PALABRAS$estrato == e & FIRMA_P6_PALABRAS$id == id & FIRMA_P6_PALABRAS$papel == pp)
+  if (length(j)) FIRMA_P6_PALABRAS$firmado_pp[j[1]] else NA_real_ }
+p6_token_juzgar <- function(VT) { ex <- 100 * VT$exceso
+  f <- vapply(seq_len(nrow(VT)), function(i) firma_p6_f(VT$estrato[i], VT$id[i], VT$papel[i]), 0)
+  fe <- unname(FIRMA_P6_TOKEN[VT$estrato])
+  ifelse(ex <= 8 + 1e-9, "ok", ifelse(!is.na(f) & round(ex, 1) <= f + 1e-9 & round(ex, 1) <= fe + 1e-9, "cubierto", "pendiente")) }
+## La regla anterior (por estrato), conservada solo para el contraste del mutante MC38.
+p6_token_juzgar_estrato <- function(VT) { ex <- 100 * VT$exceso; f <- unname(FIRMA_P6_TOKEN[VT$estrato])
   ifelse(ex <= 8 + 1e-9, "ok", ifelse(!is.na(f) & round(ex, 1) <= f + 1e-9, "cubierto", "pendiente")) }
 VT7 <- p6_token_tabla(H2X$A); VT7$veredicto <- p6_token_juzgar(VT7)
 ok(setequal(unique(VT7$estrato), names(FIRMA_P6_TOKEN)), "L-C7: los cinco estratos firmados están en la enumeración exacta")
+clave_fila <- function(d) paste(d$estrato, d$id, d$papel)
+ok(all(clave_fila(FIRMA_P6_PALABRAS) %in% clave_fila(VT7)), "L-C7: las 216 reglas de la lista firmada regla por regla existen en la enumeración exacta")
+ok(all(VT7$veredicto[clave_fila(VT7) %in% clave_fila(FIRMA_P6_PALABRAS)] == "cubierto"), "L-C7: las 216 reglas de la lista firmada salen «cubierto»")
+ok(!any(VT7$veredicto == "cubierto" & !clave_fila(VT7) %in% clave_fila(FIRMA_P6_PALABRAS)), "L-C7: ninguna «cubierto» fuera de la lista firmada")
 for (e in names(FIRMA_P6_TOKEN)) { D <- VT7[VT7$estrato == e, , drop = FALSE]; D <- D[order(-D$exceso), , drop = FALSE]; R8 <- D[D$veredicto != "ok", , drop = FALSE]
-  cat(sprintf("  L-C7 %-8s %d reglas por token (token × papel × sentido); máximo %+.1f pp (%s · %s); > +8 pp: %d; firmado %+.1f pp\n",
-              e, nrow(D), 100 * D$exceso[1], D$id[1], D$papel[1], nrow(R8), FIRMA_P6_TOKEN[[e]]))
-  for (i in seq_len(nrow(R8))) { m <- sprintf("L-C7 Parte 6 por token, %s · %s %s: %+.1f pp exactos (aplica %.0f %%)", e, R8$id[i], R8$papel[i], 100 * R8$exceso[i], 100 * R8$aplica[i])
-    if (R8$veredicto[i] == "cubierto") firmado(m, sprintf(" (firmado hasta %+.1f pp en el estrato)", FIRMA_P6_TOKEN[[e]]), por = "decisión b (L-C7, Parte 6 por token)") else
-      pendiente(m, sprintf(", por encima de lo firmado en el estrato (%+.1f pp)", FIRMA_P6_TOKEN[[e]])) } }
-## MC36 (L-C7): la hipótesis del que perdió dice «sin duda» solo cuando es verdadera. La regla por token («duda») tiene que
-## salir de «cubierto» en algún estrato, medida con la misma puerta (enumeración exacta conducida por el código, 1 Parte 1).
+  cat(sprintf("  L-C7 %-8s %d reglas por palabra (palabra × papel × sentido); máximo %+.1f pp (%s · %s); > +8 pp: %d (cubiertas %d, pendientes %d); tope del estrato %+.1f pp\n",
+              e, nrow(D), 100 * D$exceso[1], D$id[1], D$papel[1], nrow(R8), sum(R8$veredicto == "cubierto"), sum(R8$veredicto == "pendiente"), FIRMA_P6_TOKEN[[e]]))
+  for (i in seq_len(nrow(R8))) { m <- sprintf("L-C7 Parte 6 por palabra, %s · %s %s: %+.1f pp exactos (aplica %.0f %%)", e, R8$id[i], R8$papel[i], 100 * R8$exceso[i], 100 * R8$aplica[i])
+    f <- firma_p6_f(R8$estrato[i], R8$id[i], R8$papel[i])
+    if (R8$veredicto[i] == "cubierto") firmado(m, sprintf(" (firmada regla por regla: %+.1f pp)", f), por = "«Va» (L-C7, regla por regla)") else
+      pendiente(m, if (is.na(f)) ", fuera de la lista firmada (L-C7 regla por regla)" else sprintf(", por encima de lo firmado (%+.1f pp)", f)) } }
+## MC36 (L-C7): la hipótesis del que perdió dice «sin duda» solo cuando es verdadera. La regla por palabra («duda») no
+## está en la lista firmada regla por regla y tiene que salir de «cubierto», medida con la misma puerta (enumeración
+## exacta conducida por el código, 1 Parte 1).
 local({
   de <- 'P6_HP <- "Si el grado que perdió hubiera participado con un curso más, conservando su promedio por curso, habría ganado el concurso."'
   a <- paste0('P6_HP <- if (v_hp) "Si el grado que perdió hubiera participado con un curso más, conservando su promedio por curso, sin duda habría ganado el concurso." else ',
@@ -977,10 +1066,41 @@ local({
   pend <- if (llego) VM[VM$veredicto == "pendiente", , drop = FALSE] else VT7[0, ]
   pd <- pend[grepl("duda", pend$id, fixed = TRUE), , drop = FALSE]; pd <- pd[order(-pd$exceso), , drop = FALSE]
   ver <- if (!llego) "mal_construido" else if (nrow(pd)) "cazado_por_su_sonda" else if (nrow(pend)) "cazado_por_otra" else "no_detectado"
-  d <- if (nrow(pd)) sprintf("%s · %s %s %+.1f pp (firmado %+.1f en el estrato) -> pendiente; reglas por token pendientes: %d", pd$estrato[1], pd$id[1], pd$papel[1],
-                             100 * pd$exceso[1], FIRMA_P6_TOKEN[[pd$estrato[1]]], nrow(pend)) else sprintf("reglas por token pendientes: %d (masa con error %.3f)", nrow(pend), if (is.null(HM$A)) NA else HM$masa_err)
+  d <- if (nrow(pd)) sprintf("%s · %s %s %+.1f pp (fuera de la lista firmada) -> pendiente; reglas por palabra pendientes: %d", pd$estrato[1], pd$id[1], pd$papel[1],
+                             100 * pd$exceso[1], nrow(pend)) else sprintf("reglas por palabra pendientes: %d (masa con error %.3f)", nrow(pend), if (is.null(HM$A)) NA else HM$masa_err)
   ok(ver == "cazado_por_su_sonda", sprintf("MC36 (L-C7: HP dice «sin duda» solo si es verdadera): %s — %s", d, ver))
-  filas_mut[["MC36"]] <<- c("MC36", "L-C7: regla por token fuera de «cubierto»", d, ver, NA) })
+  filas_mut[["MC36"]] <<- c("MC36", "L-C7: regla por palabra fuera de la lista firmada", d, ver, NA) })
+## MC38 (L-C7 regla por regla, decisión «Va» del profesor, 2026-10-31): las dos redacciones de ventaja «por promedio»
+## (BP_perdio y BP_gano: «hubiera tenido el mismo promedio por curso») ganan «justamente», una palabra que ninguna otra
+## afirmación lleva. Esas redacciones salen en las dos ramas del otro colegio (verdaderas en PROMEDIO, falsas en CURSOS), y
+## «justamente» hereda la cifra de «tenido» en cada estrato. Las reglas por palabra nuevas («justamente…») no están en la
+## lista firmada y tienen que salir PENDIENTES con la puerta nueva; la firma anterior, por estrato, las dejaba «cubierto»
+## con su tope: es justo lo que la firma por estrato dejaba pasar. Se mide como MC36: la misma puerta (h2_exacta, que
+## ramifica la rama del otro colegio y la redacción de ventaja) sobre la Parte 1 de la semilla 1.
+local({
+  m38 <- mutar(list(
+    c("Si el grado que perdió hubiera tenido el mismo promedio por curso que el que ganó, conservando su",
+      "Si el grado que perdió hubiera tenido justamente el mismo promedio por curso que el que ganó, conservando su"),
+    c("Si el grado que ganó hubiera tenido el mismo promedio por curso que el que perdió, conservando su",
+      "Si el grado que ganó hubiera tenido justamente el mismo promedio por curso que el que perdió, conservando su")))
+  if (!is.null(m38$error)) { falla("MC38 MAL CONSTRUIDO: ", m38$error); filas_mut[["MC38"]] <<- c("MC38", "L-C7", "-", "mal_construido", NA); return(invisible()) }
+  en38 <- correr(m38$expr, 1L); HM <- h2_exacta(m38$txt, 1L)
+  bp38 <- !is.null(HM$A) && any(grepl("hubiera tenido", HM$A$c6_txt, fixed = TRUE))
+  tx38 <- if (is.null(en38$.err)) vapply(en38$P6_VENTAJA, function(z) z$texto, "") else character(0)
+  si38 <- if (is.null(en38$.err)) vapply(en38$P6_VENTAJA, function(z) isTRUE(z$si_cursos), NA) else logical(0)
+  llego <- is.null(en38$.err) && HM$masa_err == 0 && bp38 && length(tx38) == 4L && sum(!si38) == 2L &&
+    all(grepl("justamente", HM$A$c6_txt[grepl("hubiera tenido", HM$A$c6_txt, fixed = TRUE)], fixed = TRUE)) &&
+    all(grepl("justamente", tx38[!si38], fixed = TRUE)) && !any(grepl("justamente", tx38[si38], fixed = TRUE))
+  VM <- if (llego) p6_token_tabla(HM$A) else NULL
+  if (llego) { VM$veredicto <- p6_token_juzgar(VM); VM$v_estrato <- p6_token_juzgar_estrato(VM) }
+  j38 <- if (llego) VM[grepl("justamente", VM$id, fixed = TRUE) & VM$veredicto == "pendiente" & VM$v_estrato == "cubierto", , drop = FALSE] else VT7[0, ]
+  j38 <- j38[order(-j38$exceso), , drop = FALSE]
+  ver <- if (!llego) "mal_construido" else if (nrow(j38)) "cazado_por_su_sonda" else if (any(VM$veredicto == "pendiente")) "cazado_por_otra" else "no_detectado"
+  d <- if (nrow(j38)) sprintf("%s · %s %s %+.1f pp -> pendiente con la firma regla por regla; la firma por estrato la cubría (tope %+.1f pp); reglas «justamente» pendientes: %d",
+                              j38$estrato[1], j38$id[1], j38$papel[1], 100 * j38$exceso[1], FIRMA_P6_TOKEN[[j38$estrato[1]]], nrow(j38)) else
+    sprintf("reglas «justamente» pendientes: 0 (masa con error %.3f)", if (is.null(HM$A)) NA else HM$masa_err)
+  ok(ver == "cazado_por_su_sonda", sprintf("MC38 (L-C7 regla por regla: la redacción «hubiera tenido el mismo promedio por curso» gana «justamente»): %s — %s", d, ver))
+  filas_mut[["MC38"]] <<- c("MC38", "L-C7: regla por palabra fuera de la lista firmada", d, ver, NA) })
 ## Mutantes de L-C4: cada uno tiene que poner en rojo SU regla, medida con la misma sonda (juzgar, con su p95).
 for (mx in list(list(id = "MC23", c = c("o2 <- sample.int(4L)", "o2 <- 1:4"), regla = "P2-P1", desc = "la clave de la Parte 2, siempre en la primera posición",
                      llego = function(e) identical(as.integer(e$o2), 1:4)),
@@ -1073,15 +1193,15 @@ mut_p1("MP1", "regla", "quedarse con 'promedio'", "tuvo mayor promedio", "tuvo m
 mut_p1("MP2", "regla", "mas digitos", "recogió 40 kilos más", "recogió 4 kilos más")
 cat("  Decisión 2 a: las nueve reglas y sondas al 100 % (+75,0 pp) no pueden subir; ningún mutante puede sacarlas de «cubierto» y se declara.\n")
 TM <- do.call(rbind, filas_mut); colnames(TM) <- c("id", "sonda_esperada", "sonda_real", "veredicto", "semilla")
-cat("\n"); print(TM[TM[, "id"] %in% c("MC19", "MC20", "MC23", "MC24", "MC25", "MC26", "MC27", "MC28", "MC29", "MC31", "MC32", "MC33", "MC34", "MC35", "MC36", "MP1", "MP2"), c("id", "veredicto", "sonda_esperada", "sonda_real")], quote = FALSE)
+cat("\n"); print(TM[TM[, "id"] %in% c("MC19", "MC20", "MC23", "MC24", "MC25", "MC26", "MC27", "MC28", "MC29", "MC31", "MC32", "MC33", "MC34", "MC35", "MC36", "MC37", "MC38", "MP1", "MP2"), c("id", "veredicto", "sonda_esperada", "sonda_real")], quote = FALSE)
 
 ## ---- Resultado ----------------------------------------------------------------------------------
 titulo("RESULTADO")
-if (length(FIRMADOS)) cat("En rojo, cubiertos por un override firmado («O-1 corregido» extendido por F-2; X6, X9, X10 y X11 en la canónica por L-C3; la canónica de la Parte 1 regla por regla por la decisión 2 a; H2 en la Parte 6 por «H2 a» (L-C5); el residuo de la Parte 2 «promedio» (L-C6) y la regla por token de la Parte 6 (L-C7) por la decisión b; regla #22 §P7-E):\n", paste0("  - ", FIRMADOS, "\n"), sep = "")
+if (length(FIRMADOS)) cat("En rojo, cubiertos por un override firmado («O-1 corregido» extendido por F-2; X6, X9, X10 y X11 en la canónica por L-C3; la canónica de la Parte 1 regla por regla por la decisión 2 a; H2 en la Parte 6 por «H2 a» (L-C5); el residuo de la Parte 2 «promedio» (L-C6) y la regla por palabra de la Parte 6 firmada regla por regla (L-C7) por la decisión «Va»; regla #22 §P7-E):\n", paste0("  - ", FIRMADOS, "\n"), sep = "")
 if (length(RESIDUOS)) cat("\nResiduos declarados:\n", paste0("  - ", RESIDUOS, "\n"), sep = "")
 if (length(PENDIENTES)) cat("\nPendientes de firma del profesor (exit 3):\n", paste0("  - ", PENDIENTES, "\n"), sep = "")
 cat("\n=== RESULTADO:", if (length(fallos)) sprintf("FALLA (%d)", length(fallos)) else
   if (length(PENDIENTES)) sprintf("PENDIENTE DE FIRMA (%d; 0 fallos)", length(PENDIENTES)) else
-  if (length(FIRMADOS)) sprintf("EN ROJO BAJO OVERRIDE FIRMADO (%d cifras dentro de lo firmado: «O-1 corregido», X6, X9, X10 y X11 en la canónica, la canónica de la Parte 1 por la decisión 2 a H2 por «H2 a», y la Parte 2 y la regla por token de la Parte 6 por la decisión b; 0 fallos, 0 pendientes)", length(FIRMADOS)) else
+  if (length(FIRMADOS)) sprintf("EN ROJO BAJO OVERRIDE FIRMADO (%d cifras dentro de lo firmado: «O-1 corregido», X6, X9, X10 y X11 en la canónica, la canónica de la Parte 1 por la decisión 2 a H2 por «H2 a», y la Parte 2 y la regla por palabra de la Parte 6 firmada regla por regla por la decisión «Va»; 0 fallos, 0 pendientes)", length(FIRMADOS)) else
   "APROBADO (0 fallos)", "===\n")
 quit(status = if (length(fallos)) 1L else if (length(PENDIENTES)) 3L else if (length(FIRMADOS)) 4L else 0L)

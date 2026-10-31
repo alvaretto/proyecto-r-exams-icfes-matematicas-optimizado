@@ -1,18 +1,21 @@
 # HANDOFF — CLOZE `totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1`
 
 > Frase disparadora: «Continúa con el CLOZE de totales-promedios-reciclaje-n3».
-> Última actualización: 2026-10-31, tanda 8 del `orquestador-cloze` (decisión b: la Parte 2 solo con «promedio»; leyes L-C6 y
-> L-C7; md5 `f98f9dda…`), detenida antes de la FASE 2C r3, y decisión del profesor tras ella («Va», 2026-10-31: X6 exacta,
-> L-C7 regla por regla, residuo de la 6b). Antes: tanda 7 (L-C4 v2 y pasada 3 de §P7-D, md5 `898608dd…`), tanda 6
+> Última actualización: 2026-10-31, tanda «Va» del coordinador (las decisiones 1 y 2 de «Va», cableadas en
+> `verificar_espacio_cloze.R`; verificador en exit 4, sin pendientes; md5 sin cambios). Antes: tanda 8 del `orquestador-cloze`
+> (decisión b: la Parte 2 solo con «promedio»; leyes L-C6 y L-C7; md5 `f98f9dda…`), detenida antes de la FASE 2C r3, y decisión
+> del profesor tras ella («Va», 2026-10-31: X6 exacta, L-C7 regla por regla, residuo de la 6b); tanda 7 (L-C4 v2 y pasada 3 de §P7-D, md5 `898608dd…`), tanda 6
 > (FASE 2C r2 `APROBAR_CON_CAMBIOS`), tanda 5 (detenida en el paso A), tanda 4 (reparto de H2 no viable), tanda 3 (FASE 2C r1 `RECHAZAR`).
 > Si este archivo y `ejercicio_state.json` discrepan, manda el JSON. Las invariantes del SCHOICE (L-1 a L-5,
 > «O-1 corregido»), las firmas del CLOZE (F-1 a F-4), las decisiones del profesor y las leyes del CLOZE (L-C1 a L-C5)
 > están en [`../.claude/CLAUDE.md`](../.claude/CLAUDE.md) § «CLOZE hermano». El ítem verbatim, en
 > [`../ITEM_OFICIAL.md`](../ITEM_OFICIAL.md).
 
-## Estado: tanda 8 cerrada (reapertura #4; pasos 1 a 6 sellados; 7 a 11 pendientes)
+## Estado: tanda «Va» cerrada (pasos 1 a 6 sellados; 7 a 11 pendientes)
 
-`.Rmd`: md5 **`f98f9dda47e4f3cafc4e8b4e82cc956b`** (antes `898608dd…`). No está aprobado. **No usar en clase.**
+`.Rmd`: md5 **`f98f9dda47e4f3cafc4e8b4e82cc956b`** (sin cambios desde la tanda 8). No está aprobado. **No usar en clase.**
+Verificador (`salida/verificar_espacio_cloze_va.txt`): **exit 4, EN ROJO BAJO OVERRIDE FIRMADO, 327 cifras dentro de lo firmado,
+0 fallos, 0 pendientes.**
 
 ## Decisión del profesor tras la tanda 8 (2026-10-31, «Va»; texto completo en `../.claude/CLAUDE.md`)
 
@@ -23,7 +26,30 @@
    aparece una palabra por encima de +8 pp que no esté en la lista, queda pendiente.
 3. **6b:** los dos BAJO tipográficos quedan como residuo declarado.
 
-Las decisiones 1 y 2 todavía no están cableadas en `verificar_espacio_cloze.R`: es el paso 0 de «Próximo paso».
+Las decisiones 1 y 2 quedaron cableadas en la tanda «Va» (abajo).
+
+## Tanda «Va» (2026-10-31): las decisiones 1 y 2, cableadas en el verificador (registro completo en `../.claude/CLAUDE.md`)
+
+- **Solo cambió `verificar_espacio_cloze.R`.** El `.Rmd`, la batería L-C4 v2 y la lista firmada siguen en sus md5 (`f98f9dda…`,
+  `820e5146…`, `2aa8e742…`).
+- **Cómo se hizo.** DeepSeek, por `delegar.sh`, escribió el cableado. Lo corrió una vez (`salida/verificador_va.txt`,
+  interrumpida en E3) y se colgó en el proxy; su proceso había sobrevivido al cierre de la sesión anterior. El coordinador lo
+  detuvo y completó el diff. Corrigió cuatro cosas:
+  - la comprobación del sorteo (`-sol_p2` con `sol_p2` lógico quita siempre la opción 1: FALLA falsa en 74/100);
+  - MC37, que estaba antes de `mutar()`;
+  - la llegada de MC38, que daba siempre FALSE, y su semilla;
+  - MC37, que medía solo la mezcla (+8,5 pp, «cazado» por medio punto). Ahora mide la mezcla y las dos ramas, como la puerta.
+- **Decisión 1 (L-C2, E3).** X5, X6 y X10, exactas sobre el sorteo de la Parte 2: 30 combinaciones (3 claves × 10 tríos).
+  - Mezcla, CURSOS y PROMEDIO: X5 −4,2 / −2,9 / −6,4; X6 −0,1 / +1,3 / +6,0; X10 −7,3 / −4,0 / +2,7 pp. Todas «ok».
+  - X6 por clave en PROMEDIO: +9,0 / +9,0 / +0,0 pp.
+  - Supuesto del sorteo: 300/300.
+- **Decisión 2 (L-C7, E8).** La lista firmada (216 reglas, md5 comprobado). Las 216 salen cubiertas regla por regla (54 por
+  estrato de rama y de *k*′), ninguna cubierta fuera de la lista y ninguna pendiente.
+- **Mutantes:**
+  - MC37: X6 exacta +38,2 pp en CURSOS: pendiente.
+  - MC36: «duda», fuera de la lista.
+  - MC38: «justamente», pendiente con la firma regla por regla y cubierta con la de estrato; 12 reglas.
+  - Todos, cazados por su sonda. Lo demás, idéntico a la r8b.
 
 ## Tanda 8 (2026-10-31): decisión b del profesor — la Parte 2 solo con «promedio»; overrides L-C6 y L-C7
 
@@ -320,7 +346,7 @@ propia. Motivo: la clave de la Parte 1 nombra a la sede ganadora y cita *D* = *T
   canónica firmada (+25,0 pp); `render_html_shots.R` se arregla en otra tarea (no usarlo para 320 o 360 px). Quedó
   arreglado en `afac46a1`, y la premisa resultó falsa: ver «Cómo repetir cada medición».
 
-## Leyes del CLOZE y sus guardas (tandas 2 a 5)
+## Leyes del CLOZE y sus guardas (tandas 2 a «Va»)
 
 | Ley | Guarda | Mutante → sonda (E6 de `verificar_espacio_cloze.R`) |
 |---|---|---|
@@ -330,6 +356,9 @@ propia. Motivo: la clave de la Parte 1 nombra a la sede ganadora y cita *D* = *T
 | L-C5 · H2 en la Parte 6, regla por regla y por estrato («H2 a», tanda 5) | E8: `FIRMA_H2` (69 celdas) y `h2_juzgar()` sobre la enumeración exacta de `enumerar_h2_cloze.R` (100 Partes 1, con las exclusiones de V11); dentro, «cubierto» (exit 4); por encima o fuera de la firma, pendiente | MC25 (PROMEDIO con *k*′ = 1: K1 +50,0 pp), MC26 (CURSOS con δ′ < 10: D2), MC27 (`v_c <- !v_hp`: RL2 · HP); las demás celdas, sin mutante propio |
 | L-C3 ampliada · canónica de la Parte 1 regla por regla (decisión 2 a, tanda 4) | E4: `FIRMA_P1_CANON` (12 reglas) y `FIRMA_P1_SONDAS` (12 sondas), exactas; dentro, «cubierto» (exit 4) | MP1 («quedarse con 'promedio'» a +75,0), MP2 («más dígitos» a +75,0), sobre copias del registro canónico; las nueve al 100 % no pueden subir |
 | L-C3 · X6, X9, X10 y X11 en la canónica (ampliada en la tanda 3) | `FIRMA_CANON` (+16,7, +25,0, +16,7 y +12,5 pp, exactas); `veredicto_canon()` sobre la enumeración exacta de `enumerar_canonica_cloze.R`, las once reglas: dentro, «ROJO, cubierto» (exit 4, nunca PASS); por encima, o cualquier otra regla > +8 pp, pendiente | MC18 (X9 +50,0), MC19 (X6 +25,0), MC20 (X10 +25,0), MC21 (X11 +25,0): cada uno saca su regla de «cubierto» |
+| L-C2 · X5, X6 y X10 exactas sobre el sorteo de la Parte 2 (decisión «Va» 1) | E3: `medir_exacta_p2()` (3 claves × C(5,3) tríos) y `veredicto_cruzado()` en la mezcla y en cada rama; supuesto del sorteo con `ok()` (300/300) | MC37 (las tres claves ganan «aunque fue menor»: X6 exacta +38,2 pp en CURSOS → pendiente) |
+| L-C6 · residuo de la Parte 2 «promedio» (decisión b, tanda 8) | E8: `FIRMA_P2` (cinco reglas, exactas con `medir_p2_exacta`); dentro, «cubierto»; por encima u otra regla > +8 pp, pendiente | MC31 a MC35, una por regla |
+| L-C7 · Parte 6 por palabra, regla por regla (decisión «Va» 2) | E8: `p6_token_juzgar()` contra `firma_p6_palabras_f98f9dda.tsv` (md5, 216 reglas) y el tope de su estrato, sobre la enumeración exacta de L-C5 | MC36 («duda», fuera de la lista), MC38 («justamente»: pendiente con la firma regla por regla, cubierta con la de estrato) |
 
 ## Tanda 2 (2026-10-30): qué cambió en el `.Rmd` (solo tras el marcador del bloque P1)
 
@@ -345,6 +374,11 @@ propia. Motivo: la clave de la Parte 1 nombra a la sede ganadora y cita *D* = *T
 
 | Qué | Archivo | Resultado |
 |---|---|---|
+| Verificador, tanda «Va» | `verificar_espacio_cloze_va.txt` | **exit 4: EN ROJO BAJO OVERRIDE FIRMADO (327 cifras: 13 de «O-1 corregido», 2 de L-C3, 24 de la decisión 2 a, 67 de L-C5, 5 de L-C6 y 216 de L-C7; 0 fallos, 0 pendientes)**. X5, X6 y X10 exactas ≤ +6,0 pp; MC36, MC37 y MC38 cazados por su sonda; lo demás, idéntico a la r8b |
+| Verificador, tanda «Va», primera corrida completa | `verificar_espacio_cloze_va1.txt` (431 s) | exit 4, igual que la final salvo MC37, que medía solo la mezcla (+8,5 pp, n = 200) |
+| Diagnóstico de la FALLA del sorteo y de MC37 | `diag_falla_sorteo_va.R`/`.txt`, `mc37_por_estrato_va.R`/`.txt` (semillas 1:100 y 1:200) | `sol_p2` lógico; con `-sol_p2` pasan 26/100 (solo la clave en la posición 1); con `!sol_p2`, 100/100. MC37 mutado, X6 exacta: mezcla +8,5, CURSOS +38,2, PROMEDIO −25,0, canónica +75,0 pp (sin mutar: −2,5, −1,8, +1,1, −25,0) |
+| Primera corrida de DeepSeek (interrumpida) | `verificador_va.txt` | FALLA falsa del sorteo (`-sol_p2` lógico) y error en MC37 (`mutar()` sin definir); X6 exacta ya igual a `x6_estratos_t8.txt` |
+| Verificador, tanda 8 | `verificar_espacio_cloze_r8b.txt` | exit 3: 1 pendiente (X6 en PROMEDIO, +8,5 pp en la muestra) |
 | Verificador, tanda 5 | `verificar_espacio_cloze_r5.txt` (386 s) | exit 3: 34 pendientes (22 de L-C5, las celdas de «H2 a» por encima de lo firmado; 12 de la Parte 2, H1); 86 cifras «cubiertas» (13 de «O-1 corregido», 4 de L-C3, 24 de la decisión 2 a y 45 de L-C5); 8 residuos; 0 fallos; MC25, MC26 y MC27 (L-C5), MC23, MC24, MP1 y MP2 cazados por su sonda; E4 sin `SIN_COBERTURA` (§P7-G) |
 | L-C5, cifras exactas y contrastes | `h2_exacta_96cfcf35.txt` (`medir_h2_exacta.R`), `h2_contraste_96cfcf35.txt` (`contrastar_h2_ponderacion.R`) | 22 de 69 celdas por encima de lo firmado; ponderación del código = transcrita con exclusiones (1,1·10⁻¹⁹); ruido de la Parte 1 0,3 pp de mediana |
 | Verificador, tanda 4 | `verificar_espacio_cloze_r4b.txt` | exit 3: 65 pendientes, todos de L-C4 (H1, H2 y los demás canales de la batería; 22 más quedan NO CONCLUYENTES); 41 cifras «cubiertas» (13 de «O-1 corregido», 4 de L-C3 y 24 de la decisión 2 a); 0 fallos; MC23, MC24, MP1 y MP2 cazados por su sonda |
@@ -417,10 +451,10 @@ convierte un ` ` escrito en el texto en el carácter literal: comprobar con `gr
 
 ## Próximo paso
 
-0. **Cablear las decisiones 1 y 2 de «Va» en `verificar_espacio_cloze.R` (E8)**, cada una con su mutante. Después, el
-   verificador debe dar exit 4, sin pendientes.
-1. **FASE 2C r3** (`AgenteDetractor` nuevo, sin `name:`) sobre el md5 de la tanda 8 y con el verificador del paso 0; reporte en
-   `salida/fase2c_r3_detractor.md`.
-2. Pasos 8 a 10 sobre el md5 final, cada uno sellado tras su artefacto. El paso 8 necesita reconstruir el oráculo de
-   coherencias para el banco actual.
-3. WAIT_USER #3 solo con la FASE 2C cerrada.
+0. ~~Cablear las decisiones 1 y 2 de «Va» en `verificar_espacio_cloze.R`~~: hecho en la tanda «Va» (exit 4, sin pendientes).
+1. **Tanda 9a** (`orquestador-cloze`, sin `name:`), sin sellar ningún paso:
+   - **FASE 2C r3**: un `AgenteDetractor` nuevo, sin `name:`, sobre el md5 `f98f9dda…` y con el verificador de la tanda «Va».
+     Reporte en `salida/fase2c_r3_detractor.md`.
+   - **Paso 8**, con el oráculo de coherencias reconstruido para el banco actual. El de `salida/coherencias_r3/` tiene el
+     pool de la Parte 2 de `42f725bf…`, con los dos tipos.
+2. **Tanda 9b:** los sellos de los pasos 7 a 10, cada uno tras su artefacto, y el WAIT_USER #3, solo con la FASE 2C cerrada.

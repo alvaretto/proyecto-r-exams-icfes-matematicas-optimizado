@@ -1,0 +1,156 @@
+Versión verificada: totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd · md5 f98f9dda47e4f3cafc4e8b4e82cc956b
+SCHOICE leído: md5 e293d5c812b1f9790e2bb777b62de9a5 (aprobado para el aula: e293d5c812b1f9790e2bb777b62de9a5)
+
+==============================================================================
+E1 · La Parte 1 es el SCHOICE: objetos y .Random.seed en 100 semillas + cuota de 20 canónicas
+==============================================================================
+  semillas 1..100 (9 canónicas) + 11 canónicas de cuota (hasta la semilla 205)
+  OK: E1: 111 versiones (20 canónicas): objetos, opciones_p1/sol_p1/feedback_p1 y .Random.seed idénticos al SCHOICE; las Partes 2 a 6 no tocan nada de la Parte 1 
+
+Muestras: mezcla natural n = 100 · rama CURSOS n = 100 · rama PROMEDIO n = 100 · canónicas n = 30 (semillas 1001..1270)
+  OK: estrato CURSOS: n = 100 (n < 20 sería NO CONCLUYENTE) 
+  OK: estrato PROMEDIO: n = 100 (n < 20 sería NO CONCLUYENTE) 
+  OK: canónicas: n = 30 
+
+==============================================================================
+E2 · Una sola clave por gap, con oráculos que leen el texto y las tablas mostrados
+==============================================================================
+  OK: E2 p1: 330/330 versiones 
+  OK: E2 p2: 330/330 versiones 
+  OK: E2 p345: 330/330 versiones 
+  OK: E2 dir_texto_modelo: 330/330 versiones 
+  OK: E2 marca: 330/330 versiones 
+  OK: E2 una_v_una_f: 330/330 versiones 
+  Parte 1: además, la enumeración exacta de SUB/verificar_espacio.R (E3 del SCHOICE) vale aquí: E1 prueba que es el mismo código.
+
+==============================================================================
+E3 · V11 (valor, contenido, independencia), cascada F1, veredictos de la Parte 6 y batería cruzada
+==============================================================================
+  OK: V11 por valor: ninguna respuesta de las Partes 3 a 5 es un número que la Parte 1 muestra o resuelve (330 versiones) 
+  OK: V11 por valor: las Partes 2 a 6 no imprimen ninguna cifra de las opciones de la Parte 1 ni T_G, T_P o D 
+  OK: V11 por valor: los textos de las Partes 2 a 6 no llevan cifras (solo su tabla; «Partes 2 a 6» es un rótulo) 
+  OK: V11 por contenido: las Partes 2 a 6 no nombran sedes ni filas de la Parte 1 
+  RESIDUO DECLARADO: V11 a un paso (mezcla, n = 100): D de la Parte 1 sale de una operación (+, -, ×) entre dos números de la tabla del otro colegio en 11.0 %; una respuesta de las Partes 3 a 5 sale de una operación entre dos números que muestra la Parte 1 en 49.0 % 
+  RESIDUO DECLARADO: V11 a un paso (rama CURSOS, n = 100): D de la Parte 1 sale de una operación (+, -, ×) entre dos números de la tabla del otro colegio en 12.0 %; una respuesta de las Partes 3 a 5 sale de una operación entre dos números que muestra la Parte 1 en 63.0 % 
+  RESIDUO DECLARADO: V11 a un paso (rama PROMEDIO, n = 100): D de la Parte 1 sale de una operación (+, -, ×) entre dos números de la tabla del otro colegio en 17.0 %; una respuesta de las Partes 3 a 5 sale de una operación entre dos números que muestra la Parte 1 en 52.0 % 
+  RESIDUO DECLARADO: V11 a un paso (canónica, n = 30): D de la Parte 1 sale de una operación (+, -, ×) entre dos números de la tabla del otro colegio en 16.7 %; una respuesta de las Partes 3 a 5 sale de una operación entre dos números que muestra la Parte 1 en 33.3 % 
+          paralela
+P1         CURSOS PROMEDIO
+  CURSOS       49       51
+  PROMEDIO     44       56
+  OK: V11 por independencia: P(paralela CURSOS | P1 CURSOS) - P(paralela CURSOS | P1 PROMEDIO) = 0.05 (tolerancia 0,20 con n = 100 por estrato) 
+  cascada F1, paso usado (1 base · 2 espacio ampliado · 3-4 otra plantilla de veredictos): 1: 329 · 2: 1 · 3: 0 · 4: 0 
+  RESIDUO DECLARADO: cascada F1: 1 de 330 versiones usaron el paso 2 o siguientes (2: 1, 3: 0, 4: 0) 
+  OK: Parte 6, «hp»: verdadera en 48.8 % de 330 versiones (50 % ± 12) 
+  OK: Parte 6, «hg»: verdadera en 47.9 % de 330 versiones (50 % ± 12) 
+  OK: Parte 6, «ventaja»: verdadera en 51.8 % de 330 versiones (50 % ± 12) 
+  OK: Parte 6, «ganador»: verdadera en 51.8 % de 330 versiones (50 % ± 12) 
+  rama paralela CURSOS (n = 161): hp 60 % · hg 26 % · ventaja 56 % · ganador 56 % verdaderas (diseño: 1/3 o 2/3 en las hipótesis por rama)
+  rama paralela PROMEDIO (n = 169): hp 38 % · hg 69 % · ventaja 48 % · ganador 48 % verdaderas (diseño: 1/3 o 2/3 en las hipótesis por rama)
+  OK: Parte 6, plantilla de ventaja BC_gano: verdadera en 49 % de 87 (sin veredicto fijo) 
+  OK: Parte 6, plantilla de ventaja BC_perdio: verdadera en 52 % de 91 (sin veredicto fijo) 
+  OK: Parte 6, plantilla de ventaja BP_gano: verdadera en 53 % de 76 (sin veredicto fijo) 
+  OK: Parte 6, plantilla de ventaja BP_perdio: verdadera en 54 % de 76 (sin veredicto fijo) 
+  Parte 6, número de verdaderas por versión: 1: 53 · 2: 223 · 3: 54 
+  OK: decisión b: la Parte 2 es «promedio» en las 330 versiones de las muestras (su pregunta y opciones con el molde «Lo que recogió») 
+  OK: Parte 2 (promedio, n = 330): «la más larga» acierta 10.9 % (-14.1 pp); la clave es la única más larga en 36 versiones, margen máximo 6.6 % 
+  OK: Parte 2 (promedio, n = 330): «la más corta» acierta 16.7 % (-8.3 pp); la clave es la única más corta en 55 versiones, margen máximo 15.8 % 
+  OK: orden de mención: la Parte 3 pregunta por el grado que ganó en 51.2 % (50 % ± 12) 
+  OK: tabla del otro colegio: el ganador va en la fila 1 en 47.6 % (50 % ± 12) 
+                                                                       mezcla
+X1 elige la cifra que imprimen las Partes 2 a 6                          25.0
+X2 descarta la cifra que imprimen las Partes 2 a 6                       25.0
+X3 elige la cifra a una operación de la tabla del otro colegio           23.0
+X4 descarta la cifra a una operación de la tabla del otro colegio        26.0
+X5 más palabras en común con todo el texto de las Partes 2 a 6           20.5
+X6 más palabras en común con la clave de la Parte 2                      23.0
+X7 más palabras en común con las verdaderas de la Parte 6                23.7
+X8 perfil cruzado: sede de la Parte 1 con la ventaja del grado ganador   24.5
+X9 S_U + la que nombra la ventaja del grado ganador                      57.5
+X10 S_U + más palabras en común con la clave de la Parte 2               40.0
+X11 S_U + más palabras en común con las verdaderas de la Parte 6         57.5
+                                                                       CURSOS
+X1 elige la cifra que imprimen las Partes 2 a 6                          25.0
+X2 descarta la cifra que imprimen las Partes 2 a 6                       25.0
+X3 elige la cifra a una operación de la tabla del otro colegio           23.6
+X4 descarta la cifra a una operación de la tabla del otro colegio        25.8
+X5 más palabras en común con todo el texto de las Partes 2 a 6           21.8
+X6 más palabras en común con la clave de la Parte 2                      26.8
+X7 más palabras en común con las verdaderas de la Parte 6                23.7
+X8 perfil cruzado: sede de la Parte 1 con la ventaja del grado ganador   24.5
+X9 S_U + la que nombra la ventaja del grado ganador                      56.5
+X10 S_U + más palabras en común con la clave de la Parte 2               45.5
+X11 S_U + más palabras en común con las verdaderas de la Parte 6         56.0
+                                                                       PROMEDIO
+X1 elige la cifra que imprimen las Partes 2 a 6                            25.0
+X2 descarta la cifra que imprimen las Partes 2 a 6                         25.0
+X3 elige la cifra a una operación de la tabla del otro colegio             23.2
+X4 descarta la cifra a una operación de la tabla del otro colegio          25.9
+X5 más palabras en común con todo el texto de las Partes 2 a 6             18.7
+X6 más palabras en común con la clave de la Parte 2                        33.5
+X7 más palabras en común con las verdaderas de la Parte 6                  19.5
+X8 perfil cruzado: sede de la Parte 1 con la ventaja del grado ganador     28.0
+X9 S_U + la que nombra la ventaja del grado ganador                        46.0
+X10 S_U + más palabras en común con la clave de la Parte 2                 55.0
+X11 S_U + más palabras en común con las verdaderas de la Parte 6           46.0
+                                                                       canonica
+X1 elige la cifra que imprimen las Partes 2 a 6                            25.0
+X2 descarta la cifra que imprimen las Partes 2 a 6                         25.0
+X3 elige la cifra a una operación de la tabla del otro colegio             30.0
+X4 descarta la cifra a una operación de la tabla del otro colegio          22.8
+X5 más palabras en común con todo el texto de las Partes 2 a 6              0.0
+X6 más palabras en común con la clave de la Parte 2                         0.0
+X7 más palabras en común con las verdaderas de la Parte 6                  11.1
+X8 perfil cruzado: sede de la Parte 1 con la ventaja del grado ganador     25.0
+X9 S_U + la que nombra la ventaja del grado ganador                        75.0
+X10 S_U + más palabras en común con la clave de la Parte 2                 21.7
+X11 S_U + más palabras en común con las verdaderas de la Parte 6           66.7
+  FALLA: sorteo de la Parte 2: en las 300 versiones de mezcla, CURSOS y PROMEDIO, la clave mostrada está entre las 3 del banco y los 3 distractores mostrados entre los 5 
+  Exactas sobre el sorteo de la Parte 2 (3 claves × C(5,3) tríos = 30 combinaciones equiprobables):
+                                                               mezcla CURSOS
+X5 más palabras en común con todo el texto de las Partes 2 a 6   20.8   22.1
+X6 más palabras en común con la clave de la Parte 2              24.9   26.3
+X10 S_U + más palabras en común con la clave de la Parte 2       42.7   46.0
+                                                               PROMEDIO
+X5 más palabras en común con todo el texto de las Partes 2 a 6     18.6
+X6 más palabras en común con la clave de la Parte 2                31.0
+X10 S_U + más palabras en común con la clave de la Parte 2         52.7
+  OK: batería cruzada: X1 elige la cifra que imprimen las Partes 2 a 6, mezcla: 25.0 % (+0.0 pp sobre 25 %) 
+  OK: batería cruzada: X1 elige la cifra que imprimen las Partes 2 a 6, CURSOS: 25.0 % (+0.0 pp sobre 25 %) 
+  OK: batería cruzada: X1 elige la cifra que imprimen las Partes 2 a 6, PROMEDIO: 25.0 % (+0.0 pp sobre 25 %) 
+  OK: batería cruzada: X2 descarta la cifra que imprimen las Partes 2 a 6, mezcla: 25.0 % (+0.0 pp sobre 25 %) 
+  OK: batería cruzada: X2 descarta la cifra que imprimen las Partes 2 a 6, CURSOS: 25.0 % (+0.0 pp sobre 25 %) 
+  OK: batería cruzada: X2 descarta la cifra que imprimen las Partes 2 a 6, PROMEDIO: 25.0 % (+0.0 pp sobre 25 %) 
+  OK: batería cruzada: X3 elige la cifra a una operación de la tabla del otro colegio, mezcla: 23.0 % (-2.0 pp sobre 25 %) 
+  OK: batería cruzada: X3 elige la cifra a una operación de la tabla del otro colegio, CURSOS: 23.6 % (-1.4 pp sobre 25 %) 
+  OK: batería cruzada: X3 elige la cifra a una operación de la tabla del otro colegio, PROMEDIO: 23.2 % (-1.7 pp sobre 25 %) 
+  OK: batería cruzada: X4 descarta la cifra a una operación de la tabla del otro colegio, mezcla: 26.0 % (+1.0 pp sobre 25 %) 
+  OK: batería cruzada: X4 descarta la cifra a una operación de la tabla del otro colegio, CURSOS: 25.8 % (+0.8 pp sobre 25 %) 
+  OK: batería cruzada: X4 descarta la cifra a una operación de la tabla del otro colegio, PROMEDIO: 25.9 % (+0.9 pp sobre 25 %) 
+  OK: batería cruzada: X5 más palabras en común con todo el texto de las Partes 2 a 6, mezcla: exacta sobre el sorteo de la Parte 2 (decisión «Va» del profesor, 2026-10-31) 20.8 % (-4.2 pp sobre 25 %); en la muestra 20.5 % 
+  OK: batería cruzada: X5 más palabras en común con todo el texto de las Partes 2 a 6, CURSOS: exacta sobre el sorteo de la Parte 2 (decisión «Va» del profesor, 2026-10-31) 22.1 % (-2.9 pp sobre 25 %); en la muestra 21.8 % 
+  OK: batería cruzada: X5 más palabras en común con todo el texto de las Partes 2 a 6, PROMEDIO: exacta sobre el sorteo de la Parte 2 (decisión «Va» del profesor, 2026-10-31) 18.6 % (-6.4 pp sobre 25 %); en la muestra 18.7 % 
+  OK: batería cruzada: X6 más palabras en común con la clave de la Parte 2, mezcla: exacta sobre el sorteo de la Parte 2 (decisión «Va» del profesor, 2026-10-31) 24.9 % (-0.1 pp sobre 25 %); en la muestra 23.0 % 
+  OK: batería cruzada: X6 más palabras en común con la clave de la Parte 2, CURSOS: exacta sobre el sorteo de la Parte 2 (decisión «Va» del profesor, 2026-10-31) 26.3 % (+1.3 pp sobre 25 %); en la muestra 26.8 % 
+  OK: batería cruzada: X6 más palabras en común con la clave de la Parte 2, PROMEDIO: exacta sobre el sorteo de la Parte 2 (decisión «Va» del profesor, 2026-10-31) 31.0 % (+6.0 pp sobre 25 %); en la muestra 33.5 % 
+  OK: batería cruzada: X7 más palabras en común con las verdaderas de la Parte 6, mezcla: 23.7 % (-1.3 pp sobre 25 %) 
+  OK: batería cruzada: X7 más palabras en común con las verdaderas de la Parte 6, CURSOS: 23.7 % (-1.3 pp sobre 25 %) 
+  OK: batería cruzada: X7 más palabras en común con las verdaderas de la Parte 6, PROMEDIO: 19.5 % (-5.5 pp sobre 25 %) 
+  OK: batería cruzada: X8 perfil cruzado: sede de la Parte 1 con la ventaja del grado ganador, mezcla: 24.5 % (-0.5 pp sobre 25 %) 
+  OK: batería cruzada: X8 perfil cruzado: sede de la Parte 1 con la ventaja del grado ganador, CURSOS: 24.5 % (-0.5 pp sobre 25 %) 
+  OK: batería cruzada: X8 perfil cruzado: sede de la Parte 1 con la ventaja del grado ganador, PROMEDIO: 28.0 % (+3.0 pp sobre 25 %) 
+  OK: batería cruzada: X9 S_U + la que nombra la ventaja del grado ganador, mezcla: 57.5 % (+7.5 pp sobre 50 %) 
+  OK: batería cruzada: X9 S_U + la que nombra la ventaja del grado ganador, CURSOS: 56.5 % (+6.5 pp sobre 50 %) 
+  OK: batería cruzada: X9 S_U + la que nombra la ventaja del grado ganador, PROMEDIO: 46.0 % (-4.0 pp sobre 50 %) 
+  OK: batería cruzada: X10 S_U + más palabras en común con la clave de la Parte 2, mezcla: exacta sobre el sorteo de la Parte 2 (decisión «Va» del profesor, 2026-10-31) 42.7 % (-7.3 pp sobre 50 %); en la muestra 40.0 % 
+  OK: batería cruzada: X10 S_U + más palabras en común con la clave de la Parte 2, CURSOS: exacta sobre el sorteo de la Parte 2 (decisión «Va» del profesor, 2026-10-31) 46.0 % (-4.0 pp sobre 50 %); en la muestra 45.5 % 
+  OK: batería cruzada: X10 S_U + más palabras en común con la clave de la Parte 2, PROMEDIO: exacta sobre el sorteo de la Parte 2 (decisión «Va» del profesor, 2026-10-31) 52.7 % (+2.7 pp sobre 50 %); en la muestra 55.0 % 
+  OK: batería cruzada: X11 S_U + más palabras en común con las verdaderas de la Parte 6, mezcla: 57.5 % (+7.5 pp sobre 50 %) 
+  OK: batería cruzada: X11 S_U + más palabras en común con las verdaderas de la Parte 6, CURSOS: 56.0 % (+6.0 pp sobre 50 %) 
+  OK: batería cruzada: X11 S_U + más palabras en común con las verdaderas de la Parte 6, PROMEDIO: 46.0 % (-4.0 pp sobre 50 %) 
+  X6 exacta, mezcla   n = 100: 24.9 % (-0.1 pp); por clave: +1.0 / +1.0 / -2.2
+  X6 exacta, CURSOS   n = 100: 26.3 % (+1.3 pp); por clave: +2.0 / +2.0 / +0.0
+  X6 exacta, PROMEDIO n = 100: 31.0 % (+6.0 pp); por clave: +9.0 / +9.0 / +0.0
+Error en mutar(list(c("\"Lo que recogió ese grado dividido en partes iguales entre sus cursos.\"", : 
+  no se pudo encontrar la función "mutar"
+Ejecución interrumpida
