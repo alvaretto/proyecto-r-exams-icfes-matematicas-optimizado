@@ -17,7 +17,7 @@
   - **§P7-B** Margen < 15 % = inexplotable, no es defecto.
   - **§P7-C** La batería se congela al inicio; si se amplía, re-medir todo el histórico.
   - **§P7-D** Máximo 3 pasadas; luego cierre con residuo declarado. Tras cada mejora de diagnosticidad, verificar que la clave sigue siendo verdadera.
-  - **§P7-E** Medir todo canal también sobre la instancia canónica (enumeración exacta). Aceptar un canal > +8 pp es un OVERRIDE humano firmado (H-5); la batería queda en rojo. El alcance firmado (sus cifras) se cablea en el verificador: dentro, «rojo cubierto» con su propio código de salida, nunca PASS; por encima, pendiente de firma; un mutante debe sacarlo de «cubierto».
+  - **§P7-E** Medir todo canal también sobre la instancia canónica (enumeración exacta). Aceptar un canal > +8 pp es un OVERRIDE humano firmado (H-5); la batería queda en rojo. El alcance firmado (sus cifras) se cablea en el verificador: dentro, «rojo cubierto» con su propio código de salida, nunca PASS; por encima, pendiente de firma; un mutante debe sacarlo de «cubierto». Se firma y se cablea **regla por regla**: al pedir la firma se listan todas las reglas que pasan de +8 pp, cada una con su cifra exacta. Un tope por estrato o por familia no es alcance firmado, porque cubre en silencio una regla nueva que llegue al tope.
   - **§P7-F** Antes de abrir otra rama, enumerar el espacio de diseño: puede haber una sola combinación viable (canal estructural → override, no rediseño).
   - **§P7-G** (2026-10-31) La batería lleva al menos una regla **del estímulo**, que recibe lo que muestra el enunciado (tabla, valor calculado) y no solo las opciones: `nueva_regla(..., usa_estimulo = TRUE)` con `estimulos`. Si no aplica, se declara con su justificación (`estimulo_no_aplicable`). Sin una cosa ni la otra, el helper da `SIN_COBERTURA`. Las baterías anteriores se ajustan en el próximo ciclo de su ejercicio.
 
@@ -28,4 +28,4 @@
 - §P7: veredictos `PASS` · `BLOQUEA` · `SIN_COBERTURA` · `NO_CONCLUYENTE` (no es PASS) · `UMBRAL_DEGENERADO`.
 - Tests: `test_diversidad_sustantiva.R`, `test_bateria_eliminacion.R`.
 
-**Versión:** 1.10 (2026-10-31: §P7-G, la regla del estímulo) · compacta desde 2026-09-29 · Excepciones: NINGUNA.
+**Versión:** 1.11 (2026-10-31: §P7-E, la firma regla por regla pasa a la compacta) · compacta desde 2026-09-29 · Excepciones: NINGUNA.

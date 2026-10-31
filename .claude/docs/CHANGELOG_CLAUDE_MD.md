@@ -8,6 +8,28 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.35.0 (2026-10-31)
+
+- **Regla #22 v1.11, §P7-E: la firma de un override se pide y se cablea regla por regla.** Cambia la versión compacta.
+  - **Qué dice:** al pedir la firma se listan todas las reglas que pasan de +8 pp, cada una con su cifra exacta. Un
+    tope por estrato o por familia no es alcance firmado, porque cubre en silencio una regla nueva que llegue al tope.
+  - **Por qué ahora:** la norma estaba solo en el texto íntegro, como aclaración del 2026-10-30, y en la tanda 8 del
+    CLOZE de `totales-promedios-reciclaje-n3` se incumplió otra vez. La regla por palabra de la Parte 6 (L-C7) se
+    llevó a firmar por estrato y se cableó con el máximo como tope, aunque pasaban de +8 pp 54 reglas por estrato. La
+    versión compacta se carga en todas las sesiones y en todos los agentes.
+- **Regla #22, texto íntegro, §P7-E: sorteos finitos en la puerta.** Es una aclaración y no toca la versión compacta.
+  - **Qué dice:** un sorteo finito y enumerable, como las paráfrasis de la clave o los tríos de distractores, se integra
+    exacto en la puerta. Pasar una puerta de muestra a exacta que deja una cifra por debajo de +8 pp lo decide el
+    profesor (H-5), y al pedírselo se muestra el desglose por cada valor del sorteo.
+  - **Origen:** en la tanda 8, X6 daba +8,5 pp en la muestra y +6,0 pp exacta; por paráfrasis, +9,0, +9,0 y +0,0.
+    El desglose no se mostró al pedir la decisión.
+- **Decisión:** el profesor aprobó las dos el 2026-10-31 («¿Apruebas i y ii? Sí.»).
+- **Análisis de promoción del 2026-10-31**, tras la decisión «Va» de la tanda 8:
+  - **Se adoptaron:** las dos de arriba.
+  - **Quedan como ley local del CLOZE:** X5, X6 y X10 exactas sobre el sorteo de la Parte 2 (L-C2), L-C7 regla por
+    regla (`firma_p6_palabras_f98f9dda.tsv`) y el residuo de la 6b. Son decisiones del ítem, cada una con su mutante.
+- **Respaldo previo:** `.claude/backups/2026-10-31-p7e-regla-por-regla/`.
+
 ### Cambios v3.34.4 (2026-10-31)
 
 - **Regla #22, texto íntegro: dos aclaraciones.** No cambian la norma ni la versión de la regla, y la versión compacta no

@@ -480,7 +480,8 @@ en un commit, que es justo el gate apagado contra el que advierte esta sección.
 
 **Firmar el máximo no cubre las demás reglas (aclaración del 2026-10-30, sin cambio de norma).**
 - El alcance se cablea **regla por regla**. Una firma sobre la regla que más acierta en un estrato no cubre a
-  las otras que también pasan el umbral en ese estrato.
+  las otras que también pasan el umbral en ese estrato. Tampoco es alcance un tope por estrato o por familia (todas
+  las reglas hasta la cifra del máximo), porque cubre en silencio una regla nueva que llegue al tope.
 - Al pedir una firma se presentan **todas** las reglas que superan +8 pp en el estrato, cada una con su cifra.
 - En la instancia canónica, esa cifra es la **exacta**, obtenida por enumeración (§P7-E). Con n = 30, dos de
   las reglas diferían en 4 a 5 pp de su valor exacto.
@@ -489,6 +490,13 @@ Origen: el CLOZE de `totales-promedios-reciclaje-n3`. En su tanda 1 se llevó al
 la batería cruzada en la canónica (X9, +25 pp), y él lo firmó. En la tanda 2, al cablear el alcance regla
 por regla, aparecieron X6, X10 y X11 también por encima de +8 pp, y el orquestador tuvo que parar. El
 mismo error de fondo, declarar un residuo §P7 solo por su máximo, ya se había visto en otro ciclo.
+
+**En la versión compacta desde la v1.11 (2026-10-31).** En la tanda 8 del mismo CLOZE se volvió a incumplir. La
+regla por palabra de la Parte 6 (L-C7) se llevó a firmar por estrato, con el máximo de cada uno, y se cableó con esa
+cifra como tope, aunque en cada estrato de rama y de *k*′ pasaban de +8 pp 54 reglas. Con ese tope, una palabra
+nueva que llegara al máximo quedaba cubierta sin firma. El profesor la volvió a firmar regla por regla («Va»: 216
+reglas en `firma_p6_palabras_f98f9dda.tsv`), y la frase pasó a la versión compacta, que se carga en todas las
+sesiones y en todos los agentes. Hasta entonces solo estaba en este texto íntegro.
 
 **Dominancia, firmas antiguas y cifra exacta (tres aclaraciones del 2026-10-31, sin cambio de norma).**
 - **Dominancia.** Si en un estrato una regla ya firmada acierta el 100 %, las demás reglas de ese estrato no le
@@ -521,6 +529,21 @@ Origen: el mismo CLOZE, tanda 5.
   encima de lo firmado. El profesor firmó entonces las cifras del código.
 - Es la segunda vez en el mismo ejercicio que un modelo transcrito da problemas. `x_canonica_exacta.R` daba las mismas
   cifras que el código, pero ningún mutante lo movía; este omitía un filtro.
+
+**Sorteos finitos en la puerta (aclaración del 2026-10-31, sin cambio de norma).**
+- Si una regla depende de un sorteo finito y enumerable del ítem, por ejemplo las paráfrasis de la clave o los tríos
+  de distractores, la puerta lo integra **exacto** con el código, como hace `medir_p2_exacta()`. Recorre todos sus
+  valores equiprobables sobre las mismas versiones, y la muestra decide solo lo que no se puede enumerar. Es la
+  excepción de enumeración exhaustiva de la regla #23.
+- Cambiar una puerta de muestra a exacta cuando la cifra exacta ya se conoce y queda por debajo de +8 pp **relaja una
+  guarda**: lo decide el profesor (H-5). El orquestador hizo bien en no cambiarla por su cuenta.
+- Al pedir esa decisión se muestra también el **desglose por cada valor del sorteo**. La cifra exacta es su promedio,
+  y el promedio puede esconder valores por encima de +8 pp.
+
+Origen: el mismo CLOZE, tanda 8. Las Partes 2 y 6 ya se medían exactas (L-C4 v2 y L-C5). La regla cruzada X6
+(L-C2) daba +8,5 pp en la muestra de la rama PROMEDIO y +6,0 pp exacta sobre las tres paráfrasis de la clave; por
+separado, +9,0, +9,0 y +0,0. El profesor decidió la medida exacta («Va») sin ver el desglose, que se declaró después
+en el registro de su firma.
 
 #### Por qué NO se cableó dentro de `validar_diagnosticidad.R`
 
@@ -802,8 +825,11 @@ Si por diseño pedagógico un ejercicio necesita comparar exactamente los mismos
 
 ---
 
-**Versión:** 1.10
-**Fecha:** 2026-10-31 (v1.10 — nuevo **§P7-G**: el estímulo es una entrada de la batería; toda batería
+**Versión:** 1.11
+**Fecha:** 2026-10-31 (v1.11 — §P7-E: la firma de un override se pide y se cablea **regla por regla**, y un tope
+por estrato o por familia no es alcance; la frase pasa a la versión compacta. Aclaración, solo aquí: los sorteos
+finitos se integran exactos en la puerta. Origen: tanda 8 del CLOZE de `totales-promedios-reciclaje-n3`, L-C7 y
+X6); 2026-10-31 (v1.10 — nuevo **§P7-G**: el estímulo es una entrada de la batería; toda batería
 lleva una regla del estímulo o lo declara no aplicable con su justificación, y si no, `SIN_COBERTURA`;
 origen: `sistema-ecuaciones-eliminacion-n4` y el CLOZE de `totales-promedios-reciclaje-n3`);
 2026-10-29 (v1.9 — §P7-E: el alcance de un override firmado se cablea en el verificador

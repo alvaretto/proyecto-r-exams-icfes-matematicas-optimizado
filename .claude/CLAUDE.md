@@ -185,7 +185,7 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.34.4 (regla #22 v1.10, §P7-G: el estímulo es una entrada de la batería; §P7-E: la aclaración iii vale para toda cifra que se lleve a firma, y la familia léxica exige una sonda de vocabulario exclusivo de la clave; §P7-F: tercer caso, el canal que pasa al relacional)
+**Versión**: 3.35.0 (regla #22 v1.11, §P7-E: la firma de un override se pide y se cablea regla por regla, y un tope por estrato no es alcance, ahora también en la versión compacta; texto íntegro: los sorteos finitos se integran exactos en la puerta)
 **Fecha**: 2026-10-31
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)
