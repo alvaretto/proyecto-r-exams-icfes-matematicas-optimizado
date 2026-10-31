@@ -1,0 +1,13 @@
+Retroalimentación de la Parte 2 (tanda 7), 100 semillas: cada distractor mostrado tiene su expl2 y la clave su clave2_expl; feedback_p2 con 4 entradas, una «Verdadero.» alineada con sol_p2.
+expl2: 10 entradas; distractores del banco: 10; sin expl2: 0; expl2 sin distractor (dato muerto): 0
+distractores vistos en 100 semillas: 10 de 10 
+  entre_promedio: Dividir lo que recogió el grado entre su promedio da la cantidad de cursos, no el promedio: el promedio es lo recogido dividido entre el número de cursos.
+  luego_dos: Dividir otra vez entre dos da la mitad del promedio: el promedio es lo recogido dividido entre el número de cursos, sin más divisiones.
+  cuadrado: Dividir entre el número de cursos al cuadrado da el promedio dividido otra vez entre los cursos, no el promedio.
+  ambos: Dividir entre los cursos de los dos grados da menos que el promedio de ese grado: lo recogido se reparte solo entre sus propios cursos.
+  moda: Lo que recogió la mayoría de los cursos, si más de la mitad recogió lo mismo, es la moda, y puede ser distinto del promedio, que reparte por igual entre los cursos lo que recogió el grado.
+  promedio: Un promedio mayor no garantiza un total mayor si en ese grado participaron menos cursos.
+  cociente: Dividir el promedio entre la cantidad de cursos no da ningún total: el total es su producto.
+  cociente_inv: Dividir la cantidad de cursos entre el promedio no da ningún total: el total es su producto.
+  resta: Restar el promedio de la cantidad de cursos no da ningún total: el total es su producto.
+  cruzado: Multiplicar los cursos de un grado por el promedio del otro mezcla los dos grados: el total de cada grado usa sus propios cursos y su propio promedio.

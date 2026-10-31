@@ -1,0 +1,77 @@
+Batería: L-C4 v2 (2026-10-31) · md5 820e51464b34deff35b830789584de8a · v1 de control: L-C4 v1 (2026-10-31) de20e0a986f86d44f0d3412517d2f07b 
+
+====================================================================================================
+.Rmd: ../totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd
+md5: 898608dd2a625c54b905684d4bbdb827
+====================================================================================================
+
+--- Parte 2 «promedio», EXACTA: 30 combinaciones × 100 portadores; 268 reglas (108 tokens); 9 s
+control: reglas de v1, exacta frente a 720 versiones con un portador: 18 reglas, diferencia máxima 5.6e-15 pp
+v1 (exacta): P2-L1 +0.0 · P2-L2 +0.0 · P2-L3 +0.0 · P2-L4 +0.0 · P2-L5 -15.0 · P2-L6 +0.0 · P2-F1 -11.7 · P2-F2 -8.3 · P2-F3 +3.9 · P2-F4 +0.0 · P2-F5 +0.0 · P2-R1 +13.6 · P2-R2 +21.9 · P2-R3 +7.5 · P2-E1 -15.0 · P2-E2 +0.0 · P2-E3 -15.0 · P2-E4 +0.0 
+EN ROJO (> +8 pp): 5 reglas
+  P2-R2                         +21.9 pp  la que más palabras comparte con las otras tres
+  P2-R1                         +13.6 pp  par con más palabras en común (elige una del par)
+  P2-E8c                        +13.5 pp  contraria de P2-E8 (la única con una palabra del texto visible que no tiene otra opción)
+  P2-E5c                        +11.1 pp  contraria de P2-E5 (más palabras en común con el párrafo del otro colegio (H3 de la r2))
+  P2-M3c                        +10.0 pp  contraria de P2-M3 (la única con sus tres últimas palabras (molde))
+zona gris (+5,3 a +8 pp): P2-R3 +7.5 
+vocabulario exclusivo de la clave:  
+vocabulario exclusivo de los distractores: promedio · el promedio · promedio de · entre el promedio · el promedio de · promedio de sus · y · luego · dos · cursos y · y luego · luego entre · entre dos · sus cursos y · cursos y luego · y luego entre · luego entre dos · al · cuadrado · cursos al · al cuadrado · sus cursos al · cursos al cuadrado · ambos · grados · de ambos · ambos grados · cursos de ambos · de ambos grados · mayoría · los · recogió la · la mayoría · mayoría de · de los · los cursos · que recogió la · recogió la mayoría · la mayoría de · mayoría de los · de los cursos · los cursos de 
+  P2-V «dividido»        +5.0 pp
+  P2-V «entre»           +5.0 pp
+  P2-VX                    +0.0 pp
+  P2-VXE                   +0.0 pp
+  P2-E5                   -21.7 pp
+  P2-E7                   -16.8 pp
+
+--- Parte 2 «comparar», EXACTA: 30 combinaciones × 100 portadores; 234 reglas (91 tokens); 9 s
+control: reglas de v1, exacta frente a 720 versiones con un portador: 18 reglas, diferencia máxima 5.6e-15 pp
+v1 (exacta): P2-L1 +0.0 · P2-L2 +0.0 · P2-L3 +0.0 · P2-L4 +0.0 · P2-L5 +0.0 · P2-L6 +0.0 · P2-F1 +1.7 · P2-F2 -11.7 · P2-F3 +0.6 · P2-F4 -15.0 · P2-F5 +5.0 · P2-R1 +16.4 · P2-R2 +33.9 · P2-R3 +10.6 · P2-E1 +0.0 · P2-E2 +0.0 · P2-E3 +5.0 · P2-E4 +0.0 
+EN ROJO (> +8 pp): 22 reglas
+  P2-VX                         +75.0 pp  elige la que lleva vocabulario exclusivo de la clave (12 tokens: cursos multiplicada · de cursos multiplicada · cursos multiplicada por · cursos por · de cursos por · cursos por el · multiplicado · promedio multiplicado · multiplicado por · el promedio multiplicado · promedio multiplicado por · multiplicado por la)
+  P2-R2                         +33.9 pp  la que más palabras comparte con las otras tres
+  P2-V «cursos multiplicada»  +25.0 pp  elige las que dicen «cursos multiplicada» (claves 1/3, distractores 0/5)
+  P2-V «de cursos multiplicada»  +25.0 pp  elige las que dicen «de cursos multiplicada» (claves 1/3, distractores 0/5)
+  P2-V «cursos multiplicada por»  +25.0 pp  elige las que dicen «cursos multiplicada por» (claves 1/3, distractores 0/5)
+  P2-V «cursos por»           +25.0 pp  elige las que dicen «cursos por» (claves 1/3, distractores 0/5)
+  P2-V «de cursos por»        +25.0 pp  elige las que dicen «de cursos por» (claves 1/3, distractores 0/5)
+  P2-V «cursos por el»        +25.0 pp  elige las que dicen «cursos por el» (claves 1/3, distractores 0/5)
+  P2-V «multiplicado»         +25.0 pp  elige las que dicen «multiplicado» (claves 1/3, distractores 0/5)
+  P2-V «promedio multiplicado»  +25.0 pp  elige las que dicen «promedio multiplicado» (claves 1/3, distractores 0/5)
+  P2-V «multiplicado por»     +25.0 pp  elige las que dicen «multiplicado por» (claves 1/3, distractores 0/5)
+  P2-V «el promedio multiplicado»  +25.0 pp  elige las que dicen «el promedio multiplicado» (claves 1/3, distractores 0/5)
+  P2-V «promedio multiplicado por»  +25.0 pp  elige las que dicen «promedio multiplicado por» (claves 1/3, distractores 0/5)
+  P2-V «multiplicado por la»  +25.0 pp  elige las que dicen «multiplicado por la» (claves 1/3, distractores 0/5)
+  P2-R1                         +16.4 pp  par con más palabras en común (elige una del par)
+  P2-E5                         +12.5 pp  más palabras en común con el párrafo del otro colegio (H3 de la r2)
+  P2-E6                         +12.5 pp  más palabras en común con la tabla del otro colegio (encabezados y celdas)
+  P2-V «por»                  +12.5 pp  elige las que dicen «por» (claves 3/3, distractores 3/5)
+  P2-R3                         +10.6 pp  descarta la que menos palabras comparte con las otras tres
+  P2-V «por el»                +9.2 pp  elige las que dicen «por el» (claves 2/3, distractores 2/5)
+  P2-V «por el promedio»       +9.2 pp  elige las que dicen «por el promedio» (claves 2/3, distractores 2/5)
+  P2-E7                          +8.5 pp  más palabras en común con todo el texto visible del ítem
+zona gris (+5,3 a +8 pp): P2-E9c +6.2 
+vocabulario exclusivo de la clave: cursos multiplicada · de cursos multiplicada · cursos multiplicada por · cursos por · de cursos por · cursos por el · multiplicado · promedio multiplicado · multiplicado por · el promedio multiplicado · promedio multiplicado por · multiplicado por la 
+vocabulario exclusivo de los distractores: dividido · promedio dividido · dividido por · el promedio dividido · promedio dividido por · dividido por la · dividida · cursos dividida · dividida por · de cursos dividida · cursos dividida por · dividida por el · menos · cursos menos · menos el · de cursos menos · cursos menos el · menos el promedio · al · revés · grado multiplicada · promedio del · y al · al revés · un grado multiplicada · grado multiplicada por · el promedio del · promedio del otro · otro grado y · grado y al · y al revés 
+  P2-V «dividido»       -15.0 pp
+  P2-VX                   +75.0 pp
+  P2-VXE                   +0.0 pp
+  P2-E5                   +12.5 pp
+  P2-E7                    +8.5 pp
+
+--- Parte 6, enumeración exacta de L-C5: 3200 hojas, masa con error 0.0000, 44 s
+vocabulario de la Parte 6 (v2): 60 celdas (token × papel × estrato); máximo +0.8 pp; > +8 pp: 0
+  PROMEDIO     P6-V1                              ganador   +0.8 pp (aplica 55 %)
+  PROMEDIO     P6-V1                              ventaja   +0.8 pp (aplica 55 %)
+  k1           P6-V1                              ganador   +0.7 pp (aplica 53 %)
+  k1           P6-V1                              ventaja   +0.7 pp (aplica 53 %)
+  CURSOS       P6-V1                              ganador   +0.3 pp (aplica 49 %)
+  CURSOS       P6-V1                              ventaja   +0.3 pp (aplica 49 %)
+  mezcla       P6-V1                              ganador   +0.3 pp (aplica 52 %)
+  mezcla       P6-V1                              ventaja   +0.3 pp (aplica 52 %)
+  exploratoria P6 por token, mezcla    máx  +0.0 pp (P6-V «si»)
+  exploratoria P6 por token, CURSOS    máx +25.0 pp (P6-V «participado»)
+  exploratoria P6 por token, PROMEDIO  máx +25.0 pp (P6-V «participado»c)
+  exploratoria P6 por token, k1        máx +16.4 pp (P6-V «participado»c)
+  exploratoria P6 por token, k2        máx +16.7 pp (P6-V «tenido»c)
+L-C5 con v1 y con v2: 335 celdas de v1, 335 presentes en v2, diferencia máxima 0 pp

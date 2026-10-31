@@ -417,6 +417,27 @@ exacto 25 %. Parte 6, por afirmación: nulo exacto p·q + (1 − p)(1 − q), co
 | Parte 6. 34 reglas por afirmación: estímulo y magnitud (*k*′, δ′, los cursos y el promedio menores, entre ellas R_k, R_hg y R_δ de H2), divisibilidad, posición, formato y léxico. Signo no aplica. Relacionales: RL1 (par HP = HG, métrica del par) y RL2 (la contraria a «Ganó…», condicional al ganador). Control positivo al 100 % | Por estrato: mezcla, rama del otro colegio y *k*′. Una regla > +8 pp que supera el p95 del máximo con el veredicto permutado queda PENDIENTE. Por debajo de ese p95, NO CONCLUYENTE: residuo declarado | MC24: el ganador siempre en la fila 1. P6-P1 pasa a rojo |
 | Partes 3 a 5 (num): ninguna regla de eliminación aplica (sin opciones y con tolerancia 0) | V11 por valor y «a un paso» (E3) | MC1, MC2 |
 
+**L-C4 v2 (tanda 7, 2026-10-31; decisión «a · 1 sí · 2 sí» del profesor).** `cloze/bateria_partes_2_a_6.R`, versión «L-C4 v2
+(2026-10-31)», **md5 `820e51464b34deff35b830789584de8a`**, congelada antes de reescribir la Parte 2. v1 (`de20e0a9…`) está en el
+commit `31b8fe9e`. Endurece v1 sin tocar sus reglas: sus cifras se reproducen dentro de v2 (diferencia máxima 1,1·10⁻¹⁴ pp) y
+L-C5 sale idéntica en sus 335 celdas.
+- Vocabulario por token, calculado sobre los textos: cada palabra y cada expresión de 2 o 3 palabras de las opciones, con su
+  contraria («elige las que dicen t» y «descarta las que dicen t»); P2-VX, vocabulario exclusivo de la clave, y P2-VXE, el mismo
+  buscado en el texto visible.
+- Contrarias de todas las reglas de la Parte 2 de v1, y molde (la única con su primera palabra, sus tres primeras o sus tres últimas).
+- Estímulo: el párrafo del otro colegio (P2-E5), su tabla (P2-E6) y todo el texto visible del ítem (P2-E7 a P2-E9).
+- Parte 6: P6-VX y P6-VXF, vocabulario exclusivo de las verdaderas o de las falsas sobre todas las versiones (aplica 0 %; puede
+  disparar si un texto quedara con veredicto fijo). La regla por token de la Parte 6 NO entra: en la mezcla da 0,0 pp; en los
+  estratos de *k*′, hasta +16,7 pp, dominada por K1 firmada (+32,8 y +33,5 pp); en los de rama, +25,0 pp, que es el contenido
+  lógico de la afirmación de ventaja (RL3). Declarada en `cloze/salida/bateria_v2_historico.txt`; decide el profesor si entra en
+  una v3.
+- La Parte 2 se mide exacta con `medir_p2_exacta()`: 3 claves × C(5, 3) tríos; las reglas del estímulo, sobre las 100 versiones
+  de la muestra estándar como portadores. Guarda: E8 de `cloze/verificar_espacio_cloze.R` (md5). Mutante MC28: las tres claves
+  «promedio» ganan «precisamente» y P2-VX pasa a +75,0 pp.
+- Histórico (§P7-C), `cloze/salida/bateria_v2_historico.txt`: en `96cfcf35…`, 106 reglas en rojo en «promedio» y 121 en
+  «comparar»; en `42f725bf…`, 54 y 69, entre ellas «dividido» +75,0 pp en «promedio» y «descarta las que dicen *por curso*»
+  +25,0 pp en «comparar» (las de H1 y H2 de la r2), el párrafo P2-E5 +75,0 pp y P2-VX +75,0 pp en los dos tipos.
+
 **L-C3 · ampliación (decisión 2 a del 2026-10-31): la canónica de la Parte 1, regla por regla.** E4 de
 `cloze/verificar_espacio_cloze.R` guarda las 24 cifras exactas de la decisión, redondeadas a un decimal: `FIRMA_P1_CANON`
 (12 reglas de la batería del SCHOICE) y `FIRMA_P1_SONDAS` (12 sondas de E4).
@@ -763,3 +784,45 @@ se firmaron (un decimal).
   estímulo (H3, para L-C4 v2). El `ERR_DIAG_SUPERFICIAL` de `validar_diagnosticidad.R` en p6 es un artefacto de su sonda H3
   sobre un mchoice (0,0 pp exactos; H4). **Pendiente de decisión del profesor:** gastar la última pasada de §P7-D en la Parte 2
   o firmar H1 y H2 como residuo.
+
+### Decisión del profesor tras la tanda 6 (2026-10-31)
+
+> **Firmada por el profesor el 2026-10-31**, en la pausa posterior a la tanda 6 del `orquestador-cloze` (md5
+> `42f725bf191b81784f76b858c26f7733`; FASE 2C r2 `APROBAR_CON_CAMBIOS`, sin CORRECCIÓN). Respuesta literal: «a · 1 sí ·
+> 2 sí». Regla #24 **H-5**: queda por escrito quién decidió, cuándo y con qué cifras.
+
+1. **(a) La pasada 3 de §P7-D, que es la última, se gasta en la Parte 2.** Cierra H1 y H2 de la r2:
+   - H1: en «promedio», «dividido» solo aparece en las claves (+75,0 pp). Se pone también en distractores, con
+     operaciones equivocadas que sigan siendo falsas.
+   - H2: en «comparar», «por curso» solo aparece en distractores (+25,0 pp). Se quita de ellos.
+
+   Antes de reescribir, la batería pasa a L-C4 v2, que es endurecer:
+   - una sonda de vocabulario exclusivo de la clave, calculada sobre los textos;
+   - cada regla léxica con su contraria;
+   - el párrafo del otro colegio como estímulo (H3 de la r2).
+
+   Por §P7-C, la batería ampliada se vuelve a medir sobre el histórico. Revisa un detractor nuevo (FASE 2C r3). Agotada
+   esta pasada, lo que quede de diagnosticidad se cierra con residuo declarado. Una CORRECCIÓN se corrige siempre.
+2. **(1 sí) Aclaración en el texto íntegro de la regla #22:** una regla léxica de palabra fija cubre solo esa palabra. La
+   familia léxica exige una sonda de vocabulario exclusivo de la clave sobre todos los textos visibles, y cada regla con su
+   contraria. La escribe el coordinador.
+3. **(2 sí) Arreglo de `validar_diagnosticidad.R`:** las sondas de selección única dejan de aplicarse a los huecos mchoice
+   (H4 de la r2). Lo hace Codex, con su test, en un worktree aparte; se aplica al repo después de la tanda 7.
+
+### Tanda 7 (2026-10-31): pasada 3 de §P7-D en la Parte 2, la última (detenida antes de la 6b)
+
+> Lo hizo el `orquestador-cloze` tras la decisión «a · 1 sí · 2 sí». Reapertura #3 desde `generacion_rmd`. md5
+> `42f725bf…` → `898608dd2a625c54b905684d4bbdb827`. Detalle y evidencia: `cloze/HANDOFF.md`.
+
+- **H1 y H2 de la r2, cerrados.** En «promedio», las claves y cuatro distractores empiezan por «Lo que recogió ese grado
+  dividido»; los distractores dividen con un operando equivocado (el promedio, otra vez entre dos, el número de cursos al
+  cuadrado, los cursos de ambos grados), cada uno con su función de verdad (`valor_p2`) y una guarda que lo comprueba falso en
+  todas las versiones, y queda la moda. «dividido» y «entre», +5,0 pp; P2-VX, +0,0. En «comparar», ningún distractor dice
+  «curso» ni «por curso»; cada uno tiene su función de verdad (`compara_p2`).
+- **Regla de parada de §P7-D.** Al cerrar el canal léxico se abrió el relacional: «la que más palabras comparte con las otras
+  tres» (P2-R2) sube a +21,9 pp en «promedio» y a +33,9 pp en «comparar» (antes, +2,5 y −10,6). En «comparar» queda además el
+  vocabulario exclusivo de cada redacción de la multiplicación (P2-VX +75,0 pp; doce tokens a +25,0 pp). Es la última pasada:
+  todo se declara como residuo con su cifra exacta y va al profesor (`cloze/salida/bateria_v2_898608dd.txt`).
+- **Sin cambio en L-C5** ni en la Parte 1. Pendientes al cerrar la tanda: la auditoría visual 6b, la FASE 2C r3 (detractor
+  nuevo), los pasos 8 a 10 y el WAIT_USER #3.
+

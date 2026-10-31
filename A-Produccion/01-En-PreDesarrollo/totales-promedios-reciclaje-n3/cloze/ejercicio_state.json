@@ -3,7 +3,7 @@
   "ejercicio": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1",
   "tipo": "cloze",
   "timestamp_inicio": "2026-10-30T21:25:33.191024-05:00",
-  "timestamp_ultima_actualizacion": "2026-10-31T08:17:49.973266-05:00",
+  "timestamp_ultima_actualizacion": "2026-10-31T09:49:21.158258-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -27,24 +27,24 @@
     },
     "generacion_rmd": {
       "completado": true,
-      "timestamp": "2026-10-31T08:17:49.794151-05:00",
+      "timestamp": "2026-10-31T09:47:42.396278-05:00",
       "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd",
-      "nota": "Reapertura #2, tanda 6 (pasada 2 de §P7-D, H1): Parte 2 reescrita en los dos tipos; md5 42f725bf191b81784f76b858c26f7733. Artefactos: salida/verificar_espacio_cloze_r6b.txt (2026-10-31T08:17:14, exit 4, 0 fallos, 0 pendientes; L-C4 Parte 2 exacta: ninguna regla > +8 pp en «promedio» ni en «comparar»; L-C5 idéntica a la r6a; canónica X6 -2,8 y X10 +0,0 pp; MC19 y MC20 rehechos y cazados) y salida/p2_redaccion_42f725bf.txt (2026-10-31T08:16:39, antes y después, regla por regla)."
+      "nota": "Tanda 7, pasada 3 de §P7-D (Parte 2): md5 898608dd2a625c54b905684d4bbdb827. Banco «promedio»: 3 claves y 5 distractores (4 dividen con un operando equivocado, con función de verdad valor_p2 y guarda; moda); «comparar»: sin «por curso» ni «curso», con función de verdad compara_p2 y guarda. 300 semillas sin error. Batería L-C4 v2 (md5 820e5146…): salida/bateria_v2_898608dd.txt (Parte 2 exacta; L-C5 idéntica a v1 en 335 celdas)."
     },
     "retroalimentacion": {
       "completado": true,
-      "timestamp": "2026-10-31T08:17:49.854221-05:00",
-      "nota": "H3 de la FASE 2C r1: encabezado de la Solution según el tipo de la Parte 2 («Lecturas del promedio que no sirven» / «Comparaciones que no deciden qué grado ganó») y explicación nueva del distractor «cociente». Artefacto: salida/html/cloze1..5.html (2026-10-31T08:11:14): encabezado correcto en las 5 (tipos promedio 1 y 4; comparar 2, 3 y 5); 0 ##ANSWER; FASE 2J letter-independent; 0 citas de letra en la Solution (grep regla #19)."
+      "timestamp": "2026-10-31T09:47:44.625392-05:00",
+      "nota": "Tanda 7: retroalimentación de la Parte 2 rehecha para el banco nuevo (expl2 con 10 entradas, una por distractor, sin dato muerto; «moda» afinada: la mayoría es la moda solo si más de la mitad recogió lo mismo). Comprobado en 100 semillas: salida/retro_r7.txt. Encabezado de la Solution según el tipo, sin cambio."
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-10-31T08:17:49.914485-05:00",
-      "nota": "salida/render_r3.log (2026-10-31T08:11:23): HTML, PDF, DOCX y Moodle OK con semillas canonica=7 CxC=3 CxP=2 PxC=1 PxP=4; NOPS N/A (mensaje con 'cloze exercises'); tex: LTcaptype{none} con guarda c@none en el .Rmd; PDF de la semilla 2 revisado a ojo, 5 páginas (salida/revision_pdf_r3/c2_montaje.png); Moodle del aula salida/exportar_r3.log: 30/30 con pesos 3|1|1|1|1|1, 60 MULTICHOICE_V, 30 MULTIRESPONSE, 90 NUMERICAL, 0 etiquetas en 180 gaps, 0 imágenes en gaps."
+      "timestamp": "2026-10-31T09:48:15.457572-05:00",
+      "nota": "Tanda 7, md5 898608dd2a625c54b905684d4bbdb827: render_cloze.R → salida/render_r7.log; HTML, PDF, DOCX y Moodle generados; NOPS N/A (exams2nops rechaza extype cloze: «cloze exercises»)."
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-10-31T08:17:49.973266-05:00",
-      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261031-081231-2266570/informe.txt · md5 42f725bf191b81784f76b858c26f7733 · 0 errores / 7 advertencias (2B sin PDF en el comando del hook; 2E Tarea; 2F tabla de metadatos, descripción de evaluación, análisis de distractores, patrón ICFES, letra_correcta) · 2G 100/100 · 2H 10 semillas, 0 anomalías · disparado por salida/hook_trigger_r3.log (2026-10-31T08:12:31)."
+      "timestamp": "2026-10-31T09:49:21.158258-05:00",
+      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261031-094827-2419561/informe.txt · md5 898608dd2a625c54b905684d4bbdb827 · 0 errores / 7 advertencias (2B sin PDF en el comando del hook; 2E «Tarea»; 2F tabla de metadatos, descripción, análisis de distractores, patrón «Es posible que los estudiantes», letra_correcta; 2O 3 glifos en comentarios R, inocuo) · 2G 100/100 · 2H 10 semillas, 0 anomalías"
     },
     "detractor_fase2c": {
       "completado": false,
@@ -129,6 +129,37 @@
         "arsenal_post_render": {
           "timestamp": "2026-10-30T23:16:47.275118-05:00",
           "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261030-231556-1522539/informe.txt · md5 96cfcf356c01326d42f10ee4c36545b7 · 0 errores / 7 advertencias (2B sin PDF en el comando del hook: el PDF se revisó en revision_pdf_r2; 2E 'Tarea'; 2F tabla de metadatos, descripción de evaluación, análisis de distractores, patrón 'Es posible que los estudiantes', letra_correcta: heurísticas, las mismas de la tanda 1) · 2G 100/100 · 2H 10 semillas, 0 anomalías"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-10-31T09:41:13.986468-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Tanda 7 (2026-10-31), decisión del profesor «a · 1 sí · 2 sí» tras la FASE 2C r2 (APROBAR_CON_CAMBIOS, sin CORRECCIÓN): pasada 3 de §P7-D, la última, en la Parte 2 (H1 «dividido» +75,0 pp en «promedio»; H2 «por curso» +25,0 pp en «comparar»), medida con la batería L-C4 v2 (md5 820e51464b34deff35b830789584de8a), congelada antes de reescribir",
+      "reporte": "salida/fase2c_r2_detractor.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-10-31T08:17:49.794151-05:00",
+          "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd",
+          "nota": "Reapertura #2, tanda 6 (pasada 2 de §P7-D, H1): Parte 2 reescrita en los dos tipos; md5 42f725bf191b81784f76b858c26f7733. Artefactos: salida/verificar_espacio_cloze_r6b.txt (2026-10-31T08:17:14, exit 4, 0 fallos, 0 pendientes; L-C4 Parte 2 exacta: ninguna regla > +8 pp en «promedio» ni en «comparar»; L-C5 idéntica a la r6a; canónica X6 -2,8 y X10 +0,0 pp; MC19 y MC20 rehechos y cazados) y salida/p2_redaccion_42f725bf.txt (2026-10-31T08:16:39, antes y después, regla por regla)."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-10-31T08:17:49.854221-05:00",
+          "nota": "H3 de la FASE 2C r1: encabezado de la Solution según el tipo de la Parte 2 («Lecturas del promedio que no sirven» / «Comparaciones que no deciden qué grado ganó») y explicación nueva del distractor «cociente». Artefacto: salida/html/cloze1..5.html (2026-10-31T08:11:14): encabezado correcto en las 5 (tipos promedio 1 y 4; comparar 2, 3 y 5); 0 ##ANSWER; FASE 2J letter-independent; 0 citas de letra en la Solution (grep regla #19)."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-10-31T08:17:49.914485-05:00",
+          "nota": "salida/render_r3.log (2026-10-31T08:11:23): HTML, PDF, DOCX y Moodle OK con semillas canonica=7 CxC=3 CxP=2 PxC=1 PxP=4; NOPS N/A (mensaje con 'cloze exercises'); tex: LTcaptype{none} con guarda c@none en el .Rmd; PDF de la semilla 2 revisado a ojo, 5 páginas (salida/revision_pdf_r3/c2_montaje.png); Moodle del aula salida/exportar_r3.log: 30/30 con pesos 3|1|1|1|1|1, 60 MULTICHOICE_V, 30 MULTIRESPONSE, 90 NUMERICAL, 0 etiquetas en 180 gaps, 0 imágenes en gaps."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-10-31T08:17:49.973266-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261031-081231-2266570/informe.txt · md5 42f725bf191b81784f76b858c26f7733 · 0 errores / 7 advertencias (2B sin PDF en el comando del hook; 2E Tarea; 2F tabla de metadatos, descripción de evaluación, análisis de distractores, patrón ICFES, letra_correcta) · 2G 100/100 · 2H 10 semillas, 0 anomalías · disparado por salida/hook_trigger_r3.log (2026-10-31T08:12:31)."
         }
       }
     }

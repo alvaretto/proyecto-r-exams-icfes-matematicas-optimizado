@@ -1,0 +1,454 @@
+Batería: L-C4 v2 (2026-10-31) · md5 820e51464b34deff35b830789584de8a · v1 de control: L-C4 v1 (2026-10-31) de20e0a986f86d44f0d3412517d2f07b 
+
+====================================================================================================
+.Rmd: /tmp/claude-1000/-home-bootcamp-Proyectos-2026-RepositorioMatematicasICFES-R-Exams/de2a4b7e-30f1-462f-99eb-f555afbbd5c4/scratchpad/hist_96cfcf35.Rmd
+md5: 96cfcf356c01326d42f10ee4c36545b7
+====================================================================================================
+
+--- Parte 2 «promedio», EXACTA: 30 combinaciones × 100 portadores; 400 reglas (174 tokens); 9 s
+control: reglas de v1, exacta frente a 720 versiones con un portador: 18 reglas, diferencia máxima 1.1e-14 pp
+v1 (exacta): P2-L1 +45.0 · P2-L2 +45.0 · P2-L3 +50.0 · P2-L4 +0.0 · P2-L5 +0.0 · P2-L6 +5.0 · P2-F1 -8.3 · P2-F2 -21.7 · P2-F3 +2.8 · P2-F4 -15.0 · P2-F5 +5.0 · P2-R1 -22.8 · P2-R2 -25.0 · P2-R3 -13.9 · P2-E1 +20.8 · P2-E2 -24.2 · P2-E3 +0.0 · P2-E4 +7.5 
+EN ROJO (> +8 pp): 106 reglas
+  P2-VX                         +75.0 pp  elige la que lleva vocabulario exclusivo de la clave (75 tokens: recogería · si · recogieran · y · no · cambiara · que recogería · recogería un · curso si · si los · cursos recogieran · recogieran lo)
+  P2-VXE                        +75.0 pp  elige la que comparte con el texto visible un token exclusivo de la clave
+  P2-V «el total»             +75.0 pp  elige las que dicen «el total» (claves 3/3, distractores 0/5)
+  P2-V «recogió»c            +75.0 pp  descarta las que dicen «recogió» (claves 0/3, distractores 5/5)
+  P2-V «que recogió»c        +75.0 pp  descarta las que dicen «que recogió» (claves 0/3, distractores 5/5)
+  P2-L3                         +50.0 pp  elige el condicional en -ría (H1)
+  P2-V «si»                   +50.0 pp  elige las que dicen «si» (claves 2/3, distractores 0/5)
+  P2-V «curso si»             +50.0 pp  elige las que dicen «curso si» (claves 2/3, distractores 0/5)
+  P2-V «un curso si»          +50.0 pp  elige las que dicen «un curso si» (claves 2/3, distractores 0/5)
+  P2-V «por»                  +50.0 pp  elige las que dicen «por» (claves 2/3, distractores 0/5)
+  P2-V «igual»                +50.0 pp  elige las que dicen «igual» (claves 2/3, distractores 0/5)
+  P2-V «total del»            +50.0 pp  elige las que dicen «total del» (claves 2/3, distractores 0/5)
+  P2-V «por igual»            +50.0 pp  elige las que dicen «por igual» (claves 2/3, distractores 0/5)
+  P2-V «el total del»         +50.0 pp  elige las que dicen «el total del» (claves 2/3, distractores 0/5)
+  P2-V «total del grado»      +50.0 pp  elige las que dicen «total del grado» (claves 2/3, distractores 0/5)
+  P2-L1                         +45.0 pp  contiene «total» (H1)
+  P2-L2                         +45.0 pp  descarta las que empiezan por «Lo que recogió» (H1)
+  P2-M2                         +45.0 pp  la única con sus tres primeras palabras (molde)
+  P2-V «total»                +45.0 pp  elige las que dicen «total» (claves 3/3, distractores 1/5)
+  P2-V «lo que recogió»c     +45.0 pp  descarta las que dicen «lo que recogió» (claves 0/3, distractores 4/5)
+  P2-R3c                        +35.0 pp  contraria de P2-R3 (descarta la que menos palabras comparte con las otras tres)
+  P2-V «que»c                 +25.0 pp  descarta las que dicen «que» (claves 2/3, distractores 5/5)
+  P2-V «recogería»           +25.0 pp  elige las que dicen «recogería» (claves 1/3, distractores 0/5)
+  P2-V «un»                   +25.0 pp  elige las que dicen «un» (claves 2/3, distractores 1/5)
+  P2-V «recogieran»           +25.0 pp  elige las que dicen «recogieran» (claves 1/3, distractores 0/5)
+  P2-V «y»                    +25.0 pp  elige las que dicen «y» (claves 1/3, distractores 0/5)
+  P2-V «no»                   +25.0 pp  elige las que dicen «no» (claves 1/3, distractores 0/5)
+  P2-V «cambiara»             +25.0 pp  elige las que dicen «cambiara» (claves 1/3, distractores 0/5)
+  P2-V «que recogería»       +25.0 pp  elige las que dicen «que recogería» (claves 1/3, distractores 0/5)
+  P2-V «recogería un»        +25.0 pp  elige las que dicen «recogería un» (claves 1/3, distractores 0/5)
+  P2-V «un curso»             +25.0 pp  elige las que dicen «un curso» (claves 2/3, distractores 1/5)
+  P2-V «si los»               +25.0 pp  elige las que dicen «si los» (claves 1/3, distractores 0/5)
+  P2-V «cursos recogieran»    +25.0 pp  elige las que dicen «cursos recogieran» (claves 1/3, distractores 0/5)
+  P2-V «recogieran lo»        +25.0 pp  elige las que dicen «recogieran lo» (claves 1/3, distractores 0/5)
+  P2-V «mismo y»              +25.0 pp  elige las que dicen «mismo y» (claves 1/3, distractores 0/5)
+  P2-V «y el»                 +25.0 pp  elige las que dicen «y el» (claves 1/3, distractores 0/5)
+  P2-V «total no»             +25.0 pp  elige las que dicen «total no» (claves 1/3, distractores 0/5)
+  P2-V «no cambiara»          +25.0 pp  elige las que dicen «no cambiara» (claves 1/3, distractores 0/5)
+  P2-V «lo que recogería»    +25.0 pp  elige las que dicen «lo que recogería» (claves 1/3, distractores 0/5)
+  P2-V «que recogería un»    +25.0 pp  elige las que dicen «que recogería un» (claves 1/3, distractores 0/5)
+  P2-V «recogería un curso»  +25.0 pp  elige las que dicen «recogería un curso» (claves 1/3, distractores 0/5)
+  P2-V «curso si los»         +25.0 pp  elige las que dicen «curso si los» (claves 1/3, distractores 0/5)
+  P2-V «si los cursos»        +25.0 pp  elige las que dicen «si los cursos» (claves 1/3, distractores 0/5)
+  P2-V «los cursos recogieran»  +25.0 pp  elige las que dicen «los cursos recogieran» (claves 1/3, distractores 0/5)
+  P2-V «cursos recogieran lo»  +25.0 pp  elige las que dicen «cursos recogieran lo» (claves 1/3, distractores 0/5)
+  P2-V «recogieran lo mismo»  +25.0 pp  elige las que dicen «recogieran lo mismo» (claves 1/3, distractores 0/5)
+  P2-V «lo mismo y»           +25.0 pp  elige las que dicen «lo mismo y» (claves 1/3, distractores 0/5)
+  P2-V «mismo y el»           +25.0 pp  elige las que dicen «mismo y el» (claves 1/3, distractores 0/5)
+  P2-V «y el total»           +25.0 pp  elige las que dicen «y el total» (claves 1/3, distractores 0/5)
+  P2-V «el total no»          +25.0 pp  elige las que dicen «el total no» (claves 1/3, distractores 0/5)
+  P2-V «total no cambiara»    +25.0 pp  elige las que dicen «total no cambiara» (claves 1/3, distractores 0/5)
+  P2-V «grado»c               +25.0 pp  descarta las que dicen «grado» (claves 2/3, distractores 5/5)
+  P2-V «repartido»            +25.0 pp  elige las que dicen «repartido» (claves 1/3, distractores 0/5)
+  P2-V «entre»                +25.0 pp  elige las que dicen «entre» (claves 1/3, distractores 0/5)
+  P2-V «sus»                  +25.0 pp  elige las que dicen «sus» (claves 1/3, distractores 0/5)
+  P2-V «grado repartido»      +25.0 pp  elige las que dicen «grado repartido» (claves 1/3, distractores 0/5)
+  P2-V «repartido por»        +25.0 pp  elige las que dicen «repartido por» (claves 1/3, distractores 0/5)
+  P2-V «igual entre»          +25.0 pp  elige las que dicen «igual entre» (claves 1/3, distractores 0/5)
+  P2-V «entre sus»            +25.0 pp  elige las que dicen «entre sus» (claves 1/3, distractores 0/5)
+  P2-V «sus cursos»           +25.0 pp  elige las que dicen «sus cursos» (claves 1/3, distractores 0/5)
+  P2-V «del grado repartido»  +25.0 pp  elige las que dicen «del grado repartido» (claves 1/3, distractores 0/5)
+  P2-V «grado repartido por»  +25.0 pp  elige las que dicen «grado repartido por» (claves 1/3, distractores 0/5)
+  P2-V «repartido por igual»  +25.0 pp  elige las que dicen «repartido por igual» (claves 1/3, distractores 0/5)
+  P2-V «por igual entre»      +25.0 pp  elige las que dicen «por igual entre» (claves 1/3, distractores 0/5)
+  P2-V «igual entre sus»      +25.0 pp  elige las que dicen «igual entre sus» (claves 1/3, distractores 0/5)
+  P2-V «entre sus cursos»     +25.0 pp  elige las que dicen «entre sus cursos» (claves 1/3, distractores 0/5)
+  P2-V «le»                   +25.0 pp  elige las que dicen «le» (claves 1/3, distractores 0/5)
+  P2-V «tocaría»             +25.0 pp  elige las que dicen «tocaría» (claves 1/3, distractores 0/5)
+  P2-V «a»                    +25.0 pp  elige las que dicen «a» (claves 1/3, distractores 0/5)
+  P2-V «se»                   +25.0 pp  elige las que dicen «se» (claves 1/3, distractores 0/5)
+  P2-V «repartiera»           +25.0 pp  elige las que dicen «repartiera» (claves 1/3, distractores 0/5)
+  P2-V «que le»               +25.0 pp  elige las que dicen «que le» (claves 1/3, distractores 0/5)
+  P2-V «le tocaría»          +25.0 pp  elige las que dicen «le tocaría» (claves 1/3, distractores 0/5)
+  P2-V «tocaría a»           +25.0 pp  elige las que dicen «tocaría a» (claves 1/3, distractores 0/5)
+  P2-V «a un»                 +25.0 pp  elige las que dicen «a un» (claves 1/3, distractores 0/5)
+  P2-V «si el»                +25.0 pp  elige las que dicen «si el» (claves 1/3, distractores 0/5)
+  P2-V «grado se»             +25.0 pp  elige las que dicen «grado se» (claves 1/3, distractores 0/5)
+  P2-V «se repartiera»        +25.0 pp  elige las que dicen «se repartiera» (claves 1/3, distractores 0/5)
+  P2-V «repartiera por»       +25.0 pp  elige las que dicen «repartiera por» (claves 1/3, distractores 0/5)
+  P2-V «lo que le»            +25.0 pp  elige las que dicen «lo que le» (claves 1/3, distractores 0/5)
+  P2-V «que le tocaría»      +25.0 pp  elige las que dicen «que le tocaría» (claves 1/3, distractores 0/5)
+  P2-V «le tocaría a»        +25.0 pp  elige las que dicen «le tocaría a» (claves 1/3, distractores 0/5)
+  P2-V «tocaría a un»        +25.0 pp  elige las que dicen «tocaría a un» (claves 1/3, distractores 0/5)
+  P2-V «a un curso»           +25.0 pp  elige las que dicen «a un curso» (claves 1/3, distractores 0/5)
+  P2-V «curso si el»          +25.0 pp  elige las que dicen «curso si el» (claves 1/3, distractores 0/5)
+  P2-V «si el total»          +25.0 pp  elige las que dicen «si el total» (claves 1/3, distractores 0/5)
+  P2-V «del grado se»         +25.0 pp  elige las que dicen «del grado se» (claves 1/3, distractores 0/5)
+  P2-V «grado se repartiera»  +25.0 pp  elige las que dicen «grado se repartiera» (claves 1/3, distractores 0/5)
+  P2-V «se repartiera por»    +25.0 pp  elige las que dicen «se repartiera por» (claves 1/3, distractores 0/5)
+  P2-V «repartiera por igual»  +25.0 pp  elige las que dicen «repartiera por igual» (claves 1/3, distractores 0/5)
+  P2-V «recogió el»c         +25.0 pp  descarta las que dicen «recogió el» (claves 0/3, distractores 3/5)
+  P2-V «que recogió el»c     +25.0 pp  descarta las que dicen «que recogió el» (claves 0/3, distractores 3/5)
+  P2-V «cursos del»c          +25.0 pp  descarta las que dicen «cursos del» (claves 0/3, distractores 3/5)
+  P2-V «los cursos del»c      +25.0 pp  descarta las que dicen «los cursos del» (claves 0/3, distractores 3/5)
+  P2-V «cursos del grado»c    +25.0 pp  descarta las que dicen «cursos del grado» (claves 0/3, distractores 3/5)
+  P2-R1c                        +21.7 pp  contraria de P2-R1 (par con más palabras en común (elige una del par))
+  P2-E1                         +20.8 pp  más palabras en común con su pregunta
+  P2-E2c                        +17.5 pp  contraria de P2-E2 (más palabras en común con las Partes 3 a 5)
+  P2-E8                         +16.0 pp  la única con una palabra del texto visible que no tiene otra opción
+  P2-R2c                        +13.9 pp  contraria de P2-R2 (la que más palabras comparte con las otras tres)
+  P2-V «el»                   +12.5 pp  elige las que dicen «el» (claves 3/3, distractores 3/5)
+  P2-V «el curso»c            +12.5 pp  descarta las que dicen «el curso» (claves 0/3, distractores 2/5)
+  P2-V «recogió el curso»c   +12.5 pp  descarta las que dicen «recogió el curso» (claves 0/3, distractores 2/5)
+  P2-V «en»c                  +12.5 pp  descarta las que dicen «en» (claves 0/3, distractores 2/5)
+  P2-V «los»c                  +9.2 pp  descarta las que dicen «los» (claves 1/3, distractores 3/5)
+  P2-V «los cursos»c           +9.2 pp  descarta las que dicen «los cursos» (claves 1/3, distractores 3/5)
+zona gris (+5,3 a +8 pp): P2-E4 +7.5 · P2-M3 +7.5 · P2-F2c +7.2 · P2-E7c +6.1 
+vocabulario exclusivo de la clave: recogería · si · recogieran · y · no · cambiara · que recogería · recogería un · curso si · si los · cursos recogieran · recogieran lo · mismo y · y el · el total · total no · no cambiara · lo que recogería · que recogería un · recogería un curso · un curso si · curso si los · si los cursos · los cursos recogieran · cursos recogieran lo · recogieran lo mismo · lo mismo y · mismo y el · y el total · el total no · total no cambiara · repartido · por · igual · entre · sus · total del · grado repartido · repartido por · por igual · igual entre · entre sus · sus cursos · el total del · total del grado · del grado repartido · grado repartido por · repartido por igual · por igual entre · igual entre sus · entre sus cursos · le · tocaría · a · se · repartiera · que le · le tocaría · tocaría a · a un · si el · grado se · se repartiera · repartiera por · lo que le · que le tocaría · le tocaría a · tocaría a un · a un curso · curso si el · si el total · del grado se · grado se repartiera · se repartiera por · repartiera por igual 
+vocabulario exclusivo de los distractores: recogió · más · que recogió · recogió el · el curso · curso del · grado que · que más · más recogió · lo que recogió · que recogió el · recogió el curso · el curso del · curso del grado · del grado que · grado que más · que más recogió · en · el grado · grado en · en total · recogió el grado · el grado en · grado en total · porque · recogieron · exactamente · recogió un · curso porque · porque los · cursos del · grado recogieron · recogieron exactamente · exactamente lo · que recogió un · recogió un curso · un curso porque · curso porque los · porque los cursos · los cursos del · cursos del grado · del grado recogieron · grado recogieron exactamente · recogieron exactamente lo · exactamente lo mismo · queda · medio · al · ordenar · curso que · que queda · queda en · en el · el medio · medio al · al ordenar · ordenar los · el curso que · curso que queda · que queda en · queda en el · en el medio · el medio al · medio al ordenar · al ordenar los · ordenar los cursos · la · cantidad · mayoría · de · la cantidad · cantidad que · recogió la · la mayoría · mayoría de · de los · la cantidad que · cantidad que recogió · que recogió la · recogió la mayoría · la mayoría de · mayoría de los · de los cursos 
+  P2-V «entre»          +25.0 pp
+  P2-V «curso»c          -6.7 pp
+  P2-VX                   +75.0 pp
+  P2-VXE                  +75.0 pp
+  P2-E5                    -5.0 pp
+  P2-E7                   -16.6 pp
+
+--- Parte 2 «comparar», EXACTA: 30 combinaciones × 100 portadores; 372 reglas (160 tokens); 9 s
+control: reglas de v1, exacta frente a 720 versiones con un portador: 18 reglas, diferencia máxima 1.1e-14 pp
+v1 (exacta): P2-L1 +75.0 · P2-L2 -5.0 · P2-L3 +0.0 · P2-L4 +12.5 · P2-L5 -5.0 · P2-L6 +12.5 · P2-F1 -18.3 · P2-F2 -11.7 · P2-F3 +11.1 · P2-F4 +9.2 · P2-F5 -12.5 · P2-R1 -11.7 · P2-R2 -20.0 · P2-R3 -8.3 · P2-E1 +41.7 · P2-E2 +45.0 · P2-E3 -5.0 · P2-E4 +55.0 
+EN ROJO (> +8 pp): 121 reglas
+  P2-L1                         +75.0 pp  contiene «total» (H1)
+  P2-VX                         +75.0 pp  elige la que lleva vocabulario exclusivo de la clave (59 tokens: total · es · el total · total de · grado que · que es · es la · cursos por · por el · el total de · total de un · un grado que)
+  P2-VXE                        +75.0 pp  elige la que comparte con el texto visible un token exclusivo de la clave
+  P2-V «total»                +75.0 pp  elige las que dicen «total» (claves 3/3, distractores 0/5)
+  P2-E4                         +55.0 pp  la única con una palabra de las Partes 3 a 5 que no tiene otra opción
+  P2-V «curso»c               +50.0 pp  descarta las que dicen «curso» (claves 1/3, distractores 5/5)
+  P2-V «el total»             +50.0 pp  elige las que dicen «el total» (claves 2/3, distractores 0/5)
+  P2-V «total de»             +50.0 pp  elige las que dicen «total de» (claves 2/3, distractores 0/5)
+  P2-V «cursos por»           +50.0 pp  elige las que dicen «cursos por» (claves 2/3, distractores 0/5)
+  P2-V «el total de»          +50.0 pp  elige las que dicen «el total de» (claves 2/3, distractores 0/5)
+  P2-E2                         +45.0 pp  más palabras en común con las Partes 3 a 5
+  P2-V «que»                  +45.0 pp  elige las que dicen «que» (claves 3/3, distractores 1/5)
+  P2-E8                         +44.1 pp  la única con una palabra del texto visible que no tiene otra opción
+  P2-E1                         +41.7 pp  más palabras en común con su pregunta
+  P2-V «un»                   +25.0 pp  elige las que dicen «un» (claves 3/3, distractores 2/5)
+  P2-V «grado»                +25.0 pp  elige las que dicen «grado» (claves 3/3, distractores 2/5)
+  P2-V «es»                   +25.0 pp  elige las que dicen «es» (claves 1/3, distractores 0/5)
+  P2-V «la»c                  +25.0 pp  descarta las que dicen «la» (claves 1/3, distractores 4/5)
+  P2-V «un grado»             +25.0 pp  elige las que dicen «un grado» (claves 3/3, distractores 2/5)
+  P2-V «grado que»            +25.0 pp  elige las que dicen «grado que» (claves 1/3, distractores 0/5)
+  P2-V «que es»               +25.0 pp  elige las que dicen «que es» (claves 1/3, distractores 0/5)
+  P2-V «es la»                +25.0 pp  elige las que dicen «es la» (claves 1/3, distractores 0/5)
+  P2-V «por el»               +25.0 pp  elige las que dicen «por el» (claves 1/3, distractores 0/5)
+  P2-V «por curso»c           +25.0 pp  descarta las que dicen «por curso» (claves 1/3, distractores 4/5)
+  P2-V «total de un»          +25.0 pp  elige las que dicen «total de un» (claves 1/3, distractores 0/5)
+  P2-V «un grado que»         +25.0 pp  elige las que dicen «un grado que» (claves 1/3, distractores 0/5)
+  P2-V «grado que es»         +25.0 pp  elige las que dicen «grado que es» (claves 1/3, distractores 0/5)
+  P2-V «que es la»            +25.0 pp  elige las que dicen «que es la» (claves 1/3, distractores 0/5)
+  P2-V «es la cantidad»       +25.0 pp  elige las que dicen «es la cantidad» (claves 1/3, distractores 0/5)
+  P2-V «de cursos por»        +25.0 pp  elige las que dicen «de cursos por» (claves 1/3, distractores 0/5)
+  P2-V «cursos por el»        +25.0 pp  elige las que dicen «cursos por el» (claves 1/3, distractores 0/5)
+  P2-V «por el promedio»      +25.0 pp  elige las que dicen «por el promedio» (claves 1/3, distractores 0/5)
+  P2-V «recogió»             +25.0 pp  elige las que dicen «recogió» (claves 2/3, distractores 1/5)
+  P2-V «multiplicando»        +25.0 pp  elige las que dicen «multiplicando» (claves 1/3, distractores 0/5)
+  P2-V «sus»                  +25.0 pp  elige las que dicen «sus» (claves 1/3, distractores 0/5)
+  P2-V «su»                   +25.0 pp  elige las que dicen «su» (claves 1/3, distractores 0/5)
+  P2-V «que recogió»         +25.0 pp  elige las que dicen «que recogió» (claves 2/3, distractores 1/5)
+  P2-V «en total»             +25.0 pp  elige las que dicen «en total» (claves 1/3, distractores 0/5)
+  P2-V «total un»             +25.0 pp  elige las que dicen «total un» (claves 1/3, distractores 0/5)
+  P2-V «grado multiplicando»  +25.0 pp  elige las que dicen «grado multiplicando» (claves 1/3, distractores 0/5)
+  P2-V «multiplicando sus»    +25.0 pp  elige las que dicen «multiplicando sus» (claves 1/3, distractores 0/5)
+  P2-V «sus cursos»           +25.0 pp  elige las que dicen «sus cursos» (claves 1/3, distractores 0/5)
+  P2-V «por su»               +25.0 pp  elige las que dicen «por su» (claves 1/3, distractores 0/5)
+  P2-V «su promedio»          +25.0 pp  elige las que dicen «su promedio» (claves 1/3, distractores 0/5)
+  P2-V «que recogió en»      +25.0 pp  elige las que dicen «que recogió en» (claves 1/3, distractores 0/5)
+  P2-V «recogió en total»    +25.0 pp  elige las que dicen «recogió en total» (claves 1/3, distractores 0/5)
+  P2-V «en total un»          +25.0 pp  elige las que dicen «en total un» (claves 1/3, distractores 0/5)
+  P2-V «total un grado»       +25.0 pp  elige las que dicen «total un grado» (claves 1/3, distractores 0/5)
+  P2-V «un grado multiplicando»  +25.0 pp  elige las que dicen «un grado multiplicando» (claves 1/3, distractores 0/5)
+  P2-V «grado multiplicando sus»  +25.0 pp  elige las que dicen «grado multiplicando sus» (claves 1/3, distractores 0/5)
+  P2-V «multiplicando sus cursos»  +25.0 pp  elige las que dicen «multiplicando sus cursos» (claves 1/3, distractores 0/5)
+  P2-V «sus cursos por»       +25.0 pp  elige las que dicen «sus cursos por» (claves 1/3, distractores 0/5)
+  P2-V «cursos por su»        +25.0 pp  elige las que dicen «cursos por su» (claves 1/3, distractores 0/5)
+  P2-V «por su promedio»      +25.0 pp  elige las que dicen «por su promedio» (claves 1/3, distractores 0/5)
+  P2-V «kilos»                +25.0 pp  elige las que dicen «kilos» (claves 1/3, distractores 0/5)
+  P2-V «y»                    +25.0 pp  elige las que dicen «y» (claves 1/3, distractores 0/5)
+  P2-V «del»                  +25.0 pp  elige las que dicen «del» (claves 1/3, distractores 0/5)
+  P2-V «otro»                 +25.0 pp  elige las que dicen «otro» (claves 1/3, distractores 0/5)
+  P2-V «de kilos»             +25.0 pp  elige las que dicen «de kilos» (claves 1/3, distractores 0/5)
+  P2-V «kilos que»            +25.0 pp  elige las que dicen «kilos que» (claves 1/3, distractores 0/5)
+  P2-V «recogió un»          +25.0 pp  elige las que dicen «recogió un» (claves 1/3, distractores 0/5)
+  P2-V «grado y»              +25.0 pp  elige las que dicen «grado y» (claves 1/3, distractores 0/5)
+  P2-V «y el»                 +25.0 pp  elige las que dicen «y el» (claves 1/3, distractores 0/5)
+  P2-V «total del»            +25.0 pp  elige las que dicen «total del» (claves 1/3, distractores 0/5)
+  P2-V «del otro»             +25.0 pp  elige las que dicen «del otro» (claves 1/3, distractores 0/5)
+  P2-V «total de kilos»       +25.0 pp  elige las que dicen «total de kilos» (claves 1/3, distractores 0/5)
+  P2-V «de kilos que»         +25.0 pp  elige las que dicen «de kilos que» (claves 1/3, distractores 0/5)
+  P2-V «kilos que recogió»   +25.0 pp  elige las que dicen «kilos que recogió» (claves 1/3, distractores 0/5)
+  P2-V «que recogió un»      +25.0 pp  elige las que dicen «que recogió un» (claves 1/3, distractores 0/5)
+  P2-V «recogió un grado»    +25.0 pp  elige las que dicen «recogió un grado» (claves 1/3, distractores 0/5)
+  P2-V «un grado y»           +25.0 pp  elige las que dicen «un grado y» (claves 1/3, distractores 0/5)
+  P2-V «grado y el»           +25.0 pp  elige las que dicen «grado y el» (claves 1/3, distractores 0/5)
+  P2-V «y el total»           +25.0 pp  elige las que dicen «y el total» (claves 1/3, distractores 0/5)
+  P2-V «el total del»         +25.0 pp  elige las que dicen «el total del» (claves 1/3, distractores 0/5)
+  P2-V «total del otro»       +25.0 pp  elige las que dicen «total del otro» (claves 1/3, distractores 0/5)
+  P2-V «los»c                 +25.0 pp  descarta las que dicen «los» (claves 0/3, distractores 3/5)
+  P2-V «dos»c                 +25.0 pp  descarta las que dicen «dos» (claves 0/3, distractores 3/5)
+  P2-V «grados»c              +25.0 pp  descarta las que dicen «grados» (claves 0/3, distractores 3/5)
+  P2-V «curso de»c            +25.0 pp  descarta las que dicen «curso de» (claves 0/3, distractores 3/5)
+  P2-V «de los»c              +25.0 pp  descarta las que dicen «de los» (claves 0/3, distractores 3/5)
+  P2-V «los dos»c             +25.0 pp  descarta las que dicen «los dos» (claves 0/3, distractores 3/5)
+  P2-V «dos grados»c          +25.0 pp  descarta las que dicen «dos grados» (claves 0/3, distractores 3/5)
+  P2-V «por curso de»c        +25.0 pp  descarta las que dicen «por curso de» (claves 0/3, distractores 3/5)
+  P2-V «de los dos»c          +25.0 pp  descarta las que dicen «de los dos» (claves 0/3, distractores 3/5)
+  P2-V «los dos grados»c      +25.0 pp  descarta las que dicen «los dos grados» (claves 0/3, distractores 3/5)
+  P2-E7                         +21.0 pp  más palabras en común con todo el texto visible del ítem
+  P2-R3c                        +18.3 pp  contraria de P2-R3 (descarta la que menos palabras comparte con las otras tres)
+  P2-R1c                        +16.7 pp  contraria de P2-R1 (par con más palabras en común (elige una del par))
+  P2-L4                         +12.5 pp  descarta las que empiezan por «Únicamente»
+  P2-L6                         +12.5 pp  descarta las absolutas («únicamente», «sin tener en cuenta», «exactamente»)
+  P2-V «únicamente»c         +12.5 pp  descarta las que dicen «únicamente» (claves 0/3, distractores 2/5)
+  P2-V «sin»c                 +12.5 pp  descarta las que dicen «sin» (claves 0/3, distractores 2/5)
+  P2-V «tener»c               +12.5 pp  descarta las que dicen «tener» (claves 0/3, distractores 2/5)
+  P2-V «cuenta»c              +12.5 pp  descarta las que dicen «cuenta» (claves 0/3, distractores 2/5)
+  P2-V «grados sin»c          +12.5 pp  descarta las que dicen «grados sin» (claves 0/3, distractores 2/5)
+  P2-V «sin tener»c           +12.5 pp  descarta las que dicen «sin tener» (claves 0/3, distractores 2/5)
+  P2-V «tener en»c            +12.5 pp  descarta las que dicen «tener en» (claves 0/3, distractores 2/5)
+  P2-V «en cuenta»c           +12.5 pp  descarta las que dicen «en cuenta» (claves 0/3, distractores 2/5)
+  P2-V «curso de los»c        +12.5 pp  descarta las que dicen «curso de los» (claves 0/3, distractores 2/5)
+  P2-V «dos grados sin»c      +12.5 pp  descarta las que dicen «dos grados sin» (claves 0/3, distractores 2/5)
+  P2-V «grados sin tener»c    +12.5 pp  descarta las que dicen «grados sin tener» (claves 0/3, distractores 2/5)
+  P2-V «sin tener en»c        +12.5 pp  descarta las que dicen «sin tener en» (claves 0/3, distractores 2/5)
+  P2-V «tener en cuenta»c     +12.5 pp  descarta las que dicen «tener en cuenta» (claves 0/3, distractores 2/5)
+  P2-V «más»c                +12.5 pp  descarta las que dicen «más» (claves 0/3, distractores 2/5)
+  P2-F3                         +11.1 pp  descarta la más larga
+  P2-R2c                        +11.1 pp  contraria de P2-R2 (la que más palabras comparte con las otras tres)
+  P2-M1                         +10.0 pp  la única con su primera palabra (molde)
+  P2-E9c                        +10.0 pp  contraria de P2-E9 (la que menos palabras comparte con todo el texto visible)
+  P2-F4                          +9.2 pp  la que lleva coma
+  P2-E5c                         +9.2 pp  contraria de P2-E5 (más palabras en común con el párrafo del otro colegio (H3 de la r2))
+  P2-V «cantidad»c             +9.2 pp  descarta las que dicen «cantidad» (claves 1/3, distractores 3/5)
+  P2-V «la cantidad»c          +9.2 pp  descarta las que dicen «la cantidad» (claves 1/3, distractores 3/5)
+  P2-V «cantidad de»c          +9.2 pp  descarta las que dicen «cantidad de» (claves 1/3, distractores 3/5)
+  P2-V «de cursos»c            +9.2 pp  descarta las que dicen «de cursos» (claves 1/3, distractores 3/5)
+  P2-V «el promedio»c          +9.2 pp  descarta las que dicen «el promedio» (claves 1/3, distractores 3/5)
+  P2-V «promedio por»c         +9.2 pp  descarta las que dicen «promedio por» (claves 1/3, distractores 3/5)
+  P2-V «la cantidad de»c       +9.2 pp  descarta las que dicen «la cantidad de» (claves 1/3, distractores 3/5)
+  P2-V «cantidad de cursos»c   +9.2 pp  descarta las que dicen «cantidad de cursos» (claves 1/3, distractores 3/5)
+  P2-V «el promedio por»c      +9.2 pp  descarta las que dicen «el promedio por» (claves 1/3, distractores 3/5)
+  P2-V «promedio por curso»c   +9.2 pp  descarta las que dicen «promedio por curso» (claves 1/3, distractores 3/5)
+  P2-V «en»c                   +9.2 pp  descarta las que dicen «en» (claves 1/3, distractores 3/5)
+vocabulario exclusivo de la clave: total · es · el total · total de · grado que · que es · es la · cursos por · por el · el total de · total de un · un grado que · grado que es · que es la · es la cantidad · de cursos por · cursos por el · por el promedio · multiplicando · sus · su · en total · total un · grado multiplicando · multiplicando sus · sus cursos · por su · su promedio · que recogió en · recogió en total · en total un · total un grado · un grado multiplicando · grado multiplicando sus · multiplicando sus cursos · sus cursos por · cursos por su · por su promedio · kilos · y · del · otro · de kilos · kilos que · recogió un · grado y · y el · total del · del otro · total de kilos · de kilos que · kilos que recogió · que recogió un · recogió un grado · un grado y · grado y el · y el total · el total del · total del otro 
+vocabulario exclusivo de los distractores: únicamente · los · dos · grados · sin · tener · cuenta · únicamente el · curso de · de los · los dos · dos grados · grados sin · sin tener · tener en · en cuenta · cuenta la · únicamente el promedio · por curso de · curso de los · de los dos · los dos grados · dos grados sin · grados sin tener · sin tener en · tener en cuenta · en cuenta la · cuenta la cantidad · únicamente la · cursos de · cuenta el · únicamente la cantidad · de cursos de · cursos de los · en cuenta el · cuenta el promedio · diferencia · entre · promedios · la diferencia · diferencia entre · entre los · los promedios · promedios por · la diferencia entre · diferencia entre los · entre los promedios · los promedios por · promedios por curso · más · cursos más · más el · de cursos más · cursos más el · más el promedio · curso de un · recogió el · el curso · curso que · que más · más recogió · en un · que recogió el · recogió el curso · el curso que · curso que más · que más recogió · más recogió en · recogió en un · en un grado 
+  P2-V «entre»          -15.0 pp
+  P2-V «por curso»c     +25.0 pp
+  P2-V «curso»c         +50.0 pp
+  P2-VX                   +75.0 pp
+  P2-VXE                  +75.0 pp
+  P2-E5                   -12.5 pp
+  P2-E7                   +21.0 pp
+
+--- Parte 6, enumeración exacta de L-C5: 3200 hojas, masa con error 0.0000, 42 s
+vocabulario de la Parte 6 (v2): 60 celdas (token × papel × estrato); máximo +0.8 pp; > +8 pp: 0
+  PROMEDIO     P6-V1                              ganador   +0.8 pp (aplica 55 %)
+  PROMEDIO     P6-V1                              ventaja   +0.8 pp (aplica 55 %)
+  k1           P6-V1                              ganador   +0.7 pp (aplica 53 %)
+  k1           P6-V1                              ventaja   +0.7 pp (aplica 53 %)
+  CURSOS       P6-V1                              ganador   +0.3 pp (aplica 49 %)
+  CURSOS       P6-V1                              ventaja   +0.3 pp (aplica 49 %)
+  mezcla       P6-V1                              ganador   +0.3 pp (aplica 52 %)
+  mezcla       P6-V1                              ventaja   +0.3 pp (aplica 52 %)
+  exploratoria P6 por token, mezcla    máx  +0.0 pp (P6-V «si»)
+  exploratoria P6 por token, CURSOS    máx +25.0 pp (P6-V «participado»)
+  exploratoria P6 por token, PROMEDIO  máx +25.0 pp (P6-V «participado»c)
+  exploratoria P6 por token, k1        máx +16.4 pp (P6-V «participado»c)
+  exploratoria P6 por token, k2        máx +16.7 pp (P6-V «tenido»c)
+L-C5 con v1 y con v2: 335 celdas de v1, 335 presentes en v2, diferencia máxima 0 pp
+
+====================================================================================================
+.Rmd: /tmp/claude-1000/-home-bootcamp-Proyectos-2026-RepositorioMatematicasICFES-R-Exams/de2a4b7e-30f1-462f-99eb-f555afbbd5c4/scratchpad/hist_42f725bf.Rmd
+md5: 42f725bf191b81784f76b858c26f7733
+====================================================================================================
+
+--- Parte 2 «promedio», EXACTA: 30 combinaciones × 100 portadores; 320 reglas (134 tokens); 9 s
+control: reglas de v1, exacta frente a 720 versiones con un portador: 18 reglas, diferencia máxima 5.6e-15 pp
+v1 (exacta): P2-L1 +0.0 · P2-L2 +0.0 · P2-L3 +0.0 · P2-L4 +0.0 · P2-L5 +0.0 · P2-L6 +0.0 · P2-F1 -8.3 · P2-F2 -11.7 · P2-F3 +2.8 · P2-F4 +0.0 · P2-F5 +0.0 · P2-R1 +2.5 · P2-R2 +2.5 · P2-R3 +2.5 · P2-E1 +0.0 · P2-E2 +0.0 · P2-E3 +0.0 · P2-E4 +0.0 
+EN ROJO (> +8 pp): 54 reglas
+  P2-E5                         +75.0 pp  más palabras en común con el párrafo del otro colegio (H3 de la r2)
+  P2-VX                         +75.0 pp  elige la que lleva vocabulario exclusivo de la clave (35 tokens: dividido · entre · número · participantes · grado dividido · dividido entre · entre el · el número · número de · cursos participantes · el grado dividido · grado dividido entre)
+  P2-VXE                        +75.0 pp  elige la que comparte con el texto visible un token exclusivo de la clave
+  P2-V «dividido»             +75.0 pp  elige las que dicen «dividido» (claves 3/3, distractores 0/5)
+  P2-V «entre»                +75.0 pp  elige las que dicen «entre» (claves 3/3, distractores 0/5)
+  P2-V «grado dividido»       +75.0 pp  elige las que dicen «grado dividido» (claves 3/3, distractores 0/5)
+  P2-V «dividido entre»       +50.0 pp  elige las que dicen «dividido entre» (claves 2/3, distractores 0/5)
+  P2-V «grado dividido entre»  +50.0 pp  elige las que dicen «grado dividido entre» (claves 2/3, distractores 0/5)
+  P2-V «recogió ese»         +50.0 pp  elige las que dicen «recogió ese» (claves 2/3, distractores 0/5)
+  P2-V «entre sus»            +50.0 pp  elige las que dicen «entre sus» (claves 2/3, distractores 0/5)
+  P2-V «que recogió ese»     +50.0 pp  elige las que dicen «que recogió ese» (claves 2/3, distractores 0/5)
+  P2-V «recogió ese grado»   +50.0 pp  elige las que dicen «recogió ese grado» (claves 2/3, distractores 0/5)
+  P2-V «ese grado dividido»   +50.0 pp  elige las que dicen «ese grado dividido» (claves 2/3, distractores 0/5)
+  P2-V «entre sus cursos»     +50.0 pp  elige las que dicen «entre sus cursos» (claves 2/3, distractores 0/5)
+  P2-E9c                        +45.0 pp  contraria de P2-E9 (la que menos palabras comparte con todo el texto visible)
+  P2-V «el»c                  +25.0 pp  descarta las que dicen «el» (claves 1/3, distractores 4/5)
+  P2-V «número»              +25.0 pp  elige las que dicen «número» (claves 1/3, distractores 0/5)
+  P2-V «de»c                  +25.0 pp  descarta las que dicen «de» (claves 1/3, distractores 4/5)
+  P2-V «participantes»        +25.0 pp  elige las que dicen «participantes» (claves 1/3, distractores 0/5)
+  P2-V «entre el»             +25.0 pp  elige las que dicen «entre el» (claves 1/3, distractores 0/5)
+  P2-V «el número»           +25.0 pp  elige las que dicen «el número» (claves 1/3, distractores 0/5)
+  P2-V «número de»           +25.0 pp  elige las que dicen «número de» (claves 1/3, distractores 0/5)
+  P2-V «de sus»c              +25.0 pp  descarta las que dicen «de sus» (claves 1/3, distractores 4/5)
+  P2-V «cursos participantes»  +25.0 pp  elige las que dicen «cursos participantes» (claves 1/3, distractores 0/5)
+  P2-V «el grado dividido»    +25.0 pp  elige las que dicen «el grado dividido» (claves 1/3, distractores 0/5)
+  P2-V «dividido entre el»    +25.0 pp  elige las que dicen «dividido entre el» (claves 1/3, distractores 0/5)
+  P2-V «entre el número»     +25.0 pp  elige las que dicen «entre el número» (claves 1/3, distractores 0/5)
+  P2-V «el número de»        +25.0 pp  elige las que dicen «el número de» (claves 1/3, distractores 0/5)
+  P2-V «número de sus»       +25.0 pp  elige las que dicen «número de sus» (claves 1/3, distractores 0/5)
+  P2-V «de sus cursos»c       +25.0 pp  descarta las que dicen «de sus cursos» (claves 1/3, distractores 4/5)
+  P2-V «sus cursos participantes»  +25.0 pp  elige las que dicen «sus cursos participantes» (claves 1/3, distractores 0/5)
+  P2-V «partes»               +25.0 pp  elige las que dicen «partes» (claves 1/3, distractores 0/5)
+  P2-V «iguales»              +25.0 pp  elige las que dicen «iguales» (claves 1/3, distractores 0/5)
+  P2-V «dividido en»          +25.0 pp  elige las que dicen «dividido en» (claves 1/3, distractores 0/5)
+  P2-V «en partes»            +25.0 pp  elige las que dicen «en partes» (claves 1/3, distractores 0/5)
+  P2-V «partes iguales»       +25.0 pp  elige las que dicen «partes iguales» (claves 1/3, distractores 0/5)
+  P2-V «iguales entre»        +25.0 pp  elige las que dicen «iguales entre» (claves 1/3, distractores 0/5)
+  P2-V «grado dividido en»    +25.0 pp  elige las que dicen «grado dividido en» (claves 1/3, distractores 0/5)
+  P2-V «dividido en partes»   +25.0 pp  elige las que dicen «dividido en partes» (claves 1/3, distractores 0/5)
+  P2-V «en partes iguales»    +25.0 pp  elige las que dicen «en partes iguales» (claves 1/3, distractores 0/5)
+  P2-V «partes iguales entre»  +25.0 pp  elige las que dicen «partes iguales entre» (claves 1/3, distractores 0/5)
+  P2-V «iguales entre sus»    +25.0 pp  elige las que dicen «iguales entre sus» (claves 1/3, distractores 0/5)
+  P2-V «dividido entre sus»   +25.0 pp  elige las que dicen «dividido entre sus» (claves 1/3, distractores 0/5)
+  P2-E7                         +22.5 pp  más palabras en común con todo el texto visible del ítem
+  P2-E8                         +22.5 pp  la única con una palabra del texto visible que no tiene otra opción
+  P2-V «en el»c               +12.5 pp  descarta las que dicen «en el» (claves 0/3, distractores 2/5)
+  P2-V «cursos en»c           +12.5 pp  descarta las que dicen «cursos en» (claves 0/3, distractores 2/5)
+  P2-V «en ese»c              +12.5 pp  descarta las que dicen «en ese» (claves 0/3, distractores 2/5)
+  P2-V «sus cursos en»c       +12.5 pp  descarta las que dicen «sus cursos en» (claves 0/3, distractores 2/5)
+  P2-V «cursos en ese»c       +12.5 pp  descarta las que dicen «cursos en ese» (claves 0/3, distractores 2/5)
+  P2-V «en ese grado»c        +12.5 pp  descarta las que dicen «en ese grado» (claves 0/3, distractores 2/5)
+  P2-V «recogió el»c          +9.2 pp  descarta las que dicen «recogió el» (claves 1/3, distractores 3/5)
+  P2-V «que recogió el»c      +9.2 pp  descarta las que dicen «que recogió el» (claves 1/3, distractores 3/5)
+  P2-V «en»c                   +9.2 pp  descarta las que dicen «en» (claves 1/3, distractores 3/5)
+zona gris (+5,3 a +8 pp): P2-M3 +7.5 
+vocabulario exclusivo de la clave: dividido · entre · número · participantes · grado dividido · dividido entre · entre el · el número · número de · cursos participantes · el grado dividido · grado dividido entre · dividido entre el · entre el número · el número de · número de sus · sus cursos participantes · partes · iguales · recogió ese · dividido en · en partes · partes iguales · iguales entre · entre sus · que recogió ese · recogió ese grado · ese grado dividido · grado dividido en · dividido en partes · en partes iguales · partes iguales entre · iguales entre sus · entre sus cursos · dividido entre sus 
+vocabulario exclusivo de los distractores: mejor · dentro · el mejor · mejor de · cursos dentro · dentro de · de ese · recogió el mejor · el mejor de · mejor de sus · sus cursos dentro · cursos dentro de · dentro de ese · de ese grado · sumando · grado sumando · sumando lo · lo de · el grado sumando · grado sumando lo · sumando lo de · lo de sus · cualquiera · porque · recogieron · mismo · recogió cualquiera · cualquiera de · cursos porque · porque en · en el · grado recogieron · recogieron lo · lo mismo · que recogió cualquiera · recogió cualquiera de · cualquiera de sus · sus cursos porque · cursos porque en · porque en el · en el grado · el grado recogieron · grado recogieron lo · recogieron lo mismo · queda · medio · al · ordenar · el que · que queda · queda en · el medio · medio al · al ordenar · ordenar sus · cursos en · en ese · recogió el que · el que queda · que queda en · queda en el · en el medio · el medio al · medio al ordenar · al ordenar sus · ordenar sus cursos · sus cursos en · cursos en ese · en ese grado · la · mayoría · recogió la · la mayoría · mayoría de · que recogió la · recogió la mayoría · la mayoría de · mayoría de sus 
+  P2-V «dividido»       +75.0 pp
+  P2-V «entre»          +75.0 pp
+  P2-VX                   +75.0 pp
+  P2-VXE                  +75.0 pp
+  P2-E5                   +75.0 pp
+  P2-E7                   +22.5 pp
+
+--- Parte 2 «comparar», EXACTA: 30 combinaciones × 100 portadores; 306 reglas (127 tokens); 9 s
+control: reglas de v1, exacta frente a 720 versiones con un portador: 18 reglas, diferencia máxima 5.6e-15 pp
+v1 (exacta): P2-L1 +0.0 · P2-L2 +0.0 · P2-L3 +0.0 · P2-L4 +0.0 · P2-L5 -5.0 · P2-L6 +0.0 · P2-F1 -8.3 · P2-F2 -11.7 · P2-F3 +2.8 · P2-F4 +0.0 · P2-F5 +0.0 · P2-R1 +2.5 · P2-R2 -10.6 · P2-R3 +0.6 · P2-E1 +0.0 · P2-E2 +0.0 · P2-E3 -5.0 · P2-E4 +0.0 
+EN ROJO (> +8 pp): 69 reglas
+  P2-VX                         +75.0 pp  elige la que lleva vocabulario exclusivo de la clave (43 tokens: lo · recogido · los · de lo · lo recogido · recogido por · por los · los cursos · suma de lo · de lo recogido · lo recogido por · recogido por los)
+  P2-VXE                        +75.0 pp  elige la que comparte con el texto visible un token exclusivo de la clave
+  P2-V «lo»                   +50.0 pp  elige las que dicen «lo» (claves 2/3, distractores 0/5)
+  P2-V «promedio de»          +50.0 pp  elige las que dicen «promedio de» (claves 2/3, distractores 0/5)
+  P2-V «promedio de un»       +50.0 pp  elige las que dicen «promedio de un» (claves 2/3, distractores 0/5)
+  P2-V «recogido»             +25.0 pp  elige las que dicen «recogido» (claves 1/3, distractores 0/5)
+  P2-V «los»                  +25.0 pp  elige las que dicen «los» (claves 1/3, distractores 0/5)
+  P2-V «de lo»                +25.0 pp  elige las que dicen «de lo» (claves 1/3, distractores 0/5)
+  P2-V «lo recogido»          +25.0 pp  elige las que dicen «lo recogido» (claves 1/3, distractores 0/5)
+  P2-V «recogido por»         +25.0 pp  elige las que dicen «recogido por» (claves 1/3, distractores 0/5)
+  P2-V «por los»              +25.0 pp  elige las que dicen «por los» (claves 1/3, distractores 0/5)
+  P2-V «los cursos»           +25.0 pp  elige las que dicen «los cursos» (claves 1/3, distractores 0/5)
+  P2-V «suma de lo»           +25.0 pp  elige las que dicen «suma de lo» (claves 1/3, distractores 0/5)
+  P2-V «de lo recogido»       +25.0 pp  elige las que dicen «de lo recogido» (claves 1/3, distractores 0/5)
+  P2-V «lo recogido por»      +25.0 pp  elige las que dicen «lo recogido por» (claves 1/3, distractores 0/5)
+  P2-V «recogido por los»     +25.0 pp  elige las que dicen «recogido por los» (claves 1/3, distractores 0/5)
+  P2-V «por los cursos»       +25.0 pp  elige las que dicen «por los cursos» (claves 1/3, distractores 0/5)
+  P2-V «los cursos de»        +25.0 pp  elige las que dicen «los cursos de» (claves 1/3, distractores 0/5)
+  P2-V «producto»             +25.0 pp  elige las que dicen «producto» (claves 1/3, distractores 0/5)
+  P2-V «el producto»          +25.0 pp  elige las que dicen «el producto» (claves 1/3, distractores 0/5)
+  P2-V «producto de»          +25.0 pp  elige las que dicen «producto de» (claves 1/3, distractores 0/5)
+  P2-V «cursos por»           +25.0 pp  elige las que dicen «cursos por» (claves 1/3, distractores 0/5)
+  P2-V «por promedio»         +25.0 pp  elige las que dicen «por promedio» (claves 1/3, distractores 0/5)
+  P2-V «y el»c                +25.0 pp  descarta las que dicen «y el» (claves 1/3, distractores 4/5)
+  P2-V «el producto de»       +25.0 pp  elige las que dicen «el producto de» (claves 1/3, distractores 0/5)
+  P2-V «producto de cursos»   +25.0 pp  elige las que dicen «producto de cursos» (claves 1/3, distractores 0/5)
+  P2-V «de cursos por»        +25.0 pp  elige las que dicen «de cursos por» (claves 1/3, distractores 0/5)
+  P2-V «cursos por promedio»  +25.0 pp  elige las que dicen «cursos por promedio» (claves 1/3, distractores 0/5)
+  P2-V «por promedio de»      +25.0 pp  elige las que dicen «por promedio de» (claves 1/3, distractores 0/5)
+  P2-V «multiplicada»         +25.0 pp  elige las que dicen «multiplicada» (claves 1/3, distractores 0/5)
+  P2-V «mismo»                +25.0 pp  elige las que dicen «mismo» (claves 1/3, distractores 0/5)
+  P2-V «cursos multiplicada»  +25.0 pp  elige las que dicen «cursos multiplicada» (claves 1/3, distractores 0/5)
+  P2-V «multiplicada por»     +25.0 pp  elige las que dicen «multiplicada por» (claves 1/3, distractores 0/5)
+  P2-V «por el»               +25.0 pp  elige las que dicen «por el» (claves 1/3, distractores 0/5)
+  P2-V «el promedio»c         +25.0 pp  descarta las que dicen «el promedio» (claves 1/3, distractores 4/5)
+  P2-V «y lo»                 +25.0 pp  elige las que dicen «y lo» (claves 1/3, distractores 0/5)
+  P2-V «lo mismo»             +25.0 pp  elige las que dicen «lo mismo» (claves 1/3, distractores 0/5)
+  P2-V «mismo del»            +25.0 pp  elige las que dicen «mismo del» (claves 1/3, distractores 0/5)
+  P2-V «de cursos multiplicada»  +25.0 pp  elige las que dicen «de cursos multiplicada» (claves 1/3, distractores 0/5)
+  P2-V «cursos multiplicada por»  +25.0 pp  elige las que dicen «cursos multiplicada por» (claves 1/3, distractores 0/5)
+  P2-V «multiplicada por el»  +25.0 pp  elige las que dicen «multiplicada por el» (claves 1/3, distractores 0/5)
+  P2-V «por el promedio»      +25.0 pp  elige las que dicen «por el promedio» (claves 1/3, distractores 0/5)
+  P2-V «el promedio de»       +25.0 pp  elige las que dicen «el promedio de» (claves 1/3, distractores 0/5)
+  P2-V «grado y lo»           +25.0 pp  elige las que dicen «grado y lo» (claves 1/3, distractores 0/5)
+  P2-V «y lo mismo»           +25.0 pp  elige las que dicen «y lo mismo» (claves 1/3, distractores 0/5)
+  P2-V «lo mismo del»         +25.0 pp  elige las que dicen «lo mismo del» (claves 1/3, distractores 0/5)
+  P2-V «mismo del otro»       +25.0 pp  elige las que dicen «mismo del otro» (claves 1/3, distractores 0/5)
+  P2-V «curso»c               +25.0 pp  descarta las que dicen «curso» (claves 0/3, distractores 3/5)
+  P2-V «promedio por»c        +25.0 pp  descarta las que dicen «promedio por» (claves 0/3, distractores 3/5)
+  P2-V «por curso»c           +25.0 pp  descarta las que dicen «por curso» (claves 0/3, distractores 3/5)
+  P2-V «curso de»c            +25.0 pp  descarta las que dicen «curso de» (claves 0/3, distractores 3/5)
+  P2-V «el promedio por»c     +25.0 pp  descarta las que dicen «el promedio por» (claves 0/3, distractores 3/5)
+  P2-V «promedio por curso»c  +25.0 pp  descarta las que dicen «promedio por curso» (claves 0/3, distractores 3/5)
+  P2-V «por curso de»c        +25.0 pp  descarta las que dicen «por curso de» (claves 0/3, distractores 3/5)
+  P2-V «curso de un»c         +25.0 pp  descarta las que dicen «curso de un» (claves 0/3, distractores 3/5)
+  P2-E8                         +16.5 pp  la única con una palabra del texto visible que no tiene otra opción
+  P2-V «por»                  +12.5 pp  elige las que dicen «por» (claves 3/3, distractores 3/5)
+  P2-V «cursos»               +12.5 pp  elige las que dicen «cursos» (claves 3/3, distractores 3/5)
+  P2-V «entre»c               +12.5 pp  descarta las que dicen «entre» (claves 0/3, distractores 2/5)
+  P2-M2c                        +10.0 pp  contraria de P2-M2 (la única con sus tres primeras palabras (molde))
+  P2-V «el del»c               +9.2 pp  descarta las que dicen «el del» (claves 1/3, distractores 3/5)
+  P2-V «grado y el»c           +9.2 pp  descarta las que dicen «grado y el» (claves 1/3, distractores 3/5)
+  P2-V «y el del»c             +9.2 pp  descarta las que dicen «y el del» (claves 1/3, distractores 3/5)
+  P2-V «el del otro»c          +9.2 pp  descarta las que dicen «el del otro» (claves 1/3, distractores 3/5)
+  P2-V «cantidad»c             +9.2 pp  descarta las que dicen «cantidad» (claves 1/3, distractores 3/5)
+  P2-V «la cantidad»c          +9.2 pp  descarta las que dicen «la cantidad» (claves 1/3, distractores 3/5)
+  P2-V «cantidad de»c          +9.2 pp  descarta las que dicen «cantidad de» (claves 1/3, distractores 3/5)
+  P2-V «la cantidad de»c       +9.2 pp  descarta las que dicen «la cantidad de» (claves 1/3, distractores 3/5)
+  P2-V «cantidad de cursos»c   +9.2 pp  descarta las que dicen «cantidad de cursos» (claves 1/3, distractores 3/5)
+zona gris (+5,3 a +8 pp): P2-E5c +6.1 
+vocabulario exclusivo de la clave: lo · recogido · los · de lo · lo recogido · recogido por · por los · los cursos · suma de lo · de lo recogido · lo recogido por · recogido por los · por los cursos · los cursos de · producto · el producto · producto de · cursos por · por promedio · promedio de · el producto de · producto de cursos · de cursos por · cursos por promedio · por promedio de · promedio de un · multiplicada · mismo · cursos multiplicada · multiplicada por · por el · y lo · lo mismo · mismo del · de cursos multiplicada · cursos multiplicada por · multiplicada por el · por el promedio · el promedio de · grado y lo · y lo mismo · lo mismo del · mismo del otro 
+vocabulario exclusivo de los distractores: curso · promedio por · por curso · curso de · el promedio por · promedio por curso · por curso de · curso de un · participantes · cursos participantes · participantes de · la del · de cursos participantes · cursos participantes de · participantes de un · y la del · la del otro · diferencia · entre · la diferencia · diferencia entre · entre el · la diferencia entre · diferencia entre el · entre el promedio · de la · cursos y · suma de la · de la cantidad · de cursos y · cursos y el · y el promedio · dividido · promedio dividido · dividido entre · entre la · el promedio dividido · promedio dividido entre · dividido entre la · entre la cantidad · de cursos de 
+  P2-V «dividido»       -15.0 pp
+  P2-V «entre»          -22.5 pp
+  P2-V «por curso»c     +25.0 pp
+  P2-V «curso»c         +25.0 pp
+  P2-VX                   +75.0 pp
+  P2-VXE                  +75.0 pp
+  P2-E5                   -19.4 pp
+  P2-E7                    -7.3 pp
+
+--- Parte 6, enumeración exacta de L-C5: 3200 hojas, masa con error 0.0000, 43 s
+vocabulario de la Parte 6 (v2): 60 celdas (token × papel × estrato); máximo +0.8 pp; > +8 pp: 0
+  PROMEDIO     P6-V1                              ganador   +0.8 pp (aplica 55 %)
+  PROMEDIO     P6-V1                              ventaja   +0.8 pp (aplica 55 %)
+  k1           P6-V1                              ganador   +0.7 pp (aplica 53 %)
+  k1           P6-V1                              ventaja   +0.7 pp (aplica 53 %)
+  CURSOS       P6-V1                              ganador   +0.3 pp (aplica 49 %)
+  CURSOS       P6-V1                              ventaja   +0.3 pp (aplica 49 %)
+  mezcla       P6-V1                              ganador   +0.3 pp (aplica 52 %)
+  mezcla       P6-V1                              ventaja   +0.3 pp (aplica 52 %)
+  exploratoria P6 por token, mezcla    máx  +0.0 pp (P6-V «si»)
+  exploratoria P6 por token, CURSOS    máx +25.0 pp (P6-V «participado»)
+  exploratoria P6 por token, PROMEDIO  máx +25.0 pp (P6-V «participado»c)
+  exploratoria P6 por token, k1        máx +16.4 pp (P6-V «participado»c)
+  exploratoria P6 por token, k2        máx +16.7 pp (P6-V «tenido»c)
+L-C5 con v1 y con v2: 335 celdas de v1, 335 presentes en v2, diferencia máxima 0 pp
+exit=0

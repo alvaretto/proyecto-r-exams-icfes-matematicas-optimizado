@@ -63,8 +63,40 @@
 ##
 ## CONTROL POSITIVO: P6-CTL calcula los totales (la vía legítima) y tiene que acertar el 100 % de las afirmaciones;
 ## si no, el lector de afirmaciones o la tabla leída están rotos y la batería no mide nada. No entra en la decisión.
+##
+## ---- L-C4 v2 (tanda 7, 2026-10-31; decisión «a · 1 sí · 2 sí» del profesor tras la tanda 6) ----------------------------
+## v1 = md5 de20e0a986f86d44f0d3412517d2f07b (commit 31b8fe9e). v2 ENDURECE (regla #24 H-5: endurecer es autónomo) y
+## conserva intactas las reglas de v1: sus cifras se reproducen dentro de v2. Lo que añade (regla #22, texto íntegro, §P7-E
+## «familia léxica» y §P7-G; H1, H2 y H3 de la FASE 2C r2):
+##   1. VOCABULARIO, calculado sobre los textos y no elegido a mano. Token = palabra (letras, cualquier largo) o expresión
+##      de 2 o 3 palabras consecutivas. Por cada token de las opciones, a lo largo de las versiones, dos reglas: «elige las
+##      que dicen t» (P2-V «t») y su contraria «descarta las que dicen t» (P2-V «t»c). Cubren TODOS los tokens, no solo
+##      los exclusivos: un token casi exclusivo es igual de explotable, y limitarse a los exclusivos sería cobertura
+##      nominal (Error 37). Además, P2-VX «elige la que lleva vocabulario exclusivo de la clave» (tokens que aparecen en
+##      alguna clave y en ningún distractor) con su contraria, y P2-VXE, el mismo vocabulario buscado en el estímulo
+##      visible (asociación entre enunciado y opción). La unión del vocabulario exclusivo de los DISTRACTORES no entra como
+##      regla: cada distractor lleva por construcción las palabras de su propio concepto, y esa unión equivale a saberse el
+##      banco; el token suelto sí entra («descarta las que dicen t»), que es el atajo de H2 («por curso»).
+##      Parte 6: P6-VX / P6-VXF, vocabulario exclusivo de las afirmaciones verdaderas o de las falsas, calculado A LO
+##      LARGO DE TODAS LAS VERSIONES (fijar_universo_p6(); no dentro de cada estrato, donde la rama fija el veredicto de
+##      la de ventaja y fabricaría una exclusividad que el estudiante no ve), con su contraria. Con los veredictos
+##      sorteados primero (F-4, L-C1), ningún texto es siempre verdadero: P6-VX aplica 0 % y PUEDE disparar si un texto
+##      quedara con veredicto fijo (Error 37: se declara que la sonda puede disparar). La regla por token de la Parte 6
+##      (vocab_p6_tokens()) NO entra en la batería: condicionada por la tabla reproduce las reglas de magnitud ya firmadas
+##      en «H2 a» (en los estratos de k′, hasta +16,7 pp, por debajo de K1, +32,8 y +33,5) y condicionada por la rama,
+##      el contenido lógico de la afirmación de ventaja (RL3: reconocerlo es razonar); en la mezcla, 0,0 pp. Se mide y se
+##      declara aparte (salida/bateria_v2_historico.txt), y el profesor decide si entra en una v3.
+##   2. CONTRARIAS de todas las reglas de la Parte 2 de v1 que no la tenían (léxico, formato, relacional, estímulo,
+##      posición), y molde: la única con su primera palabra, con sus tres primeras y con sus tres últimas (con contraria).
+##   3. ESTÍMULO COMPLETO (§P7-G; H3 de la r2): el párrafo del otro colegio (P2-E5), su tabla, encabezados y celdas
+##      (P2-E6), y todo el texto visible del ítem (P2-E7 a P2-E9: Parte 1 —enunciado, pregunta, tabla y opciones—, el
+##      párrafo, la tabla, la pregunta de la Parte 2 y las Partes 3 a 6), con sus contrarias.
+## MEDIDA EXACTA de la Parte 2 (medir_p2_exacta): las reglas de contenido no dependen del orden de las opciones, así que el
+## espacio de textos de un tipo son sus 3 claves × C(5, 3) tríos, equiprobables; las reglas del estímulo se integran además
+## sobre los portadores del estímulo (las versiones de la muestra estándar): exacta en la Parte 2, condicionada a esos
+## portadores. Las de posición siguen en la muestra (dependen del sorteo o2).
 ## =============================================================================
-BATERIA_VERSION <- "L-C4 v1 (2026-10-31)"
+BATERIA_VERSION <- "L-C4 v2 (2026-10-31)"
 UMBRAL_OBLIGA <- 0.08
 UMBRAL_GRIS <- 0.053
 
@@ -107,6 +139,88 @@ REGLAS_P2 <- list(
 FAMILIAS_NA_P2 <- c(magnitud = "las opciones de la Parte 2 no llevan cifras (V11); el largo va en formato",
                     divisibilidad = "las opciones de la Parte 2 no llevan cifras (V11)",
                     signo = "las opciones de la Parte 2 no llevan cifras (V11)")
+
+## ---- L-C4 v2 · Parte 2: contrarias, molde, estímulo completo y vocabulario --------------------------------------------
+## .tk con memoria: misma salida que la de v1 (las reglas de v1 no cambian), solo más rápida con textos largos.
+.TK <- new.env(hash = TRUE)
+.tk <- function(s) { if (!nzchar(s)) return(character(0)); v <- .TK[[s]]; if (!is.null(v)) return(v)
+  v <- unique(tolower(regmatches(s, gregexpr("[A-Za-zÀ-ÿ]{3,}", s))[[1]])); assign(s, v, envir = .TK); v }
+## Tokens del vocabulario: palabras (letras, cualquier largo) y expresiones de 2 y 3 palabras consecutivas.
+.pal <- function(s) tolower(regmatches(s, gregexpr("[A-Za-zÀ-ÿ]+", s))[[1]])
+.NG <- new.env(hash = TRUE)
+.ngr <- function(s) { if (!nzchar(s)) return(character(0)); v <- .NG[[s]]; if (!is.null(v)) return(v)
+  w <- .pal(s); o <- character(0)
+  for (n in 1:3) if (length(w) >= n) o <- c(o, vapply(seq_len(length(w) - n + 1L), function(i) paste(w[i:(i + n - 1L)], collapse = " "), ""))
+  o <- unique(o); assign(s, o, envir = .NG); o }
+## Celdas de una tabla pipe mostrada (sin span, negrita ni espacio duro).
+.celdas <- function(md) { f <- grep("^\\|", strsplit(md, "\n", fixed = TRUE)[[1]], value = TRUE); f <- f[!grepl("^\\|[-:| ]+\\|$", f)]
+  x <- unlist(lapply(f, function(r) trimws(strsplit(sub("^\\|", "", sub("\\|$", "", r)), "|", fixed = TRUE)[[1]])))
+  gsub(" ", " ", gsub("<span[^>]*>|</span>|\\*\\*", "", x)) }
+## Estímulo visible de una versión: Parte 1 (enunciado, pregunta, tabla, opciones), párrafo y tabla del otro colegio,
+## pregunta de la Parte 2 y Partes 3 a 6. «ng» guarda sus tokens (para P2-VXE).
+.EST_TODO <- c("p1", "intro", "tabla", "preg", "otros", "p6")
+.est_txt <- function(x, partes) unlist(x[partes], use.names = FALSE)
+.con_ng <- function(e) { e$ng <- unique(unlist(lapply(.est_txt(e, .EST_TODO), .ngr))); e }
+estimulo_p2 <- function(en, preg = NULL) {
+  e <- list(preg = if (is.null(preg)) en$texto_p2 else preg, otros = c(en$texto_p3, en$texto_p4, en$texto_p5),
+            enc = names(en$tabla_par_df)[2:3], intro = en$intro_par, tabla = .celdas(en$tabla_par_md),
+            p6 = c(en$texto_p6, en$opciones_p6), p1 = c(en$enunciado, en$pregunta, .celdas(en$tabla_md), en$opciones_p1))
+  .con_ng(e) }
+## Lo mismo desde un registro del verificador (rec() de verificar_espacio_cloze.R).
+estimulo_p2_rec <- function(x, preg = x$texto_p2) {
+  e <- list(preg = preg, otros = c(x$texto_p3, x$texto_p4, x$texto_p5), enc = NULL, intro = x$intro,
+            tabla = .celdas(x$tabla_par_md), p6 = c(x$texto_p6, x$opciones_p6), p1 = c(x$enunciado, x$pregunta, .celdas(x$tabla_md), x$opciones))
+  .con_ng(e) }
+.comun_n <- function(op, ref) { r <- .tk(paste(ref, collapse = " ")); vapply(op, function(s) length(intersect(.tk(s), r)), 0L) }
+.unica_estim <- function(op, ref) { T <- lapply(op, .tk); o <- .tk(paste(ref, collapse = " "))
+  e <- vapply(seq_along(T), function(i) length(setdiff(intersect(T[[i]], o), unlist(T[-i]))), 0L)
+  if (max(e) == 0L) rep(TRUE, length(T)) else e == max(e) }
+.molde <- function(op, f) { m <- vapply(op, f, ""); m %in% names(which(table(m) == 1L)) }
+.r1 <- function(id) Filter(function(r) r$id == id, REGLAS_P2)[[1]]
+.contraria <- function(r) list(id = paste0(r$id, "c"), familia = r$familia, nombre = paste0("contraria de ", r$id, " (", r$nombre, ")"),
+                               usa_estimulo = isTRUE(r$usa_estimulo), fn = function(x) !r$fn(x))
+REGLAS_P2_V2_NUEVAS <- list(
+  list(id = "P2-M1", familia = "lexico", nombre = "la única con su primera palabra (molde)", fn = function(x) .molde(x$op, function(o) .pal(o)[1])),
+  list(id = "P2-M2", familia = "lexico", nombre = "la única con sus tres primeras palabras (molde)", fn = function(x) .molde(x$op, function(o) paste(utils::head(.pal(o), 3), collapse = " "))),
+  list(id = "P2-M3", familia = "lexico", nombre = "la única con sus tres últimas palabras (molde)", fn = function(x) .molde(x$op, function(o) paste(utils::tail(.pal(o), 3), collapse = " "))),
+  list(id = "P2-E5", familia = "estimulo", usa_estimulo = TRUE, nombre = "más palabras en común con el párrafo del otro colegio (H3 de la r2)", fn = function(x) .comun(x$op, x$intro)),
+  list(id = "P2-E6", familia = "estimulo", usa_estimulo = TRUE, nombre = "más palabras en común con la tabla del otro colegio (encabezados y celdas)", fn = function(x) .comun(x$op, x$tabla)),
+  list(id = "P2-E7", familia = "estimulo", usa_estimulo = TRUE, nombre = "más palabras en común con todo el texto visible del ítem", fn = function(x) .comun(x$op, .est_txt(x, .EST_TODO))),
+  list(id = "P2-E8", familia = "estimulo", usa_estimulo = TRUE, nombre = "la única con una palabra del texto visible que no tiene otra opción", fn = function(x) .unica_estim(x$op, .est_txt(x, .EST_TODO))),
+  list(id = "P2-E9", familia = "estimulo", usa_estimulo = TRUE, nombre = "la que menos palabras comparte con todo el texto visible", fn = function(x) { k <- .comun_n(x$op, .est_txt(x, .EST_TODO)); k == min(k) }))
+## Las reglas del estímulo de v1 (P2-E1 a P2-E4) se marcan como tales para integrarlas sobre los portadores.
+REGLAS_P2 <- lapply(REGLAS_P2, function(r) { if (startsWith(r$id, "P2-E")) r$usa_estimulo <- TRUE; r })
+REGLAS_P2 <- c(REGLAS_P2,
+  lapply(c("P2-L1", "P2-L2", "P2-L3", "P2-L4", "P2-L5", "P2-L6", "P2-F2", "P2-R1", "P2-R2", "P2-R3",
+           "P2-E1", "P2-E2", "P2-E3", "P2-E4", "P2-P1", "P2-P2"), function(i) .contraria(.r1(i))),
+  REGLAS_P2_V2_NUEVAS, lapply(REGLAS_P2_V2_NUEVAS, .contraria))
+## Vocabulario de un banco (claves y distractores distintos): por token, en cuántas claves (k de nk) y en cuántos
+## distractores (m de nd) aparece. Exclusivo de la clave: k > 0 y m = 0.
+vocabulario <- function(claves, distractores) {
+  claves <- unique(claves); distractores <- unique(distractores)
+  T <- unique(unlist(lapply(c(claves, distractores), .ngr)))
+  k <- vapply(T, function(t) sum(vapply(claves, function(s) t %in% .ngr(s), NA)), 0L)
+  m <- vapply(T, function(t) sum(vapply(distractores, function(s) t %in% .ngr(s), NA)), 0L)
+  data.frame(token = T, k = unname(k), nk = length(claves), m = unname(m), nd = length(distractores), stringsAsFactors = FALSE)
+}
+reglas_vocab_p2 <- function(V) {
+  vx <- V$token[V$k > 0 & V$m == 0]
+  tiene_vx <- function(x) vapply(x$op, function(o) any(.ngr(o) %in% vx), NA)
+  vxe <- function(x) { e <- intersect(vx, if (!is.null(x$ng)) x$ng else unique(unlist(lapply(.est_txt(x, .EST_TODO), .ngr))))
+    vapply(x$op, function(o) any(.ngr(o) %in% e), NA) }
+  base <- list(
+    list(id = "P2-VX", familia = "lexico", nombre = sprintf("elige la que lleva vocabulario exclusivo de la clave (%d tokens: %s)", length(vx),
+         paste(utils::head(vx, 12), collapse = " · ")), fn = tiene_vx),
+    list(id = "P2-VXc", familia = "lexico", nombre = "contraria de P2-VX: descarta las que llevan vocabulario exclusivo de la clave", fn = function(x) !tiene_vx(x)),
+    list(id = "P2-VXE", familia = "estimulo", usa_estimulo = TRUE, nombre = "elige la que comparte con el texto visible un token exclusivo de la clave", fn = vxe),
+    list(id = "P2-VXEc", familia = "estimulo", usa_estimulo = TRUE, nombre = "contraria de P2-VXE", fn = function(x) !vxe(x)))
+  tok <- lapply(seq_len(nrow(V)), function(i) { t <- V$token[i]
+    nm <- sprintf("«%s» (claves %d/%d, distractores %d/%d)", t, V$k[i], V$nk[i], V$m[i], V$nd[i])
+    f <- function(x) vapply(x$op, function(o) t %in% .ngr(o), NA)
+    list(list(id = sprintf("P2-V «%s»", t), familia = "lexico", nombre = paste("elige las que dicen", nm), fn = f),
+         list(id = sprintf("P2-V «%s»c", t), familia = "lexico", nombre = paste("descarta las que dicen", nm), fn = function(x) !f(x))) })
+  c(base, unlist(tok, recursive = FALSE))
+}
 
 ## ---- Parte 6 ----------------------------------------------------------------------------------------------------
 ## Lo que el estudiante lee en cada afirmación (no el papel declarado por el código).
@@ -194,11 +308,25 @@ CONTROL_P6 <- function(p) {
 ## ---- Medida -----------------------------------------------------------------------------------------------------
 ## L: lista de registros; w: pesos (por defecto iguales; la enumeración exacta los trae).
 .w <- function(L, w) { if (is.null(w)) w <- rep(1, length(L)); w / sum(w) }
-medir_p2 <- function(L, w = NULL) {
-  w <- .w(L, w)
-  do.call(rbind, lapply(REGLAS_P2, function(r) { s <- vapply(L, function(x) .sc_op(r$fn(x$p2), x$p2$k), 0)
-    data.frame(id = r$id, familia = r$familia, nombre = r$nombre, acierto = sum(w * s), nulo = 0.25,
-               exceso = sum(w * s) - 0.25, stringsAsFactors = FALSE) }))
+.fila_p2 <- function(r, s) data.frame(id = r$id, familia = r$familia, nombre = r$nombre, acierto = s, nulo = 0.25,
+                                       exceso = s - 0.25, stringsAsFactors = FALSE)
+## Muestra (posición, mutantes): reglas de v1 y v2 y, si vocab, el vocabulario calculado sobre los textos de L.
+medir_p2 <- function(L, w = NULL, vocab = TRUE) {
+  w <- .w(L, w); R <- REGLAS_P2
+  if (vocab) R <- c(R, reglas_vocab_p2(vocabulario(unlist(lapply(L, function(x) x$p2$op[x$p2$k])),
+                                                   unlist(lapply(L, function(x) x$p2$op[-x$p2$k])))))
+  do.call(rbind, lapply(R, function(r) .fila_p2(r, sum(w * vapply(L, function(x) .sc_op(r$fn(x$p2), x$p2$k), 0)))))
+}
+## EXACTA (v2): banco = list(clave, distractores) de un tipo; estimulos = portadores del estímulo (estimulo_p2()).
+## Reglas de contenido sobre las 3 × C(5, 3) combinaciones equiprobables (la clave en la posición 1: no dependen del
+## orden); las del estímulo, además, integradas sobre los portadores. Sin las de posición (muestra).
+medir_p2_exacta <- function(banco, tipo, estimulos) {
+  cl <- unique(unname(banco$clave)); di <- unique(unname(banco$distractores)); V <- vocabulario(cl, di)
+  combos <- list(); for (i in seq_along(cl)) for (s in utils::combn(length(di), 3L, simplify = FALSE)) combos[[length(combos) + 1L]] <- c(cl[i], di[s])
+  R <- Filter(function(r) r$familia != "posicion", c(REGLAS_P2, reglas_vocab_p2(V)))
+  M <- do.call(rbind, lapply(R, function(r) { E <- if (isTRUE(r$usa_estimulo)) estimulos else estimulos[1]
+    .fila_p2(r, mean(vapply(E, function(e) mean(vapply(combos, function(op) .sc_op(r$fn(c(list(op = op, k = 1L, tipo = tipo), e)), 1L), 0)), 0))) }))
+  attr(M, "vocabulario") <- V; attr(M, "n_combos") <- length(combos); attr(M, "n_portadores") <- length(estimulos); M
 }
 techo_p2 <- function(L, B = 200L) {
   if (exists(".Random.seed", globalenv())) { vieja <- get(".Random.seed", globalenv()); on.exit(assign(".Random.seed", vieja, globalenv())) }
@@ -213,14 +341,52 @@ medir_p6 <- function(L, w = NULL, papeles = c("hp", "hg", "ventaja", "ganador"))
   w <- .w(L, w)
   idx <- lapply(papeles, function(pp) vapply(L, function(x) which(x$p6$rol == pp), 0L)); names(idx) <- papeles
   ver <- lapply(papeles, function(pp) vapply(seq_along(L), function(i) L[[i]]$p6$v[idx[[pp]][i]], NA)); names(ver) <- papeles
-  do.call(rbind, lapply(REGLAS_P6, function(r) { P <- .pred6(L, r$fn)
+  est <- lapply(REGLAS_P6, function(r) { P <- .pred6(L, r$fn)
     do.call(rbind, lapply(papeles, function(pp) {
       pr <- vapply(seq_along(L), function(i) P[[i]][idx[[pp]][i]], NA); v <- ver[[pp]]; q <- sum(w * v)
       s <- ifelse(is.na(pr), 0.5, as.numeric(pr == v)); nul <- ifelse(is.na(pr), 0.5, ifelse(pr, q, 1 - q))
       data.frame(id = r$id, familia = r$familia, nombre = r$nombre, papel = pp, aplica = sum(w * !is.na(pr)),
                  acierto = sum(w * s), nulo = sum(w * nul), exceso = sum(w * s) - sum(w * nul), stringsAsFactors = FALSE)
-    })) }))
+    })) })
+  do.call(rbind, c(est, list(vocab_p6(L, w, papeles))))
 }
+## v2: vocabulario de la Parte 6, por afirmación y papel. «Las que dicen t son verdaderas» predice verdadera donde
+## aparece t y se abstiene donde no; su contraria predice falsa. Se agrega por texto distinto (exacto y rápido):
+## exceso = masa(t)·(P(verdadera | t) − q). P6-VX / P6-VXF: vocabulario exclusivo de las verdaderas / de las falsas.
+UNIVERSO_P6 <- NULL
+## Fija el vocabulario exclusivo de las verdaderas y de las falsas sobre TODAS las versiones (registros de la Parte 6).
+fijar_universo_p6 <- function(L) {
+  tx <- unlist(lapply(L, function(x) x$p6$op)); vv <- unlist(lapply(L, function(x) x$p6$v))
+  ngv <- unique(unlist(lapply(unique(tx[vv]), .ngr))); ngf <- unique(unlist(lapply(unique(tx[!vv]), .ngr)))
+  UNIVERSO_P6 <<- list(vx = setdiff(ngv, ngf), vxf = setdiff(ngf, ngv), n = length(L)); invisible(UNIVERSO_P6) }
+vocab_p6 <- function(L, w, papeles, tokens = FALSE) {
+  ix <- lapply(papeles, function(pp) vapply(L, function(x) which(x$p6$rol == pp), 0L)); names(ix) <- papeles
+  tx <- lapply(papeles, function(pp) vapply(seq_along(L), function(i) L[[i]]$p6$op[ix[[pp]][i]], "")); names(tx) <- papeles
+  vv <- lapply(papeles, function(pp) vapply(seq_along(L), function(i) L[[i]]$p6$v[ix[[pp]][i]], NA)); names(vv) <- papeles
+  textos <- unique(unlist(tx)); NG <- lapply(textos, .ngr); names(NG) <- textos
+  ngv <- unique(unlist(NG[unique(unlist(lapply(papeles, function(pp) tx[[pp]][vv[[pp]]])))]))
+  ngf <- unique(unlist(NG[unique(unlist(lapply(papeles, function(pp) tx[[pp]][!vv[[pp]]])))]))
+  vx <- setdiff(ngv, ngf); vxf <- setdiff(ngf, ngv)
+  if (!is.null(UNIVERSO_P6)) { vx <- UNIVERSO_P6$vx; vxf <- UNIVERSO_P6$vxf }
+  toks <- if (tokens) unique(unlist(NG)) else character(0); filas <- list()
+  for (pp in papeles) {
+    q <- sum(w * vv[[pp]]); a <- tapply(w, tx[[pp]], sum); av <- tapply(w * vv[[pp]], tx[[pp]], sum); tt <- names(a)
+    add <- function(id, nombre, p) { ap <- sum(a[p]); at <- sum(av[p]); ex <- at - q * ap
+      filas[[length(filas) + 1L]] <<- data.frame(id = c(id, paste0(id, "c")), familia = "lexico",
+        nombre = c(nombre, paste("contraria:", sub("son verdaderas", "son falsas", nombre))), papel = pp, aplica = ap,
+        acierto = 0.5 * (1 - ap) + c(at, ap - at), nulo = 0.5 * (1 - ap) + c(q * ap, (1 - q) * ap), exceso = c(ex, -ex),
+        stringsAsFactors = FALSE) }
+    add("P6-VX", sprintf("las que llevan vocabulario exclusivo de las verdaderas (%d tokens) son verdaderas", length(vx)),
+        vapply(tt, function(s) any(NG[[s]] %in% vx), NA))
+    add("P6-VXF", sprintf("las que llevan vocabulario exclusivo de las falsas (%d tokens) son verdaderas", length(vxf)),
+        vapply(tt, function(s) any(NG[[s]] %in% vxf), NA))
+    for (tk in toks) add(sprintf("P6-V «%s»", tk), sprintf("las que dicen «%s» son verdaderas", tk), vapply(tt, function(s) tk %in% NG[[s]], NA))
+  }
+  do.call(rbind, filas)
+}
+## Exploratoria, fuera de la batería (ver cabecera): las reglas por token de la Parte 6, solas.
+vocab_p6_tokens <- function(L, w = NULL, papeles = c("hp", "hg", "ventaja", "ganador")) { w <- .w(L, w)
+  V <- vocab_p6(L, w, papeles, tokens = TRUE); V[grepl("^P6-V «", V$id), , drop = FALSE] }
 techo_p6 <- function(L, B = 200L, papeles = c("hp", "hg", "ventaja", "ganador")) {
   if (exists(".Random.seed", globalenv())) { vieja <- get(".Random.seed", globalenv()); on.exit(assign(".Random.seed", vieja, globalenv())) }
   set.seed(20261031L)
@@ -248,8 +414,7 @@ control_p6 <- function(L) mean(vapply(L, function(x) identical(unname(CONTROL_P6
 
 ## Registro desde el entorno de una versión del .Rmd.
 registro_bateria <- function(en) with(en, list(
-  p2 = list(op = opciones_p2, k = which(sol_p2), tipo = tipo_p2, preg = texto_p2, otros = c(texto_p3, texto_p4, texto_p5),
-            enc = names(tabla_par_df)[2:3]),
+  p2 = c(list(op = opciones_p2, k = which(sol_p2), tipo = tipo_p2), estimulo_p2(en)),
   p6 = list(op = opciones_p6, v = sol_p6, rol = rol_p6, n = n_fila_par, a = a_fila_par, nombres = nom_grado),
   rama_par = rama_par, k = dp$k, delta = dp$delta, canon = isTRUE(es_canonica)))
 

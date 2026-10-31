@@ -1,7 +1,8 @@
 # HANDOFF — CLOZE `totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1`
 
 > Frase disparadora: «Continúa con el CLOZE de totales-promedios-reciclaje-n3».
-> Última actualización: 2026-10-31, tanda 6 del `orquestador-cloze`, **detenida tras la FASE 2C r2 (`APROBAR_CON_CAMBIOS`)**:
+> Última actualización: 2026-10-31, tanda 7 del `orquestador-cloze` (L-C4 v2 y pasada 3 de §P7-D, md5 `898608dd…`;
+> detenida tras el paso 6). Antes: tanda 6, **detenida tras la FASE 2C r2 (`APROBAR_CON_CAMBIOS`)**:
 > pasos 3 a 6 resellados sobre el md5 `42f725bf…` (pasada 2 de §P7-D, H1 y H3); L-C5 con las cifras exactas del código. El
 > detractor encontró, fuera de la batería congelada, un canal de +75,0 pp en la Parte 2: vuelve al profesor. Antes: tanda 5 (detenida en el paso A), tanda 4 (reparto de H2 no viable), tanda 3 (FASE 2C r1 `RECHAZAR`).
 > Si este archivo y `ejercicio_state.json` discrepan, manda el JSON. Las invariantes del SCHOICE (L-1 a L-5,
@@ -9,10 +10,54 @@
 > están en [`../.claude/CLAUDE.md`](../.claude/CLAUDE.md) § «CLOZE hermano». El ítem verbatim, en
 > [`../ITEM_OFICIAL.md`](../ITEM_OFICIAL.md).
 
-## Estado: 6/11 (reapertura #2; pasos 3 a 6 resellados en la tanda 6; `detractor_fase2c` NO sellado: FASE 2C r2 `APROBAR_CON_CAMBIOS`, pendiente de decisión del profesor)
+## Estado: 6/11 (reapertura #3; pasos 3 a 6 resellados en la tanda 7, cada uno con su propio comando; `detractor_fase2c` NO sellado: falta la FASE 2C r3)
 
-`.Rmd`: md5 **`42f725bf191b81784f76b858c26f7733`** (antes `96cfcf35…`). No está aprobado: faltan la FASE 2C r2, las 5
-coherencias, la diversidad, la validación ICFES y la aprobación del profesor. **No usar en clase.**
+`.Rmd`: md5 **`898608dd2a625c54b905684d4bbdb827`** (antes `42f725bf…`). No está aprobado: faltan la auditoría visual 6b, la
+FASE 2C r3, las 5 coherencias, la diversidad, la validación ICFES y la aprobación del profesor. **No usar en clase.**
+
+## Tanda 7 (2026-10-31): L-C4 v2 y pasada 3 de §P7-D (la última) en la Parte 2 — detenida tras el paso 6
+
+**Batería L-C4 v2**, congelada antes de reescribir: `bateria_partes_2_a_6.R`, versión «L-C4 v2 (2026-10-31)», **md5
+`820e51464b34deff35b830789584de8a`** (v1 `de20e0a9…`, commit `31b8fe9e`). Qué añade y por qué: cabecera del archivo y
+`../.claude/CLAUDE.md` § L-C4 v2. Histórico (§P7-C): `salida/bateria_v2_historico.txt` (`salida/medir_bateria_v2.R`).
+
+| md5 | «promedio»: reglas > +8 pp | «comparar»: reglas > +8 pp | Lo que pedía la orden |
+|---|---|---|---|
+| `96cfcf35…` | 106 (P2-VX +75,0; «el total» +75,0) | 121 (P2-VX +75,0; «curso» descarta +50,0) | — |
+| `42f725bf…` | 54 (**«dividido» +75,0**; párrafo P2-E5 +75,0; P2-VX +75,0) | 69 (**«por curso» descarta +25,0**; «curso» descarta +25,0; P2-VX +75,0) | en rojo: sí |
+| `898608dd…` (pasada 3) | **5**: P2-R2 +21,9 · P2-R1 +13,6 · P2-E8c +13,5 · P2-E5c +11,1 · P2-M3c +10,0 | **22**: P2-VX +75,0 · P2-R2 +33,9 · doce tokens de la multiplicación +25,0 · P2-R1 +16,4 · P2-E5 +12,5 · P2-E6 +12,5 · «por» +12,5 · P2-R3 +10,6 · «por el» +9,2 · «por el promedio» +9,2 · P2-E7 +8,5 | todas ≤ +8: no |
+
+Detalle exacto: `salida/bateria_v2_898608dd.txt`. Control: las 18 reglas de v1 dan lo mismo con la medida exacta nueva y con
+la enumeración de 720 (diferencia 5,6·10⁻¹⁵ pp). L-C5 con v1 y con v2: 335 celdas, diferencia 0.
+
+- **H1 y H2 de la r2, cerrados.** «promedio»: tres claves y cuatro distractores empiezan por «Lo que recogió ese grado dividido»;
+  los distractores dividen con un operando equivocado (entre el promedio, otra vez entre dos, entre el número de cursos al
+  cuadrado, entre los cursos de ambos grados) y queda la moda. «dividido» y «entre», +5,0 pp; P2-VX, +0,0 (ningún token
+  exclusivo de la clave). «comparar»: ningún distractor dice «curso» ni «por curso».
+- **Distractores falsos por construcción.** `valor_p2` (promedio: el valor descrito ≠ *a* en los dos grados de la tabla; la moda,
+  sobre un testigo compatible con la tabla) y `compara_p2` (comparar: la cantidad comparada ≠ el total *n* · *a*), con dos guardas
+  en `data_generation`; mutantes MC29 y MC30 en `verificar_espacio_cloze.R`. 300 semillas sin error.
+- **Retroalimentación** (`salida/retro_r7.txt`): `expl2` con una entrada por distractor (10), sin dato muerto; «moda» afinada
+  (BAJA de la r2).
+- **Regla de parada de §P7-D.** El arreglo cerró el canal léxico y abrió el relacional: «la que más palabras comparte con las
+  otras tres» sube a +21,9 pp («promedio») y +33,9 pp («comparar»), antes +2,5 y −10,6. Con las claves y los distractores
+  escritos sobre el mismo molde, la clave es la opción más «central». Es la última pasada: no se parchea; va al profesor como
+  residuo con su cifra exacta (WAIT_USER #3). Diseño: búsqueda sobre el vocabulario en
+  `/tmp/…/scratchpad/diseno/` (fuera del repo); se probó a mano y por búsqueda local, y en «comparar» ningún banco natural
+  dejó las tres redacciones de la multiplicación con un distractor que las repita.
+- **Parte 6, regla por token (fuera de la batería, declarada):** mezcla 0,0 pp; estratos de *k*′ hasta +16,7 pp (dominada por
+  K1 firmada); estratos de rama +25,0 pp (contenido lógico, RL3). Va al profesor.
+- **Sellos:** pasos 3 (09:47), 4, 5 (`salida/render_r7.log`; NOPS N/A) y 6 (hook v6.3 con la ruta absoluta: 0 errores,
+  7 advertencias, 2G 100/100, 2H 10 semillas sin anomalías; informe en `~/.cache/post-exams2-validation/…/20261031-094827-2419561/`),
+  cada uno con su propio comando tras su artefacto.
+- **Verificador** (`salida/verificar_espacio_cloze_r7.txt`): **exit 3, 407 s, 0 fallos, 27 pendientes de firma** (las 5 reglas
+  de «promedio» y las 22 de «comparar» de la tabla de arriba; ningún pendiente fuera de la Parte 2); 107 cifras «ROJO, cubierto»
+  dentro de lo firmado. Canónica exacta: X6 +0,0 y X10 +8,3 pp (firmadas +16,7), X9 +25,0, X11 +12,5. L-C5: 67 de 69 celdas
+  cubiertas, 0 por encima, 2 en +8 pp o menos, 0 fuera de la firma; las líneas de L-C5 son idénticas a las de la r6b.
+  Mutantes cazados por su sonda: MC7, MC10 a MC30 (MC28, vocabulario exclusivo: P2-VX +75,0 pp; MC29 y MC30, funciones de
+  verdad), MP1 y MP2. Residuos sin cambio: V11 a un paso (11/12/17 %), cascada F1 1 de 330, P6-P2 +9,9 y +8,3 pp NO CONCLUYENTE.
+- **No ejecutado** (presupuesto de turnos del orquestador agotado): 6b, FASE 2C r3, pasos 8 a 10, WAIT_USER #3. El
+  `.Rmd` y la batería quedan listos para ellos.
 
 ## Tanda 6 (2026-10-31): L-C5 con las cifras exactas del código y pasada 2 de §P7-D (H1 y H3)
 

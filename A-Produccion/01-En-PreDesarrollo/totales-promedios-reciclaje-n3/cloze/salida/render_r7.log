@@ -1,0 +1,18 @@
+md5 del .Rmd: 898608dd2a625c54b905684d4bbdb827 
+Semillas: canonica=7 CxC=3 CxP=2 PxC=1 PxP=4 
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+HTML     OK
+PDF      OK
+DOCX     OK
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+MOODLE   OK
+NOPS     N/A (exams2nops rechaza extype cloze por diseño) 
+tex: 6 archivos · \pandocbounded: 5 · \LTcaptype{none}: 2 · guarda c@none en el .Rmd: TRUE · longtable: 2

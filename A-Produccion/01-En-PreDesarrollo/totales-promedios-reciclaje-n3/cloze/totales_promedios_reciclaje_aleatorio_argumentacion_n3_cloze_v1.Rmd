@@ -677,30 +677,54 @@ intro_par <- paste0("Las Partes 2 a 6 se refieren a otro colegio, donde el concu
 ## «comparar». Ninguna lleva «total», coma ni condicional, ni empieza por «Únicamente», ni dice «sin tener en cuenta»
 ## o «exactamente». Por largo, una clave queda entre las cortas, otra en el medio y otra entre las largas. Las claves
 ## «promedio» comparten con las opciones de la Parte 1 lo mismo que su G-distractor (X6 y X10 de la canónica).
+## Pasada 3 (§P7-D, la última; tanda 7, 2026-10-31; H1 y H2 de la FASE 2C r2, decisión «a · 1 sí · 2 sí»): medida con la
+## batería L-C4 v2 (vocabulario por token —palabras y expresiones de 2 y 3 palabras— con su contraria, y el párrafo del
+## otro colegio y todo el texto visible como estímulo). «promedio»: las ocho opciones empiezan igual («Lo que recogió ese
+## grado dividido», salvo la moda), y cada palabra o expresión de las claves aparece en los distractores en la misma
+## proporción (en 1 clave de 3 ⇔ en 1 o 2 distractores de 5; en 2 ⇔ en 3 o 4; en 3 ⇔ en 4 o 5); cuatro distractores dividen
+## con un operando equivocado y son falsos por su función de verdad (valor_p2, guarda abajo). «comparar»: ningún
+## distractor dice «por curso» ni «curso». Los nombres de los distractores son los de su retroalimentación (expl2).
 P2 <- list(
   promedio = list(
     pregunta = paste0("¿Qué indica, en la tabla del otro colegio, el promedio de ", mat,
                       " recogido por curso de un grado?"),
-    clave = c("Lo que recogió el grado dividido entre el número de sus cursos participantes.",
-              "Lo que recogió ese grado dividido en partes iguales entre sus cursos.",
-              "Lo que recogió ese grado dividido entre sus cursos."),
+    clave = c("Lo que recogió ese grado dividido en partes iguales entre sus cursos.",
+              "Lo que recogió ese grado dividido entre el número de sus cursos.",
+              "Lo que recogió ese grado dividido entre la cantidad de cursos de ese mismo grado."),
     distractores = c(
-      maximo  = "Lo que recogió el mejor de sus cursos dentro de ese grado.",
-      total   = "Lo que recogió el grado sumando lo de sus cursos.",
-      iguales = "Lo que recogió cualquiera de sus cursos porque en el grado recogieron lo mismo.",
-      mediana = "Lo que recogió el que queda en el medio al ordenar sus cursos en ese grado.",
-      moda    = "Lo que recogió la mayoría de sus cursos en ese grado.")),
+      entre_promedio = "Lo que recogió ese grado dividido entre el promedio de sus cursos.",
+      luego_dos      = "Lo que recogió ese grado dividido en partes iguales entre sus cursos y luego entre dos.",
+      cuadrado       = "Lo que recogió ese grado dividido entre el número de sus cursos al cuadrado.",
+      ambos          = "Lo que recogió ese grado dividido entre la cantidad de cursos de ambos grados.",
+      moda           = "Lo que recogió la mayoría de los cursos de ese mismo grado.")),
   comparar = list(
     pregunta = "¿Qué se compara en la tabla del otro colegio al decidir qué grado ganó el concurso?",
-    clave = c("La suma de lo recogido por los cursos de un grado y la suma del otro grado.",
-              "El producto de cursos por promedio de un grado y el del otro grado.",
-              "La cantidad de cursos multiplicada por el promedio de un grado y lo mismo del otro grado."),
+    clave = c("La cantidad de cursos multiplicada por el promedio de un grado y lo mismo del otro grado.",
+              "La cantidad de cursos por el promedio de un grado y lo mismo del otro grado.",
+              "El promedio multiplicado por la cantidad de cursos de un grado y lo mismo del otro grado."),
     distractores = c(
-      promedio = "El promedio por curso de un grado y el del otro grado.",
-      cursos   = "La cantidad de cursos participantes de un grado y la del otro grado.",
-      resta    = "La diferencia entre el promedio por curso de un grado y el del otro grado.",
-      suma     = "La suma de la cantidad de cursos y el promedio por curso de un grado y la suma del otro grado.",
-      cociente = "El promedio dividido entre la cantidad de cursos de un grado y el del otro grado.")))
+      promedio     = "El promedio de un grado y lo mismo del otro grado.",
+      cociente     = "El promedio dividido por la cantidad de cursos de un grado y lo mismo del otro grado.",
+      cociente_inv = "La cantidad de cursos dividida por el promedio de un grado y lo mismo del otro grado.",
+      resta        = "La cantidad de cursos menos el promedio de un grado y lo mismo del otro grado.",
+      cruzado      = "La cantidad de cursos de un grado multiplicada por el promedio del otro grado, y al revés.")))
+## Funciones de verdad de la Parte 2 (tanda 7). «promedio»: el valor que describe cada distractor para un grado de la tabla
+## mostrada (n y a de su fila; n2 y a2, del otro grado); la definición del promedio por curso es (n · a) / n = a. La moda no
+## sale de la tabla: se evalúa sobre un testigo compatible con ella (n − 1 cursos con a − 1 kilos y uno con a + n − 1, cuyo
+## promedio es a; la mayoría recogió a − 1). «comparar»: la cantidad que cada distractor compara para un grado; el criterio
+## del concurso es el total n · a. Puras: no usan el azar.
+valor_p2 <- list(
+  entre_promedio = function(n, a, n2, a2) (n * a) / a,
+  luego_dos      = function(n, a, n2, a2) (n * a) / n / 2,
+  cuadrado       = function(n, a, n2, a2) (n * a) / n^2,
+  ambos          = function(n, a, n2, a2) (n * a) / (n + n2),
+  moda           = function(n, a, n2, a2) { x <- c(rep(a - 1, n - 1), a + n - 1); as.numeric(names(which.max(table(x)))) })
+compara_p2 <- list(
+  promedio     = function(n, a, n2, a2) a,
+  cociente     = function(n, a, n2, a2) a / n,
+  cociente_inv = function(n, a, n2, a2) n / a,
+  resta        = function(n, a, n2, a2) n - a,
+  cruzado      = function(n, a, n2, a2) n * a2)
 tipo_p2 <- sample(names(P2), 1L)
 q2 <- P2[[tipo_p2]]
 clave_p2 <- pick(q2$clave)
@@ -803,6 +827,17 @@ stopifnot(
                ignore.case = TRUE)),
   "Parte 2: una sola clave" = sum(opciones_p2 %in% q2$clave) == 1L && isTRUE(sol_p2[opciones_p2 %in% q2$clave]),
   "Parte 2: opciones únicas" = !anyDuplicated(opciones_p2),
+  ## Tanda 7 (pasada 3): cada distractor es falso para los dos grados de la tabla mostrada, el pool entero (no solo los
+  ## tres que salen), y cada distractor tiene su función de verdad. Mutante: MC29 (verificar_espacio_cloze.R).
+  "Parte 2: cada distractor «promedio» es falso como definición del promedio por curso (función de verdad, tanda 7)" =
+    setequal(names(valor_p2), names(P2$promedio$distractores)) &&
+    all(vapply(names(valor_p2), function(id) all(vapply(1:2, function(i) valor_p2[[id]](n_fila_par[i], a_fila_par[i],
+      n_fila_par[3L - i], a_fila_par[3L - i]) != a_fila_par[i], NA)), NA)) &&
+    all((n_fila_par * a_fila_par) / n_fila_par == a_fila_par),
+  "Parte 2: ningún distractor «comparar» compara los totales (función de verdad, tanda 7)" =
+    setequal(names(compara_p2), names(P2$comparar$distractores)) &&
+    all(vapply(names(compara_p2), function(id) any(vapply(1:2, function(i) compara_p2[[id]](n_fila_par[i], a_fila_par[i],
+      n_fila_par[3L - i], a_fila_par[3L - i]) != T_fila_par[i], NA)), NA)),
   "L-3 (caso paralelo): sin dominancia y gana el grado G'" =
     (dp$nG - dp$nP) * (dp$aG - dp$aP) < 0 && dp$TG > dp$TP && T_fila_par[gi_par] == dp$TG,
   "Parte 6: hipótesis sin empate" = dp$aG != dp$D && dp$aP != dp$D,
@@ -832,17 +867,17 @@ stopifnot("seis gaps: exclozetype, exsolution y extol con seis entradas" =
 
 ## --- Retroalimentación de las Partes 2 a 6 --------------------------------------------------------------
 expl2 <- c(
-  maximo   = "El promedio no es lo que recogió el curso que más recogió: ese curso pudo recoger más que el promedio.",
-  total    = "Eso es el total del grado; el promedio por curso es ese total repartido por igual entre los cursos.",
-  iguales  = paste("El promedio no dice que todos los cursos recogieron lo mismo: dice cuánto le tocaría a cada uno",
-                   "si el total se repartiera por igual."),
-  mediana  = "Eso describe la mediana de lo que recogieron los cursos, no el promedio.",
-  moda     = "Eso describe la moda, el valor más repetido, no el promedio.",
-  promedio = "Un promedio mayor no garantiza un total mayor si en ese grado participaron menos cursos.",
-  cursos   = "Más cursos no garantizan un total mayor si cada curso recogió, en promedio, menos.",
-  resta    = "La resta de los promedios compara un curso típico con otro; el concurso se decide por los totales.",
-  suma     = "Sumar la cantidad de cursos y el promedio no da ningún total: el total es su producto.",
-  cociente = "Dividir el promedio entre la cantidad de cursos no da ningún total: el total es su producto.")
+  entre_promedio = "Dividir lo que recogió el grado entre su promedio da la cantidad de cursos, no el promedio: el promedio es lo recogido dividido entre el número de cursos.",
+  luego_dos      = "Dividir otra vez entre dos da la mitad del promedio: el promedio es lo recogido dividido entre el número de cursos, sin más divisiones.",
+  cuadrado       = "Dividir entre el número de cursos al cuadrado da el promedio dividido otra vez entre los cursos, no el promedio.",
+  ambos          = "Dividir entre los cursos de los dos grados da menos que el promedio de ese grado: lo recogido se reparte solo entre sus propios cursos.",
+  moda           = paste("Lo que recogió la mayoría de los cursos, si más de la mitad recogió lo mismo, es la moda, y puede ser",
+                         "distinto del promedio, que reparte por igual entre los cursos lo que recogió el grado."),
+  promedio       = "Un promedio mayor no garantiza un total mayor si en ese grado participaron menos cursos.",
+  cociente       = "Dividir el promedio entre la cantidad de cursos no da ningún total: el total es su producto.",
+  cociente_inv   = "Dividir la cantidad de cursos entre el promedio no da ningún total: el total es su producto.",
+  resta          = "Restar el promedio de la cantidad de cursos no da ningún total: el total es su producto.",
+  cruzado        = "Multiplicar los cursos de un grado por el promedio del otro mezcla los dos grados: el total de cada grado usa sus propios cursos y su propio promedio.")
 clave2_expl <- c(
   promedio = paste("El promedio por curso es el total del grado dividido entre la cantidad de cursos: lo que le",
                    "tocaría a cada curso si el total se repartiera por igual."),
