@@ -8,6 +8,21 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.34.1 (2026-10-31)
+
+- **Regla #22, texto íntegro, §P7-F: segundo caso, equilibrar un rasgo desplaza el canal a otro.** Es una
+  aclaración: no cambia la norma ni la versión de la regla, y la versión compacta no se toca.
+  - **Qué dice:** una hipótesis de cambio unitario solo puede ser falsa con una diferencia de totales grande, y esa
+    diferencia delata al ganador en la tabla. En el CLOZE de `totales-promedios-reciclaje-n3`, los cuatro repartos
+    enumerados desplazaron el canal sin bajarlo de +8 pp (+36,5, +47,2 y +44,8 pp).
+  - **Decisión:** el profesor la aprobó el 2026-10-31 («2 sí»).
+- **Análisis de promoción del 2026-10-31**, tras la tanda 4 de ese CLOZE.
+  - **Se adoptó:** la aclaración de arriba, solo en el texto íntegro.
+  - **No se promovió:** la batería por afirmación de las preguntas mchoice al helper `bateria_eliminacion.R`. Hay
+    un solo caso, y la vara de +8 pp no está calibrada para mchoice, porque ningún ítem oficial lo es. Queda como
+    ley local del CLOZE (L-C4). Lo decidió el profesor el 2026-10-31 («1 no»).
+  - **La firma de H2 sobre el diseño original** es una decisión del ítem: queda como ley local (L-C5).
+
 ### Cambios v3.34.0 (2026-10-31)
 
 - **Regla #22 v1.10, nuevo §P7-G: el estímulo es una entrada de la batería §P7.** Es un cambio de norma, así

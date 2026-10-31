@@ -568,6 +568,23 @@ recorrer las cuatro ramas que se hizo evidente que el criterio «una única apli
 teorema» admitía dos lecturas y dejaba pasar una segunda clave en la rama elegida — ver Error
 35 en `patrones-errores-conocidos.md` y regla #24 H-4 (este mismo ejercicio).
 
+**Segundo caso: equilibrar un rasgo desplaza el canal a otro (aclaración del 2026-10-31, sin cambio de norma).**
+En el CLOZE de `totales-promedios-reciclaje-n3`, la Parte 6 evalúa hipótesis de cambio unitario sobre una tabla de
+dos grados: «el que perdió, con un curso más, habría ganado». Una hipótesis así solo puede ser falsa cuando la
+diferencia de totales *D*′ es grande frente a lo que aporta un curso, y una *D*′ grande deja ver al ganador en las
+magnitudes de la tabla.
+
+Se enumeraron cuatro repartos del sorteo (`cloze/salida/medir_reparto_h2.R`):
+- El que cerraba la pista de los cursos la pasó a la diferencia de promedios: +36,5 pp en la mezcla.
+- Equilibrar esa diferencia la llevó al número de cursos: +47,2 pp.
+- Equilibrar los cursos la devolvió a la diferencia de promedios: +44,8 pp.
+
+Ningún reparto bajó de +8 pp. El canal es estructural, y el profesor lo firmó como override sobre el diseño
+original, regla por regla y por estrato (2026-10-31).
+
+Lección: cuando cerrar una pista abre otra de la misma familia de magnitudes, conviene enumerar el espacio (§P7-F)
+para saber si existe un reparto viable, antes de gastar una pasada de §P7-D en buscarlo.
+
 #### §P7-G — El estímulo es una entrada de la batería (v1.10, 2026-10-31)
 
 Una regla de eliminación recibe las opciones de una versión. **El enunciado no entra.** Si muestra un valor o
