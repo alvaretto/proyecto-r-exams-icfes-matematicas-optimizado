@@ -185,8 +185,8 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.33.1 (pre-flight 23 del orquestador-cloze: también la carpeta padre; regla #22 §P7-E: firmar el máximo no cubre las demás reglas)
-**Fecha**: 2026-10-30
+**Versión**: 3.33.2 (regla #22 §P7-E: dominancia, firmas antiguas por el máximo y cifra exacta ejecutando el código)
+**Fecha**: 2026-10-31
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)
 **Copia íntegra del índice anterior (v3.24.0) y script de reversión**: `.claude/backups/2026-09-07-recorte-contexto/`

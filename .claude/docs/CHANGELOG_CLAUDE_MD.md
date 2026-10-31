@@ -8,6 +8,33 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.33.2 (2026-10-31)
+
+- **Regla #22, texto íntegro, §P7-E: tres aclaraciones.** No cambian la norma ni la versión de la regla, así que
+  la versión compacta no se toca.
+  - **Dominancia:** si en un estrato una regla firmada acierta el 100 %, las demás no exponen nada nuevo. Aun
+    así se listan con su cifra exacta y se firman juntas.
+  - **Firmas antiguas por el máximo:** siguen vigentes. Se revisan regla por regla en el próximo ciclo de cada
+    ejercicio, sin reabrir nada por oficio.
+  - **Cifra exacta:** la de la canónica sale de ejecutar el código del `.Rmd`, no de un modelo transcrito.
+  - **Origen:** la tanda 3 del CLOZE de `totales-promedios-reciclaje-n3`. La dominancia apareció dos veces el
+    mismo día; la canónica de su Parte 1 estaba firmada solo por el máximo; y la guarda de X9, sobre un modelo
+    transcrito, no admitía ningún mutante.
+  - **Decisión:** el profesor las aprobó el 2026-10-31 («i ii iii»).
+- **`VALIDATOR_COBERTURA_ICFES.md`, regenerado** con `tests/sincronizar_doc_suites.R`: 424 bloques `test_that`,
+  antes 422. Los dos nuevos son las guardas del pre-flight 23 de la v3.33.1. Sin la regeneración,
+  `test_doc_suites_sincronizada` rechazó el push de `348f4446`.
+- **Análisis de promoción del 2026-10-31.** Revisa las decisiones del profesor tras la tanda 3 de ese CLOZE.
+  - **Se adoptaron:** las tres aclaraciones de arriba, solo en el texto íntegro.
+  - **No se promovieron, por estas razones:**
+    - El rediseño del sorteo de la tabla del otro colegio (H2) y la firma por dominancia de la canónica de la
+      Parte 1: son decisiones del ítem y quedan como leyes locales del CLOZE.
+    - La batería congelada por gap de las Partes 2 a 6 (L-C4): `orquestador-cloze` ya mide la regla #22 por gap
+      en el paso 9, y §P7-C ya exige congelarla al inicio. Faltó aplicarla, no una norma.
+    - Dos trampas de medición: un acierto de exactamente 1/3 (+8,33 pp) que el filtro «> 33,3 %» deja fuera, y
+      las notificaciones de los subagentes, que escapan `<`, `>` y `&`. Son de la medición y del entorno, no de
+      una norma, y quedan en la memoria.
+
 ### Cambios v3.33.1 (2026-10-30)
 
 - **`orquestador-cloze`: el pre-flight 23 (Incidente O) lee también la carpeta padre.**

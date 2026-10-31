@@ -490,6 +490,25 @@ la batería cruzada en la canónica (X9, +25 pp), y él lo firmó. En la tanda 2
 por regla, aparecieron X6, X10 y X11 también por encima de +8 pp, y el orquestador tuvo que parar. El
 mismo error de fondo, declarar un residuo §P7 solo por su máximo, ya se había visto en otro ciclo.
 
+**Dominancia, firmas antiguas y cifra exacta (tres aclaraciones del 2026-10-31, sin cambio de norma).**
+- **Dominancia.** Si en un estrato una regla ya firmada acierta el 100 %, las demás reglas de ese estrato no le
+  dan al estudiante nada que esa regla no le dé. Aun así, cada una se lista con su cifra exacta y se firman
+  juntas: el alcance se cablea regla por regla, y un cambio posterior puede romper la dominancia. La dominancia
+  es una razón para firmar, no para dejar de listar.
+- **Firmas antiguas por el máximo.** Una firma que se expresó solo con la regla más alta de un estrato sigue
+  vigente con su cifra. Se revisa regla por regla en el próximo ciclo del ejercicio, y ahí se cablea así. No se
+  reabre ningún ejercicio por oficio para hacerlo.
+- **La cifra exacta sale de ejecutar el código.** La enumeración exacta de la instancia canónica recorre los
+  sorteos que ejecuta el propio `.Rmd`, por ejemplo sustituyendo `sample()` en su entorno. Un modelo transcrito
+  a mano no sirve de puerta: no cambia cuando cambia el código, así que ningún mutante de un sorteo lo mueve.
+
+Origen: el CLOZE de `totales-promedios-reciclaje-n3`, tanda 3. La dominancia apareció dos veces el mismo día: X6,
+X9, X10 y X11 en la canónica del CLOZE, y 12 reglas de la batería más 12 sondas en la canónica de su Parte 1. En
+los dos casos, el atajo firmado de «O-1 corregido» acierta el 100 %. Esa canónica estaba firmada solo por su
+máximo (0,10 × 75 pp), que es el caso de las firmas antiguas. Y la guarda de X9, escrita sobre un modelo
+transcrito (`x_canonica_exacta.R`), no admitía ningún mutante. La puerta que enumera el código del `.Rmd`
+(`enumerar_canonica_cloze.R`, 192 hojas) dio las mismas cifras y sí los admite.
+
 #### Por qué NO se cableó dentro de `validar_diagnosticidad.R`
 
 Se evaluó y se descartó **a propósito**. Sus sondas H1/H2/H3/H3b son genéricas porque miden
