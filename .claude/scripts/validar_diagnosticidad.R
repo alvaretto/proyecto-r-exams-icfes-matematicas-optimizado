@@ -67,6 +67,30 @@ if ("--margen" %in% args) { v <- suppressWarnings(as.numeric(args[which(args == 
 if (is.na(rmd) || !file.exists(rmd)) { cat("WARN_DIAG_INDET: .Rmd no encontrado:", rmd, "\n"); quit(status = 0) }
 
 lines <- readLines(rmd, warn = FALSE)
+# `exclozetype` clasifica cada Parte del CLOZE como un todo. No basta mirar una
+# version: un mchoice puede tener por azar una sola afirmacion verdadera, sin
+# dejar por ello de ser un hueco de varias respuestas. R/exams lo declara en la
+# seccion Meta-information, como literal (`schoice|mchoice`) o como codigo en
+# linea (`r exclozetype_str`); el codigo en linea se evalua en cada version,
+# despues de data_generation, que es donde se define su variable.
+linea_tipo <- grep("^[[:space:]]*exclozetype[[:space:]]*:", lines, value = TRUE, ignore.case = TRUE)
+valor_tipo <- if (length(linea_tipo)) trimws(sub("^[^:]*:", "", linea_tipo[1])) else ""
+expr_tipo <- if (grepl("^`r[[:space:]]", valor_tipo)) sub("^`r[[:space:]]+(.*)`$", "\\1", valor_tipo) else NA_character_
+partir_tipos <- function(v) tolower(trimws(gsub("^['\"]|['\"]$", "", strsplit(v, "|", fixed = TRUE)[[1]])))
+tipos_literal <- if (nzchar(valor_tipo) && is.na(expr_tipo)) partir_tipos(valor_tipo) else character(0)
+tipos_de_version <- function(env) {
+  if (!is.na(expr_tipo)) {
+    v <- tryCatch(paste(as.character(eval(parse(text = expr_tipo), envir = env)), collapse = "|"),
+                  error = function(e) "")
+    if (nzchar(v)) return(partir_tipos(v))
+  }
+  tipos_literal
+}
+es_mchoice_declarado <- function(gap, tipos) {
+  if (!grepl("^p[0-9]+$", gap)) return(FALSE)
+  posicion <- suppressWarnings(as.integer(sub("^p", "", gap)))
+  !is.na(posicion) && length(tipos) >= posicion && identical(tipos[posicion], "mchoice")
+}
 dg <- grep("^```\\{r[ ]*data_generation", lines)
 start <- if (length(dg)) dg[1] else NA
 fences <- grep("^```\\s*$", lines)
@@ -88,6 +112,7 @@ tmp <- file.path(tempdir(), paste0("diag_", Sys.getpid())); dir.create(tmp, show
 old <- getwd(); on.exit({ setwd(old); unlink(tmp, recursive = TRUE) }, add = TRUE)
 
 acc <- list()
+excluidos_mchoice <- character(0)
 for (i in seq_len(n)) {
   setwd(tmp); env <- new.env(parent = globalenv()); assign("n", NA, envir = env)
   set.seed(i * 7919L + 13L)
@@ -95,7 +120,8 @@ for (i in seq_len(n)) {
   setwd(old)
   if (!ok) next
   nms <- ls(envir = env)
-  # Gaps schoice del CLOZE (opciones_pN + sol_pN con una marca) y SCHOICE puro.
+  tipos_v <- tipos_de_version(env)
+  # Gaps del CLOZE (opciones_pN + sol_pN) y SCHOICE puro.
   pares <- list()
   for (k in unique(sub("^opciones_p(\\d+)$", "\\1", grep("^opciones_p\\d+$", nms, value = TRUE))))
     if (paste0("sol_p", k) %in% nms) pares[[paste0("p", k)]] <- c(paste0("opciones_p", k), paste0("sol_p", k))
@@ -103,8 +129,25 @@ for (i in seq_len(n)) {
     if (o %in% nms) for (s in c("sol", "solucion"))
       if (s %in% nms && is.null(pares[["unico"]])) pares[["unico"]] <- c(o, s)
   for (g in names(pares)) {
+    # Señal principal: la cabecera identifica el tipo de la Parte. Se excluye
+    # antes de acumular cualquier versión, incluso si esa versión tiene una
+    # sola marca por azar.
+    if (es_mchoice_declarado(g, tipos_v)) {
+      excluidos_mchoice[g] <- "mchoice"
+      acc[[g]] <- NULL
+      next
+    }
+    if (g %in% names(excluidos_mchoice)) next
     ops <- tryCatch(get(pares[[g]][1], envir = env), error = function(e) NULL)
     sol <- tryCatch(as.logical(get(pares[[g]][2], envir = env)), error = function(e) NULL)
+    # Respaldo para cabeceras ausentes o que no alcancen a mapear pN: basta una
+    # versión con varias marcas para que el hueco entero deje de ser schoice.
+    # `unico` conserva exactamente su comportamiento histórico.
+    if (grepl("^p[0-9]+$", g) && !is.null(sol) && sum(sol, na.rm = TRUE) != 1L) {
+      excluidos_mchoice[g] <- "mchoice"
+      acc[[g]] <- NULL
+      next
+    }
     if (is.null(ops) || is.null(sol) || length(ops) != length(sol)) next
     if (sum(sol, na.rm = TRUE) != 1L || length(ops) < 3L) next
     tx <- vapply(ops, txt_of, character(1))
@@ -169,6 +212,13 @@ for (i in seq_len(n)) {
 
 cat("=== Diagnosticidad de distractores (gaps de seleccion unica) ===\n")
 cat("Archivo:", basename(rmd), "| semillas:", n, "| umbral:", umbral, "% | margen H1:", margen, "%\n\n")
+if (length(excluidos_mchoice)) {
+  gaps_excluidos <- names(excluidos_mchoice)
+  gaps_excluidos <- gaps_excluidos[order(as.integer(sub("^p", "", gaps_excluidos)))]
+  for (g in gaps_excluidos)
+    cat(sprintf("%s: varias respuestas (mchoice), las sondas de selección única no aplican\n", g))
+  cat("\n")
+}
 if (!length(acc)) { cat("WARN_DIAG_INDET: sin gaps analizables (opciones+sol con una sola marca).\n"); quit(status = 0) }
 
 cat(sprintf("%-6s %6s  %20s  %20s  %12s\n", "gap", "vers",

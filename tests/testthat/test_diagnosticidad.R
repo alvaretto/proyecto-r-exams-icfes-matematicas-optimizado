@@ -12,7 +12,11 @@
 
 library(testthat)
 
-RAIZ <- "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams"
+RAIZ <- local({
+  r <- tryCatch(system("git rev-parse --show-toplevel", intern = TRUE),
+                warning = function(w) NULL, error = function(e) NULL)
+  if (!is.null(r) && length(r) == 1 && dir.exists(r)) r else normalizePath(".")
+})
 SCRIPT_DIAG <- file.path(RAIZ, ".claude/scripts/validar_diagnosticidad.R")
 
 # Construye un .Rmd mínimo con un gap schoice de 4 opciones cuya opción correcta
@@ -39,8 +43,8 @@ fixture_rmd <- function(base_chars, extra_chars) {
   f
 }
 
-correr <- function(rmd, n = 20) {
-  salida <- suppressWarnings(system2("Rscript", c(SCRIPT_DIAG, rmd, "--n", n),
+correr <- function(rmd, n = 20, script = SCRIPT_DIAG) {
+  salida <- suppressWarnings(system2("Rscript", c(script, rmd, "--n", n),
                                      stdout = TRUE, stderr = TRUE))
   list(texto = paste(salida, collapse = "\n"),
        exit = attr(salida, "status") %||% 0L)
@@ -99,6 +103,70 @@ test_that("Sin gaps de selección única el veredicto es indeterminado, no un fa
   expect_equal(r$exit, 0L)
   unlink(f)
 })
+
+# Un hueco mchoice puede tener una sola afirmación verdadera en una versión
+# concreta. Eso no lo convierte en schoice: las sondas de selección única no
+# pueden elegir una sola "correcta" para representarlo entre versiones (H4 de la
+# FASE 2C r2 del CLOZE de totales-promedios-reciclaje-n3, 2026-10-31).
+# R/exams declara `exclozetype` en la sección Meta-information, como literal o
+# como código en línea (`r ...`) que se evalúa tras data_generation. Cada modo se
+# prueba aparte: si se quitara una de las dos vías de exclusión, su caso volvería
+# a dar el falso ERR_DIAG_SUPERFICIAL.
+fixture_mchoice <- function(modo = c("en_linea", "literal", "sin_declarar")) {
+  modo <- match.arg(modo)
+  f <- tempfile(fileext = ".Rmd")
+  # Con la declaración, p2 tiene SIEMPRE una sola verdadera, que empieza por
+  # «si»: solo `exclozetype` puede excluirlo. Sin declaración, a veces tiene dos
+  # verdaderas, y lo excluye el respaldo por versiones.
+  sol_p2 <- if (modo == "sin_declarar") {
+    "sol_p2 <- if (sample.int(3L, 1L) == 1L) c(TRUE, FALSE, FALSE, FALSE) else c(TRUE, FALSE, TRUE, FALSE)"
+  } else "sol_p2 <- c(TRUE, FALSE, FALSE, FALSE)"
+  meta <- switch(modo,
+                 en_linea = "exclozetype: `r tipos_str`",
+                 literal = "exclozetype: schoice|mchoice",
+                 sin_declarar = character(0))
+  writeLines(c(
+    "```{r data_generation, echo = FALSE, results = \"hide\"}",
+    "tipos_str <- \"schoice|mchoice\"",
+    "clave_p1 <- sample.int(4L, 1L)",
+    "opciones_p1 <- c(\"clave aaa\", \"clave bbb\", \"clave ccc\", \"clave ddd\")",
+    "sol_p1 <- seq_len(4L) == clave_p1",
+    "opciones_p2 <- c(\"si el total cumple la condicion\",",
+    "                 \"si el promedio cumple la condicion\",",
+    "                 \"no la primera condicion se cumple\",",
+    "                 \"no la segunda condicion se cumple\")",
+    sol_p2,
+    "```",
+    "",
+    "Question",
+    "========",
+    "**Parte 1.** Selección única sana.",
+    "##ANSWER1##",
+    "",
+    "**Parte 2.** Selección múltiple.",
+    "##ANSWER2##",
+    "",
+    "Meta-information",
+    "================",
+    "extype: cloze",
+    meta
+  ), f)
+  f
+}
+
+for (modo in c("en_linea", "literal", "sin_declarar")) {
+  test_that(sprintf("Un mchoice no activa las sondas de selección única (exclozetype: %s)", modo), {
+    rmd <- fixture_mchoice(modo)
+    r <- correr(rmd, n = 100)
+    expect_match(r$texto,
+                 "p2: varias respuestas \\(mchoice\\), las sondas de selección única no aplican")
+    expect_false(grepl("p2.*H3 veredicto", r$texto))
+    expect_false(grepl("ERR_DIAG_SUPERFICIAL", r$texto, fixed = TRUE))
+    expect_match(r$texto, "p1\\s+100")
+    expect_equal(r$exit, 0L)
+    unlink(rmd)
+  })
+}
 
 # =============================================================================
 # H3b — molde uniforme de opciones ("¿Cuál es ...?")
