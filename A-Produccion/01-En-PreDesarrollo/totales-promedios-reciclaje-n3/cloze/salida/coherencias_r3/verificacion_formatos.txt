@@ -1,0 +1,85 @@
+md5 del .Rmd: 42f725bf191b81784f76b858c26f7733 
+
+=== HTML (cloze1..5.html) ===
+  [OK   ] HTML 1 (semilla 7): dos tablas, cada una de 3 filas × 3 columnas
+  [OK   ] HTML 1: las celdas de las dos tablas = las de la pregunta emitida por R/exams (misma versión)
+  [OK   ] HTML 1: ningún ##ANSWERi## sin resolver
+  [OK   ] HTML 1: las seis preguntas aparecen en orden
+  [OK   ] HTML 1: cada gap (opciones o campo num) va en el párrafo siguiente a su pregunta, con las opciones del exshuffle
+  [OK   ] HTML 1: sin LaTeX crudo ni «$» sueltos en el texto visible
+  [OK   ] HTML 1: las ecuaciones salieron como MathML/MathJax (cuenta ≥ las de la Solution)
+  [OK   ] HTML 1: Solution con el encabezado de su tipo de Parte 2 («Parte 2 · Lecturas del promedio que no sirven»)
+  [OK   ] HTML 1: la Solution no cita letras de opciones (regla #19)
+  [OK   ] HTML 2 (semilla 3): dos tablas, cada una de 3 filas × 3 columnas
+  [OK   ] HTML 2: las celdas de las dos tablas = las de la pregunta emitida por R/exams (misma versión)
+  [OK   ] HTML 2: ningún ##ANSWERi## sin resolver
+  [OK   ] HTML 2: las seis preguntas aparecen en orden
+  [OK   ] HTML 2: cada gap (opciones o campo num) va en el párrafo siguiente a su pregunta, con las opciones del exshuffle
+  [OK   ] HTML 2: sin LaTeX crudo ni «$» sueltos en el texto visible
+  [OK   ] HTML 2: las ecuaciones salieron como MathML/MathJax (cuenta ≥ las de la Solution)
+  [OK   ] HTML 2: Solution con el encabezado de su tipo de Parte 2 («Parte 2 · Comparaciones que no deciden qué grado ganó»)
+  [OK   ] HTML 2: la Solution no cita letras de opciones (regla #19)
+  [OK   ] HTML 3 (semilla 2): dos tablas, cada una de 3 filas × 3 columnas
+  [OK   ] HTML 3: las celdas de las dos tablas = las de la pregunta emitida por R/exams (misma versión)
+  [OK   ] HTML 3: ningún ##ANSWERi## sin resolver
+  [OK   ] HTML 3: las seis preguntas aparecen en orden
+  [OK   ] HTML 3: cada gap (opciones o campo num) va en el párrafo siguiente a su pregunta, con las opciones del exshuffle
+  [OK   ] HTML 3: sin LaTeX crudo ni «$» sueltos en el texto visible
+  [OK   ] HTML 3: las ecuaciones salieron como MathML/MathJax (cuenta ≥ las de la Solution)
+  [OK   ] HTML 3: Solution con el encabezado de su tipo de Parte 2 («Parte 2 · Comparaciones que no deciden qué grado ganó»)
+  [OK   ] HTML 3: la Solution no cita letras de opciones (regla #19)
+  [OK   ] HTML 4 (semilla 1): dos tablas, cada una de 3 filas × 3 columnas
+  [OK   ] HTML 4: las celdas de las dos tablas = las de la pregunta emitida por R/exams (misma versión)
+  [OK   ] HTML 4: ningún ##ANSWERi## sin resolver
+  [OK   ] HTML 4: las seis preguntas aparecen en orden
+  [OK   ] HTML 4: cada gap (opciones o campo num) va en el párrafo siguiente a su pregunta, con las opciones del exshuffle
+  [OK   ] HTML 4: sin LaTeX crudo ni «$» sueltos en el texto visible
+  [OK   ] HTML 4: las ecuaciones salieron como MathML/MathJax (cuenta ≥ las de la Solution)
+  [OK   ] HTML 4: Solution con el encabezado de su tipo de Parte 2 («Parte 2 · Lecturas del promedio que no sirven»)
+  [OK   ] HTML 4: la Solution no cita letras de opciones (regla #19)
+  [OK   ] HTML 5 (semilla 4): dos tablas, cada una de 3 filas × 3 columnas
+  [OK   ] HTML 5: las celdas de las dos tablas = las de la pregunta emitida por R/exams (misma versión)
+  [OK   ] HTML 5: ningún ##ANSWERi## sin resolver
+  [OK   ] HTML 5: las seis preguntas aparecen en orden
+  [OK   ] HTML 5: cada gap (opciones o campo num) va en el párrafo siguiente a su pregunta, con las opciones del exshuffle
+  [OK   ] HTML 5: sin LaTeX crudo ni «$» sueltos en el texto visible
+  [OK   ] HTML 5: las ecuaciones salieron como MathML/MathJax (cuenta ≥ las de la Solution)
+  [OK   ] HTML 5: Solution con el encabezado de su tipo de Parte 2 («Parte 2 · Comparaciones que no deciden qué grado ganó»)
+  [OK   ] HTML 5: la Solution no cita letras de opciones (regla #19)
+
+=== PDF (cloze1..5.pdf) ===
+  [OK   ] PDF 1: ningún ##ANSWERi##, «$» ni LaTeX crudo
+  [OK   ] PDF 1: cada pregunta va seguida, sin nada en medio, de sus opciones (Partes 1, 2, 6) o de la pregunta siguiente (3, 4, 5)
+  [OK   ] PDF 1: las 18 celdas de las dos tablas aparecen en el PDF
+  [OK   ] PDF 1: páginas
+  [OK   ] PDF 2: ningún ##ANSWERi##, «$» ni LaTeX crudo
+  [OK   ] PDF 2: cada pregunta va seguida, sin nada en medio, de sus opciones (Partes 1, 2, 6) o de la pregunta siguiente (3, 4, 5)
+  [OK   ] PDF 2: las 18 celdas de las dos tablas aparecen en el PDF
+  [OK   ] PDF 2: páginas
+  [OK   ] PDF 3: ningún ##ANSWERi##, «$» ni LaTeX crudo
+  [OK   ] PDF 3: cada pregunta va seguida, sin nada en medio, de sus opciones (Partes 1, 2, 6) o de la pregunta siguiente (3, 4, 5)
+  [OK   ] PDF 3: las 18 celdas de las dos tablas aparecen en el PDF
+  [OK   ] PDF 3: páginas
+  [OK   ] PDF 4: ningún ##ANSWERi##, «$» ni LaTeX crudo
+  [OK   ] PDF 4: cada pregunta va seguida, sin nada en medio, de sus opciones (Partes 1, 2, 6) o de la pregunta siguiente (3, 4, 5)
+  [OK   ] PDF 4: las 18 celdas de las dos tablas aparecen en el PDF
+  [OK   ] PDF 4: páginas
+  [OK   ] PDF 5: ningún ##ANSWERi##, «$» ni LaTeX crudo
+  [OK   ] PDF 5: cada pregunta va seguida, sin nada en medio, de sus opciones (Partes 1, 2, 6) o de la pregunta siguiente (3, 4, 5)
+  [OK   ] PDF 5: las 18 celdas de las dos tablas aparecen en el PDF
+  [OK   ] PDF 5: páginas
+  páginas por PDF: 5 5 5 5 4 
+
+=== DOCX (cloze1.docx, semilla 7) ===
+  [FALLA] DOCX: ningún ##ANSWERi## sin resolver  -> marcadores visibles: 6
+  [FALLA] DOCX: las opciones de la Parte 1 salen justo después de su pregunta  -> posición de las opciones de la Parte 1: 2092 · posición de «Parte 2.»: 1549
+  (informativo) las opciones aparecen agrupadas tras la Parte 6, con rótulos (a), (b), (c):  TRUE 
+  [OK   ] DOCX: las dos tablas con sus celdas
+
+=== MOODLE moodle/cloze.xml ===
+  preguntas cloze: 5 · fallos: 0
+
+=== MOODLE moodle_aula/totales_promedios_cloze.xml ===
+  preguntas cloze: 30 · fallos: 0
+
+TOTAL de verificaciones fallidas entre formatos: 2 

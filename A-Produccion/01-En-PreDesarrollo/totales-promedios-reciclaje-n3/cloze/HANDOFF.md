@@ -1,23 +1,87 @@
 # HANDOFF — CLOZE `totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1`
 
 > Frase disparadora: «Continúa con el CLOZE de totales-promedios-reciclaje-n3».
-> Última actualización: 2026-10-31, tanda 5 del `orquestador-cloze`, **detenida en el paso A**: al cablear «H2 a» (L-C5)
-> con la enumeración exacta que ejecuta el código, las exclusiones de V11 (que dependen de la Parte 1) mueven las cifras.
-> De las 69 celdas firmadas, 22 quedan por encima de lo firmado (+0,1 a +0,8 pp). El `.Rmd` no cambió. Quedan cableadas
-> L-C5 (E8, con MC25 a MC27) y §P7-G (E4).
-> Antes: tanda 4, detenida en el paso B (el reparto autorizado de H2 no era viable); tanda 3, **FASE 2C r1: `RECHAZAR`**
-> (H1 y H2, diagnosticidad ALTA, ninguna CORRECCIÓN).
+> Última actualización: 2026-10-31, tanda 6 del `orquestador-cloze`, **detenida tras la FASE 2C r2 (`APROBAR_CON_CAMBIOS`)**:
+> pasos 3 a 6 resellados sobre el md5 `42f725bf…` (pasada 2 de §P7-D, H1 y H3); L-C5 con las cifras exactas del código. El
+> detractor encontró, fuera de la batería congelada, un canal de +75,0 pp en la Parte 2: vuelve al profesor. Antes: tanda 5 (detenida en el paso A), tanda 4 (reparto de H2 no viable), tanda 3 (FASE 2C r1 `RECHAZAR`).
 > Si este archivo y `ejercicio_state.json` discrepan, manda el JSON. Las invariantes del SCHOICE (L-1 a L-5,
-> «O-1 corregido»), las firmas del CLOZE (F-1 a F-4), las decisiones del 2026-10-30 y las leyes del CLOZE (L-C1 a
-> L-C3) están en [`../.claude/CLAUDE.md`](../.claude/CLAUDE.md) § «CLOZE hermano». El ítem verbatim, en
+> «O-1 corregido»), las firmas del CLOZE (F-1 a F-4), las decisiones del profesor y las leyes del CLOZE (L-C1 a L-C5)
+> están en [`../.claude/CLAUDE.md`](../.claude/CLAUDE.md) § «CLOZE hermano». El ítem verbatim, en
 > [`../ITEM_OFICIAL.md`](../ITEM_OFICIAL.md).
 
-## Estado: 6/11 (pasos 1 a 6 sellados en la tanda 2; `detractor_fase2c` NO sellado: la FASE 2C r1 rechazó; las tandas 4 y 5 no reabrieron)
+## Estado: 6/11 (reapertura #2; pasos 3 a 6 resellados en la tanda 6; `detractor_fase2c` NO sellado: FASE 2C r2 `APROBAR_CON_CAMBIOS`, pendiente de decisión del profesor)
 
-`.Rmd`: md5 **`96cfcf356c01326d42f10ee4c36545b7`** (tanda 1: `e58f3df91e31121ea66c2be0b0506c50`). Reapertura #1
-desde `generacion_rmd`; los pasos 3, 4, 5 y 6 se sellaron uno a uno, cada uno tras ejecutarse y con su artefacto en
-la nota. No está aprobado: faltan la FASE 2C, las 5 coherencias, la diversidad, la validación ICFES y la
-aprobación del profesor. **No usar en clase.**
+`.Rmd`: md5 **`42f725bf191b81784f76b858c26f7733`** (antes `96cfcf35…`). No está aprobado: faltan la FASE 2C r2, las 5
+coherencias, la diversidad, la validación ICFES y la aprobación del profesor. **No usar en clase.**
+
+## Tanda 6 (2026-10-31): L-C5 con las cifras exactas del código y pasada 2 de §P7-D (H1 y H3)
+
+**Resultado:** md5 `96cfcf35…` → **`42f725bf191b81784f76b858c26f7733`**. Reapertura #2 desde `generacion_rmd`
+(`--reporte salida/fase2c_r1_detractor.md`); pasos 3 a 6 sellados de nuevo, cada uno con su artefacto en la nota.
+Quedan **Partes 2 a 6: 1 pasada de §P7-D** (usadas: tanda 1 y tanda 6).
+
+- **Paso A (L-C5).** `FIRMA_H2` = columna `ex` de `salida/h2_exacta_96cfcf35.txt` (decisión «a · iii ampliada sí»).
+  `salida/verificar_espacio_cloze_r6a.txt` (exit 3, 368 s): 67 celdas «ROJO, cubierto», A1 en CURSOS (+7,0) en «ok»,
+  0 por encima, 0 fuera de la firma; MC25 a MC27 cazados; solo los 12 pendientes de la Parte 2.
+- **Paso B (H1).** Parte 2 reescrita en sus dos tipos. Las ocho opciones de cada tipo llevan las mismas palabras del
+  estímulo («Lo que recogió … grado … sus cursos» en «promedio»; «grado», «del» y «otro» en «comparar»), sin «total»,
+  coma ni condicional; por largo, una clave entre las cortas, otra en el medio y otra entre las largas. Distractor nuevo
+  «cociente» (en lugar de «mejor») en «comparar». Exactas, 720 versiones por tipo (`salida/p2_redaccion_42f725bf.txt`):
+  todas las reglas de L-C4 de la Parte 2 en +2,8 pp o menos (antes, hasta +75,0). Sondas extra fuera de la batería
+  (la que menos comparte, fuera del par, prefijo, descarta la más corta, tres primeras palabras): antes hasta +45,0 pp;
+  ahora +3,9 pp como máximo.
+- **H3.** Encabezado de la Solution según el tipo de la Parte 2.
+- **Invariancia.** Por semilla (100), la Parte 1, la tabla del otro colegio, las Partes 3 a 6, el tipo y la posición de la
+  clave de la Parte 2 y el `.Random.seed` final son idénticos a HEAD (`salida/rng_partes_3a6_r3.txt`). L-C5, idéntica entre
+  r6a y r6b (134 líneas).
+
+- **FASE 2C r2 (`AgenteDetractor` nuevo, sin `name:`): `APROBAR_CON_CAMBIOS`.** Reporte íntegro en
+  `salida/fase2c_r2_detractor.md` (sacado de su transcripción); `verificar_citas_detractor.py`: 13 citas, 0 problemas.
+  Ninguna CORRECCIÓN; reproduce con código propio L-C4 (Parte 2 en +2,8 pp o menos, con los 3 materiales y los 6 pares de
+  grados), las 69 celdas de «H2 a», RL1, RL2, las canónicas, los pesos y los espacios duros.
+
+  | ID | Severidad · tipo | Qué | Estado |
+  |---|---|---|---|
+  | H1 | MEDIA · diagnosticidad | Tipo «promedio»: las tres claves dicen «dividido entre» y ningún distractor; «elige la que dice dividido», «… entre» o «más palabras con el párrafo del otro colegio»: **+75,0 pp exactos**. Es H1 de la r1 desplazado («total» → «dividido entre»). Fuera de L-C4 | **Al profesor** (§P7-C: no obliga en este ciclo) |
+  | H2 | MEDIA · diagnosticidad | Tipo «comparar»: «descarta las que dicen *por curso*»: **+25,0 pp exactos** (tres distractores lo dicen, ninguna clave) | **Al profesor**, con H1 |
+  | H3 | MEDIA · cobertura del verificador | L-C4 no lleva el párrafo del otro colegio (`intro_par`) como estímulo de la Parte 2; por ahí entró H1 | Para L-C4 v2 (próximo ciclo; obliga a volver a medir el histórico) |
+  | H4 | BAJA · proceso | El `ERR_DIAG_SUPERFICIAL` de p6 es un artefacto de la sonda H3 sobre un mchoice: «las que empiezan por Si son verdaderas» da 0,0 pp exactos; el canal real condicionado es RL2 (+33,3, firmado) | Anotar esta justificación al sellar el paso 9 |
+
+- **Abierto al cerrar la tanda (no ejecutado o sin resultado):**
+- **6b (`auditor-visual-html`, N = 24, semillas de `render_6b.R`; 120 capturas por CDP a 320, 360 y 1024 px, con
+  `innerWidth` comprobado): `APTO_CON_OBSERVACIONES`**, recibido después de cerrar el reporte de la tanda. Evidencia en
+  `salida/6b_r3/`.
+  - BAJA 1: en la Solution de las Partes 3 a 6 (texto propio), la cifra de una ecuación queda separada de «kilos.»: 129 cortes
+    en 594 casos (feedback (c) a (f), «Procedimiento correcto», «Parte 6 · Afirmaciones falsas», «Caso específico»), aunque
+    el espacio duro ya está. La métrica de la r2 no contaba esta clase. Propuesta del auditor, sin probar: envolver ecuación y
+    unidad en un `span` con `white-space:nowrap`. Es de tipografía, no de diagnosticidad: no gasta pasada de §P7-D, pero
+    cambiar el `.Rmd` exige reapertura y otro detractor.
+  - BAJA 2: palabras sueltas al final de las opciones de la Parte 2 a 320 px (22 de 96) y de sus viñetas en la Solution.
+    Estética; sin acción.
+  - Sin hallazgos de markup, math, partes, tablas, tildes ni anomalías entre versiones. El encabezado de la Parte 2 sigue al
+    tipo en 24 de 24. Posición de la clave en 200 versiones: Parte 2, p = 0,73; Parte 1, p = 0,46.
+  - Residuos de la Parte 1 (decisión 2 a), iguales a la r2: «15 / kilos.» 154 cortes en 2 014 casos, todos en la Parte 1.
+- **Paso 8 (`AgenteValidadorVisual`, salida en `salida/coherencias_r3/`): las 5 coherencias OK en HTML, PDF y Moodle**,
+  con un verificador propio que no usa las funciones del `.Rmd` (N = 100: 106 comprobaciones por versión, 0 fallos; 2555
+  ecuaciones; Moodle 35/35 versiones y 210 gaps; 20 mutaciones de control detectadas). **Sin sellar**: el orden exige el
+  paso 7 antes. Dos BAJA:
+  - el DOCX deja visibles los `##ANSWERi##` (comportamiento de `exams2pandoc` con cloze; ya declarado: el DOCX no es formato
+    de entrega del CLOZE; para papel, el SCHOICE);
+  - `expl2["moda"]` dice «Eso describe la moda, el valor más repetido» de «Lo que recogió la mayoría de sus cursos»: lo que
+    recoge la mayoría es siempre la moda, pero la moda puede no ser mayoritaria. Precisión de la Solution, no CORRECCIÓN;
+    se puede afinar en la misma reapertura que decida el profesor.
+- **Corrección de una nota sellada:** la nota del paso 5 dice «PDF de la semilla 2»; `salida/revision_pdf_r3/c2-*.png` son
+  páginas de `cloze2.pdf`, que es la **semilla 3** (CxC). La revisión a ojo vale para esa semilla.
+- **Medido, sin sellar** (el orden exige la FASE 2C antes):
+  - Paso 9: `salida/diversidad_sustantiva_r3.txt` (exit 0; p2 6/100 = fija-justificada), `salida/diagnosticidad_por_rama_r3.txt`
+    y `salida/diagnosticidad_r3.txt`: **exit 1, `ERR_DIAG_SUPERFICIAL` en p6** (H3: en las 17 versiones con una sola
+    verdadera, la verdadera empieza por «Si»). La Parte 6 es mchoice con «Puede haber más de una»; esa única verdadera es
+    siempre una hipótesis porque «ventaja» y «Ganó…» llevan el mismo veredicto (L-C1, decisión 1 a), y H2 da 0 %. Pendiente
+    de juicio del detractor y, si es canal, del profesor: no se tocó la Parte 6.
+  - Paso 10: V1 a V4 OK (`salida/v1_v4_r3.txt`); literalidad de Afirmación, Evidencia, Descriptor y Estándar contra el
+    catálogo canónico, OK; DOK 2, Bloom «Evaluar», Nivel 3.
+  - Stress test visual N = 100 (`salida/stress_n100_r3/`): 0 anomalías. Suites del repo que barren los `.Rmd`: 6/6 en verde
+    (`salida/suites_r3.txt`).
 
 ## Tanda 5 (2026-10-31): L-C5 cableada; las cifras exactas con el código superan lo firmado en 22 celdas
 
@@ -267,17 +331,12 @@ convierte un ` ` escrito en el texto en el carácter literal: comprobar con `gr
 
 ## Próximo paso
 
-1. **Decisión del profesor sobre el alcance de «H2 a»**, con las cifras de la tanda 5 (`../.claude/CLAUDE.md` § «Tanda 5» y
-   `salida/h2_exacta_96cfcf35.txt`):
-   - (a) firmar como alcance las cifras exactas que ejecuta el código (las 100 Partes 1 de la muestra estándar,
-     deterministas); se cambian las cifras de `FIRMA_H2` en E8 y nada más;
-   - (b) mantener V0 y añadir un margen por el ruido de la Parte 1 (relajar: solo con su firma);
-   - (c) otra que proponga el profesor.
-2. Después, la pasada 2 de §P7-D para H1 y H3, que no depende de esta decisión: reabrir desde `generacion_rmd` con
-   `--reporte salida/fase2c_r1_detractor.md`. H1: redacción de la Parte 2 hasta dejar en +8 pp o menos todas sus reglas en
-   rojo (exactas, por tipo; en `salida/verificar_espacio_cloze_r5.txt`: «promedio» P2-L3 +50,0, P2-L1 +45,0, P2-L2 +45,0,
-   P2-E1 +20,8; «comparar» P2-L1 +75,0, P2-E4 +55,0, P2-E2 +45,0, P2-E1 +41,7, P2-L4 +12,5, P2-L6 +12,5, P2-F3 +11,1, P2-F4
-   +9,2 pp), y volver a enumerar la canónica (X5, X6 y X10). H3: encabezado según el tipo. Luego, los pasos 3 a 6 y la 6b
-   con sellos separados.
-3. **FASE 2C r2 con un detractor NUEVO**, sin `name:`. Después, las 5 coherencias, la diversidad por gap, la validación
-   ICFES y el WAIT_USER #3.
+1. **Decisión del profesor sobre H1 y H2 de la FASE 2C r2** (regla de parada de §P7-D: el arreglo de H1 de la r1 cerró la batería
+   y abrió el mismo canal con otra palabra):
+   - (a) gastar la **última** pasada de §P7-D en la Parte 2: «dividido entre» en 4 o 5 distractores «promedio», con operandos
+     equivocados y siempre falsos (propuesta del detractor, con su `expl2`), y «promedio» sin «por curso» en los distractores
+     «comparar»; volver a medir L-C4, las sondas de H1 y H2, las cruzadas y la canónica; detractor nuevo;
+   - (b) firmar H1 (+75,0 pp en «promedio») y H2 (+25,0 pp en «comparar») como residuo (§P7-E), con sus cifras exactas;
+   - (c) otra.
+2. Sellar 7 a 10 según la decisión (el paso 8 ya tiene artefacto: `salida/coherencias_r3/`); H4 en la nota del paso 9.
+3. WAIT_USER #3 solo con la FASE 2C cerrada.

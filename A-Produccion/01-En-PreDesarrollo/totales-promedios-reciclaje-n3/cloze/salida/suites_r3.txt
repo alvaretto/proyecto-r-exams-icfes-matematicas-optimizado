@@ -1,0 +1,6 @@
+test_letter_independence.R exit=0
+test_glifos_latex.R exit=0
+test_nomenclatura_rmd.R exit=0
+test_markdown_tablas_none_guard.R exit=0
+test_pandocbounded_y_solution_coherence.R exit=0
+test_ortografia_espanol.R exit=0

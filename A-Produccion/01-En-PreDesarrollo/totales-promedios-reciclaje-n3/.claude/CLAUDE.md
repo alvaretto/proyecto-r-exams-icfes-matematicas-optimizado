@@ -450,6 +450,17 @@ se firmaron (un decimal).
 | Cada celda de H2, dentro de lo firmado | `h2_juzgar()` contra `FIRMA_H2`, una sola función para las 69 celdas | MC25: la rama PROMEDIO del otro colegio, siempre con *k*′ = 1 (K1 en PROMEDIO). MC26: la rama CURSOS, siempre con δ′ < 10 (D2 en CURSOS). MC27: `v_c <- !v_hp` (RL2 · HP). Las demás celdas no tienen mutante propio |
 | La puerta ejecuta el código | cada hoja cuenta las llamadas de cada sorteo libre; la masa con error tiene que ser 0 | sin mutante propio (el mismo mecanismo que MC22 en la puerta de L-C3) |
 
+**Actualización de L-C5 en la tanda 6 (2026-10-31; decisión «a · iii ampliada sí» del profesor).**
+- **Qué cambió.** `FIRMA_H2` (E8 de `cloze/verificar_espacio_cloze.R`) lleva ahora las 69 cifras exactas que da el código del
+  `.Rmd` con las exclusiones de V11, sobre las 100 Partes 1 de la muestra estándar: la columna `ex` de la primera tabla de
+  `cloze/salida/h2_exacta_96cfcf35.txt`, a un decimal, tal como se firmaron. Sustituyen a las de V0. Las dos celdas de A1 en
+  la rama CURSOS quedan en 7,0. Nada más cambió en el verificador ni en el `.Rmd`.
+- **Por qué.** Las cifras de V0 salían de un modelo transcrito sin las exclusiones de V11. La aclaración iii de §P7-E,
+  ampliada, exige que toda cifra que se lleve a firma salga del código del `.Rmd`, con todos sus filtros.
+- **Comprobado** (`cloze/salida/verificar_espacio_cloze_r6a.txt`, exit 3, 368 s): 67 celdas «ROJO, cubierto»; las dos de
+  A1 en la rama CURSOS, en +8 pp o menos («ok»); ninguna por encima de lo firmado y ninguna celda no firmada por encima de
+  +8 pp; MC25, MC26 y MC27, cazados por su sonda; 0 fallos; los 12 pendientes son de la Parte 2 (H1).
+
 ### Decisión del profesor tras la tanda 2 (2026-10-30)
 
 > **Firmada por el profesor el 2026-10-30**, en la pausa posterior a la tanda 2 del `orquestador-cloze`, que se
@@ -689,3 +700,66 @@ se firmaron (un decimal).
   alguna regla, detente y trae las dos cifras»). No se reabrió el `.Rmd` ni se gastó la pasada 2 de §P7-D. L-C5 queda
   cableada con las cifras firmadas: el verificador sale con exit 3 y lista las 22 celdas como pendientes. §P7-G quedó
   aplicada a la batería de E4.
+
+### Decisión del profesor tras la tanda 5 (2026-10-31)
+
+> **Firmada por el profesor el 2026-10-31**, en la pausa posterior a la tanda 5 del `orquestador-cloze`. La tanda se
+> detuvo al cablear L-C5, porque al ejecutar el código del `.Rmd` 22 de las 69 celdas de «H2 a» superaban lo firmado
+> (md5 `96cfcf356c01326d42f10ee4c36545b7`). Respuesta literal: «a · iii ampliada sí». Regla #24 **H-5**: queda por
+> escrito quién decidió, cuándo y con qué cifras.
+
+1. **(a) El alcance de «H2 a» son las cifras exactas que da el código, en las 69 celdas.** Sustituyen a las de V0.
+   - Fuente: la columna `ex` de la primera tabla de `cloze/salida/h2_exacta_96cfcf35.txt`. Incluye las exclusiones de
+     V11 y usa las 100 Partes 1 de la muestra estándar, así que es determinista.
+   - Celdas que suben (antes → ahora, en pp):
+
+     | Estrato | Celdas |
+     |---|---|
+     | mezcla | A1 ventaja y ganador 13,6 → 14,2 · D2 ventaja y ganador 24,0 → 24,3 · N1 ventaja y ganador 14,1 → 14,8 · HK1·HG 22,5 → 22,8 |
+     | rama CURSOS | HK1·HG 26,9 → 27,1 · HK2·HP 13,5 → 13,6 |
+     | rama PROMEDIO | D2 ventaja y ganador 31,7 → 32,5 · HN·HG 10,4 → 10,6 |
+     | *k*′ = 1 | D2 ventaja y ganador 32,1 → 32,8 · HD·HP 23,6 → 23,8 · HD·HG 13,8 → 14,1 · HN·HG 14,1 → 14,3 · HA·HP 16,5 → 16,6 · HA·HG 11,1 → 11,2 |
+     | *k*′ ≥ 2 | HA·HG 8,8 → 9,3 · HD·HP 13,7 → 14,0 · RL2·HP 30,2 → 30,3 |
+
+   - Las otras 47 celdas quedan iguales o más bajas. En la rama CURSOS, «menor promedio de 40 o más» (ventaja y
+     ganador) baja a +7,0 pp y sale del umbral.
+   - Ninguna celda no firmada pasa de +8 pp. Los dos residuos de orden (P6-P2, medidos con muestra: HG +9,9 y ganador
+     +8,3 pp) siguen declarados como NO CONCLUYENTES.
+   - Por qué hizo falta una segunda firma: las cifras de V0 salían de un modelo transcrito sin las exclusiones de V11.
+     Fue un error del coordinador, que aplicó la aclaración iii solo a la canónica.
+2. **(iii ampliada sí)** El coordinador amplía la aclaración iii de §P7-E en el texto íntegro de la regla #22: toda cifra
+   que se lleve a firma sale del código del `.Rmd`, con todos sus filtros.
+
+### Tanda 6 (2026-10-31): pasada 2 de §P7-D en la Parte 2 (H1 y H3 de la FASE 2C r1)
+
+> Lo hizo el `orquestador-cloze` tras la decisión «a · iii ampliada sí». Reapertura #2 desde `generacion_rmd`. md5
+> `96cfcf35…` → `42f725bf191b81784f76b858c26f7733`. Detalle y evidencia: `cloze/HANDOFF.md`.
+
+- **Pasadas de §P7-D en las Partes 2 a 6: quedan 1** (usadas: tanda 1 y tanda 6).
+- **H1 (Parte 2).** En cada tipo, las ocho opciones llevan las mismas palabras del estímulo (la pregunta y las Partes 3 a 5):
+  «Lo que recogió … grado … sus cursos» en «promedio»; «grado», «del» y «otro» en «comparar». Ninguna lleva «total», coma ni
+  condicional, ni empieza por «Únicamente», ni dice «sin tener en cuenta» o «exactamente». Por largo, una clave queda entre
+  las cortas, otra en el medio y otra entre las largas. En «comparar», el distractor «mejor» se cambió por «cociente» (el
+  promedio dividido entre la cantidad de cursos). Las claves no cambian de concepto.
+  - Batería L-C4, exacta (720 versiones por tipo): todas las reglas de la Parte 2 en +2,8 pp o menos. Antes: en «promedio»,
+    P2-L3 +50,0, P2-L1 +45,0, P2-L2 +45,0 y P2-E1 +20,8; en «comparar», P2-L1 +75,0, P2-E4 +55,0, P2-E2 +45,0, P2-E1 +41,7,
+    P2-L4 +12,5, P2-L6 +12,5, P2-F3 +11,1 y P2-F4 +9,2 pp.
+  - Fuera de la batería congelada (§P7-C), cinco sondas medidas para no abrir el canal inverso: la que menos comparte, la que
+    queda fuera del par más parecido, el prefijo singleton, «descarta la más corta» y las tres primeras palabras. Antes, hasta
+    +45,0 pp (las tres primeras palabras en «promedio») y +35,0 pp (la que menos comparte); ahora, +3,9 pp como máximo.
+- **H3.** El encabezado «Parte 2 · …» de la Solution depende del tipo: «Lecturas del promedio que no sirven» o
+  «Comparaciones que no deciden qué grado ganó».
+- **Canónica (L-C3).** Al mover los textos de la Parte 2, X6 baja de +16,7 a −2,8 pp y X10 de +16,7 a +0,0 pp (exactas); X5
+  sigue en −25,0. Siguen firmadas, pero ya no están en rojo. MC19 y MC20 se rehicieron para los textos nuevos (tres claves
+  «comparar» y dos claves «promedio» ganan «aunque», «fue» y «menor»): X6 +25,0 y X10 +33,3 pp, cazados por su sonda.
+- **Sin cambio en lo demás.** Por semilla (100), la Parte 1, la tabla del otro colegio, las Partes 3 a 6, el tipo y la
+  posición de la clave de la Parte 2 y el `.Random.seed` final son idénticos a los del md5 anterior. L-C5 da las mismas 69
+  cifras que antes de la pasada.
+- **Verificador** (`cloze/salida/verificar_espacio_cloze_r6b.txt`): exit 4, 106 cifras dentro de lo firmado, 0 fallos y
+  0 pendientes.
+- **FASE 2C r2 (2026-10-31): `APROBAR_CON_CAMBIOS`, sin ninguna CORRECCIÓN** (`cloze/salida/fase2c_r2_detractor.md`; citas 13/0).
+  Fuera de la batería congelada: en «promedio», la clave es la única que dice «dividido entre» (+75,0 pp exactos); en
+  «comparar», «descarta las que dicen *por curso*» (+25,0 pp). La batería L-C4 no lleva el párrafo del otro colegio como
+  estímulo (H3, para L-C4 v2). El `ERR_DIAG_SUPERFICIAL` de `validar_diagnosticidad.R` en p6 es un artefacto de su sonda H3
+  sobre un mchoice (0,0 pp exactos; H4). **Pendiente de decisión del profesor:** gastar la última pasada de §P7-D en la Parte 2
+  o firmar H1 y H2 como residuo.

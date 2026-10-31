@@ -1,0 +1,12 @@
+Control sin mutar: 0 fallos
+  Parte 3 numérica +1                                           CAZADA (1 fallos)
+  peso del gap 1: 3 -> 2                                         CAZADA (1 fallos)
+  celda «5 cursos» -> «6 cursos» (tabla 1)                   CAZADA (1 fallos)
+  marca de la Parte 2 movida a otra opción                      CAZADA (1 fallos)
+  marca de «Ganó el concurso el grado noveno» invertida (Parte 6) CAZADA (1 fallos)
+  un marcador ##ANSWER1## sin resolver                           CAZADA (1 fallos)
+  gap de la Parte 3 desplazado (pregunta 4 antes de la 3)        CAZADA (6 fallos)
+Avisos:
+1: In verificar_moodle(f) : NAs introducidos por coerción
+2: In r(4) : NAs introducidos por coerción
+3: In r(4) : NAs introducidos por coerción

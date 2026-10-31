@@ -3,7 +3,7 @@
   "ejercicio": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1",
   "tipo": "cloze",
   "timestamp_inicio": "2026-10-30T21:25:33.191024-05:00",
-  "timestamp_ultima_actualizacion": "2026-10-30T23:16:47.275118-05:00",
+  "timestamp_ultima_actualizacion": "2026-10-31T08:17:49.973266-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -27,24 +27,24 @@
     },
     "generacion_rmd": {
       "completado": true,
-      "timestamp": "2026-10-30T23:14:21.358207-05:00",
+      "timestamp": "2026-10-31T08:17:49.794151-05:00",
       "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd",
-      "nota": "Tanda 2: .Rmd md5 96cfcf356c01326d42f10ee4c36545b7 (antes e58f3df9...). Cambios solo tras el marcador del bloque P1: guarda de composición de la Parte 6 (L-C1) y espacio duro ED en el texto propio de las Partes 2 a 6. Verificado: cloze/salida/verificar_espacio_cloze_r2.txt (E1 111/111 con 20 canónicas, E2 330/330, MC1-MC18 cazados por su sonda, exit 3 por X6/X10/X11 en la canónica, pendientes de firma); validar_glifos_latex.R y corregir_ortografia_espanol.R sobre el md5 nuevo."
+      "nota": "Reapertura #2, tanda 6 (pasada 2 de §P7-D, H1): Parte 2 reescrita en los dos tipos; md5 42f725bf191b81784f76b858c26f7733. Artefactos: salida/verificar_espacio_cloze_r6b.txt (2026-10-31T08:17:14, exit 4, 0 fallos, 0 pendientes; L-C4 Parte 2 exacta: ninguna regla > +8 pp en «promedio» ni en «comparar»; L-C5 idéntica a la r6a; canónica X6 -2,8 y X10 +0,0 pp; MC19 y MC20 rehechos y cazados) y salida/p2_redaccion_42f725bf.txt (2026-10-31T08:16:39, antes y después, regla por regla)."
     },
     "retroalimentacion": {
       "completado": true,
-      "timestamp": "2026-10-30T23:15:38.511467-05:00",
-      "nota": "Tanda 2, md5 96cfcf35...: Solution con sus 6 subsecciones (Respuestas, Procedimiento, Análisis de los distractores, Propiedades, Caso específico, Reflexión, Estrategia). BAJA 3 de la 6b corregida: en «Respuestas · Parte 6» cada afirmación va en su renglón, agrupadas por veredicto (sin orden: Incidente Q). Espacio duro cifra-unidad en las Partes 3 a 6 y su retroalimentación (27 y 26 en cloze1/cloze5.html; 14 «~kilos» en tex/exercise1.tex). Revisado en cloze/salida/html/cloze1.html, cloze5.html y revision_pdf_r2/c1-2.png. El párrafo de la Parte 1 sigue igual que en el SCHOICE (decisión 2 a)."
+      "timestamp": "2026-10-31T08:17:49.854221-05:00",
+      "nota": "H3 de la FASE 2C r1: encabezado de la Solution según el tipo de la Parte 2 («Lecturas del promedio que no sirven» / «Comparaciones que no deciden qué grado ganó») y explicación nueva del distractor «cociente». Artefacto: salida/html/cloze1..5.html (2026-10-31T08:11:14): encabezado correcto en las 5 (tipos promedio 1 y 4; comparar 2, 3 y 5); 0 ##ANSWER; FASE 2J letter-independent; 0 citas de letra en la Solution (grep regla #19)."
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-10-30T23:15:50.953399-05:00",
-      "nota": "Tanda 2, md5 96cfcf35...: cloze/salida/render_r2.log. HTML, PDF, DOCX y Moodle OK con las semillas canonica=7, CxC=3, CxP=2, PxC=1, PxP=4; NOPS N/A (mensaje con 'cloze exercises'). tex: \\pandocbounded solo como \\providecommand (5), \\LTcaptype{none} 2 con la guarda c@none. Moodle: 0 imágenes en gaps, 0 ##ANSWER en el HTML. PDF de la canónica revisado (revision_pdf_r2/, 5 páginas: la lista anidada de Respuestas ocupa más)."
+      "timestamp": "2026-10-31T08:17:49.914485-05:00",
+      "nota": "salida/render_r3.log (2026-10-31T08:11:23): HTML, PDF, DOCX y Moodle OK con semillas canonica=7 CxC=3 CxP=2 PxC=1 PxP=4; NOPS N/A (mensaje con 'cloze exercises'); tex: LTcaptype{none} con guarda c@none en el .Rmd; PDF de la semilla 2 revisado a ojo, 5 páginas (salida/revision_pdf_r3/c2_montaje.png); Moodle del aula salida/exportar_r3.log: 30/30 con pesos 3|1|1|1|1|1, 60 MULTICHOICE_V, 30 MULTIRESPONSE, 90 NUMERICAL, 0 etiquetas en 180 gaps, 0 imágenes en gaps."
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-10-30T23:16:47.275118-05:00",
-      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261030-231556-1522539/informe.txt · md5 96cfcf356c01326d42f10ee4c36545b7 · 0 errores / 7 advertencias (2B sin PDF en el comando del hook: el PDF se revisó en revision_pdf_r2; 2E 'Tarea'; 2F tabla de metadatos, descripción de evaluación, análisis de distractores, patrón 'Es posible que los estudiantes', letra_correcta: heurísticas, las mismas de la tanda 1) · 2G 100/100 · 2H 10 semillas, 0 anomalías"
+      "timestamp": "2026-10-31T08:17:49.973266-05:00",
+      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261031-081231-2266570/informe.txt · md5 42f725bf191b81784f76b858c26f7733 · 0 errores / 7 advertencias (2B sin PDF en el comando del hook; 2E Tarea; 2F tabla de metadatos, descripción de evaluación, análisis de distractores, patrón ICFES, letra_correcta) · 2G 100/100 · 2H 10 semillas, 0 anomalías · disparado por salida/hook_trigger_r3.log (2026-10-31T08:12:31)."
     },
     "detractor_fase2c": {
       "completado": false,
@@ -98,6 +98,37 @@
         "arsenal_post_render": {
           "timestamp": "2026-10-30T21:52:57.075292-05:00",
           "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261030-215026-1392541/informe.txt · md5 e58f3df91e31121ea66c2be0b0506c50 · 0 errores / 7 advertencias (6 heurísticas 2E/2F, como en el SCHOICE; 2B sin PDF en el comando, PDF revisado aparte); 2G 100/100; 2H 10 semillas, 0 anomalías; 2I-2O OK"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-10-31T08:09:32.820623-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Tanda 6, pasada 2 de §P7-D (Partes 2 a 6): H1 de la FASE 2C r1 (canal léxico de la Parte 2: todas sus reglas en rojo de la batería L-C4 a +8 pp o menos, exactas y por tipo) y H3 (encabezado de la Solution según el tipo de la Parte 2). H2 queda bajo el override «H2 a» con las cifras exactas del código (decisión «a · iii ampliada sí» del 2026-10-31). Decisión del profesor del 2026-10-31.",
+      "reporte": "salida/fase2c_r1_detractor.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-10-30T23:14:21.358207-05:00",
+          "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd",
+          "nota": "Tanda 2: .Rmd md5 96cfcf356c01326d42f10ee4c36545b7 (antes e58f3df9...). Cambios solo tras el marcador del bloque P1: guarda de composición de la Parte 6 (L-C1) y espacio duro ED en el texto propio de las Partes 2 a 6. Verificado: cloze/salida/verificar_espacio_cloze_r2.txt (E1 111/111 con 20 canónicas, E2 330/330, MC1-MC18 cazados por su sonda, exit 3 por X6/X10/X11 en la canónica, pendientes de firma); validar_glifos_latex.R y corregir_ortografia_espanol.R sobre el md5 nuevo."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-10-30T23:15:38.511467-05:00",
+          "nota": "Tanda 2, md5 96cfcf35...: Solution con sus 6 subsecciones (Respuestas, Procedimiento, Análisis de los distractores, Propiedades, Caso específico, Reflexión, Estrategia). BAJA 3 de la 6b corregida: en «Respuestas · Parte 6» cada afirmación va en su renglón, agrupadas por veredicto (sin orden: Incidente Q). Espacio duro cifra-unidad en las Partes 3 a 6 y su retroalimentación (27 y 26 en cloze1/cloze5.html; 14 «~kilos» en tex/exercise1.tex). Revisado en cloze/salida/html/cloze1.html, cloze5.html y revision_pdf_r2/c1-2.png. El párrafo de la Parte 1 sigue igual que en el SCHOICE (decisión 2 a)."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-10-30T23:15:50.953399-05:00",
+          "nota": "Tanda 2, md5 96cfcf35...: cloze/salida/render_r2.log. HTML, PDF, DOCX y Moodle OK con las semillas canonica=7, CxC=3, CxP=2, PxC=1, PxP=4; NOPS N/A (mensaje con 'cloze exercises'). tex: \\pandocbounded solo como \\providecommand (5), \\LTcaptype{none} 2 con la guarda c@none. Moodle: 0 imágenes en gaps, 0 ##ANSWER en el HTML. PDF de la canónica revisado (revision_pdf_r2/, 5 páginas: la lista anidada de Respuestas ocupa más)."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-10-30T23:16:47.275118-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261030-231556-1522539/informe.txt · md5 96cfcf356c01326d42f10ee4c36545b7 · 0 errores / 7 advertencias (2B sin PDF en el comando del hook: el PDF se revisó en revision_pdf_r2; 2E 'Tarea'; 2F tabla de metadatos, descripción de evaluación, análisis de distractores, patrón 'Es posible que los estudiantes', letra_correcta: heurísticas, las mismas de la tanda 1) · 2G 100/100 · 2H 10 semillas, 0 anomalías"
         }
       }
     }

@@ -1,0 +1,61 @@
+md5 del .Rmd: 42f725bf191b81784f76b858c26f7733 
+xexams: 100 versiones en 30 s
+
+Versiones verificadas: 100 · con algún fallo: 0 · fallos totales: 0
+
+Cobertura de la muestra (semillas 1 100 ):
+  Parte 1 × otro colegio:
+          OtroColegio
+Parte1     CURSOS PROMEDIO
+  CURSOS       23       21
+  PROMEDIO     30       26
+  Tipo de Parte 2:
+
+comparar promedio 
+      59       41 
+  Material:
+
+  cartón    papel plástico 
+      28       42       30 
+  Fila (en la tabla 1) de la sede que gana:   Campestre=7 Central=7 El Bosque=3 La Pradera=9 Mañana=7 Norte=6 Primaria=18 Rural=12 Secundaria=5 Sur=6 Tarde=7 Urbana=13 
+  Ecuaciones aritméticas comprobadas:  2555 
+  Lectura alterna de la cifra como «total» (residuo declarado de O-1): versiones con ≥ 1 afirmación verdadera bajo esa lectura: 22 de 100; con exactamente una: 22
+
+==== Fichas de las 5 versiones renderizadas (semillas de render_cloze.R) ====
+
+[canonica · semilla 7] Parte 1 (CURSOS): Primaria 5 × 40 = 200 | Secundaria 4 × 45 = 180 → gana Primaria por 20 
+   Otro colegio (CURSOS): Séptimo 6 × 39 = 234 | Noveno 4 × 48 = 192 → gana Séptimo por 42 · Parte 2: promedio 
+   fallos: 0 
+
+[CxC · semilla 3] Parte 1 (CURSOS): Central 4 × 45 = 180 | Campestre 6 × 32 = 192 → gana Campestre por 12 
+   Otro colegio (CURSOS): Sexto 5 × 44 = 220 | Séptimo 7 × 33 = 231 → gana Séptimo por 11 · Parte 2: comparar 
+   fallos: 0 
+
+[CxP · semilla 2] Parte 1 (CURSOS): Mañana 4 × 39 = 156 | Tarde 6 × 32 = 192 → gana Tarde por 36 
+   Otro colegio (PROMEDIO): Sexto 6 × 35 = 210 | Séptimo 5 × 45 = 225 → gana Séptimo por 15 · Parte 2: comparar 
+   fallos: 0 
+
+[PxC · semilla 1] Parte 1 (PROMEDIO): Primaria 5 × 42 = 210 | Secundaria 6 × 27 = 162 → gana Primaria por 48 
+   Otro colegio (CURSOS): Sexto 7 × 53 = 371 | Séptimo 8 × 51 = 408 → gana Séptimo por 37 · Parte 2: promedio 
+   fallos: 0 
+
+[PxP · semilla 4] Parte 1 (PROMEDIO): Urbana 7 × 51 = 357 | Rural 8 × 39 = 312 → gana Urbana por 45 
+   Otro colegio (PROMEDIO): Sexto 7 × 57 = 399 | Octavo 8 × 46 = 368 → gana Sexto por 31 · Parte 2: comparar 
+   fallos: 0 
+
+==== Mutaciones de control (cada una debe producir ≥ 1 fallo) ====
+  Parte 5 + 1                                             CAZADA (1 fallos)
+  Parte 3 y 4 intercambiadas                              CAZADA (2 fallos)
+  una marca de la Parte 1 movida                          CAZADA (1 fallos)
+  una marca de la Parte 6 invertida                       CAZADA (1 fallos)
+  marca de la Parte 2 movida                              CAZADA (2 fallos)
+  cifra de una celda de la tabla 2 alterada               CAZADA (19 fallos)
+  nombre de grado de la Parte 3 cambiado                  CAZADA (6 fallos)
+  ##ANSWER3## movido tras la Parte 4                      CAZADA (3 fallos)
+  retroalimentación de la Parte 5 con otra diferencia    CAZADA (2 fallos)
+  una letra en la Solution (regla #19)                    CAZADA (1 fallos)
+  encabezado de la Parte 2 de otro tipo                   CAZADA (2 fallos)
+  opción de la Parte 2 de otro tipo                      CAZADA (3 fallos)
+  afirmación de la Parte 1 con otra cifra                CAZADA (5 fallos)
+
+Control sin mutar (debe dar 0 fallos): 0 

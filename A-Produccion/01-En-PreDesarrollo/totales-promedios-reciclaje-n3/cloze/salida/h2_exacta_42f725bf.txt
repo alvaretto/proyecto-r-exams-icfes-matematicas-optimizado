@@ -1,0 +1,79 @@
+md5 del .Rmd: 42f725bf191b81784f76b858c26f7733 
+
+Con las exclusiones de V11, 100 Partes 1: 3200 hojas, masa con error 0.0000, 15892 filas únicas, cascada (paso > 1) 0.50 % · 42.96638 secs
+  estrato   base   papel   ex firma veredicto
+   mezcla  P6-A1 ganador 14.2  14.2  cubierto
+   mezcla  P6-A1 ventaja 14.2  14.2  cubierto
+   mezcla  P6-D2 ganador 24.3  24.3  cubierto
+   mezcla  P6-D2 ventaja 24.3  24.3  cubierto
+   mezcla P6-HK1      hg 22.8  22.8  cubierto
+   mezcla  P6-HN      hp 17.7  17.7  cubierto
+   mezcla  P6-K1 ganador 33.3  33.3  cubierto
+   mezcla  P6-K1 ventaja 33.3  33.3  cubierto
+   mezcla  P6-N1 ganador 14.8  14.8  cubierto
+   mezcla  P6-N1 ventaja 14.8  14.8  cubierto
+   mezcla    RL1     par  8.3   8.3  cubierto
+   mezcla    RL2      hp 33.3  33.3  cubierto
+   mezcla    RL2      hg 33.3  33.3  cubierto
+   CURSOS  P6-A1 ganador  7.0   7.0        ok
+   CURSOS  P6-A1 ventaja  7.0   7.0        ok
+   CURSOS  P6-D1 ganador 12.6  12.6  cubierto
+   CURSOS  P6-D1 ventaja 12.6  12.6  cubierto
+   CURSOS  P6-D2 ganador 16.1  16.1  cubierto
+   CURSOS  P6-D2 ventaja 16.1  16.1  cubierto
+   CURSOS  P6-HD      hp 10.3  10.3  cubierto
+   CURSOS P6-HK1      hg 27.1  27.1  cubierto
+   CURSOS P6-HK2      hp 13.6  13.6  cubierto
+   CURSOS  P6-HN      hp 15.2  15.2  cubierto
+   CURSOS  P6-K1 ganador 29.6  29.6  cubierto
+   CURSOS  P6-K1 ventaja 29.6  29.6  cubierto
+   CURSOS    RL1     par 11.1  11.1  cubierto
+   CURSOS    RL2      hp 33.3  33.3  cubierto
+   CURSOS    RL2      hg 33.3  33.3  cubierto
+ PROMEDIO  P6-A1 ganador 35.4  35.4  cubierto
+ PROMEDIO  P6-A1 ventaja 35.4  35.4  cubierto
+ PROMEDIO  P6-D2 ganador 32.5  32.5  cubierto
+ PROMEDIO  P6-D2 ventaja 32.5  32.5  cubierto
+ PROMEDIO  P6-HD      hp  8.4   8.4  cubierto
+ PROMEDIO  P6-HN      hg 10.6  10.6  cubierto
+ PROMEDIO  P6-HN      hp 10.2  10.2  cubierto
+ PROMEDIO  P6-K1 ganador 36.9  36.9  cubierto
+ PROMEDIO  P6-K1 ventaja 36.9  36.9  cubierto
+ PROMEDIO  P6-N1 ganador 34.0  34.0  cubierto
+ PROMEDIO  P6-N1 ventaja 34.0  34.0  cubierto
+ PROMEDIO    RL1     par 11.1  11.1  cubierto
+ PROMEDIO    RL2      hp 33.3  33.3  cubierto
+ PROMEDIO    RL2      hg 33.3  33.3  cubierto
+       k1  P6-A1 ganador 30.0  30.0  cubierto
+       k1  P6-A1 ventaja 30.0  30.0  cubierto
+       k1  P6-D2 ganador 32.8  32.8  cubierto
+       k1  P6-D2 ventaja 32.8  32.8  cubierto
+       k1  P6-HA      hg 11.2  11.2  cubierto
+       k1  P6-HA      hp 16.6  16.6  cubierto
+       k1  P6-HD      hg 14.1  14.1  cubierto
+       k1  P6-HD      hp 23.8  23.8  cubierto
+       k1  P6-HN      hg 14.3  14.3  cubierto
+       k1  P6-HN      hp 16.9  16.9  cubierto
+       k1  P6-K1 ganador 32.8  32.8  cubierto
+       k1  P6-K1 ventaja 32.8  32.8  cubierto
+       k1  P6-N1 ganador 28.9  28.9  cubierto
+       k1  P6-N1 ventaja 28.9  28.9  cubierto
+       k1    RL1     par 13.0  13.0  cubierto
+       k1    RL2      hp 37.7  37.7  cubierto
+       k1    RL2      hg 33.4  33.4  cubierto
+       k2  P6-D2 ganador 11.9  11.9  cubierto
+       k2  P6-D2 ventaja 11.9  11.9  cubierto
+       k2  P6-HA      hg  9.3   9.3  cubierto
+       k2  P6-HD      hg 15.9  15.9  cubierto
+       k2  P6-HD      hp 14.0  14.0  cubierto
+       k2  P6-HN      hp 17.0  17.0  cubierto
+       k2  P6-K1 ganador 33.5  33.5  cubierto
+       k2  P6-K1 ventaja 33.5  33.5  cubierto
+       k2    RL2      hp 30.3  30.3  cubierto
+       k2    RL2      hg 24.6  24.6  cubierto
+
+Celdas en las que la cifra exacta con exclusiones difiere de la firmada (un decimal):
+[1] estrato   base      papel     ex        firma     veredicto
+<0 rows> (o 0- extensión row.names)
+
+resumen: 69 celdas firmadas; 0 difieren; 0 por encima de lo firmado; 0 pendientes fuera de la firma

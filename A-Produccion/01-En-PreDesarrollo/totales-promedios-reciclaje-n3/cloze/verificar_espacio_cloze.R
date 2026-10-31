@@ -172,9 +172,11 @@ or_p1 <- function(x) {
   sum(cand) == 1L && which(cand) == x$clave
 }
 or_p2 <- function(x) {
-  ## Pasada 1: ningún distractor del tipo «comparar» nombra un total; las tres claves sí.
-  es_clave <- if (x$tipo_p2 == "promedio") grepl("por igual|no cambiara", x$opciones_p2) else
-    grepl("total", x$opciones_p2) & !grepl("^Únicamente ", x$opciones_p2)
+  ## Pasada 2 (tanda 6): las claves «promedio» dividen lo que recogió el grado entre sus cursos, y ningún distractor de
+  ## ese tipo divide. Las claves «comparar» multiplican cursos por promedio o suman lo recogido por los cursos; ningún
+  ## distractor de ese tipo lo hace (el de la suma suma cursos y promedio; el del cociente divide el promedio).
+  es_clave <- if (x$tipo_p2 == "promedio") grepl("^Lo que recogió (el|ese) grado dividido (entre|en partes iguales entre) ", x$opciones_p2) else
+    grepl("producto de cursos por promedio|cursos multiplicada por el promedio|suma de lo recogido por los cursos", x$opciones_p2)
   sum(es_clave) == 1L && identical(es_clave, x$sol_p2)
 }
 or_p345 <- function(x) {
@@ -596,7 +598,7 @@ MUT <- list(
        cambios = list(c("un curso más, conservando su promedio por curso, habría ganado", "un curso más, conservando su promedio por curso, habría perdido")),
        llego = function(e) isTRUE(grepl("habría perdido", e$P6_HP))),
   list(id = "MC7", sonda = "L-1 endurecida: sin vocabulario de error", desc = "un distractor de la Parte 2 dice «error»",
-       cambios = list(c("La cantidad que recogió la mayoría de los cursos del grado.", "La cantidad que recogió la mayoría de los cursos del grado, sin error.")),
+       cambios = list(c("Lo que recogió la mayoría de sus cursos en ese grado.", "Lo que recogió la mayoría de sus cursos en ese grado, sin error.")),
        llego = function(e) isTRUE(any(grepl("error", e$opciones_p2)))),
   list(id = "MC8", sonda = "L-3 (caso paralelo): sin dominancia", desc = "permite la dominancia en la rama CURSOS del caso paralelo",
        cambios = list(c('g <- if (rama_x == "CURSOS") g[g$nG > g$nP & g$aG < g$aP, ]',
@@ -660,14 +662,23 @@ MUT_CANON <- list(
        cambios = list(c('rama_par <- sample(c("CURSOS", "PROMEDIO"), 1L)',
                         'rama_par <- if (isTRUE(es_canonica)) "CURSOS" else sample(c("CURSOS", "PROMEDIO"), 1L)')),
        llego = function(H) all(vapply(H, function(h) identical(h$rama_par, "CURSOS") && !"rama_par" %in% names(h$ruta), NA))),
-  list(id = "MC19", regla = REGLA_X6, desc = "una clave «comparar» de la Parte 2 gana «aunque» (palabra de la clave de la Parte 1 y de C)",
-       cambios = list(c('"El total de un grado, que es la cantidad de cursos por el promedio por curso."',
-                        '"El total de un grado, que es la cantidad de cursos por el promedio por curso, aunque cambie."')),
-       llego = function(H) any(vapply(H, function(h) isTRUE(grepl(", aunque cambie.", h$clave_p2, fixed = TRUE)), NA))),
-  list(id = "MC20", regla = REGLA_X10, desc = "una clave «comparar» de la Parte 2 gana «cantidad» y «curso» (palabras de la razón sin sustento)",
-       cambios = list(c('"El total de kilos que recogió un grado y el total del otro."',
-                        '"El total de kilos que recogió un grado y el total del otro, en cantidad y curso por curso."')),
-       llego = function(H) any(vapply(H, function(h) isTRUE(grepl("en cantidad y curso por curso.", h$clave_p2, fixed = TRUE)), NA))),
+  ## Tanda 6 (pasada 2 de la Parte 2): con la redacción nueva, X6 y X10 bajan a -2,8 y +0,0 pp en la canónica, así que
+  ## un solo texto mutado ya no basta para salir de «cubierto»: MC19 muta las tres claves «comparar» y MC20 dos claves
+  ## «promedio» (calculado: X6 +25,0 y X10 +33,3 pp). La sonda y la puerta no cambian.
+  list(id = "MC19", regla = REGLA_X6, desc = "las tres claves «comparar» de la Parte 2 ganan «aunque», «fue» y «menor» (palabras de la clave de la Parte 1)",
+       cambios = list(c('"La suma de lo recogido por los cursos de un grado y la suma del otro grado."',
+                        '"La suma de lo recogido por los cursos de un grado y la suma del otro grado aunque fue menor."'),
+                      c('"El producto de cursos por promedio de un grado y el del otro grado."',
+                        '"El producto de cursos por promedio de un grado y el del otro grado aunque fue menor."'),
+                      c('"La cantidad de cursos multiplicada por el promedio de un grado y lo mismo del otro grado."',
+                        '"La cantidad de cursos multiplicada por el promedio de un grado y lo mismo del otro grado aunque fue menor."')),
+       llego = function(H) any(vapply(H, function(h) isTRUE(grepl("del otro grado aunque fue menor.", h$clave_p2, fixed = TRUE)), NA))),
+  list(id = "MC20", regla = REGLA_X10, desc = "dos claves «promedio» de la Parte 2 ganan «aunque», «fue» y «menor» (palabras de la clave de la Parte 1)",
+       cambios = list(c('"Lo que recogió ese grado dividido en partes iguales entre sus cursos."',
+                        '"Lo que recogió ese grado dividido en partes iguales entre sus cursos aunque fue menor."'),
+                      c('"Lo que recogió ese grado dividido entre sus cursos."',
+                        '"Lo que recogió ese grado dividido entre sus cursos aunque fue menor."')),
+       llego = function(H) any(vapply(H, function(h) isTRUE(grepl("entre sus cursos aunque fue menor.", h$clave_p2, fixed = TRUE)), NA))),
   list(id = "MC21", regla = REGLA_X11, desc = "las dos redacciones de ventaja «por promedio» de la Parte 6 ganan «total» (exclusiva de la clave de la Parte 1)",
        cambios = list(c('"cantidad de cursos, habría ganado el concurso."', '"cantidad de cursos y su total, habría ganado el concurso."'),
                       c('"cantidad de cursos, habría perdido el concurso."', '"cantidad de cursos y su total, habría perdido el concurso."')),
@@ -756,32 +767,37 @@ ok(unname(tools::md5sum(BAT)) == MD5_BAT, sprintf("L-C4: la batería es la conge
 EB <- new.env(); sys.source(BAT, envir = EB, keep.source = FALSE)
 source(file.path(DIR, "enumerar_h2_cloze.R"), encoding = "UTF-8")   # L-C5 (tanda 5): enumerar_h2(), h2_tabla(), h2_juzgar()
 ## L-C5 (tanda 5, 2026-10-31; decisión «H2 a» del profesor): override de H2 sobre el diseño actual (V0), regla por regla y
-## por estrato. Cifras firmadas, en pp de exceso sobre el nulo exacto, tal como se firmaron (un decimal), de
-## salida/reparto_h2_96cfcf35.txt (V0, 14 096 registros). «base» es la regla o su contraria (la que sale positiva); las de
-## ventaja y ganador valen igual. NA = no firmada en ese estrato (debe quedar en +8 pp o menos).
+## por estrato. Cifras firmadas, en pp de exceso sobre el nulo exacto, tal como se firmaron (un decimal). «base» es la
+## regla o su contraria (la que sale positiva); las de ventaja y ganador valen igual. NA = no firmada en ese estrato
+## (debe quedar en +8 pp o menos).
+## Tanda 6 (decisión «a · iii ampliada sí» del profesor, 2026-10-31): las cifras son las EXACTAS que da el código del
+## .Rmd con las exclusiones de V11, sobre las 100 Partes 1 de la muestra estándar: la columna `ex` de la primera tabla de
+## salida/h2_exacta_96cfcf35.txt. Sustituyen a las de V0 (salida/reparto_h2_96cfcf35.txt, 14 096 registros, sin las
+## exclusiones), que salían de un modelo transcrito. Las dos celdas de A1 en la rama CURSOS quedan en 7.0: por debajo de
+## +8 pp, h2_juzgar() las da «ok» antes de mirar la firma.
 FIRMA_H2 <- utils::read.table(header = TRUE, stringsAsFactors = FALSE, text = "
 base   papel   mezcla CURSOS PROMEDIO k1   k2
-P6-K1  ventaja 33.3   29.8   36.9     32.9 33.6
-P6-K1  ganador 33.3   29.8   36.9     32.9 33.6
-P6-D2  ventaja 24.0   16.3   31.7     32.1 12.3
-P6-D2  ganador 24.0   16.3   31.7     32.1 12.3
-P6-N1  ventaja 14.1   NA     34.5     29.3 NA
-P6-N1  ganador 14.1   NA     34.5     29.3 NA
-P6-A1  ventaja 13.6   8.9    36.1     30.5 NA
-P6-A1  ganador 13.6   8.9    36.1     30.5 NA
-P6-D1  ventaja NA     12.7   NA       NA   NA
-P6-D1  ganador NA     12.7   NA       NA   NA
-P6-HK1 hg      22.5   26.9   NA       NA   NA
-P6-HK2 hp      NA     13.5   NA       NA   NA
-P6-HN  hp      18.0   16.0   10.5     17.3 17.5
-P6-HN  hg      NA     NA     10.4     14.1 NA
-P6-HD  hp      NA     10.3   8.5      23.6 13.7
-P6-HD  hg      NA     NA     NA       13.8 16.3
-P6-HA  hp      NA     NA     NA       16.5 NA
-P6-HA  hg      NA     NA     NA       11.1 8.8
+P6-K1  ventaja 33.3   29.6   36.9     32.8 33.5
+P6-K1  ganador 33.3   29.6   36.9     32.8 33.5
+P6-D2  ventaja 24.3   16.1   32.5     32.8 11.9
+P6-D2  ganador 24.3   16.1   32.5     32.8 11.9
+P6-N1  ventaja 14.8   NA     34.0     28.9 NA
+P6-N1  ganador 14.8   NA     34.0     28.9 NA
+P6-A1  ventaja 14.2   7.0    35.4     30.0 NA
+P6-A1  ganador 14.2   7.0    35.4     30.0 NA
+P6-D1  ventaja NA     12.6   NA       NA   NA
+P6-D1  ganador NA     12.6   NA       NA   NA
+P6-HK1 hg      22.8   27.1   NA       NA   NA
+P6-HK2 hp      NA     13.6   NA       NA   NA
+P6-HN  hp      17.7   15.2   10.2     16.9 17.0
+P6-HN  hg      NA     NA     10.6     14.3 NA
+P6-HD  hp      NA     10.3   8.4      23.8 14.0
+P6-HD  hg      NA     NA     NA       14.1 15.9
+P6-HA  hp      NA     NA     NA       16.6 NA
+P6-HA  hg      NA     NA     NA       11.2 9.3
 RL1    par     8.3    11.1   11.1     13.0 NA
-RL2    hp      33.3   33.3   33.3     37.8 30.2
-RL2    hg      33.3   33.3   33.3     33.6 24.6
+RL2    hp      33.3   33.3   33.3     37.7 30.3
+RL2    hg      33.3   33.3   33.3     33.4 24.6
 ")
 reg_b <- function(x) { tb <- tabla_leida(x$tabla_par_md)
   list(p2 = list(op = x$opciones_p2, k = which(x$sol_p2), tipo = x$tipo_p2, preg = x$texto_p2, otros = c(x$texto_p3, x$texto_p4, x$texto_p5)),

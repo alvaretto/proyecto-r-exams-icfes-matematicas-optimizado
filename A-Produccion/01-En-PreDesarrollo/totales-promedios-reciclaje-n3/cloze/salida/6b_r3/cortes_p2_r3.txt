@@ -1,0 +1,64 @@
+errores: 0 []
+iw: [(320, 320), (360, 360)]
+
+=== Parte 2, opciones únicas @ 320 (líneas | semillas) ===
+[2 lín] Lo que recogió la mayoría de sus // cursos en ese grado.  | n=5 01,13,15,18… <<fin-de-linea-en-palabra-funcional:sus>>
+[3 lín] Lo que recogió el que queda en el // medio al ordenar sus cursos en ese // grado.  | n=5 01,07,16,20… <<ORFANA-ultima-linea;fin-de-linea-en-palabra-funcional:el>>
+[2 lín] Lo que recogió ese grado dividido // entre sus cursos.  | n=4 01,15,16,18 
+[2 lín] Lo que recogió el grado sumando lo // de sus cursos.  | n=5 01,07,10,18… <<fin-de-linea-en-palabra-funcional:lo>>
+[3 lín] La diferencia entre el promedio por // curso de un grado y el del otro // grado.  | n=9 02,03,04,05… <<ORFANA-ultima-linea;fin-de-linea-en-palabra-funcional:por>>
+[3 lín] El promedio dividido entre la cantidad // de cursos de un grado y el del otro // grado.  | n=7 02,06,08,09… <<ORFANA-ultima-linea>>
+[2 lín] El promedio por curso de un grado y // el del otro grado.  | n=10 02,03,04,06… <<fin-de-linea-en-palabra-funcional:y>>
+[3 lín] La suma de lo recogido por los // cursos de un grado y la suma del // otro grado.  | n=8 02,04,05,06… <<fin-de-linea-en-palabra-funcional:los,del>>
+[3 lín] La cantidad de cursos multiplicada // por el promedio de un grado y lo // mismo del otro grado.  | n=5 03,11,12,19… <<fin-de-linea-en-palabra-funcional:lo>>
+[2 lín] La cantidad de cursos participantes // de un grado y la del otro grado.  | n=11 03,04,05,06… 
+[3 lín] La suma de la cantidad de cursos y // el promedio por curso de un grado y // la suma del otro grado.  | n=8 05,08,12,14… <<fin-de-linea-en-palabra-funcional:y,y>>
+[3 lín] Lo que recogió cualquiera de sus // cursos porque en el grado // recogieron lo mismo.  | n=6 07,10,13,15… <<fin-de-linea-en-palabra-funcional:sus>>
+[2 lín] Lo que recogió ese grado dividido en // partes iguales entre sus cursos.  | n=4 07,10,13,20 <<fin-de-linea-en-palabra-funcional:en>>
+[2 lín] Lo que recogió el mejor de sus // cursos dentro de ese grado.  | n=6 10,13,15,16… <<fin-de-linea-en-palabra-funcional:sus>>
+[2 lín] El producto de cursos por promedio // de un grado y el del otro grado.  | n=2 14,24 
+[3 lín] Lo que recogió el grado dividido // entre el número de sus cursos // participantes.  | n=1 22 <<ORFANA-ultima-linea>>
+
+=== Parte 2, opciones únicas @ 360 (líneas | semillas) ===
+[2 lín] Lo que recogió la mayoría de sus cursos // en ese grado.  | n=5 01,13,15,18… 
+[2 lín] Lo que recogió el que queda en el medio al // ordenar sus cursos en ese grado.  | n=5 01,07,16,20… <<fin-de-linea-en-palabra-funcional:al>>
+[2 lín] Lo que recogió ese grado dividido entre // sus cursos.  | n=4 01,15,16,18 
+[2 lín] Lo que recogió el grado sumando lo de sus // cursos.  | n=5 01,07,10,18… <<ORFANA-ultima-linea;fin-de-linea-en-palabra-funcional:sus>>
+[2 lín] La diferencia entre el promedio por curso // de un grado y el del otro grado.  | n=9 02,03,04,05… 
+[2 lín] El promedio dividido entre la cantidad de // cursos de un grado y el del otro grado.  | n=7 02,06,08,09… <<fin-de-linea-en-palabra-funcional:de>>
+[2 lín] El promedio por curso de un grado y el del // otro grado.  | n=10 02,03,04,06… <<fin-de-linea-en-palabra-funcional:del>>
+[2 lín] La suma de lo recogido por los cursos de // un grado y la suma del otro grado.  | n=8 02,04,05,06… <<fin-de-linea-en-palabra-funcional:de>>
+[3 lín] La cantidad de cursos multiplicada por el // promedio de un grado y lo mismo del otro // grado.  | n=5 03,11,12,19… <<ORFANA-ultima-linea;fin-de-linea-en-palabra-funcional:el>>
+[2 lín] La cantidad de cursos participantes de un // grado y la del otro grado.  | n=11 03,04,05,06… <<fin-de-linea-en-palabra-funcional:un>>
+[3 lín] La suma de la cantidad de cursos y el // promedio por curso de un grado y la suma // del otro grado.  | n=8 05,08,12,14… <<fin-de-linea-en-palabra-funcional:el>>
+[2 lín] Lo que recogió cualquiera de sus cursos // porque en el grado recogieron lo mismo.  | n=6 07,10,13,15… 
+[2 lín] Lo que recogió ese grado dividido en // partes iguales entre sus cursos.  | n=4 07,10,13,20 <<fin-de-linea-en-palabra-funcional:en>>
+[2 lín] Lo que recogió el mejor de sus cursos // dentro de ese grado.  | n=6 10,13,15,16… 
+[2 lín] El producto de cursos por promedio de un // grado y el del otro grado.  | n=2 14,24 <<fin-de-linea-en-palabra-funcional:un>>
+[2 lín] Lo que recogió el grado dividido entre el // número de sus cursos participantes.  | n=1 22 <<fin-de-linea-en-palabra-funcional:el>>
+
+=== Solution Parte 2: viñetas y encabezado ===
+@320 s01 [2] Parte 2 · Lecturas del promedio que // no sirven 
+@320 s01 [5] «Lo que recogió el grado sumando // lo de sus cursos.» Eso es el total // del grado; el promedio por curso // es ese total repartido por igual // entre los cursos. 
+@320 s01 [4] «Lo que recogió la mayoría de sus // cursos en ese grado.» Eso // describe la moda, el valor más // repetido, no el promedio. 
+@320 s01 [5] «Lo que recogió el que queda en el // medio al ordenar sus cursos en // ese grado.» Eso describe la // mediana de lo que recogieron los // cursos, no el promedio. 
+@320 s02 [2] Parte 2 · Comparaciones que no // deciden qué grado ganó 
+@320 s02 [6] «La diferencia entre el promedio // por curso de un grado y el del otro // grado.» La resta de los promedios // compara un curso típico con otro; // el concurso se decide por los // totales. <<ORFANA>>
+@320 s02 [5] «El promedio por curso de un // grado y el del otro grado.» Un // promedio mayor no garantiza un // total mayor si en ese grado // participaron menos cursos. 
+@320 s02 [6] «El promedio dividido entre la // cantidad de cursos de un grado y // el del otro grado.» Dividir el // promedio entre la cantidad de // cursos no da ningún total: el total // es su producto. 
+@320 s03 [6] «La cantidad de cursos // participantes de un grado y la del // otro grado.» Más cursos no // garantizan un total mayor si cada // curso recogió, en promedio, // menos. <<ORFANA>>
+@320 s05 [6] «La suma de la cantidad de cursos // y el promedio por curso de un // grado y la suma del otro grado.» // Sumar la cantidad de cursos y el // promedio no da ningún total: el // total es su producto. 
+@320 s07 [7] «Lo que recogió cualquiera de sus // cursos porque en el grado // recogieron lo mismo.» El promedio // no dice que todos los cursos // recogieron lo mismo: dice cuánto // le tocaría a cada uno si el total se // repartiera por igual. 
+@320 s10 [6] «Lo que recogió el mejor de sus // cursos dentro de ese grado.» El // promedio no es lo que recogió el // curso que más recogió: ese curso // pudo recoger más que el // promedio. <<ORFANA>>
+@360 s01 [2] Parte 2 · Lecturas del promedio que no // sirven <<ORFANA>>
+@360 s01 [4] «Lo que recogió el grado sumando lo de // sus cursos.» Eso es el total del grado; el // promedio por curso es ese total // repartido por igual entre los cursos. 
+@360 s01 [4] «Lo que recogió la mayoría de sus // cursos en ese grado.» Eso describe la // moda, el valor más repetido, no el // promedio. <<ORFANA>>
+@360 s01 [5] «Lo que recogió el que queda en el // medio al ordenar sus cursos en ese // grado.» Eso describe la mediana de lo // que recogieron los cursos, no el // promedio. <<ORFANA>>
+@360 s02 [2] Parte 2 · Comparaciones que no deciden // qué grado ganó 
+@360 s02 [5] «La diferencia entre el promedio por // curso de un grado y el del otro grado.» // La resta de los promedios compara un // curso típico con otro; el concurso se // decide por los totales. 
+@360 s02 [4] «El promedio por curso de un grado y el // del otro grado.» Un promedio mayor no // garantiza un total mayor si en ese grado // participaron menos cursos. 
+@360 s02 [5] «El promedio dividido entre la cantidad // de cursos de un grado y el del otro // grado.» Dividir el promedio entre la // cantidad de cursos no da ningún total: el // total es su producto. 
+@360 s03 [5] «La cantidad de cursos participantes de // un grado y la del otro grado.» Más // cursos no garantizan un total mayor si // cada curso recogió, en promedio, // menos. <<ORFANA>>
+@360 s05 [5] «La suma de la cantidad de cursos y el // promedio por curso de un grado y la // suma del otro grado.» Sumar la cantidad // de cursos y el promedio no da ningún // total: el total es su producto. 
+@360 s07 [6] «Lo que recogió cualquiera de sus // cursos porque en el grado recogieron lo // mismo.» El promedio no dice que todos // los cursos recogieron lo mismo: dice // cuánto le tocaría a cada uno si el total // se repartiera por igual. 
+@360 s10 [5] «Lo que recogió el mejor de sus cursos // dentro de ese grado.» El promedio no es // lo que recogió el curso que más recogió: // ese curso pudo recoger más que el // promedio. <<ORFANA>>

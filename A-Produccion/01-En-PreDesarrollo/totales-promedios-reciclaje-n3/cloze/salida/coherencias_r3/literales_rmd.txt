@@ -1,0 +1,649 @@
+participó 1 curso
+participaron
+cursos
+0.5em
+0.9em
+**
+tabla_responsiva(): la tabla mide %d caracteres de ancho y en el PDF de R/exams 
+una tabla pipe no parte el texto: se saldría del margen (límite medido: %d). 
+Use lista_responsiva(), acorte las celdas o, si ya revisó el PDF, pase 
+ancho_max_pdf = NULL.
+<span style="display:inline-block;
+ padding-left:
+;
+ font-size:
+">
+</span>
+markdown
+::: {style="overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; margin:0.6em 0;"}
+
+
+
+
+:::
+
+En un colegio se realiza un concurso de reciclaje que premiará a la sede que recoja la mayor cantidad
+de papel. La tabla muestra la cantidad de cursos que participaron y el promedio de papel recogido por
+curso en la sede primaria y en la sede secundaria.
+De acuerdo con la información anterior, ¿cuál de las siguientes afirmaciones es VERDADERA?
+La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria.
+La sede primaria ganó el concurso porque participaron más cursos y aunque el promedio fue menor,
+el total fue de 20 kilos más.
+La sede secundaria ganó porque, aunque participaron menos cursos, tuvo mayor promedio con 5 kilos de más.
+La sede secundaria ganó el concurso porque en ella hubo un curso que recogió más que los otros,
+aumentando la cantidad de papel recogida en todo el colegio.
+sede
+Sede
+la sede primaria
+la sede secundaria
+Primaria
+Secundaria
+la sede norte
+la sede sur
+Norte
+Sur
+la sede urbana
+la sede rural
+Urbana
+Rural
+la sede central
+la sede campestre
+Central
+Campestre
+la sede El Bosque
+la sede La Pradera
+El Bosque
+La Pradera
+jornada
+Jornada
+la jornada de la mañana
+la jornada de la tarde
+Mañana
+Tarde
+papel
+cartón
+plástico
+la profesora Marta
+el profesor Andrés
+la coordinadora del proyecto ambiental
+la personera estudiantil
+el grupo ecológico
+el rector
+institucional
+En un colegio se realiza un concurso de reciclaje que premiará a la 
+ que recoja la mayor cantidad de 
+.
+periodistica
+El periódico escolar anunció un concurso de reciclaje: el premio será para la 
+dialogo
+—Ganará la 
+ —anunció 
+ al abrir el concurso de reciclaje del colegio.
+perspectiva_estudiante
+Imagina que haces parte del comité ambiental de tu colegio, que organizó un concurso de 
+reciclaje para premiar a la 
+situacion_problema
+ debe entregar el premio del concurso de reciclaje del colegio a la 
+pregunta_retorica
+¿Qué 
+ del colegio ganará el concurso de reciclaje? El premio será para la que recoja 
+la mayor cantidad de 
+accion_en_curso
+ está revisando los resultados del concurso de reciclaje del colegio, que premiará a la 
+descubrimiento
+Al revisar las planillas del concurso de reciclaje, 
+ recordó que el premio es para la 
+CURSOS
+su total fue más alto que el de 
+ en 
+ kilos.
+diferencia
+(fue de|recogió) [0-9]+ kilos
+total
+M
+dif_total
+ ganó el concurso porque participaron más cursos y, aunque el promedio fue menor, 
+ ganó el concurso porque, aunque su promedio fue menor, participaron más cursos y 
+P
+ ganó el concurso porque, aunque participaron menos cursos, tuvo mayor promedio y 
+ ganó el concurso porque tuvo mayor promedio y, aunque participaron menos cursos, 
+ ganó el concurso porque, al sumar lo que recogieron todos y cada uno de sus cursos, 
+ ganó el concurso porque, después de juntar lo que recogieron todos sus cursos, 
+sin_sustento
+ ganó el concurso porque, al sumar solo lo que recogieron sus cursos más grandes, 
+ ganó el concurso porque en ella hubo un curso que recogió más que los otros, y 
+ ganó el concurso porque en sus cursos hay más alumnos para recoger, y por eso 
+ ganó el concurso porque sus cursos reciclaron durante más días que los demás, y 
+dif_prom
+ ganó el concurso porque, aunque participaron menos cursos, tuvo mayor promedio con 
+ kilos de más.
+G
+tener mayor promedio
+tener más cursos
+ no ganó: recogió 
+ kilos, menos que los 
+ de 
+ERR-DATO
+Toma un dato aislado de la tabla
+Toma un número que ya está en la tabla como si fuera la diferencia entre los totales.
+Los promedios de la tabla describen un curso típico de cada grupo; cuánto más
+recogió un grupo que el otro solo se sabe al calcular y restar los totales.
+Busca la respuesta entre los datos impresos en lugar de calcular con ellos.
+aG
+aP
+calcula(ERR-DATO): fuera de contexto
+La cifra 
+ kilos es el promedio de 
+, un dato de la tabla, no la diferencia entre los 
+totales. 
+ recogió $
+ = 
+$ kilos y 
+, $
+$ kilos: la diferencia es 
+ERR-RESTA
+Resta los promedios
+Resta los dos promedios y toma esa resta como la diferencia entre los totales.
+La resta de los promedios compara un curso típico con otro; cuando los grupos
+tienen distinta cantidad de cursos, la diferencia entre los totales es otra.
+Opera con los promedios como si fueran totales.
+calcula(ERR-RESTA): fuera de contexto
+ sale de restar los promedios: $
+ - 
+$. Esa resta compara un curso típico de cada 
+, no las 
+s completas: como participaron 
+ y 
+ cursos, la diferencia entre los totales es $
+$ kilos.
+ERR-PARCIAL
+Cuenta solo la ventaja de quien gana
+Calcula lo que aporta el punto fuerte del grupo que gana y olvida lo que aporta
+el punto fuerte del otro.
+Cada grupo tiene una ventaja: uno, más cursos; el otro, mayor promedio. La
+diferencia entre los totales es lo que aporta una ventaja menos lo que aporta
+la otra.
+Considera solo una de las dos cantidades que forman el total.
+calcula(ERR-PARCIAL): fuera de contexto
+La cifra $
+$ cuenta solo lo que 
+aporta el curso
+aportan los 
+ cursos
+ de más de 
+ y olvida que en 
+ cada curso recogió, en promedio, 
+ kilos más: $
+$ kilos que compensan parte de esa ventaja. La diferencia 
+es $
+$ cuenta solo la ventaja de promedio de 
+ en sus 
+ cursos y olvida que en 
+ más, que aporta $
+ más, que aportan $
+$ kilos. La diferencia es $
+ERR-TOTAL
+Confunde el total con la diferencia
+Calcula el total del grupo que gana y lo presenta como la diferencia con el otro.
+El total de un grupo dice cuánto recogió; para saber cuánto más recogió que el
+otro hay que restarle el total del otro.
+Se detiene a mitad del procedimiento: calcula un total, pero no le resta el del otro grupo.
+calcula(ERR-TOTAL): fuera de contexto
+ es el total de 
+: $
+$ kilos. No es la diferencia: falta restarle el total de 
+, y $
+ERR-PROM
+Compara solo los promedios
+Ve el mayor promedio y concluye que ganó quien lo tiene, sin tener en cuenta que
+allí participaron menos cursos.
+Un promedio más alto no garantiza un total más alto: el total también depende
+de cuántos cursos participaron.
+Toma el promedio como criterio del concurso, cuando el criterio es la cantidad total.
+delta
+parcialP
+calcula(ERR-PROM): fuera de contexto
+P_ven
+Es cierto que el promedio de 
+ es 
+ kilos mayor, pero allí participaron 
+menos cursos: su total, $
+$ kilos, es menor que el de 
+, 
+ kilos. 
+ no ganó.
+ kilos mayor. La cifra $
+$ suma esa ventaja en sus 
+ cursos, pero olvida que en 
+$ kilos. 
+ERR-CURSOS
+Compara solo la cantidad de cursos
+Ve que en un grupo participaron más cursos y concluye que ganó, sin tener en
+cuenta que su promedio es menor.
+Más cursos no garantizan un total más alto: el total también depende de cuánto
+recogió, en promedio, cada curso.
+Toma la cantidad de cursos como criterio del concurso, cuando el criterio es la cantidad total.
+PROMEDIO
+calcula(ERR-CURSOS): fuera de contexto
+Es cierto que en 
+ más. La cifra $
+aportan los cursos
+ de más, pero olvida que en 
+ERR-INVENTA
+Inventa una explicación que no sale de la tabla
+Elige una razón que suena posible, aunque la tabla no da ningún dato para
+sostenerla.
+La tabla solo informa cuántos cursos participaron y cuánto recogió, en
+promedio, cada curso. No dice qué recogió un curso en particular, cuántos
+alumnos tiene ni cuántos días recicló: una afirmación apoyada en eso no se
+puede justificar con la tabla.
+Completa con suposiciones la información que la tabla no da, en lugar de calcular con la que sí da.
+calcula(ERR-INVENTA): fuera de contexto
+Sobre lo recogido, la tabla da solo el promedio por curso de cada 
+; no dice cuánto recogió cada 
+curso ni cuántos alumnos tiene, así que no permite saber cuáles son los más grandes ni sumar 
+solo lo que ellos recogieron.
+curso, así que no permite afirmar que hubo un curso destacado.
+La tabla no dice cuántos alumnos tiene cada curso, y aunque lo dijera, el concurso se 
+decide por los kilos recogidos.
+La tabla no dice durante cuántos días recicló cada curso, y el concurso se decide por los 
+kilos recogidos.
+ La cifra de 
+ kilos tampoco es la diferencia 
+entre los totales, que es de 
+ Además, 
+regla #1: pool de al menos 4 errores
+L-5: P_CANON <= 0,10
+encima
+canonica
+0
+1
+2
+3
+F1: espacio de parámetros no vacío
+L-3: cursos y promedio en sentidos opuestos
+L-3: gana G
+L-3: la canónica va en la rama CURSOS
+M_a
+CLAVE
+N_a
+U_b
+B
+A
+C
+D
+neutro
+N_b
+M_b
+P_a
+P_b
+perfil
+debajo
+gdis
+F1: reparto de lados posible
+parcialG
+TG
+canal 2: hay cifra falsa del lado sorteado
+U_a
+U_c
+U_d
+psin
+F1: hay cifra para la razón sin sustento
+H1: la cifra de la razón sin sustento no sale de un cálculo con la tabla
+clave
+regla #13 v1.1: ninguna lectura que admite el texto cambia el veredicto
+regla #13 v1.1: la cifra va solo en el complemento «en x kilos»
+ kilos\.$
+[0-9]+
+ La tabla muestra la cantidad de cursos que participaron y el promedio de 
+ recogido por curso en 
+ y en 
+kilos
+recolectado
+recogido
+Cantidad de cursos
+Promedio de
+por curso
+L-1: un solo verbo en el enunciado y en el encabezado
+recolect
+c
+L-2: una sola afirmación verdadera, la clave
+L-1: reparto 2 + 2
+L-1: sin vocabulario de error
+estudiante|error|equivoc|confundi|olvid
+regla #10: opciones únicas
+canal 8: cifras distintas entre opciones
+criterio: gana la mayor cantidad total
+la mayor cantidad
+pregunta del impreso
+|
+L-1: canónica verbatim (enunciado)
+L-1: canónica verbatim (tabla)
+L-1: canónica verbatim (opciones)
+regla #1: precondiciones de los errores elegidos
+regla #1: calcula() reproduce la cifra de cada distractor
+Verdadero. 
+$ kilos: ganó por $
+Falso. 
+ sí ganó, pero por 
+ kilos, no por 
+ recogió 
+: 
+ no le bastó.
+ no ganó (
+ kilos frente a 
+), y la razón que da no 
+sale de la tabla, que solo informa la cantidad de cursos y el promedio por curso de cada 
+Antes de comparar, pregúntate qué mide cada número: un promedio describe un curso típico; un total, el grupo completo.
+Cuando cada grupo tiene una ventaja distinta, no decidas por la que más llama la atención: calcula cuánto aporta cada una.
+Una afirmación puede apoyarse en un dato cierto y llegar a una conclusión falsa: revisa las dos partes.
+Si una afirmación cita una cifra, compruébala con tus cálculos antes de aceptarla.
+Si la tabla no trae un dato, ninguna afirmación puede justificarse con él.
+sexto
+séptimo
+octavo
+noveno
+^\|
+^\|[-:| ]+\|$
+\|$
+<span[^>]*>|</span>|\*\*
+hg
+hp
+F1: la cascada del caso paralelo encuentra candidatos sin relajar V11
+Grado
+recogido por curso
+Las Partes 2 a 6 se refieren a otro colegio, donde el concurso se hizo entre dos grados y 
+ganaba el que recogiera más 
+. La tabla muestra la cantidad de cursos 
+que participaron y el promedio de 
+ recogido por curso en el grado 
+ y en el grado 
+¿Qué indica, en la tabla del otro colegio, el promedio de 
+ recogido por curso de un grado?
+Lo que recogió el grado dividido entre el número de sus cursos participantes.
+Lo que recogió ese grado dividido en partes iguales entre sus cursos.
+Lo que recogió ese grado dividido entre sus cursos.
+Lo que recogió el mejor de sus cursos dentro de ese grado.
+Lo que recogió el grado sumando lo de sus cursos.
+Lo que recogió cualquiera de sus cursos porque en el grado recogieron lo mismo.
+Lo que recogió el que queda en el medio al ordenar sus cursos en ese grado.
+Lo que recogió la mayoría de sus cursos en ese grado.
+¿Qué se compara en la tabla del otro colegio al decidir qué grado ganó el concurso?
+La suma de lo recogido por los cursos de un grado y la suma del otro grado.
+El producto de cursos por promedio de un grado y el del otro grado.
+La cantidad de cursos multiplicada por el promedio de un grado y lo mismo del otro grado.
+El promedio por curso de un grado y el del otro grado.
+La cantidad de cursos participantes de un grado y la del otro grado.
+La diferencia entre el promedio por curso de un grado y el del otro grado.
+La suma de la cantidad de cursos y el promedio por curso de un grado y la suma del otro grado.
+El promedio dividido entre la cantidad de cursos de un grado y el del otro grado.
+¿Cuántos kilos de 
+ recogió en total el grado 
+?
+El grado que ganó recogió más 
+ que el otro. ¿Cuántos kilos más recogió?
+Si el grado que perdió hubiera participado con un curso más, conservando su promedio por curso, habría ganado el concurso.
+Si al grado que ganó le hubiera faltado un curso, conservando su promedio por curso, habría perdido el concurso.
+BC_perdio
+Si el grado que perdió hubiera participado con tantos cursos como el que ganó, conservando su promedio
+por curso, habría ganado el concurso.
+BC_gano
+Si el grado que ganó hubiera participado con tantos cursos como el que perdió, conservando su promedio
+por curso, habría perdido el concurso.
+BP_perdio
+Si el grado que perdió hubiera tenido el mismo promedio por curso que el que ganó, conservando su
+cantidad de cursos, habría ganado el concurso.
+BP_gano
+Si el grado que ganó hubiera tenido el mismo promedio por curso que el que perdió, conservando su
+cantidad de cursos, habría perdido el concurso.
+Ganó el concurso el grado 
+¿Cuáles de las siguientes afirmaciones sobre el concurso del otro colegio son verdaderas?
+Puede haber más de una.
+^Ganó el concurso el grado (.*)\.$
+\1
+^Si (el|al) grado que perdió
+^Si (el|al) grado que ganó
+con un curso más,
+le hubiera faltado un curso,
+con tantos cursos como el que
+el mismo promedio por curso que el que
+habría ganado el concurso\.$
+habría perdido el concurso\.$
+Las Partes 2 a 6
+^la (sede|jornada de la) 
+ (
+) 
+V11 por contenido: las Partes 2 a 6 no nombran sedes ni filas de la Parte 1
+V11 por valor: los textos de las Partes 2 a 6 no imprimen cifras (solo su tabla)
+[0-9]
+V11 por valor: la tabla del otro colegio no imprime cifras de las opciones de la Parte 1 ni T_G, T_P o D
+V11 por valor: las respuestas de las Partes 3 a 5 no son números que muestre o resuelva la Parte 1
+L-1 endurecida: sin vocabulario de error en las Partes 2 y 6
+Parte 2: una sola clave
+Parte 2: opciones únicas
+L-3 (caso paralelo): sin dominancia y gana el grado G'
+Parte 6: hipótesis sin empate
+Parte 6: HP, HG, una de ventaja y la del ganador, nada más (decisión 1 a, L-C1)
+^Ganó el concurso el grado (sexto|séptimo|octavo|noveno)\.$
+Parte 6: al menos una verdadera y una falsa
+Parte 6: sin pares complementarios (la de ventaja y la del ganador van juntas)
+V10: la marca de cada afirmación de la Parte 6 sale de su texto y de la tabla
+Parte 6: opciones únicas
+Partes 3 a 5: respuestas enteras y positivas
+Parte 5: D' es la diferencia entre los totales de la tabla
+schoice|schoice|num|num|num|mchoice
+seis gaps: exclozetype, exsolution y extol con seis entradas
+El promedio no es lo que recogió el curso que más recogió: ese curso pudo recoger más que el promedio.
+Eso es el total del grado; el promedio por curso es ese total repartido por igual entre los cursos.
+El promedio no dice que todos los cursos recogieron lo mismo: dice cuánto le tocaría a cada uno
+si el total se repartiera por igual.
+Eso describe la mediana de lo que recogieron los cursos, no el promedio.
+Eso describe la moda, el valor más repetido, no el promedio.
+Un promedio mayor no garantiza un total mayor si en ese grado participaron menos cursos.
+Más cursos no garantizan un total mayor si cada curso recogió, en promedio, menos.
+La resta de los promedios compara un curso típico con otro; el concurso se decide por los totales.
+Sumar la cantidad de cursos y el promedio no da ningún total: el total es su producto.
+Dividir el promedio entre la cantidad de cursos no da ningún total: el total es su producto.
+El promedio por curso es el total del grado dividido entre la cantidad de cursos: lo que le
+tocaría a cada curso si el total se repartiera por igual.
+Gana el grado que recogió más en total, y el total de cada grado es la cantidad de cursos
+multiplicada por el promedio por curso.
+Verdadero.
+Falso.
+En el grado 
+ participaron 
+cursos y cada uno recogió, en promedio, 
+kilos: $
+$
+kilos.
+Ganó el grado 
+kilos más que el grado 
+Con un curso más, el grado 
+ habría recogido $
+ + 
+kilos, 
+más que los 
+ del grado 
+: habría ganado.
+que no superan los 
+: habría seguido perdiendo.
+Con un curso menos, el grado 
+menos que los 
+: habría perdido.
+que siguen superando los 
+: habría seguido ganando.
+Con ese cambio, el grado 
+más
+menos
+ que los 
+: habría 
+ganado.
+perdido.
+, con 
+kilos frente a los 
+retroalimentación de la Parte 6 coherente con la marca de la afirmación de ventaja
+habría ganado
+Calcular los totales del otro colegio antes de leer sus afirmaciones te da con qué contrastarlas: es lo mismo que exige la Parte 1.
+Una hipótesis como «con un curso más» cambia una sola parte del total: pregúntate cuánto suma o resta ese cambio y compáralo con la diferencia.
+Si una afirmación te parece evidente, compruébala con los números de la tabla antes de marcarla.
+**Parte 1.** 
+**Parte 2.** 
+**Parte 3.** 
+**Parte 4.** 
+**Parte 5.** 
+**Parte 6.** 
+* 
+**
+
+
+{=latex}
+
+  \@afterindenttrue\@afterheading 
+
+Respuestas
+- Parte 1. La respuesta correcta es la que afirma: «
+»
+
+- Parte 2. «
+- Parte 3. 
+kilos, el total del grado 
+.
+
+- Parte 4. 
+- Parte 5. 
+kilos.
+
+- Parte 6. Son verdaderas:
+
+    - «
+- Parte 6. Son falsas:
+
+Procedimiento correcto
+Parte 1. El concurso premia a la 
+, es decir, el mayor 
+**total**. La tabla no da los totales: da cuántos cursos participaron y cuánto recogió, en promedio, cada 
+curso. El total de cada 
+ es la cantidad de cursos multiplicada por el promedio por curso:
+
+
+- 
+$ kilos.
+
+
+Ganó 
+, con $
+$ kilos más. 
+Su promedio era menor (
+), pero participaron más cursos (
+ frente a 
+), y eso pesó más.
+Participaron menos cursos (
+), pero su promedio era mayor (
+Las dos afirmaciones que dan el triunfo a 
+ son falsas, porque esa 
+ no ganó. De las 
+dos que se lo dan a 
+, solo una cita la diferencia correcta, 
+ kilos.
+
+
+Parte 2. 
+promedio
+No dice cuánto recogió cada curso en particular.
+Comparar solo los promedios, o solo la cantidad de cursos, puede llevar a una conclusión falsa.
+Partes 3 a 5. En el otro colegio, el total de cada grado también es la cantidad de cursos multiplicada por 
+el promedio por curso:
+
+
+- Grado 
+
+Ganó el grado 
+kilos más. 
+kilos frente a 
+).
+Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo promedio suma ese 
+promedio al total, y un curso menos lo resta. Por eso el grado 
+ habría ganado con un curso más 
+solo si su promedio por curso, 
+kilos, fuera mayor que la diferencia, 
+kilos; y el grado 
+ habría perdido con un curso menos solo si su promedio, 
+kilos, fuera mayor que esa 
+diferencia.
+
+
+Análisis de los distractores
+padv
+Parte 1 · 
+ — 
+*Afirmación:* «
+»
+
+
+*Lectura que lleva a elegirla:* 
+*Por qué es un error:* 
+*Causa raíz:* 
+Parte 2 · Lecturas del promedio que no sirven
+Parte 2 · Comparaciones que no deciden qué grado ganó
+- «
+» 
+Parte 6 · Afirmaciones falsas
+Propiedades del concepto
+- El total de un grupo es la cantidad de elementos multiplicada por el promedio: con la cantidad de cursos y 
+el promedio por curso se reconstruye el total.
+
+- Un promedio más alto no garantiza un total más alto, ni más cursos garantizan un total más alto: el total 
+depende de las dos cantidades a la vez.
+
+- El promedio por curso es el total repartido por igual entre los cursos; no dice cuánto recogió cada curso 
+en particular.
+
+- Si un grupo suma un curso con el mismo promedio, su total aumenta exactamente en ese promedio; si pierde 
+uno, disminuye en esa misma cantidad.
+
+
+Caso específico
+En la Parte 1, 
+$ kilos a favor de 
+.
+
+
+En el otro colegio, el grado 
+kilos y el grado 
+kilos: la diferencia es 
+kilos.
+
+
+Reflexión metacognitiva
+Estrategia para evitar el error
+- Identifica el criterio del concurso, la cantidad total, y calcula el total de cada grupo antes de leer las 
+afirmaciones.
+
+- Descarta las afirmaciones cuya conclusión contradice tus cálculos, aunque su razón mencione un dato cierto 
+de la tabla.
+
+- Entre las que quedan, verifica cada cifra: debe coincidir con la diferencia entre los totales.
+
+- Desconfía de las razones que la tabla no puede sustentar, como lo que hizo un curso en particular.
+
+- Ante una hipótesis como «con un curso más», calcula solo lo que cambia, el promedio que se suma o se 
+resta, y compáralo con la diferencia entre los totales.
+
+
+exname: totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1
+exextra[Type]: CLOZE
+exextra[Competencia]: Argumentación
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Valida procedimientos y estrategias matemáticas utilizadas para dar solución a problemas.
+exextra[Evidencia]: Plantea afirmaciones que sustentan o refutan una interpretación dada a la información disponible en el marco de la solución de un problema.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.10 — Justifica afirmaciones utilizando planteamientos y operaciones aritméticas o haciendo uso directo de un concepto, es decir, a partir de un único argumento.
+exextra[Contenido]: Estadística
+exextra[TemaEspecifico]: Promedio y total de datos
+exextra[Estandar]: Predigo y justifico razonamientos y conclusiones usando información estadística. (6°-7°, Pensamiento aleatorio)
+exextra[DOK]: 2
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_afirmacion
+exextra[ItemOriginal]: MAT-2026-07-050
+exextra[GradoSugerido]: 6°-7°

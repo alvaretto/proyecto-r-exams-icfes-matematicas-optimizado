@@ -1,0 +1,41 @@
+líneas de metadatos del .Rmd:
+exclozetype_str <- "schoice|schoice|num|num|num|mchoice"
+exsolution_str <- paste(mchoice2string(sol_p1), mchoice2string(sol_p2), exsol_p3, exsol_p4, exsol_p5,
+extol_str <- paste(rep("0", 6L), collapse = "|")
+exname: totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1
+extype: cloze
+exclozetype: `r exclozetype_str`
+exsolution: `r exsolution_str`
+extol: `r extol_str`
+expoints: 3|1|1|1|1|1
+exshuffle: TRUE
+exextra[Type]: CLOZE
+exextra[Nivel]: 3
+exextra[DOK]: 2
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+
+semilla 7  exclozetype: schoice|schoice|num|num|num|mchoice
+            exsolution: 0001|0001|192|234|42|1000   (campos: 6)
+            extol: 0|0|0|0|0|0
+            lo que lee R/exams (tras exshuffle): 0001|0001|192|234|42|0001 
+
+semilla 3  exclozetype: schoice|schoice|num|num|num|mchoice
+            exsolution: 0100|0001|231|220|11|0101   (campos: 6)
+            extol: 0|0|0|0|0|0
+            lo que lee R/exams (tras exshuffle): 0100|1000|231|220|11|0101 
+
+semilla 2  exclozetype: schoice|schoice|num|num|num|mchoice
+            exsolution: 0010|0100|225|210|15|1001   (campos: 6)
+            extol: 0|0|0|0|0|0
+            lo que lee R/exams (tras exshuffle): 0100|0001|225|210|15|1100 
+
+semilla 1  exclozetype: schoice|schoice|num|num|num|mchoice
+            exsolution: 0100|0001|371|408|37|1100   (campos: 6)
+            extol: 0|0|0|0|0|0
+            lo que lee R/exams (tras exshuffle): 0001|0010|371|408|37|1010 
+
+semilla 4  exclozetype: schoice|schoice|num|num|num|mchoice
+            exsolution: 0010|0010|399|368|31|0110   (campos: 6)
+            extol: 0|0|0|0|0|0
+            lo que lee R/exams (tras exshuffle): 0100|1000|399|368|31|1100 

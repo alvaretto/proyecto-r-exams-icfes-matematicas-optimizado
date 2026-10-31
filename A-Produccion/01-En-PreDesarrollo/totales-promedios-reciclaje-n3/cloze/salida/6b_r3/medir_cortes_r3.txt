@@ -1,0 +1,21 @@
+errores: []
+plain320  n=24 'N kilos|cursos' partidos entre líneas: 94 de 1007 en 24 versiones | en opciones/enunciado: 21 | en Solution: 73 | en tabla: 0
+          nombres El Bosque/La Pradera: 82 apariciones, partidos: [(6, 'La Pradera', 'enunc/opc'), (6, 'El Bosque', 'enunc/opc'), (6, 'La Pradera', 'sol'), (6, 'La Pradera', 'sol'), (6, 'El Bosque', 'sol'), (6, 'La Pradera', 'sol'), (6, 'El Bosque', 'sol'), (6, 'La Pradera', 'sol'), (13, 'El Bosque', 'enunc/opc'), (13, 'El Bosque', 'enunc/opc'), (13, 'El Bosque', 'sol'), (13, 'El Bosque', 'sol'), (13, 'El Bosque', 'sol'), (13, 'El Bosque', 'sol')], con NBSP: 4, en tabla: 4
+          puntuación tras ecuación: 14, huérfana (en otra línea): 3 -> [(9, '.', 4308), (19, '.', 4290), (21, '.', 4186)]
+          separación mínima entre el TEXTO de cabeceras vecinas (px): 14; por tabla T1/T2: 14/16.5
+          encabezados Solution no en negrita o ausentes: [] | lista (a)-(f): Counter({'{"n": 6, "type": "a"}': 24}) | mj: {'timeout': 10, 'mj': 14} | math/MathJax nodos: [(False, True), (True, True)]
+plain360  n=24 'N kilos|cursos' partidos entre líneas: 70 de 1007 en 23 versiones | en opciones/enunciado: 8 | en Solution: 62 | en tabla: 0
+          nombres El Bosque/La Pradera: 82 apariciones, partidos: [(6, 'El Bosque', 'enunc/opc'), (6, 'La Pradera', 'enunc/opc'), (6, 'La Pradera', 'enunc/opc'), (6, 'La Pradera', 'sol'), (6, 'El Bosque', 'sol'), (6, 'La Pradera', 'sol'), (6, 'El Bosque', 'sol'), (6, 'La Pradera', 'sol'), (6, 'La Pradera', 'sol'), (6, 'La Pradera', 'sol'), (13, 'La Pradera', 'sol'), (13, 'El Bosque', 'sol'), (13, 'La Pradera', 'sol'), (13, 'El Bosque', 'sol')], con NBSP: 4, en tabla: 4
+          puntuación tras ecuación: 14, huérfana (en otra línea): 3 -> [(6, '.', 3792), (9, '.', 3862), (19, '.', 3862)]
+          separación mínima entre el TEXTO de cabeceras vecinas (px): 13.5; por tabla T1/T2: 13.8/13.5
+          encabezados Solution no en negrita o ausentes: [] | lista (a)-(f): Counter({'{"n": 6, "type": "a"}': 24}) | mj: {'timeout': 9, 'mj': 15} | math/MathJax nodos: [(False, True), (True, True)]
+box320    n=24 'N kilos|cursos' partidos entre líneas: 76 de 1007 en 23 versiones | en opciones/enunciado: 14 | en Solution: 62 | en tabla: 0
+          nombres El Bosque/La Pradera: 82 apariciones, partidos: [(6, 'La Pradera', 'sol'), (6, 'El Bosque', 'sol'), (6, 'El Bosque', 'sol'), (6, 'La Pradera', 'sol'), (6, 'La Pradera', 'sol'), (6, 'El Bosque', 'sol'), (6, 'El Bosque', 'sol'), (13, 'El Bosque', 'sol'), (13, 'El Bosque', 'sol'), (13, 'La Pradera', 'sol')], con NBSP: 4, en tabla: 4
+          puntuación tras ecuación: 14, huérfana (en otra línea): 4 -> [(2, '.', 5246), (6, '.', 5113), (9, '.', 5246), (16, '.', 0)]
+          separación mínima entre el TEXTO de cabeceras vecinas (px): 15.1; por tabla T1/T2: 15.1/17.3
+          encabezados Solution no en negrita o ausentes: [] | lista (a)-(f): Counter({'{"n": 6, "type": "a"}': 24}) | mj: {'timeout': 11, 'mj': 13} | math/MathJax nodos: [(False, True), (True, True)]
+box360    n=24 'N kilos|cursos' partidos entre líneas: 96 de 1007 en 22 versiones | en opciones/enunciado: 24 | en Solution: 72 | en tabla: 0
+          nombres El Bosque/La Pradera: 82 apariciones, partidos: [(6, 'El Bosque', 'enunc/opc'), (6, 'La Pradera', 'sol'), (6, 'El Bosque', 'sol'), (6, 'La Pradera', 'sol'), (6, 'El Bosque', 'sol'), (6, 'La Pradera', 'sol'), (13, 'La Pradera', 'sol'), (13, 'La Pradera', 'sol'), (13, 'El Bosque', 'sol'), (13, 'El Bosque', 'sol'), (13, 'El Bosque', 'sol')], con NBSP: 4, en tabla: 4
+          puntuación tras ecuación: 14, huérfana (en otra línea): 2 -> [(9, '.', 4733), (19, '.', 4778)]
+          separación mínima entre el TEXTO de cabeceras vecinas (px): 13.6; por tabla T1/T2: 13.6/13.6
+          encabezados Solution no en negrita o ausentes: [] | lista (a)-(f): Counter({'{"n": 6, "type": "a"}': 24}) | mj: {'timeout': 8, 'mj': 16} | math/MathJax nodos: [(False, True), (True, True)]

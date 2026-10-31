@@ -1,0 +1,263 @@
+SEMILLA 1 
+
+== PREGUNTA (Markdown) ==
+
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
+¿Qué sede del colegio ganará el concurso de reciclaje? El premio será para la que recoja la mayor cantidad de cartón. La tabla muestra la cantidad de cursos que participaron y el promedio de cartón recogido por curso en la sede primaria y en la sede secundaria.
+
+::: {style="overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; margin:0.6em 0;"}
+
+| <span style="display:inline-block; font-size:0.9em;">Sede</span> | <span style="display:inline-block; padding-left:0.5em; font-size:0.9em;">Cantidad de cursos</span> | <span style="display:inline-block; padding-left:0.5em; font-size:0.9em;">Promedio de cartón recogido por curso</span> |
+|:----------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------:|
+|     <span style="display:inline-block;">**Primaria**</span>      |              <span style="display:inline-block; padding-left:0.5em;">5 cursos</span>               |                        <span style="display:inline-block; padding-left:0.5em;">42 kilos</span>                        |
+|    <span style="display:inline-block;">**Secundaria**</span>     |              <span style="display:inline-block; padding-left:0.5em;">6 cursos</span>               |                        <span style="display:inline-block; padding-left:0.5em;">27 kilos</span>                        |
+
+:::
+
+**Parte 1.** De acuerdo con la información anterior, ¿cuál de las siguientes afirmaciones es VERDADERA?
+
+##ANSWER1##
+
+Las Partes 2 a 6 se refieren a otro colegio, donde el concurso se hizo entre dos grados y ganaba el que recogiera más cartón. La tabla muestra la cantidad de cursos que participaron y el promedio de cartón recogido por curso en el grado sexto y en el grado séptimo.
+
+::: {style="overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%; margin:0.6em 0;"}
+
+| <span style="display:inline-block; font-size:0.9em;">Grado</span> | <span style="display:inline-block; padding-left:0.5em; font-size:0.9em;">Cantidad de cursos</span> | <span style="display:inline-block; padding-left:0.5em; font-size:0.9em;">Promedio de cartón recogido por curso</span> |
+|:-----------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------------------------:|
+|       <span style="display:inline-block;">**Sexto**</span>        |              <span style="display:inline-block; padding-left:0.5em;">7 cursos</span>               |                        <span style="display:inline-block; padding-left:0.5em;">53 kilos</span>                        |
+|      <span style="display:inline-block;">**Séptimo**</span>       |              <span style="display:inline-block; padding-left:0.5em;">8 cursos</span>               |                        <span style="display:inline-block; padding-left:0.5em;">51 kilos</span>                        |
+
+:::
+
+**Parte 2.** ¿Qué indica, en la tabla del otro colegio, el promedio de cartón recogido por curso de un grado?
+
+##ANSWER2##
+
+**Parte 3.** ¿Cuántos kilos de cartón recogió en total el grado sexto?
+
+##ANSWER3##
+
+**Parte 4.** ¿Cuántos kilos de cartón recogió en total el grado séptimo?
+
+##ANSWER4##
+
+**Parte 5.** El grado que ganó recogió más cartón que el otro. ¿Cuántos kilos más recogió?
+
+##ANSWER5##
+
+**Parte 6.** ¿Cuáles de las siguientes afirmaciones sobre el concurso del otro colegio son verdaderas? Puede haber más de una.
+
+##ANSWER6##
+
+
+== OPCIONES (questionlist, tras exshuffle) ==
+[01] La sede secundaria ganó el concurso porque, aunque su promedio fue menor, participaron más cursos y su total fue más alto que el de la sede primaria en 27 kilos.
+[02] La sede secundaria ganó el concurso porque en ella hubo un curso que recogió más que los otros, y su total fue más alto que el de la sede primaria en 58 kilos.
+[03] La sede primaria ganó el concurso porque, aunque participaron menos cursos, tuvo mayor promedio y su total fue más alto que el de la sede secundaria en 15 kilos.
+[04] La sede primaria ganó el concurso porque, al sumar lo que recogieron todos y cada uno de sus cursos, su total fue más alto que el de la sede secundaria en 48 kilos.
+[05] Lo que recogió la mayoría de sus cursos en ese grado.
+[06] Lo que recogió el que queda en el medio al ordenar sus cursos en ese grado.
+[07] Lo que recogió ese grado dividido entre sus cursos.
+[08] Lo que recogió el grado sumando lo de sus cursos.
+[09] 
+[10] 
+[11] 
+[12] Si el grado que perdió hubiera participado con un curso más, conservando su promedio por curso, habría ganado el concurso.
+[13] Ganó el concurso el grado sexto.
+[14] Si al grado que ganó le hubiera faltado un curso, conservando su promedio por curso, habría perdido el concurso.
+[15] Si el grado que perdió hubiera tenido el mismo promedio por curso que el que ganó, conservando su cantidad de cursos, habría ganado el concurso.
+
+== exsolution (metainfo$solution) ==
+List of 6
+ $ : logi [1:4] FALSE FALSE FALSE TRUE
+ $ : logi [1:4] FALSE FALSE TRUE FALSE
+ $ : num 371
+ $ : num 408
+ $ : num 37
+ $ : logi [1:4] TRUE FALSE TRUE FALSE
+
+== exclozetype / extol / expoints ==
+[1] "schoice" "schoice" "num"     "num"     "num"     "mchoice"
+[1] 0 0 0 0 0 0
+[1] 3 1 1 1 1 1
+
+== SOLUTION (Markdown) ==
+
+**Respuestas**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+- Parte 1. La respuesta correcta es la que afirma: «La sede primaria ganó el concurso porque, al sumar lo que recogieron todos y cada uno de sus cursos, su total fue más alto que el de la sede secundaria en 48 kilos.»
+- Parte 2. «Lo que recogió ese grado dividido entre sus cursos.»
+- Parte 3. 371 kilos, el total del grado sexto.
+- Parte 4. 408 kilos, el total del grado séptimo.
+- Parte 5. 37 kilos.
+- Parte 6. Son verdaderas:
+    - «Si al grado que ganó le hubiera faltado un curso, conservando su promedio por curso, habría perdido el concurso.»
+    - «Si el grado que perdió hubiera participado con un curso más, conservando su promedio por curso, habría ganado el concurso.»
+- Parte 6. Son falsas:
+    - «Ganó el concurso el grado sexto.»
+    - «Si el grado que perdió hubiera tenido el mismo promedio por curso que el que ganó, conservando su cantidad de cursos, habría ganado el concurso.»
+
+**Procedimiento correcto**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+Parte 1. El concurso premia a la sede que recoja la mayor cantidad de cartón, es decir, el mayor **total**. La tabla no da los totales: da cuántos cursos participaron y cuánto recogió, en promedio, cada curso. El total de cada sede es la cantidad de cursos multiplicada por el promedio por curso:
+
+- La sede primaria: $5 \times 42 = 210$ kilos.
+- La sede secundaria: $6 \times 27 = 162$ kilos.
+
+Ganó la sede primaria, con $210 - 162 = 48$ kilos más. Participaron menos cursos (5 frente a 6), pero su promedio era mayor (42 kilos frente a 27), y eso pesó más.
+
+Las dos afirmaciones que dan el triunfo a la sede secundaria son falsas, porque esa sede no ganó. De las dos que se lo dan a la sede primaria, solo una cita la diferencia correcta, 48 kilos.
+
+Parte 2. El promedio por curso es el total del grado dividido entre la cantidad de cursos: lo que le tocaría a cada curso si el total se repartiera por igual. No dice cuánto recogió cada curso en particular.
+
+Partes 3 a 5. En el otro colegio, el total de cada grado también es la cantidad de cursos multiplicada por el promedio por curso:
+
+- Grado sexto: $7 \times 53 = 371$ kilos.
+- Grado séptimo: $8 \times 51 = 408$ kilos.
+
+Ganó el grado séptimo, con $408 - 371 = 37$ kilos más. Su promedio era menor (51 kilos frente a 53), pero participaron más cursos (8 frente a 7).
+
+Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo promedio suma ese promedio al total, y un curso menos lo resta. Por eso el grado sexto habría ganado con un curso más solo si su promedio por curso, 53 kilos, fuera mayor que la diferencia, 37 kilos; y el grado séptimo habría perdido con un curso menos solo si su promedio, 51 kilos, fuera mayor que esa diferencia.
+
+**Análisis de los distractores**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+**Parte 1 · ERR-RESTA — Resta los promedios**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+*Afirmación:* «La sede primaria ganó el concurso porque, aunque participaron menos cursos, tuvo mayor promedio y su total fue más alto que el de la sede secundaria en 15 kilos.»
+
+*Lectura que lleva a elegirla:* Resta los dos promedios y toma esa resta como la diferencia entre los totales.
+
+La cifra 15 sale de restar los promedios: $42 - 27 = 15$. Esa resta compara un curso típico de cada sede, no las sedes completas: como participaron 5 y 6 cursos, la diferencia entre los totales es $210 - 162 = 48$ kilos.
+
+*Por qué es un error:* La resta de los promedios compara un curso típico con otro; cuando los grupos tienen distinta cantidad de cursos, la diferencia entre los totales es otra.
+
+*Causa raíz:* Opera con los promedios como si fueran totales.
+
+**Parte 1 · ERR-CURSOS — Compara solo la cantidad de cursos**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+*Afirmación:* «La sede secundaria ganó el concurso porque, aunque su promedio fue menor, participaron más cursos y su total fue más alto que el de la sede primaria en 27 kilos.»
+
+*Lectura que lleva a elegirla:* Ve que en un grupo participaron más cursos y concluye que ganó, sin tener en cuenta que su promedio es menor.
+
+Es cierto que en la sede secundaria participó 1 curso más. La cifra $1 \times 27 = 27$ cuenta solo lo que aporta el curso de más, pero olvida que en la sede primaria cada curso recogió, en promedio, 15 kilos más: $5 \times 15 = 75$ kilos. La sede secundaria no ganó: recogió 162 kilos, menos que los 210 de la sede primaria.
+
+*Por qué es un error:* Más cursos no garantizan un total más alto: el total también depende de cuánto recogió, en promedio, cada curso.
+
+*Causa raíz:* Toma la cantidad de cursos como criterio del concurso, cuando el criterio es la cantidad total.
+
+**Parte 1 · ERR-INVENTA — Inventa una explicación que no sale de la tabla**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+*Afirmación:* «La sede secundaria ganó el concurso porque en ella hubo un curso que recogió más que los otros, y su total fue más alto que el de la sede primaria en 58 kilos.»
+
+*Lectura que lleva a elegirla:* Elige una razón que suena posible, aunque la tabla no da ningún dato para sostenerla.
+
+Sobre lo recogido, la tabla da solo el promedio por curso de cada sede; no dice cuánto recogió cada curso, así que no permite afirmar que hubo un curso destacado. La cifra de 58 kilos tampoco es la diferencia entre los totales, que es de 48 kilos. Además, la sede secundaria no ganó: recogió 162 kilos, menos que los 210 de la sede primaria.
+
+*Por qué es un error:* La tabla solo informa cuántos cursos participaron y cuánto recogió, en promedio, cada curso. No dice qué recogió un curso en particular, cuántos alumnos tiene ni cuántos días recicló: una afirmación apoyada en eso no se puede justificar con la tabla.
+
+*Causa raíz:* Completa con suposiciones la información que la tabla no da, en lugar de calcular con la que sí da.
+
+**Parte 2 · Lecturas del promedio que no sirven**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+- «Lo que recogió el grado sumando lo de sus cursos.» Eso es el total del grado; el promedio por curso es ese total repartido por igual entre los cursos.
+- «Lo que recogió la mayoría de sus cursos en ese grado.» Eso describe la moda, el valor más repetido, no el promedio.
+- «Lo que recogió el que queda en el medio al ordenar sus cursos en ese grado.» Eso describe la mediana de lo que recogieron los cursos, no el promedio.
+
+**Parte 6 · Afirmaciones falsas**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+- «Ganó el concurso el grado sexto.» Ganó el grado séptimo, con 408 kilos frente a los 371 del grado sexto.
+- «Si el grado que perdió hubiera tenido el mismo promedio por curso que el que ganó, conservando su cantidad de cursos, habría ganado el concurso.» Con ese cambio, el grado sexto habría recogido $7 \times 51 = 357$ kilos, menos que los 408 del grado séptimo: habría perdido.
+
+**Propiedades del concepto**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+- El total de un grupo es la cantidad de elementos multiplicada por el promedio: con la cantidad de cursos y el promedio por curso se reconstruye el total.
+- Un promedio más alto no garantiza un total más alto, ni más cursos garantizan un total más alto: el total depende de las dos cantidades a la vez.
+- El promedio por curso es el total repartido por igual entre los cursos; no dice cuánto recogió cada curso en particular.
+- Si un grupo suma un curso con el mismo promedio, su total aumenta exactamente en ese promedio; si pierde uno, disminuye en esa misma cantidad.
+
+**Caso específico**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+En la Parte 1, la sede primaria recogió $5 \times 42 = 210$ kilos y la sede secundaria recogió $6 \times 27 = 162$ kilos. La diferencia es $210 - 162 = 48$ kilos a favor de la sede primaria.
+
+En el otro colegio, el grado séptimo recogió $8 \times 51 = 408$ kilos y el grado sexto, $7 \times 53 = 371$ kilos: la diferencia es 37 kilos.
+
+**Reflexión metacognitiva**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+Si la tabla no trae un dato, ninguna afirmación puede justificarse con él. Calcular los totales del otro colegio antes de leer sus afirmaciones te da con qué contrastarlas: es lo mismo que exige la Parte 1.
+
+**Estrategia para evitar el error**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+- Identifica el criterio del concurso, la cantidad total, y calcula el total de cada grupo antes de leer las afirmaciones.
+- Descarta las afirmaciones cuya conclusión contradice tus cálculos, aunque su razón mencione un dato cierto de la tabla.
+- Entre las que quedan, verifica cada cifra: debe coincidir con la diferencia entre los totales.
+- Desconfía de las razones que la tabla no puede sustentar, como lo que hizo un curso en particular.
+- Ante una hipótesis como «con un curso más», calcula solo lo que cambia, el promedio que se suma o se resta, y compáralo con la diferencia entre los totales.
+
+
+== RETROALIMENTACIÓN (solutionlist) ==
+[01] Falso. La sede secundaria recogió 162 kilos, menos que los 210 de la sede primaria: tener más cursos no le bastó.
+[02] Falso. La sede secundaria no ganó (162 kilos frente a 210), y la razón que da no sale de la tabla, que solo informa la cantidad de cursos y el promedio por curso de cada sede.
+[03] Falso. La sede primaria sí ganó, pero por 48 kilos, no por 15.
+[04] Verdadero. La sede primaria recogió $5 \times 42 = 210$ kilos y la sede secundaria, $6 \times 27 = 162$ kilos: ganó por $210 - 162 = 48$ kilos.
+[05] Falso. Eso describe la moda, el valor más repetido, no el promedio.
+[06] Falso. Eso describe la mediana de lo que recogieron los cursos, no el promedio.
+[07] Verdadero. El promedio por curso es el total del grado dividido entre la cantidad de cursos: lo que le tocaría a cada curso si el total se repartiera por igual.
+[08] Falso. Eso es el total del grado; el promedio por curso es ese total repartido por igual entre los cursos.
+[09] En el grado sexto participaron 7 cursos y cada uno recogió, en promedio, 53 kilos: $7 \times 53 = 371$ kilos.
+[10] En el grado séptimo participaron 8 cursos y cada uno recogió, en promedio, 51 kilos: $8 \times 51 = 408$ kilos.
+[11] Ganó el grado séptimo: $408 - 371 = 37$ kilos más que el grado sexto.
+[12] Verdadero. Con un curso más, el grado sexto habría recogido $371 + 53 = 424$ kilos, más que los 408 del grado séptimo: habría ganado.
+[13] Falso. Ganó el grado séptimo, con 408 kilos frente a los 371 del grado sexto.
+[14] Verdadero. Con un curso menos, el grado séptimo habría recogido $408 - 51 = 357$ kilos, menos que los 371 del grado sexto: habría perdido.
+[15] Falso. Con ese cambio, el grado sexto habría recogido $7 \times 51 = 357$ kilos, menos que los 408 del grado séptimo: habría perdido.

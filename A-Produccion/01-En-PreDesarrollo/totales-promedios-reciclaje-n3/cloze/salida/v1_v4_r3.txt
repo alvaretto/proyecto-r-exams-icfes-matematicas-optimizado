@@ -1,0 +1,5 @@
+md5: 42f725bf191b81784f76b858c26f7733 
+OK   V1: 6 ##ANSWERi## = 6 tipos en exclozetype = 6 partes 
+OK   V2: ##ANSWER1..6## en orden, cada uno tras su «**Parte N.**» y antes de la siguiente 
+OK   V4: 6 partes (mínimo 6) 
+OK   V3: exsolution/extol coherentes con su tipo en 100/100 semillas (schoice: un 1 y largo = opciones; mchoice: al menos un 1 y un 0; num: entero; extol >= 0); fallos = 0 

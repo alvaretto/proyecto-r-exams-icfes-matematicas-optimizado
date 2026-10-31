@@ -1,0 +1,32 @@
+{
+  "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd",
+  "ruta_completa": "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/cloze/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd",
+  "timestamp": "2026-10-31 08:26:56",
+  "semillas_total": 100,
+  "semillas_exitosas": 100,
+  "semillas_fallidas": 0,
+  "semillas_sospechosas": 0,
+  "veredicto": "PASA",
+  "anomalias": [],
+  "estadisticas": {
+    "posicion_correcta": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0
+    },
+    "rango_valores": {
+      "min": null,
+      "max": null
+    },
+    "variabilidad_valor_correcto": null,
+    "contextos_unicos": 71
+  },
+  "clasificacion": {
+    "normales": [7919, 15838, 23757, 31676, 39595, 47514, 55433, 63352, 71271, 79190, 87109, 95028, 102947, 110866, 118785, 126704, 134623, 142542, 150461, 158380, 166299, 174218, 182137, 190056, 197975, 205894, 213813, 221732, 229651, 237570, 245489, 253408, 261327, 269246, 277165, 285084, 293003, 300922, 308841, 316760, 324679, 332598, 340517, 348436, 356355, 364274, 372193, 380112, 388031, 395950, 403869, 411788, 419707, 427626, 435545, 443464, 451383, 459302, 467221, 475140, 483059, 490978, 498897, 506816, 514735, 522654, 530573, 538492, 546411, 554330, 562249, 570168, 578087, 586006, 593925, 601844, 609763, 617682, 625601, 633520, 641439, 649358, 657277, 665196, 673115, 681034, 688953, 696872, 704791, 712710, 720629, 728548, 736467, 744386, 752305, 760224, 768143, 776062, 783981, 791900],
+    "sospechosas": {},
+    "fallidas": {}
+  },
+  "pngs_sospechosas": {},
+  "pngs_muestra_normales": ["seed_07919-0.png", "seed_07919-1.png", "seed_07919-2.png", "seed_07919-3.png", "seed_07919-4.png", "seed_15838-0.png", "seed_15838-1.png", "seed_15838-2.png", "seed_15838-3.png", "seed_15838-4.png", "seed_23757-0.png", "seed_23757-1.png", "seed_23757-2.png", "seed_23757-3.png", "seed_23757-4.png"]
+}

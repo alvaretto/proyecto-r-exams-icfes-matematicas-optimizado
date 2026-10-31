@@ -1,0 +1,49 @@
+=== ANTES (HEAD) ===
+md5 del .Rmd medido: 96cfcf356c01326d42f10ee4c36545b7 
+  EXTRA: menos_comparte +35.0 · fuera_del_par +21.7 · prefijo_singleton +5.0 · descarta_corta +7.2 · tres_palabras +45.0
+Parte 2 «promedio» exacta (720): P2-L1 +45.0 · P2-L2 +45.0 · P2-L3 +50.0 · P2-L4 +0.0 · P2-L5 +0.0 · P2-L6 +5.0 · P2-F1 -8.3 · P2-F2 -21.7 · P2-F3 +2.8 · P2-F4 -15.0 · P2-F5 +5.0 · P2-R1 -22.8 · P2-R2 -25.0 · P2-R3 -13.9 · P2-E1 +20.8 · P2-E2 -24.2 · P2-E3 +0.0 · P2-E4 +7.5
+  EN ROJO: P2-L1 +45.0 · P2-L2 +45.0 · P2-L3 +50.0 · P2-E1 +20.8 
+  largos clave: 83 56 75 · distractores: 50 33 85 78 59 
+  pregunta: ¿Qué indica, en la tabla del otro colegio, el promedio de cartón recogido por curso de un grado? 
+  EXTRA: menos_comparte +18.3 · fuera_del_par +16.7 · prefijo_singleton +10.0 · descarta_corta +3.9 · tres_palabras -5.0
+Parte 2 «comparar» exacta (720): P2-L1 +75.0 · P2-L2 -5.0 · P2-L3 +0.0 · P2-L4 +12.5 · P2-L5 -5.0 · P2-L6 +12.5 · P2-F1 -18.3 · P2-F2 -11.7 · P2-F3 +11.1 · P2-F4 +9.2 · P2-F5 -12.5 · P2-R1 -11.7 · P2-R2 -20.0 · P2-R3 -8.3 · P2-E1 +41.7 · P2-E2 +45.0 · P2-E3 -5.0 · P2-E4 +55.0
+  EN ROJO: P2-L1 +75.0 · P2-L4 +12.5 · P2-L6 +12.5 · P2-F3 +11.1 · P2-F4 +9.2 · P2-E1 +41.7 · P2-E2 +45.0 · P2-E4 +55.0 
+  largos clave: 77 75 59 · distractores: 94 94 62 60 52 
+  pregunta: ¿Qué se compara en la tabla del otro colegio al decidir qué grado ganó el concurso? 
+
+PEOR exceso de la Parte 2: +75.0 pp
+mezcla    n = 100: X5 -3.7 · X6 -3.5 · X10 +1.5 pp
+CURSOS    n = 100: X5 -1.3 · X6 -7.3 · X10 +0.5 pp
+PROMEDIO  n = 100: X5 -2.5 · X6 +0.7 · X10 +4.5 pp
+canónica: X6 +16.7 (firmado +16,7) · X10 +16.7 (firmado +16,7) · X5 -25.0 pp (muestra de 30 canónicas, tríos integrados)
+  canónica, Parte 1: La sede secundaria ganó porque, aunque participaron menos cursos, tuvo mayor promedio con 5 kilos de más. | La sede secundaria ganó el concurso porque en ella hubo un curso que recogió más que los otros, aumentando la cantidad de papel recogida en todo el colegio. | [CLAVE] La sede primaria ganó el concurso porque participaron más cursos y aunque el promedio fue menor, el total fue de 20 kilos más. | La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+  clave P2 «Lo que recogería un curso si los cursos recogieran lo mismo y el total no cambiara.»: comunes con A-D = 1/3/2/1
+  clave P2 «El total del grado repartido por igual entre sus cursos.»: comunes con A-D = 1/0/2/0
+  clave P2 «Lo que le tocaría a un curso si el total del grado se repartiera por igual.»: comunes con A-D = 0/2/1/1
+  clave P2 «El total de un grado, que es la cantidad de cursos por el promedio por curso.»: comunes con A-D = 2/3/3/1
+  clave P2 «Lo que recogió en total un grado, multiplicando sus cursos por su promedio.»: comunes con A-D = 2/2/3/2
+  clave P2 «El total de kilos que recogió un grado y el total del otro.»: comunes con A-D = 1/2/2/3
+
+=== DESPUÉS ===
+md5 del .Rmd medido: 42f725bf191b81784f76b858c26f7733 
+  EXTRA: menos_comparte -7.5 · fuera_del_par -7.5 · prefijo_singleton +0.0 · descarta_corta +3.9 · tres_palabras +0.0
+Parte 2 «promedio» exacta (720): P2-L1 +0.0 · P2-L2 +0.0 · P2-L3 +0.0 · P2-L4 +0.0 · P2-L5 +0.0 · P2-L6 +0.0 · P2-F1 -8.3 · P2-F2 -11.7 · P2-F3 +2.8 · P2-F4 +0.0 · P2-F5 +0.0 · P2-R1 +2.5 · P2-R2 +2.5 · P2-R3 +2.5 · P2-E1 +0.0 · P2-E2 +0.0 · P2-E3 +0.0 · P2-E4 +0.0
+  largos clave: 77 69 51 · distractores: 58 49 79 75 53 
+  pregunta: ¿Qué indica, en la tabla del otro colegio, el promedio de cartón recogido por curso de un grado? 
+  EXTRA: menos_comparte -5.6 · fuera_del_par -4.2 · prefijo_singleton -10.0 · descarta_corta +3.9 · tres_palabras -10.0
+Parte 2 «comparar» exacta (720): P2-L1 +0.0 · P2-L2 +0.0 · P2-L3 +0.0 · P2-L4 +0.0 · P2-L5 -5.0 · P2-L6 +0.0 · P2-F1 -8.3 · P2-F2 -11.7 · P2-F3 +2.8 · P2-F4 +0.0 · P2-F5 +0.0 · P2-R1 +2.5 · P2-R2 -10.6 · P2-R3 +0.6 · P2-E1 +0.0 · P2-E2 +0.0 · P2-E3 -5.0 · P2-E4 +0.0
+  largos clave: 75 67 89 · distractores: 54 68 74 94 81 
+  pregunta: ¿Qué se compara en la tabla del otro colegio al decidir qué grado ganó el concurso? 
+
+PEOR exceso de la Parte 2: +2.8 pp
+mezcla    n = 100: X5 -0.3 · X6 -0.5 · X10 +0.0 pp
+CURSOS    n = 100: X5 +2.7 · X6 -2.3 · X10 -3.5 pp
+PROMEDIO  n = 100: X5 -0.6 · X6 +5.3 · X10 +6.0 pp
+canónica: X6 -2.8 (firmado +16,7) · X10 +0.0 (firmado +16,7) · X5 -25.0 pp (muestra de 30 canónicas, tríos integrados)
+  canónica, Parte 1: La sede secundaria ganó porque, aunque participaron menos cursos, tuvo mayor promedio con 5 kilos de más. | La sede secundaria ganó el concurso porque en ella hubo un curso que recogió más que los otros, aumentando la cantidad de papel recogida en todo el colegio. | [CLAVE] La sede primaria ganó el concurso porque participaron más cursos y aunque el promedio fue menor, el total fue de 20 kilos más. | La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+  clave P2 «Lo que recogió el grado dividido entre el número de sus cursos participantes.»: comunes con A-D = 1/2/1/2
+  clave P2 «Lo que recogió ese grado dividido en partes iguales entre sus cursos.»: comunes con A-D = 1/2/1/2
+  clave P2 «Lo que recogió ese grado dividido entre sus cursos.»: comunes con A-D = 1/2/1/2
+  clave P2 «La suma de lo recogido por los cursos de un grado y la suma del otro grado.»: comunes con A-D = 1/1/1/0
+  clave P2 «El producto de cursos por promedio de un grado y el del otro grado.»: comunes con A-D = 2/0/2/0
+  clave P2 «La cantidad de cursos multiplicada por el promedio de un grado y lo mismo del otro grado.»: comunes con A-D = 2/1/2/0

@@ -1,0 +1,67 @@
+md5 del .Rmd: 42f725bf191b81784f76b858c26f7733 · N = 100 por estrato
+semillas recorridas: 1..880 · n por estrato: mezcla = 100 · p1_CURSOS = 100 · p1_PROMEDIO = 100 · p1_canonica = 100 · p2_promedio = 100 · p2_comparar = 100 · par_CURSOS = 100 · par_PROMEDIO = 100
+
+== V9 por estrato, gap p1 (Parte 1, schoice) ==
+                 mezcla p1_CURSOS p1_PROMEDIO p1_canonica
+n                 100.0     100.0       100.0       100.0
+H1_larga            0.0       0.0         0.0         0.0
+H1_corta            0.0       0.0         0.0         0.0
+H2                  0.0       0.0         0.0         0.0
+prefijo_uniforme  100.0     100.0       100.0       100.0
+H3                100.0     100.0       100.0       100.0
+elige_larga        32.0      34.3        30.2         0.0
+elige_corta        10.3      17.5        12.0         0.0
+descarta_larga     21.2      20.7        22.8        33.3
+margen_max_larga    2.0       2.0         2.0         0.0
+margen_max_corta    1.3       1.2         1.3         0.0
+
+== V9 por estrato, gap p2 (Parte 2, schoice) ==
+                 mezcla p2_promedio p2_comparar par_CURSOS par_PROMEDIO
+n                 100.0       100.0       100.0      100.0        100.0
+H1_larga            4.0         6.0         5.0        4.0          5.0
+H1_corta            0.0         0.0         0.0        0.0          0.0
+H2                  1.0         0.0         4.0        1.0          3.0
+prefijo_uniforme   46.0       100.0         8.0       49.0         54.0
+H3                 41.0       100.0        64.0       44.0         49.0
+elige_larga        20.0        18.0        20.0       19.0         19.0
+elige_corta        15.0        11.0        21.0       12.0         21.0
+descarta_larga     26.7        27.3        26.7       27.0         27.0
+margen_max_larga   32.8        32.8        20.3       20.3         32.8
+margen_max_corta   12.1        12.1         9.5       12.1         12.1
+
+(acierto de «elige la más larga», «elige la más corta» y «descarta la más larga» contra el 25 % del azar; H3 es la
+ cuota de la primera palabra más frecuente de la clave; con prefijo uniforme, H2 y H3 no miden nada)
+
+== Parte 6 (mchoice) por rama del otro colegio: % de verdaderas ==
+             mezcla par_CURSOS par_PROMEDIO
+n               100      100.0        100.0
+hp               57       65.0         31.0
+hg               49       35.0         66.0
+ventaja          45       47.0         48.0
+ganador          45       47.0         48.0
+la_mas_larga     45       47.0         48.0
+la_mas_corta     45       47.0         48.0
+todas            49       48.5         48.2
+1 verdadera      17       18.0         21.0
+2 verdaderas     70       70.0         65.0
+3 verdaderas     13       12.0         14.0
+
+== V8: claves distintas por gap y por estrato ==
+   mezcla p1_CURSOS p1_PROMEDIO p1_canonica p2_promedio p2_comparar par_CURSOS
+n     100       100         100         100         100         100        100
+p1     92        99          98           1          90          91         91
+p2      6         6           6           6           3           3          6
+p3     69        73          73          63          73          66         69
+p4     71        66          65          64          71          66         71
+p5     52        47          50          49          51          40         52
+p6     27        27          28          30          28          24         18
+   par_PROMEDIO
+n           100
+p1           91
+p2            6
+p3           71
+p4           62
+p5           48
+p6           17
+
+(p1 en la canónica: clave verbatim, una sola por diseño (L-1); p2: clave conceptual fija por tipo, 3 paráfrasis (V8 fija-justificada))

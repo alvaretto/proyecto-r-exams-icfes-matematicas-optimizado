@@ -1,0 +1,3 @@
+tipos de afirmación de la Parte 6 (frecuencia): {'prom/perdió': 8, 'menos1/ganó': 24, 'ganador': 24, 'mas1/perdió': 24, 'cursos/ganó': 4, 'cursos/perdió': 6, 'prom/ganó': 6}
+verdaderas por versión: Counter({2: 16, 1: 5, 3: 3})
+INCIDENCIAS Parte 6 / feedback (0):

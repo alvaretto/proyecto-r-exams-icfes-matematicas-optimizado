@@ -670,30 +670,37 @@ intro_par <- paste0("Las Partes 2 a 6 se refieren a otro colegio, donde el concu
 ## «promedio» (+31,7 pp, margen hasta 32 %); (b) fuera «cada», «todos», «uno», «menor», «mayor», «solo», «hay» y
 ## «para»: cada una solo la tiene un molde de la Parte 1 y movía las reglas cruzadas X5 y X6 (+23 y +10 pp en la rama
 ## PROMEDIO). Las claves conservan su concepto.
+## Pasada 2 (§P7-D, tanda 6, 2026-10-31; H1 de la FASE 2C r1): todas las reglas de la batería L-C4 de la Parte 2 a
+## +8 pp o menos, exactas y por tipo (antes: «total» +75 y +45 pp; «Lo que recogió» +45; el condicional +50; las
+## palabras de la pregunta y de las Partes 3 a 5 hasta +55). Dentro de cada tipo, las ocho opciones llevan las mismas
+## palabras del estímulo: «Lo que recogió», «grado» y «sus cursos» en «promedio»; «grado», «del» y «otro» en
+## «comparar». Ninguna lleva «total», coma ni condicional, ni empieza por «Únicamente», ni dice «sin tener en cuenta»
+## o «exactamente». Por largo, una clave queda entre las cortas, otra en el medio y otra entre las largas. Las claves
+## «promedio» comparten con las opciones de la Parte 1 lo mismo que su G-distractor (X6 y X10 de la canónica).
 P2 <- list(
   promedio = list(
     pregunta = paste0("¿Qué indica, en la tabla del otro colegio, el promedio de ", mat,
                       " recogido por curso de un grado?"),
-    clave = c("Lo que recogería un curso si los cursos recogieran lo mismo y el total no cambiara.",
-              "El total del grado repartido por igual entre sus cursos.",
-              "Lo que le tocaría a un curso si el total del grado se repartiera por igual."),
+    clave = c("Lo que recogió el grado dividido entre el número de sus cursos participantes.",
+              "Lo que recogió ese grado dividido en partes iguales entre sus cursos.",
+              "Lo que recogió ese grado dividido entre sus cursos."),
     distractores = c(
-      maximo  = "Lo que recogió el curso del grado que más recogió.",
-      total   = "Lo que recogió el grado en total.",
-      iguales = "Lo que recogió un curso, porque los cursos del grado recogieron exactamente lo mismo.",
-      mediana = "Lo que recogió el curso que queda en el medio al ordenar los cursos del grado.",
-      moda    = "La cantidad que recogió la mayoría de los cursos del grado.")),
+      maximo  = "Lo que recogió el mejor de sus cursos dentro de ese grado.",
+      total   = "Lo que recogió el grado sumando lo de sus cursos.",
+      iguales = "Lo que recogió cualquiera de sus cursos porque en el grado recogieron lo mismo.",
+      mediana = "Lo que recogió el que queda en el medio al ordenar sus cursos en ese grado.",
+      moda    = "Lo que recogió la mayoría de sus cursos en ese grado.")),
   comparar = list(
     pregunta = "¿Qué se compara en la tabla del otro colegio al decidir qué grado ganó el concurso?",
-    clave = c("El total de un grado, que es la cantidad de cursos por el promedio por curso.",
-              "Lo que recogió en total un grado, multiplicando sus cursos por su promedio.",
-              "El total de kilos que recogió un grado y el total del otro."),
+    clave = c("La suma de lo recogido por los cursos de un grado y la suma del otro grado.",
+              "El producto de cursos por promedio de un grado y el del otro grado.",
+              "La cantidad de cursos multiplicada por el promedio de un grado y lo mismo del otro grado."),
     distractores = c(
-      promedio = "Únicamente el promedio por curso de los dos grados, sin tener en cuenta la cantidad de cursos.",
-      cursos   = "Únicamente la cantidad de cursos de los dos grados, sin tener en cuenta el promedio por curso.",
-      resta    = "La diferencia entre los promedios por curso de los dos grados.",
-      suma     = "La cantidad de cursos más el promedio por curso de un grado.",
-      mejor    = "Lo que recogió el curso que más recogió en un grado.")))
+      promedio = "El promedio por curso de un grado y el del otro grado.",
+      cursos   = "La cantidad de cursos participantes de un grado y la del otro grado.",
+      resta    = "La diferencia entre el promedio por curso de un grado y el del otro grado.",
+      suma     = "La suma de la cantidad de cursos y el promedio por curso de un grado y la suma del otro grado.",
+      cociente = "El promedio dividido entre la cantidad de cursos de un grado y el del otro grado.")))
 tipo_p2 <- sample(names(P2), 1L)
 q2 <- P2[[tipo_p2]]
 clave_p2 <- pick(q2$clave)
@@ -835,7 +842,7 @@ expl2 <- c(
   cursos   = "Más cursos no garantizan un total mayor si cada curso recogió, en promedio, menos.",
   resta    = "La resta de los promedios compara un curso típico con otro; el concurso se decide por los totales.",
   suma     = "Sumar la cantidad de cursos y el promedio no da ningún total: el total es su producto.",
-  mejor    = "La tabla no dice cuánto recogió cada curso, y el concurso se decide por lo que recogió todo el grado.")
+  cociente = "Dividir el promedio entre la cantidad de cursos no da ningún total: el total es su producto.")
 clave2_expl <- c(
   promedio = paste("El promedio por curso es el total del grado dividido entre la cantidad de cursos: lo que le",
                    "tocaría a cada curso si el total se repartiera por igual."),
@@ -1009,7 +1016,8 @@ for (r in c("gdis", "padv", "psin")) {
   cat("*Por qué es un error:* ", e$descripcion_larga, "\n\n", sep = "")
   cat("*Causa raíz:* ", e$causa_raiz, "\n\n", sep = "")
 }
-encabezado("Parte 2 · Lecturas del promedio que no sirven")
+encabezado(if (tipo_p2 == "promedio") "Parte 2 · Lecturas del promedio que no sirven" else
+             "Parte 2 · Comparaciones que no deciden qué grado ganó")
 for (nm in setdiff(names(op2), "clave")) cat("- «", op2[[nm]], "» ", expl2[[nm]], "\n", sep = "")
 cat("\n")
 encabezado("Parte 6 · Afirmaciones falsas")

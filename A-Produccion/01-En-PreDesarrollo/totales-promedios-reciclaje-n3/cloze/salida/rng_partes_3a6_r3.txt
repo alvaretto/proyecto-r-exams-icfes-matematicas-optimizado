@@ -1,0 +1,3 @@
+       p1     tabla      p345        p6      tipo pos_clave       rng 
+      100       100       100       100       100       100       100 
+de 100 semillas

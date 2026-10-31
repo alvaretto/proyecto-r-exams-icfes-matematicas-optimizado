@@ -1,0 +1,26 @@
+=== Diagnosticidad de distractores (gaps de seleccion unica) ===
+Archivo: totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd | semillas: 100 | umbral: 70 % | margen H1: 15 %
+
+gap      vers          H1 mas-larga          H1 mas-corta    H2 prefijo
+                  tasa (margen med)     tasa (margen med)          tasa
+p1        100              0% (   2%)              0% (   1%)            0%
+               H2/H3 CIEGAS: las 4 opciones comparten primera palabra en el 100% de las versiones
+                  -> el 0% de H2 NO es ausencia de senal, es ausencia de medicion; H3 no acumula
+               H3b contenido: la clave dice lo mismo ("la sede primaria ganó el concurso porque despu...") en el 6% de 100 versiones
+p2        100              3% (   3%)              0% (   4%)            2%
+               H3 veredicto: la correcta empieza por "la" en el 57% de 44 versiones
+               H3b contenido: la clave dice lo mismo ("lo que recogió ese grado dividido entre sus cu...") en el 22% de 100 versiones
+p6         17              0% (    -)              0% (    -)            0%
+               H3 veredicto: la correcta empieza por "si" en el 100% de 17 versiones
+               H3b contenido: la clave dice lo mismo ("si al grado que ganó le hubiera faltado un cur...") en el 59% de 17 versiones
+
+NOTA DE ORDEN (informativa, no bloquea):
+  - p1: H2 y H3 no son aplicables (prefijo uniforme en el 100% de las versiones); la invariancia del tipo de clave la mide H3b
+
+ERR_DIAG_SUPERFICIAL: en TODAS las versiones la correcta se identifica sin razonar en: p6 (H3 veredicto invariante: siempre "si")
+  -> H3: el veredicto de la clave es constante A LO LARGO de las versiones.
+     Igualar longitudes NO lo arregla: hay que sortear si la afirmacion del
+     enunciado es verdadera o falsa (flag `afirmacion_es_verdadera`) y tener en
+     el pool una clave alternativa con el veredicto opuesto, mutuamente excluyentes.
+     El balance 2+2 no protege: es intra-version. Ver regla #22 sec. P4-bis.
+  -> Ver .claude/rules/diversidad-sustantiva.md y el catalogo de distractores.

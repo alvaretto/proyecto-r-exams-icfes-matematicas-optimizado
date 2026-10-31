@@ -1,0 +1,30 @@
+v  sem  canon rama1    rama2(otro)  tipo_p2   material  grados            D'  math  nVerd  cabecera tabla1
+v1    7  CANON CURSOS   CURSOS      promedio  papel     Séptimo/Noveno     42   25   1      Promedio de papel recolectado por curso
+v2    3  -     CURSOS   CURSOS      comparar  plástico  Sexto/Séptimo      11   25   2      Promedio de plástico recogido por curso
+v3    2  -     CURSOS   PROMEDIO    comparar  cartón    Sexto/Séptimo      15   25   2      Promedio de cartón recogido por curso
+v4    1  CANON PROMEDIO CURSOS      promedio  cartón    Sexto/Séptimo      37   25   2      Promedio de cartón recogido por curso
+v5    4  -     PROMEDIO PROMEDIO    comparar  plástico  Sexto/Octavo       31   25   2      Promedio de plástico recogido por curso
+v6    5  -     CURSOS   CURSOS      comparar  plástico  Sexto/Séptimo      27   26   1      Promedio de plástico recogido por curso
+v7    6  -     CURSOS   CURSOS      comparar  cartón    Sexto/Octavo       48   25   3      Promedio de cartón recogido por curso
+v8    8  CANON PROMEDIO CURSOS      comparar  plástico  Octavo/Noveno      47   27   1      Promedio de plástico recogido por curso
+v9    9  CANON PROMEDIO CURSOS      comparar  plástico  Séptimo/Octavo     12   25   2      Promedio de plástico recogido por curso
+v10  10  CANON PROMEDIO PROMEDIO    promedio  plástico  Sexto/Séptimo      33   25   3      Promedio de plástico recogido por curso
+v11  11  -     PROMEDIO CURSOS      comparar  papel     Séptimo/Octavo     42   26   2      Promedio de papel recogido por curso
+v12  12  CANON CURSOS   CURSOS      comparar  cartón    Sexto/Noveno       29   25   3      Promedio de cartón recogido por curso
+v13  13  -     PROMEDIO PROMEDIO    promedio  cartón    Sexto/Octavo       28   25   2      Promedio de cartón recogido por curso
+v14  14  CANON CURSOS   CURSOS      comparar  plástico  Sexto/Séptimo      28   26   1      Promedio de plástico recogido por curso
+v15  15  -     PROMEDIO CURSOS      promedio  cartón    Séptimo/Noveno     17   25   2      Promedio de cartón recogido por curso
+v16  16  CANON PROMEDIO PROMEDIO    promedio  papel     Séptimo/Noveno     52   26   2      Promedio de papel recogido por curso
+v17  17  -     CURSOS   CURSOS      comparar  cartón    Octavo/Noveno      18   25   2      Promedio de cartón recogido por curso
+v18  18  -     CURSOS   CURSOS      promedio  cartón    Sexto/Octavo       26   25   2      Promedio de cartón recogido por curso
+v19  19  -     PROMEDIO CURSOS      comparar  plástico  Octavo/Noveno      40   26   2      Promedio de plástico recogido por curso
+v20  20  -     CURSOS   CURSOS      promedio  cartón    Séptimo/Noveno      6   26   2      Promedio de cartón recogido por curso
+v21  21  CANON PROMEDIO PROMEDIO    comparar  papel     Sexto/Octavo       39   26   2      Promedio de papel recogido por curso
+v22  22  -     PROMEDIO PROMEDIO    promedio  cartón    Octavo/Noveno      26   25   2      Promedio de cartón recogido por curso
+v23  23  -     PROMEDIO PROMEDIO    comparar  papel     Octavo/Noveno      45   26   1      Promedio de papel recogido por curso
+v24  24  -     PROMEDIO PROMEDIO    comparar  plástico  Sexto/Séptimo      10   25   2      Promedio de plástico recogido por curso
+
+Resumen: canónicas=9; tipo promedio=9, comparar=15; otro colegio CURSOS=15, PROMEDIO=9; Parte 1 CURSOS=10, PROMEDIO=14
+Cruce tipo_p2 x rama otro colegio: {('promedio', 'CURSOS'): 5, ('comparar', 'CURSOS'): 10, ('comparar', 'PROMEDIO'): 5, ('promedio', 'PROMEDIO'): 4}
+
+INCIDENCIAS (0):
