@@ -32,6 +32,20 @@
 #   T6 los validadores corren con el .Rprofile y el .Renviron del proyecto, solo si existen
 #   T7 la 2B toma el dir= correcto aunque edir= o texdir= vayan antes
 #   T8 si arsenal_post_render ya está sellado, la sugerencia lo dice antes del mismo comando
+# El comando cambia de directorio antes de renderizar (2026-10-31): la sesión está en la raíz del proyecto
+# falso y el .Rmd es relativo al directorio al que llega el comando, no al de la sesión
+#   T9  cd <dir> && … exams2html("rel.Rmd"): el hook corre sin avisar «no existe» y el ejercicio es el de
+#       ese .Rmd (cd a la carpeta, a una subcarpeta con ../x.Rmd, varios cd encadenados con comillas y --)
+#   T10 lo mismo con setwd("<dir>") dentro de Rscript -e (comillas dobles, simples, y tras un cd)
+#   T11 un .Rmd relativo que no está ni ahí ni en el cwd de la sesión: sigue saliendo el aviso
+#   T12 ese aviso nombra los dos directorios si difieren y, si no, solo el de la sesión (el texto de siempre)
+#   T13 respaldo: un cd que no cambia el directorio real (un subshell) se resuelve contra el cwd de la
+#       sesión, como hasta la v6.3, y el PDF también se busca ahí
+#   T14 el PDF (con y sin dir=) y el .tex de texdir= se buscan desde el directorio al que llega el comando
+#   T15 un cd que no se resuelve de forma literal (cd "$PWD") conserva el directorio anterior
+#   T16 las formas de cd y de setwd, una por una: el recorrido se extrae del hook y se corre solo
+# Contra el hook de antes (git show 8e75b132:.claude/hooks/post-exams2-validation.sh) T9, T10, T12, T14, T15
+# y T16 tienen que fallar; T11 y T13 son de compatibilidad y pasan con los dos.
 # Mutantes (cada uno hace fallar el caso que se indica)
 #   M1 estado de vuelta a $CWD, con complete (la v6.2)        -> T1     M6  sin R_ENVIRON_USER  -> T6
 #   M2 las dos llamadas a complete, sobre la carpeta de B     -> T1     M7  dir= sin borde      -> T7
@@ -40,6 +54,11 @@
 #   M5 validadores con cd "$CWD"                              -> T1     M9  sin poda            -> T5
 #                                                                       M10 nota -> <nombre>.txt -> T2
 #   M11 siempre dice «ya está sellado» -> T2     M12 nunca lo dice -> T8
+#   M13 sin recorrido (CWD_EFECTIVO = $CWD)       -> T9     M18 2B: dir= desde $CWD                  -> T14
+#   M14 ignora los cd                             -> T9     M19 2B: carpetas de siempre desde $CWD   -> T14
+#   M15 ignora los setwd                          -> T10    M20 2I: texdir= desde $CWD               -> T14
+#   M16 sin respaldo contra $CWD                  -> T13    M21 el aviso nombra un solo directorio   -> T12
+#   M17 el respaldo no devuelve las salidas a $CWD -> T13   M22 cd "$PWD" tomado como literal        -> T15
 # =============================================================================
 library(testthat)
 
@@ -408,6 +427,279 @@ test_that("T8: con arsenal_post_render ya sellado, la sugerencia lo dice antes d
   expect_equal(problemas_t8(), character(0))
 })
 
+# --- cd y setwd dentro del comando (T9-T16) ----------------------------------------------------
+# La sesión está en la raíz del proyecto falso y el comando cambia de directorio antes de renderizar:
+# `cd A-Produccion/.../B/salida && Rscript -e 'exams::exams2html("../x.Rmd")'`. Hasta el 2026-10-31 el
+# hook resolvía la ruta relativa contra el cwd de la sesión: no hallaba el .Rmd, avisaba «no existe» y
+# el arsenal no corría; el PDF y el dir=/texdir= también los buscaba desde allí.
+REL_B <- file.path("A-Produccion", "01-En-PreDesarrollo", "B")
+
+rscript_e <- function(codigo, comilla = "'") paste0("Rscript -e ", comilla, codigo, comilla)
+
+# Una corrida del hook en un mundo nuevo. `comando` y `sesion` son funciones del mundo porque llevan
+# sus rutas; por defecto la sesión está en la raíz del proyecto falso.
+en_mundo_nuevo <- function(comando, hook = HOOK, sesion = function(m) m$proy, preparar = function(m) NULL) {
+  m <- nuevo_mundo(); preparar(m)
+  list(m = m, r = correr_hook(m, comando(m), cwd = sesion(m), hook = hook))
+}
+preparar_salida <- function(m) invisible(dir.create(file.path(m$B, "salida")))
+
+# El arsenal corrió sobre el .Rmd de B: sin aviso de «no existe», y con su ruta absoluta y su md5 en
+# ORIGEN.txt, en los validadores y en el `complete` sugerido.
+problemas_ejercicio_b <- function(e) {
+  m <- e$m; ctx <- contexto(e$r); p <- character()
+  if (!identical(e$r$ec, 0L)) p <- c(p, sprintf("el hook salió con %s y no con 0", e$r$ec))
+  if (is.null(ctx)) return(c(p, "el hook no entregó additionalContext"))
+  if (contiene(ctx, "pero ese archivo no existe")) p <- c(p, "el hook avisa que no halla el .Rmd: el arsenal no corrió")
+  corridas <- list.dirs(file.path(m$informes, "x"), recursive = FALSE)
+  if (length(corridas) != 1L) return(c(p, sprintf("se esperaba 1 corrida de x en la caché y hay %d", length(corridas))))
+  origen <- leer_utf8(file.path(corridas, "ORIGEN.txt"))
+  if (!identical(origen, c(paste0("rmd: ", m$rmd_b), paste0("md5: ", md5(m$rmd_b)))))
+    p <- c(p, "ORIGEN.txt no identifica el .Rmd de B (ruta absoluta y md5)")
+  log <- leer_log(m$log)
+  for (s in VALIDADORES) {
+    f <- log[log$stub == s, ]
+    if (nrow(f) != 1L) { p <- c(p, sprintf("el validador %s corrió %d veces y se esperaba 1", s, nrow(f))); next }
+    if (!identical(f$arg1, m$rmd_b)) p <- c(p, sprintf("%s recibió «%s» y no la ruta absoluta del .Rmd de B", s, f$arg1))
+  }
+  if (!contiene(ctx, sprintf('complete "%s" arsenal_post_render', m$B))) p <- c(p, "el complete sugerido no apunta a B")
+  p
+}
+
+problemas_variantes <- function(variantes, hook, cuales) {
+  p <- character()
+  for (v in names(variantes[cuales])) {
+    pp <- problemas_ejercicio_b(en_mundo_nuevo(variantes[[v]], hook, preparar = preparar_salida))
+    if (length(pp)) p <- c(p, paste0(v, ": ", pp))
+  }
+  p
+}
+
+# T9: cd. El .Rmd de B es relativo al directorio al que llega el comando.
+VARIANTES_T9 <- list(
+  "cd a la carpeta del .Rmd" =
+    function(m) paste0("cd ", REL_B, " && ", render("x.Rmd")),
+  "cd a una subcarpeta y ../x.Rmd (Rscript --no-init-file)" =
+    function(m) paste0("cd ", REL_B, "/salida && ", sub("^Rscript ", "Rscript --no-init-file ", render("../x.Rmd"))),
+  "varios cd: ; && comillas dobles, simples y --" =
+    function(m) paste0("cd A-Produccion; cd -- \"01-En-PreDesarrollo\" && cd 'B' && ", render("x.Rmd"))
+)
+problemas_t9 <- function(hook = HOOK, cuales = seq_along(VARIANTES_T9)) problemas_variantes(VARIANTES_T9, hook, cuales)
+
+# T10: setwd() dentro del código R.
+VARIANTES_T10 <- list(
+  "setwd() con comillas dobles" =
+    function(m) rscript_e(sprintf('setwd("%s"); exams::exams2html("x.Rmd")', REL_B)),
+  "setwd() con comillas simples, en un Rscript -e entre comillas dobles" =
+    function(m) rscript_e(sprintf("setwd('%s/salida'); exams::exams2html('../x.Rmd')", REL_B), '"'),
+  "cd y luego setwd() relativo a ese cd" =
+    function(m) paste0("cd A-Produccion && ", rscript_e('setwd("01-En-PreDesarrollo/B"); exams::exams2html("x.Rmd")'))
+)
+problemas_t10 <- function(hook = HOOK, cuales = seq_along(VARIANTES_T10)) problemas_variantes(VARIANTES_T10, hook, cuales)
+
+# T11 y T12: un .Rmd relativo que no está ni en el directorio del comando ni en el de la sesión. La sesión
+# está en `otro`, que no es prefijo de B ni al revés: cada directorio solo puede aparecer si el aviso lo nombra.
+escenarios_inexistente <- function(hook = HOOK) {
+  una <- function(con_cd) en_mundo_nuevo(
+    function(m) if (con_cd) paste0("cd ", shQuote(m$B), " && ", render("no_esta.Rmd")) else render("no_esta.Rmd"),
+    hook, sesion = function(m) m$otro)
+  list(con_cd = una(TRUE), sin_cd = una(FALSE))
+}
+
+problemas_t11 <- function(es) {
+  p <- character()
+  for (n in names(es)) {
+    e <- es[[n]]; ctx <- contexto(e$r)
+    if (!identical(e$r$ec, 0L)) p <- c(p, sprintf("%s: el hook salió con %s y no con 0", n, e$r$ec))
+    if (is.null(ctx)) { p <- c(p, sprintf("%s: el hook salió callado", n)); next }
+    if (!contiene(ctx, "NO corrió")) p <- c(p, sprintf("%s: el aviso no dice que el arsenal NO corrió", n))
+    if (!contiene(ctx, "no_esta.Rmd")) p <- c(p, sprintf("%s: el aviso no nombra el .Rmd", n))
+    if (!is.null(e$r$json$decision)) p <- c(p, sprintf("%s: un .Rmd inexistente no debe bloquear", n))
+    if (dir.exists(file.path(e$m$informes, "no_esta"))) p <- c(p, sprintf("%s: el arsenal corrió sobre un .Rmd que no existe", n))
+  }
+  p
+}
+
+problemas_t12 <- function(es) {
+  p <- character()
+  con <- contexto(es$con_cd$r); sin <- contexto(es$sin_cd$r)
+  if (is.null(con) || is.null(sin)) return("el hook salió callado")
+  if (!contiene(con, es$con_cd$m$B)) p <- c(p, "con cd, el aviso no nombra el directorio al que llega el comando")
+  if (!contiene(con, es$con_cd$m$otro)) p <- c(p, "con cd, el aviso no nombra el cwd de la sesión")
+  if (!contiene(sin, es$sin_cd$m$otro)) p <- c(p, "sin cd, el aviso no nombra el cwd de la sesión")
+  if (contiene(sin, "directorio al que llega el comando")) p <- c(p, "sin cd, el aviso habla de un directorio del comando")
+  p
+}
+
+inexistente_vivo <- local({
+  e <- NULL
+  function() { if (is.null(e)) e <<- escenarios_inexistente(HOOK); e }
+})
+
+# T13: el cd va en un subshell, así que el render sigue en la carpeta de la sesión (A), pero el recorrido
+# lo sigue hasta `otro`. El .Rmd no está ahí: el respaldo lo busca contra A, y la 2B busca el PDF en A.
+problemas_t13 <- function(hook = HOOK) {
+  e <- en_mundo_nuevo(function(m) sprintf("(cd %s && ls > /dev/null); %s", shQuote(m$otro), render("../B/x.Rmd")),
+                      hook, sesion = function(m) m$A)
+  p <- problemas_ejercicio_b(e)
+  usado <- leer_utf8(e$m$log_magick); esperado <- file.path(e$m$A, "render.pdf")
+  if (!identical(usado, esperado))
+    p <- c(p, sprintf("la 2B previsualizó «%s» y no el PDF de la sesión «%s»", paste(usado, collapse = ", "), esperado))
+  p
+}
+
+# T14: las salidas del render, desde el directorio al que llega el comando. En la raíz (la sesión) hay un
+# PDF señuelo; en B, el PDF de dir = "out_pdf", el PDF que deja un render sin dir= y un .tex con
+# \pandocbounded{ más nuevo que el .Rmd en tex_out.
+COMANDOS_T14 <- list(
+  dir     = function(m) paste0("cd ", REL_B, " && ", rscript_e('exams::exams2pdf("x.Rmd", dir = "out_pdf")')),
+  defecto = function(m) paste0("cd ", REL_B, " && ", rscript_e('exams::exams2pdf("x.Rmd")')),
+  texdir  = function(m) paste0("cd ", REL_B, " && ", rscript_e("exams::exams2pdf('x.Rmd', texdir = 'tex_out')", '"'))
+)
+
+preparar_t14 <- function(m) {
+  preparar_salida(m)
+  pdf <- function(...) {
+    f <- file.path(...); dir.create(dirname(f), showWarnings = FALSE); writeLines("%PDF-1.4", f)
+  }
+  pdf(m$B, "out_pdf", "salida.pdf"); pdf(m$B, "default.pdf"); pdf(m$proy, "decoy.pdf")
+  tex <- file.path(m$B, "tex_out", "exercise1.tex")
+  dir.create(dirname(tex)); writeLines("\\pandocbounded{x}", tex); Sys.setFileTime(tex, Sys.time() + 10)
+}
+
+problemas_t14 <- function(hook = HOOK, cuales = names(COMANDOS_T14)) {
+  p <- character()
+  for (v in cuales) {
+    e <- en_mundo_nuevo(COMANDOS_T14[[v]], hook, preparar = preparar_t14); m <- e$m
+    if (v == "texdir") {
+      if (!contiene(leer_utf8(file.path(m$informes, "x.txt")), "ERROR 16: uso de"))
+        p <- c(p, "texdir: el .tex de texdir= no se revisó desde el directorio del comando")
+      if (!identical(e$r$json$decision, "block")) p <- c(p, "texdir: con el ERROR 16 el hook no bloquea")
+    } else {
+      esperado <- if (v == "dir") file.path(m$B, "out_pdf", "salida.pdf") else file.path(m$B, "default.pdf")
+      usado <- leer_utf8(m$log_magick)
+      if (!identical(usado, esperado))
+        p <- c(p, sprintf("%s: la 2B previsualizó «%s» y se esperaba «%s»", v, paste(usado, collapse = ", "), esperado))
+    }
+  }
+  p
+}
+
+# T15: tras un cd literal, `cd "$PWD"` no se adivina: queda B (que es lo que hace de verdad ese cd).
+problemas_t15 <- function(hook = HOOK) {
+  problemas_ejercicio_b(en_mundo_nuevo(function(m) paste0("cd ", REL_B, " && cd \"$PWD\" && ", render("x.Rmd")), hook))
+}
+
+# T16: el recorrido solo, sin el resto del hook. Se extrae del propio hook (el bloque entre
+# `IFS= read -r -d '' PY_CWD_EFECTIVO <<'PY'` y la línea `PY`) y se corre con Python como lo corre el hook:
+# una copia aquí podría divergir sin que nada lo notara. Sesión en /sesion y HOME=/casa.
+extraer_recorrido <- function(hook = HOOK) {
+  l <- readLines(hook, warn = FALSE, encoding = "UTF-8")
+  ini <- grep("^IFS= read -r -d '' PY_CWD_EFECTIVO <<'PY'$", l)
+  if (length(ini) != 1L || ini == length(l)) return(NULL)
+  fin <- ini + match("PY", l[(ini + 1L):length(l)])
+  if (is.na(fin)) return(NULL)
+  l[(ini + 1L):(fin - 1L)]
+}
+
+directorio_del_comando <- function(py, comando) {
+  f <- tempfile(fileext = ".py"); writeLines(py, f, useBytes = TRUE)
+  suppressWarnings(system2("python3", c("-I", shQuote(f), shQuote("/sesion")), input = comando,
+                           stdout = TRUE, stderr = FALSE, env = "HOME=/casa"))
+}
+
+R_X <- render("x.Rmd")
+CASOS_T16 <- list(
+  # nada que seguir; un cd posterior al render no cuenta
+  c(R_X, "/sesion"),
+  c(paste0(R_X, " && cd a"), "/sesion"),
+  # cd: las formas
+  c(paste0("cd a && ", R_X), "/sesion/a"),
+  c(paste0("cd \"a b\" && ", R_X), "/sesion/a b"),
+  c(paste0("cd 'a b' && ", R_X), "/sesion/a b"),
+  c(paste0("cd a\\ b && ", R_X), "/sesion/a b"),
+  c(paste0("cd -- a && ", R_X), "/sesion/a"),
+  c(paste0("cd -P a && ", R_X), "/sesion/a"),
+  c(paste0("cd a/ && ", R_X), "/sesion/a"),
+  c(paste0("cd a 2>/dev/null && ", R_X), "/sesion/a"),
+  c(paste0("cd a || exit 1; ", R_X), "/sesion/a"),
+  c(paste0("cd a\n", R_X), "/sesion/a"),
+  c(paste0("cd ~/x && ", R_X), "/casa/x"),
+  # encadenados: cada uno contra el anterior; el primero, contra la sesión
+  c(paste0("cd a; cd b; ", R_X), "/sesion/a/b"),
+  c(paste0("cd a && cd ../c && ", R_X), "/sesion/c"),
+  c(paste0("cd /abs && cd rel && ", R_X), "/abs/rel"),
+  c(paste0("cd a\ncd b\n", R_X), "/sesion/a/b"),
+  # lo que no se resuelve de forma literal no se adivina: queda el directorio de antes
+  c(paste0("cd \"$S\" && ", R_X), "/sesion"),
+  c(paste0("cd a && cd \"$S\" && ", R_X), "/sesion/a"),
+  c(paste0("cd a && cd $(pwd)/b && ", R_X), "/sesion/a"),
+  c(paste0("cd a && cd - && ", R_X), "/sesion/a"),
+  c(paste0("cd a/* && ", R_X), "/sesion"),
+  c(paste0("cd ~otro/x && ", R_X), "/sesion"),
+  c(paste0("cd \"~/x\" && ", R_X), "/sesion"),
+  c(paste0("cd \"a\"/b && ", R_X), "/sesion"),
+  # lo que no está en posición de comando no es un cd
+  c(paste0("echo \"x; cd foo\" && ", R_X), "/sesion"),
+  c(paste0("echo 'cd foo' && ", R_X), "/sesion"),
+  c(paste0("abcd a && ", R_X), "/sesion"),
+  # setwd
+  c(rscript_e('setwd("a"); exams::exams2html("x.Rmd")'), "/sesion/a"),
+  c(rscript_e("setwd('a'); exams::exams2html('x.Rmd')", '"'), "/sesion/a"),
+  c(rscript_e('setwd(dir = "a"); exams::exams2html("x.Rmd")'), "/sesion/a"),
+  c(rscript_e('setwd("/abs/a"); exams::exams2html("x.Rmd")'), "/abs/a"),
+  c(rscript_e('setwd("a"); setwd("b"); exams::exams2html("x.Rmd")'), "/sesion/a/b"),
+  c(rscript_e('setwd(dirname(f)); exams::exams2html("x.Rmd")'), "/sesion"),
+  c(rscript_e('exams::exams2html("x.Rmd"); setwd("a")'), "/sesion"),
+  c(paste0("cd a && ", rscript_e('setwd("b"); exams::exams2html("x.Rmd")')), "/sesion/a/b"),
+  c(paste0("cd a/b && ", rscript_e('setwd(".."); exams::exams2html("x.Rmd")')), "/sesion/a")
+)
+
+problemas_t16 <- function(hook = HOOK) {
+  py <- extraer_recorrido(hook)
+  if (is.null(py)) return("el hook no trae el recorrido del comando (el bloque PY_CWD_EFECTIVO)")
+  p <- character()
+  for (caso in CASOS_T16) {
+    obtenido <- directorio_del_comando(py, caso[1])
+    if (!identical(obtenido, caso[2]))
+      p <- c(p, sprintf("«%s» dio «%s» y se esperaba «%s»", gsub("\n", "\\n", caso[1], fixed = TRUE),
+                        paste(obtenido, collapse = "|"), caso[2]))
+  }
+  p
+}
+
+test_that("T9: cd <dir> && … exams2html(\"rel.Rmd\"): el hook halla el .Rmd y el ejercicio es el suyo", {
+  expect_equal(problemas_t9(), character(0))
+})
+
+test_that("T10: setwd(\"<dir>\") dentro del código R: el hook halla el .Rmd y el ejercicio es el suyo", {
+  expect_equal(problemas_t10(), character(0))
+})
+
+test_that("T11: un .Rmd relativo que no está en ninguno de los dos directorios sigue avisando", {
+  expect_equal(problemas_t11(inexistente_vivo()), character(0))
+})
+
+test_that("T12: ese aviso nombra los dos directorios si difieren, y solo el de la sesión si no", {
+  expect_equal(problemas_t12(inexistente_vivo()), character(0))
+})
+
+test_that("T13: respaldo: un cd que no cambia el directorio real se resuelve contra el cwd de la sesión", {
+  expect_equal(problemas_t13(), character(0))
+})
+
+test_that("T14: el PDF y el .tex del render se buscan desde el directorio al que llega el comando", {
+  expect_equal(problemas_t14(), character(0))
+})
+
+test_that("T15: un cd que no se resuelve de forma literal conserva el directorio anterior", {
+  expect_equal(problemas_t15(), character(0))
+})
+
+test_that("T16: el recorrido del comando, forma por forma de cd y de setwd", {
+  expect_equal(problemas_t16(), character(0))
+})
+
 # --- Los mutantes ------------------------------------------------------------------------------
 # Texto literal, sin expresiones regulares: el `old` debe aparecer exactamente `veces` veces.
 aplicar <- function(txt, old, new, veces = 1L) {
@@ -471,7 +763,40 @@ MUTANTES <- list(
              caso_f = caso_base(problemas_t2)),
   M12 = list(desc = "nunca dice «ya está sellado»", caso = "T8",
              muta = function(t) aplicar(t, 'if bash "$WORKFLOW_SCRIPT" check "$EJ_DIR" arsenal_post_render >/dev/null 2>&1; then', "if false; then"),
-             caso_f = problemas_t8)
+             caso_f = problemas_t8),
+  M13 = list(desc = "sin recorrido: el directorio efectivo es siempre el de la sesión", caso = "T9",
+             muta = function(t) aplicar(t, 'CWD_EFECTIVO=$(python3 -I -c "$PY_CWD_EFECTIVO" "$CWD" <<< "$COMMAND" 2>/dev/null)',
+                                        'CWD_EFECTIVO=""'),
+             caso_f = function(hook) problemas_t9(hook, 1L)),
+  M14 = list(desc = "el recorrido ignora los cd", caso = "T9",
+             muta = function(t) aplicar(t, "for m in CD.finditer(antes):", "for m in []:"),
+             caso_f = function(hook) problemas_t9(hook, 1L)),
+  M15 = list(desc = "el recorrido ignora los setwd", caso = "T10",
+             muta = function(t) aplicar(t, "for m in SETWD.finditer(antes):", "for m in []:"),
+             caso_f = function(hook) problemas_t10(hook, 1L)),
+  M16 = list(desc = "sin respaldo contra el cwd de la sesión", caso = "T13",
+             muta = function(t) aplicar(t, '  RMD_PATH="$CWD/$RMD_FILE"\n  [ -f "$RMD_PATH" ] && CWD_EFECTIVO="$CWD"',
+                                        '  RMD_PATH="$CWD_EFECTIVO/$RMD_FILE"'),
+             caso_f = problemas_t13),
+  M17 = list(desc = "el respaldo no devuelve las salidas al cwd de la sesión", caso = "T13",
+             muta = function(t) aplicar(t, '[ -f "$RMD_PATH" ] && CWD_EFECTIVO="$CWD"', ":"),
+             caso_f = problemas_t13),
+  M18 = list(desc = "2B: el dir= relativo, desde $CWD", caso = "T14",
+             muta = function(t) aplicar(t, 'SEARCH_DIRS+=("$CWD_EFECTIVO/$PDF_DIR")', 'SEARCH_DIRS+=("$CWD/$PDF_DIR")'),
+             caso_f = function(hook) problemas_t14(hook, "dir")),
+  M19 = list(desc = "2B: output_pdf, output y el propio directorio, desde $CWD", caso = "T14",
+             muta = function(t) aplicar(t, 'SEARCH_DIRS+=("$CWD_EFECTIVO/output_pdf" "$CWD_EFECTIVO/output_pdf_test" "$CWD_EFECTIVO/output" "$CWD_EFECTIVO")',
+                                        'SEARCH_DIRS+=("$CWD/output_pdf" "$CWD/output_pdf_test" "$CWD/output" "$CWD")'),
+             caso_f = function(hook) problemas_t14(hook, "defecto")),
+  M20 = list(desc = "2I: el texdir= relativo, desde $CWD", caso = "T14",
+             muta = function(t) aplicar(t, '[[ "$D" = /* ]] || D="$CWD_EFECTIVO/$D"', '[[ "$D" = /* ]] || D="$CWD/$D"'),
+             caso_f = function(hook) problemas_t14(hook, "texdir")),
+  M21 = list(desc = "el aviso nombra un solo directorio", caso = "T12",
+             muta = function(t) aplicar(t, 'if [[ "$RMD_FILE" = /* ]] || [ "$CWD_EFECTIVO" = "$CWD" ]; then', "if true; then"),
+             caso_f = function(hook) problemas_t12(escenarios_inexistente(hook))),
+  M22 = list(desc = 'cd "$PWD" tomado como un directorio literal', caso = "T15",
+             muta = function(t) aplicar(t, 'if not texto or texto == "-" or "$" in texto or "`" in texto:', "if not texto:"),
+             caso_f = problemas_t15)
 )
 
 # Copia mutada del hook vivo en tempdir().

@@ -207,27 +207,119 @@ valores_literales_del_comando() {
     | grep -oP "(\"[^\"]*\"|'[^']*')" | tr -d "\"'"
 }
 
-# Construir ruta completa del .Rmd
+# Directorio al que llega el comando cuando renderiza (CWD_EFECTIVO). El comando puede cambiar de
+# directorio antes de `exams2*()`: `cd salida && Rscript -e 'exams2html("../x.Rmd")'`, o `setwd("salida")`
+# dentro del código R. Entonces la ruta relativa del .Rmd, el dir= y el texdir= se leen desde ese
+# directorio y no desde el cwd de la sesión ($CWD, el del JSON de entrada): hasta aquí el hook solo
+# conocía el de la sesión, no hallaba el .Rmd y el arsenal no corría. Se recorre el comando en orden,
+# hasta el `exams2*` del que sale RMD_FILE:
+#   - cada `cd <dir>` (con o sin comillas, `cd -- <dir>`, -P/-L, encadenados con && o ;), resuelto
+#     contra el anterior; el primero, contra $CWD;
+#   - cada `setwd("<dir>")` o `setwd('<dir>')` del código R anterior.
+# Lo que no se resuelve de forma literal (`cd "$S"`, `cd $(...)`, `cd -`, `cd ~otro`, un glob, comillas
+# mezcladas en una misma palabra) no se adivina: queda el directorio que había hasta ahí. Un `cd` dentro
+# de un subshell o de otro proceso se sigue como si fuera del principal: lo corrige el respaldo de más
+# abajo, que prueba el .Rmd también contra $CWD. Python y no grep porque el recorrido es ordenado; el
+# comando entra por stdin (como argumento no pasa de 128 KiB) y `-I` evita que el cwd del hook le meta
+# módulos propios. Test: tests/testthat/test_post_exams2_cwd.R (T9-T16; T16 extrae este bloque y lo corre).
+IFS= read -r -d '' PY_CWD_EFECTIVO <<'PY'
+import os
+import re
+import sys
+
+# Entrada: el comando por stdin y, en argv[1], el cwd de la sesión. Salida: el directorio al que llega el
+# comando cuando renderiza, sin salto de línea; si no se puede seguir nada, el cwd de la sesión.
+sesion = sys.argv[1]
+comando = sys.stdin.buffer.read().decode("utf-8", "surrogateescape")
+
+# La llamada de la que el hook saca RMD_FILE (comillas dobles primero, luego simples), sin cruzar líneas
+# como no las cruza grep -P. Lo que hay antes de ella es lo que cuenta.
+render = (re.search(r'exams2\w+\([^\S\n]*"[^"\n]*\.Rmd"', comando, re.ASCII)
+          or re.search(r"exams2\w+\([^\S\n]*'[^'\n]*\.Rmd'", comando, re.ASCII))
+antes = comando[:render.start()] if render else ""
+
+# `cd` en posición de comando (al inicio, tras ; & | ( { o un salto de línea, o tras then/do/else), con
+# sus opciones (-P, -L, --) y un solo argumento: entre comillas dobles, entre comillas simples o suelto.
+# Si lo que sigue al argumento no cierra la palabra (`"a b"/c`), no hay coincidencia y ese `cd` no se sigue.
+DOBLES = r'"((?:\\.|[^"\\])*)"'
+SIMPLES = r"'([^']*)'"
+SUELTA = r"""((?:\\.|[^\s;&|()<>"'\\])+)"""
+CD = re.compile(r"(?:^|(?<=[;&|({\n])|\b(?:then|do|else)[ \t]+)[ \t]*cd[ \t]+(?:(?:-[PLe@]+|--)[ \t]+)*"
+                + "(?:" + DOBLES + "|" + SIMPLES + "|" + SUELTA + r")(?=[ \t\r\n;&|()<>]|$)")
+SETWD = re.compile(r"""\bsetwd\([ \t]*(?:dir[ \t]*=[ \t]*)?\\?(["'])([^"'\\\n]*)\\?\1[ \t]*\)""")
+
+
+def resolver(base, texto, tilde):
+    # None si el texto no se resuelve de forma literal. La tilde la expande el shell solo si va suelta
+    # (en cd) y R siempre (en setwd); `~otro` no se adivina.
+    if not texto or texto == "-" or "$" in texto or "`" in texto:
+        return None
+    if texto.startswith("~"):
+        casa = os.environ.get("HOME")
+        if not (tilde and casa and (texto == "~" or texto.startswith("~/"))):
+            return None
+        texto = casa + texto[1:]
+    return os.path.normpath(os.path.join(base, texto))
+
+
+eventos = []
+for m in CD.finditer(antes):
+    dobles, simples, suelta = m.groups()
+    if suelta is not None:
+        if re.search(r"[*?\[{]", suelta):
+            continue
+        eventos.append((m.start(), re.sub(r"\\(.)", r"\1", suelta), True))
+    elif dobles is not None:
+        eventos.append((m.start(), re.sub(r'\\(["\\])', r"\1", dobles), False))
+    else:
+        eventos.append((m.start(), simples, False))
+for m in SETWD.finditer(antes):
+    eventos.append((m.start(), m.group(2), True))
+
+donde = sesion
+for _, texto, tilde in sorted(eventos, key=lambda e: e[0]):
+    nuevo = resolver(donde, texto, tilde)
+    if nuevo:
+        donde = nuevo
+sys.stdout.buffer.write(os.fsencode(donde))
+PY
+
+CWD_EFECTIVO=$(python3 -I -c "$PY_CWD_EFECTIVO" "$CWD" <<< "$COMMAND" 2>/dev/null)
+CWD_EFECTIVO="${CWD_EFECTIVO:-$CWD}"
+
+# Construir ruta completa del .Rmd. Una ruta relativa se prueba primero contra el directorio efectivo
+# del comando y, si ahí no existe, contra el cwd de la sesión, como hasta la v6.3: el recorrido no
+# modela todo (un `cd` dentro de un subshell, por ejemplo). Si solo el respaldo la halla, el recorrido
+# se equivocó y las salidas del render (PDF, dir=, texdir=) también se buscan desde el cwd de la sesión.
 if [[ "$RMD_FILE" = /* ]]; then
   RMD_PATH="$RMD_FILE"
+elif [ -f "$CWD_EFECTIVO/$RMD_FILE" ]; then
+  RMD_PATH="$CWD_EFECTIVO/$RMD_FILE"
 else
   RMD_PATH="$CWD/$RMD_FILE"
+  [ -f "$RMD_PATH" ] && CWD_EFECTIVO="$CWD"
 fi
 
 if [ ! -f "$RMD_PATH" ]; then
-  # Hasta la v6.1 salía callado: un render con el .Rmd fuera del cwd de la sesión (por ejemplo, tras
-  # un `cd` dentro del mismo comando) dejaba el arsenal sin correr y nadie se enteraba.
-  emitir_json aviso "post-exams2-validation.sh: el comando renderiza «$RMD_FILE», pero ese archivo no existe visto desde el cwd de la sesión ($CWD). El arsenal post-render NO corrió; para que corra, renderizar con la ruta absoluta del .Rmd."
+  # Hasta la v6.1 salía callado: un render con el .Rmd fuera del cwd de la sesión dejaba el arsenal sin
+  # correr y nadie se enteraba. Si el comando cambió de directorio, el aviso nombra los dos que probó.
+  if [[ "$RMD_FILE" = /* ]] || [ "$CWD_EFECTIVO" = "$CWD" ]; then
+    DONDE_NO_ESTA="visto desde el cwd de la sesión ($CWD)"
+  else
+    DONDE_NO_ESTA="visto desde el directorio al que llega el comando ($CWD_EFECTIVO) ni desde el cwd de la sesión ($CWD)"
+  fi
+  emitir_json aviso "post-exams2-validation.sh: el comando renderiza «$RMD_FILE», pero ese archivo no existe $DONDE_NO_ESTA. El arsenal post-render NO corrió; para que corra, renderizar con la ruta absoluta del .Rmd."
   exit 0
 fi
 
 RMD_BASENAME=$(basename "$RMD_FILE" .Rmd)
 
 # El ejercicio es el del .Rmd, no el del cwd de la sesión (v6.3). RMD_ABS es la ruta absoluta y
-# canónica del .Rmd (si vino relativa, resuelta contra $CWD); EJ_DIR, su carpeta; RMD_MD5, la huella de
-# esta versión del archivo. De aquí salen el proyecto, el estado del workflow y el destino de todo lo
-# que el hook produce. $CWD queda para resolver una ruta relativa y para localizar lo que escribió el
-# comando renderizado (el PDF, dir=/texdir=).
+# canónica del .Rmd (si vino relativa, resuelta contra $CWD_EFECTIVO o, si ahí no está, contra $CWD);
+# EJ_DIR, su carpeta; RMD_MD5, la huella de esta versión del archivo. De aquí salen el proyecto, el
+# estado del workflow y el destino de todo lo que el hook produce. $CWD_EFECTIVO resuelve una ruta
+# relativa y localiza lo que escribió el comando renderizado (el PDF, dir=/texdir=); $CWD queda de
+# respaldo.
 RMD_ABS=$(realpath -- "$RMD_PATH" 2>/dev/null)
 RMD_ABS="${RMD_ABS:-$RMD_PATH}"
 EJ_DIR=$(dirname "$RMD_ABS")
@@ -349,15 +441,16 @@ PDF_DIR=$(valores_literales_del_comando dir | sed -n '1p')
 PDF_FOUND=""
 SEARCH_DIRS=()
 
+# Los relativos, desde el directorio al que llega el comando: ahí escribe el render.
 if [ -n "$PDF_DIR" ]; then
   if [[ "$PDF_DIR" = /* ]]; then
     SEARCH_DIRS+=("$PDF_DIR")
   else
-    SEARCH_DIRS+=("$CWD/$PDF_DIR")
+    SEARCH_DIRS+=("$CWD_EFECTIVO/$PDF_DIR")
   fi
 fi
 
-SEARCH_DIRS+=("$CWD/output_pdf" "$CWD/output_pdf_test" "$CWD/output" "$CWD")
+SEARCH_DIRS+=("$CWD_EFECTIVO/output_pdf" "$CWD_EFECTIVO/output_pdf_test" "$CWD_EFECTIVO/output" "$CWD_EFECTIVO")
 
 for DIR in "${SEARCH_DIRS[@]}"; do
   if [ -d "$DIR" ]; then
@@ -550,7 +643,7 @@ PB_USOS=""
 PB_DEFINIDO=0
 
 # Solo los .tex de ESTE render (v6.3): los directorios que el comando nombra (dir=, texdir=, con
-# comillas dobles o simples; los relativos, contra $CWD) y la carpeta de la corrida, a profundidad 2.
+# comillas dobles o simples; los relativos, contra $CWD_EFECTIVO) y la carpeta de la corrida, a profundidad 2.
 # Hasta la v6.2 era `find "$CWD" -maxdepth 4 -name "*.tex" -newer "$RMD_FILE"`: un barrido del cwd de
 # la sesión que le atribuía a este ejercicio los .tex de cualquier otro más nuevos que su .Rmd. Los
 # valores salen de valores_literales_del_comando (definida arriba, con borde de palabra).
@@ -558,7 +651,7 @@ TEX_DIRS=()
 for ARG_DIR in dir texdir; do
   while IFS= read -r D; do
     [ -n "$D" ] || continue
-    [[ "$D" = /* ]] || D="$CWD/$D"
+    [[ "$D" = /* ]] || D="$CWD_EFECTIVO/$D"
     [ -d "$D" ] && TEX_DIRS+=("$D")
   done < <(valores_literales_del_comando "$ARG_DIR")
 done
