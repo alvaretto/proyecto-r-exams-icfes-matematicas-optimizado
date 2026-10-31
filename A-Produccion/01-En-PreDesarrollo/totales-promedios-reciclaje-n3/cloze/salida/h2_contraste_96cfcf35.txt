@@ -1,0 +1,76 @@
+md5 del .Rmd: 96cfcf356c01326d42f10ee4c36545b7 
+(a) 100 Partes 1: máxima diferencia de peso por fila, código frente a transcrito con exclusiones = 1.08e-19 · 1.28894 mins
+
+(b) Ruido de la Parte 1: semillas 1 a 50 frente a 51 a 100 (pp; semidif ≈ error típico de la media de 100)
+  estrato   base   papel firma s1_50 s51_100 media semidif
+   CURSOS  P6-A1 ganador   8.9   6.8     7.3   7.0     0.2
+   CURSOS  P6-A1 ventaja   8.9   6.8     7.3   7.0     0.2
+   CURSOS  P6-D1 ganador  12.7  12.7    12.5  12.6     0.1
+   CURSOS  P6-D1 ventaja  12.7  12.7    12.5  12.6     0.1
+   CURSOS  P6-D2 ganador  16.3  16.9    15.4  16.1     0.8
+   CURSOS  P6-D2 ventaja  16.3  16.9    15.4  16.1     0.8
+   CURSOS  P6-HD      hp  10.3  10.4    10.3  10.3     0.0
+   CURSOS P6-HK1      hg  26.9  27.7    26.6  27.1     0.5
+   CURSOS P6-HK2      hp  13.5  13.8    13.3  13.6     0.3
+   CURSOS  P6-HN      hp  16.0  14.9    15.6  15.2     0.3
+   CURSOS  P6-K1 ganador  29.8  29.2    30.0  29.6     0.4
+   CURSOS  P6-K1 ventaja  29.8  29.2    30.0  29.6     0.4
+   CURSOS    RL1     par  11.1  11.1    11.1  11.1     0.0
+   CURSOS    RL2      hg  33.3  33.3    33.3  33.3     0.0
+   CURSOS    RL2      hp  33.3  33.3    33.3  33.3     0.0
+       k1  P6-A1 ganador  30.5  30.3    29.7  30.0     0.3
+       k1  P6-A1 ventaja  30.5  30.3    29.7  30.0     0.3
+       k1  P6-D2 ganador  32.1  33.2    32.4  32.8     0.4
+       k1  P6-D2 ventaja  32.1  33.2    32.4  32.8     0.4
+       k1  P6-HA      hg  11.1  10.9    11.6  11.2     0.3
+       k1  P6-HA      hp  16.5  16.7    16.5  16.6     0.1
+       k1  P6-HD      hg  13.8  13.9    14.3  14.1     0.2
+       k1  P6-HD      hp  23.6  23.8    23.8  23.8     0.0
+       k1  P6-HN      hg  14.1  14.9    13.5  14.2     0.7
+       k1  P6-HN      hp  17.3  17.2    16.6  16.9     0.3
+       k1  P6-K1 ganador  32.9  32.6    33.0  32.8     0.2
+       k1  P6-K1 ventaja  32.9  32.6    33.0  32.8     0.2
+       k1  P6-N1 ganador  29.3  28.1    29.8  28.9     0.9
+       k1  P6-N1 ventaja  29.3  28.1    29.8  28.9     0.9
+       k1    RL1     par  13.0  12.9    13.0  13.0     0.1
+       k1    RL2      hg  33.6  33.2    33.7  33.4     0.2
+       k1    RL2      hp  37.8  37.7    37.7  37.7     0.0
+       k2  P6-D2 ganador  12.3  12.3    11.6  11.9     0.3
+       k2  P6-D2 ventaja  12.3  12.3    11.6  11.9     0.3
+       k2  P6-HA      hg   8.8   8.9     9.6   9.3     0.3
+       k2  P6-HD      hg  16.3  15.5    16.4  15.9     0.5
+       k2  P6-HD      hp  13.7  13.9    14.1  14.0     0.1
+       k2  P6-HN      hp  17.5  17.1    17.0  17.1     0.0
+       k2  P6-K1 ganador  33.6  33.6    33.4  33.5     0.1
+       k2  P6-K1 ventaja  33.6  33.6    33.4  33.5     0.1
+       k2    RL2      hg  24.6  24.1    25.1  24.6     0.5
+       k2    RL2      hp  30.2  30.2    30.3  30.3     0.1
+   mezcla  P6-A1 ganador  13.6  14.5    13.8  14.2     0.3
+   mezcla  P6-A1 ventaja  13.6  14.5    13.8  14.2     0.3
+   mezcla  P6-D2 ganador  24.0  24.9    23.7  24.3     0.6
+   mezcla  P6-D2 ventaja  24.0  24.9    23.7  24.3     0.6
+   mezcla P6-HK1      hg  22.5  23.4    22.2  22.8     0.6
+   mezcla  P6-HN      hp  18.0  17.8    17.5  17.7     0.1
+   mezcla  P6-K1 ganador  33.3  33.2    33.3  33.3     0.0
+   mezcla  P6-K1 ventaja  33.3  33.2    33.3  33.3     0.0
+   mezcla  P6-N1 ganador  14.1  15.1    14.5  14.8     0.3
+   mezcla  P6-N1 ventaja  14.1  15.1    14.5  14.8     0.3
+   mezcla    RL1     par   8.3   8.3     8.3   8.3     0.0
+   mezcla    RL2      hg  33.3  33.3    33.3  33.3     0.0
+   mezcla    RL2      hp  33.3  33.3    33.3  33.3     0.0
+ PROMEDIO  P6-A1 ganador  36.1  35.7    35.0  35.4     0.4
+ PROMEDIO  P6-A1 ventaja  36.1  35.7    35.0  35.4     0.4
+ PROMEDIO  P6-D2 ganador  31.7  32.9    32.1  32.5     0.4
+ PROMEDIO  P6-D2 ventaja  31.7  32.9    32.1  32.5     0.4
+ PROMEDIO  P6-HD      hp   8.5   8.3     8.4   8.4     0.0
+ PROMEDIO  P6-HN      hg  10.4  11.5     9.7  10.6     0.9
+ PROMEDIO  P6-HN      hp  10.5  10.6     9.8  10.2     0.4
+ PROMEDIO  P6-K1 ganador  36.9  37.2    36.5  36.9     0.3
+ PROMEDIO  P6-K1 ventaja  36.9  37.2    36.5  36.9     0.3
+ PROMEDIO  P6-N1 ganador  34.5  32.7    35.4  34.0     1.4
+ PROMEDIO  P6-N1 ventaja  34.5  32.7    35.4  34.0     1.4
+ PROMEDIO    RL1     par  11.1  11.1    11.1  11.1     0.0
+ PROMEDIO    RL2      hg  33.3  33.3    33.3  33.3     0.0
+ PROMEDIO    RL2      hp  33.3  33.3    33.3  33.3     0.0
+
+semidiferencia mediana 0.3 pp, máxima 1.4 pp

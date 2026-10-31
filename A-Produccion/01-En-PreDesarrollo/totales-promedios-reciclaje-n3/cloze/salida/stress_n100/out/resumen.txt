@@ -1,0 +1,21 @@
+═══════════════════════════════════════════════════════════════
+  STRESS TEST VISUAL — REPORTE
+═══════════════════════════════════════════════════════════════
+  Archivo:              totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd
+  Fecha:                2026-10-30 22:05:31
+  Semillas probadas:    100
+  Exitosas:             100
+  Fallidas:             0
+  Sospechosas:          0
+───────────────────────────────────────────────────────────────
+  VEREDICTO:            PASA
+───────────────────────────────────────────────────────────────
+
+  Sin anomalías detectadas.
+
+───────────────────────────────────────────────────────────────
+  ESTADÍSTICAS:
+  Posición correcta: A=0 B=0 C=0 D=0
+  Rango valor correcto: N/A
+  Contextos únicos: 71
+═══════════════════════════════════════════════════════════════

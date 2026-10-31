@@ -1,0 +1,1 @@
+Rscript --no-init-file ../verificar_espacio_cloze.R >  2>&1  17,67s user 0,06s system 99% cpu 17,808 total

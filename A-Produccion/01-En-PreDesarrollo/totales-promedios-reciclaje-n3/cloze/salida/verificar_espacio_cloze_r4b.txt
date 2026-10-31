@@ -1,0 +1,631 @@
+Versión verificada: totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd · md5 96cfcf356c01326d42f10ee4c36545b7
+SCHOICE leído: md5 e293d5c812b1f9790e2bb777b62de9a5 (aprobado para el aula: e293d5c812b1f9790e2bb777b62de9a5)
+
+==============================================================================
+E1 · La Parte 1 es el SCHOICE: objetos y .Random.seed en 100 semillas + cuota de 20 canónicas
+==============================================================================
+  semillas 1..100 (9 canónicas) + 11 canónicas de cuota (hasta la semilla 205)
+  OK: E1: 111 versiones (20 canónicas): objetos, opciones_p1/sol_p1/feedback_p1 y .Random.seed idénticos al SCHOICE; las Partes 2 a 6 no tocan nada de la Parte 1 
+
+Muestras: mezcla natural n = 100 · rama CURSOS n = 100 · rama PROMEDIO n = 100 · canónicas n = 30 (semillas 1001..1270)
+  OK: estrato CURSOS: n = 100 (n < 20 sería NO CONCLUYENTE) 
+  OK: estrato PROMEDIO: n = 100 (n < 20 sería NO CONCLUYENTE) 
+  OK: canónicas: n = 30 
+
+==============================================================================
+E2 · Una sola clave por gap, con oráculos que leen el texto y las tablas mostrados
+==============================================================================
+  OK: E2 p1: 330/330 versiones 
+  OK: E2 p2: 330/330 versiones 
+  OK: E2 p345: 330/330 versiones 
+  OK: E2 dir_texto_modelo: 330/330 versiones 
+  OK: E2 marca: 330/330 versiones 
+  OK: E2 una_v_una_f: 330/330 versiones 
+  Parte 1: además, la enumeración exacta de SUB/verificar_espacio.R (E3 del SCHOICE) vale aquí: E1 prueba que es el mismo código.
+
+==============================================================================
+E3 · V11 (valor, contenido, independencia), cascada F1, veredictos de la Parte 6 y batería cruzada
+==============================================================================
+  OK: V11 por valor: ninguna respuesta de las Partes 3 a 5 es un número que la Parte 1 muestra o resuelve (330 versiones) 
+  OK: V11 por valor: las Partes 2 a 6 no imprimen ninguna cifra de las opciones de la Parte 1 ni T_G, T_P o D 
+  OK: V11 por valor: los textos de las Partes 2 a 6 no llevan cifras (solo su tabla; «Partes 2 a 6» es un rótulo) 
+  OK: V11 por contenido: las Partes 2 a 6 no nombran sedes ni filas de la Parte 1 
+  RESIDUO DECLARADO: V11 a un paso (mezcla, n = 100): D de la Parte 1 sale de una operación (+, -, ×) entre dos números de la tabla del otro colegio en 11.0 %; una respuesta de las Partes 3 a 5 sale de una operación entre dos números que muestra la Parte 1 en 49.0 % 
+  RESIDUO DECLARADO: V11 a un paso (rama CURSOS, n = 100): D de la Parte 1 sale de una operación (+, -, ×) entre dos números de la tabla del otro colegio en 12.0 %; una respuesta de las Partes 3 a 5 sale de una operación entre dos números que muestra la Parte 1 en 63.0 % 
+  RESIDUO DECLARADO: V11 a un paso (rama PROMEDIO, n = 100): D de la Parte 1 sale de una operación (+, -, ×) entre dos números de la tabla del otro colegio en 17.0 %; una respuesta de las Partes 3 a 5 sale de una operación entre dos números que muestra la Parte 1 en 52.0 % 
+  RESIDUO DECLARADO: V11 a un paso (canónica, n = 30): D de la Parte 1 sale de una operación (+, -, ×) entre dos números de la tabla del otro colegio en 16.7 %; una respuesta de las Partes 3 a 5 sale de una operación entre dos números que muestra la Parte 1 en 33.3 % 
+          paralela
+P1         CURSOS PROMEDIO
+  CURSOS       49       51
+  PROMEDIO     44       56
+  OK: V11 por independencia: P(paralela CURSOS | P1 CURSOS) - P(paralela CURSOS | P1 PROMEDIO) = 0.05 (tolerancia 0,20 con n = 100 por estrato) 
+  cascada F1, paso usado (1 base · 2 espacio ampliado · 3-4 otra plantilla de veredictos): 1: 329 · 2: 1 · 3: 0 · 4: 0 
+  RESIDUO DECLARADO: cascada F1: 1 de 330 versiones usaron el paso 2 o siguientes (2: 1, 3: 0, 4: 0) 
+  OK: Parte 6, «hp»: verdadera en 48.8 % de 330 versiones (50 % ± 12) 
+  OK: Parte 6, «hg»: verdadera en 47.9 % de 330 versiones (50 % ± 12) 
+  OK: Parte 6, «ventaja»: verdadera en 51.8 % de 330 versiones (50 % ± 12) 
+  OK: Parte 6, «ganador»: verdadera en 51.8 % de 330 versiones (50 % ± 12) 
+  rama paralela CURSOS (n = 161): hp 60 % · hg 26 % · ventaja 56 % · ganador 56 % verdaderas (diseño: 1/3 o 2/3 en las hipótesis por rama)
+  rama paralela PROMEDIO (n = 169): hp 38 % · hg 69 % · ventaja 48 % · ganador 48 % verdaderas (diseño: 1/3 o 2/3 en las hipótesis por rama)
+  OK: Parte 6, plantilla de ventaja BC_gano: verdadera en 49 % de 87 (sin veredicto fijo) 
+  OK: Parte 6, plantilla de ventaja BC_perdio: verdadera en 52 % de 91 (sin veredicto fijo) 
+  OK: Parte 6, plantilla de ventaja BP_gano: verdadera en 53 % de 76 (sin veredicto fijo) 
+  OK: Parte 6, plantilla de ventaja BP_perdio: verdadera en 54 % de 76 (sin veredicto fijo) 
+  Parte 6, número de verdaderas por versión: 1: 53 · 2: 223 · 3: 54 
+  OK: Parte 2 (promedio, n = 165): «la más larga» acierta 21.8 % (-3.2 pp); la clave es la única más larga en 36 versiones, margen máximo 40.7 % 
+  OK: Parte 2 (promedio, n = 165): «la más corta» acierta 3.0 % (-22.0 pp); la clave es la única más corta en 5 versiones, margen máximo 5.1 % 
+  OK: Parte 2 (comparar, n = 165): «la más larga» acierta 8.5 % (-16.5 pp); la clave es la única más larga en 14 versiones, margen máximo 24.2 % 
+  OK: Parte 2 (comparar, n = 165): «la más corta» acierta 12.1 % (-12.9 pp); la clave es la única más corta en 20 versiones, margen máximo 4.8 % 
+  OK: orden de mención: la Parte 3 pregunta por el grado que ganó en 51.2 % (50 % ± 12) 
+  OK: tabla del otro colegio: el ganador va en la fila 1 en 47.6 % (50 % ± 12) 
+                                                                       mezcla
+X1 elige la cifra que imprimen las Partes 2 a 6                          25.0
+X2 descarta la cifra que imprimen las Partes 2 a 6                       25.0
+X3 elige la cifra a una operación de la tabla del otro colegio           23.0
+X4 descarta la cifra a una operación de la tabla del otro colegio        26.0
+X5 más palabras en común con todo el texto de las Partes 2 a 6           21.3
+X6 más palabras en común con la clave de la Parte 2                      21.5
+X7 más palabras en común con las verdaderas de la Parte 6                23.7
+X8 perfil cruzado: sede de la Parte 1 con la ventaja del grado ganador   24.5
+X9 S_U + la que nombra la ventaja del grado ganador                      57.5
+X10 S_U + más palabras en común con la clave de la Parte 2               51.5
+X11 S_U + más palabras en común con las verdaderas de la Parte 6         57.5
+                                                                       CURSOS
+X1 elige la cifra que imprimen las Partes 2 a 6                          25.0
+X2 descarta la cifra que imprimen las Partes 2 a 6                       25.0
+X3 elige la cifra a una operación de la tabla del otro colegio           23.6
+X4 descarta la cifra a una operación de la tabla del otro colegio        25.8
+X5 más palabras en común con todo el texto de las Partes 2 a 6           23.8
+X6 más palabras en común con la clave de la Parte 2                      17.8
+X7 más palabras en común con las verdaderas de la Parte 6                23.7
+X8 perfil cruzado: sede de la Parte 1 con la ventaja del grado ganador   24.5
+X9 S_U + la que nombra la ventaja del grado ganador                      56.5
+X10 S_U + más palabras en común con la clave de la Parte 2               50.5
+X11 S_U + más palabras en común con las verdaderas de la Parte 6         56.0
+                                                                       PROMEDIO
+X1 elige la cifra que imprimen las Partes 2 a 6                            25.0
+X2 descarta la cifra que imprimen las Partes 2 a 6                         25.0
+X3 elige la cifra a una operación de la tabla del otro colegio             23.2
+X4 descarta la cifra a una operación de la tabla del otro colegio          25.9
+X5 más palabras en común con todo el texto de las Partes 2 a 6             22.5
+X6 más palabras en común con la clave de la Parte 2                        25.7
+X7 más palabras en común con las verdaderas de la Parte 6                  19.5
+X8 perfil cruzado: sede de la Parte 1 con la ventaja del grado ganador     28.0
+X9 S_U + la que nombra la ventaja del grado ganador                        46.0
+X10 S_U + más palabras en común con la clave de la Parte 2                 54.5
+X11 S_U + más palabras en común con las verdaderas de la Parte 6           46.0
+                                                                       canonica
+X1 elige la cifra que imprimen las Partes 2 a 6                            25.0
+X2 descarta la cifra que imprimen las Partes 2 a 6                         25.0
+X3 elige la cifra a una operación de la tabla del otro colegio             30.0
+X4 descarta la cifra a una operación de la tabla del otro colegio          22.8
+X5 más palabras en común con todo el texto de las Partes 2 a 6              0.0
+X6 más palabras en común con la clave de la Parte 2                        33.3
+X7 más palabras en común con las verdaderas de la Parte 6                  11.1
+X8 perfil cruzado: sede de la Parte 1 con la ventaja del grado ganador     25.0
+X9 S_U + la que nombra la ventaja del grado ganador                        75.0
+X10 S_U + más palabras en común con la clave de la Parte 2                 61.7
+X11 S_U + más palabras en común con las verdaderas de la Parte 6           66.7
+  OK: batería cruzada: X1 elige la cifra que imprimen las Partes 2 a 6, mezcla: 25.0 % (+0.0 pp sobre 25 %) 
+  OK: batería cruzada: X1 elige la cifra que imprimen las Partes 2 a 6, CURSOS: 25.0 % (+0.0 pp sobre 25 %) 
+  OK: batería cruzada: X1 elige la cifra que imprimen las Partes 2 a 6, PROMEDIO: 25.0 % (+0.0 pp sobre 25 %) 
+  OK: batería cruzada: X2 descarta la cifra que imprimen las Partes 2 a 6, mezcla: 25.0 % (+0.0 pp sobre 25 %) 
+  OK: batería cruzada: X2 descarta la cifra que imprimen las Partes 2 a 6, CURSOS: 25.0 % (+0.0 pp sobre 25 %) 
+  OK: batería cruzada: X2 descarta la cifra que imprimen las Partes 2 a 6, PROMEDIO: 25.0 % (+0.0 pp sobre 25 %) 
+  OK: batería cruzada: X3 elige la cifra a una operación de la tabla del otro colegio, mezcla: 23.0 % (-2.0 pp sobre 25 %) 
+  OK: batería cruzada: X3 elige la cifra a una operación de la tabla del otro colegio, CURSOS: 23.6 % (-1.4 pp sobre 25 %) 
+  OK: batería cruzada: X3 elige la cifra a una operación de la tabla del otro colegio, PROMEDIO: 23.2 % (-1.7 pp sobre 25 %) 
+  OK: batería cruzada: X4 descarta la cifra a una operación de la tabla del otro colegio, mezcla: 26.0 % (+1.0 pp sobre 25 %) 
+  OK: batería cruzada: X4 descarta la cifra a una operación de la tabla del otro colegio, CURSOS: 25.8 % (+0.8 pp sobre 25 %) 
+  OK: batería cruzada: X4 descarta la cifra a una operación de la tabla del otro colegio, PROMEDIO: 25.9 % (+0.9 pp sobre 25 %) 
+  OK: batería cruzada: X5 más palabras en común con todo el texto de las Partes 2 a 6, mezcla: 21.3 % (-3.7 pp sobre 25 %) 
+  OK: batería cruzada: X5 más palabras en común con todo el texto de las Partes 2 a 6, CURSOS: 23.8 % (-1.3 pp sobre 25 %) 
+  OK: batería cruzada: X5 más palabras en común con todo el texto de las Partes 2 a 6, PROMEDIO: 22.5 % (-2.5 pp sobre 25 %) 
+  OK: batería cruzada: X6 más palabras en común con la clave de la Parte 2, mezcla: 21.5 % (-3.5 pp sobre 25 %) 
+  OK: batería cruzada: X6 más palabras en común con la clave de la Parte 2, CURSOS: 17.8 % (-7.3 pp sobre 25 %) 
+  OK: batería cruzada: X6 más palabras en común con la clave de la Parte 2, PROMEDIO: 25.7 % (+0.7 pp sobre 25 %) 
+  OK: batería cruzada: X7 más palabras en común con las verdaderas de la Parte 6, mezcla: 23.7 % (-1.3 pp sobre 25 %) 
+  OK: batería cruzada: X7 más palabras en común con las verdaderas de la Parte 6, CURSOS: 23.7 % (-1.3 pp sobre 25 %) 
+  OK: batería cruzada: X7 más palabras en común con las verdaderas de la Parte 6, PROMEDIO: 19.5 % (-5.5 pp sobre 25 %) 
+  OK: batería cruzada: X8 perfil cruzado: sede de la Parte 1 con la ventaja del grado ganador, mezcla: 24.5 % (-0.5 pp sobre 25 %) 
+  OK: batería cruzada: X8 perfil cruzado: sede de la Parte 1 con la ventaja del grado ganador, CURSOS: 24.5 % (-0.5 pp sobre 25 %) 
+  OK: batería cruzada: X8 perfil cruzado: sede de la Parte 1 con la ventaja del grado ganador, PROMEDIO: 28.0 % (+3.0 pp sobre 25 %) 
+  OK: batería cruzada: X9 S_U + la que nombra la ventaja del grado ganador, mezcla: 57.5 % (+7.5 pp sobre 50 %) 
+  OK: batería cruzada: X9 S_U + la que nombra la ventaja del grado ganador, CURSOS: 56.5 % (+6.5 pp sobre 50 %) 
+  OK: batería cruzada: X9 S_U + la que nombra la ventaja del grado ganador, PROMEDIO: 46.0 % (-4.0 pp sobre 50 %) 
+  OK: batería cruzada: X10 S_U + más palabras en común con la clave de la Parte 2, mezcla: 51.5 % (+1.5 pp sobre 50 %) 
+  OK: batería cruzada: X10 S_U + más palabras en común con la clave de la Parte 2, CURSOS: 50.5 % (+0.5 pp sobre 50 %) 
+  OK: batería cruzada: X10 S_U + más palabras en común con la clave de la Parte 2, PROMEDIO: 54.5 % (+4.5 pp sobre 50 %) 
+  OK: batería cruzada: X11 S_U + más palabras en común con las verdaderas de la Parte 6, mezcla: 57.5 % (+7.5 pp sobre 50 %) 
+  OK: batería cruzada: X11 S_U + más palabras en común con las verdaderas de la Parte 6, CURSOS: 56.0 % (+6.0 pp sobre 50 %) 
+  OK: batería cruzada: X11 S_U + más palabras en común con las verdaderas de la Parte 6, PROMEDIO: 46.0 % (-4.0 pp sobre 50 %) 
+  OK: canónica, enumeración exacta conducida por el código (semilla 1001): 192 hojas, masa 1.000000000, masa con error 0 
+  OK: canónica: la enumeración no depende de la semilla (orden de las opciones de la Parte 1): semillas 1001 y 1028, mismas once cifras 
+  OK: canónica: X6 a X11 de la enumeración por código = transcripción del modelo (x_canonica_exacta.R): X6 41.7/41.7 · X7 8.3/8.3 · X8 25.0/25.0 · X9 75.0/75.0 · X10 66.7/66.7 · X11 62.5/62.5 
+  OK: batería cruzada: X1 elige la cifra que imprimen las Partes 2 a 6, canónica exacta: 25.0 % (+0.0 pp sobre 25 %; muestra n = 30: 25.0 %); peso en la mezcla 0,10 × +0.0 = +0.00 pp 
+  OK: batería cruzada: X2 descarta la cifra que imprimen las Partes 2 a 6, canónica exacta: 25.0 % (+0.0 pp sobre 25 %; muestra n = 30: 25.0 %); peso en la mezcla 0,10 × +0.0 = +0.00 pp 
+  OK: batería cruzada: X3 elige la cifra a una operación de la tabla del otro colegio, canónica exacta: 24.0 % (-1.0 pp sobre 25 %; muestra n = 30: 30.0 %); peso en la mezcla 0,10 × -1.0 = -0.10 pp 
+  OK: batería cruzada: X4 descarta la cifra a una operación de la tabla del otro colegio, canónica exacta: 25.3 % (+0.3 pp sobre 25 %; muestra n = 30: 22.8 %); peso en la mezcla 0,10 × +0.3 = +0.03 pp 
+  OK: batería cruzada: X5 más palabras en común con todo el texto de las Partes 2 a 6, canónica exacta: 0.0 % (-25.0 pp sobre 25 %; muestra n = 30: 0.0 %); peso en la mezcla 0,10 × -25.0 = -2.50 pp 
+  ROJO, cubierto por el override de la canónica (L-C3: X6, X9, X10 y X11): X6 más palabras en común con la clave de la Parte 2, canónica exacta: 41.7 % (+16.7 pp sobre 25 %; muestra n = 30: 33.3 %); peso en la mezcla 0,10 × +16.7 = +1.67 pp (firmado hasta +16.7 pp)
+  OK: batería cruzada: X7 más palabras en común con las verdaderas de la Parte 6, canónica exacta: 8.3 % (-16.7 pp sobre 25 %; muestra n = 30: 11.1 %); peso en la mezcla 0,10 × -16.7 = -1.67 pp 
+  OK: batería cruzada: X8 perfil cruzado: sede de la Parte 1 con la ventaja del grado ganador, canónica exacta: 25.0 % (+0.0 pp sobre 25 %; muestra n = 30: 25.0 %); peso en la mezcla 0,10 × +0.0 = +0.00 pp 
+  ROJO, cubierto por el override de la canónica (L-C3: X6, X9, X10 y X11): X9 S_U + la que nombra la ventaja del grado ganador, canónica exacta: 75.0 % (+25.0 pp sobre 50 %; muestra n = 30: 75.0 %); peso en la mezcla 0,10 × +25.0 = +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por el override de la canónica (L-C3: X6, X9, X10 y X11): X10 S_U + más palabras en común con la clave de la Parte 2, canónica exacta: 66.7 % (+16.7 pp sobre 50 %; muestra n = 30: 61.7 %); peso en la mezcla 0,10 × +16.7 = +1.67 pp (firmado hasta +16.7 pp)
+  ROJO, cubierto por el override de la canónica (L-C3: X6, X9, X10 y X11): X11 S_U + más palabras en común con las verdaderas de la Parte 6, canónica exacta: 62.5 % (+12.5 pp sobre 50 %; muestra n = 30: 66.7 %); peso en la mezcla 0,10 × +12.5 = +1.25 pp (firmado hasta +12.5 pp)
+  La transcripción del modelo sigue disponible como contraste: Rscript --no-init-file x_canonica_exacta.R, desde cloze/salida.
+
+==============================================================================
+E4 · «O-1 corregido» sobre la Parte 1, por rama (F-2)
+==============================================================================
+                                                            mezcla CURSOS
+H1 clave única más larga (margen 15 %)                         0.0    0.0
+H1 clave única más corta (margen 15 %)                         0.0    0.0
+clave es la más larga (sin margen)                            32.0   33.0
+clave es la más corta (sin margen)                            10.3   12.0
+canal 2: cifra falsa de G menor que D                         45.0   57.0
+S1 descarta cifras de la tabla                                32.0   28.2
+S1b se queda con cifras de la tabla                            9.0   15.0
+S2 par de la sede de la fila 1                                27.0   22.5
+S3 par de la sede de más cursos                               22.0   50.0
+S4 par de la sede de mayor promedio                           28.0    0.0
+S5 más cursos + menor cifra del par                           30.0   43.0
+S6 mayor promedio + menor cifra del par                       25.0    0.0
+S7 G real + menor cifra del par (cota canal 2)                55.0   43.0
+S_U la sede de la razón sin sustento pierde                   50.0   50.0
+S_todos elige la opción con «todos»                           41.2   44.0
+R_dif la cifra que es diferencia de otras dos                 29.2   30.2
+S_U + S1 (par de G sin la cifra de la tabla)                  61.0   71.0
+S_U + suma (par de G sin la cifra que es suma de otras dos)   58.5   60.5
+Atípica: descarta la cifra que dobla a todas las demás        26.9   25.1
+S_U + S1 + suma (las dos pistas)                              68.0   79.0
+S_U + atípica                                                 63.0   51.5
+S_U + S1 + suma + atípica                                     77.0   81.5
+D es la menor cifra (frecuencia)                              22.0   24.0
+D es la 2.ª cifra (frecuencia)                                33.0   23.0
+D es la 3.ª cifra (frecuencia)                                19.0   24.0
+D es la 4.ª cifra (frecuencia)                                26.0   29.0
+única opción sin cifra (frecuencia)                            9.0    0.0
+clave con token exclusivo (frecuencia)                       100.0  100.0
+                                                            PROMEDIO canonica
+H1 clave única más larga (margen 15 %)                           0.0      0.0
+H1 clave única más corta (margen 15 %)                           0.0      0.0
+clave es la más larga (sin margen)                              41.2      0.0
+clave es la más corta (sin margen)                              16.8      0.0
+canal 2: cifra falsa de G menor que D                           54.0      0.0
+S1 descarta cifras de la tabla                                  33.4     50.0
+S1b se queda con cifras de la tabla                              3.2      0.0
+S2 par de la sede de la fila 1                                  28.5     50.0
+S3 par de la sede de más cursos                                  0.0     50.0
+S4 par de la sede de mayor promedio                             50.0      0.0
+S5 más cursos + menor cifra del par                              0.0    100.0
+S6 mayor promedio + menor cifra del par                         46.0      0.0
+S7 G real + menor cifra del par (cota canal 2)                  46.0    100.0
+S_U la sede de la razón sin sustento pierde                     50.0     50.0
+S_todos elige la opción con «todos»                             54.0     25.0
+R_dif la cifra que es diferencia de otras dos                   31.1     25.0
+S_U + S1 (par de G sin la cifra de la tabla)                    55.0    100.0
+S_U + suma (par de G sin la cifra que es suma de otras dos)     62.0     50.0
+Atípica: descarta la cifra que dobla a todas las demás          26.8     33.3
+S_U + S1 + suma (las dos pistas)                                67.0    100.0
+S_U + atípica                                                   58.0    100.0
+S_U + S1 + suma + atípica                                       74.5    100.0
+D es la menor cifra (frecuencia)                                24.0      0.0
+D es la 2.ª cifra (frecuencia)                                  25.0    100.0
+D es la 3.ª cifra (frecuencia)                                  24.0      0.0
+D es la 4.ª cifra (frecuencia)                                  27.0      0.0
+única opción sin cifra (frecuencia)                              0.0    100.0
+clave con token exclusivo (frecuencia)                         100.0    100.0
+  ROJO, cubierto por O-1 corregido (F-2): S_U, rama CURSOS: 50.0 %, +16.7 pp atribuibles (firmado: +16,7)
+  ROJO, cubierto por O-1 corregido (F-2): S_U + S1 (par de G sin la cifra de la tabla), rama CURSOS: 71.0 % (firmado hasta 71.0 %)
+  ROJO, cubierto por O-1 corregido (F-2): S_U + suma (par de G sin la cifra que es suma de otras dos), rama CURSOS: 60.5 % (firmado hasta 60.5 %)
+  ROJO, cubierto por O-1 corregido (F-2): S_U + S1 + suma (las dos pistas), rama CURSOS: 79.0 % (firmado hasta 79.0 %)
+  ROJO, cubierto por O-1 corregido (F-2): S_U + atípica, rama CURSOS: 51.5 % (firmado hasta 51.5 %)
+  ROJO, cubierto por O-1 corregido (F-2): S_U + S1 + suma + atípica, rama CURSOS: 81.5 % (firmado hasta 81.5 %)
+  OK: S1, rama CURSOS: +3.2 pp (obliga > +8) 
+  OK: R_dif la cifra que es diferencia de otras dos, rama CURSOS: +5.2 pp (obliga > +8) 
+  OK: Atípica: descarta la cifra que dobla a todas las demás, rama CURSOS: +0.1 pp (obliga > +8) 
+  ROJO, cubierto por O-1 corregido (F-2): S_U, rama PROMEDIO: 50.0 %, +16.7 pp atribuibles (firmado: +16,7)
+  ROJO, cubierto por O-1 corregido (F-2): S_U + S1 (par de G sin la cifra de la tabla), rama PROMEDIO: 55.0 % (firmado hasta 55.0 %)
+  ROJO, cubierto por O-1 corregido (F-2): S_U + suma (par de G sin la cifra que es suma de otras dos), rama PROMEDIO: 62.0 % (firmado hasta 62.0 %)
+  ROJO, cubierto por O-1 corregido (F-2): S_U + S1 + suma (las dos pistas), rama PROMEDIO: 67.0 % (firmado hasta 67.0 %)
+  ROJO, cubierto por O-1 corregido (F-2): S_U + atípica, rama PROMEDIO: 58.0 % (firmado hasta 58.0 %)
+  ROJO, cubierto por O-1 corregido (F-2): S_U + S1 + suma + atípica, rama PROMEDIO: 74.5 % (firmado hasta 74.5 %)
+  ROJO, cubierto por O-1 corregido (F-2): S1, rama PROMEDIO: +8.4 pp (firmado hasta +8,4)
+  OK: R_dif la cifra que es diferencia de otras dos, rama PROMEDIO: +6.1 pp (obliga > +8) 
+  OK: Atípica: descarta la cifra que dobla a todas las demás, rama PROMEDIO: +1.8 pp (obliga > +8) 
+  batería §P7 (48 reglas) mezcla natural n=100: máx 33.0 % (cifra mediana), techo nulo 32.7 %, exceso +0.3 pp -> PASS
+  OK: §P7-A mezcla natural: exceso +0.3 pp (obliga > +8) 
+  batería §P7 (48 reglas) rama CURSOS n=100: máx 33.5 % (sede de la opción más larga (relacional)), techo nulo 32.8 %, exceso +0.7 pp -> PASS
+  OK: §P7-A rama CURSOS: exceso +0.7 pp (obliga > +8) 
+  batería §P7 (48 reglas) rama PROMEDIO n=100: máx 43.0 % (la mas larga (chars)), techo nulo 32.6 %, exceso +10.4 pp -> BLOQUEA
+  OK: §P7-B, dentro de lo declarado en O-1 corregido: canal de largo (rama PROMEDIO): +10.4 pp, márgenes 2.0 % (caracteres) y 6.5 % (palabras); sin reglas de largo -0.1 pp; declarado hasta +10,4 pp, 2,7 % y 6,5 % 
+  canónica (24 órdenes): máx 100.0 % (la que MAS comparte); peso en la mezcla 0,10 × +75.0 = +7.5 pp (firmado: 0,10 × 75 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, regla «mas digitos»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, regla «primer numero PAR»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, regla «la que MAS comparte»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, regla «ultimo multiplo de 10»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, regla «descartar ultimo negativo»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, regla «par por sede: menor cifra»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, regla «descartar sin cifra»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, regla «quedarse con 'total'»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, regla «quedarse con 'promedio'»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, regla «descartar 'de más'»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, regla «cifra mediana»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, regla «par con más palabras en común (relacional)»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  decisión 2 a, reglas firmadas: 12; por encima de +8 pp en la canónica: 12
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, sonda «S1 descarta cifras de la tabla»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, sonda «S2 par de la sede de la fila 1»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, sonda «S3 par de la sede de más cursos»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, sonda «S5 más cursos + menor cifra del par»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, sonda «S7 G real + menor cifra del par (cota canal 2)»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, sonda «S_U la sede de la razón sin sustento pierde»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, sonda «S_U + S1 (par de G sin la cifra de la tabla)»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, sonda «S_U + suma (par de G sin la cifra que es suma de otras dos)»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, sonda «Atípica: descarta la cifra que dobla a todas las demás»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, sonda «S_U + S1 + suma (las dos pistas)»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, sonda «S_U + atípica»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  ROJO, cubierto por la decisión 2 a (canónica de la Parte 1, regla por regla): canónica de la Parte 1, sonda «S_U + S1 + suma + atípica»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  decisión 2 a, sondas firmadas: 12; por encima de +8 pp en la canónica: 12
+  RESIDUO DECLARADO: canónica de la Parte 1, fuera de la batería congelada (§P7-C, decisión 2 a: solo declarada): «descarta la más larga» 33.3 % (+8.3 pp) 
+
+==============================================================================
+E5 · Versiones únicas sobre 300 semillas (objetivo >= 250) y claves por gap
+==============================================================================
+  OK: E5: 300 versiones únicas de 300 
+  claves distintas por gap (300 semillas): p1 264 · p2 6 · p3 125 · p4 122 · p5 66 · p6 35 
+  Parte 2: clave conceptual fija por tipo de pregunta (V8, fija-justificada); cambia su redacción (3 paráfrasis por tipo).
+
+==============================================================================
+E6 · Mutantes (sonda propia, materialización en el entorno, patrón único, semillas hasta la primera muerte)
+==============================================================================
+  OK: MC1 (sin la exclusión de la tabla paralela) cazado por su sonda en la semilla 1 
+  OK: MC2 (sin la exclusión de las respuestas) cazado por su sonda en la semilla 3 
+  OK: MC3 (la Parte 2 nombra a la sede ganadora de la Parte 1) cazado por su sonda en la semilla 1 
+  OK: MC4 (una segunda paráfrasis de la clave entra como distractor) cazado por su sonda en la semilla 1 
+  OK: MC5 (si las hipótesis coinciden, las otras dos también) cazado por su sonda en la semilla 1 
+  OK: MC6 (la hipótesis del que perdió dice «habría perdido» con la marca de «habría ganado») cazado por su sonda en la semilla 1 
+  OK: MC7 (un distractor de la Parte 2 dice «error») cazado por su sonda en la semilla 1 
+  OK: MC8 (permite la dominancia en la rama CURSOS del caso paralelo) cazado por su sonda en la semilla 11 
+  OK: MC9 (extol con cinco entradas) cazado por su sonda en la semilla 1 
+  OK: MC10 (la respuesta de la Parte 5 no es entera) cazado por su sonda en la semilla 1 
+  OK: MC11 (L-C1: rompe el atado, la del ganador con veredicto independiente del de la de ventaja) cazado por su sonda en la semilla 3 
+  OK: MC16 (L-C1: una afirmación conceptual sustituye a la del ganador) cazado por su sonda en la semilla 1 
+  OK: MC12 (la rama del otro colegio copia la de la Parte 1): la sonda de independencia lo detecta (diferencia 1.00 > 0,20) 
+  OK: MC17 (L-C2: abre un canal cruzado; la rama del otro colegio copia la de la Parte 1): la batería lo deja PENDIENTE DE FIRMA (X8 perfil cruzado: sede de la Parte 1 con la ventaja del grado ganador +25.0 pp, n = 181) — cazado_por_su_sonda 
+  OK: MC18 (L-C3, X9: la canónica sale siempre con el otro colegio en la rama CURSOS): X9 +50.0 pp (firmado +25.0) -> pendiente; salen: X8 +25.0, X9 +50.0, X11 +25.0; 96 hojas — cazado_por_su_sonda 
+  OK: MC19 (L-C3, X6: una clave «comparar» de la Parte 2 gana «aunque» (palabra de la clave de la Parte 1 y de C)): X6 +25.0 pp (firmado +16.7) -> pendiente; salen: X6 +25.0; 192 hojas — cazado_por_su_sonda 
+  OK: MC20 (L-C3, X10: una clave «comparar» de la Parte 2 gana «cantidad» y «curso» (palabras de la razón sin sustento)): X10 +25.0 pp (firmado +16.7) -> pendiente; salen: X10 +25.0; 192 hojas — cazado_por_su_sonda 
+  OK: MC21 (L-C3, X11: las dos redacciones de ventaja «por promedio» de la Parte 6 ganan «total» (exclusiva de la clave de la Parte 1)): X11 +25.0 pp (firmado +12.5) -> pendiente; salen: X11 +25.0; 192 hojas — cazado_por_su_sonda 
+  OK: MC22 (H4: v_c reescrito con el texto de un sorteo libre): la cuenta de llamadas libres lo detecta (masa con error 0.333 en 144 hojas) — cazado_por_su_sonda 
+  OK: MC13 (sin sortear primero el veredicto): la sonda de veredictos lo detecta (hp 76 %, hg 78 %) 
+  OK: MC14 (consume un número aleatorio más dentro del bloque P1): E1 lo detecta (5 diferencias en 5 semillas; p. ej. «s=1 .Random.seed distinto al final del bloque P1») 
+  OK: MC15 (cambia una reflexión de la Parte 1): E1 lo detecta (6 diferencias en 5 semillas; p. ej. «s=1 reflexiones distinto») 
+
+     id   veredicto           semilla
+MC1  MC1  cazado_por_su_sonda 1      
+MC2  MC2  cazado_por_su_sonda 3      
+MC3  MC3  cazado_por_su_sonda 1      
+MC4  MC4  cazado_por_su_sonda 1      
+MC5  MC5  cazado_por_su_sonda 1      
+MC6  MC6  cazado_por_su_sonda 1      
+MC7  MC7  cazado_por_su_sonda 1      
+MC8  MC8  cazado_por_su_sonda 11     
+MC9  MC9  cazado_por_su_sonda 1      
+MC10 MC10 cazado_por_su_sonda 1      
+MC11 MC11 cazado_por_su_sonda 3      
+MC16 MC16 cazado_por_su_sonda 1      
+MC12 MC12 cazado_por_su_sonda <NA>   
+MC17 MC17 cazado_por_su_sonda <NA>   
+MC18 MC18 cazado_por_su_sonda <NA>   
+MC19 MC19 cazado_por_su_sonda <NA>   
+MC20 MC20 cazado_por_su_sonda <NA>   
+MC21 MC21 cazado_por_su_sonda <NA>   
+MC22 MC22 cazado_por_su_sonda <NA>   
+MC13 MC13 cazado_por_su_sonda <NA>   
+MC14 MC14 cazado_por_su_sonda <NA>   
+MC15 MC15 cazado_por_su_sonda <NA>   
+     sonda_esperada                                            
+MC1  V11 por valor: la tabla del otro colegio                  
+MC2  V11 por valor: las respuestas de las Partes 3 a 5         
+MC3  V11 por contenido                                         
+MC4  Parte 2: una sola clave                                   
+MC5  Parte 6: al menos una verdadera y una falsa               
+MC6  V10: la marca de cada afirmación                          
+MC7  L-1 endurecida: sin vocabulario de error                  
+MC8  L-3 (caso paralelo): sin dominancia                       
+MC9  seis gaps                                                 
+MC10 Partes 3 a 5: respuestas enteras                          
+MC11 Parte 6: sin pares complementarios                        
+MC16 Parte 6: HP, HG, una de ventaja y la del ganador, nada más
+MC12 V11 por independencia                                     
+MC17 batería cruzada > +8 pp: pendiente (L-C2)                 
+MC18 X9 en la canónica: fuera de «cubierto» (L-C3)             
+MC19 X6 en la canónica: fuera de «cubierto» (L-C3)             
+MC20 X10 en la canónica: fuera de «cubierto» (L-C3)            
+MC21 X11 en la canónica: fuera de «cubierto» (L-C3)            
+MC22 enumeración: llamadas libres (H4)                         
+MC13 Parte 6: veredicto 50 % ± 12                              
+MC14 E1                                                        
+MC15 E1                                                        
+  Sin mutante propio aquí: las guardas de la Parte 1 (L-1 a L-5, M1-M22 del SCHOICE): el código es el mismo (E1).
+
+==============================================================================
+E7 · Pesos por gap: expoints 3|1|1|1|1|1, una entrada por gap (F-3)
+==============================================================================
+  OK: expoints 3|1|1|1|1|1 con 6 gaps 
+  OK: E7 mutante «sin la línea» muerto: hay 0 líneas expoints (se espera 1) 
+  OK: E7 mutante «Parte 1 a peso 1» muerto: pesos 1|1|1|1|1|1 (firmado: 3|1|1|1|1|1) 
+  OK: E7 mutante «un peso de menos» muerto: 5 pesos para 6 gaps 
+  OK: E7 mutante «el 3 en la Parte 2» muerto: pesos 1|3|1|1|1|1 (firmado: 3|1|1|1|1|1) 
+
+==============================================================================
+E8 · L-C4: batería CONGELADA por gap (Parte 2 y Parte 6), regla por regla
+==============================================================================
+  OK: L-C4: la batería es la congelada (bateria_partes_2_a_6.R, md5 de20e0a986f86d44f0d3412517d2f07b) 
+  PENDIENTE DE FIRMA: L-C4 Parte 2 «promedio», exacta (720 versiones) · P2-L3: 75.0 % (nulo 25.0 %, +50.0 pp) — elige el condicional en -ría (H1) (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 2 «promedio», exacta (720 versiones) · P2-L1: 70.0 % (nulo 25.0 %, +45.0 pp) — contiene «total» (H1) (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 2 «promedio», exacta (720 versiones) · P2-L2: 70.0 % (nulo 25.0 %, +45.0 pp) — descarta las que empiezan por «Lo que recogió» (H1) (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 2 «promedio», exacta (720 versiones) · P2-E1: 45.8 % (nulo 25.0 %, +20.8 pp) — más palabras en común con su pregunta (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  OK: L-C4 Parte 2 «promedio», posición, muestra n = 165: ninguna regla por encima de +8 pp 
+  PENDIENTE DE FIRMA: L-C4 Parte 2 «comparar», exacta (720 versiones) · P2-L1: 100.0 % (nulo 25.0 %, +75.0 pp) — contiene «total» (H1) (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 2 «comparar», exacta (720 versiones) · P2-E4: 80.0 % (nulo 25.0 %, +55.0 pp) — la única con una palabra de las Partes 3 a 5 que no tiene otra opción (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 2 «comparar», exacta (720 versiones) · P2-E2: 70.0 % (nulo 25.0 %, +45.0 pp) — más palabras en común con las Partes 3 a 5 (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 2 «comparar», exacta (720 versiones) · P2-E1: 66.7 % (nulo 25.0 %, +41.7 pp) — más palabras en común con su pregunta (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 2 «comparar», exacta (720 versiones) · P2-L4: 37.5 % (nulo 25.0 %, +12.5 pp) — descarta las que empiezan por «Únicamente» (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 2 «comparar», exacta (720 versiones) · P2-L6: 37.5 % (nulo 25.0 %, +12.5 pp) — descarta las absolutas («únicamente», «sin tener en cuenta», «exactamente») (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 2 «comparar», exacta (720 versiones) · P2-F3: 36.1 % (nulo 25.0 %, +11.1 pp) — descarta la más larga (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 2 «comparar», exacta (720 versiones) · P2-F4: 34.2 % (nulo 25.0 %, +9.2 pp) — la que lleva coma (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  OK: L-C4 Parte 2 «comparar», posición, muestra n = 165: ninguna regla por encima de +8 pp 
+  OK: L-C4 Parte 6, mezcla: control positivo (calcula los totales) acierta las cuatro afirmaciones en 100/100 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, mezcla, muestra n = 100 · P6-K1 ventaja: 80.0 % (nulo 48.7 %, +31.3 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, mezcla, muestra n = 100 · P6-K1 ganador: 80.0 % (nulo 48.7 %, +31.3 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, mezcla, muestra n = 100 · P6-D2 ventaja: 78.0 % (nulo 50.1 %, +27.9 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, mezcla, muestra n = 100 · P6-D2 ganador: 78.0 % (nulo 50.1 %, +27.9 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, mezcla, muestra n = 100 · P6-HK1 hg: 74.0 % (nulo 50.0 %, +24.0 pp) — R_hg (H2): HG verdadera ⟺ k′ = 1 (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  RESIDUO DECLARADO: L-C4 Parte 6, mezcla, muestra n = 100 · P6-P1c ventaja: 62.0 % (nulo 49.7 %, +12.3 pp) — contraria: ganó el de la segunda fila (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 64.0 %) 
+  RESIDUO DECLARADO: L-C4 Parte 6, mezcla, muestra n = 100 · P6-P1c ganador: 62.0 % (nulo 49.7 %, +12.3 pp) — contraria: ganó el de la segunda fila (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 64.0 %) 
+  RESIDUO DECLARADO: L-C4 Parte 6, mezcla, muestra n = 100 · P6-HNc hp: 58.0 % (nulo 47.6 %, +10.4 pp) — contraria (⟺ menos de 5) (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 62.0 %) 
+  RESIDUO DECLARADO: L-C4 Parte 6, mezcla, muestra n = 100 · P6-N1 ventaja: 60.0 % (nulo 49.7 %, +10.3 pp) — el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 64.0 %) 
+  RESIDUO DECLARADO: L-C4 Parte 6, mezcla, muestra n = 100 · P6-N1 ganador: 60.0 % (nulo 49.7 %, +10.3 pp) — el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 64.0 %) 
+  RESIDUO DECLARADO: L-C4 Parte 6, mezcla, muestra n = 100 · P6-P2 hg: 60.0 % (nulo 50.1 %, +9.9 pp) — las dos primeras afirmaciones son verdaderas y las dos últimas falsas (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 62.0 %) 
+  RESIDUO DECLARADO: L-C4 Parte 6, mezcla, muestra n = 100 · P6-HA hp: 56.0 % (nulo 46.8 %, +9.2 pp) — las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 62.0 %) 
+  RESIDUO DECLARADO: L-C4 Parte 6, mezcla, muestra n = 100 · P6-P2 ganador: 58.0 % (nulo 49.7 %, +8.3 pp) — las dos primeras afirmaciones son verdaderas y las dos últimas falsas (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 64.0 %) 
+  RESIDUO DECLARADO: L-C4 Parte 6, mezcla, relacional RL1_par_hp_hg: 35.0 % (nulo 24.9 %, +10.1 pp) — métrica del par (NO CONCLUYENTE: dentro de 2 errores típicos de +8 pp) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, mezcla, relacional RL2_hp_contraria_ganador: 84.0 % (nulo 50.7 %, +33.3 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, mezcla, relacional RL2_hg_contraria_ganador: 86.0 % (nulo 49.9 %, +36.1 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp) 
+  OK: L-C4 Parte 6, rama CURSOS: control positivo (calcula los totales) acierta las cuatro afirmaciones en 161/161 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-K1 ventaja: 83.2 % (nulo 52.7 %, +30.6 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-K1 ganador: 83.2 % (nulo 52.7 %, +30.6 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-HK1 hg: 90.7 % (nulo 65.9 %, +24.8 pp) — R_hg (H2): HG verdadera ⟺ k′ = 1 (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-D2 ventaja: 69.6 % (nulo 51.2 %, +18.4 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-D2 ganador: 69.6 % (nulo 51.2 %, +18.4 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-HD hp: 61.5 % (nulo 46.0 %, +15.5 pp) — las hipótesis de un curso son verdaderas ⟺ δ′ ≥ 10 (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  RESIDUO DECLARADO: L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-HK2 hp: 56.5 % (nulo 43.2 %, +13.3 pp) — R_hp: HP verdadera ⟺ k′ = 1 (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 60.9 %) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-D1 ventaja: 62.7 % (nulo 50.4 %, +12.3 pp) — R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene) (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-D1 ganador: 62.7 % (nulo 50.4 %, +12.3 pp) — R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene) (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  RESIDUO DECLARADO: L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-HNc hp: 60.2 % (nulo 48.3 %, +12.0 pp) — contraria (⟺ menos de 5) (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 60.9 %) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-A1c ventaja: 61.5 % (nulo 50.4 %, +11.1 pp) — contraria de «promedio de 40 o más» (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-A1c ganador: 61.5 % (nulo 50.4 %, +11.1 pp) — contraria de «promedio de 40 o más» (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  RESIDUO DECLARADO: L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-HA hg: 64.0 % (nulo 55.5 %, +8.5 pp) — las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 73.9 %) 
+  RESIDUO DECLARADO: L-C4 Parte 6, rama CURSOS, relacional RL1_par_hp_hg: 32.9 % (nulo 22.5 %, +10.4 pp) — métrica del par (NO CONCLUYENTE: dentro de 2 errores típicos de +8 pp) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama CURSOS, relacional RL2_hp_contraria_ganador: 83.9 % (nulo 48.8 %, +35.1 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama CURSOS, relacional RL2_hg_contraria_ganador: 82.0 % (nulo 52.8 %, +29.2 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp) 
+  OK: L-C4 Parte 6, rama PROMEDIO: control positivo (calcula los totales) acierta las cuatro afirmaciones en 169/169 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-D2 ventaja: 87.6 % (nulo 49.7 %, +37.9 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-D2 ganador: 87.6 % (nulo 49.7 %, +37.9 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-K1 ventaja: 87.6 % (nulo 50.0 %, +37.6 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-K1 ganador: 87.6 % (nulo 50.0 %, +37.6 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-A1 ventaja: 83.4 % (nulo 49.6 %, +33.8 pp) — el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-A1 ganador: 83.4 % (nulo 49.6 %, +33.8 pp) — el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-N1 ventaja: 81.7 % (nulo 49.7 %, +32.0 pp) — el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-N1 ganador: 81.7 % (nulo 49.7 %, +32.0 pp) — el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-HNc hp: 69.8 % (nulo 57.7 %, +12.1 pp) — contraria (⟺ menos de 5) (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  RESIDUO DECLARADO: L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-HNc hg: 49.7 % (nulo 38.2 %, +11.5 pp) — contraria (⟺ menos de 5) (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 68.7 %) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-HA hp: 69.2 % (nulo 58.1 %, +11.1 pp) — las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-HDc hp: 68.6 % (nulo 59.1 %, +9.5 pp) — contraria (⟺ δ′ < 10) (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  RESIDUO DECLARADO: L-C4 Parte 6, rama PROMEDIO, relacional RL1_par_hp_hg: 34.6 % (nulo 22.7 %, +11.9 pp) — métrica del par (NO CONCLUYENTE: dentro de 2 errores típicos de +8 pp) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama PROMEDIO, relacional RL2_hp_contraria_ganador: 85.8 % (nulo 49.5 %, +36.3 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, rama PROMEDIO, relacional RL2_hg_contraria_ganador: 83.4 % (nulo 50.8 %, +32.7 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp) 
+  OK: L-C4 Parte 6, k′ = 1: control positivo (calcula los totales) acierta las cuatro afirmaciones en 175/175 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-D2 ventaja: 88.0 % (nulo 50.0 %, +38.0 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-D2 ganador: 88.0 % (nulo 50.0 %, +38.0 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-K1 ventaja: 84.6 % (nulo 48.8 %, +35.8 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-K1 ganador: 84.6 % (nulo 48.8 %, +35.8 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-A1 ventaja: 80.0 % (nulo 49.0 %, +31.0 pp) — el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-A1 ganador: 80.0 % (nulo 49.0 %, +31.0 pp) — el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-N1 ventaja: 76.0 % (nulo 48.7 %, +27.3 pp) — el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-N1 ganador: 76.0 % (nulo 48.7 %, +27.3 pp) — el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-HDc hp: 74.9 % (nulo 51.4 %, +23.4 pp) — contraria (⟺ δ′ < 10) (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-HA hp: 71.4 % (nulo 51.4 %, +20.0 pp) — las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  RESIDUO DECLARADO: L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-HDc hg: 53.7 % (nulo 39.8 %, +13.9 pp) — contraria (⟺ δ′ < 10) (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 72.6 %) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-HNc hp: 64.0 % (nulo 51.8 %, +12.2 pp) — contraria (⟺ menos de 5) (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  RESIDUO DECLARADO: L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-HA hg: 51.4 % (nulo 39.8 %, +11.6 pp) — las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 72.6 %) 
+  RESIDUO DECLARADO: L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-HNc hg: 48.6 % (nulo 37.0 %, +11.6 pp) — contraria (⟺ menos de 5) (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 72.6 %) 
+  RESIDUO DECLARADO: L-C4 Parte 6, k′ = 1, relacional RL1_par_hp_hg: 37.1 % (nulo 24.3 %, +12.9 pp) — métrica del par (NO CONCLUYENTE: dentro de 2 errores típicos de +8 pp) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ = 1, relacional RL2_hp_contraria_ganador: 88.6 % (nulo 49.5 %, +39.1 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ = 1, relacional RL2_hg_contraria_ganador: 85.7 % (nulo 53.7 %, +32.0 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp) 
+  OK: L-C4 Parte 6, k′ ≥ 2: control positivo (calcula los totales) acierta las cuatro afirmaciones en 155/155 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-K1 ventaja: 86.5 % (nulo 54.4 %, +32.1 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-K1 ganador: 86.5 % (nulo 54.4 %, +32.1 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-HD hp: 69.7 % (nulo 49.9 %, +19.8 pp) — las hipótesis de un curso son verdaderas ⟺ δ′ ≥ 10 (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-HNc hp: 66.5 % (nulo 49.8 %, +16.7 pp) — contraria (⟺ menos de 5) (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  RESIDUO DECLARADO: L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-HD hg: 68.4 % (nulo 52.9 %, +15.5 pp) — las hipótesis de un curso son verdaderas ⟺ δ′ ≥ 10 (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 80.0 %) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-D2 ventaja: 68.4 % (nulo 54.7 %, +13.7 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-D2 ganador: 68.4 % (nulo 54.7 %, +13.7 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D) 
+  RESIDUO DECLARADO: L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-A1c ventaja: 59.4 % (nulo 50.3 %, +9.1 pp) — contraria de «promedio de 40 o más» (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 63.2 %) 
+  RESIDUO DECLARADO: L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-A1c ganador: 59.4 % (nulo 50.3 %, +9.1 pp) — contraria de «promedio de 40 o más» (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 63.2 %) 
+  OK: L-C4 Parte 6, k′ ≥ 2, relacional RL1_par_hp_hg: 30.0 % (nulo 24.7 %, +5.3 pp) — métrica del par 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ ≥ 2, relacional RL2_hp_contraria_ganador: 80.6 % (nulo 49.7 %, +30.9 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp) 
+  PENDIENTE DE FIRMA: L-C4 Parte 6, k′ ≥ 2, relacional RL2_hg_contraria_ganador: 79.4 % (nulo 57.9 %, +21.4 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp) 
+  OK: MC23 (L-C4: la clave de la Parte 2, siempre en la primera posición): la batería congelada pone en rojo P2-P1 (100 versiones; en rojo: P2-P1, P2-L1, P2-E4, P2-E1, P2-L3, P2-E2, P2-L2) — cazado_por_su_sonda 
+  OK: MC24 (L-C4: el grado que gana, siempre en la primera fila de la tabla del otro colegio): la batería congelada pone en rojo P6-P1 (100 versiones; en rojo: P6-P1, P6-K1, P6-D2, P6-HK1) — cazado_por_su_sonda 
+  Partes 3 a 5 (num): ninguna regla de eliminación aplica (sin opciones, tolerancia 0); sus vías de fuga las mide V11 por valor y «a un paso» (E3).
+  OK: MP1 (decisión 2 a; copia de la canónica, «tuvo mayor promedio» -> «tuvo mayor media»): quedarse con 'promedio' +75.0 pp (firmado +25.0) -> pendiente — cazado_por_su_sonda 
+  OK: MP2 (decisión 2 a; copia de la canónica, «recogió 40 kilos más» -> «recogió 4 kilos más»): mas digitos +75.0 pp (firmado +25.0) -> pendiente — cazado_por_su_sonda 
+  Decisión 2 a: las nueve reglas y sondas al 100 % (+75,0 pp) no pueden subir; ningún mutante puede sacarlas de «cubierto» y se declara.
+
+     id   veredicto          
+MC23 MC23 cazado_por_su_sonda
+MC24 MC24 cazado_por_su_sonda
+MP1  MP1  cazado_por_su_sonda
+MP2  MP2  cazado_por_su_sonda
+     sonda_esperada                                    
+MC23 L-C4: P2-P1 en rojo                               
+MC24 L-C4: P6-P1 en rojo                               
+MP1  2 a: «quedarse con 'promedio'» fuera de «cubierto»
+MP2  2 a: «mas digitos» fuera de «cubierto»            
+     sonda_real                                                             
+MC23 100 versiones; en rojo: P2-P1, P2-L1, P2-E4, P2-E1, P2-L3, P2-E2, P2-L2
+MC24 100 versiones; en rojo: P6-P1, P6-K1, P6-D2, P6-HK1                    
+MP1  quedarse con 'promedio' +75.0 pp (firmado +25.0) -> pendiente          
+MP2  mas digitos +75.0 pp (firmado +25.0) -> pendiente                      
+
+==============================================================================
+RESULTADO
+==============================================================================
+En rojo, cubiertos por un override firmado («O-1 corregido» extendido por F-2; X6, X9, X10 y X11 en la canónica por L-C3; la canónica de la Parte 1 regla por regla por la decisión 2 a; regla #22 §P7-E):
+  - [el override de la canónica (L-C3: X6, X9, X10 y X11)] X6 más palabras en común con la clave de la Parte 2, canónica exacta: 41.7 % (+16.7 pp sobre 25 %; muestra n = 30: 33.3 %); peso en la mezcla 0,10 × +16.7 = +1.67 pp (firmado hasta +16.7 pp)
+  - [el override de la canónica (L-C3: X6, X9, X10 y X11)] X9 S_U + la que nombra la ventaja del grado ganador, canónica exacta: 75.0 % (+25.0 pp sobre 50 %; muestra n = 30: 75.0 %); peso en la mezcla 0,10 × +25.0 = +2.50 pp (firmado hasta +25.0 pp)
+  - [el override de la canónica (L-C3: X6, X9, X10 y X11)] X10 S_U + más palabras en común con la clave de la Parte 2, canónica exacta: 66.7 % (+16.7 pp sobre 50 %; muestra n = 30: 61.7 %); peso en la mezcla 0,10 × +16.7 = +1.67 pp (firmado hasta +16.7 pp)
+  - [el override de la canónica (L-C3: X6, X9, X10 y X11)] X11 S_U + más palabras en común con las verdaderas de la Parte 6, canónica exacta: 62.5 % (+12.5 pp sobre 50 %; muestra n = 30: 66.7 %); peso en la mezcla 0,10 × +12.5 = +1.25 pp (firmado hasta +12.5 pp)
+  - [O-1 corregido (F-2)] S_U, rama CURSOS: 50.0 %, +16.7 pp atribuibles (firmado: +16,7)
+  - [O-1 corregido (F-2)] S_U + S1 (par de G sin la cifra de la tabla), rama CURSOS: 71.0 % (firmado hasta 71.0 %)
+  - [O-1 corregido (F-2)] S_U + suma (par de G sin la cifra que es suma de otras dos), rama CURSOS: 60.5 % (firmado hasta 60.5 %)
+  - [O-1 corregido (F-2)] S_U + S1 + suma (las dos pistas), rama CURSOS: 79.0 % (firmado hasta 79.0 %)
+  - [O-1 corregido (F-2)] S_U + atípica, rama CURSOS: 51.5 % (firmado hasta 51.5 %)
+  - [O-1 corregido (F-2)] S_U + S1 + suma + atípica, rama CURSOS: 81.5 % (firmado hasta 81.5 %)
+  - [O-1 corregido (F-2)] S_U, rama PROMEDIO: 50.0 %, +16.7 pp atribuibles (firmado: +16,7)
+  - [O-1 corregido (F-2)] S_U + S1 (par de G sin la cifra de la tabla), rama PROMEDIO: 55.0 % (firmado hasta 55.0 %)
+  - [O-1 corregido (F-2)] S_U + suma (par de G sin la cifra que es suma de otras dos), rama PROMEDIO: 62.0 % (firmado hasta 62.0 %)
+  - [O-1 corregido (F-2)] S_U + S1 + suma (las dos pistas), rama PROMEDIO: 67.0 % (firmado hasta 67.0 %)
+  - [O-1 corregido (F-2)] S_U + atípica, rama PROMEDIO: 58.0 % (firmado hasta 58.0 %)
+  - [O-1 corregido (F-2)] S_U + S1 + suma + atípica, rama PROMEDIO: 74.5 % (firmado hasta 74.5 %)
+  - [O-1 corregido (F-2)] S1, rama PROMEDIO: +8.4 pp (firmado hasta +8,4)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, regla «mas digitos»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, regla «primer numero PAR»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, regla «la que MAS comparte»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, regla «ultimo multiplo de 10»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, regla «descartar ultimo negativo»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, regla «par por sede: menor cifra»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, regla «descartar sin cifra»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, regla «quedarse con 'total'»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, regla «quedarse con 'promedio'»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, regla «descartar 'de más'»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, regla «cifra mediana»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, regla «par con más palabras en común (relacional)»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, sonda «S1 descarta cifras de la tabla»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, sonda «S2 par de la sede de la fila 1»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, sonda «S3 par de la sede de más cursos»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, sonda «S5 más cursos + menor cifra del par»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, sonda «S7 G real + menor cifra del par (cota canal 2)»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, sonda «S_U la sede de la razón sin sustento pierde»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, sonda «S_U + S1 (par de G sin la cifra de la tabla)»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, sonda «S_U + suma (par de G sin la cifra que es suma de otras dos)»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, sonda «Atípica: descarta la cifra que dobla a todas las demás»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, sonda «S_U + S1 + suma (las dos pistas)»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, sonda «S_U + atípica»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  - [la decisión 2 a (canónica de la Parte 1, regla por regla)] canónica de la Parte 1, sonda «S_U + S1 + suma + atípica»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+
+Residuos declarados:
+  - V11 a un paso (mezcla, n = 100): D de la Parte 1 sale de una operación (+, -, ×) entre dos números de la tabla del otro colegio en 11.0 %; una respuesta de las Partes 3 a 5 sale de una operación entre dos números que muestra la Parte 1 en 49.0 %
+  - V11 a un paso (rama CURSOS, n = 100): D de la Parte 1 sale de una operación (+, -, ×) entre dos números de la tabla del otro colegio en 12.0 %; una respuesta de las Partes 3 a 5 sale de una operación entre dos números que muestra la Parte 1 en 63.0 %
+  - V11 a un paso (rama PROMEDIO, n = 100): D de la Parte 1 sale de una operación (+, -, ×) entre dos números de la tabla del otro colegio en 17.0 %; una respuesta de las Partes 3 a 5 sale de una operación entre dos números que muestra la Parte 1 en 52.0 %
+  - V11 a un paso (canónica, n = 30): D de la Parte 1 sale de una operación (+, -, ×) entre dos números de la tabla del otro colegio en 16.7 %; una respuesta de las Partes 3 a 5 sale de una operación entre dos números que muestra la Parte 1 en 33.3 %
+  - cascada F1: 1 de 330 versiones usaron el paso 2 o siguientes (2: 1, 3: 0, 4: 0)
+  - canónica de la Parte 1, fuera de la batería congelada (§P7-C, decisión 2 a: solo declarada): «descarta la más larga» 33.3 % (+8.3 pp)
+  - L-C4 Parte 6, mezcla, muestra n = 100 · P6-P1c ventaja: 62.0 % (nulo 49.7 %, +12.3 pp) — contraria: ganó el de la segunda fila (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 64.0 %)
+  - L-C4 Parte 6, mezcla, muestra n = 100 · P6-P1c ganador: 62.0 % (nulo 49.7 %, +12.3 pp) — contraria: ganó el de la segunda fila (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 64.0 %)
+  - L-C4 Parte 6, mezcla, muestra n = 100 · P6-HNc hp: 58.0 % (nulo 47.6 %, +10.4 pp) — contraria (⟺ menos de 5) (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 62.0 %)
+  - L-C4 Parte 6, mezcla, muestra n = 100 · P6-N1 ventaja: 60.0 % (nulo 49.7 %, +10.3 pp) — el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 64.0 %)
+  - L-C4 Parte 6, mezcla, muestra n = 100 · P6-N1 ganador: 60.0 % (nulo 49.7 %, +10.3 pp) — el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 64.0 %)
+  - L-C4 Parte 6, mezcla, muestra n = 100 · P6-P2 hg: 60.0 % (nulo 50.1 %, +9.9 pp) — las dos primeras afirmaciones son verdaderas y las dos últimas falsas (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 62.0 %)
+  - L-C4 Parte 6, mezcla, muestra n = 100 · P6-HA hp: 56.0 % (nulo 46.8 %, +9.2 pp) — las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 62.0 %)
+  - L-C4 Parte 6, mezcla, muestra n = 100 · P6-P2 ganador: 58.0 % (nulo 49.7 %, +8.3 pp) — las dos primeras afirmaciones son verdaderas y las dos últimas falsas (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 64.0 %)
+  - L-C4 Parte 6, mezcla, relacional RL1_par_hp_hg: 35.0 % (nulo 24.9 %, +10.1 pp) — métrica del par (NO CONCLUYENTE: dentro de 2 errores típicos de +8 pp)
+  - L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-HK2 hp: 56.5 % (nulo 43.2 %, +13.3 pp) — R_hp: HP verdadera ⟺ k′ = 1 (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 60.9 %)
+  - L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-HNc hp: 60.2 % (nulo 48.3 %, +12.0 pp) — contraria (⟺ menos de 5) (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 60.9 %)
+  - L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-HA hg: 64.0 % (nulo 55.5 %, +8.5 pp) — las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 73.9 %)
+  - L-C4 Parte 6, rama CURSOS, relacional RL1_par_hp_hg: 32.9 % (nulo 22.5 %, +10.4 pp) — métrica del par (NO CONCLUYENTE: dentro de 2 errores típicos de +8 pp)
+  - L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-HNc hg: 49.7 % (nulo 38.2 %, +11.5 pp) — contraria (⟺ menos de 5) (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 68.7 %)
+  - L-C4 Parte 6, rama PROMEDIO, relacional RL1_par_hp_hg: 34.6 % (nulo 22.7 %, +11.9 pp) — métrica del par (NO CONCLUYENTE: dentro de 2 errores típicos de +8 pp)
+  - L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-HDc hg: 53.7 % (nulo 39.8 %, +13.9 pp) — contraria (⟺ δ′ < 10) (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 72.6 %)
+  - L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-HA hg: 51.4 % (nulo 39.8 %, +11.6 pp) — las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 72.6 %)
+  - L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-HNc hg: 48.6 % (nulo 37.0 %, +11.6 pp) — contraria (⟺ menos de 5) (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 72.6 %)
+  - L-C4 Parte 6, k′ = 1, relacional RL1_par_hp_hg: 37.1 % (nulo 24.3 %, +12.9 pp) — métrica del par (NO CONCLUYENTE: dentro de 2 errores típicos de +8 pp)
+  - L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-HD hg: 68.4 % (nulo 52.9 %, +15.5 pp) — las hipótesis de un curso son verdaderas ⟺ δ′ ≥ 10 (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 80.0 %)
+  - L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-A1c ventaja: 59.4 % (nulo 50.3 %, +9.1 pp) — contraria de «promedio de 40 o más» (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 63.2 %)
+  - L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-A1c ganador: 59.4 % (nulo 50.3 %, +9.1 pp) — contraria de «promedio de 40 o más» (NO CONCLUYENTE: no supera el p95 del máximo con la clave o el veredicto permutados, 63.2 %)
+
+Pendientes de firma del profesor (exit 3):
+  - L-C4 Parte 2 «promedio», exacta (720 versiones) · P2-L3: 75.0 % (nulo 25.0 %, +50.0 pp) — elige el condicional en -ría (H1) (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 2 «promedio», exacta (720 versiones) · P2-L1: 70.0 % (nulo 25.0 %, +45.0 pp) — contiene «total» (H1) (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 2 «promedio», exacta (720 versiones) · P2-L2: 70.0 % (nulo 25.0 %, +45.0 pp) — descarta las que empiezan por «Lo que recogió» (H1) (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 2 «promedio», exacta (720 versiones) · P2-E1: 45.8 % (nulo 25.0 %, +20.8 pp) — más palabras en común con su pregunta (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 2 «comparar», exacta (720 versiones) · P2-L1: 100.0 % (nulo 25.0 %, +75.0 pp) — contiene «total» (H1) (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 2 «comparar», exacta (720 versiones) · P2-E4: 80.0 % (nulo 25.0 %, +55.0 pp) — la única con una palabra de las Partes 3 a 5 que no tiene otra opción (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 2 «comparar», exacta (720 versiones) · P2-E2: 70.0 % (nulo 25.0 %, +45.0 pp) — más palabras en común con las Partes 3 a 5 (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 2 «comparar», exacta (720 versiones) · P2-E1: 66.7 % (nulo 25.0 %, +41.7 pp) — más palabras en común con su pregunta (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 2 «comparar», exacta (720 versiones) · P2-L4: 37.5 % (nulo 25.0 %, +12.5 pp) — descarta las que empiezan por «Únicamente» (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 2 «comparar», exacta (720 versiones) · P2-L6: 37.5 % (nulo 25.0 %, +12.5 pp) — descarta las absolutas («únicamente», «sin tener en cuenta», «exactamente») (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 2 «comparar», exacta (720 versiones) · P2-F3: 36.1 % (nulo 25.0 %, +11.1 pp) — descarta la más larga (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 2 «comparar», exacta (720 versiones) · P2-F4: 34.2 % (nulo 25.0 %, +9.2 pp) — la que lleva coma (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, mezcla, muestra n = 100 · P6-K1 ventaja: 80.0 % (nulo 48.7 %, +31.3 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, mezcla, muestra n = 100 · P6-K1 ganador: 80.0 % (nulo 48.7 %, +31.3 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, mezcla, muestra n = 100 · P6-D2 ventaja: 78.0 % (nulo 50.1 %, +27.9 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, mezcla, muestra n = 100 · P6-D2 ganador: 78.0 % (nulo 50.1 %, +27.9 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, mezcla, muestra n = 100 · P6-HK1 hg: 74.0 % (nulo 50.0 %, +24.0 pp) — R_hg (H2): HG verdadera ⟺ k′ = 1 (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, mezcla, relacional RL2_hp_contraria_ganador: 84.0 % (nulo 50.7 %, +33.3 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp)
+  - L-C4 Parte 6, mezcla, relacional RL2_hg_contraria_ganador: 86.0 % (nulo 49.9 %, +36.1 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp)
+  - L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-K1 ventaja: 83.2 % (nulo 52.7 %, +30.6 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-K1 ganador: 83.2 % (nulo 52.7 %, +30.6 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-HK1 hg: 90.7 % (nulo 65.9 %, +24.8 pp) — R_hg (H2): HG verdadera ⟺ k′ = 1 (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-D2 ventaja: 69.6 % (nulo 51.2 %, +18.4 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-D2 ganador: 69.6 % (nulo 51.2 %, +18.4 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-HD hp: 61.5 % (nulo 46.0 %, +15.5 pp) — las hipótesis de un curso son verdaderas ⟺ δ′ ≥ 10 (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-D1 ventaja: 62.7 % (nulo 50.4 %, +12.3 pp) — R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene) (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-D1 ganador: 62.7 % (nulo 50.4 %, +12.3 pp) — R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene) (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-A1c ventaja: 61.5 % (nulo 50.4 %, +11.1 pp) — contraria de «promedio de 40 o más» (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama CURSOS, muestra n = 161 · P6-A1c ganador: 61.5 % (nulo 50.4 %, +11.1 pp) — contraria de «promedio de 40 o más» (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama CURSOS, relacional RL2_hp_contraria_ganador: 83.9 % (nulo 48.8 %, +35.1 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp)
+  - L-C4 Parte 6, rama CURSOS, relacional RL2_hg_contraria_ganador: 82.0 % (nulo 52.8 %, +29.2 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp)
+  - L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-D2 ventaja: 87.6 % (nulo 49.7 %, +37.9 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-D2 ganador: 87.6 % (nulo 49.7 %, +37.9 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-K1 ventaja: 87.6 % (nulo 50.0 %, +37.6 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-K1 ganador: 87.6 % (nulo 50.0 %, +37.6 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-A1 ventaja: 83.4 % (nulo 49.6 %, +33.8 pp) — el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-A1 ganador: 83.4 % (nulo 49.6 %, +33.8 pp) — el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-N1 ventaja: 81.7 % (nulo 49.7 %, +32.0 pp) — el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-N1 ganador: 81.7 % (nulo 49.7 %, +32.0 pp) — el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-HNc hp: 69.8 % (nulo 57.7 %, +12.1 pp) — contraria (⟺ menos de 5) (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-HA hp: 69.2 % (nulo 58.1 %, +11.1 pp) — las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama PROMEDIO, muestra n = 169 · P6-HDc hp: 68.6 % (nulo 59.1 %, +9.5 pp) — contraria (⟺ δ′ < 10) (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, rama PROMEDIO, relacional RL2_hp_contraria_ganador: 85.8 % (nulo 49.5 %, +36.3 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp)
+  - L-C4 Parte 6, rama PROMEDIO, relacional RL2_hg_contraria_ganador: 83.4 % (nulo 50.8 %, +32.7 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp)
+  - L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-D2 ventaja: 88.0 % (nulo 50.0 %, +38.0 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-D2 ganador: 88.0 % (nulo 50.0 %, +38.0 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-K1 ventaja: 84.6 % (nulo 48.8 %, +35.8 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-K1 ganador: 84.6 % (nulo 48.8 %, +35.8 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-A1 ventaja: 80.0 % (nulo 49.0 %, +31.0 pp) — el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-A1 ganador: 80.0 % (nulo 49.0 %, +31.0 pp) — el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-N1 ventaja: 76.0 % (nulo 48.7 %, +27.3 pp) — el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-N1 ganador: 76.0 % (nulo 48.7 %, +27.3 pp) — el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-HDc hp: 74.9 % (nulo 51.4 %, +23.4 pp) — contraria (⟺ δ′ < 10) (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-HA hp: 71.4 % (nulo 51.4 %, +20.0 pp) — las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ = 1, muestra n = 175 · P6-HNc hp: 64.0 % (nulo 51.8 %, +12.2 pp) — contraria (⟺ menos de 5) (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ = 1, relacional RL2_hp_contraria_ganador: 88.6 % (nulo 49.5 %, +39.1 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp)
+  - L-C4 Parte 6, k′ = 1, relacional RL2_hg_contraria_ganador: 85.7 % (nulo 53.7 %, +32.0 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp)
+  - L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-K1 ventaja: 86.5 % (nulo 54.4 %, +32.1 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-K1 ganador: 86.5 % (nulo 54.4 %, +32.1 pp) — R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-HD hp: 69.7 % (nulo 49.9 %, +19.8 pp) — las hipótesis de un curso son verdaderas ⟺ δ′ ≥ 10 (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-HNc hp: 66.5 % (nulo 49.8 %, +16.7 pp) — contraria (⟺ menos de 5) (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-D2 ventaja: 68.4 % (nulo 54.7 %, +13.7 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ ≥ 2, muestra n = 155 · P6-D2 ganador: 68.4 % (nulo 54.7 %, +13.7 pp) — δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos (> +8 pp: vuelve al profesor o a una pasada de §P7-D)
+  - L-C4 Parte 6, k′ ≥ 2, relacional RL2_hp_contraria_ganador: 80.6 % (nulo 49.7 %, +30.9 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp)
+  - L-C4 Parte 6, k′ ≥ 2, relacional RL2_hg_contraria_ganador: 79.4 % (nulo 57.9 %, +21.4 pp) — condicional: presupone el ganador, que calculan las Partes 3 a 5 (> +8 pp)
+
+=== RESULTADO: PENDIENTE DE FIRMA (65; 0 fallos) ===
+exit=3
+1e8cd6e150f7e90d1706cdbac747956b  ../verificar_espacio_cloze.R
+de20e0a986f86d44f0d3412517d2f07b  ../bateria_partes_2_a_6.R
+96cfcf356c01326d42f10ee4c36545b7  ../totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd

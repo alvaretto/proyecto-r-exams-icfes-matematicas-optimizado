@@ -1,0 +1,9854 @@
+[
+ {
+  "seed": 7,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "48 kilos",
+     "y": 3580,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "20 kilos",
+     "y": 4022,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "180 kilos",
+     "y": 5134,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "48 kilos",
+     "y": 8302,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "39 kilos",
+     "y": 8375,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 38,
+   "hgap": [
+    [
+     38.4,
+     14
+    ],
+    [
+     24.8,
+     19.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 7,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "40 kilos",
+     "y": 2547,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "39 kilos",
+     "y": 2990,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "48 kilos",
+     "y": 3150,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "42 kilos",
+     "y": 3168,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 7332,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 7405,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 38,
+   "hgap": [
+    [
+     40.7,
+     17.5
+    ],
+    [
+     22.6,
+     24.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 7,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "5 kilos",
+     "y": 5197,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "180 kilos",
+     "y": 9232,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 38,
+   "hgap": [
+    [
+     37.2,
+     15.6
+    ],
+    [
+     26.7,
+     18.6
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 7,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "4 cursos",
+     "y": 8741,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 8809,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 38,
+   "hgap": [
+    [
+     42.3,
+     17.6
+    ],
+    [
+     23,
+     16.6
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 3,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "12 kilos",
+     "y": 649,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "52 kilos",
+     "y": 739,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "12 kilos",
+     "y": 2171,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "44 kilos",
+     "y": 3724,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "52 kilos",
+     "y": 4518,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "180 kilos",
+     "y": 4787,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "180 kilos",
+     "y": 5441,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "33 kilos",
+     "y": 8410,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 42,
+   "hgap": [
+    [
+     35.9,
+     15.5
+    ],
+    [
+     24.4,
+     19.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 3,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "33 kilos",
+     "y": 3134,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "44 kilos",
+     "y": 3294,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "11 kilos",
+     "y": 3312,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 4193,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "180 kilos",
+     "y": 6896,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 cursos",
+     "y": 7386,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 7459,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 42,
+   "hgap": [
+    [
+     40.9,
+     29.5
+    ],
+    [
+     21.9,
+     16
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 3,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "52 kilos",
+     "y": 5420,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 5630,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 10062,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 42,
+   "hgap": [
+    [
+     38.8,
+     15.3
+    ],
+    [
+     26.3,
+     26.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 3,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "12 kilos",
+     "y": 600,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "192 kilos",
+     "y": 4344,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "180 kilos",
+     "y": 8267,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "180 kilos",
+     "y": 8447,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 cursos",
+     "y": 8829,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "44 kilos",
+     "y": 8919,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "231 kilos",
+     "y": 9009,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 42,
+   "hgap": [
+    [
+     43.8,
+     20.3
+    ],
+    [
+     22.3,
+     22.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 2,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "7 kilos",
+     "y": 847,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "45 kilos",
+     "y": 3596,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "35 kilos",
+     "y": 3756,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 kilos",
+     "y": 4038,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "36 kilos",
+     "y": 8145,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "45 kilos",
+     "y": 8505,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4178
+    }
+   ],
+   "units_total": 43,
+   "hgap": [
+    [
+     16.5,
+     21
+    ],
+    [
+     24.6,
+     19.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 2,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "35 kilos",
+     "y": 3364,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "15 kilos",
+     "y": 3382,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 4297,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 7519,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 7592,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 3750
+    }
+   ],
+   "units_total": 43,
+   "hgap": [
+    [
+     14.2,
+     23
+    ],
+    [
+     22.3,
+     21.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 2,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "7 kilos",
+     "y": 988,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "36 kilos",
+     "y": 2817,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "45 kilos",
+     "y": 4527,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 5855,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 10287,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 5180
+    }
+   ],
+   "units_total": 43,
+   "hgap": [
+    [
+     20.9,
+     26.1
+    ],
+    [
+     26.5,
+     26.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 2,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "4 cursos",
+     "y": 5211,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "26 kilos",
+     "y": 5864,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "156 kilos",
+     "y": 5931,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "156 kilos",
+     "y": 8541,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 8991,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "35 kilos",
+     "y": 9104,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "225 kilos",
+     "y": 9396,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4559
+    }
+   ],
+   "units_total": 43,
+   "hgap": [
+    [
+     17,
+     13.6
+    ],
+    [
+     22.7,
+     13.6
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 1,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "27 kilos",
+     "y": 559,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "42 kilos",
+     "y": 2993,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "53 kilos",
+     "y": 3686,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "27 kilos",
+     "y": 4532,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "162 kilos",
+     "y": 4800,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "51 kilos",
+     "y": 8403,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4108
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     40.5,
+     21.5
+    ],
+    [
+     24.6,
+     19.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 1,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "53 kilos",
+     "y": 3240,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "37 kilos",
+     "y": 3258,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "48 kilos",
+     "y": 4774,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 cursos",
+     "y": 7290,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 7363,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 3626
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     42.7,
+     17
+    ],
+    [
+     22.3,
+     21.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 1,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "27 kilos",
+     "y": 593,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "15 kilos",
+     "y": 849,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "42 kilos",
+     "y": 3777,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "162 kilos",
+     "y": 6552,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "162 kilos",
+     "y": 9320,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 cursos",
+     "y": 9905,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 5045
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     39.1,
+     15.1
+    ],
+    [
+     26.5,
+     26.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 1,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "27 kilos",
+     "y": 483,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "58 kilos",
+     "y": 600,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "42 kilos",
+     "y": 3311,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "27 kilos",
+     "y": 4864,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "48 kilos",
+     "y": 5771,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "162 kilos",
+     "y": 8134,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "53 kilos",
+     "y": 8719,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 8764,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4444
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     44.2,
+     24.6
+    ],
+    [
+     22.7,
+     13.6
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 4,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "45 kilos",
+     "y": 2135,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "51 kilos",
+     "y": 2992,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "57 kilos",
+     "y": 3543,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "46 kilos",
+     "y": 3703,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "39 kilos",
+     "y": 4531,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "312 kilos",
+     "y": 5434,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4107
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     25.8,
+     23
+    ],
+    [
+     21,
+     24
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 4,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "46 kilos",
+     "y": 3293,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "31 kilos",
+     "y": 3311,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "57 kilos",
+     "y": 3347,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "12 kilos",
+     "y": 3539,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "1 curso",
+     "y": 4189,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "31 kilos",
+     "y": 6339,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 cursos",
+     "y": 7430,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 7503,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "399 kilos",
+     "y": 7848,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 3679
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     23.3,
+     19.5
+    ],
+    [
+     18.5,
+     20.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 4,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "51 kilos",
+     "y": 3777,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "57 kilos",
+     "y": 4415,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "312 kilos",
+     "y": 9500,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 cursos",
+     "y": 10040,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 10130,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 5067
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     28.4,
+     29.1
+    ],
+    [
+     23.7,
+     29.6
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 4,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "45 kilos",
+     "y": 600,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "39 kilos",
+     "y": 716,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "51 kilos",
+     "y": 3354,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "57 kilos",
+     "y": 3879,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "1 curso",
+     "y": 5049,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "312 kilos",
+     "y": 5162,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "57 kilos",
+     "y": 8807,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 8852,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4487
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     24.4,
+     25.1
+    ],
+    [
+     19.6,
+     25.6
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 5,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "30 kilos",
+     "y": 577,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "39 kilos",
+     "y": 3738,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "30 kilos",
+     "y": 4530,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "24 kilos",
+     "y": 8592,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 42,
+   "hgap": [
+    [
+     40.4,
+     16.5
+    ],
+    [
+     24.4,
+     19.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 5,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "30 kilos",
+     "y": 523,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "23 kilos",
+     "y": 595,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "39 kilos",
+     "y": 3344,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "27 kilos",
+     "y": 3362,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 4240,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 7532,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "3 cursos",
+     "y": 7605,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 42,
+   "hgap": [
+    [
+     42.4,
+     27.5
+    ],
+    [
+     21.9,
+     16
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 5,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "30 kilos",
+     "y": 593,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 5697,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "3 cursos",
+     "y": 10265,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 42,
+   "hgap": [
+    [
+     38.9,
+     15.1
+    ],
+    [
+     26.3,
+     26.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 5,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "30 kilos",
+     "y": 506,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "51 kilos",
+     "y": 739,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "318 kilos",
+     "y": 4367,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "30 kilos",
+     "y": 4929,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "51 kilos",
+     "y": 5582,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "295 kilos",
+     "y": 8402,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 8987,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "39 kilos",
+     "y": 9077,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 42,
+   "hgap": [
+    [
+     43.9,
+     20.1
+    ],
+    [
+     22.3,
+     22.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 26,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 6,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "64 kilos",
+     "y": 811,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "54 kilos",
+     "y": 3724,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 4731,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": true,
+     "split": false,
+     "tabla": true,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": true,
+     "split": false,
+     "tabla": true,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    }
+   ],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": true,
+     "y": 4128
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     36,
+     20.5
+    ],
+    [
+     21.3,
+     24
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 6,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "2 kilos",
+     "y": 489,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "64 kilos",
+     "y": 1943,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "44 kilos",
+     "y": 3174,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "54 kilos",
+     "y": 3334,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "48 kilos",
+     "y": 3352,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "44 kilos",
+     "y": 3388,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "2 kilos",
+     "y": 3580,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 4269,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "240 kilos",
+     "y": 4871,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 7390,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 7463,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": true,
+     "split": false,
+     "tabla": true,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": true,
+     "split": false,
+     "tabla": true,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    }
+   ],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": true,
+     "y": 3720
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     41.2,
+     19
+    ],
+    [
+     19,
+     13.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 6,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "12 kilos",
+     "y": 710,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "64 kilos",
+     "y": 965,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "64 kilos",
+     "y": 3952,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 5159,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 5767,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "240 kilos",
+     "y": 5857,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 9997,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 10087,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": true,
+     "split": false,
+     "tabla": true,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": true,
+     "split": false,
+     "tabla": true,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    }
+   ],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 5114
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     37.7,
+     16.9
+    ],
+    [
+     23.9,
+     19.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 6,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "2 kilos",
+     "y": 506,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "27 kilos",
+     "y": 739,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "2 kilos",
+     "y": 4369,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "27 kilos",
+     "y": 5629,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "27 kilos",
+     "y": 5816,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "240 kilos",
+     "y": 8359,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 8831,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "54 kilos",
+     "y": 8921,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": true,
+     "split": false,
+     "tabla": true,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": true,
+     "split": false,
+     "tabla": true,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    }
+   ],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": true,
+     "y": 4533
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     42.9,
+     26.4
+    ],
+    [
+     20.1,
+     17.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 8,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "90 kilos",
+     "y": 811,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "50 kilos",
+     "y": 3101,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "53 kilos",
+     "y": 3688,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "90 kilos",
+     "y": 3970,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "280 kilos",
+     "y": 5424,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "39 kilos",
+     "y": 8629,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 43,
+   "hgap": [
+    [
+     20.5,
+     30
+    ],
+    [
+     23.3,
+     21
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 27,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 8,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "39 kilos",
+     "y": 3100,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "53 kilos",
+     "y": 3260,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "47 kilos",
+     "y": 3278,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "90 kilos",
+     "y": 3506,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 3665,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "40 kilos",
+     "y": 4038,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "1 curso",
+     "y": 4178,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "14 kilos",
+     "y": 4586,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "50 kilos",
+     "y": 4798,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "280 kilos",
+     "y": 6972,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 7444,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 7517,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 43,
+   "hgap": [
+    [
+     18,
+     26.5
+    ],
+    [
+     20.8,
+     17.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 27,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 8,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "50 kilos",
+     "y": 2707,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "50 kilos",
+     "y": 9637,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 10019,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 43,
+   "hgap": [
+    [
+     24.3,
+     19.6
+    ],
+    [
+     25.1,
+     27.8
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 27,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 8,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "40 kilos",
+     "y": 579,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "1 curso",
+     "y": 4961,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "50 kilos",
+     "y": 5681,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 8809,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 8876,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "312 kilos",
+     "y": 8989,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 43,
+   "hgap": [
+    [
+     20.3,
+     17.6
+    ],
+    [
+     21,
+     23.8
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 27,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 9,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "15 kilos",
+     "y": 595,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "4 kilos",
+     "y": 685,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "20 kilos",
+     "y": 865,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "25 kilos",
+     "y": 3085,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "58 kilos",
+     "y": 3796,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "160 kilos",
+     "y": 4913,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 kilos",
+     "y": 5283,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 kilos",
+     "y": 5495,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "15 kilos",
+     "y": 8140,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "45 kilos",
+     "y": 8627,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": true,
+     "y": 4218
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     16.3,
+     21
+    ],
+    [
+     24.4,
+     19.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 9,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "20 kilos",
+     "y": 741,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "15 kilos",
+     "y": 1977,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "58 kilos",
+     "y": 3365,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "12 kilos",
+     "y": 3383,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "15 kilos",
+     "y": 4916,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "160 kilos",
+     "y": 7124,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "160 kilos",
+     "y": 7250,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 7574,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 7647,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 3751
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     13.8,
+     17.5
+    ],
+    [
+     21.9,
+     16
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 9,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "15 kilos",
+     "y": 616,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "20 kilos",
+     "y": 1010,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "15 kilos",
+     "y": 2862,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 kilos",
+     "y": 5015,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 10175,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": true,
+     "y": 5179
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     20.7,
+     26.1
+    ],
+    [
+     26.3,
+     26.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 9,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "4 kilos",
+     "y": 5784,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "15 kilos",
+     "y": 6039,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "160 kilos",
+     "y": 8739,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 9122,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 9212,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4667
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     16.6,
+     22.1
+    ],
+    [
+     22.3,
+     22.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 10,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "42 kilos",
+     "y": 2939,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 kilos",
+     "y": 3063,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "42 kilos",
+     "y": 3472,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "27 kilos",
+     "y": 3632,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "203 kilos",
+     "y": 5308,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 kilos",
+     "y": 7733,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "27 kilos",
+     "y": 8237,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4036
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     20.5,
+     30
+    ],
+    [
+     24.4,
+     19.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 10,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "27 kilos",
+     "y": 3186,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "33 kilos",
+     "y": 3204,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "42 kilos",
+     "y": 3240,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "58 kilos",
+     "y": 3924,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 kilos",
+     "y": 4488,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 kilos",
+     "y": 4700,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "33 kilos",
+     "y": 6123,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 7233,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 7306,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 3554
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     18,
+     26.5
+    ],
+    [
+     21.9,
+     16
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 10,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "7 kilos",
+     "y": 2662,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "42 kilos",
+     "y": 4304,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "203 kilos",
+     "y": 9209,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 9929,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4957
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     24.3,
+     19.6
+    ],
+    [
+     26.3,
+     26.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 10,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "7 kilos",
+     "y": 485,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "58 kilos",
+     "y": 602,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "2 cursos",
+     "y": 4916,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "203 kilos",
+     "y": 5659,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 8584,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "42 kilos",
+     "y": 8674,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": true,
+     "y": 4353
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     20.3,
+     17.6
+    ],
+    [
+     22.3,
+     22.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 11,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "35 kilos",
+     "y": 631,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "47 kilos",
+     "y": 3010,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "37 kilos",
+     "y": 3721,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "280 kilos",
+     "y": 4816,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "44 kilos",
+     "y": 5186,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "37 kilos",
+     "y": 8632,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4143
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     40.6,
+     21.5
+    ],
+    [
+     24.8,
+     19.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 11,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "33 kilos",
+     "y": 3082,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "37 kilos",
+     "y": 3242,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "42 kilos",
+     "y": 3260,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "33 kilos",
+     "y": 3296,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "280 kilos",
+     "y": 4779,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 7425,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 7498,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": true,
+     "y": 3628
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     42.9,
+     20
+    ],
+    [
+     22.6,
+     24.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 26,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 11,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "12 kilos",
+     "y": 593,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "47 kilos",
+     "y": 3779,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "280 kilos",
+     "y": 9637,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 10199,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 5069
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     39.2,
+     15.1
+    ],
+    [
+     26.7,
+     18.6
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 11,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "44 kilos",
+     "y": 716,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "47 kilos",
+     "y": 3356,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "35 kilos",
+     "y": 4931,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "44 kilos",
+     "y": 5606,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "44 kilos",
+     "y": 5794,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 8989,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 9079,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4511
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     44.4,
+     27.6
+    ],
+    [
+     23,
+     16.6
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 12,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "25 kilos",
+     "y": 2099,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "33 kilos",
+     "y": 3652,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "45 kilos",
+     "y": 4464,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 4659,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "220 kilos",
+     "y": 4733,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "220 kilos",
+     "y": 5351,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "220 kilos",
+     "y": 7798,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "33 kilos",
+     "y": 8285,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 43,
+   "hgap": [
+    [
+     26,
+     23
+    ],
+    [
+     23.5,
+     21
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 12,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "33 kilos",
+     "y": 3240,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "29 kilos",
+     "y": 3258,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "23 kilos",
+     "y": 3294,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "25 kilos",
+     "y": 3682,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "220 kilos",
+     "y": 4248,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "25 kilos",
+     "y": 4794,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "29 kilos",
+     "y": 6217,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "25 kilos",
+     "y": 6949,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 cursos",
+     "y": 7309,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 7382,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 43,
+   "hgap": [
+    [
+     23.8,
+     25
+    ],
+    [
+     21.2,
+     23
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 12,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "5 cursos",
+     "y": 5567,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "220 kilos",
+     "y": 9099,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "25 kilos",
+     "y": 9189,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 cursos",
+     "y": 9684,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 43,
+   "hgap": [
+    [
+     28.7,
+     18.6
+    ],
+    [
+     25.3,
+     17.3
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 12,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "25 kilos",
+     "y": 485,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "45 kilos",
+     "y": 602,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "25 kilos",
+     "y": 5729,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "23 kilos",
+     "y": 8676,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 8721,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 43,
+   "hgap": [
+    [
+     24.8,
+     16.6
+    ],
+    [
+     21.4,
+     15.3
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 13,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "59 kilos",
+     "y": 2977,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "56 kilos",
+     "y": 3492,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "42 kilos",
+     "y": 3652,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "368 kilos",
+     "y": 7780,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": true,
+     "split": false,
+     "tabla": true,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": true,
+     "split": false,
+     "tabla": true,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    }
+   ],
+   "punct": [],
+   "units_total": 41,
+   "hgap": [
+    [
+     36,
+     20.5
+    ],
+    [
+     21.3,
+     24
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 13,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "42 kilos",
+     "y": 3244,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "28 kilos",
+     "y": 3262,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "56 kilos",
+     "y": 3298,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 7282,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 7355,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": true,
+     "split": false,
+     "tabla": true,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": true,
+     "split": false,
+     "tabla": true,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    }
+   ],
+   "punct": [],
+   "units_total": 41,
+   "hgap": [
+    [
+     41.2,
+     19
+    ],
+    [
+     19,
+     13.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 13,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "413 kilos",
+     "y": 593,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "368 kilos",
+     "y": 9412,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 9862,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 9952,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": true,
+     "split": false,
+     "tabla": true,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": true,
+     "split": false,
+     "tabla": true,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    }
+   ],
+   "punct": [],
+   "units_total": 41,
+   "hgap": [
+    [
+     37.7,
+     16.9
+    ],
+    [
+     23.9,
+     19.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 13,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "56 kilos",
+     "y": 3881,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "46 kilos",
+     "y": 4909,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 8854,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "42 kilos",
+     "y": 8966,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "280 kilos",
+     "y": 9079,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": true,
+     "split": false,
+     "tabla": true,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": true,
+     "split": false,
+     "tabla": true,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": false
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": true,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "La Pradera",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    },
+    {
+     "txt": "El Bosque",
+     "nbsp": false,
+     "split": false,
+     "tabla": false,
+     "sol": true
+    }
+   ],
+   "punct": [],
+   "units_total": 41,
+   "hgap": [
+    [
+     42.9,
+     26.4
+    ],
+    [
+     20.1,
+     17.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 14,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "12 kilos",
+     "y": 631,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "36 kilos",
+     "y": 3683,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "12 kilos",
+     "y": 4494,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "210 kilos",
+     "y": 5360,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "26 kilos",
+     "y": 8483,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 44,
+   "hgap": [
+    [
+     25.8,
+     23
+    ],
+    [
+     24.4,
+     19.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 14,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "33 kilos",
+     "y": 2636,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "36 kilos",
+     "y": 3255,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "28 kilos",
+     "y": 3273,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "21 kilos",
+     "y": 3696,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 4206,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "46 kilos",
+     "y": 4594,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "21 kilos",
+     "y": 4806,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 7533,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 7605,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 44,
+   "hgap": [
+    [
+     23.3,
+     19.5
+    ],
+    [
+     21.9,
+     16
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 14,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "33 kilos",
+     "y": 3687,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 5652,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "210 kilos",
+     "y": 6462,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "210 kilos",
+     "y": 9545,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "21 kilos",
+     "y": 9635,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 10220,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 44,
+   "hgap": [
+    [
+     28.4,
+     29.1
+    ],
+    [
+     26.3,
+     26.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 26,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 14,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "21 kilos",
+     "y": 3437,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "21 kilos",
+     "y": 5769,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 8942,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "36 kilos",
+     "y": 9054,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 44,
+   "hgap": [
+    [
+     24.4,
+     25.1
+    ],
+    [
+     22.3,
+     22.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 15,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "69 kilos",
+     "y": 525,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "38 kilos",
+     "y": 2922,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 kilos",
+     "y": 3046,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "45 kilos",
+     "y": 3615,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "184 kilos",
+     "y": 7571,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "45 kilos",
+     "y": 8202,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "38 kilos",
+     "y": 8275,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 41,
+   "hgap": [
+    [
+     20.9,
+     19.5
+    ],
+    [
+     24.6,
+     19.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 15,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "2 kilos",
+     "y": 671,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "6 kilos",
+     "y": 2708,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "45 kilos",
+     "y": 3187,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "17 kilos",
+     "y": 3205,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "190 kilos",
+     "y": 3433,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "3 cursos",
+     "y": 4029,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "17 kilos",
+     "y": 6125,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "3 cursos",
+     "y": 7234,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 7307,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 41,
+   "hgap": [
+    [
+     18.6,
+     19.5
+    ],
+    [
+     22.3,
+     21.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 15,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "184 kilos",
+     "y": 9164,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 41,
+   "hgap": [
+    [
+     24.6,
+     24.1
+    ],
+    [
+     26.5,
+     26.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 15,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "38 kilos",
+     "y": 3246,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 kilos",
+     "y": 3374,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "3 cursos",
+     "y": 4896,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 kilos",
+     "y": 5594,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "184 kilos",
+     "y": 8249,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "3 cursos",
+     "y": 8654,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 8744,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "152 kilos",
+     "y": 8901,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 41,
+   "hgap": [
+    [
+     20.7,
+     22.1
+    ],
+    [
+     22.7,
+     13.6
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 16,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "13 kilos",
+     "y": 633,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "33 kilos",
+     "y": 2119,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "58 kilos",
+     "y": 2977,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "46 kilos",
+     "y": 3510,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "32 kilos",
+     "y": 3670,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "13 kilos",
+     "y": 3952,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "315 kilos",
+     "y": 5366,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "32 kilos",
+     "y": 8511,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "46 kilos",
+     "y": 8584,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4092
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     26.2,
+     15.5
+    ],
+    [
+     24.8,
+     19.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 16,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "32 kilos",
+     "y": 3260,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "52 kilos",
+     "y": 3278,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "1 curso",
+     "y": 4156,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "33 kilos",
+     "y": 4794,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "52 kilos",
+     "y": 6379,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "315 kilos",
+     "y": 7001,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 cursos",
+     "y": 7507,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 7580,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 3646
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     24,
+     14
+    ],
+    [
+     22.6,
+     24.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 16,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "58 kilos",
+     "y": 3759,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "46 kilos",
+     "y": 4374,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "315 kilos",
+     "y": 9459,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "33 kilos",
+     "y": 9549,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "315 kilos",
+     "y": 9684,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 5027
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     28.9,
+     21.6
+    ],
+    [
+     26.7,
+     18.6
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 16,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "58 kilos",
+     "y": 3269,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "46 kilos",
+     "y": 3771,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "1 curso",
+     "y": 4964,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "33 kilos",
+     "y": 5684,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "33 kilos",
+     "y": 8361,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 cursos",
+     "y": 8879,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 8946,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": true,
+     "y": 4400
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     25.1,
+     19.6
+    ],
+    [
+     23,
+     16.6
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 26,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 17,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "7 kilos",
+     "y": 649,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "35 kilos",
+     "y": 739,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "8 kilos",
+     "y": 2153,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "27 kilos",
+     "y": 3720,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "35 kilos",
+     "y": 4530,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "250 kilos",
+     "y": 5452,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "21 kilos",
+     "y": 8433,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4124
+    }
+   ],
+   "units_total": 43,
+   "hgap": [
+    [
+     40.5,
+     21.5
+    ],
+    [
+     23.5,
+     21
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 17,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "7 kilos",
+     "y": 561,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "21 kilos",
+     "y": 3136,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "27 kilos",
+     "y": 3296,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "18 kilos",
+     "y": 3314,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 kilos",
+     "y": 3542,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 4231,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 7406,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 7479,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": true,
+     "y": 3682
+    }
+   ],
+   "units_total": 43,
+   "hgap": [
+    [
+     42.7,
+     17
+    ],
+    [
+     21.2,
+     23
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 17,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "8 kilos",
+     "y": 3884,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 5092,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "35 kilos",
+     "y": 5512,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 5722,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 10132,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "126 kilos",
+     "y": 10492,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 5047
+    }
+   ],
+   "units_total": 43,
+   "hgap": [
+    [
+     39.1,
+     15.1
+    ],
+    [
+     25.3,
+     17.3
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 17,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "7 kilos",
+     "y": 622,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "3 kilos",
+     "y": 855,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "7 kilos",
+     "y": 4391,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 5186,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 8966,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 9056,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4556
+    }
+   ],
+   "units_total": 43,
+   "hgap": [
+    [
+     44.2,
+     24.6
+    ],
+    [
+     21.4,
+     15.3
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 18,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "57 kilos",
+     "y": 3652,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "34 kilos",
+     "y": 3934,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "33 kilos",
+     "y": 4482,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "13 kilos",
+     "y": 7870,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "102 kilos",
+     "y": 7906,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 44,
+   "hgap": [
+    [
+     40.5,
+     21.5
+    ],
+    [
+     21.3,
+     24
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 18,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "45 kilos",
+     "y": 561,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "57 kilos",
+     "y": 3241,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "26 kilos",
+     "y": 3259,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "46 kilos",
+     "y": 3295,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "3 cursos",
+     "y": 4192,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "26 kilos",
+     "y": 6234,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 7325,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 7398,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 44,
+   "hgap": [
+    [
+     42.7,
+     17
+    ],
+    [
+     19,
+     13.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 18,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "45 kilos",
+     "y": 710,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "34 kilos",
+     "y": 849,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "13 kilos",
+     "y": 2729,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "13 kilos",
+     "y": 3907,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "33 kilos",
+     "y": 5467,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "3 cursos",
+     "y": 5677,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "102 kilos",
+     "y": 6554,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "13 kilos",
+     "y": 9457,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 9929,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 10019,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 44,
+   "hgap": [
+    [
+     39.1,
+     15.1
+    ],
+    [
+     23.9,
+     19.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 18,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "45 kilos",
+     "y": 600,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "34 kilos",
+     "y": 716,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "34 kilos",
+     "y": 4256,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "3 cursos",
+     "y": 5074,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "102 kilos",
+     "y": 8404,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "57 kilos",
+     "y": 8809,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 8854,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 44,
+   "hgap": [
+    [
+     44.2,
+     24.6
+    ],
+    [
+     20.1,
+     17.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 25,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 19,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "9 kilos",
+     "y": 847,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "35 kilos",
+     "y": 3778,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "35 kilos",
+     "y": 8627,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "180 kilos",
+     "y": 8883,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": true,
+     "y": 4200
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     16.3,
+     21
+    ],
+    [
+     23.3,
+     21
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 26,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 19,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "9 kilos",
+     "y": 741,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "30 kilos",
+     "y": 3190,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "35 kilos",
+     "y": 3350,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "40 kilos",
+     "y": 3368,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "30 kilos",
+     "y": 3404,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "222 kilos",
+     "y": 4887,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 7551,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 7624,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": true,
+     "y": 3736
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     13.8,
+     17.5
+    ],
+    [
+     20.8,
+     17.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 26,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 19,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "6 cursos",
+     "y": 10265,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": true,
+     "y": 0
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     20.7,
+     26.1
+    ],
+    [
+     25.1,
+     27.8
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 26,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 19,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "7 kilos",
+     "y": 5949,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 9167,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 9257,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4644
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     16.6,
+     22.1
+    ],
+    [
+     21,
+     23.8
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 20,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "67 kilos",
+     "y": 703,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "15 kilos",
+     "y": 793,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "30 kilos",
+     "y": 3652,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 kilos",
+     "y": 3670,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "15 kilos",
+     "y": 4538,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 4733,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "185 kilos",
+     "y": 4806,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "185 kilos",
+     "y": 5460,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "24 kilos",
+     "y": 8411,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "30 kilos",
+     "y": 8484,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 44,
+   "hgap": [
+    [
+     26,
+     23
+    ],
+    [
+     24.6,
+     19.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 0,
+   "mjN": 26,
+   "mj": "timeout"
+  }
+ },
+ {
+  "seed": 20,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "24 kilos",
+     "y": 3043,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "30 kilos",
+     "y": 3203,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 kilos",
+     "y": 3221,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "68 kilos",
+     "y": 3449,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "185 kilos",
+     "y": 4227,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 7378,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "3 cursos",
+     "y": 7451,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 44,
+   "hgap": [
+    [
+     23.8,
+     25
+    ],
+    [
+     22.3,
+     21.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 20,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "15 kilos",
+     "y": 923,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 5677,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 44,
+   "hgap": [
+    [
+     28.7,
+     18.6
+    ],
+    [
+     26.5,
+     26.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 20,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "185 kilos",
+     "y": 8159,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 8631,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "3 cursos",
+     "y": 8699,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [],
+   "units_total": 44,
+   "hgap": [
+    [
+     24.8,
+     16.6
+    ],
+    [
+     22.7,
+     13.6
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 21,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "26 kilos",
+     "y": 795,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "49 kilos",
+     "y": 2943,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "38 kilos",
+     "y": 3493,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "27 kilos",
+     "y": 3653,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "170 kilos",
+     "y": 5331,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4057
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     26.2,
+     15.5
+    ],
+    [
+     21.5,
+     16.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 21,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "26 kilos",
+     "y": 1891,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "27 kilos",
+     "y": 3225,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "39 kilos",
+     "y": 3243,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "38 kilos",
+     "y": 3279,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "15 kilos",
+     "y": 3471,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "34 kilos",
+     "y": 3981,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "1 curso",
+     "y": 4121,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "3 kilos",
+     "y": 4547,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "26 kilos",
+     "y": 4759,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "39 kilos",
+     "y": 6325,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 7417,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 cursos",
+     "y": 7489,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 3611
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     24,
+     14
+    ],
+    [
+     19.3,
+     15
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 21,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "26 kilos",
+     "y": 923,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "49 kilos",
+     "y": 3737,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "38 kilos",
+     "y": 4374,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "170 kilos",
+     "y": 9504,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 10134,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 cursos",
+     "y": 10224,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 5027
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     28.9,
+     21.6
+    ],
+    [
+     24.1,
+     22.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 21,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "34 kilos",
+     "y": 673,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "49 kilos",
+     "y": 3246,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "26 kilos",
+     "y": 3374,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "38 kilos",
+     "y": 3771,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "34 kilos",
+     "y": 4799,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "1 curso",
+     "y": 4964,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "26 kilos",
+     "y": 5684,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 8856,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "27 kilos",
+     "y": 8969,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4379
+    }
+   ],
+   "units_total": 41,
+   "hgap": [
+    [
+     25.1,
+     19.6
+    ],
+    [
+     20.4,
+     20.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 22,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "49 kilos",
+     "y": 2995,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "56 kilos",
+     "y": 3119,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "58 kilos",
+     "y": 3527,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "44 kilos",
+     "y": 3687,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "238 kilos",
+     "y": 5346,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "56 kilos",
+     "y": 7969,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "58 kilos",
+     "y": 8311,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4091
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     20.9,
+     19.5
+    ],
+    [
+     23.5,
+     21
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 22,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "44 kilos",
+     "y": 3205,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "26 kilos",
+     "y": 3223,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "34 kilos",
+     "y": 3943,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "1 curso",
+     "y": 4083,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "36 kilos",
+     "y": 4508,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "26 kilos",
+     "y": 6179,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "238 kilos",
+     "y": 6801,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 7271,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 7343,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 3573
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     18.6,
+     19.5
+    ],
+    [
+     21.2,
+     23
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 22,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "56 kilos",
+     "y": 2687,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "58 kilos",
+     "y": 4307,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "15 kilos",
+     "y": 5679,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 9954,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4959
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     24.6,
+     24.1
+    ],
+    [
+     25.3,
+     17.3
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 22,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "56 kilos",
+     "y": 579,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "34 kilos",
+     "y": 696,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "58 kilos",
+     "y": 3794,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "1 curso",
+     "y": 4964,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 8654,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 8744,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4401
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     20.7,
+     22.1
+    ],
+    [
+     21.4,
+     15.3
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 23,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "59 kilos",
+     "y": 2941,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "46 kilos",
+     "y": 3492,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "33 kilos",
+     "y": 3652,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "11 kilos",
+     "y": 3934,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "48 kilos",
+     "y": 4498,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "384 kilos",
+     "y": 5348,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "46 kilos",
+     "y": 8584,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4074
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     26.2,
+     15.5
+    ],
+    [
+     23.7,
+     21
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 23,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "33 kilos",
+     "y": 3260,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "45 kilos",
+     "y": 3278,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "1 curso",
+     "y": 4156,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "9 kilos",
+     "y": 4582,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "45 kilos",
+     "y": 6397,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 cursos",
+     "y": 7489,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 7562,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 3646
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     24,
+     14
+    ],
+    [
+     21.5,
+     13.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 23,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "59 kilos",
+     "y": 3714,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "46 kilos",
+     "y": 4352,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "384 kilos",
+     "y": 9527,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 cursos",
+     "y": 10157,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 5004
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     28.9,
+     21.6
+    ],
+    [
+     25.5,
+     20.3
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 23,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "48 kilos",
+     "y": 673,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "59 kilos",
+     "y": 3269,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "46 kilos",
+     "y": 3794,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "1 curso",
+     "y": 4986,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "384 kilos",
+     "y": 5099,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "9 kilos",
+     "y": 5639,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 cursos",
+     "y": 8901,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "6 cursos",
+     "y": 8991,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "276 kilos",
+     "y": 9149,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4424
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     25.1,
+     19.6
+    ],
+    [
+     21.7,
+     18.3
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 26,
+   "mjN": 26,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 24,
+  "label": "plain320",
+  "m": {
+   "unit": [
+    {
+     "txt": "31 kilos",
+     "y": 703,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "22 kilos",
+     "y": 2117,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "34 kilos",
+     "y": 2975,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "40 kilos",
+     "y": 3525,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "30 kilos",
+     "y": 3685,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "216 kilos",
+     "y": 5399,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "216 kilos",
+     "y": 7696,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "30 kilos",
+     "y": 8383,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4089
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     20.5,
+     30
+    ],
+    [
+     24.4,
+     19.5
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 24,
+  "label": "plain360",
+  "m": {
+   "unit": [
+    {
+     "txt": "30 kilos",
+     "y": 3239,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "10 kilos",
+     "y": 3257,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "40 kilos",
+     "y": 3293,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 kilos",
+     "y": 3485,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "1 curso",
+     "y": 4117,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "10 kilos",
+     "y": 6250,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "22 kilos",
+     "y": 6890,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 7306,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 7379,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "160 kilos",
+     "y": 7505,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 3625
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     18,
+     26.5
+    ],
+    [
+     21.9,
+     16
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 24,
+  "label": "box320",
+  "m": {
+   "unit": [
+    {
+     "txt": "34 kilos",
+     "y": 3689,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "40 kilos",
+     "y": 4327,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "8 cursos",
+     "y": 5024,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "1 curso",
+     "y": 5587,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "7 kilos",
+     "y": 5677,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "216 kilos",
+     "y": 9187,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "4 cursos",
+     "y": 9862,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4979
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     24.3,
+     19.6
+    ],
+    [
+     26.3,
+     26.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ },
+ {
+  "seed": 24,
+  "label": "box360",
+  "m": {
+   "unit": [
+    {
+     "txt": "27 kilos",
+     "y": 463,
+     "sol": false,
+     "tabla": false
+    },
+    {
+     "txt": "34 kilos",
+     "y": 3289,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "22 kilos",
+     "y": 3416,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "40 kilos",
+     "y": 3814,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "22 kilos",
+     "y": 8201,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "40 kilos",
+     "y": 8719,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "5 cursos",
+     "y": 8764,
+     "sol": true,
+     "tabla": false
+    },
+    {
+     "txt": "160 kilos",
+     "y": 8899,
+     "sol": true,
+     "tabla": false
+    }
+   ],
+   "names": [],
+   "punct": [
+    {
+     "ch": ".",
+     "orphan": false,
+     "y": 4421
+    }
+   ],
+   "units_total": 42,
+   "hgap": [
+    [
+     20.3,
+     17.6
+    ],
+    [
+     22.3,
+     22.1
+    ]
+   ],
+   "heads": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "fb": {
+    "n": 6,
+    "type": "a"
+   },
+   "mathN": 25,
+   "mjN": 25,
+   "mj": "mj"
+  }
+ }
+]

@@ -1,0 +1,15 @@
+md5 del .Rmd: 96cfcf356c01326d42f10ee4c36545b7 
+canónica de la semilla 7 
+opciones (orden de esta semilla; clave = 4 ):
+  1. La sede secundaria ganó porque, aunque participaron menos cursos, tuvo mayor promedio con 5 kilos de más.
+  2. La sede secundaria ganó el concurso porque en ella hubo un curso que recogió más que los otros, aumentando la cantidad de papel recogida en todo el colegio.
+  3. La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria.
+  4. La sede primaria ganó el concurso porque participaron más cursos y aunque el promedio fue menor, el total fue de 20 kilos más.
+
+Batería cruzada en la canónica, enumeración exacta (96 casos ponderados):
+  X6    41.7 %  (+16.7 pp sobre 25 %)  peso en la mezcla 0,10 × +16.7 = +1.67 pp
+  X7     8.3 %  (-16.7 pp sobre 25 %)  peso en la mezcla 0,10 × -16.7 = -1.67 pp
+  X8    25.0 %  ( +0.0 pp sobre 25 %)  peso en la mezcla 0,10 × +0.0 = +0.00 pp
+  X9    75.0 %  (+25.0 pp sobre 50 %)  peso en la mezcla 0,10 × +25.0 = +2.50 pp
+  X10   66.7 %  (+16.7 pp sobre 50 %)  peso en la mezcla 0,10 × +16.7 = +1.67 pp
+  X11   62.5 %  (+12.5 pp sobre 50 %)  peso en la mezcla 0,10 × +12.5 = +1.25 pp

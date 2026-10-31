@@ -1,0 +1,434 @@
+md5 del .Rmd: 96cfcf356c01326d42f10ee4c36545b7 · batería L-C4 v1 (2026-10-31) md5 de20e0a986f86d44f0d3412517d2f07b 
+
+Soporte de las dos celdas de k′ = 1 (espacio base, δ′ ≥ 5): filas por δ′ y por cursos del grado de menos cursos
+ CURSOS HG=TRUE HP=TRUE (387 filas)
+    delta
+n_lo  5  6  7  8  9 10 11 12 13
+   3 35 31 27 23 19 15 11  7  3
+   4 30 25 20 15 10  5  0  0  0
+   5 24 18 12  6  0  0  0  0  0
+   6 18 11  4  0  0  0  0  0  0
+   7 13  5  0  0  0  0  0  0  0
+ PROMEDIO HG=FALSE HP=FALSE (135 filas)
+    delta
+n_lo  7  8  9 10 11 12 13 14 15
+   5  0  0  0  0  2  2  2  3  3
+   6  0  0  3  5  6  6  7  7  8
+   7  1  4  7  9 10 11 12 13 14
+
+==================== V0 · diseño actual · 14096 registros ====================
+
+[mezcla] masa 1.000 · HG verdadera 50.0 % · HP verdadera 50.0 % · ganó el de más cursos 50.0 % · δ′ ≥ 10 en 57.7 %
+  P6-K1  ventaja   83.3 % (nulo 50.0 %, +33.3 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+  P6-HK1 hg        72.5 % (nulo 50.0 %, +22.5 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+  P6-D1  ventaja   56.3 % (nulo 50.0 %,  +6.3 pp, aplica  13 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2  ventaja   74.0 % (nulo 50.0 %, +24.0 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+  P6-N1  ventaja   64.1 % (nulo 50.0 %, +14.1 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+  P6-A1  ventaja   63.6 % (nulo 50.0 %, +13.6 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+  RL1 par HP = HG: HP = HG en 66.7 %; «adivina una y copia» 33.3 % frente a 25.0 % (+8.3 pp, métrica del par)
+  RL2 (condicional al ganador): HP +33.3 pp · HG +33.3 pp
+  reglas por encima de +8 pp: 10
+    P6-K1   ventaja   83.3 % (nulo 50.0 %, +33.3 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+    P6-K1   ganador   83.3 % (nulo 50.0 %, +33.3 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+    P6-D2   ventaja   74.0 % (nulo 50.0 %, +24.0 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-D2   ganador   74.0 % (nulo 50.0 %, +24.0 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-HK1  hg        72.5 % (nulo 50.0 %, +22.5 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+    P6-HNc  hp        68.0 % (nulo 50.0 %, +18.0 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-N1   ventaja   64.1 % (nulo 50.0 %, +14.1 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-N1   ganador   64.1 % (nulo 50.0 %, +14.1 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-A1   ventaja   63.6 % (nulo 50.0 %, +13.6 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-A1   ganador   63.6 % (nulo 50.0 %, +13.6 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+
+[rama_CURSOS] masa 0.500 · HG verdadera 33.3 % · HP verdadera 66.7 % · ganó el de más cursos 100.0 % · δ′ ≥ 10 en 33.7 %
+  P6-K1  ventaja   79.8 % (nulo 50.0 %, +29.8 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+  P6-HK1 hg        86.9 % (nulo 59.9 %, +26.9 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+  P6-D1  ventaja   62.7 % (nulo 50.0 %, +12.7 pp, aplica  25 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2  ventaja   66.3 % (nulo 50.0 %, +16.3 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+  P6-N1c ventaja   56.2 % (nulo 50.0 %,  +6.2 pp, aplica 100 %)  contraria de «5 o más cursos»
+  P6-A1c ventaja   58.9 % (nulo 50.0 %,  +8.9 pp, aplica 100 %)  contraria de «promedio de 40 o más»
+  RL1 par HP = HG: HP = HG en 66.7 %; «adivina una y copia» 33.3 % frente a 22.2 % (+11.1 pp, métrica del par)
+  RL2 (condicional al ganador): HP +33.3 pp · HG +33.3 pp
+  reglas por encima de +8 pp: 12
+    P6-K1   ventaja   79.8 % (nulo 50.0 %, +29.8 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+    P6-K1   ganador   79.8 % (nulo 50.0 %, +29.8 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+    P6-HK1  hg        86.9 % (nulo 59.9 %, +26.9 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+    P6-D2   ventaja   66.3 % (nulo 50.0 %, +16.3 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-D2   ganador   66.3 % (nulo 50.0 %, +16.3 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-HNc  hp        63.9 % (nulo 47.9 %, +16.0 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-HK2  hp        53.5 % (nulo 40.1 %, +13.5 pp, aplica 100 %)  R_hp: HP verdadera ⟺ k′ = 1
+    P6-D1   ventaja   62.7 % (nulo 50.0 %, +12.7 pp, aplica  25 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+    P6-D1   ganador   62.7 % (nulo 50.0 %, +12.7 pp, aplica  25 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+    P6-HD   hp        54.9 % (nulo 44.6 %, +10.3 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ δ′ ≥ 10
+    P6-A1c  ventaja   58.9 % (nulo 50.0 %,  +8.9 pp, aplica 100 %)  contraria de «promedio de 40 o más»
+    P6-A1c  ganador   58.9 % (nulo 50.0 %,  +8.9 pp, aplica 100 %)  contraria de «promedio de 40 o más»
+
+[rama_PROMEDIO] masa 0.500 · HG verdadera 66.7 % · HP verdadera 33.3 % · ganó el de más cursos 0.0 % · δ′ ≥ 10 en 81.7 %
+  P6-K1  ventaja   86.9 % (nulo 50.0 %, +36.9 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+  P6-HK1 hg        58.1 % (nulo 62.3 %,  -4.2 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+  P6-D1  ventaja   50.0 % (nulo 50.0 %,  -0.0 pp, aplica   0 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2  ventaja   81.7 % (nulo 50.0 %, +31.7 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+  P6-N1c ventaja   15.5 % (nulo 50.0 %, -34.5 pp, aplica 100 %)  contraria de «5 o más cursos»
+  P6-A1  ventaja   86.1 % (nulo 50.0 %, +36.1 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+  RL1 par HP = HG: HP = HG en 66.7 %; «adivina una y copia» 33.3 % frente a 22.2 % (+11.1 pp, métrica del par)
+  RL2 (condicional al ganador): HP +33.3 pp · HG +33.3 pp
+  reglas por encima de +8 pp: 11
+    P6-K1   ventaja   86.9 % (nulo 50.0 %, +36.9 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+    P6-K1   ganador   86.9 % (nulo 50.0 %, +36.9 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+    P6-A1   ventaja   86.1 % (nulo 50.0 %, +36.1 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-A1   ganador   86.1 % (nulo 50.0 %, +36.1 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-N1   ventaja   84.5 % (nulo 50.0 %, +34.5 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-N1   ganador   84.5 % (nulo 50.0 %, +34.5 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-D2   ventaja   81.7 % (nulo 50.0 %, +31.7 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-D2   ganador   81.7 % (nulo 50.0 %, +31.7 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-HNc  hp        72.0 % (nulo 61.5 %, +10.5 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-HNc  hg        48.9 % (nulo 38.5 %, +10.4 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-HDc  hp        69.1 % (nulo 60.6 %,  +8.5 pp, aplica 100 %)  contraria (⟺ δ′ < 10)
+
+[k1] masa 0.535 · HG verdadera 71.0 % · HP verdadera 45.0 % · ganó el de más cursos 18.9 % · δ′ ≥ 10 en 65.1 %
+  P6-K1c ventaja   18.9 % (nulo 51.7 %, -32.9 pp, aplica 100 %)  contraria de R_k
+  P6-HK1c hg        29.0 % (nulo 29.0 %,  -0.0 pp, aplica 100 %)  contraria de R_hg
+  P6-D1c ventaja   44.6 % (nulo 49.1 %,  -4.5 pp, aplica  11 %)  contraria de R_δ: δ′ ≤ 4 ⇒ el de mayor promedio
+  P6-D2c ventaja   17.8 % (nulo 49.9 %, -32.1 pp, aplica 100 %)  contraria de δ′ ≥ 10
+  P6-N1  ventaja   77.8 % (nulo 48.5 %, +29.3 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+  P6-A1c ventaja   20.5 % (nulo 50.9 %, -30.5 pp, aplica 100 %)  contraria de «promedio de 40 o más»
+  RL1 par HP = HG: HP = HG en 74.0 %; «adivina una y copia» 37.0 % frente a 24.0 % (+13.0 pp, métrica del par)
+  RL2 (condicional al ganador): HP +37.8 pp · HG +33.6 pp
+  reglas por encima de +8 pp: 14
+    P6-K1   ventaja   81.1 % (nulo 48.3 %, +32.9 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+    P6-K1   ganador   81.1 % (nulo 48.3 %, +32.9 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+    P6-D2   ventaja   82.2 % (nulo 50.1 %, +32.1 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-D2   ganador   82.2 % (nulo 50.1 %, +32.1 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-A1   ventaja   79.5 % (nulo 49.1 %, +30.5 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-A1   ganador   79.5 % (nulo 49.1 %, +30.5 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-N1   ventaja   77.8 % (nulo 48.5 %, +29.3 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-N1   ganador   77.8 % (nulo 48.5 %, +29.3 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-HDc  hp        75.1 % (nulo 51.5 %, +23.6 pp, aplica 100 %)  contraria (⟺ δ′ < 10)
+    P6-HNc  hp        69.8 % (nulo 52.6 %, +17.3 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-HA   hp        69.1 % (nulo 52.6 %, +16.5 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más
+    P6-HNc  hg        53.3 % (nulo 39.2 %, +14.1 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-HDc  hg        57.5 % (nulo 43.7 %, +13.8 pp, aplica 100 %)  contraria (⟺ δ′ < 10)
+    P6-HA   hg        50.3 % (nulo 39.2 %, +11.1 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más
+
+[k2mas] masa 0.465 · HG verdadera 25.8 % · HP verdadera 55.7 % · ganó el de más cursos 85.9 % · δ′ ≥ 10 en 49.2 %
+  P6-K1  ventaja   85.9 % (nulo 52.3 %, +33.6 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+  P6-HK1 hg        74.2 % (nulo 74.2 %,  -0.0 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+  P6-D1  ventaja   57.5 % (nulo 51.3 %,  +6.2 pp, aplica  15 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2c ventaja   35.4 % (nulo 47.7 %, -12.3 pp, aplica 100 %)  contraria de δ′ ≥ 10
+  P6-N1  ventaja   48.3 % (nulo 47.9 %,  +0.4 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+  P6-A1  ventaja   45.2 % (nulo 50.2 %,  -5.0 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+  RL1 par HP = HG: HP = HG en 58.2 %; «adivina una y copia» 29.1 % frente a 23.6 % (+5.5 pp, métrica del par)
+  RL2 (condicional al ganador): HP +30.2 pp · HG +24.6 pp
+  reglas por encima de +8 pp: 8
+    P6-K1   ventaja   85.9 % (nulo 52.3 %, +33.6 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+    P6-K1   ganador   85.9 % (nulo 52.3 %, +33.6 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+    P6-HNc  hp        65.8 % (nulo 48.4 %, +17.5 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-HD   hg        66.7 % (nulo 50.4 %, +16.3 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ δ′ ≥ 10
+    P6-HD   hp        63.7 % (nulo 49.9 %, +13.7 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ δ′ ≥ 10
+    P6-D2   ventaja   64.6 % (nulo 52.3 %, +12.3 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-D2   ganador   64.6 % (nulo 52.3 %, +12.3 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-HAc  hg        49.7 % (nulo 40.9 %,  +8.8 pp, aplica 100 %)  contraria (⟺ menos de 40)
+  rama CURSOS, k′ = 1: masa 0.101 · HG 100.0 % · HP 100.0 % · δ′ medio 4.6 · cursos del grado de menos cursos: media 4.50
+  rama CURSOS, k′ = 2: masa 0.273 · HG 20.8 % · HP 56.9 % · δ′ medio 7.1 · cursos del grado de menos cursos: media 4.77
+  rama PROMEDIO, k′ = 1: masa 0.434 · HG 64.3 % · HP 32.2 % · δ′ medio 11.7 · cursos del grado de menos cursos: media 5.78
+  rama PROMEDIO, k′ = 2: masa 0.064 · HG 82.1 % · HP 39.3 % · δ′ medio 13.5 · cursos del grado de menos cursos: media 5.58
+
+==================== V1 · reparto autorizado (literal) · 6360 registros ====================
+
+[mezcla] masa 1.000 · HG verdadera 50.0 % · HP verdadera 50.0 % · ganó el de más cursos 50.0 % · δ′ ≥ 10 en 57.4 %
+  P6-K1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+  P6-HK1 hg        50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+  P6-D1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica   0 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2  ventaja   86.5 % (nulo 50.0 %, +36.5 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+  P6-N1  ventaja   78.6 % (nulo 50.0 %, +28.6 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+  P6-A1  ventaja   78.6 % (nulo 50.0 %, +28.6 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+  RL1 par HP = HG: HP = HG en 83.3 %; «adivina una y copia» 41.7 % frente a 25.0 % (+16.7 pp, métrica del par)
+  RL2 (condicional al ganador): HP +41.7 pp · HG +41.7 pp
+  reglas por encima de +8 pp: 12
+    P6-D2   ventaja   86.5 % (nulo 50.0 %, +36.5 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-D2   ganador   86.5 % (nulo 50.0 %, +36.5 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-N1   ventaja   78.6 % (nulo 50.0 %, +28.6 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-N1   ganador   78.6 % (nulo 50.0 %, +28.6 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-A1   ventaja   78.6 % (nulo 50.0 %, +28.6 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-A1   ganador   78.6 % (nulo 50.0 %, +28.6 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-HNc  hp        75.8 % (nulo 50.0 %, +25.8 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-HDc  hp        70.3 % (nulo 50.0 %, +20.3 pp, aplica 100 %)  contraria (⟺ δ′ < 10)
+    P6-HA   hp        66.4 % (nulo 50.0 %, +16.4 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más
+    P6-HNc  hg        65.0 % (nulo 50.0 %, +15.0 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-HDc  hg        59.0 % (nulo 50.0 %,  +9.0 pp, aplica 100 %)  contraria (⟺ δ′ < 10)
+    P6-HA   hg        58.9 % (nulo 50.0 %,  +8.9 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más
+
+[rama_CURSOS] masa 0.500 · HG verdadera 66.7 % · HP verdadera 83.3 % · ganó el de más cursos 100.0 % · δ′ ≥ 10 en 20.9 %
+  P6-K1  ventaja   50.0 % (nulo 37.5 %, +12.5 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+  P6-HK1 hg        83.3 % (nulo 50.0 %, +33.3 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+  P6-D1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica   0 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2  ventaja   79.1 % (nulo 54.7 %, +24.4 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+  P6-N1  ventaja   59.7 % (nulo 56.7 %,  +3.0 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+  P6-A1  ventaja   60.0 % (nulo 51.4 %,  +8.6 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+  RL1 par HP = HG: HP = HG en 83.3 %; «adivina una y copia» 41.7 % frente a 30.6 % (+11.1 pp, métrica del par)
+  RL2 (condicional al ganador): HP +25.0 pp · HG +33.3 pp
+  reglas por encima de +8 pp: 9
+    P6-HK1  hg        83.3 % (nulo 50.0 %, +33.3 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+    P6-D2   ventaja   79.1 % (nulo 54.7 %, +24.4 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-D2   ganador   79.1 % (nulo 54.7 %, +24.4 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-HK2  hp        66.7 % (nulo 50.0 %, +16.7 pp, aplica 100 %)  R_hp: HP verdadera ⟺ k′ = 1
+    P6-K1   ventaja   50.0 % (nulo 37.5 %, +12.5 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+    P6-K1   ganador   50.0 % (nulo 37.5 %, +12.5 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+    P6-HNc  hp        65.7 % (nulo 56.5 %,  +9.3 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-A1   ventaja   60.0 % (nulo 51.4 %,  +8.6 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-A1   ganador   60.0 % (nulo 51.4 %,  +8.6 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+
+[rama_PROMEDIO] masa 0.500 · HG verdadera 33.3 % · HP verdadera 16.7 % · ganó el de más cursos 0.0 % · δ′ ≥ 10 en 93.9 %
+  P6-K1  ventaja   50.0 % (nulo 62.5 %, -12.5 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+  P6-HK1 hg        16.7 % (nulo 50.0 %, -33.3 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+  P6-D1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica   0 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2  ventaja   93.9 % (nulo 60.0 %, +34.0 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+  P6-N1  ventaja   97.5 % (nulo 63.7 %, +33.8 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+  P6-A1c ventaja    2.8 % (nulo 38.7 %, -36.0 pp, aplica 100 %)  contraria de «promedio de 40 o más»
+  RL1 par HP = HG: HP = HG en 83.3 %; «adivina una y copia» 41.7 % frente a 30.6 % (+11.1 pp, métrica del par)
+  RL2 (condicional al ganador): HP +25.0 pp · HG +33.3 pp
+  reglas por encima de +8 pp: 10
+    P6-A1   ventaja   97.2 % (nulo 61.3 %, +36.0 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-A1   ganador   97.2 % (nulo 61.3 %, +36.0 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-D2   ventaja   93.9 % (nulo 60.0 %, +34.0 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-D2   ganador   93.9 % (nulo 60.0 %, +34.0 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-N1   ventaja   97.5 % (nulo 63.7 %, +33.8 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-N1   ganador   97.5 % (nulo 63.7 %, +33.8 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-HK1c hg        83.3 % (nulo 50.0 %, +33.3 pp, aplica 100 %)  contraria de R_hg
+    P6-HK2c hp        66.7 % (nulo 50.0 %, +16.7 pp, aplica 100 %)  contraria de R_hp
+    P6-K1c  ventaja   50.0 % (nulo 37.5 %, +12.5 pp, aplica 100 %)  contraria de R_k
+    P6-K1c  ganador   50.0 % (nulo 37.5 %, +12.5 pp, aplica 100 %)  contraria de R_k
+
+[k1] masa 0.500 · HG verdadera 50.0 % · HP verdadera 50.0 % · ganó el de más cursos 50.0 % · δ′ ≥ 10 en 49.7 %
+  P6-K1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+  P6-HK1 hg        50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+  P6-D1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica   0 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2  ventaja   89.1 % (nulo 50.0 %, +39.1 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+  P6-N1  ventaja   85.7 % (nulo 50.0 %, +35.7 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+  P6-A1  ventaja   82.5 % (nulo 50.0 %, +32.5 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+  RL1 par HP = HG: HP = HG en 100.0 %; «adivina una y copia» 50.0 % frente a 25.0 % (+25.0 pp, métrica del par)
+  RL2 (condicional al ganador): HP +50.0 pp · HG +50.0 pp
+  reglas por encima de +8 pp: 12
+    P6-D2   ventaja   89.1 % (nulo 50.0 %, +39.1 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-D2   ganador   89.1 % (nulo 50.0 %, +39.1 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-HDc  hp        89.1 % (nulo 50.0 %, +39.1 pp, aplica 100 %)  contraria (⟺ δ′ < 10)
+    P6-HDc  hg        89.1 % (nulo 50.0 %, +39.1 pp, aplica 100 %)  contraria (⟺ δ′ < 10)
+    P6-N1   ventaja   85.7 % (nulo 50.0 %, +35.7 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-N1   ganador   85.7 % (nulo 50.0 %, +35.7 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-HNc  hp        85.7 % (nulo 50.0 %, +35.7 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-HNc  hg        85.7 % (nulo 50.0 %, +35.7 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-A1   ventaja   82.5 % (nulo 50.0 %, +32.5 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-A1   ganador   82.5 % (nulo 50.0 %, +32.5 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-HA   hp        82.5 % (nulo 50.0 %, +32.5 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más
+    P6-HA   hg        82.5 % (nulo 50.0 %, +32.5 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más
+
+[k2mas] masa 0.500 · HG verdadera 50.0 % · HP verdadera 50.0 % · ganó el de más cursos 50.0 % · δ′ ≥ 10 en 65.1 %
+  P6-K1c ventaja   50.0 % (nulo 50.0 %,  -0.0 pp, aplica 100 %)  contraria de R_k
+  P6-HK1 hg        50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+  P6-D1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica   0 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2  ventaja   83.9 % (nulo 50.0 %, +33.9 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+  P6-N1c ventaja   28.4 % (nulo 50.0 %, -21.6 pp, aplica 100 %)  contraria de «5 o más cursos»
+  P6-A1c ventaja   25.3 % (nulo 50.0 %, -24.7 pp, aplica 100 %)  contraria de «promedio de 40 o más»
+  RL1 par HP = HG: HP = HG en 66.7 %; «adivina una y copia» 33.3 % frente a 25.0 % (+8.3 pp, métrica del par)
+  RL2 (condicional al ganador): HP +33.3 pp · HG +33.3 pp
+  reglas por encima de +8 pp: 9
+    P6-D2   ventaja   83.9 % (nulo 50.0 %, +33.9 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-D2   ganador   83.9 % (nulo 50.0 %, +33.9 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-A1   ventaja   74.7 % (nulo 50.0 %, +24.7 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-A1   ganador   74.7 % (nulo 50.0 %, +24.7 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-N1   ventaja   71.6 % (nulo 50.0 %, +21.6 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-N1   ganador   71.6 % (nulo 50.0 %, +21.6 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-HD   hg        71.2 % (nulo 50.0 %, +21.2 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ δ′ ≥ 10
+    P6-HNc  hp        65.9 % (nulo 50.0 %, +15.9 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-HAc  hg        64.8 % (nulo 50.0 %, +14.8 pp, aplica 100 %)  contraria (⟺ menos de 40)
+  rama CURSOS, k′ = 1: masa 0.250 · HG 100.0 % · HP 100.0 % · δ′ medio 6.8 · cursos del grado de menos cursos: media 4.02
+  rama CURSOS, k′ = 2: masa 0.250 · HG 33.3 % · HP 66.7 % · δ′ medio 8.4 · cursos del grado de menos cursos: media 4.56
+  rama PROMEDIO, k′ = 1: masa 0.250 · HG 0.0 % · HP 0.0 % · δ′ medio 12.3 · cursos del grado de menos cursos: media 6.51
+  rama PROMEDIO, k′ = 2: masa 0.250 · HG 66.7 % · HP 33.3 % · δ′ medio 13.6 · cursos del grado de menos cursos: media 5.65
+  k′ = 2: las celdas no comparten ningún valor de delta
+
+==================== V2 · reparto autorizado + δ′ equilibrado dentro de k′ · 1056 registros ====================
+
+[mezcla] masa 1.000 · HG verdadera 50.0 % · HP verdadera 50.0 % · ganó el de más cursos 50.0 % · δ′ ≥ 10 en 57.1 %
+  P6-K1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+  P6-HK1 hg        50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+  P6-D1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica   0 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+  P6-N1c ventaja    2.8 % (nulo 50.0 %, -47.2 pp, aplica 100 %)  contraria de «5 o más cursos»
+  P6-A1c ventaja    7.9 % (nulo 50.0 %, -42.1 pp, aplica 100 %)  contraria de «promedio de 40 o más»
+  RL1 par HP = HG: HP = HG en 100.0 %; «adivina una y copia» 50.0 % frente a 25.0 % (+25.0 pp, métrica del par)
+  RL2 (condicional al ganador): HP +50.0 pp · HG +50.0 pp
+  reglas por encima de +8 pp: 8
+    P6-N1   ventaja   97.2 % (nulo 50.0 %, +47.2 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-N1   ganador   97.2 % (nulo 50.0 %, +47.2 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-HNc  hp        97.2 % (nulo 50.0 %, +47.2 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-HNc  hg        97.2 % (nulo 50.0 %, +47.2 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-A1   ventaja   92.1 % (nulo 50.0 %, +42.1 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-A1   ganador   92.1 % (nulo 50.0 %, +42.1 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-HA   hp        92.1 % (nulo 50.0 %, +42.1 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más
+    P6-HA   hg        92.1 % (nulo 50.0 %, +42.1 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más
+
+[rama_CURSOS] masa 0.500 · HG verdadera 100.0 % · HP verdadera 100.0 % · ganó el de más cursos 100.0 % · δ′ ≥ 10 en 57.1 %
+  P6-K1  ventaja    0.0 % (nulo  0.0 %,  +0.0 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+  P6-HK1 hg       100.0 % (nulo 100.0 %,  +0.0 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+  P6-D1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica   0 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2  ventaja   42.9 % (nulo 42.9 %,  +0.0 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+  P6-N1  ventaja   94.4 % (nulo 94.4 %,  +0.0 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+  P6-A1  ventaja   84.2 % (nulo 84.2 %,  +0.0 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+  RL1 par HP = HG: HP = HG en 100.0 %; «adivina una y copia» 50.0 % frente a 50.0 % (+0.0 pp, métrica del par)
+  RL2 (condicional al ganador): HP +0.0 pp · HG +0.0 pp
+  reglas por encima de +8 pp: 0
+
+[rama_PROMEDIO] masa 0.500 · HG verdadera 0.0 % · HP verdadera 0.0 % · ganó el de más cursos 0.0 % · δ′ ≥ 10 en 57.1 %
+  P6-K1  ventaja  100.0 % (nulo 100.0 %,  +0.0 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+  P6-HK1 hg         0.0 % (nulo  0.0 %,  +0.0 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+  P6-D1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica   0 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2  ventaja   57.1 % (nulo 57.1 %,  +0.0 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+  P6-N1  ventaja  100.0 % (nulo 100.0 %,  +0.0 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+  P6-A1  ventaja  100.0 % (nulo 100.0 %,  +0.0 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+  RL1 par HP = HG: HP = HG en 100.0 %; «adivina una y copia» 50.0 % frente a 50.0 % (+0.0 pp, métrica del par)
+  RL2 (condicional al ganador): HP +0.0 pp · HG +0.0 pp
+  reglas por encima de +8 pp: 0
+
+[k1] masa 1.000 · HG verdadera 50.0 % · HP verdadera 50.0 % · ganó el de más cursos 50.0 % · δ′ ≥ 10 en 57.1 %
+  P6-K1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+  P6-HK1 hg        50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+  P6-D1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica   0 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+  P6-N1c ventaja    2.8 % (nulo 50.0 %, -47.2 pp, aplica 100 %)  contraria de «5 o más cursos»
+  P6-A1c ventaja    7.9 % (nulo 50.0 %, -42.1 pp, aplica 100 %)  contraria de «promedio de 40 o más»
+  RL1 par HP = HG: HP = HG en 100.0 %; «adivina una y copia» 50.0 % frente a 25.0 % (+25.0 pp, métrica del par)
+  RL2 (condicional al ganador): HP +50.0 pp · HG +50.0 pp
+  reglas por encima de +8 pp: 8
+    P6-N1   ventaja   97.2 % (nulo 50.0 %, +47.2 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-N1   ganador   97.2 % (nulo 50.0 %, +47.2 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-HNc  hp        97.2 % (nulo 50.0 %, +47.2 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-HNc  hg        97.2 % (nulo 50.0 %, +47.2 pp, aplica 100 %)  contraria (⟺ menos de 5)
+    P6-A1   ventaja   92.1 % (nulo 50.0 %, +42.1 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-A1   ganador   92.1 % (nulo 50.0 %, +42.1 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-HA   hp        92.1 % (nulo 50.0 %, +42.1 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más
+    P6-HA   hg        92.1 % (nulo 50.0 %, +42.1 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más
+  rama CURSOS, k′ = 1: masa 0.500 · HG 100.0 % · HP 100.0 % · δ′ medio 10.0 · cursos del grado de menos cursos: media 3.30
+  rama PROMEDIO, k′ = 1: masa 0.500 · HG 0.0 % · HP 0.0 % · δ′ medio 10.0 · cursos del grado de menos cursos: media 6.68
+
+==================== V3 · reparto autorizado + cursos del grado de menos cursos equilibrados dentro de k′ · 2120 registros ====================
+
+[mezcla] masa 1.000 · HG verdadera 50.0 % · HP verdadera 50.0 % · ganó el de más cursos 50.0 % · δ′ ≥ 10 en 50.5 %
+  P6-K1c ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  contraria de R_k
+  P6-HK1 hg        50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+  P6-D1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica   0 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2  ventaja   94.8 % (nulo 50.0 %, +44.8 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+  P6-N1c ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  contraria de «5 o más cursos»
+  P6-A1  ventaja   88.6 % (nulo 50.0 %, +38.6 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+  RL1 par HP = HG: HP = HG en 83.3 %; «adivina una y copia» 41.7 % frente a 25.0 % (+16.7 pp, métrica del par)
+  RL2 (condicional al ganador): HP +41.7 pp · HG +41.7 pp
+  reglas por encima de +8 pp: 8
+    P6-D2   ventaja   94.8 % (nulo 50.0 %, +44.8 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-D2   ganador   94.8 % (nulo 50.0 %, +44.8 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-A1   ventaja   88.6 % (nulo 50.0 %, +38.6 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-A1   ganador   88.6 % (nulo 50.0 %, +38.6 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-HDc  hp        79.2 % (nulo 50.0 %, +29.2 pp, aplica 100 %)  contraria (⟺ δ′ < 10)
+    P6-HA   hp        74.2 % (nulo 50.0 %, +24.2 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más
+    P6-HA   hg        63.6 % (nulo 50.0 %, +13.6 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más
+    P6-HDc  hg        62.5 % (nulo 50.0 %, +12.5 pp, aplica 100 %)  contraria (⟺ δ′ < 10)
+
+[rama_CURSOS] masa 0.500 · HG verdadera 66.7 % · HP verdadera 83.3 % · ganó el de más cursos 100.0 % · δ′ ≥ 10 en 5.6 %
+  P6-K1  ventaja   50.0 % (nulo 37.5 %, +12.5 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+  P6-HK1c hg        16.7 % (nulo 50.0 %, -33.3 pp, aplica 100 %)  contraria de R_hg
+  P6-D1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica   0 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2  ventaja   94.4 % (nulo 59.7 %, +34.7 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+  P6-N1  ventaja    0.0 % (nulo 37.5 %, -37.5 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+  P6-A1c ventaja   21.0 % (nulo 43.1 %, -22.1 pp, aplica 100 %)  contraria de «promedio de 40 o más»
+  RL1 par HP = HG: HP = HG en 83.3 %; «adivina una y copia» 41.7 % frente a 30.6 % (+11.1 pp, métrica del par)
+  RL2 (condicional al ganador): HP +25.0 pp · HG +33.3 pp
+  reglas por encima de +8 pp: 10
+    P6-N1c  ventaja  100.0 % (nulo 62.5 %, +37.5 pp, aplica 100 %)  contraria de «5 o más cursos»
+    P6-N1c  ganador  100.0 % (nulo 62.5 %, +37.5 pp, aplica 100 %)  contraria de «5 o más cursos»
+    P6-D2   ventaja   94.4 % (nulo 59.7 %, +34.7 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-D2   ganador   94.4 % (nulo 59.7 %, +34.7 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-HK1  hg        83.3 % (nulo 50.0 %, +33.3 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+    P6-A1   ventaja   79.0 % (nulo 56.9 %, +22.1 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-A1   ganador   79.0 % (nulo 56.9 %, +22.1 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-HK2  hp        66.7 % (nulo 50.0 %, +16.7 pp, aplica 100 %)  R_hp: HP verdadera ⟺ k′ = 1
+    P6-K1   ventaja   50.0 % (nulo 37.5 %, +12.5 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+    P6-K1   ganador   50.0 % (nulo 37.5 %, +12.5 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+
+[rama_PROMEDIO] masa 0.500 · HG verdadera 33.3 % · HP verdadera 16.7 % · ganó el de más cursos 0.0 % · δ′ ≥ 10 en 95.3 %
+  P6-K1  ventaja   50.0 % (nulo 62.5 %, -12.5 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+  P6-HK1 hg        16.7 % (nulo 50.0 %, -33.3 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+  P6-D1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica   0 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2c ventaja    4.7 % (nulo 38.8 %, -34.1 pp, aplica 100 %)  contraria de δ′ ≥ 10
+  P6-N1  ventaja  100.0 % (nulo 62.5 %, +37.5 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+  P6-A1  ventaja   98.2 % (nulo 62.0 %, +36.3 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+  RL1 par HP = HG: HP = HG en 83.3 %; «adivina una y copia» 41.7 % frente a 30.6 % (+11.1 pp, métrica del par)
+  RL2 (condicional al ganador): HP +25.0 pp · HG +33.3 pp
+  reglas por encima de +8 pp: 10
+    P6-N1   ventaja  100.0 % (nulo 62.5 %, +37.5 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-N1   ganador  100.0 % (nulo 62.5 %, +37.5 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+    P6-A1   ventaja   98.2 % (nulo 62.0 %, +36.3 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-A1   ganador   98.2 % (nulo 62.0 %, +36.3 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-D2   ventaja   95.3 % (nulo 61.2 %, +34.1 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-D2   ganador   95.3 % (nulo 61.2 %, +34.1 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-HK1c hg        83.3 % (nulo 50.0 %, +33.3 pp, aplica 100 %)  contraria de R_hg
+    P6-HK2c hp        66.7 % (nulo 50.0 %, +16.7 pp, aplica 100 %)  contraria de R_hp
+    P6-K1c  ventaja   50.0 % (nulo 37.5 %, +12.5 pp, aplica 100 %)  contraria de R_k
+    P6-K1c  ganador   50.0 % (nulo 37.5 %, +12.5 pp, aplica 100 %)  contraria de R_k
+
+[k1] masa 0.500 · HG verdadera 50.0 % · HP verdadera 50.0 % · ganó el de más cursos 50.0 % · δ′ ≥ 10 en 46.3 %
+  P6-K1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  R_k (H2): k′ ≥ 2 ⇒ ganó el de más cursos; k′ = 1 ⇒ el de mayor promedio
+  P6-HK1 hg        50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  R_hg (H2): HG verdadera ⟺ k′ = 1
+  P6-D1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica   0 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2  ventaja   96.3 % (nulo 50.0 %, +46.3 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+  P6-N1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+  P6-A1  ventaja   94.5 % (nulo 50.0 %, +44.5 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+  RL1 par HP = HG: HP = HG en 100.0 %; «adivina una y copia» 50.0 % frente a 25.0 % (+25.0 pp, métrica del par)
+  RL2 (condicional al ganador): HP +50.0 pp · HG +50.0 pp
+  reglas por encima de +8 pp: 8
+    P6-D2   ventaja   96.3 % (nulo 50.0 %, +46.3 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-D2   ganador   96.3 % (nulo 50.0 %, +46.3 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-HDc  hp        96.3 % (nulo 50.0 %, +46.3 pp, aplica 100 %)  contraria (⟺ δ′ < 10)
+    P6-HDc  hg        96.3 % (nulo 50.0 %, +46.3 pp, aplica 100 %)  contraria (⟺ δ′ < 10)
+    P6-A1   ventaja   94.5 % (nulo 50.0 %, +44.5 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-A1   ganador   94.5 % (nulo 50.0 %, +44.5 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-HA   hp        94.5 % (nulo 50.0 %, +44.5 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más
+    P6-HA   hg        94.5 % (nulo 50.0 %, +44.5 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ el menor promedio es de 40 o más
+
+[k2mas] masa 0.500 · HG verdadera 50.0 % · HP verdadera 50.0 % · ganó el de más cursos 50.0 % · δ′ ≥ 10 en 54.6 %
+  P6-K1c ventaja   50.0 % (nulo 50.0 %,  -0.0 pp, aplica 100 %)  contraria de R_k
+  P6-HK1c hg        50.0 % (nulo 50.0 %,  +0.0 pp, aplica 100 %)  contraria de R_hg
+  P6-D1  ventaja   50.0 % (nulo 50.0 %,  +0.0 pp, aplica   0 %)  R_δ (H2): δ′ ≤ 4 ⇒ ganó el de más cursos (si no, se abstiene)
+  P6-D2  ventaja   93.3 % (nulo 50.0 %, +43.3 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+  P6-N1  ventaja   50.0 % (nulo 50.0 %,  -0.0 pp, aplica 100 %)  el grado de menos cursos tiene 5 o más ⇒ ganó el de mayor promedio
+  P6-A1  ventaja   82.8 % (nulo 50.0 %, +32.8 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+  RL1 par HP = HG: HP = HG en 66.7 %; «adivina una y copia» 33.3 % frente a 25.0 % (+8.3 pp, métrica del par)
+  RL2 (condicional al ganador): HP +33.3 pp · HG +33.3 pp
+  reglas por encima de +8 pp: 7
+    P6-D2   ventaja   93.3 % (nulo 50.0 %, +43.3 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-D2   ganador   93.3 % (nulo 50.0 %, +43.3 pp, aplica 100 %)  δ′ ≥ 10 ⇒ ganó el de mayor promedio; δ′ < 10 ⇒ el de más cursos
+    P6-A1   ventaja   82.8 % (nulo 50.0 %, +32.8 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-A1   ganador   82.8 % (nulo 50.0 %, +32.8 pp, aplica 100 %)  el menor promedio es de 40 kilos o más ⇒ ganó el de más cursos
+    P6-HD   hg        71.3 % (nulo 50.0 %, +21.3 pp, aplica 100 %)  las hipótesis de un curso son verdaderas ⟺ δ′ ≥ 10
+    P6-HAc  hg        67.2 % (nulo 50.0 %, +17.2 pp, aplica 100 %)  contraria (⟺ menos de 40)
+    P6-HDc  hp        62.1 % (nulo 50.0 %, +12.1 pp, aplica 100 %)  contraria (⟺ δ′ < 10)
+  rama CURSOS, k′ = 1: masa 0.250 · HG 100.0 % · HP 100.0 % · δ′ medio 5.6 · cursos del grado de menos cursos: media 6.00
+  rama CURSOS, k′ = 2: masa 0.250 · HG 33.3 % · HP 66.7 % · δ′ medio 6.9 · cursos del grado de menos cursos: media 6.00
+  rama PROMEDIO, k′ = 1: masa 0.250 · HG 0.0 % · HP 0.0 % · δ′ medio 12.6 · cursos del grado de menos cursos: media 6.00
+  rama PROMEDIO, k′ = 2: masa 0.250 · HG 66.7 % · HP 33.3 % · δ′ medio 13.4 · cursos del grado de menos cursos: media 6.00
+
+==================== Cascada F1 (V1, con las exclusiones de V11 de cada Parte 1) ====================
+  versiones esperadas (de 100) cuya celda sorteada no tiene candidatos en el espacio base: 2.50; tampoco en el ampliado (n′ ≤ 10): 0.50
+   s=10 celda 2 (PROMEDIO HG=FALSE HP=FALSE k′=1): base 0, ampliado 237
+   s=10 celda 5 (CURSOS HG=FALSE HP=FALSE k′=2): base 0, ampliado 8
+   s=10 celda 6 (PROMEDIO HG=TRUE HP=TRUE k′=2): base 0, ampliado 63
+   s=10 celda 7 (PROMEDIO HG=TRUE HP=FALSE k′=2): base 0, ampliado 23
+   s=10 celda 8 (PROMEDIO HG=FALSE HP=FALSE k′=2): base 0, ampliado 41
+   s=15 celda 8 (PROMEDIO HG=FALSE HP=FALSE k′=2): base 0, ampliado 73
+   s=17 celda 7 (PROMEDIO HG=TRUE HP=FALSE k′=2): base 0, ampliado 0
+   s=17 celda 8 (PROMEDIO HG=FALSE HP=FALSE k′=2): base 0, ampliado 0
+   s=19 celda 7 (PROMEDIO HG=TRUE HP=FALSE k′=2): base 0, ampliado 0
+   s=19 celda 8 (PROMEDIO HG=FALSE HP=FALSE k′=2): base 0, ampliado 0
+   s=32 celda 7 (PROMEDIO HG=TRUE HP=FALSE k′=2): base 0, ampliado 0
+   s=32 celda 8 (PROMEDIO HG=FALSE HP=FALSE k′=2): base 0, ampliado 0
+   s=43 celda 8 (PROMEDIO HG=FALSE HP=FALSE k′=2): base 0, ampliado 56
+   s=59 celda 8 (PROMEDIO HG=FALSE HP=FALSE k′=2): base 0, ampliado 21
+   s=67 celda 1 (CURSOS HG=TRUE HP=TRUE k′=1): base 0, ampliado 6
+exit=0

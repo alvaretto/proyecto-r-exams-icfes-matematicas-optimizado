@@ -1,0 +1,61 @@
+md5 del .Rmd: 96cfcf356c01326d42f10ee4c36545b7 
+
+(1) N = 100: R_k 80.0 % (CURSOS 77.4 % n = 53; PROMEDIO 83.0 % n = 47) · R_hg 74.0 % · R_delta: delta' <= 4 en 14 versiones, CURSOS en 100.0 %
+
+(2) Filas viables, espacio base (n' <= 8, k' <= 3) — sin exclusiones de V11:
+ rama CURSOS 
+           
+            k'=1 k'=2 k'=3  Sum
+  hg=F hp=F    0  302  126  428
+  hg=F hp=T    0  139   96  235
+  hg=T hp=T  901  505   80 1486
+  Sum        901  946  302 2149
+  por franja de delta':
+           
+            d'<=4 d'5-9 d'10-15
+  hg=F hp=F   164   186      78
+  hg=F hp=T     7   101     127
+  hg=T hp=T   518   540     428
+ rama PROMEDIO 
+           
+            k'=1 k'=2 k'=3 Sum
+  hg=F hp=F  135   10    0 145
+  hg=T hp=F  137   27    0 164
+  hg=T hp=T  560  101    6 667
+  Sum        832  138    6 976
+  por franja de delta':
+           
+            d'<=4 d'5-9 d'10-15
+  hg=F hp=F     0    15     130
+  hg=T hp=F     0    22     142
+  hg=T hp=T     1   206     460
+
+(2) Filas viables, espacio ampliado (n' <= 10, k' <= 4) — sin exclusiones de V11:
+ rama CURSOS 
+           
+            k'=1 k'=2 k'=3 k'=4  Sum
+  hg=F hp=F    0  518  431  165 1114
+  hg=F hp=T    0  171  159   49  379
+  hg=T hp=T 1060  726  223   27 2036
+  Sum       1060 1415  813  241 3529
+  por franja de delta':
+           
+            d'<=4 d'5-9 d'10-15
+  hg=F hp=F   389   464     261
+  hg=F hp=T    17   147     215
+  hg=T hp=T   688   750     598
+ rama PROMEDIO 
+           
+            k'=1 k'=2 k'=3  Sum
+  hg=F hp=F  392   86    4  482
+  hg=T hp=F  188   76   15  279
+  hg=T hp=T  761  248   43 1052
+  Sum       1341  410   62 1813
+  por franja de delta':
+           
+            d'<=4 d'5-9 d'10-15
+  hg=F hp=F     0    81     401
+  hg=T hp=F     0    53     226
+  hg=T hp=T    17   400     635
+
+Combinaciones que sortea el .Rmd: CURSOS {hg=T hp=T, hg=F hp=T, hg=F hp=F}; PROMEDIO {hg=T hp=T, hg=T hp=F, hg=F hp=F}.

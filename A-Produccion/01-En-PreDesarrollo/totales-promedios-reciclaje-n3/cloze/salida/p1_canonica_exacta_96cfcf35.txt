@@ -1,0 +1,35 @@
+canónica, semilla 1001 
+
+Batería §P7 del SCHOICE (48 reglas) en la canónica, 24 órdenes (exacta); exceso > +8 pp:
+  100.0 %   +75.0 pp  peso +7.50 pp  la que MAS comparte
+  100.0 %   +75.0 pp  peso +7.50 pp  quedarse con 'total'
+  100.0 %   +75.0 pp  peso +7.50 pp  cifra mediana
+   50.0 %   +25.0 pp  peso +2.50 pp  mas digitos
+   50.0 %   +25.0 pp  peso +2.50 pp  primer numero PAR
+   50.0 %   +25.0 pp  peso +2.50 pp  ultimo multiplo de 10
+   50.0 %   +25.0 pp  peso +2.50 pp  quedarse con 'promedio'
+   50.0 %   +25.0 pp  peso +2.50 pp  par con más palabras en común (relacional)
+   33.3 %    +8.3 pp  peso +0.83 pp  descartar ultimo negativo
+   33.3 %    +8.3 pp  peso +0.83 pp  par por sede: menor cifra
+   33.3 %    +8.3 pp  peso +0.83 pp  descartar sin cifra
+   33.3 %    +8.3 pp  peso +0.83 pp  descartar 'de más'
+  (reglas de la batería: 48; por encima de +8 pp: 12; máximo 100.0 %)
+
+Sondas de E4 en la canónica (exactas), sin las filas «(frecuencia)», exceso > +8 pp:
+   50.0 %   +25.0 pp  S1 descarta cifras de la tabla
+   50.0 %   +25.0 pp  S2 par de la sede de la fila 1
+   50.0 %   +25.0 pp  S3 par de la sede de más cursos
+  100.0 %   +75.0 pp  S5 más cursos + menor cifra del par
+  100.0 %   +75.0 pp  S7 G real + menor cifra del par (cota canal 2)
+   50.0 %   +25.0 pp  S_U la sede de la razón sin sustento pierde
+  100.0 %   +75.0 pp  S_U + S1 (par de G sin la cifra de la tabla)
+   50.0 %   +25.0 pp  S_U + suma (par de G sin la cifra que es suma de otras dos)
+   33.3 %    +8.3 pp  Atípica: descarta la cifra que dobla a todas las demás
+  100.0 %   +75.0 pp  S_U + S1 + suma (las dos pistas)
+  100.0 %   +75.0 pp  S_U + atípica
+  100.0 %   +75.0 pp  S_U + S1 + suma + atípica
+
+largos de las opciones de la canónica: 105 156 126 88 · clave: 3 · margen de la más larga sobre la segunda: 23.8 %
+
+Fuera de la batería (§P7-C): «descarta la más larga» 33.3 % (+8.3 pp; margen de la más larga sobre la segunda en la canónica: 23.8 %)
+md5 del .Rmd del CLOZE: 96cfcf356c01326d42f10ee4c36545b7 
