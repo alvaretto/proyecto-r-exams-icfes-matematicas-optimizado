@@ -8,6 +8,24 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.34.4 (2026-10-31)
+
+- **Regla #22, texto íntegro: dos aclaraciones.** No cambian la norma ni la versión de la regla, y la versión compacta no
+  se toca.
+  - **§P7-F, tercer caso:** igualar el vocabulario de las opciones sobre el molde de la clave desplaza el canal al
+    relacional. En la Parte 2 del CLOZE de `totales-promedios-reciclaje-n3`, «la que más palabras comparte con las otras
+    tres» pasó de +2,5 a +21,9 pp y de −10,6 a +33,9 pp. Antes de escribir distractores sobre ese molde hay que medir
+    también las reglas relacionales.
+  - **§P7-E, familia léxica:** la exclusividad del vocabulario se calcula sobre todas las versiones juntas. Calculada
+    dentro de un estrato que fija el veredicto, fabricó +25 pp que el estudiante no puede ver.
+  - **Decisión:** el profesor las aprobó el 2026-10-31 («1 sí · 2 sí»).
+- **Análisis de promoción del 2026-10-31**, tras la tanda 7 de ese CLOZE.
+  - **Se adoptaron:** las dos aclaraciones de arriba, solo en el texto íntegro.
+  - **Va aparte:** el arreglo de `post-exams2-validation.sh` para rutas relativas después de un `cd` o un `setwd()` del
+    propio comando («3 sí»). Es infraestructura protegida, así que lleva su respaldo y su test.
+  - **Queda como ley local:** quitar de la Parte 2 el tipo «comparar» y firmar el residuo de «promedio». Son decisiones
+    del ítem.
+
 ### Cambios v3.34.3 (2026-10-31)
 
 - **Regla #22, texto íntegro, §P7-E: en la familia léxica, una regla de palabra fija cubre solo esa palabra.** Es una

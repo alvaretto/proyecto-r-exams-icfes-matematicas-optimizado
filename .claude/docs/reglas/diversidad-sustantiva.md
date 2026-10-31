@@ -553,7 +553,10 @@ debajo. Por eso la familia léxica exige, además:
 - una sonda de **vocabulario exclusivo de la clave**, calculada sobre los textos y no elegida a mano: toda palabra o
   expresión que aparece en la clave y en ningún distractor a lo largo de las versiones, buscada en todos los textos
   visibles (opciones, enunciado, tablas y párrafos de contexto);
-- **cada regla léxica con su contraria**: «elige la que dice X» y «descarta las que dicen X».
+- **cada regla léxica con su contraria**: «elige la que dice X» y «descarta las que dicen X»;
+- la exclusividad se calcula sobre **todas las versiones juntas** (precisión del 2026-10-31). Calculada dentro de un
+  estrato que fija el veredicto, fabrica pistas que el estudiante no puede ver: en la Parte 6 del mismo CLOZE dio +25 pp
+  que no existían.
 
 Origen: el CLOZE de `totales-promedios-reciclaje-n3`, Parte 2.
 - La FASE 2C r1 encontró «total» solo en las claves: +75 pp.
@@ -614,6 +617,17 @@ original, regla por regla y por estrato (2026-10-31).
 
 Lección: cuando cerrar una pista abre otra de la misma familia de magnitudes, conviene enumerar el espacio (§P7-F)
 para saber si existe un reparto viable, antes de gastar una pasada de §P7-D en buscarlo.
+
+**Tercer caso: igualar el vocabulario sobre el molde de la clave desplaza el canal al relacional (aclaración del
+2026-10-31, sin cambio de norma).** En la Parte 2 del mismo CLOZE, la tercera pasada escribió los distractores sobre el
+molde de la clave para que dejaran de delatarla por su vocabulario.
+- El canal léxico se cerró: «dividido» bajó de +75,0 a +5,0 pp.
+- Pero la clave quedó como la opción más central. «La que más palabras comparte con las otras tres» pasó de +2,5 a
+  +21,9 pp en un tipo, y de −10,6 a +33,9 pp en el otro.
+- Solo una regla relacional lo ve.
+
+Antes de escribir distractores sobre el molde de la clave, hay que medir también las reglas relacionales (§P7-E), no solo
+las léxicas. Con las pasadas agotadas, el profesor quitó el tipo con más reglas en rojo y firmó el residuo del otro.
 
 #### §P7-G — El estímulo es una entrada de la batería (v1.10, 2026-10-31)
 
