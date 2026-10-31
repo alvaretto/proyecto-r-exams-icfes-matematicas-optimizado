@@ -33,48 +33,116 @@ browser <- Sys.which("chromium")
 if (!nzchar(browser)) browser <- Sys.which("google-chrome-stable")
 if (!nzchar(browser)) browser <- Sys.which("google-chrome")
 if (!nzchar(browser)) stop("No se encontró chromium ni google-chrome-stable para capturar HTML.")
+if (!requireNamespace("chromote", quietly = TRUE)) stop("No se encontró el paquete R chromote para capturar HTML.")
 magick <- Sys.which("magick")
 
 suppressWarnings(suppressMessages(library(exams)))
 
-# Margen (px) bajo la altura de ventana `h`: si tras recortar el blanco
-# sobrante el contenido llega a menos de este margen del borde inferior de
-# la ventana de captura, no se puede distinguir "el documento termina justo
-# ahi" de "el documento sigue y la captura lo trunco en silencio" -- chromium
-# --screenshot recorta SIEMPRE al tamano exacto de --window-size (verificado:
-# el PNG crudo mide wxh pase lo que pase con el contenido), nunca captura mas
-# alla del viewport. Calibrado el 2026-08-17 con un fixture de texto realista
-# a 360px de ancho (~6948px de contenido real): a h=6000L (default viejo) el
-# margen tras el recorte fue de 14px -> TRUNCADO; a h=8000L (default nuevo)
-# el margen fue de 1052px -> OK. Hueco amplio entre ambos casos.
+# Margen (px) para la red de seguridad de truncamiento: se compara el alto
+# bruto del PNG con document.documentElement.scrollHeight antes de recortar el
+# blanco inferior. Con chromote la captura se pide a altura completa, pero la
+# comprobación mantiene visible cualquier regresión de ese contrato.
 TRUNC_MARGIN_PX <- 50L
 
 shot <- function(html, png, w, h = 8000L, trunc_margin = TRUNC_MARGIN_PX) {
-  ok <- system2(browser, c(
-    "--headless", "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
+  # Con --window-size por debajo de 500, Chromium 156 headless carga la página a
+  # 500 px: el JavaScript de carga y --dump-dom ven innerWidth = 500, aunque
+  # --screenshot vuelve a maquetar a W antes de capturar. Medido el 2026-10-31:
+  # una caja al 50 % mide 160 px en la captura de 320, y las capturas de un
+  # ejercicio real salen idénticas con la CLI y con CDP. Con CDP la página carga
+  # ya a W, el ancho se comprueba en la página y se captura con el mismo
+  # ejecutable que el script detectó arriba.
+  profile_dir <- tempfile("render_html_shots_chromote_")
+  dir.create(profile_dir, recursive = TRUE)
+  controller <- NULL
+  session <- NULL
+  on.exit({
+    if (!is.null(controller)) {
+      try(controller$close(), silent = TRUE)
+    } else if (!is.null(session)) {
+      try(session$close(), silent = TRUE)
+    }
+    unlink(profile_dir, recursive = TRUE, force = TRUE)
+  }, add = TRUE)
+
+  chrome_args <- c(
+    "--no-sandbox", "--disable-gpu", "--hide-scrollbars",
     "--force-device-scale-factor=1",
-    sprintf("--window-size=%d,%d", w, h),
-    sprintf("--screenshot=%s", png),
-    sprintf("file://%s", html)
-  ), stdout = FALSE, stderr = FALSE)
+    paste0("--user-data-dir=", profile_dir)
+  )
+  controller <- chromote::Chromote$new(
+    browser = chromote::Chrome$new(path = browser, args = chrome_args)
+  )
+  session <- controller$new_session(width = as.integer(w), height = as.integer(h), wait_ = TRUE)
+  mobile <- w < 600L
+  emular_viewport <- function(alto) {
+    session$Emulation$setDeviceMetricsOverride(
+      width = as.integer(w), height = as.integer(alto), deviceScaleFactor = 1,
+      mobile = mobile, wait_ = TRUE
+    )
+    if (mobile) {
+      # Chromium 156 ensancha el layout viewport a 980px (o al ancho de un
+      # elemento fijo) en páginas móviles sin respuesta. La segunda emulación
+      # preserva W como viewport CSS real sin modificar el HTML de R/exams.
+      session$Emulation$setDeviceMetricsOverride(
+        width = as.integer(w), height = as.integer(alto), deviceScaleFactor = 1,
+        mobile = FALSE, wait_ = TRUE
+      )
+    }
+  }
+  emular_viewport(h)
+  file_url <- paste0("file://", utils::URLencode(normalizePath(html), reserved = FALSE))
+  session$go_to(file_url, delay = 0.1, wait_ = TRUE)
+
+  medir_entero <- function(expresion) {
+    resultado <- session$Runtime$evaluate(expresion, returnByValue = TRUE, wait_ = TRUE)
+    as.integer(resultado$result$value)
+  }
+  comprobar_ancho <- function() {
+    ancho <- medir_entero("window.innerWidth")
+    if (length(ancho) != 1L || is.na(ancho) || ancho != w) {
+      stop(sprintf("Viewport incorrecto: se pidió %d px y se midió %s px.",
+                   w, if (length(ancho) == 1L && !is.na(ancho)) ancho else "NA"))
+    }
+    ancho
+  }
+
+  # Se comprueba antes y después del ajuste final para no ocultar un viewport
+  # incorrecto por una página sin meta viewport.
+  comprobar_ancho()
+  page_height <- medir_entero("document.documentElement.scrollHeight")
+  if (length(page_height) != 1L || is.na(page_height) || page_height < 1L) {
+    stop("No se pudo medir document.documentElement.scrollHeight para la captura.")
+  }
+  emular_viewport(page_height)
+  viewport_width <- comprobar_ancho()
+  captura <- session$Page$captureScreenshot(
+    format = "png", fromSurface = TRUE, captureBeyondViewport = TRUE,
+    clip = list(x = 0, y = 0, width = as.integer(w), height = page_height, scale = 1),
+    wait_ = TRUE
+  )
+  writeBin(jsonlite::base64_dec(captura$data), png)
+
   truncado <- FALSE
   if (file.exists(png) && nzchar(magick)) {
-    # Recortar el blanco sobrante inferior; +repage normaliza el lienzo.
-    system2(magick, c(shQuote(png), "-trim", "+repage", shQuote(png)),
-            stdout = FALSE, stderr = FALSE)
-    # Detector de truncamiento: compara el alto tras el recorte contra el
-    # alto de ventana `h`. Ver comentario de TRUNC_MARGIN_PX arriba.
-    h_trim <- tryCatch({
+    # El detector conserva utilidad como red de seguridad: ahora compara el
+    # alto bruto capturado contra la altura real medida de la página, no contra
+    # la antigua ventana fija. Después se mantiene el recorte de blanco.
+    h_capturado <- tryCatch({
       out <- system2(magick, c("identify", "-format", "%h", shQuote(png)),
                       stdout = TRUE, stderr = FALSE)
       as.integer(out[1])
     }, error = function(e) NA_integer_)
-    if (!is.na(h_trim) && (h - h_trim) <= trunc_margin) truncado <- TRUE
+    if (!is.na(h_capturado) && h_capturado + trunc_margin < page_height) truncado <- TRUE
+    system2(magick, c(shQuote(png), "-trim", "+repage", shQuote(png)),
+            stdout = FALSE, stderr = FALSE)
   }
-  list(ok = file.exists(png), truncado = truncado)
+  list(ok = file.exists(png), truncado = truncado,
+       viewport_width = viewport_width, page_height = page_height)
 }
 
 ok_seeds <- integer(0); fail_seeds <- integer(0); trunc_seeds <- character(0)
+viewports_medidos <- character(0)
 cat(sprintf("Renderizando %d versiones de %s\n  viewports: %s\n  salida: %s\n",
             N, basename(rmd), paste(viewports, collapse = ","), outdir))
 
@@ -93,6 +161,8 @@ for (s in seq_len(N)) {
   for (w in viewports) {
     r <- shot(html, file.path(outdir, sprintf("%s_%d.png", nm, w)), w)
     got <- got && r$ok
+    viewports_medidos <- c(viewports_medidos,
+                           sprintf("%s@%d=%d", nm, w, r$viewport_width))
     if (isTRUE(r$truncado)) truncado_en <- c(truncado_en, sprintf("%dpx", w))
   }
   if (got) { ok_seeds <- c(ok_seeds, s) } else { fail_seeds <- c(fail_seeds, s) }
@@ -125,6 +195,7 @@ writeLines(c(
   sprintf("N: %d  viewports: %s", N, paste(viewports, collapse = ",")),
   sprintf("OK (%d): %s", length(ok_seeds), paste(ok_seeds, collapse = ",")),
   sprintf("FALLIDAS (%d): %s", length(fail_seeds), paste(fail_seeds, collapse = ",")),
+  sprintf("ANCHOS MEDIDOS: %s", paste(viewports_medidos, collapse = "; ")),
   sprintf("POSIBLE TRUNCAMIENTO (%d): %s", length(trunc_seeds), paste(trunc_seeds, collapse = "; "))
 ), manifest)
 cat(sprintf("\nResumen: %d OK, %d fallidas. Manifiesto: %s\n",

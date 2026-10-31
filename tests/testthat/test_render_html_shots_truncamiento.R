@@ -14,13 +14,12 @@
 # haber visto el pie del documento: un gate que da verde sin haber mirado,
 # mismo modo de fallo que la FASE 2G y la FASE 2I de este repositorio.
 #
-# El fix tiene DOS partes, y esta suite prueba las dos: (1) subir el default
-# h=6000L -> h=8000L; (2) un detector de truncamiento que compara, tras
-# recortar el blanco sobrante con `magick -trim`, el alto resultante contra
-# el alto de ventana `h` -- si el contenido llega a menos de TRUNC_MARGIN_PX
-# del borde inferior, no se puede distinguir "el documento termina justo ahi"
-# de "se corto en silencio", y se marca como POSIBLE TRUNCAMIENTO. Un limite
-# mas alto SIN detector solo mueve el problema a un documento mas largo.
+# El fix usa chromote/CDP: primero mide la altura real del documento y aplica
+# Emulation.setDeviceMetricsOverride con esa altura antes de capturar la página
+# completa. El detector se conserva como red de seguridad, pero compara la
+# altura del PNG bruto contra document.documentElement.scrollHeight; ya no
+# compara contra la antigua ventana fija, porque esa comparación produciría
+# falsos positivos en una captura de página completa.
 #
 # El detector se EXTRAE del script real (bloque TRUNC_MARGIN_PX + shot()) y
 # se evalua tal cual, en vez de reimplementarlo aqui: una copia paralela
@@ -37,14 +36,20 @@ repo_root <- local({
   if (!is.null(r) && length(r) == 1 && dir.exists(r)) r else normalizePath("../..")
 })
 
-SCRIPT <- file.path(repo_root, ".claude", "scripts", "render_html_shots.R")
+# Permite ejecutar esta misma suite contra un respaldo sin mutar el script
+# activo; se usa para demostrar la regresión que cubre el test de viewport.
+.script_override <- Sys.getenv("RENDER_HTML_SHOTS_SCRIPT", unset = "")
+SCRIPT <- normalizePath(
+  if (nzchar(.script_override)) .script_override else file.path(repo_root, ".claude", "scripts", "render_html_shots.R"),
+  mustWork = TRUE
+)
 
 # --- Herramientas externas: si faltan, esta suite se salta declarandolo -----
 .browser <- Sys.which("chromium")
 if (!nzchar(.browser)) .browser <- Sys.which("google-chrome-stable")
 if (!nzchar(.browser)) .browser <- Sys.which("google-chrome")
 .magick <- Sys.which("magick")
-.tools_ok <- nzchar(.browser) && nzchar(.magick)
+.tools_ok <- nzchar(.browser) && nzchar(.magick) && requireNamespace("chromote", quietly = TRUE)
 
 # --- Extraccion del bloque real (constante + shot()) del script fuente ------
 # NUNCA se copia el codigo del detector a mano: se extrae literal del archivo
@@ -84,7 +89,8 @@ crear_fixture_grande <- function(dir) {
   parrafos <- vapply(1:65, function(i) sprintf(paste0("<p>", parrafo, "</p>"), i),
                       character(1))
   html <- paste0(
-    "<html><body style='margin:0;padding:10px;background:white;",
+    "<html><head><meta name='viewport' content='width=device-width, initial-scale=1'></head>",
+    "<body style='margin:0;padding:10px;background:white;",
     "font-family:sans-serif;font-size:16px;'>",
     paste(parrafos, collapse = ""),
     "<div style='background:#eee;border:2px solid black;padding:10px;",
@@ -99,7 +105,8 @@ crear_fixture_grande <- function(dir) {
 # --- Fixture: contenido corto, con margen amplio bajo cualquier h razonable -
 crear_fixture_corto <- function(dir) {
   html <- paste0(
-    "<html><body style='margin:0;padding:10px;background:white;",
+    "<html><head><meta name='viewport' content='width=device-width, initial-scale=1'></head>",
+    "<body style='margin:0;padding:10px;background:white;",
     "font-family:sans-serif;font-size:16px;'>",
     "<p>Documento corto: una sola version de examen sin desbordes.</p>",
     "<div style='background:#eee;border:2px solid black;padding:10px;'>",
@@ -131,6 +138,22 @@ test_that("El detector de truncamiento existe en el archivo fuente (no solo en m
   expect_true(grepl("truncado", txt, fixed = TRUE))
 })
 
+test_that("Viewport móvil efectivo: una captura a 320px mide realmente 320px", {
+  skip_if_not(.tools_ok, "chromium/google-chrome + magick + chromote no disponibles en este entorno")
+  e <- cargar_shot(SCRIPT, .browser, .magick)
+  tmp <- file.path(tempdir(), paste0("shots_viewport_", as.integer(runif(1, 1e6, 9e6))))
+  dir.create(tmp, recursive = TRUE)
+  on.exit(unlink(tmp, recursive = TRUE), add = TRUE)
+
+  html <- crear_fixture_corto(tmp)
+  png <- file.path(tmp, "v01_320.png")
+  r <- get("shot", envir = e)(html, png, w = 320L, h = 800L)
+
+  expect_true(r$ok, info = "la captura mínima a 320px debía generarse")
+  expect_equal(r$viewport_width, 320L,
+               info = "window.innerWidth debe coincidir exactamente con el ancho solicitado")
+})
+
 test_that("El aviso de truncamiento es VISIBLE: manifest.txt y consola lo reportan", {
   txt <- paste(readLines(SCRIPT, warn = FALSE), collapse = "\n")
   expect_true(grepl("POSIBLE TRUNCAMIENTO", txt, fixed = TRUE),
@@ -139,7 +162,7 @@ test_that("El aviso de truncamiento es VISIBLE: manifest.txt y consola lo report
               info = "no hay aviso de consola visible cuando hay truncamiento")
 })
 
-test_that("CONTROL POSITIVO: el detector real dispara con h=6000L (el default viejo)", {
+test_that("CAPTURA COMPLETA: h=6000L inicial no trunca una página más alta", {
   skip_if_not(.tools_ok, "chromium/google-chrome + magick no disponibles en este entorno")
   e <- cargar_shot(SCRIPT, .browser, .magick)
   tmp <- file.path(tempdir(), paste0("shots_trunc_", as.integer(runif(1, 1e6, 9e6))))
@@ -150,9 +173,9 @@ test_that("CONTROL POSITIVO: el detector real dispara con h=6000L (el default vi
   png  <- file.path(tmp, "v01_360_h6000.png")
   r <- get("shot", envir = e)(html, png, w = 360L, h = 6000L)
 
-  expect_true(r$ok, info = "la captura debió generarse aunque esté truncada")
-  expect_true(isTRUE(r$truncado),
-              info = "con h=6000L (default viejo) el fixture de ~6900px debía marcarse truncado")
+  expect_true(r$ok, info = "la captura completa debía generarse")
+  expect_false(isTRUE(r$truncado),
+               info = "chromote debe capturar el documento completo aunque h=6000L sea solo la altura inicial")
 })
 
 test_that("CONTROL NEGATIVO: el MISMO fixture, con el default REAL del script, no se marca truncado", {
