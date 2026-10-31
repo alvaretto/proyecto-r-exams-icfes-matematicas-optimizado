@@ -509,6 +509,19 @@ máximo (0,10 × 75 pp), que es el caso de las firmas antiguas. Y la guarda de X
 transcrito (`x_canonica_exacta.R`), no admitía ningún mutante. La puerta que enumera el código del `.Rmd`
 (`enumerar_canonica_cloze.R`, 192 hojas) dio las mismas cifras y sí los admite.
 
+**La aclaración iii vale para toda cifra que se lleve a firma (ampliación del 2026-10-31, sin cambio de norma).**
+No solo la de la canónica. Toda cifra que se presente para firmar sale del código del `.Rmd` con **todos** sus
+filtros, también los que dependen de otra parte del ítem. Un modelo transcrito que omite un filtro da otras cifras, y
+la firma hay que pedirla dos veces.
+
+Origen: el mismo CLOZE, tanda 5.
+- Las cifras de H2 que se llevaron a firmar salían de un modelo transcrito (`medir_reparto_h2.R`). Ese modelo no tenía
+  las exclusiones de V11, que dependen de la Parte 1.
+- Al cablearlas ejecutando el código (`enumerar_h2_cloze.R`), 22 de las 69 celdas salieron entre 0,1 y 0,8 pp por
+  encima de lo firmado. El profesor firmó entonces las cifras del código.
+- Es la segunda vez en el mismo ejercicio que un modelo transcrito da problemas. `x_canonica_exacta.R` daba las mismas
+  cifras que el código, pero ningún mutante lo movía; este omitía un filtro.
+
 #### Por qué NO se cableó dentro de `validar_diagnosticidad.R`
 
 Se evaluó y se descartó **a propósito**. Sus sondas H1/H2/H3/H3b son genéricas porque miden

@@ -8,6 +8,22 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.34.2 (2026-10-31)
+
+- **Regla #22, texto íntegro, §P7-E: la aclaración iii vale para toda cifra que se lleve a firma.** Es una
+  aclaración: no cambia la norma ni la versión de la regla, y la versión compacta no se toca.
+  - **Qué dice:** toda cifra que se presente para firmar sale del código del `.Rmd` con todos sus filtros, también
+    los que dependen de otra parte del ítem. No solo la de la canónica.
+  - **Origen:** en el CLOZE de `totales-promedios-reciclaje-n3`, las cifras de H2 se llevaron a firmar desde un
+    modelo transcrito sin las exclusiones de V11. Ejecutando el código, 22 de 69 celdas salieron entre 0,1 y 0,8 pp
+    por encima de lo firmado, y hubo que firmar otra vez. Es el segundo problema con un modelo transcrito en el mismo
+    ejercicio. Error del coordinador.
+  - **Decisión:** el profesor la aprobó el 2026-10-31 («iii ampliada sí»).
+- **Análisis de promoción.** La decisión «a» del profesor, firmar las cifras del código, es del ítem y queda en la ley
+  local L-C5. Medir con `enumerar_h2_cloze.R` toda cifra de la Parte 6 antes de llevarla a firma también queda dentro
+  de L-C5. La trampa de desactivar un filtro sustituyendo su texto, que dispara las guardas del propio código, va a la
+  memoria, no a una regla.
+
 ### Cambios v3.34.1 (2026-10-31)
 
 - **Regla #22, texto íntegro, §P7-F: segundo caso, equilibrar un rasgo desplaza el canal a otro.** Es una
