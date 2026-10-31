@@ -8,6 +8,23 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.34.3 (2026-10-31)
+
+- **Regla #22, texto íntegro, §P7-E: en la familia léxica, una regla de palabra fija cubre solo esa palabra.** Es una
+  aclaración: no cambia la norma ni la versión de la regla, y la versión compacta no se toca.
+  - **Qué dice:** la familia léxica exige una sonda de vocabulario exclusivo de la clave, calculada sobre todos los
+    textos visibles, y cada regla léxica con su contraria.
+  - **Origen:** en la Parte 2 del CLOZE de `totales-promedios-reciclaje-n3`, la pista léxica se desplazó dos veces:
+    «total» (+75 pp) y luego «dividido» (+75 pp) y «por curso» (+25 pp). La batería congelada, con reglas de palabra
+    fija, no vio ninguno de los dos desplazamientos. Ya se había visto el mismo patrón en otro ciclo.
+  - **Decisión:** el profesor la aprobó el 2026-10-31 («1 sí»).
+- **Análisis de promoción del 2026-10-31.**
+  - **Se adoptó:** la aclaración de arriba, solo en el texto íntegro.
+  - **También se aprobó** el arreglo de `validar_diagnosticidad.R`, que aplicaba sondas de selección única a huecos
+    mchoice. Va por separado, con su test.
+  - **Quedan como ley local:** gastar la última pasada de §P7-D en la Parte 2, y la batería L-C4 v2 de ese CLOZE. Son
+    decisiones del ítem.
+
 ### Cambios v3.34.2 (2026-10-31)
 
 - **Regla #22, texto íntegro, §P7-E: la aclaración iii vale para toda cifra que se lleve a firma.** Es una

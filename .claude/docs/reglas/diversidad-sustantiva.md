@@ -546,6 +546,23 @@ incumplida**. Medido: una regla relacional con **aplicabilidad 0,0 %**. Declarar
 es peor que declararla no aplicable, porque simula una cobertura que no existe. Ver Error 37
 en `patrones-errores-conocidos.md`.
 
+**Familia léxica: una regla de palabra fija cubre solo esa palabra (aclaración del 2026-10-31, sin cambio de norma).**
+Es la cobertura nominal aplicada al léxico. Una regla como «contiene *total*» deja la familia léxica «CON SONDA», pero
+solo mira esa palabra. Si la clave pasa a llevar otra palabra exclusiva, la familia sigue cubierta y el canal pasa por
+debajo. Por eso la familia léxica exige, además:
+- una sonda de **vocabulario exclusivo de la clave**, calculada sobre los textos y no elegida a mano: toda palabra o
+  expresión que aparece en la clave y en ningún distractor a lo largo de las versiones, buscada en todos los textos
+  visibles (opciones, enunciado, tablas y párrafos de contexto);
+- **cada regla léxica con su contraria**: «elige la que dice X» y «descarta las que dicen X».
+
+Origen: el CLOZE de `totales-promedios-reciclaje-n3`, Parte 2.
+- La FASE 2C r1 encontró «total» solo en las claves: +75 pp.
+- La reescritura cerró «total», y la r2 encontró «dividido», también solo en las claves (+75 pp), y «por curso», solo en
+  los distractores (+25 pp con la regla contraria).
+- La batería congelada tenía reglas léxicas de palabra fija y no vio ninguno de los dos desplazamientos.
+
+El mismo patrón, una fuga léxica que abre el propio arreglo, ya se había visto en otro ciclo.
+
 #### §P7-F — El espacio de diseño puede tener UNA SOLA combinación viable: enumérala antes de rediseñar
 
 Ante un canal estructural, el impulso es añadir una segunda rama al ítem para que el tipo de

@@ -185,7 +185,7 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.34.2 (regla #22 v1.10, §P7-G: el estímulo es una entrada de la batería; §P7-E: la aclaración iii vale para toda cifra que se lleve a firma)
+**Versión**: 3.34.3 (regla #22 v1.10, §P7-G: el estímulo es una entrada de la batería; §P7-E: la aclaración iii vale para toda cifra que se lleve a firma, y la familia léxica exige una sonda de vocabulario exclusivo de la clave)
 **Fecha**: 2026-10-31
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)
