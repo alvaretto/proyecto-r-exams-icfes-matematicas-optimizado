@@ -8,6 +8,37 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.34.0 (2026-10-31)
+
+- **Regla #22 v1.10, nuevo §P7-G: el estímulo es una entrada de la batería §P7.** Es un cambio de norma, así
+  que se actualizan la versión compacta y el texto íntegro.
+  - **Problema:** las reglas de eliminación reciben solo las opciones, y un canal que nace de lo que muestra el
+    enunciado les es invisible. Medido dos veces:
+    - `sistema-ecuaciones-eliminacion-n4`: +31,3 pp con las 30 reglas en verde;
+    - H2 del CLOZE de `totales-promedios-reciclaje-n3`: la tabla delataba al ganador en el 80 % de las versiones.
+  - **Cambio:** toda batería lleva al menos una regla del estímulo, o lo declara no aplicable con su
+    justificación. Sin una cosa ni la otra, `SIN_COBERTURA`.
+  - **Helper:** `bateria_eliminacion.R` acepta `nueva_regla(..., usa_estimulo = TRUE)`, cuya `fn` recibe las
+    opciones y el estímulo, y `evaluar_bateria(..., estimulos = , estimulo_no_aplicable = )`. El estado del
+    estímulo se imprime en la cobertura.
+  - **Declarar el estímulo no mueve ninguna cifra:** con una llamada antigua, el helper anterior y el nuevo dan
+    cifras idénticas.
+  - **Guarda:** cuatro bloques nuevos en `tests/testthat/test_bateria_eliminacion.R`, 21 en total.
+    - El decisivo usa las mismas opciones y claves del control negativo, más un enunciado que muestra la mitad
+      del valor de la clave. Las seis familias dan PASS y la regla del estímulo, BLOQUEA al 100 %.
+    - Un mutante que quita el estímulo del veredicto hace fallar la suite.
+    - Los 17 bloques anteriores declaran el estímulo no aplicable, porque sus fixtures no tienen enunciado.
+  - **Baterías anteriores:** 16 archivos de 8 ejercicios:
+    - `barras-campeonato-baloncesto-n3` y `informacion-insuficiente-lote-n4`;
+    - `pendiente-rectas-paralelas-n4` y `probabilidad-fichas-tabla-doble-entrada-n2`;
+    - `sistema-ecuaciones-eliminacion-n4` y `tasa-caminata-velocidad-maxima-n4`;
+    - `teorema-coseno-datos-suficientes-n3` y `totales-promedios-reciclaje-n3`.
+
+    Al volver a correrlos dan `SIN_COBERTURA` hasta que declaren el estímulo. Se ajustan en el próximo ciclo de
+    cada ejercicio, sin reabrir nada por oficio.
+  - **Respaldo:** `.claude/backups/2026-10-31-p7g-estimulo/`.
+  - **Decisión:** el profesor la aprobó el 2026-10-31 («iv sí»).
+
 ### Cambios v3.33.2 (2026-10-31)
 
 - **Regla #22, texto íntegro, §P7-E: tres aclaraciones.** No cambian la norma ni la versión de la regla, así que

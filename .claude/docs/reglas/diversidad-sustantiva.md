@@ -568,6 +568,45 @@ recorrer las cuatro ramas que se hizo evidente que el criterio «una única apli
 teorema» admitía dos lecturas y dejaba pasar una segunda clave en la rama elegida — ver Error
 35 en `patrones-errores-conocidos.md` y regla #24 H-4 (este mismo ejercicio).
 
+#### §P7-G — El estímulo es una entrada de la batería (v1.10, 2026-10-31)
+
+Una regla de eliminación recibe las opciones de una versión. **El enunciado no entra.** Si muestra un valor o
+una tabla cuya forma depende de cuál es la clave, ninguna regla sobre las opciones puede verlo, por muchas
+familias que cubra. Es el principio de §P7 un piso más abajo: allí faltaba una familia; aquí falta una
+**entrada**.
+
+Medido dos veces:
+
+| Ejercicio | Canal del estímulo | Batería sobre las opciones |
+|---|---|---|
+| `sistema-ecuaciones-eliminacion-n4` (2026-08-19) | el valor final que muestra el enunciado delata el paso del error: 56,2 % sin álgebra, +31,3 pp sobre su techo nulo | 30 reglas en verde |
+| CLOZE de `totales-promedios-reciclaje-n3` (2026-10-31) | la diferencia de cursos de la tabla delata al ganador (80,0 %) y el veredicto de una hipótesis (74,0 %) | no lo vio; lo encontró el detractor (H2 de la FASE 2C r1) |
+
+**Exigencia.** Toda batería lleva al menos una **regla del estímulo**, que recibe lo que muestra el
+enunciado de cada versión. Si no aplica, la batería declara el estímulo **no aplicable, con su
+justificación**: por ejemplo, «el enunciado no muestra ningún valor que dependa de la clave», o «el canal del
+estímulo se mide aparte, en E4». Es el trato de una familia: sin sonda ni declaración, `SIN_COBERTURA`.
+
+**En el helper** (`.claude/scripts/bateria_eliminacion.R`):
+- `nueva_regla(nombre, familia, function(opciones, estimulo) …, usa_estimulo = TRUE)` declara la regla. La
+  familia sigue siendo la dimensión que usa: magnitud, en «la que dobla el valor mostrado».
+- `evaluar_bateria(…, estimulos = <lista, una entrada por versión>)` le pasa el enunciado.
+- `evaluar_bateria(…, estimulo_no_aplicable = "<justificación>")` lo declara. Una cadena vacía es un error, y
+  declararlo junto con reglas del estímulo también.
+- El techo nulo no cambia de método: permutar la clave rompe su relación con el estímulo, así que una regla
+  del estímulo vale 1/n en esperanza, como cualquier otra.
+
+**Baterías anteriores.** Las escritas antes del 2026-10-31 no declaran el estímulo: al volver a correrlas dan
+`SIN_COBERTURA`. Se ajustan en el próximo ciclo de cada ejercicio, con una regla del estímulo o con la
+declaración, y no se reabre ningún ejercicio por oficio. Declarar el estímulo cierra la cobertura y no mueve
+ninguna cifra: medido con una llamada antigua, el máximo, el techo nulo, el ruido y el exceso salen idénticos
+con el helper anterior y con el nuevo. El 2026-10-31 eran 16 archivos de 8 ejercicios.
+
+**Test:** `tests/testthat/test_bateria_eliminacion.R`. Su control decisivo es el de §P7, trasladado: con las
+mismas opciones y claves del control negativo, más un enunciado que muestra la mitad del valor de la clave,
+las seis familias dan `PASS` y la regla del estímulo da `BLOQUEA` al 100 %. Un mutante que quita el estímulo
+del veredicto, y deja la API, hace fallar la suite.
+
 ---
 
 ## Patrón Correcto
@@ -702,8 +741,11 @@ Si por diseño pedagógico un ejercicio necesita comparar exactamente los mismos
 
 ---
 
-**Versión:** 1.9
-**Fecha:** 2026-10-29 (v1.9 — §P7-E: el alcance de un override firmado se cablea en el verificador
+**Versión:** 1.10
+**Fecha:** 2026-10-31 (v1.10 — nuevo **§P7-G**: el estímulo es una entrada de la batería; toda batería
+lleva una regla del estímulo o lo declara no aplicable con su justificación, y si no, `SIN_COBERTURA`;
+origen: `sistema-ecuaciones-eliminacion-n4` y el CLOZE de `totales-promedios-reciclaje-n3`);
+2026-10-29 (v1.9 — §P7-E: el alcance de un override firmado se cablea en el verificador
 con tres estados, rojo cubierto, pendiente de firma y fallo, y nunca como PASS; origen: ítem 50,
 rondas 4 y 4b); 2026-09-13 (v1.8 — nuevo **§P7-F**: el espacio de diseño puede tener UNA SOLA
 combinación viable (matriz `teorema × magnitud pedida` de `teorema-coseno-datos-suficientes-n3`,
@@ -719,6 +761,16 @@ Ver Errores 33 y 34; v1.6 2026-08-15)
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo archivo `.Rmd` SCHOICE o CLOZE en desarrollo o revisión.
+
+### Cambios v1.10 (2026-10-31) — §P7-G: el estímulo es una entrada de la batería
+
+- **NUEVO §P7-G.** Toda batería lleva al menos una regla del estímulo, o lo declara no aplicable con su
+  justificación. Sin una cosa ni la otra, `SIN_COBERTURA`.
+- El helper acepta `nueva_regla(..., usa_estimulo = TRUE)` y `evaluar_bateria(..., estimulos = ,
+  estimulo_no_aplicable = )`, y lo imprime en la cobertura.
+- Origen: dos canales del estímulo medidos (`sistema-ecuaciones-eliminacion-n4`, +31,3 pp con 30 reglas en
+  verde; H2 del CLOZE de `totales-promedios-reciclaje-n3`). Aprobada por el profesor el 2026-10-31
+  («iv sí»).
 
 ### Cambios v1.9 (2026-10-29) — §P7-E: alcance del override y su guarda
 

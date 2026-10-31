@@ -64,6 +64,24 @@
 #   - un índice entero (la regla se queda con UNA opción);
 #   - NA / vector vacío (la regla no aplica: no elimina nada).
 #
+# EL ESTÍMULO (regla #22 §P7-G, 2026-10-31)
+# ------------------------------------------
+# Una regla que solo recibe las opciones no puede ver un canal que nace de lo que
+# muestra el ENUNCIADO: una tabla cuya forma delata al ganador, un valor calculado
+# que solo cuadra con una opción. Medido dos veces: +31,3 pp con las 30 reglas de la
+# batería en verde (`sistema-ecuaciones-eliminacion-n4`, 2026-08-19), y una tabla que
+# delataba al ganador en el 80 % de las versiones (CLOZE de
+# `totales-promedios-reciclaje-n3`, 2026-10-31). Por eso:
+#   - `nueva_regla(..., usa_estimulo = TRUE)` declara una regla del estímulo: su
+#     `fn(opciones, estimulo)` recibe además lo que muestra el enunciado de esa
+#     versión, tomado de `evaluar_bateria(..., estimulos = <una entrada por versión>)`;
+#   - si la batería no lleva ninguna, `estimulo_no_aplicable = "<justificación>"` lo
+#     declara, como una familia inaplicable;
+#   - sin una cosa ni la otra, el veredicto es SIN_COBERTURA.
+# Las baterías escritas antes de esa fecha no declaran el estímulo: al volver a
+# correrlas dan SIN_COBERTURA hasta que lo hagan, en el próximo ciclo de cada
+# ejercicio. Declararlo cierra la cobertura y no mueve ninguna cifra.
+#
 # Ver regla #22 §P7 (`.claude/rules/diversidad-sustantiva.md`).
 # Muestra estándar: N = 100 (regla #23).
 # =============================================================================
@@ -99,13 +117,17 @@ CORTE_CANAL <- 0.08
 # es lo que impide acreditar un PASS con una muestra que no resuelve la banda.
 K_SIGMA <- 2
 
-nueva_regla <- function(nombre, familia, fn) {
+nueva_regla <- function(nombre, familia, fn, usa_estimulo = FALSE) {
   if (!familia %in% names(FAMILIAS_DIMENSION)) {
     stop(sprintf("Familia desconocida: '%s'. Validas: %s",
                  familia, paste(names(FAMILIAS_DIMENSION), collapse = ", ")))
   }
   if (!is.function(fn)) stop("fn debe ser una funcion(opciones) -> conjunto, indice o NA")
-  structure(list(nombre = nombre, familia = familia, fn = fn), class = "regla_elim")
+  if (!is.logical(usa_estimulo) || length(usa_estimulo) != 1L || is.na(usa_estimulo)) {
+    stop("usa_estimulo debe ser TRUE o FALSE")
+  }
+  structure(list(nombre = nombre, familia = familia, fn = fn,
+                 usa_estimulo = usa_estimulo), class = "regla_elim")
 }
 
 # Normaliza la salida de `fn` al conjunto superviviente (lógico de longitud n).
@@ -118,14 +140,21 @@ nueva_regla <- function(nombre, familia, fn) {
   s
 }
 
+# Aplica una regla a UNA versión. Las reglas del estímulo reciben además lo que
+# muestra su enunciado (§P7-G); las demás, solo las opciones, como siempre. Una regla
+# sin el campo `usa_estimulo` se trata como si fuera FALSE.
+.aplicar_regla <- function(regla, opciones_i, estimulo_i = NULL) {
+  if (isTRUE(regla$usa_estimulo)) regla$fn(opciones_i, estimulo_i) else regla$fn(opciones_i)
+}
+
 # Matriz n_versiones x max_opciones con el score que la regla pagaría si la clave
 # estuviera en cada posición. Precalcularla hace que las permutaciones del nulo
 # sean re-indexado puro: 400 réplicas cuestan lo que costaba 1.
-.matriz_score <- function(regla, opciones, n_op, maxn) {
+.matriz_score <- function(regla, opciones, n_op, maxn, estimulos = NULL) {
   M <- matrix(NA_real_, nrow = length(opciones), ncol = maxn)
   for (i in seq_along(opciones)) {
     n <- n_op[i]
-    S <- tryCatch(.conjunto_de(regla$fn(opciones[[i]]), n),
+    S <- tryCatch(.conjunto_de(.aplicar_regla(regla, opciones[[i]], estimulos[[i]]), n),
                   error = function(e) rep(FALSE, n))
     k <- sum(S)
     # |S| = 0 (nadie sobrevive) y |S| = n (no elimina nada) pagan lo mismo: 1/n.
@@ -153,6 +182,12 @@ nueva_regla <- function(nombre, familia, fn) {
 #' @param umbral    tasa absoluta de referencia. **INFORMATIVA: no decide nada.**
 #'        Se conserva para poder imprimir la cifra que los verificadores antiguos
 #'        citaban, y para dejar constancia de que ya no gobierna.
+#' @param estimulos  lista con lo que muestra el enunciado de cada versión, una
+#'        entrada por versión y en el orden de `opciones`. La reciben las reglas del
+#'        estímulo (`usa_estimulo = TRUE`). Regla #22 §P7-G.
+#' @param estimulo_no_aplicable  justificación, si la batería no lleva ninguna regla
+#'        del estímulo: `"el enunciado no muestra ningún valor que dependa de la
+#'        clave"`. Sin regla del estímulo ni justificación: SIN_COBERTURA.
 evaluar_bateria <- function(reglas, opciones, claves,
                             corte_canal = CORTE_CANAL,
                             corte_ruido = CORTE_RUIDO,
@@ -160,7 +195,9 @@ evaluar_bateria <- function(reglas, opciones, claves,
                             n_perm = 400L,
                             familias_no_aplicables = character(0),
                             umbral = 0.70,
-                            semilla = 20260815L) {
+                            semilla = 20260815L,
+                            estimulos = NULL,
+                            estimulo_no_aplicable = NULL) {
 
   stopifnot(length(reglas) > 0, length(opciones) == length(claves),
             length(opciones) > 0, corte_ruido < corte_canal)
@@ -168,14 +205,34 @@ evaluar_bateria <- function(reglas, opciones, claves,
   n_op  <- vapply(opciones, length, integer(1))
   maxn  <- max(n_op)
 
+  # El estímulo (§P7-G): una regla que lo lee necesita una entrada por versión, y
+  # declararlo no aplicable exige una razón y no convive con reglas que lo leen.
+  usa_est <- vapply(reglas, function(r) isTRUE(r$usa_estimulo), logical(1))
+  if (any(usa_est) && is.null(estimulos)) {
+    stop("Hay reglas del estimulo y no se paso `estimulos` (una entrada por version).")
+  }
+  if (!is.null(estimulos) && length(estimulos) != n_ver) {
+    stop("`estimulos` debe tener una entrada por version, como `opciones`.")
+  }
+  if (!is.null(estimulo_no_aplicable)) {
+    if (!is.character(estimulo_no_aplicable) || length(estimulo_no_aplicable) != 1L ||
+        is.na(estimulo_no_aplicable) || !nzchar(trimws(estimulo_no_aplicable))) {
+      stop("`estimulo_no_aplicable` exige una justificacion: una cadena no vacia.")
+    }
+    if (any(usa_est)) {
+      stop("Contradiccion: la bateria tiene reglas del estimulo y lo declara no aplicable.")
+    }
+  }
+
   # ---- 1. Tasa observada por regla -----------------------------------------
-  MATS  <- lapply(reglas, .matriz_score, opciones = opciones, n_op = n_op, maxn = maxn)
+  MATS  <- lapply(reglas, .matriz_score, opciones = opciones, n_op = n_op, maxn = maxn,
+                  estimulos = estimulos)
   tasas <- vapply(MATS, .tasa, numeric(1), claves = claves)
   # Aplicabilidad: fracción de versiones en que la regla DICE algo (elimina, pero
   # no lo elimina todo). Una regla que nunca aplica puntúa el azar exacto.
   aplic <- vapply(seq_along(reglas), function(j) {
     mean(vapply(seq_len(n_ver), function(i) {
-      s <- .conjunto_de(tryCatch(reglas[[j]]$fn(opciones[[i]]),
+      s <- .conjunto_de(tryCatch(.aplicar_regla(reglas[[j]], opciones[[i]], estimulos[[i]]),
                                  error = function(e) NULL), n_op[i])
       sum(s) > 0L && sum(s) < n_op[i]
     }, logical(1)))
@@ -185,6 +242,7 @@ evaluar_bateria <- function(reglas, opciones, claves,
   familias <- vapply(reglas, `[[`, character(1), "familia")
   detalle  <- data.frame(regla = nombres, familia = familias,
                          tasa = tasas, aplicabilidad = aplic,
+                         usa_estimulo = usa_est,
                          stringsAsFactors = FALSE)
   detalle   <- detalle[order(-detalle$tasa), , drop = FALSE]
   max_obs   <- max(tasas)
@@ -232,14 +290,18 @@ evaluar_bateria <- function(reglas, opciones, claves,
   azar_exacto    <- mean(1 / n_op)
   exceso_atomico <- max_obs - azar_exacto
 
-  # ---- 3. Cobertura por familias -------------------------------------------
+  # ---- 3. Cobertura por familias y por el estímulo (§P7-G) -----------------
   con_sonda   <- unique(familias)
   declaradas  <- names(familias_no_aplicables)
   sin_sonda   <- setdiff(names(FAMILIAS_DIMENSION), c(con_sonda, declaradas))
+  estimulo    <- if (any(usa_est)) "CON SONDA"
+                 else if (!is.null(estimulo_no_aplicable)) "NO APLICABLE"
+                 else "SIN SONDA"
 
   # ---- 4. Veredicto --------------------------------------------------------
-  # El orden importa: la falta de cobertura manda sobre cualquier cifra. Un máximo
-  # bajo en una batería incompleta NO es "sin señal", es "sin sonda".
+  # El orden importa: la falta de cobertura (de una familia o del estímulo) manda
+  # sobre cualquier cifra. Un máximo bajo en una batería incompleta NO es "sin
+  # señal", es "sin sonda".
   #
   # `UMBRAL_DEGENERADO` cambia de causa, no de espíritu: antes disparaba cuando el
   # techo nulo alcanzaba un umbral ABSOLUTO (una batería de ruido lo cruzaba); ahora
@@ -250,7 +312,7 @@ evaluar_bateria <- function(reglas, opciones, claves,
   margen_disponible <- 1 - techo_nulo
   umbral_degenerado <- margen_disponible < corte_canal
 
-  veredicto <- if (length(sin_sonda) > 0) {
+  veredicto <- if (length(sin_sonda) > 0 || estimulo == "SIN SONDA") {
     "SIN_COBERTURA"
   } else if (umbral_degenerado) {
     "UMBRAL_DEGENERADO"
@@ -275,6 +337,8 @@ evaluar_bateria <- function(reglas, opciones, claves,
     n_perm = n_perm,
     familias_con_sonda = con_sonda, familias_sin_sonda = sin_sonda,
     familias_no_aplicables = familias_no_aplicables,
+    estimulo = estimulo, estimulo_no_aplicable = estimulo_no_aplicable,
+    reglas_estimulo = nombres[usa_est],
     umbral_degenerado = umbral_degenerado
   ), class = "bateria_elim")
 }
@@ -291,8 +355,9 @@ imprimir_bateria <- function(res) {
   cat("\n-- Reglas (ordenadas por tasa) --\n")
   for (i in seq_len(nrow(res$detalle))) {
     d <- res$detalle[i, ]
-    cat(sprintf("  %-28s [%-13s] tasa %-8s aplicable %s\n",
-                d$regla, d$familia, pct(d$tasa), pct(d$aplicabilidad)))
+    cat(sprintf("  %-28s [%-13s] tasa %-8s aplicable %s%s\n",
+                d$regla, d$familia, pct(d$tasa), pct(d$aplicabilidad),
+                if (isTRUE(d$usa_estimulo)) "  (lee el estimulo)" else ""))
   }
 
   cat("\n-- Calibracion contra el techo nulo --\n")
@@ -321,10 +386,20 @@ imprimir_bateria <- function(res) {
               else "*** SIN SONDA ***"
     cat(sprintf("  %-14s %-26s %s\n", f, estado, FAMILIAS_DIMENSION[[f]]))
   }
-  if (length(res$familias_no_aplicables)) {
+  n_est <- length(res$reglas_estimulo)
+  estado_est <- switch(res$estimulo,
+    "CON SONDA"    = sprintf("CON SONDA (%d regla%s)", n_est, if (n_est == 1L) "" else "s"),
+    "NO APLICABLE" = "no aplicable (declarado)",
+    "*** SIN SONDA ***")
+  cat(sprintf("  %-14s %-26s %s\n", "estimulo", estado_est,
+              "lo que muestra el enunciado: tabla, valor calculado (regla #22, P7-G)"))
+  if (length(res$familias_no_aplicables) || !is.null(res$estimulo_no_aplicable)) {
     cat("\n  Justificaciones declaradas:\n")
     for (f in names(res$familias_no_aplicables)) {
       cat(sprintf("    %s: %s\n", f, res$familias_no_aplicables[[f]]))
+    }
+    if (!is.null(res$estimulo_no_aplicable)) {
+      cat(sprintf("    estimulo: %s\n", res$estimulo_no_aplicable))
     }
   }
 
@@ -332,10 +407,12 @@ imprimir_bateria <- function(res) {
   switch(res$veredicto,
     SIN_COBERTURA = {
       cat("  SIN_COBERTURA (exit 1)\n")
-      cat(sprintf("  Familias sin sonda: %s\n", paste(res$familias_sin_sonda, collapse = ", ")))
+      faltan <- c(res$familias_sin_sonda, if (identical(res$estimulo, "SIN SONDA")) "estimulo")
+      cat(sprintf("  Sin sonda: %s\n", paste(faltan, collapse = ", ")))
       cat("  Esta bateria NO mide 'sin senal', mide SIN SONDA. El canal real puede\n")
-      cat("  estar justo en la familia que nadie sondeo. Anadir sonda, o declarar la\n")
-      cat("  familia como no aplicable CON justificacion. PROHIBIDO leerlo como PASS.\n")
+      cat("  estar justo en la familia que nadie sondeo, o en lo que muestra el\n")
+      cat("  enunciado. Anadir sonda, o declararlo no aplicable CON justificacion.\n")
+      cat("  PROHIBIDO leerlo como PASS.\n")
     },
     UMBRAL_DEGENERADO = {
       cat("  UMBRAL_DEGENERADO (exit 1)\n")
@@ -383,7 +460,7 @@ imprimir_bateria <- function(res) {
                   100 * res$exceso, pct(res$techo_nulo)))
       cat(sprintf("  (%+.1f pp) incluso sumando %.1f sd del ruido medido (%+.1f pp), y las seis\n",
                   100 * res$corte_ruido, res$k_sigma, 100 * res$margen))
-      cat("  familias tienen sonda o declaracion. Este PASS si acredita.\n")
+      cat("  familias y el estimulo tienen sonda o declaracion. Este PASS si acredita.\n")
     })
   cat("\n")
   invisible(res)

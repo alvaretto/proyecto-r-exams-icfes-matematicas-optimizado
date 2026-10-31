@@ -19,6 +19,7 @@
   - **§P7-D** Máximo 3 pasadas; luego cierre con residuo declarado. Tras cada mejora de diagnosticidad, verificar que la clave sigue siendo verdadera.
   - **§P7-E** Medir todo canal también sobre la instancia canónica (enumeración exacta). Aceptar un canal > +8 pp es un OVERRIDE humano firmado (H-5); la batería queda en rojo. El alcance firmado (sus cifras) se cablea en el verificador: dentro, «rojo cubierto» con su propio código de salida, nunca PASS; por encima, pendiente de firma; un mutante debe sacarlo de «cubierto».
   - **§P7-F** Antes de abrir otra rama, enumerar el espacio de diseño: puede haber una sola combinación viable (canal estructural → override, no rediseño).
+  - **§P7-G** (2026-10-31) La batería lleva al menos una regla **del estímulo**, que recibe lo que muestra el enunciado (tabla, valor calculado) y no solo las opciones: `nueva_regla(..., usa_estimulo = TRUE)` con `estimulos`. Si no aplica, se declara con su justificación (`estimulo_no_aplicable`). Sin una cosa ni la otra, el helper da `SIN_COBERTURA`. Las baterías anteriores se ajustan en el próximo ciclo de su ejercicio.
 
 ## Defensa automática
 - `Rscript .claude/scripts/validar_diversidad_sustantiva.R <rmd> --n 100` (orquestador paso 9): `ERR_DIV_COSMETICA` (exit 1, **bloqueante**), `WARN_DIV_BAJA`, `WARN_DIV_INDET`.
@@ -27,4 +28,4 @@
 - §P7: veredictos `PASS` · `BLOQUEA` · `SIN_COBERTURA` · `NO_CONCLUYENTE` (no es PASS) · `UMBRAL_DEGENERADO`.
 - Tests: `test_diversidad_sustantiva.R`, `test_bateria_eliminacion.R`.
 
-**Versión:** 1.9 (2026-10-29: guarda del alcance de un override) · compacta desde 2026-09-29 · Excepciones: NINGUNA.
+**Versión:** 1.10 (2026-10-31: §P7-G, la regla del estímulo) · compacta desde 2026-09-29 · Excepciones: NINGUNA.

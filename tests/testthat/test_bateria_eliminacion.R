@@ -11,11 +11,14 @@
 # oficiales demostró que un umbral de TASA ABSOLUTA mide, en parte, el tamaño de
 # la batería — la misma población da 27,4 % con 19 reglas y 34,8 % con 25.
 #
-# Los dos controles que dan valor a esta suite:
+# Los tres controles que dan valor a esta suite:
 #   · "MISMOS DATOS, SONDA RETIRADA": una batería incompleta reporta una cifra baja
 #     y tranquilizadora sobre un ítem que se resuelve al 100 % sin razonar.
 #   · "MÁS REGLAS DE RUIDO NO CAMBIAN EL VEREDICTO": es la lección medida hecha
 #     aserción. Con el criterio viejo, añadir ruido cruzaba el umbral.
+#   · "EL CANAL VIVE EN EL ENUNCIADO" (§P7-G, 2026-10-31): las seis familias dan PASS
+#     sobre un ítem que se resuelve al 100 % mirando el enunciado; la regla del
+#     estímulo lo bloquea.
 
 library(testthat)
 
@@ -23,6 +26,12 @@ repo_root <- tryCatch(system("git rev-parse --show-toplevel", intern = TRUE),
                       error = function(e) getwd())
 if (length(repo_root) == 1 && nzchar(repo_root)) setwd(repo_root)
 source(".claude/scripts/bateria_eliminacion.R")
+
+# Los fixtures sintéticos no tienen enunciado: las opciones son todo el ítem. Por eso
+# los tests de las familias declaran el estímulo no aplicable (§P7-G). Los del
+# estímulo, al final del archivo, llaman a `evaluar_bateria()` directamente.
+SIN_ESTIMULO <- "fixture sintetico: el item no tiene enunciado, solo opciones"
+evaluar_fx <- function(...) evaluar_bateria(..., estimulo_no_aplicable = SIN_ESTIMULO)
 
 # ---- Batería de referencia: una regla por familia ---------------------------
 regla_magnitud <- nueva_regla("la mayor", "magnitud",
@@ -126,7 +135,7 @@ test_that("LA CONVENCIÓN TIENE NULO EXACTO: E[score] = 1/n para toda regla", {
 
 test_that("CONTROL POSITIVO: caza un canal real de eliminación", {
   fx <- fixture_canal_divisibilidad()
-  res <- evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves)
+  res <- evaluar_fx(BATERIA_COMPLETA, fx$opciones, fx$claves)
 
   expect_equal(res$veredicto, "BLOQUEA")
   expect_equal(exit_bateria(res), 1L)
@@ -138,7 +147,7 @@ test_that("CONTROL POSITIVO: caza un canal real de eliminación", {
 
 test_that("CONTROL NEGATIVO: un ítem sano da PASS y no un rojo falso", {
   fx <- fixture_sin_canal()
-  res <- evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves)
+  res <- evaluar_fx(BATERIA_COMPLETA, fx$opciones, fx$claves)
 
   expect_equal(res$veredicto, "PASS")
   expect_equal(exit_bateria(res), 0L)
@@ -151,8 +160,8 @@ test_that("LA LECCIÓN MEDIDA: más reglas de RUIDO suben la tasa pero NO el exc
   # reglas que no saben nada del ítem acercaba (y podía cruzar) la puerta. El
   # exceso no se mueve porque el techo nulo sube con el máximo.
   fx <- fixture_sin_canal()
-  res_6  <- evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves)
-  res_46 <- evaluar_bateria(c(BATERIA_COMPLETA, reglas_ruido(40)),
+  res_6  <- evaluar_fx(BATERIA_COMPLETA, fx$opciones, fx$claves)
+  res_46 <- evaluar_fx(c(BATERIA_COMPLETA, reglas_ruido(40)),
                             fx$opciones, fx$claves)
 
   # 1. La tasa absoluta SÍ sube al añadir ruido: es el defecto que se corrige.
@@ -177,7 +186,7 @@ test_that("LA LECCIÓN: batería incompleta NO es 'sin señal', es 'sin sonda'",
   fx <- fixture_canal_divisibilidad()
   sin_divis <- list(regla_magnitud, regla_signo, regla_posicion,
                     regla_formato, regla_lexico)
-  res <- evaluar_bateria(sin_divis, fx$opciones, fx$claves)
+  res <- evaluar_fx(sin_divis, fx$opciones, fx$claves)
 
   # La cifra que reporta es baja y tranquilizadora. Si esta aserción cae, el fixture
   # dejó de reproducir el escenario: el máximo debía desplomarse al retirar la sonda.
@@ -194,12 +203,12 @@ test_that("Una familia declarada no aplicable cierra la cobertura, pero exige ju
                     regla_formato, regla_lexico)
 
   # Sin declararla: bloquea por falta de cobertura.
-  res_mudo <- evaluar_bateria(sin_signo, fx$opciones, fx$claves)
+  res_mudo <- evaluar_fx(sin_signo, fx$opciones, fx$claves)
   expect_equal(res_mudo$veredicto, "SIN_COBERTURA")
   expect_true("signo" %in% res_mudo$familias_sin_sonda)
 
   # Declarada con su razón: la cobertura queda cerrada.
-  res_decl <- evaluar_bateria(
+  res_decl <- evaluar_fx(
     sin_signo, fx$opciones, fx$claves,
     familias_no_aplicables = c(signo = "todas las magnitudes del item son positivas"))
   expect_equal(res_decl$veredicto, "PASS")
@@ -210,7 +219,7 @@ test_that("ZONA GRIS: un exceso entre los dos cortes no es ni verde ni rojo", {
   # Canal parcial calibrado para dejar el exceso por encima del ruido (+2 pp) y por
   # debajo del corte de canal (+8 pp). Ahí NO se decide: exit 1, nunca PASS.
   fx <- fixture_canal_parcial(p = 0.34)
-  res <- evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves)
+  res <- evaluar_fx(BATERIA_COMPLETA, fx$opciones, fx$claves)
 
   expect_equal(res$veredicto, "NO_CONCLUYENTE")
   # Un NO_CONCLUYENTE jamás puede salir con 0: se leería como aprobado.
@@ -221,20 +230,20 @@ test_that("ZONA GRIS: un exceso entre los dos cortes no es ni verde ni rojo", {
 
   # Los MISMOS datos con los cortes ensanchados sí acreditan: es el corte, y no la
   # tasa absoluta, lo que decide.
-  expect_equal(evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves,
+  expect_equal(evaluar_fx(BATERIA_COMPLETA, fx$opciones, fx$claves,
                                corte_ruido = 0.06, corte_canal = 0.30)$veredicto, "PASS")
 
   # Y con los cortes POR DEFECTO, un canal más penetrante sí llega a BLOQUEA: las
   # tres regiones existen y están ordenadas.
   fuerte <- fixture_canal_parcial(p = 0.55)
-  res_f <- evaluar_bateria(BATERIA_COMPLETA, fuerte$opciones, fuerte$claves)
+  res_f <- evaluar_fx(BATERIA_COMPLETA, fuerte$opciones, fuerte$claves)
   expect_equal(res_f$veredicto, "BLOQUEA")
   expect_gt(res_f$exceso, res$exceso)
 
   # NO se puede forzar un BLOQUEA sobre la zona gris bajando el corte: el margen de
   # 2 sd del ruido medido (~2,7 pp aquí) lo impide. Un exceso de ~5 pp con ~3 pp de
   # ruido no acredita un canal por mucho que se mueva la puerta.
-  expect_equal(evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves,
+  expect_equal(evaluar_fx(BATERIA_COMPLETA, fx$opciones, fx$claves,
                                corte_ruido = 0.005, corte_canal = 0.02)$veredicto,
                "NO_CONCLUYENTE")
 })
@@ -244,7 +253,7 @@ test_that("MUESTRA CORTA: si el ruido no resuelve la banda, no hay PASS aunque e
   # exceso alcanza el corte de canal: esta muestra no puede acreditar la AUSENCIA.
   # Es la misma disciplina que la regla #23 impone a los estratos con n < 20.
   fx <- fixture_sin_canal(n = 30L, semilla = 3L)
-  res <- evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves)
+  res <- evaluar_fx(BATERIA_COMPLETA, fx$opciones, fx$claves)
 
   expect_lt(res$exceso, res$corte_ruido)          # el exceso está dentro del ruido...
   expect_gt(res$ruido, 0.03)                      # ...pero el ruido es ancho
@@ -252,7 +261,7 @@ test_that("MUESTRA CORTA: si el ruido no resuelve la banda, no hay PASS aunque e
   expect_equal(exit_bateria(res), 1L)
 
   # Los mismos datos, la misma batería, con la muestra estándar N = 100: sí acredita.
-  expect_equal(evaluar_bateria(BATERIA_COMPLETA, fixture_sin_canal()$opciones,
+  expect_equal(evaluar_fx(BATERIA_COMPLETA, fixture_sin_canal()$opciones,
                                fixture_sin_canal()$claves)$veredicto, "PASS")
 })
 
@@ -262,7 +271,7 @@ test_that("UMBRAL DEGENERADO: si el techo nulo satura, el corte es inalcanzable"
   # produciría un exceso suficiente. El criterio no discrimina nada.
   set.seed(5L)
   ops <- lapply(1:3, function(i) as.character(sample(10:99, 4)))
-  res <- evaluar_bateria(reglas_ruido(200), ops, c(1L, 2L, 3L))
+  res <- evaluar_fx(reglas_ruido(200), ops, c(1L, 2L, 3L))
 
   expect_equal(res$veredicto, "UMBRAL_DEGENERADO")
   expect_equal(exit_bateria(res), 1L)
@@ -274,12 +283,12 @@ test_that("El techo nulo está por encima del azar puro (inflación por selecci�
   # regla. El MÁXIMO sobre varias está inflado: es justo la razón de calibrar en
   # vez de comparar contra el 25 %.
   fx <- fixture_sin_canal()
-  res <- evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves)
+  res <- evaluar_fx(BATERIA_COMPLETA, fx$opciones, fx$claves)
   expect_gt(res$techo_nulo, 0.25)
   expect_lt(res$techo_nulo, 0.60)
   expect_gte(res$techo_p95, res$techo_nulo)
   # Y crece con el número de reglas: por eso la tasa absoluta no es comparable.
-  res_46 <- evaluar_bateria(c(BATERIA_COMPLETA, reglas_ruido(40)), fx$opciones, fx$claves)
+  res_46 <- evaluar_fx(c(BATERIA_COMPLETA, reglas_ruido(40)), fx$opciones, fx$claves)
   expect_gt(res_46$techo_nulo, res$techo_nulo)
 })
 
@@ -289,10 +298,10 @@ test_that("El ruido reportado ES la anchura real del exceso bajo H0", {
   # el guardián de muestra corta sería decorativo.
   emp <- vapply(1:40, function(b) {
     fx <- fixture_sin_canal(n = 100L, semilla = 500L + b)
-    evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves,
+    evaluar_fx(BATERIA_COMPLETA, fx$opciones, fx$claves,
                     n_perm = 120L, semilla = 900L + b)$exceso
   }, numeric(1))
-  reportado <- evaluar_bateria(BATERIA_COMPLETA, fixture_sin_canal()$opciones,
+  reportado <- evaluar_fx(BATERIA_COMPLETA, fixture_sin_canal()$opciones,
                                fixture_sin_canal()$claves)$ruido
   expect_lt(abs(stats::sd(emp) - reportado), 0.015)
   expect_lt(abs(mean(emp)), 0.02)   # el exceso bajo H0 está centrado en cero
@@ -303,7 +312,7 @@ test_that("El contrato de las reglas se valida: familia inválida y fn no-funci�
                regexp = "Familia desconocida")
   expect_error(nueva_regla("x", "magnitud", "no soy funcion"),
                regexp = "funcion")
-  expect_error(evaluar_bateria(BATERIA_COMPLETA, fixture_sin_canal()$opciones,
+  expect_error(evaluar_fx(BATERIA_COMPLETA, fixture_sin_canal()$opciones,
                                fixture_sin_canal()$claves,
                                corte_ruido = 0.20, corte_canal = 0.05))
 })
@@ -314,7 +323,7 @@ test_that("Una regla que revienta se trata como abstención y puntúa el azar ex
   # es justo lo que rompía la comparabilidad entre baterías.
   regla_rota <- nueva_regla("revienta", "magnitud", function(o) stop("boom"))
   fx <- fixture_sin_canal(n = 20L)
-  res <- evaluar_bateria(list(regla_rota, regla_divis, regla_signo,
+  res <- evaluar_fx(list(regla_rota, regla_divis, regla_signo,
                               regla_posicion, regla_formato, regla_lexico),
                          fx$opciones, fx$claves)
   fila <- res$detalle[res$detalle$regla == "revienta", ]
@@ -331,7 +340,7 @@ test_that("La regla puede devolver un CONJUNTO y se puntúa 1/|S|", {
   dos <- nueva_regla("sobreviven dos", "magnitud", function(o) c(TRUE, TRUE, FALSE, FALSE))
   M <- .matriz_score(dos, ops, rep(4L, 4L), 4L)
   expect_equal(M[1, ], c(0.5, 0.5, 0, 0))
-  res <- evaluar_bateria(list(dos, regla_divis, regla_signo, regla_posicion,
+  res <- evaluar_fx(list(dos, regla_divis, regla_signo, regla_posicion,
                               regla_formato, regla_lexico),
                          ops, c(1L, 1L, 3L, 3L), n_perm = 50L)
   expect_equal(res$detalle$tasa[res$detalle$regla == "sobreviven dos"], 0.25)
@@ -351,8 +360,8 @@ test_that("RESIDUO DECLARADO: rellenar la batería sube el techo y erosiona el e
   # plausible— pero publica `exceso_atomico`, que no depende de k y NO se mueve.
   # Este test fija el mecanismo para que nadie lo descubra por sorpresa.
   fx <- fixture_canal_parcial(p = 0.55)
-  base <- evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves)
-  pad  <- evaluar_bateria(c(BATERIA_COMPLETA, reglas_ruido(300)), fx$opciones, fx$claves)
+  base <- evaluar_fx(BATERIA_COMPLETA, fx$opciones, fx$claves)
+  pad  <- evaluar_fx(c(BATERIA_COMPLETA, reglas_ruido(300)), fx$opciones, fx$claves)
 
   expect_equal(pad$max_obs, base$max_obs)             # el máximo no se mueve...
   expect_gt(pad$techo_nulo, base$techo_nulo + 0.03)   # ...pero el techo sube...
@@ -371,7 +380,92 @@ test_that("Los cortes son los calibrados y el veredicto NO usa la tasa absoluta"
   expect_gt(CORTE_CANAL, CORTE_RUIDO)
   # `umbral` sobrevive como cifra informativa: cambiarlo NO puede mover el veredicto.
   fx <- fixture_canal_parcial(p = 0.34)
-  v1 <- evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves, umbral = 0.10)$veredicto
-  v2 <- evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves, umbral = 0.99)$veredicto
+  v1 <- evaluar_fx(BATERIA_COMPLETA, fx$opciones, fx$claves, umbral = 0.10)$veredicto
+  v2 <- evaluar_fx(BATERIA_COMPLETA, fx$opciones, fx$claves, umbral = 0.99)$veredicto
   expect_equal(v1, v2)
+})
+
+# ---- §P7-G: el estímulo es una entrada de la batería -------------------------
+# Ítem cuyo canal vive en el ENUNCIADO: las MISMAS opciones y claves del control
+# negativo (ninguna familia tiene señal: ahí la batería da PASS), más un enunciado que
+# muestra la mitad del valor de la clave, así que solo una opción lo dobla. Es la forma
+# de los dos canales medidos: `sistema-ecuaciones-eliminacion-n4` (+31,3 pp con 30
+# reglas en verde) y H2 del CLOZE de `totales-promedios-reciclaje-n3`.
+fixture_canal_estimulo <- function(n = 100L, semilla = 11L) {
+  fx <- fixture_sin_canal(n = n, semilla = semilla)
+  fx$estimulos <- lapply(seq_len(n), function(i)
+    list(mitad = as.numeric(fx$opciones[[i]][fx$claves[i]]) / 2))
+  fx
+}
+regla_estimulo <- nueva_regla("la que dobla el valor mostrado", "magnitud",
+  function(o, e) which(abs(as.numeric(o) - 2 * e$mitad) < 1e-9), usa_estimulo = TRUE)
+
+test_that("EL CANAL VIVE EN EL ENUNCIADO: las seis familias no lo ven y la regla del estímulo sí", {
+  fx <- fixture_canal_estimulo()
+  # Sin regla del estímulo, y declarándolo no aplicable a propósito: la batería
+  # queda en verde sobre un ítem que se resuelve al 100 % mirando el enunciado.
+  ciega <- evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves,
+                           estimulo_no_aplicable = "declaracion falsa, a proposito")
+  expect_equal(ciega$veredicto, "PASS")
+  expect_lt(ciega$max_obs, 0.35)
+  # La misma batería con la regla del estímulo bloquea, y el canal se le atribuye.
+  res <- evaluar_bateria(c(BATERIA_COMPLETA, list(regla_estimulo)), fx$opciones, fx$claves,
+                         estimulos = fx$estimulos)
+  expect_equal(res$veredicto, "BLOQUEA")
+  expect_equal(res$max_obs, 1)
+  expect_equal(res$regla_top, "la que dobla el valor mostrado")
+  expect_equal(res$estimulo, "CON SONDA")
+  expect_equal(res$reglas_estimulo, "la que dobla el valor mostrado")
+  salida <- capture.output(imprimir_bateria(res))
+  expect_true(any(grepl("(lee el estimulo)", salida, fixed = TRUE)))
+  expect_true(any(grepl("^  estimulo +CON SONDA \\(1 regla\\)", salida)))
+})
+
+test_that("SIN REGLA DEL ESTÍMULO NI DECLARACIÓN: SIN_COBERTURA aunque las seis familias tengan sonda", {
+  fx <- fixture_sin_canal()
+  res <- evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves)
+  expect_equal(res$veredicto, "SIN_COBERTURA")
+  expect_equal(exit_bateria(res), 1L)
+  expect_equal(res$estimulo, "SIN SONDA")
+  expect_length(res$familias_sin_sonda, 0)     # las seis familias sí tienen sonda
+  expect_true(any(grepl("Sin sonda: estimulo", capture.output(imprimir_bateria(res)),
+                        fixed = TRUE)))
+  # Declarado con su razón, la misma batería acredita.
+  decl <- evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves,
+                          estimulo_no_aplicable = "el enunciado no muestra ningun valor")
+  expect_equal(decl$veredicto, "PASS")
+  expect_equal(decl$estimulo, "NO APLICABLE")
+  expect_true(any(grepl("estimulo: el enunciado no muestra ningun valor",
+                        capture.output(imprimir_bateria(decl)), fixed = TRUE)))
+})
+
+test_that("Declarar el estímulo solo cierra la cobertura: no mueve ninguna cifra", {
+  # Las baterías anteriores a §P7-G dan SIN_COBERTURA hasta que lo declaren. Este test
+  # garantiza que la declaración no les cambia los números, solo la cobertura.
+  fx <- fixture_canal_parcial(p = 0.55)
+  sin_decl <- evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves)
+  con_decl <- evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves,
+                              estimulo_no_aplicable = "sin enunciado")
+  expect_equal(sin_decl$veredicto, "SIN_COBERTURA")
+  expect_equal(con_decl$veredicto, "BLOQUEA")
+  for (campo in c("max_obs", "techo_nulo", "techo_p95", "ruido", "exceso", "exceso_atomico")) {
+    expect_equal(sin_decl[[campo]], con_decl[[campo]], info = campo)
+  }
+  expect_equal(sin_decl$detalle$tasa, con_decl$detalle$tasa)
+})
+
+test_that("El contrato del estímulo se valida: justificación, una entrada por versión y sin contradicción", {
+  fx <- fixture_canal_estimulo(n = 20L)
+  con_est <- c(BATERIA_COMPLETA, list(regla_estimulo))
+  expect_error(evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves,
+                               estimulo_no_aplicable = "   "), regexp = "justificacion")
+  expect_error(evaluar_bateria(BATERIA_COMPLETA, fx$opciones, fx$claves,
+                               estimulo_no_aplicable = NA_character_), regexp = "justificacion")
+  expect_error(evaluar_bateria(con_est, fx$opciones, fx$claves), regexp = "estimulos")
+  expect_error(evaluar_bateria(con_est, fx$opciones, fx$claves, estimulos = fx$estimulos[-1]),
+               regexp = "una entrada por version")
+  expect_error(evaluar_bateria(con_est, fx$opciones, fx$claves, estimulos = fx$estimulos,
+                               estimulo_no_aplicable = "x"), regexp = "Contradiccion")
+  expect_error(nueva_regla("x", "magnitud", function(o, e) 1L, usa_estimulo = NA),
+               regexp = "usa_estimulo")
 })
