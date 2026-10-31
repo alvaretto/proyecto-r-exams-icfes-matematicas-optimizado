@@ -86,6 +86,34 @@ verificar_contrato <- function(path) {
   )
 }
 
+# --- DETECTOR del pre-flight 23 con carpeta padre (orquestador-cloze) --------
+# El check 23 y la «Defensa preventiva» del Incidente O son párrafos de una sola
+# línea en el agente: se localizan por su comienzo. Si algún día se parten en
+# varias líneas, el control negativo del test lo avisa.
+MARCA_CHECK23   <- "23. **Reglas locales del subproyecto**"
+MARCA_DEFENSA_O <- "**Defensa preventiva**: pre-flight check 23"
+MARCA_PADRE_23  <- " **Carpeta padre (ejercicio hermano"
+MARCA_PADRE_O   <- " Si el destino es la carpeta de un ejercicio hermano"
+
+verificar_check23_padre <- function(path) {
+  if (!file.exists(path)) return(list(existe = FALSE))
+  lineas  <- readLines(path, warn = FALSE)
+  check23 <- lineas[startsWith(lineas, MARCA_CHECK23)]
+  defensa <- lineas[startsWith(lineas, MARCA_DEFENSA_O)]
+  check23 <- if (length(check23) == 1) check23 else ""
+  defensa <- if (length(defensa) == 1) defensa else ""
+  list(
+    existe         = TRUE,
+    hay_check23    = nzchar(check23),
+    hay_defensa    = nzchar(defensa),
+    padre_claude   = grepl("../.claude/CLAUDE.md", check23, fixed = TRUE),
+    padre_handoff  = grepl("../HANDOFF.md", check23, fixed = TRUE),
+    padre_item     = grepl("../ITEM_OFICIAL.md", check23, fixed = TRUE),
+    criterio_padre = grepl("ejercicio_state.json", check23, fixed = TRUE),
+    defensa_padre  = grepl("../.claude/", defensa, fixed = TRUE)
+  )
+}
+
 # =============================================================================
 context("Contrato de entrega de los orquestadores (paridad con el detractor)")
 
@@ -230,4 +258,76 @@ test_that("verificar_contrato() detecta un contrato ausente o mutilado", {
     info = "El mutante 4 debía CONSERVAR la sección (si no, no prueba lo que dice probar)")
   expect_false(r4$cubre_dry_run,
     info = "MUTANTE 4 no cazado: el detector no ve que el contrato excluya dry-run")
+})
+
+# =============================================================================
+context("Pre-flight 23 del orquestador-cloze: también la carpeta padre (2026-10-30)")
+
+# Con `ruta_destino` = `<SUB>/cloze`, el check 23 solo miraba `<ruta_destino>/.claude/`
+# y `<ruta_destino>/HANDOFF.md`, que en un CLOZE hermano no existen: las invariantes
+# del SCHOICE y las firmas del CLOZE viven en `../.claude/CLAUDE.md` (convención de
+# `probabilidad-fichas-tabla-doble-entrada-n2/cloze` y de
+# `totales-promedios-reciclaje-n3/cloze`). El check pasaba sin haber leído ninguna
+# invariante, y el coordinador lo suplía pegando esas rutas en el prompt.
+test_that("orquestador-cloze: el check 23 lee también la carpeta padre", {
+  path <- file.path(AGENTS_DIR, "orquestador-cloze.md")
+  skip_if_not(file.exists(path))
+  r <- verificar_check23_padre(path)
+  for (k in c("hay_check23", "hay_defensa", "padre_claude", "padre_handoff",
+              "padre_item", "criterio_padre", "defensa_padre")) {
+    expect_true(isTRUE(r[[k]]),
+      info = paste0("Pre-flight 23 del orquestador-cloze: falla `", k, "`. Con el destino ",
+                    "en `<SUB>/cloze`, sin la carpeta padre el check pasa sin haber visto ",
+                    "ninguna invariante del ejercicio hermano."))
+  }
+})
+
+# Control positivo: se restituye el texto anterior al 2026-10-30 en una COPIA en
+# tempdir() (se corta la cláusula de la carpeta padre de cada línea) y el detector
+# tiene que verlo.
+test_that("verificar_check23_padre() caza el check 23 sin la carpeta padre", {
+  origen <- file.path(AGENTS_DIR, "orquestador-cloze.md")
+  skip_if_not(file.exists(origen))
+
+  fixture_dir <- file.path(tempdir(), "check23-fixture")
+  dir.create(fixture_dir, showWarnings = FALSE, recursive = TRUE)
+  on.exit(unlink(fixture_dir, recursive = TRUE), add = TRUE)
+
+  lineas <- readLines(origen, warn = FALSE)
+
+  # Control negativo, sub-check por sub-check (ver la nota del mutante 3 de arriba).
+  sano <- file.path(fixture_dir, "sano.md")
+  writeLines(lineas, sano)
+  r_sano <- verificar_check23_padre(sano)
+  for (k in c("hay_check23", "hay_defensa", "padre_claude", "padre_handoff",
+              "padre_item", "criterio_padre", "defensa_padre")) {
+    expect_true(isTRUE(r_sano[[k]]),
+      info = paste0("La copia INTACTA falla en `", k, "`: el detector está mal ",
+                    "calibrado, no el archivo. Arregla el detector, no el agente."))
+  }
+
+  i23 <- which(startsWith(lineas, MARCA_CHECK23))
+  iO  <- which(startsWith(lineas, MARCA_DEFENSA_O))
+  expect_length(i23, 1)
+  expect_length(iO, 1)
+  p23 <- regexpr(MARCA_PADRE_23, lineas[i23], fixed = TRUE)
+  pO  <- regexpr(MARCA_PADRE_O, lineas[iO], fixed = TRUE)
+  expect_true(p23 > 0 && pO > 0,
+    info = "El mutante no encuentra las cláusulas de la carpeta padre: no prueba lo que dice probar")
+
+  m <- lineas
+  m[i23] <- substr(m[i23], 1, p23 - 1)
+  m[iO]  <- substr(m[iO], 1, pO - 1)
+  mut <- file.path(fixture_dir, "mutante.md")
+  writeLines(m, mut)
+  r_m <- verificar_check23_padre(mut)
+
+  expect_true(r_m$hay_check23 && r_m$hay_defensa,
+    info = "El mutante debía CONSERVAR el check 23 y la defensa (si no, no prueba lo que dice probar)")
+  expect_false(r_m$padre_claude,
+    info = "MUTANTE no cazado: el detector no ve que el check 23 ignore `../.claude/CLAUDE.md`")
+  expect_false(r_m$padre_handoff,
+    info = "MUTANTE no cazado: el detector no ve que el check 23 ignore `../HANDOFF.md`")
+  expect_false(r_m$defensa_padre,
+    info = "MUTANTE no cazado: el detector no ve la defensa del Incidente O sin la carpeta padre")
 })

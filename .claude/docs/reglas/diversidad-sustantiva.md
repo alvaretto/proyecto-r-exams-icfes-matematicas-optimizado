@@ -478,6 +478,18 @@ distinguía «dentro del alcance» de «lo superó» (Errores 35-37, otra invari
 Después, al cablear las cifras, el verificador pasó a decir `APROBADO (0 fallos)` con exit 0. Así quedó
 en un commit, que es justo el gate apagado contra el que advierte esta sección.
 
+**Firmar el máximo no cubre las demás reglas (aclaración del 2026-10-30, sin cambio de norma).**
+- El alcance se cablea **regla por regla**. Una firma sobre la regla que más acierta en un estrato no cubre a
+  las otras que también pasan el umbral en ese estrato.
+- Al pedir una firma se presentan **todas** las reglas que superan +8 pp en el estrato, cada una con su cifra.
+- En la instancia canónica, esa cifra es la **exacta**, obtenida por enumeración (§P7-E). Con n = 30, dos de
+  las reglas diferían en 4 a 5 pp de su valor exacto.
+
+Origen: el CLOZE de `totales-promedios-reciclaje-n3`. En su tanda 1 se llevó al profesor solo el máximo de
+la batería cruzada en la canónica (X9, +25 pp), y él lo firmó. En la tanda 2, al cablear el alcance regla
+por regla, aparecieron X6, X10 y X11 también por encima de +8 pp, y el orquestador tuvo que parar. El
+mismo error de fondo, declarar un residuo §P7 solo por su máximo, ya se había visto en otro ciclo.
+
 #### Por qué NO se cableó dentro de `validar_diagnosticidad.R`
 
 Se evaluó y se descartó **a propósito**. Sus sondas H1/H2/H3/H3b son genéricas porque miden

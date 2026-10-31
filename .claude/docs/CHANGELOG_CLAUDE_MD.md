@@ -8,6 +8,45 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.33.1 (2026-10-30)
+
+- **`orquestador-cloze`: el pre-flight 23 (Incidente O) lee también la carpeta padre.**
+  - **Problema:** con `ruta_destino` = `<SUB>/cloze`, el check solo miraba `<ruta_destino>/.claude/` y
+    `<ruta_destino>/HANDOFF.md`, y en un CLOZE hermano esos archivos no existen. Las invariantes del SCHOICE y
+    las firmas del CLOZE viven en `../.claude/CLAUDE.md`, por la convención de
+    `probabilidad-fichas-tabla-doble-entrada-n2/cloze` y `totales-promedios-reciclaje-n3/cloze`. El check
+    pasaba sin haber leído ninguna invariante.
+  - **Cambio:** si el padre es un ejercicio (tiene `ejercicio_state.json`, `.claude/` o `HANDOFF.md`), el
+    orquestador lee también `../.claude/CLAUDE.md`, `../.claude/rules/*.md`, `../HANDOFF.md` y
+    `../ITEM_OFICIAL.md`, y lista en el reporte los archivos leídos.
+  - **Guarda:** `verificar_check23_padre()` en `tests/testthat/test_contrato_entrega_orquestadores.R`, una
+    suite que ya vigila `orquestador-cloze`. Incluye un mutante que restituye el texto anterior y tiene que
+    fallar.
+  - **Respaldo:** `.claude/backups/2026-10-30-preflight23-padre/`.
+  - **Vigencia:** rige para los orquestadores que arranquen después del commit, en una sesión nueva.
+- **Regla #22, texto íntegro, §P7-E: firmar el máximo no cubre las demás reglas.** Es una aclaración, sin cambio
+  de norma ni de versión de la regla, así que la versión compacta no cambia.
+  - **Qué dice:** el alcance de un override se cablea regla por regla, y al pedir una firma se presentan
+    todas las reglas que superan +8 pp en el estrato, con su cifra. En la canónica, la cifra exacta, por
+    enumeración.
+  - **Origen:** el CLOZE de `totales-promedios-reciclaje-n3`. Se firmó X9 viendo solo el máximo, y al cablear
+    regla por regla aparecieron X6, X10 y X11. El mismo error ya se había visto antes, así que es repetido.
+  - **Decisión:** el profesor la aprobó el 2026-10-30 («aclaración sí»).
+- **Análisis de promoción del 2026-10-30.** Revisa las decisiones del profesor sobre el CLOZE de
+  `totales-promedios-reciclaje-n3` y las lecciones de sus tandas 1 y 2.
+  - **Se adoptaron dos:** la guarda del pre-flight 23, que es mecánica, y la aclaración de §P7-E, que va solo
+    al texto íntegro.
+  - **No se promovieron, por estas razones:**
+    - El par atado de la Parte 6: está sin medir, y lo evalúa la FASE 2C.
+    - Los cortes entre cifra y unidad: son cosméticos y aparecieron por primera vez.
+    - La aclaración de F-2: es un solo caso y queda como ley local.
+    - Las firmas de X9, X6, X10 y X11 en la canónica: son la ley local L-C3, y la regla #22 §P7-E v1.9 ya las
+      cubre.
+    - Las trampas de herramientas de la tanda 2: el editor escribe `\u00a0` como carácter literal y
+      `python3 -I` no encuentra `websockets`. Son del entorno, no de una norma.
+    - El control del sellado en lote en `workflow-state.sh` y la familia F7 «CLOZE hermano» de la regla #21:
+      de las tres propuestas, el profesor eligió solo la primera.
+
 ### Cambios v3.33.0 (2026-10-29)
 
 Decisiones de las rondas 4 y 4b del ítem 50 (`totales-promedios-reciclaje-n3`), que llevaron a
