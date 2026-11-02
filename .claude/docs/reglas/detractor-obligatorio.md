@@ -543,7 +543,7 @@ significado del artefacto, que es precisamente el terreno que justifica esta reg
 
 | Invocación | Qué recibe quien invoca |
 |---|---|
-| `Task(subagent_type="AgenteDetractor", …)` **sin `name`** | El **reporte íntegro** como `tool_result` |
+| `Task(subagent_type="AgenteDetractor", …)` **sin `name`** | El **reporte íntegro**, en una notificación cuando termina. El `tool_result` del lanzamiento es solo el acuse, «Async agent launched» y un `agentId` (medido el 2026-10-31; ver «Cambios v1.7») |
 | `Agent(subagent_type="AgenteDetractor", name="…", …)` | `"Spawned successfully"` (275-307 chars) y, al terminar, un `idle_notification`. **El reporte no llega jamás** |
 
 Con `name`, el agente pasa a ser un *teammate* (`taskKind: "in_process_teammate"`), cuyo único
@@ -627,9 +627,13 @@ gastar un reintento, buscar el reporte en la transcripción del agente:
 
 ```bash
 D=~/.claude/projects/<proyecto-slug>/<session-id>/subagents
-ls -t "$D"/*<nombre-agente>*.jsonl | head -1
+ls -t "$D"/agent-<agentId>.jsonl          # el agentId viene en el acuse «Async agent launched»
+grep -l '"agentType":"AgenteDetractor"' "$D"/*.meta.json   # sin agentId: el .meta.json trae agentType y parentAgentId
 # extraer el ÚLTIMO content[].text de role: assistant de ese .jsonl
 ```
+
+Los subagentes de un subagente (por ejemplo, el detractor que lanza un orquestador) también quedan en
+el `subagents/` de la sesión principal, con `parentAgentId` en su `.meta.json` (medido el 2026-10-31).
 
 Si el reporte está ahí y cierra con `VEREDICTO_DETRACTOR:`, **la FASE 2C está cumplida**: se usa
 ese reporte y no se reclama nada. Dos cautelas medidas:
@@ -641,6 +645,10 @@ ese reporte y no se reclama nada. Dos cautelas medidas:
 - **Si el `tool_result` empezaba por `"Spawned successfully"`**, el detractor se lanzó **con
   `name:`** y por tanto como *teammate*, que no tiene canal de entrega hacia arriba. Eso no es una
   no-entrega del agente sino un error de invocación: relanzarlo **sin `name`** en vez de reclamar.
+- **Si el `tool_result` decía «Async agent launched»**, el lanzamiento fue correcto y asíncrono: el
+  reporte todavía no había llegado. Si quien lo lanzó cerró su turno antes de la notificación, el
+  reporte no le llegó a él, pero existe en la transcripción: se recupera con este Paso 0, no se
+  reclama (v1.7).
 
 `TaskOutput` **NO** sirve para esto: está deprecado y su propia descripción desaconseja leer el
 `.output` de un `local_agent` (es un symlink a la transcripción íntegra y desborda el contexto).
@@ -688,14 +696,32 @@ Con el detractor obligatorio:
 
 ---
 
-**Versión**: 1.5
-**Fecha**: 2026-09-13
+**Versión**: 1.7
+**Fecha**: 2026-11-02
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: NINGUNA
 **Skill asociado**: `.claude/skills/detractor/SKILL.md`
 **Agente asociado**: `.claude/agents/agente-detractor.md`
 **Detractor heterogéneo**: `.claude/scripts/detractor-hetero.sh` · `/detractor-hetero`
 **Verificador de citas**: `.claude/scripts/verificar_citas_detractor.py` (hook `SubagentStop` en `.claude/settings.json`)
+
+### Cambios v1.7 (2026-11-02) — el lanzamiento sin `name:` es asíncrono
+
+- **Qué cambia.** El Paso 0 y la tabla de la regla de spawn dicen ahora que, sin `name:`, el `tool_result`
+  es el acuse «Async agent launched» con un `agentId`, y que el reporte llega después, en una notificación. Ese
+  acuse no es una entrega ni una no-entrega. Quien lanza espera el reporte antes de cerrar el suyo, y lo que
+  llegue después se recupera de `subagents/agent-<agentId>.jsonl`. Los dos orquestadores lo recogen en su punto
+  7 de «Cómo lanzo YO», y en su punto 8 dicen cómo transmitir el veredicto sin copiar el marcador literal, para
+  que el hook de citas no los evalúe como si fueran el detractor.
+- **Origen, medido en la tanda 9a del CLOZE de `totales-promedios-reciclaje-n3` (2026-10-31).** El orquestador
+  lanzó un `AgenteDetractor` y un `AgenteValidadorVisual` sin `name:`, y los dos devolvieron «Async agent
+  launched» al instante. Esperarlos le costó 19 de sus 41 turnos, porque un Bash en primer plano pasa a segundo
+  plano a los 180 s aunque pida 600 000 ms. Al transmitir el veredicto con el marcador literal, el hook
+  `SubagentStop` lo bloqueó (`citas-detractor.log`: «BLOQUEADO (1/3)»), porque se aplica a cualquier subagente cuyo
+  último mensaje lo contenga y toma como hallazgo toda fila que empiece por un identificador.
+- **Ya había pasado.** En la tanda 6 del mismo CLOZE, el reporte de la 6b llegó después de que el orquestador
+  cerrara el suyo. Las definiciones de los orquestadores seguían diciendo «subagente bloqueante».
+- **Decisión:** el profesor aprobó las candidatas #3 y #5 de la tanda 9a el 2026-11-02 («Las tres, ahora»).
 
 ### Cambios v1.6 (2026-10-20) — citas verificables, con hook que no deja terminar
 - **Origen**: el 2026-06-16 un detractor reportó un «bug crítico» sobre una reconstrucción

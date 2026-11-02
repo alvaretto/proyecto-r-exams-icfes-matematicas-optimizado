@@ -8,6 +8,36 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.36.0 (2026-11-02)
+
+- **Regla #9 v1.7: el lanzamiento sin `name:` es asíncrono.** Cambia la versión compacta (Paso 0).
+  - **Qué dice:** «Async agent launched» es el acuse del lanzamiento, no una entrega ni una no-entrega. Quien
+    lanza espera el reporte antes de cerrar el suyo, y lo que llegue tarde se recupera de
+    `subagents/agent-<agentId>.jsonl`. El íntegro corrige la tabla de spawn, que daba el reporte como `tool_result`, y
+    el `ls` del Paso 0, que buscaba el nombre del agente en un archivo que solo lleva su `agentId`.
+  - **Los dos orquestadores** (`orquestador-schoice.md` y `orquestador-cloze.md`, paridad) dejan de llamar
+    «bloqueante» al lanzamiento sin `name:`. En «Cómo lanzo YO» ganan dos puntos:
+    - el 7, no cerrar el reporte con subagentes pendientes, y contar la espera en el presupuesto de turnos;
+    - el 8, transmitir el veredicto de la FASE 2C sin copiar el marcador literal del detractor.
+  - **Origen:** la tanda 9a del CLOZE de `totales-promedios-reciclaje-n3` (2026-10-31).
+    - Los dos subagentes devolvieron el acuse al instante, y esperarlos costó 19 de 41 turnos.
+    - El hook de citas bloqueó al orquestador (1/3) por transmitir el marcador.
+    - En la tanda 6 del mismo CLOZE, la 6b llegó después de cerrar el reporte.
+  - **Guarda:** `test_contrato_entrega_orquestadores.R` comprueba que los dos orquestadores declaren el lanzamiento
+    asíncrono y el punto 8, y que ya no digan «subagente bloqueante». Un mutante sobre una copia tiene que fallar.
+- **Regla #22, texto íntegro, §P7-E: «exacta» sobre qué sorteos.** Es una aclaración y no toca la versión compacta.
+  - **Qué dice:** toda cifra que se lleve a firma, o que la puerta llame exacta, dice sobre qué sorteos lo es y sobre
+    cuáles es muestral, con su N. Integrar exacto un sorteo no le quita el ruido de los otros.
+  - **Origen:** el mismo CLOZE, tres veces: el ruido de la Parte 1 en L-C5 (tanda 5), X6 +8,5 frente a +6,0 (tanda 8),
+    y en la FASE 2C r3, cinco réplicas de la Parte 1 con X6 por clave entre +3,0 y +10,5 pp en PROMEDIO.
+- **Decisión:** el profesor aprobó las candidatas #3, #4 y #5 de la tanda 9a el 2026-11-02 («Las tres, ahora»).
+- **Análisis de promoción del 2026-11-02**, tras la decisión posterior a la tanda 9a:
+  - **No se promueve** la lectura del sello del paso 7: un cambio pedido por un `APROBAR_CON_CAMBIOS` que no toca el
+    `.Rmd` ni las cifras firmadas no exige otro detractor. Es la primera vez y suaviza la lectura literal de la regla #9
+    (H-5). Queda como decisión del ítem.
+  - **Quedan como residuo del ítem:** X6 por clave y por rama, y H3 (diferido).
+- **Respaldo previo:** `.claude/backups/2026-11-02-candidatas-9a/`.
+
 ### Cambios v3.35.0 (2026-10-31)
 
 - **Regla #22 v1.11, §P7-E: la firma de un override se pide y se cablea regla por regla.** Cambia la versión compacta.

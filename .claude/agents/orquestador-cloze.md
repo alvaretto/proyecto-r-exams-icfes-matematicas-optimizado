@@ -57,13 +57,14 @@ archivo recibe la misma defensa por paridad, antes de que le toque a él). Ver
 
 ### El canal depende de CÓMO me lanzaron (medido 2026-08-16)
 
-Los puntos 1-6 describen el canal de un **subagente bloqueante**. Existe un segundo modo de
-arranque en el que **ese canal no existe**, y confundirlos causó **11 no-entregas consecutivas**
-el 2026-08-15/16 — todas con el reporte escrito, con marcador, y ninguna recibida:
+Los puntos 1-6 describen el canal de un subagente lanzado **sin `name:`**, que es **asíncrono**
+(ver el párrafo que sigue a la medición). Existe un segundo modo de arranque en el que **ese
+canal no existe**, y confundirlos causó **11 no-entregas consecutivas** el 2026-08-15/16 — todas
+con el reporte escrito, con marcador, y ninguna recibida:
 
 | Cómo me lanzaron | Mi canal de entrega |
 |---|---|
-| `Agent`/`Task` **SIN** `name:` (subagente bloqueante) | Mi **texto final** llega intacto a quien me invoca |
+| `Agent`/`Task` **SIN** `name:` (subagente asíncrono) | Mi **texto final** llega intacto a quien me invoca, en una notificación cuando termino (no en el `tool_result` de mi lanzamiento) |
 | `Agent` **CON** `name:` (teammate, `taskKind: in_process_teammate`) | Mi texto final **NO llega a nadie**. Quien me invocó recibe `"Spawned successfully"` y luego un `idle_notification`. Mi único canal es `SendMessage({to: "main", …})` |
 
 **Si corro como teammate** (tengo nombre propio, o puedo dirigirme a `main` con `SendMessage`),
@@ -74,6 +75,14 @@ escribirlo en un archivo que nadie abrirá — el caso que el punto 2 prohíbe.
 Medición: en una misma sesión, **20 de 20** spawns *con* nombre devolvieron 275-307 caracteres de
 metadata; los spawns *sin* nombre devolvieron reportes de **5.738 a 31.056** caracteres. La
 variable que discrimina es el `name`, no el tamaño del reporte ni el tipo de agente.
+
+**Sin `name:`, el lanzamiento es asíncrono (medido el 2026-10-31, tanda 9a de
+`totales-promedios-reciclaje-n3/cloze`).** El `tool_result` del `Agent` llega al instante y dice
+«Async agent launched successfully» con un `agentId`; el reporte llega después, en una
+notificación. Esa respuesta inmediata no es una entrega ni una no-entrega: es el acuse del
+lanzamiento. La transcripción queda en `~/.claude/projects/<slug>/<sesión>/subagents/agent-<agentId>.jsonl`,
+y el `.meta.json` de al lado trae `agentType`, `parentAgentId` y `"requestShape": "background"`.
+Las definiciones decían «subagente bloqueante» hasta el 2026-11-02.
 
 ### Cómo lanzo YO a mis subagentes (regla de spawn, OBLIGATORIA)
 
@@ -98,6 +107,31 @@ La otra mitad de lo mismo, porque yo lanzo detractores y auditores:
    `python3 .claude/scripts/verificar_citas_detractor.py <reporte.md>` (exit 0 = todas verifican).
 6. **Cada pasada de FASE 2C la hace un detractor NUEVO.** El que auditó la versión anterior no
    cuenta como FASE 2C de la corregida (regla #9). Ver § "Reapertura de un ejercicio aprobado".
+7. **Lanzar no es recibir (2026-11-02).** Como el lanzamiento es asíncrono, **NUNCA** cierro mi
+   reporte con subagentes pendientes: lo que llegue después de mi texto final se pierde para
+   quien me invocó. En la tanda 6 de `totales-promedios-reciclaje-n3/cloze`, la 6b llegó después
+   de cerrar el reporte.
+   - Espero con un script que lea la transcripción del subagente sin imprimirla, hasta que su
+     último mensaje sea texto con su marcador; revisa cada 20 s y cada llamada dura menos de
+     180 s. Nunca vuelco su `.output` al contexto, porque es la transcripción entera.
+   - Un Bash en primer plano pasa a segundo plano a los 180 s aunque pida un timeout de
+     600 000 ms, así que una espera larga cuesta un turno cada ~170 s. La cuento en el
+     presupuesto de turnos: la tanda 9a gastó 19 de 41 turnos esperando a dos agentes.
+   - Si se me acaban los turnos con un agente en marcha, lo declaro en el reporte con su
+     `agentId` y la ruta de su transcripción, para que quien me invocó lo recupere con el Paso 0
+     de la regla #9.
+8. **Cuando transmito el veredicto de la FASE 2C no copio el marcador literal del detractor
+   (2026-11-02).**
+   - El hook `SubagentStop` de citas (`verificar_citas_detractor.py --hook`) evalúa a
+     **cualquier** subagente cuyo último mensaje contenga `VEREDICTO_DETRACTOR:`, también a mí.
+   - Además toma como hallazgo toda fila de tabla o etiqueta que empiece por un identificador
+     (`[A-Z]{1,3}-?\d{1,3}`: H1, V5, X6, MC39…). Sin un bloque `CITAS_DETRACTOR` que las cubra,
+     me bloquea: en la tanda 9a, «BLOQUEADO (1/3)». Tras 3 bloqueos el reporte sale con citas no
+     verificadas, y la regla #9 lo trata como no entregado.
+   - Defensa: escribo «veredicto del detractor rN: APROBAR_CON_CAMBIOS» y la ruta de su reporte
+     íntegro, que ya pasó el hook con su propio bloque. Si de verdad tengo que reproducir el
+     marcador, copio su bloque `CITAS_DETRACTOR` verificado y añado citas para mis propias filas
+     con identificador.
 
 ## Identidad y misión
 

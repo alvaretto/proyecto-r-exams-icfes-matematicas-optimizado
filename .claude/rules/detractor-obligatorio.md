@@ -16,7 +16,7 @@ El detractor DEBE ser un agente **distinto del que escribió o corrigió** el ar
 
 ## Protocolo de no-entrega
 El reporte está entregado sólo si su última línea es `VEREDICTO_DETRACTOR: APROBAR | APROBAR_CON_CAMBIOS | RECHAZAR`.
-0. **Recuperar antes de reclamar**: buscar el reporte en la transcripción del subagente (`.jsonl`); si está con marcador, la FASE 2C está cumplida.
+0. **Recuperar antes de reclamar**: buscar el reporte en la transcripción del subagente (`subagents/agent-<agentId>.jsonl`); si está con marcador, la FASE 2C está cumplida. Sin `name:` el lanzamiento es **asíncrono** (v1.7): «Async agent launched» es el acuse del lanzamiento, no una entrega ni una no-entrega. Quien lanza espera el reporte antes de cerrar el suyo, y lo que llegue después se recupera así.
 1. Reclamar al mismo agente (`SendMessage`). 2. Lanzar un agente nuevo. 3. Tras 2 fallos, escalar al usuario.
 
 PROHIBIDO sustituir el detractor por la auditoría propia, sellar `detractor_fase2c` o declarar el ejercicio listo. La revisión propia se permite sólo declarada como **no independiente**, dejando la FASE 2C abierta.
@@ -26,4 +26,4 @@ Antes del marcador, el bloque `CITAS_DETRACTOR` … `FIN_CITAS_DETRACTOR`: por h
 
 **Tests:** `tests/testthat/test_contrato_detractor.R`, `tests/testthat/test_citas_detractor.R`.
 
-**Versión**: 1.6 · compacta desde 2026-09-29 · Excepciones: NINGUNA.
+**Versión**: 1.7 (2026-11-02: el lanzamiento sin `name:` es asíncrono, Paso 0) · compacta desde 2026-09-29 · Excepciones: NINGUNA.

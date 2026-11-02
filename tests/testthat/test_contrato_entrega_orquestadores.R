@@ -331,3 +331,77 @@ test_that("verificar_check23_padre() caza el check 23 sin la carpeta padre", {
   expect_false(r_m$defensa_padre,
     info = "MUTANTE no cazado: el detector no ve la defensa del Incidente O sin la carpeta padre")
 })
+
+# =============================================================================
+context("Lanzamiento asíncrono y transmisión de la FASE 2C (regla #9 v1.7, 2026-11-02)")
+
+# La tanda 9a del CLOZE de `totales-promedios-reciclaje-n3` (2026-10-31) midió que el
+# `Agent` sin `name:` devuelve «Async agent launched» al instante y que el reporte llega
+# después, por notificación. Las dos definiciones lo llamaban «subagente bloqueante», y
+# un orquestador que cierra su reporte con agentes pendientes los pierde (la 6b de la
+# tanda 6 llegó tarde). Además, el hook SubagentStop de citas bloqueó al orquestador que
+# transmitía el marcador literal del detractor. El detector fija las dos defensas en los
+# dos orquestadores, por paridad. Como los de arriba, es una función de la ruta, para
+# poder mutarla sobre una copia sin tocar el archivo real.
+verificar_lanzamiento_asincrono <- function(path) {
+  if (!file.exists(path)) return(list(existe = FALSE))
+  txt <- leer(path)
+  list(
+    existe          = TRUE,
+    # La afirmación vieja, no la mención histórica («decían "subagente bloqueante" hasta…»).
+    sin_bloqueante  = !grepl("(subagente bloqueante)", txt, fixed = TRUE) &&
+                      !grepl("canal de un **subagente bloqueante**", txt, fixed = TRUE),
+    declara_acuse   = grepl("Async agent launched", txt, fixed = TRUE),
+    no_cierra_pend  = grepl("NUNCA\\*\\*\\s+cierro\\s+mi\\s+reporte\\s+con\\s+subagentes\\s+pendientes", txt, perl = TRUE),
+    no_copia_marca  = grepl("no\\s+copio\\s+el\\s+marcador\\s+literal\\s+del\\s+detractor", txt, perl = TRUE)
+  )
+}
+CLAVES_ASINC <- c("sin_bloqueante", "declara_acuse", "no_cierra_pend", "no_copia_marca")
+
+for (agente in ORQUESTADORES) {
+  local({
+    path <- file.path(AGENTS_DIR, paste0(agente, ".md"))
+    test_that(paste0(agente, ": declara el lanzamiento asíncrono y no copia el marcador del detractor"), {
+      skip_if_not(file.exists(path))
+      r <- verificar_lanzamiento_asincrono(path)
+      for (k in CLAVES_ASINC) {
+        expect_true(isTRUE(r[[k]]),
+          info = paste0(agente, ": falla `", k, "`. Sin esto, el orquestador cierra su reporte con ",
+                        "subagentes pendientes o el hook de citas lo bloquea por transmitir el marcador ",
+                        "(regla #9 v1.7, tanda 9a del CLOZE de totales-promedios-reciclaje-n3)."))
+      }
+    })
+  })
+}
+
+# Control positivo: cada defensa se revierte en una COPIA y el detector tiene que verlo.
+test_that("verificar_lanzamiento_asincrono() caza cada defensa revertida", {
+  origen <- file.path(AGENTS_DIR, "orquestador-cloze.md")
+  skip_if_not(file.exists(origen))
+  fixture_dir <- file.path(tempdir(), "asinc-fixture")
+  dir.create(fixture_dir, showWarnings = FALSE, recursive = TRUE)
+  on.exit(unlink(fixture_dir, recursive = TRUE), add = TRUE)
+  txt <- leer(origen)
+
+  sano <- file.path(fixture_dir, "sano.md"); writeLines(txt, sano)
+  r_sano <- verificar_lanzamiento_asincrono(sano)
+  for (k in CLAVES_ASINC) expect_true(isTRUE(r_sano[[k]]),
+    info = paste0("La copia INTACTA falla en `", k, "`: el detector está mal calibrado, no el archivo."))
+
+  mutantes <- list(
+    sin_bloqueante = function(t) sub("(subagente asíncrono)", "(subagente bloqueante)", t, fixed = TRUE),
+    declara_acuse  = function(t) gsub("Async agent launched", "Agent launched", t, fixed = TRUE),
+    no_cierra_pend = function(t) sub("NUNCA\\*\\*(\\s+)cierro", "A veces\\1cierro", t, perl = TRUE),
+    no_copia_marca = function(t) sub("no(\\s+)copio(\\s+)el(\\s+)marcador", "sí\\1copio\\2el\\3marcador", t, perl = TRUE)
+  )
+  for (k in names(mutantes)) {
+    m <- mutantes[[k]](txt)
+    expect_false(identical(m, txt), info = paste0("El mutante de `", k, "` no cambió nada: no prueba lo que dice probar"))
+    p <- file.path(fixture_dir, paste0("mut_", k, ".md")); writeLines(m, p)
+    r <- verificar_lanzamiento_asincrono(p)
+    expect_false(isTRUE(r[[k]]), info = paste0("MUTANTE no cazado: `", k, "` revertida y el detector no lo ve"))
+    otros <- setdiff(CLAVES_ASINC, k)
+    expect_true(all(vapply(otros, function(o) isTRUE(r[[o]]), logical(1))),
+      info = paste0("El mutante de `", k, "` rompió otras defensas: no aísla lo que prueba"))
+  }
+})

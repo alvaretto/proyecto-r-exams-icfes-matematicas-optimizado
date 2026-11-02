@@ -545,6 +545,23 @@ Origen: el mismo CLOZE, tanda 8. Las Partes 2 y 6 ya se medían exactas (L-C4 v2
 separado, +9,0, +9,0 y +0,0. El profesor decidió la medida exacta («Va») sin ver el desglose, que se declaró después
 en el registro de su firma.
 
+**«Exacta» sobre qué sorteos (aclaración del 2026-11-02, sin cambio de norma).**
+- Toda cifra que se lleve a firma, o que la puerta llame «exacta», dice **sobre qué sorteos es exacta y sobre cuáles
+  es muestral**, con su N. Por ejemplo: «exacta sobre el sorteo de la Parte 2 y muestral sobre la Parte 1 (N = 100
+  por estrato)». El rótulo lo imprime el verificador y lo repite quien pide la firma.
+- Integrar exacto un sorteo no le quita a la cifra el ruido de los otros. La cifra sigue siendo muestral, y su
+  dispersión entre muestras disjuntas es la de los sorteos que no se enumeraron. El desglose por valor del sorteo
+  exacto también es muestral sobre el resto, y suele serlo más, porque cada valor reparte la misma muestra.
+- Si la cifra muestral queda cerca del umbral, su dispersión se puede medir con réplicas disjuntas del mismo N,
+  como hizo la FASE 2C r3, sin subir el N (regla #23). Lo que decide sigue siendo la vara de §P7, con su NO
+  CONCLUYENTE; las réplicas solo informan la decisión.
+
+Origen: el mismo CLOZE, tres veces. En la tanda 5, el ruido de la Parte 1 movía 0,3 pp de mediana las cifras de H2
+(L-C5). En la tanda 8, X6 daba +8,5 pp en la muestra y +6,0 «exacta», y esa «exacta» lo era solo sobre la Parte 2. En
+la FASE 2C r3 (tanda 9a), cinco réplicas disjuntas de la Parte 1 dieron X6 por rama de +2,0 a +7,0 pp en PROMEDIO, y
+por clave, de +3,0 a +10,5. El registro de «Va» llamaba «exacta» a una cifra que solo lo era sobre la Parte 2. El
+profesor dejó el desglose por clave como residuo declarado (2026-11-02).
+
 #### Por qué NO se cableó dentro de `validar_diagnosticidad.R`
 
 Se evaluó y se descartó **a propósito**. Sus sondas H1/H2/H3/H3b son genéricas porque miden

@@ -53,6 +53,10 @@ Consolidado: `.claude/docs/REGLAS_CRITICAS.md` (leer bajo demanda). Cada ruta `.
    `CITAS_DETRACTOR` (por hallazgo, `ID | ruta:línea | fragmento literal` o `AUSENTE:`), y el hook
    `SubagentStop` (`verificar_citas_detractor.py --hook`) **no deja terminar** al detractor mientras
    una cita no coincida con el archivo: un detractor ya citó código inventado (2026-06-16).
+   **Desde la v1.7 (2026-11-02): el lanzamiento sin `name:` es asíncrono.** «Async agent launched»
+   es el acuse, no una entrega ni una no-entrega; quien lanza espera el reporte antes de cerrar el
+   suyo, y lo que llegue tarde se recupera por el Paso 0. Un orquestador que transmite el veredicto
+   no copia el marcador literal, porque el hook de citas lo evaluaría a él.
 10. **Validación _neg_ opciones repetidas** → .claude/rules/validacion-neg-opciones-repetidas.md
 11. **Contextos narrativos creativos** (no mecánicos) → .claude/rules/contextos-narrativos-creativos.md
 12. **Validación semántica automática** (Nivel 4: descripción ↔ datos) → .claude/rules/ejercicios-metacognitivos.md (sección Validación Semántica)
@@ -185,8 +189,8 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.35.0 (regla #22 v1.11, §P7-E: la firma de un override se pide y se cablea regla por regla, y un tope por estrato no es alcance, ahora también en la versión compacta; texto íntegro: los sorteos finitos se integran exactos en la puerta)
-**Fecha**: 2026-10-31
+**Versión**: 3.36.0 (regla #9 v1.7: el lanzamiento sin `name:` es asíncrono, en el Paso 0 y en los dos orquestadores, que tampoco copian el marcador del detractor al transmitirlo; regla #22, texto íntegro: «exacta» dice sobre qué sorteos lo es y sobre cuáles es muestral)
+**Fecha**: 2026-11-02
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)
 **Copia íntegra del índice anterior (v3.24.0) y script de reversión**: `.claude/backups/2026-09-07-recorte-contexto/`
