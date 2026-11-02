@@ -1201,3 +1201,41 @@ paso 7, en la tanda 9b.
 - **¿Ley local o regla?** Ninguna nueva. Los validadores de la familia A no escriben en su salida el md5 del `.Rmd` que midieron,
   y por eso esta tanda tuvo que repetirlos. Se propone como mejora de herramienta al coordinador. No cumple el criterio de regla:
   no produjo ningún defecto y no se ha repetido.
+
+### Aprobación del CLOZE y auditoría del sellado del SCHOICE (2026-11-02)
+
+> **Firmada por el profesor el 2026-11-02**, en el WAIT_USER #3 de la tanda 9b. Respuestas literales: aprobación «[a] Aprobar»;
+> candidatas 1 y 2 de la 9b, «Anotar»; candidata 3, «Auditar ahora». Regla #24 **H-5**.
+
+**CLOZE aprobado para el aula: md5 `f98f9dda47e4f3cafc4e8b4e82cc956b`, 11/11** (`aprobacion_usuario` sellado con su nota).
+Se aprueba con los residuos declarados en el HANDOFF. MC39 no lo ha revisado ningún detractor; lo revisa el próximo. Uso: Moodle,
+con `exportar_moodle_cloze.R`. El DOCX no es apto para estudiantes; para papel, el SCHOICE. **No está en producción:** falta la
+evidencia de aula, y la promoción viene después.
+
+**Candidatas 1 y 2 de la 9b, anotadas** en `.claude/docs/HANDOFF_REPO.md`, pendiente 9: el md5 en la salida de los validadores y
+el cotejo de `exextra` en el paso 10.
+
+**Auditoría del sellado del SCHOICE (solo lectura; md5 vigente `e293d5c8…`, igual al aprobado).** Los pasos 3 a 6 se sellaron
+en lote el 2026-10-29 a las 20:51:24, y los pasos 7 a 10 a las 21:05:03, con milisegundos entre unos y otros. Cada nota nombra
+un artefacto que existe y es anterior a su sello:
+
+| Paso | Artefacto | Resultado |
+|---|---|---|
+| 3 y 9 | `salida/verificar_espacio_ronda4b.txt` | Se sobrescribió a las 22:32, después del sello. Lo hizo el verificador más estricto de `e9c85009` (§P7-E v1.9: «rojo cubierto», nunca APROBADO), sobre el mismo md5. Hoy dice: EN ROJO BAJO OVERRIDE FIRMADO, 13 canales, 0 fallos y 0 pendientes. La nota cita «APROBADO (0 fallos)», que era la salida anterior |
+| 5 | `salida/r4b/` | 20 HTML, 3 PDF, 2 NOPS, 3 DOCX y Moodle |
+| 6 | informe del hook del 2026-10-29, 20:43 | Declara el md5 |
+| 7 | `salida/fase2c_r4b_detractor.md` (21:03:40) | Lleva el marcador y el md5. Las citas las verificó a mano el coordinador a las 21:03:38: 8, sin problemas. Hoy fallan 5, porque los hallazgos H3 y H4 ya se corrigieron |
+| 8 | `salida/paso8_r4_coherencias.md` (r4) más la invariancia r4 → r4b (texto visible idéntico en 100/100) | Arrastre declarado en la nota |
+| 9 | `salida/r4b/paso9_validadores.txt` | Declara el md5 |
+| 10 | `salida/r4b/diff_r3_r4b.patch` | Cero líneas `ex*`: la meta-información no cambió |
+
+**Conclusión:** los sellos tienen artefacto. El lote es un defecto de procedimiento, no un trabajo sin hacer, y no hace falta
+reabrir. **Hallazgo nuevo, del repo:** los dos detractores del SCHOICE (r4 y r4b) entregaron su reporte con la herramienta
+`SubagentHandback`. El hook de citas solo lee el texto final, así que no los evaluó ni dejó registro, y los cubrió la verificación
+manual. Queda en el pendiente 10 de `HANDOFF_REPO.md`, y se lleva al profesor.
+
+**¿Ley local o regla?**
+- La aprobación y las anotaciones no crean ley.
+- El hueco del hook cumple el criterio de promoción: es general, porque vale para todo detractor; es grave, porque desactiva en
+  silencio la defensa contra citas inventadas; se repitió dos veces; ningún gate lo ve, y `test_citas_detractor.R` no lo cubre.
+  No crea una regla nueva: amplía la guarda de la regla #9 v1.6. Toca `.claude/` (regla #17), así que lo decide el profesor.

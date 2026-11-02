@@ -276,8 +276,25 @@ Rscript tests/testthat/test_post_exams2_cwd.R      # el ejercicio sale del .Rmd;
 8. ~~Suite completa y push de la v3.33.0 (`e9c85009`)~~. **Cerrado el 2026-10-30:** 46/46 (1266,3 s) y push
    `8efdf504..e9c85009`; detalle en § «2026-10-29», v3.33.0. El commit de este archivo se empuja a
    continuación.
+9. **Mejoras de herramienta anotadas el 2026-11-02** (decisión del profesor: «Anotar»), propuestas por la tanda 9b del
+   CLOZE de `totales-promedios-reciclaje-n3`. Ninguna produjo un defecto:
+   - `validar_diversidad_sustantiva.R` y `validar_diagnosticidad.R` (en `SOURCES/scripts_validacion/`, I-10) no escriben
+     en su salida el md5 del `.Rmd` que midieron. Por eso la 9b los repitió para probar a qué versión correspondían.
+   - El cotejo literal de los `exextra` contra el catálogo canónico no lo certifica ningún validador del arsenal. Hay un
+     modelo en `…/totales-promedios-reciclaje-n3/cloze/salida/literalidad_exextra_r9.py`; incorporarlo ampliaría el
+     paso 10 de los dos orquestadores.
+10. **El hook de citas no ve un reporte entregado con `SubagentHandback`** (auditoría del 2026-11-02, pendiente de
+    decisión). `verificar_citas_detractor.py --hook` lee solo `last_assistant_message` o el último texto de la
+    transcripción. Los detractores r4 (19:47) y r4b (21:03) del SCHOICE de `totales-promedios-reciclaje-n3`, el
+    2026-10-29, entregaron con la herramienta `SubagentHandback` (el reporte va en `input.message`). El hook corrió
+    (`hook_success`), no vio el marcador, salió con 0 y no dejó registro. En los dos casos el coordinador verificó las
+    citas a mano antes del sello (11 y 8, sin problemas).
 
 ## Respaldos del día (fuera de git, regla #17)
+
+- `.claude/backups/2026-11-02-candidatas-9a/`: los dos orquestadores, la regla #9 (compacta e íntegra), el íntegro de
+  la #22, el índice, su changelog y `test_contrato_entrega_orquestadores.R`, antes de `acdaac24`, con
+  `sha256_antes.txt`.
 
 - `.claude/backups/2026-10-28-pipefail-activacion-2o/`: el hook con solo la 2N arreglada, el runner, el
   test anterior de pipefail y el HANDOFF de probabilidad-fichas, antes de `54f2a05e`.

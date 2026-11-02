@@ -3,7 +3,7 @@
   "ejercicio": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1",
   "tipo": "cloze",
   "timestamp_inicio": "2026-10-30T21:25:33.191024-05:00",
-  "timestamp_ultima_actualizacion": "2026-11-02T18:30:13.849034-05:00",
+  "timestamp_ultima_actualizacion": "2026-11-02T18:36:40.229861-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -72,8 +72,9 @@
       "nota": "Tanda 9b (2026-11-02), .Rmd md5 f98f9dda47e4f3cafc4e8b4e82cc956b. V1-V4: salida/v1_v4_r8.txt (md5 vigente en la cabecera): 6 ##ANSWERi## = 6 tipos (schoice|schoice|num|num|num|mchoice) = 6 partes; orden e inmediatez OK; exsolution/extol coherentes en 100/100 semillas; 6 partes. V5-V11: salida/v5_v11_r9.py -> v5_v11_r9.txt, 0 fallos: V5 N/A por construcción (Flujo B = n) y medido: 390 gaps en 101 XML, 0 con <img/@@PLUGINFILE@@; 100 HTML con 0 ##ANSWER; 0 diagrama_*.png. V6 OK: M6 y M4 del oráculo coherencias_r9 (setequal por contenido, N = 100, 0 fallos). V7 N/A (ninguna parte ofrece opciones de fuera de su conjunto; unicidad de la Parte 2 por S2). V8/V9: artefactos del paso 9. V10 OK en las hipótesis de la Parte 6: guarda stopifnot, MC6 cazado por su sonda, marcas del XML = veredicto recalculado 100/100 y 30/30. V11 OK por valor, contenido e independencia (verificar_espacio_cloze_r9.txt); a un paso, residuo declarado (11-17 % y 33-63 % por rama). Literalidad: salida/literalidad_exextra_r9.py -> literalidad_exextra_r9.txt, 0 fallos: Competencia, Componente, Afirmación, Evidencia (Arg_E1), Descriptor (D3.10 = niveles_oficiales/N3[9]) y Estándar (Aleatorio_6-7[7]) literales en el catálogo canónico (niveles 426ea08a…, evidencias 427d2e29…, estándares 4862e82c…) e iguales carácter a carácter a ITEM_OFICIAL.md, también Nivel, GradoSugerido, Contenido y TemaEspecifico. DOK 2, Bloom Evaluar, Nivel 3: DOK >= 3 => Nivel >= 3 y Bloom Evaluar => Nivel >= 3 se cumplen. Juicio de literalidad del orquestador con script propio (ningún validador del arsenal la certifica)."
     },
     "aprobacion_usuario": {
-      "completado": false,
-      "timestamp": null
+      "completado": true,
+      "timestamp": "2026-11-02T18:36:40.229861-05:00",
+      "nota": "WAIT_USER #3 de la tanda 9b (2026-11-02): el profesor respondió «[a] Aprobar» y aprueba para el aula la versión md5 f98f9dda47e4f3cafc4e8b4e82cc956b (commit b6525e74). Pasos 1-10 sellados, cada uno tras su artefacto. FASE 2C r3 APROBAR_CON_CAMBIOS sin CORRECCIÓN; paso 8 coherencias_r9 con 0 fallos; 300 de 300 únicas; verificador r9 en exit 4 (327 cifras firmadas, 0 fallos, 0 pendientes). Residuos declarados (HANDOFF § Residuos declarados): X6 por clave y por rama (H1), H3 diferido al próximo ciclo, orden de la Parte 6 NO CONCLUYENTE, V11 a un paso, tipográficos de la decisión 2 a y de la 6b, BAJA del paso 8. MC39 no lo ha revisado ningún detractor: lo revisa el próximo. Uso: Moodle (exportar_moodle_cloze.R); el DOCX no es apto para estudiantes; para papel, el SCHOICE. No está en producción: falta la evidencia de aula."
     }
   },
   "reaperturas": [

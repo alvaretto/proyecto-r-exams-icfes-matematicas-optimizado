@@ -4,6 +4,10 @@
 > [`.claude/CLAUDE.md`](.claude/CLAUDE.md), que prevalecen sobre este archivo. Versionado desde `17dfc787`
 > (versión aprobada en la ronda 3, md5 `cd94b59a…`). **Vigente: md5 `e293d5c812b1f9790e2bb777b62de9a5`
 > (ronda 4b), 11 de 11, aprobada para el aula el 2026-10-29:** ver § «Rondas 4 y 4b».
+> **Auditoría del 2026-11-02 (solo lectura):** los pasos 3 a 6 y 7 a 10 se sellaron en lote, a milisegundos entre sí, pero
+> cada sello tiene un artefacto anterior a él sobre este md5; no hace falta reabrir. Detalle y tabla en
+> [`.claude/CLAUDE.md`](.claude/CLAUDE.md) § «Aprobación del CLOZE y auditoría del sellado del SCHOICE». El CLOZE hermano
+> (`cloze/`) quedó aprobado para el aula ese mismo día.
 
 ## Qué se hizo
 

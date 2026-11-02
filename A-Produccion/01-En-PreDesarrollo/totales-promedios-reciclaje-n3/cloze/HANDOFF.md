@@ -1,7 +1,8 @@
 # HANDOFF — CLOZE `totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1`
 
 > Frase disparadora: «Continúa con el CLOZE de totales-promedios-reciclaje-n3».
-> Última actualización: 2026-11-02, tanda 9b del `orquestador-cloze` (pasos 7 a 10 sellados uno por uno, cada uno tras
+> Última actualización: 2026-11-02, **aprobado por el profesor para el aula («[a] Aprobar»), 11/11**. Antes: tanda 9b del
+> `orquestador-cloze` (pasos 7 a 10 sellados uno por uno, cada uno tras
 > comprobar su artefacto; 10/11; md5 sin cambios; el paso 11 espera la decisión del profesor). Antes: cierre de la tanda 9a por
 > el coordinador (H2 cerrado con MC39; rótulo «muestral sobre la
 > Parte 1» en L-C2; verificador r9 en exit 4, sin pendientes; nada sellado; md5 sin cambios). Antes: tanda 9a del
@@ -16,9 +17,12 @@
 > están en [`../.claude/CLAUDE.md`](../.claude/CLAUDE.md) § «CLOZE hermano». El ítem verbatim, en
 > [`../ITEM_OFICIAL.md`](../ITEM_OFICIAL.md).
 
-## Estado: tanda 9b cerrada (pasos 1 a 10 sellados; el 11, `aprobacion_usuario`, espera la decisión del profesor)
+## Estado: 11/11, aprobado para el aula el 2026-11-02 (falta la evidencia de aula; no está en producción)
 
-`.Rmd`: md5 **`f98f9dda47e4f3cafc4e8b4e82cc956b`** (sin cambios desde la tanda 8). No está aprobado. **No usar en clase.**
+`.Rmd`: md5 **`f98f9dda47e4f3cafc4e8b4e82cc956b`** (sin cambios desde la tanda 8). **Aprobado para el aula** por el profesor en el
+WAIT_USER #3 («[a] Aprobar»), con los residuos de § «Residuos declarados». Uso: Moodle (§ «Uso en el aula»); el DOCX no es
+apto para estudiantes y, para papel, está el SCHOICE. Siguiente hito: la evidencia de aula (Nivel 3). La promoción viene
+después. El próximo detractor revisa MC39, y H3 está diferido al próximo ciclo, junto con el pendiente del SCHOICE.
 
 ## Tanda 9b (2026-11-02): pasos 7 a 10 sellados (registro también en `../.claude/CLAUDE.md`)
 
@@ -515,7 +519,7 @@ propia. Motivo: la clave de la Parte 1 nombra a la sede ganadora y cita *D* = *T
   «si y solo si»). No es falsa.
 - **La vara §P7** está medida sobre opción múltiple simple; aplicarla gap a gap no está calibrado para CLOZE.
 
-## Uso en el aula (cuando esté aprobado)
+## Uso en el aula (aprobado el 2026-11-02)
 
 - **Moodle**, desde `cloze/salida`: `Rscript --no-init-file ../exportar_moodle_cloze.R [n]` (n de 1 a 100; 30 por
   defecto). La pregunta vale 8 puntos.
@@ -545,6 +549,10 @@ maquetar al ancho pedido. El 500 solo lo veían el JavaScript de carga y `--dump
 convierte un ` ` escrito en el texto en el carácter literal: comprobar con `grep -nP '\xa0'`.
 
 ## Próximo paso
+
+**Ahora (2026-11-02):** el CLOZE está aprobado para el aula (11/11). Siguen la evidencia de aula (Nivel 3) y, después,
+la promoción (`/promover-ejercicio`). En el próximo ciclo: H3 (la Solution de la Parte 6), la revisión de MC39 por un detractor
+nuevo y el pendiente del SCHOICE. Los puntos de abajo son historia: ya están cumplidos.
 
 0. ~~Cablear las decisiones 1 y 2 de «Va»~~ (tanda «Va») y ~~la tanda 9a: FASE 2C r3 y paso 8~~ (ejecutados, sin sellar).
 1. ~~**Cerrar la FASE 2C r3 antes de la 9b**~~: cerrada el 2026-11-02 (H1 residuo, H2 MC39, H3 diferido; ver «Decisión del
