@@ -1174,3 +1174,30 @@ paso 7, en la tanda 9b.
   toca el `.Rmd` ni las cifras firmadas no exige otro detractor antes del sello. No se promueve: es la primera vez, no es grave
   y suaviza la lectura literal de «un detractor que auditó una versión anterior no es FASE 2C». Por H-5, eso lo decide un humano
   caso por caso.
+
+### Tanda 9b (2026-11-02): pasos 7 a 10 sellados, uno por uno
+
+> La hizo el `orquestador-cloze` sobre el md5 `f98f9dda47e4f3cafc4e8b4e82cc956b`, con el verificador de `92dc8d69`
+> (`6901624e…`). No cambiaron el `.Rmd`, el verificador, la batería L-C4 v2 (`820e5146…`) ni la lista de L-C7 (`2aa8e742…`). Se
+> sellaron cuatro pasos de `cloze/ejercicio_state.json`, cada uno con su propio `complete`, después de comprobar su artefacto
+> (18:26, 18:27, 18:28 y 18:30). El paso 11 queda para el profesor. Detalle: `cloze/HANDOFF.md` § «Tanda 9b».
+
+- **Paso 7.** Se selló con la FASE 2C r3, como decidió el profesor el 2026-11-02 (decisión 4 de la tanda 9a).
+  `verificar_citas_detractor.py` da exit 0 (9 citas, 0 problemas). La nota declara que MC39 llegó después y que lo revisa el
+  próximo detractor.
+- **Paso 8.** Se selló con `cloze/salida/coherencias_r9/`. Cumple L-C8: S2 por versión, S2 global y la mutación con texto no
+  juzgado, cazada. Da 0 fallos sobre el md5 vigente.
+- **Paso 9.**
+  - `validar_diversidad_sustantiva.R` y `validar_diagnosticidad.R` se volvieron a correr con N = 100
+    (`cloze/salida/*_r9.txt`, con el md5 en la cabecera). Los r8 no lo llevaban, y su procedencia solo se deducía por el mtime.
+    Las salidas r9 son idénticas a las r8.
+  - Por rama, `diagnosticidad_por_rama_r8.txt`. Unicidad: E5, 300 de 300.
+- **Paso 10.** Dos scripts nuevos, de solo lectura, en `cloze/salida/`: `v5_v11_r9.py` y `literalidad_exextra_r9.py`, los dos con
+  0 fallos.
+  - Los seis campos oficiales (Competencia, Componente, Afirmación, Evidencia `Arg_E1`, Descriptor D3.10 = `niveles_oficiales/N3[9]`
+    y Estándar `Aleatorio_6-7[7]`) son literales en el catálogo canónico e iguales, carácter a carácter, a `ITEM_OFICIAL.md`.
+  - V6 se acredita por las comprobaciones M6 y M4 del oráculo, que emparejan por contenido. V7 es N/A. V10 se aplica a las
+    hipótesis de la Parte 6.
+- **¿Ley local o regla?** Ninguna nueva. Los validadores de la familia A no escriben en su salida el md5 del `.Rmd` que midieron,
+  y por eso esta tanda tuvo que repetirlos. Se propone como mejora de herramienta al coordinador. No cumple el criterio de regla:
+  no produjo ningún defecto y no se ha repetido.

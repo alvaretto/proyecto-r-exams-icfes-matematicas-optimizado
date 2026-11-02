@@ -1,0 +1,10 @@
+md5 del .Rmd: f98f9dda47e4f3cafc4e8b4e82cc956b · tanda 9b, 2026-11-02T18:27:35-05:00 · Rscript --no-init-file .claude/scripts/validar_diversidad_sustantiva.R <rmd> (N por defecto)
+Diversidad sustantiva (CLOZE): 6 gap(s) medidos de 6 declarados (encabezados **Parte N.**) | 100 version(es) evaluadas | errores=0
+  gap p1   clave:  95 valor(es) unico(s) de 100  [ok]
+  gap p2   clave:   3 valor(es) unico(s) de 100  [baja]
+  gap p3   clave:  75 valor(es) unico(s) de 100  [ok]
+  gap p4   clave:  74 valor(es) unico(s) de 100  [ok]
+  gap p5   clave:  52 valor(es) unico(s) de 100  [ok]
+  gap p6   clave:  36 valor(es) unico(s) de 100  [ok]
+WARN_DIV_BAJA: la clave varia poco en p2. Ampliar rangos de aleatorizacion.
+exit=0 · 2 s

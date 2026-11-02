@@ -1,7 +1,9 @@
 # HANDOFF — CLOZE `totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1`
 
 > Frase disparadora: «Continúa con el CLOZE de totales-promedios-reciclaje-n3».
-> Última actualización: 2026-11-02, cierre de la tanda 9a por el coordinador (H2 cerrado con MC39; rótulo «muestral sobre la
+> Última actualización: 2026-11-02, tanda 9b del `orquestador-cloze` (pasos 7 a 10 sellados uno por uno, cada uno tras
+> comprobar su artefacto; 10/11; md5 sin cambios; el paso 11 espera la decisión del profesor). Antes: cierre de la tanda 9a por
+> el coordinador (H2 cerrado con MC39; rótulo «muestral sobre la
 > Parte 1» en L-C2; verificador r9 en exit 4, sin pendientes; nada sellado; md5 sin cambios). Antes: tanda 9a del
 > `orquestador-cloze` (FASE 2C r3 `APROBAR_CON_CAMBIOS`, sin CORRECCIÓN; paso 8
 > con el oráculo reconstruido, 0 fallos; nada sellado; md5 sin cambios). Antes: tanda «Va» del coordinador (las decisiones 1 y 2 de «Va», cableadas en
@@ -14,13 +16,32 @@
 > están en [`../.claude/CLAUDE.md`](../.claude/CLAUDE.md) § «CLOZE hermano». El ítem verbatim, en
 > [`../ITEM_OFICIAL.md`](../ITEM_OFICIAL.md).
 
-## Estado: tanda 9a cerrada (pasos 1 a 6 sellados; 7 a 11 pendientes; la FASE 2C r3 y el paso 8, ejecutados sin sellar)
+## Estado: tanda 9b cerrada (pasos 1 a 10 sellados; el 11, `aprobacion_usuario`, espera la decisión del profesor)
 
 `.Rmd`: md5 **`f98f9dda47e4f3cafc4e8b4e82cc956b`** (sin cambios desde la tanda 8). No está aprobado. **No usar en clase.**
+
+## Tanda 9b (2026-11-02): pasos 7 a 10 sellados (registro también en `../.claude/CLAUDE.md`)
+
+- **No cambió nada que no sea el estado:** el `.Rmd` (`f98f9dda…`), `verificar_espacio_cloze.R` (`6901624e…`, el de `92dc8d69`),
+  la batería (`820e5146…`) y la lista firmada (`2aa8e742…`) siguen igual. Se sellaron cuatro pasos, cada uno con su propio
+  `workflow-state.sh complete` y después de comprobar su artefacto. La nota de cada sello nombra el artefacto y su md5 o su cifra.
+  - **Paso 7** (18:26:42): `fase2c_r3_detractor.md` (md5 `70989c4e…`) audita `f98f9dda…`; `verificar_citas_detractor.py` da
+    exit 0 (9 citas, 0 problemas). La nota recoge la decisión del 2026-11-02: H1 queda como residuo, H2 se cerró con MC39 en
+    la r9 y H3 se difiere. MC39 llegó después de la r3, y lo revisa el próximo detractor.
+  - **Paso 8** (18:27:17): `coherencias_r9/`. Los 4 informes y los 7 logs de render llevan el md5 vigente. Resultado: 12 720
+    comprobaciones y 0 fallos; 0 fallos entre formatos (2 declarados en el DOCX); las 88 mutaciones, cazadas por su sonda.
+    L-C8 se cumple: S2 por versión, S2 global y la cuarta paráfrasis cazada.
+  - **Paso 9** (18:28:02):
+    - `diversidad_sustantiva_r9.txt` y `diagnosticidad_r9.txt` se volvieron a correr con N = 100 y el md5 en la cabecera;
+      salen idénticos a los r8.
+    - `diagnosticidad_por_rama_r8.txt` lleva el md5 vigente y n = 100 en los 7 estratos.
+    - E5 de la r9: 300 versiones únicas de 300. FASE 2G: 100 de 100.
+  - **Paso 10** (18:30:13): V1 a V4, en `v1_v4_r8.txt`. V5 a V11, en `v5_v11_r9.py` y su `.txt` (nuevos; 0 fallos). La
+    literalidad de los `exextra` contra el catálogo canónico, en `literalidad_exextra_r9.py` y su `.txt` (nuevos; 0 fallos).
 Verificador (`salida/verificar_espacio_cloze_r9.txt`, con MC39): **exit 4, EN ROJO BAJO OVERRIDE FIRMADO, 327 cifras dentro de lo
 firmado, 0 fallos, 0 pendientes.**
 FASE 2C r3: **`APROBAR_CON_CAMBIOS`**, sin CORRECCIÓN (H1 y H3, al profesor; H2, cerrado por el coordinador con MC39). Paso 8:
-**`VEREDICTO_COHERENCIAS: OK`** (N = 100, 0 fallos). Ninguno de los dos está sellado.
+**`VEREDICTO_COHERENCIAS: OK`** (N = 100, 0 fallos). Los dos se sellaron en la tanda 9b (pasos 7 y 8).
 
 ## Cierre de la tanda 9a (2026-11-02, coordinador; registro también en `../.claude/CLAUDE.md`)
 
@@ -437,6 +458,9 @@ propia. Motivo: la clave de la Parte 1 nombra a la sede ganadora y cita *D* = *T
 
 | Qué | Archivo | Resultado |
 |---|---|---|
+| Paso 9, mediciones repetidas (tanda 9b) | `diversidad_sustantiva_r9.txt`, `diagnosticidad_r9.txt` | md5 vigente en la cabecera, N = 100, exit 0 y 0; idénticas a las r8: 6 de 6 gaps (p2 3 valores, fija-justificada); V9 PASS, p6 excluida por ser mchoice |
+| Paso 10, V5 a V11 (tanda 9b) | `v5_v11_r9.py` → `v5_v11_r9.txt` | 0 fallos: 390 gaps en 101 XML sin imágenes; 100 HTML sin `##ANSWER`; V6 por M6/M4; V7 N/A; V10 guarda + MC6 + marcas recalculadas; V11 por valor, contenido e independencia |
+| Paso 10, literalidad (tanda 9b) | `literalidad_exextra_r9.py` → `literalidad_exextra_r9.txt` | 0 fallos: los 6 campos oficiales, literales en el catálogo (D3.10 = `N3[9]`, estándar `Aleatorio_6-7[7]`) e iguales a `ITEM_OFICIAL.md`; DOK 2, Bloom Evaluar, Nivel 3 coherentes |
 | FASE 2C r3 | `fase2c_r3_detractor.md`; scripts en `fase2c_r3/` | `APROBAR_CON_CAMBIOS`: H1 y H2 MEDIA, H3 BAJA; 0 CORRECCIÓN; citas 9/0 |
 | Paso 8, oráculo reconstruido (tanda 9a) | `coherencias_r9/` (`verificacion_N100.txt`, `verificacion_formatos.txt`, `control_moodle.txt`, `control_html_pdf.txt`) | `VEREDICTO_COHERENCIAS: OK`; N = 100, 0 fallos; 88 mutaciones cazadas por su sonda |
 | Verificador, cierre de la tanda 9a (MC39) | `verificar_espacio_cloze_r9.txt` (445 s); `comparar_r9_va.py`/`.txt` | **exit 4: EN ROJO BAJO OVERRIDE FIRMADO (327 cifras; 0 fallos, 0 pendientes)**. MC39 y su sonda directa, cazados; contra la «Va», solo cambian MC39 (5 líneas) y los 13 rótulos «muestral sobre la Parte 1» |
@@ -534,7 +558,7 @@ convierte un ` ` escrito en el texto en el carácter literal: comprobar con `gr
      El próximo detractor lo revisa.
    - **H3, al profesor (opcional).** Reescribir el «solo si … fuera mayor» de la Solution de la Parte 6. Si se aplica, cambia el
      `.Rmd`: reapertura desde `generacion_rmd`, pasos 3 a 6 y FASE 2C r4 con un detractor nuevo.
-2. **Tanda 9b** (si el `.Rmd` no cambia), cada sello con su propio comando y su artefacto en la nota:
+2. ~~**Tanda 9b**~~: hecha el 2026-11-02, con los pasos 7 a 10 sellados (ver «Tanda 9b», arriba). Texto original:
    - paso 7: `salida/fase2c_r3_detractor.md`, con la decisión del 2026-11-02 (H1 residuo, H2 MC39 en la r9, H3 diferido; MC39
      llegó después de la r3 y lo revisa el próximo detractor);
    - paso 8: `salida/coherencias_r9/`;
@@ -542,3 +566,11 @@ convierte un ` ` escrito en el texto en el carácter literal: comprobar con `gr
      `diagnosticidad_por_rama_r8.txt`, medidos sobre `f98f9dda…`; E5 300/300 en `verificar_espacio_cloze_r9.txt`;
    - paso 10: `salida/v1_v4_r8.txt`, V5 a V11 y la literalidad de los `exextra` contra el catálogo canónico;
    - después, el WAIT_USER #3 con los residuos declarados.
+3. **WAIT_USER #3 (paso 11), pendiente del profesor.** El paquete de aprobación, con los residuos y sus cifras, está en el
+   reporte de la tanda 9b del orquestador; la lista de residuos es la de «Residuos declarados», arriba.
+   - «a»: `workflow-state.sh complete <dir> aprobacion_usuario --nota "<respuesta literal, fecha y md5 f98f9dda…>"`.
+   - «r»: describir qué corregir. Se reabre con `workflow-state.sh reopen <dir> --desde <paso> --motivo "…"`, y la FASE 2C r4
+     la hace un detractor nuevo.
+   - «p»: no se toca nada.
+4. **Después de la aprobación:** aula → evidencia de Nivel 3 → promoción. Quedan para el próximo ciclo H3 de la r3, el pendiente
+   del SCHOICE (decisión 2 a) y la revisión de MC39 por el próximo detractor.
