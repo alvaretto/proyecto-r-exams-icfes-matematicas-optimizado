@@ -1,0 +1,103 @@
+md5 del .Rmd: f98f9dda47e4f3cafc4e8b4e82cc956b 
+
+=== HTML (html/cloze1..100.html) ===
+
+=== PDF (pdf/cloze001..100.pdf) ===
+  páginas por PDF (100 PDF): 4 págs = 4 · 5 págs = 96 PDF
+
+=== DOCX (docx/cloze_s0071.docx, semilla 7) ===
+  (informativo) las opciones aparecen agrupadas tras la Parte 6, con rótulos (a), (b), (c):  TRUE 
+
+=== MOODLE moodle/s001..s100.xml (un XML por semilla, set.seed(s) + n = 1) ===
+
+=== MOODLE moodle_aula/totales_promedios_cloze.xml (30 versiones en un XML: la ruta real del aula) ===
+   TOTAL: gaps 780, etiquetas dentro de gaps: 0 (control positivo y negativo OK) 
+
+=== RESUMEN POR COMPROBACIÓN (OK/total; entre paréntesis, las semillas o preguntas que fallan) ===
+  [OK   ] HTML         100/100 dos tablas, cada una de 3 filas × 3 columnas
+  [OK   ] HTML         100/100 las celdas de las dos tablas = las de la pregunta emitida por R/exams (misma versión)
+  [OK   ] HTML         100/100 ningún ##ANSWERi## sin resolver
+  [OK   ] HTML         100/100 las seis preguntas aparecen en orden
+  [OK   ] HTML         100/100 cada gap (opciones o campo num) va en el párrafo siguiente a su pregunta, con las opciones del exshuffle
+  [OK   ] HTML         100/100 sin LaTeX crudo ni «$» sueltos en el texto visible
+  [OK   ] HTML         100/100 las ecuaciones salieron como MathML/MathJax (cuenta ≥ las de la Solution)
+  [OK   ] HTML         100/100 Solution con el único encabezado de la Parte 2 («Parte 2 · Lecturas del promedio que no sirven») y ninguno del tipo retirado
+  [OK   ] HTML         100/100 la Solution no cita letras de opciones (regla #19)
+  [OK   ] HTML         100/100 bajo el encabezado de la Parte 2, las tres viñetas son las tres opciones incorrectas de la versión con la explicación de su retroalimentación
+  [OK   ] HTML         100/100 «Respuestas»: la línea de la Parte 2 cita la opción correcta
+  [OK   ] HTML         100/100 «Procedimiento»: la línea de la Parte 2 define el promedio por curso
+  [OK   ] HTML         100/100 ni el enunciado ni la Solution conservan texto del tipo retirado de la Parte 2
+  [OK   ] PDF          100/100 ningún ##ANSWERi##, «$» ni LaTeX crudo
+  [OK   ] PDF          100/100 cada pregunta va seguida, sin nada en medio, de sus opciones (Partes 1, 2, 6) o de la pregunta siguiente (3, 4, 5)
+  [OK   ] PDF          100/100 las seis filas de las dos tablas (cabecera y dos filas, completas y en orden) aparecen en el PDF
+  [OK   ] PDF          100/100 la Solution lleva el encabezado de la Parte 2 una sola vez y ninguno del tipo retirado
+  [OK   ] PDF          100/100 las tres viñetas de la Parte 2 (opción incorrecta + explicación de su retroalimentación) aparecen en el PDF
+  [OK   ] PDF          100/100 «Respuestas» cita la opción correcta de la Parte 2 y «Procedimiento» define el promedio por curso
+  [OK   ] PDF          100/100 ni el enunciado ni la Solution conservan texto del tipo retirado de la Parte 2
+  [DECL ] DOCX           0/1   ningún ##ANSWERi## sin resolver (exams2pandoc no procesa los gaps del cloze: DECLARADO, el DOCX no es formato de entrega del CLOZE)  (7) -> marcadores visibles: 6
+  [DECL ] DOCX           0/1   las opciones de la Parte 1 salen justo después de su pregunta (exams2pandoc las agrupa tras la Parte 6: DECLARADO)  (7) -> posición de las opciones de la Parte 1: 2092 · posición de «Parte 2.»: 1549
+  [OK   ] DOCX           1/1   las seis filas de las dos tablas (cabecera y dos filas, completas y en orden)
+  [OK   ] DOCX           1/1   la Solution lleva el encabezado de la Parte 2, sus tres viñetas y la línea de «Respuestas»; nada del tipo retirado
+  [OK   ] MOODLE       100/100 dos tablas, cada una de 3 filas × 3 columnas
+  [OK   ] MOODLE       100/100 ningún ##ANSWERi## sin resolver
+  [OK   ] MOODLE       100/100 las seis preguntas aparecen en orden
+  [OK   ] MOODLE       100/100 cada gap va en el párrafo siguiente a su pregunta
+  [OK   ] MOODLE       100/100 tipos de gap: MULTICHOICE_V, MULTICHOICE_V, NUMERICAL ×3, MULTIRESPONSE
+  [OK   ] MOODLE       100/100 pesos de los gaps 3|1|1|1|1|1 (F-3)
+  [OK   ] MOODLE       100/100 defaultgrade = 8
+  [OK   ] MOODLE       100/100 cuatro opciones en cada gap de elección
+  [OK   ] MOODLE       100/100 los nombres del enunciado = las filas de la tabla 1
+  [OK   ] MOODLE       100/100 Parte 1: una sola verdadera, y es la marcada en el XML
+  [OK   ] MOODLE       100/100 Parte 2: la pregunta es la vigente y cita el material de la tabla del otro colegio
+  [OK   ] MOODLE       100/100 Parte 2: las cuatro opciones salen de mi banco, una sola marcada y es la que juzgué correcta
+  [OK   ] MOODLE       100/100 Partes 3 y 4: el total del grado preguntado, leído de la tabla 2
+  [OK   ] MOODLE       100/100 Parte 5: la diferencia de los dos totales de la tabla 2
+  [OK   ] MOODLE       100/100 tolerancia 0 en las tres Partes numéricas
+  [OK   ] MOODLE       100/100 Parte 6: las marcas del XML = el veredicto recalculado (al menos una verdadera y una falsa)
+  [OK   ] MOODLE       100/100 generalfeedback con texto y sin ##ANSWER
+  [OK   ] MOODLE       100/100 generalfeedback: un único encabezado «Parte 2 · …», el vigente
+  [OK   ] MOODLE       100/100 generalfeedback: las tres viñetas de la Parte 2 son las tres opciones incorrectas del XML, cada una con la explicación propia de su opción
+  [OK   ] MOODLE       100/100 generalfeedback: lo que cada viñeta de la Parte 2 dice que da la operación es cierto con las dos filas de la tabla del XML
+  [OK   ] MOODLE       100/100 generalfeedback: «Respuestas» cita la opción que el XML marca como correcta en la Parte 2
+  [OK   ] MOODLE       100/100 generalfeedback: «Procedimiento» define el promedio por curso
+  [OK   ] MOODLE       100/100 sin texto del tipo retirado de la Parte 2 en la pregunta ni en la retroalimentación
+  [OK   ] MOODLE       100/100 el nombre de la pregunta no lleva ruta
+  [OK   ] MOODLE       100/100 guarda del archivo: 0 desplegables, 2 MULTICHOICE_V + 1 MULTIRESPONSE + 3 NUMERICAL por pregunta
+  [OK   ] MOODLE       100/100 guarda del archivo: ninguna imagen ni @@PLUGINFILE@@ en todo el XML
+  [OK   ] MOODLE       100/100 una sola pregunta cloze por archivo
+  [OK   ] MOODLE       100/100 las celdas de las dos tablas del XML = las que R/exams emite (xexams) para la misma semilla
+  [OK   ] MOODLE_AULA   30/30  dos tablas, cada una de 3 filas × 3 columnas
+  [OK   ] MOODLE_AULA   30/30  ningún ##ANSWERi## sin resolver
+  [OK   ] MOODLE_AULA   30/30  las seis preguntas aparecen en orden
+  [OK   ] MOODLE_AULA   30/30  cada gap va en el párrafo siguiente a su pregunta
+  [OK   ] MOODLE_AULA   30/30  tipos de gap: MULTICHOICE_V, MULTICHOICE_V, NUMERICAL ×3, MULTIRESPONSE
+  [OK   ] MOODLE_AULA   30/30  pesos de los gaps 3|1|1|1|1|1 (F-3)
+  [OK   ] MOODLE_AULA   30/30  defaultgrade = 8
+  [OK   ] MOODLE_AULA   30/30  cuatro opciones en cada gap de elección
+  [OK   ] MOODLE_AULA   30/30  los nombres del enunciado = las filas de la tabla 1
+  [OK   ] MOODLE_AULA   30/30  Parte 1: una sola verdadera, y es la marcada en el XML
+  [OK   ] MOODLE_AULA   30/30  Parte 2: la pregunta es la vigente y cita el material de la tabla del otro colegio
+  [OK   ] MOODLE_AULA   30/30  Parte 2: las cuatro opciones salen de mi banco, una sola marcada y es la que juzgué correcta
+  [OK   ] MOODLE_AULA   30/30  Partes 3 y 4: el total del grado preguntado, leído de la tabla 2
+  [OK   ] MOODLE_AULA   30/30  Parte 5: la diferencia de los dos totales de la tabla 2
+  [OK   ] MOODLE_AULA   30/30  tolerancia 0 en las tres Partes numéricas
+  [OK   ] MOODLE_AULA   30/30  Parte 6: las marcas del XML = el veredicto recalculado (al menos una verdadera y una falsa)
+  [OK   ] MOODLE_AULA   30/30  generalfeedback con texto y sin ##ANSWER
+  [OK   ] MOODLE_AULA   30/30  generalfeedback: un único encabezado «Parte 2 · …», el vigente
+  [OK   ] MOODLE_AULA   30/30  generalfeedback: las tres viñetas de la Parte 2 son las tres opciones incorrectas del XML, cada una con la explicación propia de su opción
+  [OK   ] MOODLE_AULA   30/30  generalfeedback: lo que cada viñeta de la Parte 2 dice que da la operación es cierto con las dos filas de la tabla del XML
+  [OK   ] MOODLE_AULA   30/30  generalfeedback: «Respuestas» cita la opción que el XML marca como correcta en la Parte 2
+  [OK   ] MOODLE_AULA   30/30  generalfeedback: «Procedimiento» define el promedio por curso
+  [OK   ] MOODLE_AULA   30/30  sin texto del tipo retirado de la Parte 2 en la pregunta ni en la retroalimentación
+  [OK   ] MOODLE_AULA   30/30  el nombre de la pregunta no lleva ruta
+  [OK   ] MOODLE_AULA    1/1   guarda del archivo: 0 desplegables, 2 MULTICHOICE_V + 1 MULTIRESPONSE + 3 NUMERICAL por pregunta
+  [OK   ] MOODLE_AULA    1/1   guarda del archivo: ninguna imagen ni @@PLUGINFILE@@ en todo el XML
+  [OK   ] MOODLE_AULA    1/1   30 preguntas cloze
+  [OK   ] MOODLE_AULA    1/1   secuencia de pesos 3|1|1|1|1|1 en cada una de las 30 preguntas (como la guarda del exportador)
+  [OK   ] MOODLE         1/1   ninguna etiqueta HTML dentro de un gap (verificar_gaps_xml.py sobre los 101 XML)
+
+Comprobaciones ejecutadas entre formatos: 5529 (HTML 1300 · PDF 700 · DOCX 4 · MOODLE 2801 · MOODLE_AULA 724)
+Archivos verificados: HTML 100 · PDF 100 · DOCX 1 · XML de Moodle 100 (una pregunta) + 1 del aula (30 preguntas)
+TOTAL de verificaciones fallidas entre formatos (sin las declaradas): 0 
+Verificaciones fallidas DECLARADAS (DOCX de un cloze, no es formato de entrega): 2 
+Rscript --no-init-file verificar_formatos.R  36,71s user 1,02s system 99% cpu 37,891 total

@@ -1,0 +1,31 @@
+md5 del .Rmd: f98f9dda47e4f3cafc4e8b4e82cc956b 
+Control HTML sin mutar (debe dar 0 fallos): 0 de 13 comprobaciones
+  HTML · una celda de la tabla 2 alterada (6 cursos → 7 cursos)                                             CAZADA · sonda propia: sí (1 fallos)
+  HTML · un ##ANSWER2## sin resolver                                                                          CAZADA · sonda propia: sí (1 fallos)
+  HTML · las dos primeras opciones de la Parte 2 intercambiadas                                               CAZADA · sonda propia: sí (1 fallos)
+  HTML · LaTeX crudo a la vista                                                                               CAZADA · sonda propia: sí (1 fallos)
+  HTML · encabezado de la Parte 2 del tipo retirado                                                           CAZADA · sonda propia: sí (3 fallos)
+  HTML · encabezado de la Parte 2 duplicado                                                                   CAZADA · sonda propia: sí (1 fallos)
+  HTML · viñeta con la operación cambiada («la mitad» → «el doble del promedio»)                      CAZADA · sonda propia: sí (1 fallos)
+  HTML · una viñeta de la Parte 2 omitida                                                                    CAZADA · sonda propia: sí (1 fallos)
+  HTML · «Respuestas» de la Parte 2 cita un distractor                                                      CAZADA · sonda propia: sí (1 fallos)
+  HTML · «Procedimiento» de la Parte 2 con el párrafo del tipo retirado                                    CAZADA · sonda propia: sí (2 fallos)
+  HTML · una letra de opción en la Solution (regla #19)                                                      CAZADA · sonda propia: sí (1 fallos)
+  HTML · texto del tipo retirado en el cuerpo                                                                 CAZADA · sonda propia: sí (1 fallos)
+
+Mutaciones de HTML: 12 de 12 cazadas · 12 de 12 por su sonda propia
+
+Control PDF sin mutar (debe dar 0 fallos): 0 de 7 comprobaciones
+  PDF  · un ##ANSWER1## a la vista                                                                            CAZADA · sonda propia: sí (1 fallos)
+  PDF  · el encabezado de la Parte 2 de la Solution ausente                                                   CAZADA · sonda propia: sí (1 fallos)
+  PDF  · el encabezado de la Parte 2 del tipo retirado                                                        CAZADA · sonda propia: sí (2 fallos)
+  PDF  · la primera opción de la Parte 2 repetida (la segunda en su lugar)                                   CAZADA · sonda propia: sí (1 fallos)
+  PDF  · una celda de la tabla alterada (39 kilos → 93 kilos; el texto «39 kilos» sigue en la Solution)   CAZADA · sonda propia: sí (1 fallos)
+  PDF  · texto del tipo retirado a la vista                                                                   CAZADA · sonda propia: sí (1 fallos)
+  PDF  · explicación de una viñeta con la operación cambiada                                               CAZADA · sonda propia: sí (1 fallos)
+  PDF  · «Respuestas» de la Parte 2 cita un distractor (en el texto crudo los « » salen como caracteres de control) CAZADA · sonda propia: sí (1 fallos)
+  PDF  · una fila de la tabla 2 alterada por completo (Séptimo 6 cursos 39 kilos → Séptimo 6 cursos 93 kilos) CAZADA · sonda propia: sí (1 fallos)
+  PDF  · las dos filas de la tabla 2 intercambiadas                                                           CAZADA · sonda propia: sí (1 fallos)
+  PDF  · LaTeX crudo a la vista                                                                               CAZADA · sonda propia: sí (1 fallos)
+
+Mutaciones de PDF: 11 de 11 cazadas · 11 de 11 por su sonda propia

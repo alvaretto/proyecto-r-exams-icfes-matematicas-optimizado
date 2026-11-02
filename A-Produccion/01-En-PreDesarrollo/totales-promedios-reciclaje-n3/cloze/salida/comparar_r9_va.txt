@@ -1,0 +1,9 @@
+Líneas: va 1129, r9 1134; rótulos «muestral» deshechos en la r9: 13; líneas con MC39: 5
+--- líneas de MC39 en la r9:
+      OK: MC39, sonda directa (L-C7, «o que pase de su cifra»): 32 reglas de la lista bajo el tope de su estrato; CURSOS · P6-V «curso habría ganado» ventaja a +13.5 pp (firmada +12.5, tope +25.0): pendiente con la regla por regla, cubierta con la de estrato 
+      OK: MC39 (L-C7, «o que pase de su cifra»: BP_gano gana «perdió hubiera tenido»): CURSOS · P6-V «perdió hubiera tenido»c ventaja +25.0 pp (firmada +12.5, tope +25.0) -> pendiente con la regla por regla; cubierta con la de estrato; PROMEDIO · P6-V «perdió hubiera tenido» ventaja +25.0 pp (firmada +12.5, tope +25.0) -> pendiente con la regla por regla; cubierta con la de estrato — cazado_por_su_sonda 
+    MC39 MC39 cazado_por_su_sonda
+    MC39 L-C7: regla de la lista por encima de su cifra, bajo el tope de su estrato
+    MC39 CURSOS · P6-V «perdió hubiera tenido»c ventaja +25.0 pp (firmada +12.5, tope +25.0) -> pendiente con la regla por regla; cubierta con la de estrato; PROMEDIO · P6-V «perdió hubiera tenido» ventaja +25.0 pp (firmada +12.5, tope +25.0) -> pendiente con la regla por regla; cubierta con la de estrato
+--- tiempo: va ['exit=4 · 439 s'] · r9 ['exit=4 · 445 s']
+--- diff restante: 0 líneas

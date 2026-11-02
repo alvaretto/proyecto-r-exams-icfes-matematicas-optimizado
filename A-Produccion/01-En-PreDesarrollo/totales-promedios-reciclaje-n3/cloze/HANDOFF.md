@@ -1,7 +1,10 @@
 # HANDOFF — CLOZE `totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1`
 
 > Frase disparadora: «Continúa con el CLOZE de totales-promedios-reciclaje-n3».
-> Última actualización: 2026-10-31, tanda «Va» del coordinador (las decisiones 1 y 2 de «Va», cableadas en
+> Última actualización: 2026-11-02, cierre de la tanda 9a por el coordinador (H2 cerrado con MC39; rótulo «muestral sobre la
+> Parte 1» en L-C2; verificador r9 en exit 4, sin pendientes; nada sellado; md5 sin cambios). Antes: tanda 9a del
+> `orquestador-cloze` (FASE 2C r3 `APROBAR_CON_CAMBIOS`, sin CORRECCIÓN; paso 8
+> con el oráculo reconstruido, 0 fallos; nada sellado; md5 sin cambios). Antes: tanda «Va» del coordinador (las decisiones 1 y 2 de «Va», cableadas en
 > `verificar_espacio_cloze.R`; verificador en exit 4, sin pendientes; md5 sin cambios). Antes: tanda 8 del `orquestador-cloze`
 > (decisión b: la Parte 2 solo con «promedio»; leyes L-C6 y L-C7; md5 `f98f9dda…`), detenida antes de la FASE 2C r3, y decisión
 > del profesor tras ella («Va», 2026-10-31: X6 exacta, L-C7 regla por regla, residuo de la 6b); tanda 7 (L-C4 v2 y pasada 3 de §P7-D, md5 `898608dd…`), tanda 6
@@ -11,17 +14,76 @@
 > están en [`../.claude/CLAUDE.md`](../.claude/CLAUDE.md) § «CLOZE hermano». El ítem verbatim, en
 > [`../ITEM_OFICIAL.md`](../ITEM_OFICIAL.md).
 
-## Estado: tanda «Va» cerrada (pasos 1 a 6 sellados; 7 a 11 pendientes)
+## Estado: tanda 9a cerrada (pasos 1 a 6 sellados; 7 a 11 pendientes; la FASE 2C r3 y el paso 8, ejecutados sin sellar)
 
 `.Rmd`: md5 **`f98f9dda47e4f3cafc4e8b4e82cc956b`** (sin cambios desde la tanda 8). No está aprobado. **No usar en clase.**
-Verificador (`salida/verificar_espacio_cloze_va.txt`): **exit 4, EN ROJO BAJO OVERRIDE FIRMADO, 327 cifras dentro de lo firmado,
-0 fallos, 0 pendientes.**
+Verificador (`salida/verificar_espacio_cloze_r9.txt`, con MC39): **exit 4, EN ROJO BAJO OVERRIDE FIRMADO, 327 cifras dentro de lo
+firmado, 0 fallos, 0 pendientes.**
+FASE 2C r3: **`APROBAR_CON_CAMBIOS`**, sin CORRECCIÓN (H1 y H3, al profesor; H2, cerrado por el coordinador con MC39). Paso 8:
+**`VEREDICTO_COHERENCIAS: OK`** (N = 100, 0 fallos). Ninguno de los dos está sellado.
+
+## Cierre de la tanda 9a (2026-11-02, coordinador; registro también en `../.claude/CLAUDE.md`)
+
+- **Solo cambió `verificar_espacio_cloze.R`** (+37/−5 frente a `e11dc058`). El `.Rmd` y `ejercicio_state.json` (6/11), no.
+- **H2 cerrado: MC39 en E8** (L-C7, la cláusula «o que pase de su cifra»):
+  - sonda directa: una de las 32 reglas firmadas bajo el tope de su estrato, subida 1 pp sobre su cifra (CURSOS · «curso habría
+    ganado» a +13,5, firmada +12,5, tope +25,0), queda pendiente con la regla por regla y cubierta con la de estrato;
+  - mutante de texto: BP_gano gana «perdió hubiera tenido», que pasa de +12,5 a +25,0 pp en CURSOS y PROMEDIO:
+    `cazado_por_su_sonda`.
+- **H1, la parte del coordinador:** las 13 líneas de X5, X6 y X10 en E3 dicen «exacta sobre el sorteo de la Parte 2 y muestral
+  sobre la Parte 1 (N = 100)». Las cifras no cambian.
+- **r9** (`salida/verificar_espacio_cloze_r9.txt`, 445 s): exit 4, 327 cifras, 0 fallos, 0 pendientes. Contra la «Va», con los
+  rótulos devueltos a su forma anterior y sin las 5 líneas de MC39, quedan 0 líneas de diferencia (`salida/comparar_r9_va.py`/`.txt`).
+  La primera corrida se cortó al cerrar la sesión del 2026-10-31 (línea 718 de 1 134) y se repitió entera.
+- **L-C8 comprobada en `coherencias_r9/`:** S2 por versión y global, y la mutación con una redacción nueva, cazada.
+- **Fe de erratas:** en la tabla de «Va», «exacta» lo es solo sobre el sorteo de la Parte 2. Sobre la Parte 1 es muestral: una
+  muestra de N = 100 por estrato. Corregido abajo en su sitio; en `../.claude/CLAUDE.md`, como fe de erratas, porque allí solo se
+  añade.
+
+## Decisión del profesor tras la tanda 9a (2026-11-02; texto completo en `../.claude/CLAUDE.md`)
+
+1. **H1 (a):** X6 por clave y por rama, **residuo declarado**. La puerta sigue juzgando por rama. Claves 1 y 2, en las 5 réplicas:
+   CURSOS +2,0 / +10,0 / +4,5 / +11,0 / +4,5 (500 juntas: +6,4); PROMEDIO +9,0 / +8,5 / +10,5 / +3,0 / +7,5 (+7,7); clave 3,
+   +0,0 (`salida/fase2c_r3/x6_replicas.txt`).
+2. **H3 (a): se difiere** al próximo ciclo, junto con el pendiente del SCHOICE. El `.Rmd` no cambia.
+3. **Candidatas del repo #3, #4 y #5: se aplican ahora**, en un commit aparte (regla #17).
+4. **Paso 7 (a): se sella con la r3.** La nota declara que MC39 llegó después; lo revisa el próximo detractor.
+
+## Tanda 9a (2026-10-31): FASE 2C r3 y paso 8, sin sellar (registro también en `../.claude/CLAUDE.md`)
+
+- **No cambió nada sellado:** ni el `.Rmd` (`f98f9dda…`), ni `verificar_espacio_cloze.R`, ni `ejercicio_state.json` (6/11).
+- **FASE 2C r3** (`AgenteDetractor` nuevo, sin `name:`): **`APROBAR_CON_CAMBIOS`**, sin ninguna CORRECCIÓN. Reporte íntegro,
+  sacado de su transcripción: `salida/fase2c_r3_detractor.md`. Citas: `verificar_citas_detractor.py` → 9 citas, 0 problemas; el
+  hook `SubagentStop` registró «ENTREGA VERIFICADA». Sus scripts y salidas: `salida/fase2c_r3/`.
+  - Sin hallazgo, con su código: en la Parte 2 solo la clave da el promedio con todas las lecturas razonables; el tipo retirado
+    no deja rastro; el sorteo conservado solo mueve el RNG (0 diferencias con `898608dd`); reproduce E1, L-C6, la lista de L-C7,
+    las 9 celdas de L-C2, la canónica, RL1 y RL2.
+
+  | ID | Severidad · tipo | Qué | Estado |
+  |---|---|---|---|
+  | H1 | MEDIA · diagnosticidad | L-C2 «exacta» lo es sobre el sorteo de la Parte 2 y muestral sobre la Parte 1. X6 por rama, en 5 réplicas disjuntas de N = 100: CURSOS de +1,3 a +7,3 y PROMEDIO de +2,0 a +7,0 pp («ok» en todas). Claves 1 y 2: CURSOS +2,0 / +10,0 / +4,5 / +11,0 / +4,5 y PROMEDIO +9,0 / +8,5 / +10,5 / +3,0 / +7,5 pp; clave 3, +0,0. La réplica 1 es la del verificador (`salida/fase2c_r3/x6_replicas.txt`) | Al profesor (la lectura por clave que la decisión «Va» 1 le reservó) |
+  | H2 | MEDIA · verificador | Ningún mutante prueba la cláusula «o que pase de su cifra» de L-C7 (`p6_token_juzgar()`, línea 1036): quedan sin prueba las 32 reglas firmadas a la mitad del tope de su estrato | Al coordinador: MC39 |
+  | H3 | BAJA · Solution | Parte 6: «habría ganado con un curso más solo si su promedio … fuera mayor que la diferencia» da solo la condición necesaria y, en el caso verdadero, se lee como contrafáctica. No es falsa | Opcional; cambia el `.Rmd` |
+
+- **Paso 8** (`AgenteValidadorVisual`, sin `name:`; oráculo reconstruido en `salida/coherencias_r9/`):
+  **`VEREDICTO_COHERENCIAS: OK`**.
+  - Juicio propio de las 8 opciones de la Parte 2 (3 correctas y 5 incorrectas), sin abrir el `.Rmd`, y recálculo de cada
+    operación con la tabla mostrada: ninguna incorrecta da el promedio (200 de 200 filas); las explicaciones que dicen qué da una
+    operación, 240 de 240.
+  - N = 100: de 126 a 129 comprobaciones por versión (12 720), 0 fallos. Formatos: HTML 100, PDF 100, Moodle 100 (más 30 por la
+    ruta de `exportar_moodle_cloze.R`), PDF con el pandoc de RStudio 5, DOCX 1 (2 BAJA ya declaradas); 5 529 comprobaciones entre
+    formatos, 0 fallos. 88 mutaciones de control, cazadas por su sonda (40 + 25 + 12 + 11).
+  - Límite de independencia declarado: el volcado del pool le mostró la marca junto a cada texto y `../.claude/CLAUDE.md` le
+    llegó al contexto. Lo independiente es el recálculo numérico, más la función de verdad propia del detractor.
+  - BAJA de redacción: «al cuadrado» con dos lecturas (las dos falsas; la explicación describe una); las claves 2 y 3 están
+    redactadas como operación, no como «lo que indica».
 
 ## Decisión del profesor tras la tanda 8 (2026-10-31, «Va»; texto completo en `../.claude/CLAUDE.md`)
 
-1. **X6 exacta (L-C2).** X5, X6 y X10 se miden exactas sobre el sorteo de la Parte 2 en la mezcla y en las dos ramas. X6 en
-   PROMEDIO pasa de +8,5 pp (muestra) a +6,0 pp (exacta). Por clave da +9,0, +9,0 y +0,0 pp: es un dato que no se mostró al
-   pedir la decisión y está declarado en el registro.
+1. **X6 exacta sobre la Parte 2 (L-C2).** X5, X6 y X10 se miden exactas sobre el sorteo de la Parte 2 en la mezcla y en las
+   dos ramas, y muestrales sobre la Parte 1 (la misma muestra de N = 100 por estrato). X6 en PROMEDIO pasa de +8,5 pp (muestra
+   de todo) a +6,0 pp (exacta sobre la Parte 2). Por clave da +9,0, +9,0 y +0,0 pp: es un dato que no se mostró al pedir la
+   decisión y está declarado en el registro.
 2. **L-C7 regla por regla.** La lista es `firma_p6_palabras_f98f9dda.tsv`: 216 reglas, 54 por estrato de rama y de *k*′. Si
    aparece una palabra por encima de +8 pp que no esté en la lista, queda pendiente.
 3. **6b:** los dos BAJO tipográficos quedan como residuo declarado.
@@ -39,7 +101,8 @@ Las decisiones 1 y 2 quedaron cableadas en la tanda «Va» (abajo).
   - MC37, que estaba antes de `mutar()`;
   - la llegada de MC38, que daba siempre FALSE, y su semilla;
   - MC37, que medía solo la mezcla (+8,5 pp, «cazado» por medio punto). Ahora mide la mezcla y las dos ramas, como la puerta.
-- **Decisión 1 (L-C2, E3).** X5, X6 y X10, exactas sobre el sorteo de la Parte 2: 30 combinaciones (3 claves × 10 tríos).
+- **Decisión 1 (L-C2, E3).** X5, X6 y X10, exactas sobre el sorteo de la Parte 2 (30 combinaciones: 3 claves × 10 tríos) y
+  muestrales sobre la Parte 1 (una muestra de N = 100 por estrato; fe de erratas del 2026-11-02).
   - Mezcla, CURSOS y PROMEDIO: X5 −4,2 / −2,9 / −6,4; X6 −0,1 / +1,3 / +6,0; X10 −7,3 / −4,0 / +2,7 pp. Todas «ok».
   - X6 por clave en PROMEDIO: +9,0 / +9,0 / +0,0 pp.
   - Supuesto del sorteo: 300/300.
@@ -356,9 +419,9 @@ propia. Motivo: la clave de la Parte 1 nombra a la sede ganadora y cita *D* = *T
 | L-C5 · H2 en la Parte 6, regla por regla y por estrato («H2 a», tanda 5) | E8: `FIRMA_H2` (69 celdas) y `h2_juzgar()` sobre la enumeración exacta de `enumerar_h2_cloze.R` (100 Partes 1, con las exclusiones de V11); dentro, «cubierto» (exit 4); por encima o fuera de la firma, pendiente | MC25 (PROMEDIO con *k*′ = 1: K1 +50,0 pp), MC26 (CURSOS con δ′ < 10: D2), MC27 (`v_c <- !v_hp`: RL2 · HP); las demás celdas, sin mutante propio |
 | L-C3 ampliada · canónica de la Parte 1 regla por regla (decisión 2 a, tanda 4) | E4: `FIRMA_P1_CANON` (12 reglas) y `FIRMA_P1_SONDAS` (12 sondas), exactas; dentro, «cubierto» (exit 4) | MP1 («quedarse con 'promedio'» a +75,0), MP2 («más dígitos» a +75,0), sobre copias del registro canónico; las nueve al 100 % no pueden subir |
 | L-C3 · X6, X9, X10 y X11 en la canónica (ampliada en la tanda 3) | `FIRMA_CANON` (+16,7, +25,0, +16,7 y +12,5 pp, exactas); `veredicto_canon()` sobre la enumeración exacta de `enumerar_canonica_cloze.R`, las once reglas: dentro, «ROJO, cubierto» (exit 4, nunca PASS); por encima, o cualquier otra regla > +8 pp, pendiente | MC18 (X9 +50,0), MC19 (X6 +25,0), MC20 (X10 +25,0), MC21 (X11 +25,0): cada uno saca su regla de «cubierto» |
-| L-C2 · X5, X6 y X10 exactas sobre el sorteo de la Parte 2 (decisión «Va» 1) | E3: `medir_exacta_p2()` (3 claves × C(5,3) tríos) y `veredicto_cruzado()` en la mezcla y en cada rama; supuesto del sorteo con `ok()` (300/300) | MC37 (las tres claves ganan «aunque fue menor»: X6 exacta +38,2 pp en CURSOS → pendiente) |
+| L-C2 · X5, X6 y X10 exactas sobre el sorteo de la Parte 2 y muestrales sobre la Parte 1, N = 100 por estrato (decisión «Va» 1) | E3: `medir_exacta_p2()` (3 claves × C(5,3) tríos) y `veredicto_cruzado()` en la mezcla y en cada rama; supuesto del sorteo con `ok()` (300/300); el rótulo declara las dos cosas desde la r9 | MC37 (las tres claves ganan «aunque fue menor»: X6 exacta +38,2 pp en CURSOS → pendiente) |
 | L-C6 · residuo de la Parte 2 «promedio» (decisión b, tanda 8) | E8: `FIRMA_P2` (cinco reglas, exactas con `medir_p2_exacta`); dentro, «cubierto»; por encima u otra regla > +8 pp, pendiente | MC31 a MC35, una por regla |
-| L-C7 · Parte 6 por palabra, regla por regla (decisión «Va» 2) | E8: `p6_token_juzgar()` contra `firma_p6_palabras_f98f9dda.tsv` (md5, 216 reglas) y el tope de su estrato, sobre la enumeración exacta de L-C5 | MC36 («duda», fuera de la lista), MC38 («justamente»: pendiente con la firma regla por regla, cubierta con la de estrato) |
+| L-C7 · Parte 6 por palabra, regla por regla (decisión «Va» 2) | E8: `p6_token_juzgar()` contra `firma_p6_palabras_f98f9dda.tsv` (md5, 216 reglas) y el tope de su estrato, sobre la enumeración exacta de L-C5 | MC36 («duda», fuera de la lista), MC38 («justamente»: pendiente con la firma regla por regla, cubierta con la de estrato), MC39 (una regla de la lista por encima de su cifra y bajo el tope de su estrato: sonda directa y «perdió hubiera tenido» en BP_gano, +12,5 → +25,0) |
 
 ## Tanda 2 (2026-10-30): qué cambió en el `.Rmd` (solo tras el marcador del bloque P1)
 
@@ -374,7 +437,10 @@ propia. Motivo: la clave de la Parte 1 nombra a la sede ganadora y cita *D* = *T
 
 | Qué | Archivo | Resultado |
 |---|---|---|
-| Verificador, tanda «Va» | `verificar_espacio_cloze_va.txt` | **exit 4: EN ROJO BAJO OVERRIDE FIRMADO (327 cifras: 13 de «O-1 corregido», 2 de L-C3, 24 de la decisión 2 a, 67 de L-C5, 5 de L-C6 y 216 de L-C7; 0 fallos, 0 pendientes)**. X5, X6 y X10 exactas ≤ +6,0 pp; MC36, MC37 y MC38 cazados por su sonda; lo demás, idéntico a la r8b |
+| FASE 2C r3 | `fase2c_r3_detractor.md`; scripts en `fase2c_r3/` | `APROBAR_CON_CAMBIOS`: H1 y H2 MEDIA, H3 BAJA; 0 CORRECCIÓN; citas 9/0 |
+| Paso 8, oráculo reconstruido (tanda 9a) | `coherencias_r9/` (`verificacion_N100.txt`, `verificacion_formatos.txt`, `control_moodle.txt`, `control_html_pdf.txt`) | `VEREDICTO_COHERENCIAS: OK`; N = 100, 0 fallos; 88 mutaciones cazadas por su sonda |
+| Verificador, cierre de la tanda 9a (MC39) | `verificar_espacio_cloze_r9.txt` (445 s); `comparar_r9_va.py`/`.txt` | **exit 4: EN ROJO BAJO OVERRIDE FIRMADO (327 cifras; 0 fallos, 0 pendientes)**. MC39 y su sonda directa, cazados; contra la «Va», solo cambian MC39 (5 líneas) y los 13 rótulos «muestral sobre la Parte 1» |
+| Verificador, tanda «Va» | `verificar_espacio_cloze_va.txt` | **exit 4: EN ROJO BAJO OVERRIDE FIRMADO (327 cifras: 13 de «O-1 corregido», 2 de L-C3, 24 de la decisión 2 a, 67 de L-C5, 5 de L-C6 y 216 de L-C7; 0 fallos, 0 pendientes)**. X5, X6 y X10 exactas sobre la Parte 2 (muestrales sobre la Parte 1) ≤ +6,0 pp; MC36, MC37 y MC38 cazados por su sonda; lo demás, idéntico a la r8b |
 | Verificador, tanda «Va», primera corrida completa | `verificar_espacio_cloze_va1.txt` (431 s) | exit 4, igual que la final salvo MC37, que medía solo la mezcla (+8,5 pp, n = 200) |
 | Diagnóstico de la FALLA del sorteo y de MC37 | `diag_falla_sorteo_va.R`/`.txt`, `mc37_por_estrato_va.R`/`.txt` (semillas 1:100 y 1:200) | `sol_p2` lógico; con `-sol_p2` pasan 26/100 (solo la clave en la posición 1); con `!sol_p2`, 100/100. MC37 mutado, X6 exacta: mezcla +8,5, CURSOS +38,2, PROMEDIO −25,0, canónica +75,0 pp (sin mutar: −2,5, −1,8, +1,1, −25,0) |
 | Primera corrida de DeepSeek (interrumpida) | `verificador_va.txt` | FALLA falsa del sorteo (`-sol_p2` lógico) y error en MC37 (`mutar()` sin definir); X6 exacta ya igual a `x6_estratos_t8.txt` |
@@ -418,6 +484,11 @@ propia. Motivo: la clave de la Parte 1 nombra a la sede ganadora y cita *D* = *T
 - **Firmados (decisión b, tanda 8):** el residuo de la Parte 2 «promedio» (L-C6, cinco reglas) y la regla por palabra de la
   Parte 6 (L-C7, regla por regla desde la decisión «Va»: `firma_p6_palabras_f98f9dda.tsv`).
 - **6b de la tanda 8 (decisión «Va»):** «sirven» queda sola en su línea a 360 px (24/24) y «cuadrado.» a 320 px (15/96).
+- **X6 por clave y por rama (H1 de la FASE 2C r3, decisión del 2026-11-02):** las claves 1 y 2 pasan de +8 pp en 2 de 5 réplicas
+  en CURSOS (hasta +11,0) y en 3 de 5 en PROMEDIO (hasta +10,5); con las 500 juntas, +6,4 y +7,7. Por rama, como mucho +7,3; en
+  la mezcla por clave, +1,0 / +1,0 / −2,2.
+- **H3 de la FASE 2C r3, diferido:** la Solution de la Parte 6 dice «solo si … fuera mayor» (condición necesaria; la relación es
+  «si y solo si»). No es falsa.
 - **La vara §P7** está medida sobre opción múltiple simple; aplicarla gap a gap no está calibrado para CLOZE.
 
 ## Uso en el aula (cuando esté aprobado)
@@ -451,10 +522,23 @@ convierte un ` ` escrito en el texto en el carácter literal: comprobar con `gr
 
 ## Próximo paso
 
-0. ~~Cablear las decisiones 1 y 2 de «Va» en `verificar_espacio_cloze.R`~~: hecho en la tanda «Va» (exit 4, sin pendientes).
-1. **Tanda 9a** (`orquestador-cloze`, sin `name:`), sin sellar ningún paso:
-   - **FASE 2C r3**: un `AgenteDetractor` nuevo, sin `name:`, sobre el md5 `f98f9dda…` y con el verificador de la tanda «Va».
-     Reporte en `salida/fase2c_r3_detractor.md`.
-   - **Paso 8**, con el oráculo de coherencias reconstruido para el banco actual. El de `salida/coherencias_r3/` tiene el
-     pool de la Parte 2 de `42f725bf…`, con los dos tipos.
-2. **Tanda 9b:** los sellos de los pasos 7 a 10, cada uno tras su artefacto, y el WAIT_USER #3, solo con la FASE 2C cerrada.
+0. ~~Cablear las decisiones 1 y 2 de «Va»~~ (tanda «Va») y ~~la tanda 9a: FASE 2C r3 y paso 8~~ (ejecutados, sin sellar).
+1. ~~**Cerrar la FASE 2C r3 antes de la 9b**~~: cerrada el 2026-11-02 (H1 residuo, H2 MC39, H3 diferido; ver «Decisión del
+   profesor tras la tanda 9a»). Texto original:
+   - **H1, al profesor.** ¿Lee X6 clave por clave en cada rama? Por rama queda en «ok» en las cinco réplicas (máximo +7,3 pp);
+     por clave, las claves 1 y 2 pasan de +8 pp en 2 de 5 réplicas en CURSOS (hasta +11,0) y en 3 de 5 en PROMEDIO (hasta
+     +10,5). El estudiante puede ver la clave de la Parte 2, no la rama; en la mezcla por clave, +1,0 / +1,0 / −2,2 pp en la
+     muestra del verificador. Si la firma por clave, la cifra sale de enumerar los textos de la Parte 1 (regla #23) o de
+     réplicas declaradas. El rótulo de E3 ya dice «exacta sobre la Parte 2, muestral sobre la Parte 1» (r9).
+   - ~~**H2, al coordinador.** MC39 en E8~~: hecho el 2026-11-02, cazado por su sonda (`salida/verificar_espacio_cloze_r9.txt`).
+     El próximo detractor lo revisa.
+   - **H3, al profesor (opcional).** Reescribir el «solo si … fuera mayor» de la Solution de la Parte 6. Si se aplica, cambia el
+     `.Rmd`: reapertura desde `generacion_rmd`, pasos 3 a 6 y FASE 2C r4 con un detractor nuevo.
+2. **Tanda 9b** (si el `.Rmd` no cambia), cada sello con su propio comando y su artefacto en la nota:
+   - paso 7: `salida/fase2c_r3_detractor.md`, con la decisión del 2026-11-02 (H1 residuo, H2 MC39 en la r9, H3 diferido; MC39
+     llegó después de la r3 y lo revisa el próximo detractor);
+   - paso 8: `salida/coherencias_r9/`;
+   - paso 9: `salida/diversidad_sustantiva_r8.txt` (p2 fija-justificada), `diagnosticidad_r8.txt` (p6 excluida por mchoice) y
+     `diagnosticidad_por_rama_r8.txt`, medidos sobre `f98f9dda…`; E5 300/300 en `verificar_espacio_cloze_r9.txt`;
+   - paso 10: `salida/v1_v4_r8.txt`, V5 a V11 y la literalidad de los `exextra` contra el catálogo canónico;
+   - después, el WAIT_USER #3 con los residuos declarados.

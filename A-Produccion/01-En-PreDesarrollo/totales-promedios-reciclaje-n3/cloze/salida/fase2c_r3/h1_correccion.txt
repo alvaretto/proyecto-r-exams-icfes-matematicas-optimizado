@@ -1,0 +1,886 @@
+Versiones: 100  fallos: 0 
+
+Rama P1: 44 56  canónicas: 9  rama_par: 53 47  cascada: 99 1 
+clave P2 (1,2,3): 35 33 32 
+           
+            CURSOS PROMEDIO
+  BC_gano       13       14
+  BC_perdio     13       14
+  BP_gano       10       12
+  BP_perdio     17        7
+nv
+ 1  2  3 
+17 70 13 
+
+== Contextos con U+00A0 (zona, plantilla) ==
+nb_ctx
+                          Solution  - Grado GRADO: $# \\times # = #$~kilos. 
+                                                                        200 
+                    Solution  - Parte #. #~kilos, el total del grado GRADO. 
+                                                                        200 
+                                              Solution  - Parte #. #~kilos. 
+                                                                        100 
+     Solution  Parte #. Cada hipótesis cambia un solo dato de la tabla. Un  
+                                                                        100 
+      Solution  * En el grado GRADO participaron #~cursos y cada uno recogi 
+                                                                         95 
+      Solution  En el otro colegio, el grado GRADO recogió $# \\times # = # 
+                                                                         75 
+     Solution  * En el grado GRADO participaron #~cursos y cada uno recogió 
+                                                                         56 
+         Solution  * Falso. Ganó el grado GRADO, con #~kilos frente a los # 
+                                                                         54 
+     Solution  - «Si al grado que ganó le hubiera faltado un curso, conserv 
+                                                                         51 
+           Solution  * Ganó el grado GRADO: $# - # = #$~kilos más que el gr 
+                                                                         50 
+       Solution  * En el grado GRADO participaron #~cursos y cada uno recog 
+                                                                         49 
+     Solution  - «Si el grado que perdió hubiera participado con un curso m 
+                                                                         43 
+      Solution  * Falso. Con un curso menos, el grado GRADO habría recogido 
+                                                                         28 
+           Solution  Ganó el grado GRADO, con $# - # = #$~kilos más. Partic 
+                                                                         26 
+      Solution  * Falso. Con ese cambio, el grado GRADO habría recogido $#  
+                                                                         25 
+          Solution  * Ganó el grado GRADO: $# - # = #$~kilos más que el gra 
+                                                                         25 
+        Solution  * Verdadero. Ganó el grado GRADO, con #~kilos frente a lo 
+                                                                         25 
+       Solution  En el otro colegio, el grado GRADO recogió $# \\times # =  
+                                                                         25 
+      Solution  * Verdadero. Con un curso más, el grado GRADO habría recogi 
+                                                                         24 
+           Solution  Ganó el grado GRADO, con $# - # = #$~kilos más. Su pro 
+                                                                         24 
+      Solution  * Verdadero. Con ese cambio, el grado GRADO habría recogido 
+                                                                         23 
+      Solution  * Verdadero. Con un curso menos, el grado GRADO habría reco 
+                                                                         23 
+       Solution  - «Ganó el concurso el grado GRADO.» Ganó el grado GRADO,  
+                                                                         22 
+            Solution  * Ganó el grado GRADO: $# - # = #$~kilos más que el g 
+                                                                         22 
+      Solution  * Falso. Con un curso más, el grado GRADO habría recogido $ 
+                                                                         19 
+    Solution  * Falso. Con ese cambio, el grado GRADO habría recogido $# \\ 
+                                                                         18 
+     Solution  * Verdadero. Con un curso más, el grado GRADO habría recogid 
+                                                                         18 
+        Solution  - «Ganó el concurso el grado GRADO.» Ganó el grado GRADO, 
+                                                                         17 
+     Solution  - «Si el grado que perdió hubiera tenido el mismo promedio p 
+                                                                         17 
+      Solution  - «Ganó el concurso el grado GRADO.» Ganó el grado GRADO, c 
+                                                                         16 
+            Solution  Ganó el grado GRADO, con $# - # = #$~kilos más. Su pr 
+                                                                         16 
+     Solution  * Falso. Con un curso más, el grado GRADO habría recogido $# 
+                                                                         15 
+       Solution  * Verdadero. Con un curso más, el grado GRADO habría recog 
+                                                                         15 
+     Solution  - «Si el grado que ganó hubiera participado con tantos curso 
+                                                                         14 
+     Solution  - «Si el grado que perdió hubiera participado con tantos cur 
+                                                                         14 
+     Solution  * Verdadero. Con ese cambio, el grado GRADO habría recogido  
+                                                                         14 
+       Solution  * Verdadero. Con un curso menos, el grado GRADO habría rec 
+                                                                         14 
+          Solution  Ganó el grado GRADO, con $# - # = #$~kilos más. Partici 
+                                                                         14 
+Q-Parte1 TABLA |     <span style="display:inline-block;">**El~Bosque**</spa 
+                                                                         12 
+Q-Parte1 TABLA |    <span style="display:inline-block;">**La~Pradera**</spa 
+                                                                         12 
+       Solution  * Falso. Con ese cambio, el grado GRADO habría recogido $# 
+                                                                         12 
+     Solution  * Falso. Con un curso menos, el grado GRADO habría recogido  
+                                                                         12 
+     Solution  * Verdadero. Con un curso menos, el grado GRADO habría recog 
+                                                                         12 
+       Solution  * Falso. Con un curso menos, el grado GRADO habría recogid 
+                                                                         11 
+       Solution  * Verdadero. Ganó el grado GRADO, con #~kilos frente a los 
+                                                                         11 
+          Solution  Ganó el grado GRADO, con $# - # = #$~kilos más. Su prom 
+                                                                         11 
+     Solution  - «Si el grado que ganó hubiera tenido el mismo promedio por 
+                                                                         10 
+       Solution  * Falso. Con un curso más, el grado GRADO habría recogido  
+                                                                          9 
+         Solution  * Verdadero. Ganó el grado GRADO, con #~kilos frente a l 
+                                                                          9 
+       Solution  * Verdadero. Con ese cambio, el grado GRADO habría recogid 
+                                                                          8 
+            Solution  Ganó el grado GRADO, con $# - # = #$~kilos más. Parti 
+                                                                          6 
+         Solution  * Ganó el grado GRADO: $# - # = #$~kilos más que el grad 
+                                                                          3 
+         Solution  Ganó el grado GRADO, con $# - # = #$~kilos más. Su prome 
+                                                                          2 
+        Solution  * Falso. Ganó el grado GRADO, con #~kilos frente a los #  
+                                                                          1 
+         Solution  Ganó el grado GRADO, con $# - # = #$~kilos más. Particip 
+                                                                          1 
+
+== Cifra + espacio NORMAL + kilos/cursos fuera de tablas ==
+sp_ctx
+   Solution - Parte #. La respuesta correcta es la que afirma: «La sede  
+                                                                      86 
+   Solution Sobre lo recogido, la tabla da solo el promedio por curso de 
+                                                                      49 
+   Solution La tabla no dice durante cuántos días recicló cada curso, y  
+                                                                      30 
+       Solution La cifra # sale de restar los promedios: $# - # = #$. Es 
+                                                                      29 
+                      Solution - La sede rural: $# \\times # = #$ kilos. 
+                                                                      25 
+                     Solution - La sede urbana: $# \\times # = #$ kilos. 
+                                                                      25 
+                   Solution - La sede primaria: $# \\times # = #$ kilos. 
+                                                                      23 
+                 Solution - La sede secundaria: $# \\times # = #$ kilos. 
+                                                                      23 
+   Solution *Afirmación:* «La jornada de la mañana ganó el concurso porq 
+                                                                      21 
+   Solution *Afirmación:* «La jornada de la tarde ganó el concurso porqu 
+                                                                      21 
+   Solution La tabla no dice cuántos alumnos tiene cada curso, y aunque  
+                                                                      21 
+     Solution * Verdadero. La sede primaria recogió $# \\times # = #$ ki 
+                                                                      18 
+     Solution En la Parte #, la sede primaria recogió $# \\times # = #$  
+                                                                      18 
+   Solution Las dos afirmaciones que dan el triunfo a la sede secundaria 
+                                                                      18 
+       Solution * Falso. La sede secundaria no ganó (# kilos frente a #) 
+                                                                      17 
+     Solution * Falso. La sede secundaria recogió # kilos, menos que los 
+                                                                      17 
+    Solution * Falso. La sede primaria sí ganó, pero por # kilos, no por 
+                                                                      16 
+            Solution - La jornada de la mañana: $# \\times # = #$ kilos. 
+                                                                      14 
+             Solution - La jornada de la tarde: $# \\times # = #$ kilos. 
+                                                                      14 
+                  Solution - La sede campestre: $# \\times # = #$ kilos. 
+                                                                      14 
+                    Solution - La sede central: $# \\times # = #$ kilos. 
+                                                                      14 
+   Solution - Parte #. La respuesta correcta es la que afirma: «La jorna 
+                                                                      14 
+       Solution * Falso. La sede rural no ganó (# kilos frente a #), y l 
+                                                                      13 
+       Solution * Falso. La sede rural recogió # kilos, menos que los #  
+                                                                      13 
+    Solution * Falso. La sede urbana sí ganó, pero por # kilos, no por # 
+                                                                      13 
+     Solution * Verdadero. La sede urbana recogió $# \\times # = #$ kilo 
+                                                                      13 
+     Solution En la Parte #, la sede urbana recogió $# \\times # = #$ ki 
+                                                                      13 
+     Solution La cifra # sale de restar los promedios: $# - # = #$. Esa  
+                                                                      13 
+   Solution Las dos afirmaciones que dan el triunfo a la sede rural son  
+                                                                      13 
+Q-Partes2a6 * La sede primaria ganó el concurso porque participaron más  
+                                                                      12 
+                  Solution - La sede El Bosque: $# \\times # = #$ kilos. 
+                                                                      12 
+                 Solution - La sede La Pradera: $# \\times # = #$ kilos. 
+                                                                      12 
+                      Solution - La sede norte: $# \\times # = #$ kilos. 
+                                                                      12 
+                        Solution - La sede sur: $# \\times # = #$ kilos. 
+                                                                      12 
+       Solution * Falso. La sede urbana no ganó (# kilos frente a #), y  
+                                                                      12 
+       Solution * Falso. La sede urbana recogió # kilos, menos que los # 
+                                                                      12 
+     Solution * Verdadero. La sede rural recogió $# \\times # = #$ kilos 
+                                                                      12 
+     Solution En la Parte #, la sede rural recogió $# \\times # = #$ kil 
+                                                                      12 
+   Solution Las dos afirmaciones que dan el triunfo a la sede urbana son 
+                                                                      12 
+     Solution * Falso. La sede rural sí ganó, pero por # kilos, no por # 
+                                                                      11 
+   Solution *Afirmación:* «La sede urbana ganó el concurso porque, aunqu 
+                                                                      11 
+        Solution Ganó la sede primaria, con $# - # = #$ kilos más. Su pr 
+                                                                      11 
+   Solution Es cierto que el promedio de la sede secundaria es # kilos m 
+                                                                      10 
+    Solution La cifra # kilos es el promedio de la sede primaria, un dat 
+                                                                      10 
+ Q-Partes2a6 * La sede primaria ganó el concurso porque recogió # kilos  
+                                                                       9 
+Q-Partes2a6 * La sede secundaria ganó porque, aunque participaron menos  
+                                                                       9 
+       Solution * Falso. La sede El Bosque no ganó (# kilos frente a #), 
+                                                                       9 
+     Solution * Falso. La sede El Bosque recogió # kilos, menos que los  
+                                                                       9 
+    Solution * Falso. La sede La Pradera sí ganó, pero por # kilos, no p 
+                                                                       9 
+     Solution * Verdadero. La sede La Pradera recogió $# \\times # = #$  
+                                                                       9 
+   Solution *Afirmación:* «La sede primaria ganó el concurso porque reco 
+                                                                       9 
+   Solution *Afirmación:* «La sede secundaria ganó porque, aunque partic 
+                                                                       9 
+     Solution En la Parte #, la sede La Pradera recogió $# \\times # = # 
+                                                                       9 
+   Solution Las dos afirmaciones que dan el triunfo a la sede El Bosque  
+                                                                       9 
+Q-Partes2a6 * La sede norte ganó el concurso porque, aunque su promedio  
+                                                                       8 
+Q-Partes2a6 * La sede rural ganó el concurso porque participaron más cur 
+                                                                       8 
+Q-Partes2a6 * La sede urbana ganó el concurso porque, aunque participaro 
+                                                                       8 
+   Solution *Afirmación:* «La sede El Bosque ganó el concurso porque, au 
+                                                                       8 
+   Solution *Afirmación:* «La sede rural ganó el concurso porque, al sum 
+                                                                       8 
+   Solution Es cierto que en la sede rural participó # curso más. La cif 
+                                                                       8 
+        Solution Ganó la sede urbana, con $# - # = #$ kilos más. Partici 
+                                                                       8 
+Q-Partes2a6 * La sede rural ganó el concurso porque tuvo mayor promedio  
+                                                                       7 
+Q-Partes2a6 * La sede rural ganó el concurso porque, al sumar lo que rec 
+                                                                       7 
+Q-Partes2a6 * La sede secundaria ganó el concurso porque participaron má 
+                                                                       7 
+Q-Partes2a6 * La sede sur ganó el concurso porque tuvo mayor promedio y, 
+                                                                       7 
+Q-Partes2a6 * La sede urbana ganó el concurso porque, aunque su promedio 
+                                                                       7 
+Q-Partes2a6 * La sede urbana ganó el concurso porque, después de juntar  
+                                                                       7 
+     Solution * Falso. La jornada de la mañana no ganó (# kilos frente a 
+                                                                       7 
+     Solution * Falso. La jornada de la mañana recogió # kilos, menos qu 
+                                                                       7 
+     Solution * Falso. La jornada de la tarde no ganó (# kilos frente a  
+                                                                       7 
+     Solution * Falso. La jornada de la tarde recogió # kilos, menos que 
+                                                                       7 
+       Solution * Falso. La sede campestre no ganó (# kilos frente a #), 
+                                                                       7 
+     Solution * Falso. La sede campestre recogió # kilos, menos que los  
+                                                                       7 
+       Solution * Falso. La sede central no ganó (# kilos frente a #), y 
+                                                                       7 
+      Solution * Falso. La sede central recogió # kilos, menos que los # 
+                                                                       7 
+    Solution * Falso. La sede central sí ganó, pero por # kilos, no por  
+                                                                       7 
+   Solution * Verdadero. La jornada de la mañana recogió $# \\times # =  
+                                                                       7 
+   Solution * Verdadero. La jornada de la tarde recogió $# \\times # = # 
+                                                                       7 
+     Solution * Verdadero. La sede campestre recogió $# \\times # = #$ k 
+                                                                       7 
+     Solution * Verdadero. La sede central recogió $# \\times # = #$ kil 
+                                                                       7 
+   Solution *Afirmación:* «La sede central ganó el concurso porque, aunq 
+                                                                       7 
+   Solution *Afirmación:* «La sede norte ganó el concurso porque, aunque 
+                                                                       7 
+   Solution *Afirmación:* «La sede rural ganó el concurso porque, aunque 
+                                                                       7 
+   Solution En la Parte #, la jornada de la mañana recogió $# \\times #  
+                                                                       7 
+   Solution En la Parte #, la jornada de la tarde recogió $# \\times # = 
+                                                                       7 
+     Solution En la Parte #, la sede campestre recogió $# \\times # = #$ 
+                                                                       7 
+     Solution En la Parte #, la sede central recogió $# \\times # = #$ k 
+                                                                       7 
+   Solution Las dos afirmaciones que dan el triunfo a la jornada de la m 
+                                                                       7 
+   Solution Las dos afirmaciones que dan el triunfo a la jornada de la t 
+                                                                       7 
+   Solution Las dos afirmaciones que dan el triunfo a la sede campestre  
+                                                                       7 
+   Solution Las dos afirmaciones que dan el triunfo a la sede central so 
+                                                                       7 
+Q-Partes2a6 * La jornada de la mañana ganó el concurso porque, aunque pa 
+                                                                       6 
+Q-Partes2a6 * La jornada de la tarde ganó el concurso porque, al sumar l 
+                                                                       6 
+Q-Partes2a6 * La sede campestre ganó el concurso porque participaron más 
+                                                                       6 
+Q-Partes2a6 * La sede central ganó el concurso porque, aunque su promedi 
+                                                                       6 
+Q-Partes2a6 * La sede primaria ganó el concurso porque tuvo mayor promed 
+                                                                       6 
+Q-Partes2a6 * La sede rural ganó el concurso porque, aunque su promedio  
+                                                                       6 
+Q-Partes2a6 * La sede urbana ganó el concurso porque tuvo mayor promedio 
+                                                                       6 
+Q-Partes2a6 * La sede urbana ganó el concurso porque, al sumar lo que re 
+                                                                       6 
+    Solution * Falso. La jornada de la tarde sí ganó, pero por # kilos,  
+                                                                       6 
+      Solution * Falso. La sede sur sí ganó, pero por # kilos, no por #. 
+                                                                       6 
+     Solution * Verdadero. La sede norte recogió $# \\times # = #$ kilos 
+                                                                       6 
+     Solution * Verdadero. La sede sur recogió $# \\times # = #$ kilos y 
+                                                                       6 
+   Solution *Afirmación:* «La sede La Pradera ganó el concurso porque, a 
+                                                                       6 
+   Solution *Afirmación:* «La sede secundaria ganó el concurso porque en 
+                                                                       6 
+   Solution *Afirmación:* «La sede secundaria ganó el concurso porque pa 
+                                                                       6 
+     Solution En la Parte #, la sede norte recogió $# \\times # = #$ kil 
+                                                                       6 
+     Solution En la Parte #, la sede sur recogió $# \\times # = #$ kilos 
+                                                                       6 
+   Solution Es cierto que en la sede secundaria participó # curso más. L 
+                                                                       6 
+   Solution Es cierto que en la sede urbana participó # curso más. La ci 
+                                                                       6 
+        Solution Ganó la jornada de la tarde, con $# - # = #$ kilos más. 
+                                                                       6 
+        Solution Ganó la sede La Pradera, con $# - # = #$ kilos más. Su  
+                                                                       6 
+        Solution Ganó la sede rural, con $# - # = #$ kilos más. Particip 
+                                                                       6 
+        Solution Ganó la sede rural, con $# - # = #$ kilos más. Su prome 
+                                                                       6 
+    Solution La cifra $# \\times # = #$ cuenta solo lo que aportan los # 
+                                                                       6 
+   Solution Las dos afirmaciones que dan el triunfo a la sede norte son  
+                                                                       6 
+   Solution Las dos afirmaciones que dan el triunfo a la sede sur son fa 
+                                                                       6 
+Q-Partes2a6 * La jornada de la mañana ganó el concurso porque, al sumar  
+                                                                       5 
+Q-Partes2a6 * La jornada de la tarde ganó el concurso porque, aunque su  
+                                                                       5 
+Q-Partes2a6 * La sede campestre ganó el concurso porque, aunque particip 
+                                                                       5 
+Q-Partes2a6 * La sede campestre ganó el concurso porque, después de junt 
+                                                                       5 
+Q-Partes2a6 * La sede El Bosque ganó el concurso porque, aunque particip 
+                                                                       5 
+Q-Partes2a6 * La sede La Pradera ganó el concurso porque, aunque su prom 
+                                                                       5 
+Q-Partes2a6 * La sede La Pradera ganó el concurso porque, después de jun 
+                                                                       5 
+Q-Partes2a6 * La sede primaria ganó el concurso porque, después de junta 
+                                                                       5 
+Q-Partes2a6 * La sede rural ganó el concurso porque, después de juntar l 
+                                                                       5 
+    Solution * Falso. La jornada de la mañana sí ganó, pero por # kilos, 
+                                                                       5 
+       Solution * Falso. La sede norte no ganó (# kilos frente a #), y l 
+                                                                       5 
+       Solution * Falso. La sede norte recogió # kilos, menos que los #  
+                                                                       5 
+       Solution * Falso. La sede primaria no ganó (# kilos frente a #),  
+                                                                       5 
+     Solution * Falso. La sede primaria recogió # kilos, menos que los # 
+                                                                       5 
+       Solution * Falso. La sede sur no ganó (# kilos frente a #), y la  
+                                                                       5 
+       Solution * Falso. La sede sur recogió # kilos, menos que los # de 
+                                                                       5 
+     Solution * Verdadero. La sede secundaria recogió $# \\times # = #$  
+                                                                       5 
+   Solution *Afirmación:* «La sede primaria ganó el concurso porque, al  
+                                                                       5 
+   Solution *Afirmación:* «La sede rural ganó el concurso porque tuvo ma 
+                                                                       5 
+   Solution *Afirmación:* «La sede rural ganó el concurso porque, despué 
+                                                                       5 
+   Solution *Afirmación:* «La sede secundaria ganó el concurso porque, a 
+                                                                       5 
+   Solution *Afirmación:* «La sede sur ganó el concurso porque tuvo mayo 
+                                                                       5 
+   Solution *Afirmación:* «La sede urbana ganó el concurso porque tuvo m 
+                                                                       5 
+   Solution *Afirmación:* «La sede urbana ganó el concurso porque, al su 
+                                                                       5 
+     Solution En la Parte #, la sede secundaria recogió $# \\times # = # 
+                                                                       5 
+   Solution Es cierto que el promedio de la sede rural es # kilos mayor. 
+                                                                       5 
+   Solution Es cierto que el promedio de la sede urbana es # kilos mayor 
+                                                                       5 
+   Solution Es cierto que en la jornada de la mañana participó # curso m 
+                                                                       5 
+   Solution Es cierto que en la sede norte participó # curso más. La cif 
+                                                                       5 
+        Solution Ganó la jornada de la mañana, con $# - # = #$ kilos más 
+                                                                       5 
+        Solution Ganó la sede urbana, con $# - # = #$ kilos más. Su prom 
+                                                                       5 
+    Solution La cifra $# \\times # = #$ cuenta solo la ventaja de promed 
+                                                                       5 
+   Solution Las dos afirmaciones que dan el triunfo a la sede primaria s 
+                                                                       5 
+Q-Partes2a6 * La jornada de la tarde ganó el concurso porque participaro 
+                                                                       4 
+Q-Partes2a6 * La sede central ganó el concurso porque tuvo mayor promedi 
+                                                                       4 
+Q-Partes2a6 * La sede central ganó el concurso porque, después de juntar 
+                                                                       4 
+Q-Partes2a6 * La sede El Bosque ganó el concurso porque sus cursos recic 
+                                                                       4 
+Q-Partes2a6 * La sede El Bosque ganó el concurso porque, aunque su prome 
+                                                                       4 
+Q-Partes2a6 * La sede La Pradera ganó el concurso porque, al sumar lo qu 
+                                                                       4 
+Q-Partes2a6 * La sede norte ganó el concurso porque, al sumar lo que rec 
+                                                                       4 
+Q-Partes2a6 * La sede primaria ganó el concurso porque, al sumar lo que  
+                                                                       4 
+Q-Partes2a6 * La sede primaria ganó el concurso porque, aunque participa 
+                                                                       4 
+Q-Partes2a6 * La sede rural ganó el concurso porque en sus cursos hay má 
+                                                                       4 
+Q-Partes2a6 * La sede rural ganó el concurso porque, aunque participaron 
+                                                                       4 
+Q-Partes2a6 * La sede sur ganó el concurso porque sus cursos reciclaron  
+                                                                       4 
+Q-Partes2a6 * La sede urbana ganó el concurso porque en ella hubo un cur 
+                                                                       4 
+Q-Partes2a6 * La sede urbana ganó el concurso porque participaron más cu 
+                                                                       4 
+Q-Partes2a6 * La sede urbana ganó el concurso porque sus cursos reciclar 
+                                                                       4 
+    Solution * Falso. La sede campestre sí ganó, pero por # kilos, no po 
+                                                                       4 
+     Solution * Falso. La sede norte sí ganó, pero por # kilos, no por # 
+                                                                       4 
+    Solution * Falso. La sede secundaria sí ganó, pero por # kilos, no p 
+                                                                       4 
+   Solution *Afirmación:* «La sede campestre ganó el concurso porque par 
+                                                                       4 
+   Solution *Afirmación:* «La sede campestre ganó el concurso porque, au 
+                                                                       4 
+   Solution *Afirmación:* «La sede El Bosque ganó el concurso porque en  
+                                                                       4 
+   Solution *Afirmación:* «La sede El Bosque ganó el concurso porque sus 
+                                                                       4 
+   Solution *Afirmación:* «La sede primaria ganó el concurso porque tuvo 
+                                                                       4 
+   Solution *Afirmación:* «La sede rural ganó el concurso porque en sus  
+                                                                       4 
+   Solution *Afirmación:* «La sede sur ganó el concurso porque sus curso 
+                                                                       4 
+   Solution *Afirmación:* «La sede urbana ganó el concurso porque en ell 
+                                                                       4 
+   Solution *Afirmación:* «La sede urbana ganó el concurso porque sus cu 
+                                                                       4 
+   Solution Es cierto que el promedio de la sede El Bosque es # kilos ma 
+                                                                       4 
+   Solution Es cierto que en la jornada de la tarde participaron # curso 
+                                                                       4 
+   Solution Es cierto que en la sede campestre participó # curso más. La 
+                                                                       4 
+        Solution Ganó la sede central, con $# - # = #$ kilos más. Partic 
+                                                                       4 
+        Solution Ganó la sede primaria, con $# - # = #$ kilos más. Parti 
+                                                                       4 
+        Solution Ganó la sede sur, con $# - # = #$ kilos más. Participar 
+                                                                       4 
+     Solution La cifra # es el total de la sede campestre: $# \\times #  
+                                                                       4 
+    Solution La cifra # kilos es el promedio de la sede rural, un dato d 
+                                                                       4 
+Q-Partes2a6 * La jornada de la mañana ganó el concurso porque en ella hu 
+                                                                       3 
+Q-Partes2a6 * La jornada de la mañana ganó el concurso porque tuvo mayor 
+                                                                       3 
+Q-Partes2a6 * La jornada de la mañana ganó el concurso porque, aunque su 
+                                                                       3 
+Q-Partes2a6 * La jornada de la mañana ganó el concurso porque, después d 
+                                                                       3 
+Q-Partes2a6 * La jornada de la tarde ganó el concurso porque en ella hub 
+                                                                       3 
+Q-Partes2a6 * La jornada de la tarde ganó el concurso porque tuvo mayor  
+                                                                       3 
+Q-Partes2a6 * La sede central ganó el concurso porque en ella hubo un cu 
+                                                                       3 
+Q-Partes2a6 * La sede central ganó el concurso porque, al sumar lo que r 
+                                                                       3 
+Q-Partes2a6 * La sede central ganó el concurso porque, aunque participar 
+                                                                       3 
+Q-Partes2a6 * La sede El Bosque ganó el concurso porque, después de junt 
+                                                                       3 
+Q-Partes2a6 * La sede La Pradera ganó el concurso porque tuvo mayor prom 
+                                                                       3 
+Q-Partes2a6 * La sede norte ganó el concurso porque sus cursos reciclaro 
+                                                                       3 
+Q-Partes2a6 * La sede rural ganó el concurso porque en ella hubo un curs 
+                                                                       3 
+Q-Partes2a6 * La sede rural ganó el concurso porque sus cursos reciclaro 
+                                                                       3 
+Q-Partes2a6 * La sede rural ganó el concurso porque, al sumar solo lo qu 
+                                                                       3 
+Q-Partes2a6 * La sede secundaria ganó el concurso porque en ella hubo un 
+                                                                       3 
+Q-Partes2a6 * La sede secundaria ganó el concurso porque en sus cursos h 
+                                                                       3 
+Q-Partes2a6 * La sede secundaria ganó el concurso porque sus cursos reci 
+                                                                       3 
+Q-Partes2a6 * La sede secundaria ganó el concurso porque, al sumar lo qu 
+                                                                       3 
+Q-Partes2a6 * La sede secundaria ganó el concurso porque, aunque partici 
+                                                                       3 
+Q-Partes2a6 * La sede secundaria ganó el concurso porque, aunque su prom 
+                                                                       3 
+Q-Partes2a6 * La sede sur ganó el concurso porque, al sumar lo que recog 
+                                                                       3 
+Q-Partes2a6 * La sede sur ganó el concurso porque, después de juntar lo  
+                                                                       3 
+Q-Partes2a6 * La sede urbana ganó el concurso porque en sus cursos hay m 
+                                                                       3 
+   Solution * Falso. La sede campestre sí ganó, pero por # kilos, no por 
+                                                                       3 
+    Solution * Falso. La sede El Bosque sí ganó, pero por # kilos, no po 
+                                                                       3 
+       Solution * Falso. La sede La Pradera no ganó (# kilos frente a #) 
+                                                                       3 
+     Solution * Falso. La sede La Pradera recogió # kilos, menos que los 
+                                                                       3 
+     Solution * Verdadero. La sede El Bosque recogió $# \\times # = #$ k 
+                                                                       3 
+   Solution *Afirmación:* «La sede campestre ganó el concurso porque en  
+                                                                       3 
+   Solution *Afirmación:* «La sede campestre ganó el concurso porque, al 
+                                                                       3 
+   Solution *Afirmación:* «La sede campestre ganó el concurso porque, de 
+                                                                       3 
+   Solution *Afirmación:* «La sede central ganó el concurso porque en el 
+                                                                       3 
+   Solution *Afirmación:* «La sede central ganó el concurso porque tuvo  
+                                                                       3 
+   Solution *Afirmación:* «La sede central ganó el concurso porque, desp 
+                                                                       3 
+   Solution *Afirmación:* «La sede La Pradera ganó el concurso porque, d 
+                                                                       3 
+   Solution *Afirmación:* «La sede norte ganó el concurso porque sus cur 
+                                                                       3 
+   Solution *Afirmación:* «La sede primaria ganó el concurso porque, aun 
+                                                                       3 
+   Solution *Afirmación:* «La sede primaria ganó el concurso porque, des 
+                                                                       3 
+   Solution *Afirmación:* «La sede rural ganó el concurso porque en ella 
+                                                                       3 
+   Solution *Afirmación:* «La sede rural ganó el concurso porque partici 
+                                                                       3 
+   Solution *Afirmación:* «La sede rural ganó el concurso porque sus cur 
+                                                                       3 
+   Solution *Afirmación:* «La sede secundaria ganó el concurso porque su 
+                                                                       3 
+   Solution *Afirmación:* «La sede sur ganó el concurso porque, al sumar 
+                                                                       3 
+   Solution *Afirmación:* «La sede urbana ganó el concurso porque en sus 
+                                                                       3 
+   Solution *Afirmación:* «La sede urbana ganó el concurso porque, despu 
+                                                                       3 
+     Solution En la Parte #, la sede El Bosque recogió $# \\times # = #$ 
+                                                                       3 
+   Solution Es cierto que en la jornada de la tarde participó # curso má 
+                                                                       3 
+   Solution Es cierto que en la sede central participó # curso más. La c 
+                                                                       3 
+   Solution Es cierto que en la sede El Bosque participó # curso más. La 
+                                                                       3 
+        Solution Ganó la sede central, con $# - # = #$ kilos más. Su pro 
+                                                                       3 
+        Solution Ganó la sede La Pradera, con $# - # = #$ kilos más. Par 
+                                                                       3 
+       Solution Ganó la sede primaria, con $# - # = #$ kilos más. Partic 
+                                                                       3 
+     Solution La cifra # es el total de la sede La Pradera: $# \\times # 
+                                                                       3 
+     Solution La cifra # es el total de la sede urbana: $# \\times # = # 
+                                                                       3 
+   Solution La cifra $# \\times # = #$ cuenta solo la ventaja de promedi 
+                                                                       3 
+   Solution Las dos afirmaciones que dan el triunfo a la sede La Pradera 
+                                                                       3 
+Q-Partes2a6 * La jornada de la mañana ganó el concurso porque participar 
+                                                                       2 
+Q-Partes2a6 * La jornada de la mañana ganó el concurso porque sus cursos 
+                                                                       2 
+Q-Partes2a6 * La jornada de la tarde ganó el concurso porque en sus curs 
+                                                                       2 
+Q-Partes2a6 * La jornada de la tarde ganó el concurso porque sus cursos  
+                                                                       2 
+Q-Partes2a6 * La jornada de la tarde ganó el concurso porque, aunque par 
+                                                                       2 
+Q-Partes2a6 * La sede campestre ganó el concurso porque en sus cursos ha 
+                                                                       2 
+Q-Partes2a6 * La sede campestre ganó el concurso porque sus cursos recic 
+                                                                       2 
+Q-Partes2a6 * La sede campestre ganó el concurso porque tuvo mayor prome 
+                                                                       2 
+Q-Partes2a6 * La sede campestre ganó el concurso porque, al sumar lo que 
+                                                                       2 
+Q-Partes2a6 * La sede campestre ganó el concurso porque, al sumar solo l 
+                                                                       2 
+Q-Partes2a6 * La sede central ganó el concurso porque en sus cursos hay  
+                                                                       2 
+Q-Partes2a6 * La sede central ganó el concurso porque, al sumar solo lo  
+                                                                       2 
+Q-Partes2a6 * La sede El Bosque ganó el concurso porque en ella hubo un  
+                                                                       2 
+Q-Partes2a6 * La sede El Bosque ganó el concurso porque en sus cursos ha 
+                                                                       2 
+Q-Partes2a6 * La sede El Bosque ganó el concurso porque tuvo mayor prome 
+                                                                       2 
+Q-Partes2a6 * La sede La Pradera ganó el concurso porque en ella hubo un 
+                                                                       2 
+Q-Partes2a6 * La sede La Pradera ganó el concurso porque participaron má 
+                                                                       2 
+Q-Partes2a6 * La sede La Pradera ganó el concurso porque, aunque partici 
+                                                                       2 
+Q-Partes2a6 * La sede norte ganó el concurso porque en ella hubo un curs 
+                                                                       2 
+Q-Partes2a6 * La sede norte ganó el concurso porque tuvo mayor promedio  
+                                                                       2 
+Q-Partes2a6 * La sede norte ganó el concurso porque, después de juntar l 
+                                                                       2 
+Q-Partes2a6 * La sede primaria ganó el concurso porque sus cursos recicl 
+                                                                       2 
+Q-Partes2a6 * La sede primaria ganó el concurso porque, al sumar solo lo 
+                                                                       2 
+Q-Partes2a6 * La sede secundaria ganó el concurso porque, después de jun 
+                                                                       2 
+Q-Partes2a6 * La sede sur ganó el concurso porque participaron más curso 
+                                                                       2 
+Q-Partes2a6 * La sede sur ganó el concurso porque, aunque participaron m 
+                                                                       2 
+   Solution * Falso. La jornada de la mañana sí ganó, pero por # kilos,  
+                                                                       2 
+    Solution * Falso. La sede norte sí ganó, pero por # kilos, no por #. 
+                                                                       2 
+   Solution * Falso. La sede primaria sí ganó, pero por # kilos, no por  
+                                                                       2 
+   Solution *Afirmación:* «La sede campestre ganó el concurso porque sus 
+                                                                       2 
+   Solution *Afirmación:* «La sede campestre ganó el concurso porque tuv 
+                                                                       2 
+   Solution *Afirmación:* «La sede central ganó el concurso porque en su 
+                                                                       2 
+   Solution *Afirmación:* «La sede central ganó el concurso porque, al s 
+                                                                       2 
+   Solution *Afirmación:* «La sede El Bosque ganó el concurso porque tuv 
+                                                                       2 
+   Solution *Afirmación:* «La sede La Pradera ganó el concurso porque en 
+                                                                       2 
+   Solution *Afirmación:* «La sede La Pradera ganó el concurso porque tu 
+                                                                       2 
+   Solution *Afirmación:* «La sede norte ganó el concurso porque en ella 
+                                                                       2 
+   Solution *Afirmación:* «La sede norte ganó el concurso porque tuvo ma 
+                                                                       2 
+   Solution *Afirmación:* «La sede primaria ganó el concurso porque sus  
+                                                                       2 
+   Solution *Afirmación:* «La sede secundaria ganó el concurso porque, d 
+                                                                       2 
+   Solution *Afirmación:* «La sede sur ganó el concurso porque participa 
+                                                                       2 
+   Solution *Afirmación:* «La sede sur ganó el concurso porque, aunque p 
+                                                                       2 
+   Solution *Afirmación:* «La sede urbana ganó el concurso porque partic 
+                                                                       2 
+   Solution Es cierto que el promedio de la jornada de la mañana es # ki 
+                                                                       2 
+   Solution Es cierto que el promedio de la sede campestre es # kilos ma 
+                                                                       2 
+    Solution Es cierto que el promedio de la sede central es # kilos may 
+                                                                       2 
+    Solution Es cierto que el promedio de la sede El Bosque es # kilos m 
+                                                                       2 
+   Solution Es cierto que el promedio de la sede primaria es # kilos may 
+                                                                       2 
+   Solution Es cierto que el promedio de la sede sur es # kilos mayor. L 
+                                                                       2 
+   Solution Es cierto que en la sede primaria participó # curso más. La  
+                                                                       2 
+   Solution Es cierto que en la sede sur participó # curso más. La cifra 
+                                                                       2 
+       Solution Ganó la jornada de la mañana, con $# - # = #$ kilos más. 
+                                                                       2 
+        Solution Ganó la sede campestre, con $# - # = #$ kilos más. Part 
+                                                                       2 
+       Solution Ganó la sede campestre, con $# - # = #$ kilos más. Parti 
+                                                                       2 
+        Solution Ganó la sede campestre, con $# - # = #$ kilos más. Su p 
+                                                                       2 
+        Solution Ganó la sede El Bosque, con $# - # = #$ kilos más. Su p 
+                                                                       2 
+        Solution Ganó la sede norte, con $# - # = #$ kilos más. Particip 
+                                                                       2 
+        Solution Ganó la sede norte, con $# - # = #$ kilos más. Su prome 
+                                                                       2 
+        Solution Ganó la sede secundaria, con $# - # = #$ kilos más. Par 
+                                                                       2 
+        Solution Ganó la sede secundaria, con $# - # = #$ kilos más. Su  
+                                                                       2 
+       Solution Ganó la sede sur, con $# - # = #$ kilos más. Participaro 
+                                                                       2 
+    Solution La cifra # es el total de la jornada de la mañana: $# \\tim 
+                                                                       2 
+     Solution La cifra # es el total de la sede central: $# \\times # =  
+                                                                       2 
+     Solution La cifra # es el total de la sede El Bosque: $# \\times #  
+                                                                       2 
+     Solution La cifra # es el total de la sede primaria: $# \\times # = 
+                                                                       2 
+    Solution La cifra # kilos es el promedio de la sede campestre, un da 
+                                                                       2 
+    Solution La cifra # kilos es el promedio de la sede urbana, un dato  
+                                                                       2 
+Q-Partes2a6 * La jornada de la mañana ganó el concurso porque en sus cur 
+                                                                       1 
+Q-Partes2a6 * La jornada de la tarde ganó el concurso porque, después de 
+                                                                       1 
+Q-Partes2a6 * La sede campestre ganó el concurso porque en ella hubo un  
+                                                                       1 
+Q-Partes2a6 * La sede campestre ganó el concurso porque, aunque su prome 
+                                                                       1 
+Q-Partes2a6 * La sede central ganó el concurso porque participaron más c 
+                                                                       1 
+Q-Partes2a6 * La sede El Bosque ganó el concurso porque participaron más 
+                                                                       1 
+Q-Partes2a6 * La sede El Bosque ganó el concurso porque, al sumar solo l 
+                                                                       1 
+Q-Partes2a6 * La sede La Pradera ganó el concurso porque sus cursos reci 
+                                                                       1 
+Q-Partes2a6 * La sede norte ganó el concurso porque en sus cursos hay má 
+                                                                       1 
+Q-Partes2a6 * La sede norte ganó el concurso porque participaron más cur 
+                                                                       1 
+Q-Partes2a6 * La sede norte ganó el concurso porque, aunque participaron 
+                                                                       1 
+Q-Partes2a6 * La sede primaria ganó el concurso porque en ella hubo un c 
+                                                                       1 
+Q-Partes2a6 * La sede primaria ganó el concurso porque, aunque su promed 
+                                                                       1 
+Q-Partes2a6 * La sede secundaria ganó el concurso porque tuvo mayor prom 
+                                                                       1 
+Q-Partes2a6 * La sede sur ganó el concurso porque en sus cursos hay más  
+                                                                       1 
+Q-Partes2a6 * La sede sur ganó el concurso porque, al sumar solo lo que  
+                                                                       1 
+Q-Partes2a6 * La sede sur ganó el concurso porque, aunque su promedio fu 
+                                                                       1 
+Q-Partes2a6 * La sede urbana ganó el concurso porque, al sumar solo lo q 
+                                                                       1 
+   Solution * Falso. La jornada de la tarde sí ganó, pero por # kilos, n 
+                                                                       1 
+      Solution * Falso. La sede norte no ganó (# kilos frente a #), y la 
+                                                                       1 
+      Solution * Falso. La sede norte recogió # kilos, menos que los # d 
+                                                                       1 
+    Solution * Falso. La sede rural sí ganó, pero por # kilos, no por #. 
+                                                                       1 
+      Solution * Falso. La sede secundaria no ganó (# kilos frente a #), 
+                                                                       1 
+    Solution * Falso. La sede secundaria recogió # kilos, menos que los  
+                                                                       1 
+   Solution * Falso. La sede secundaria sí ganó, pero por # kilos, no po 
+                                                                       1 
+      Solution * Falso. La sede sur no ganó (# kilos frente a #), y la r 
+                                                                       1 
+      Solution * Falso. La sede sur recogió # kilos, menos que los # de  
+                                                                       1 
+   Solution *Afirmación:* «La sede central ganó el concurso porque parti 
+                                                                       1 
+   Solution *Afirmación:* «La sede El Bosque ganó el concurso porque par 
+                                                                       1 
+   Solution *Afirmación:* «La sede El Bosque ganó el concurso porque, al 
+                                                                       1 
+   Solution *Afirmación:* «La sede El Bosque ganó el concurso porque, de 
+                                                                       1 
+   Solution *Afirmación:* «La sede La Pradera ganó el concurso porque pa 
+                                                                       1 
+   Solution *Afirmación:* «La sede La Pradera ganó el concurso porque su 
+                                                                       1 
+   Solution *Afirmación:* «La sede norte ganó el concurso porque en sus  
+                                                                       1 
+   Solution *Afirmación:* «La sede norte ganó el concurso porque partici 
+                                                                       1 
+   Solution *Afirmación:* «La sede norte ganó el concurso porque, al sum 
+                                                                       1 
+   Solution *Afirmación:* «La sede norte ganó el concurso porque, despué 
+                                                                       1 
+   Solution *Afirmación:* «La sede primaria ganó el concurso porque en e 
+                                                                       1 
+   Solution *Afirmación:* «La sede primaria ganó el concurso porque part 
+                                                                       1 
+   Solution *Afirmación:* «La sede secundaria ganó el concurso porque tu 
+                                                                       1 
+   Solution *Afirmación:* «La sede sur ganó el concurso porque en sus cu 
+                                                                       1 
+   Solution *Afirmación:* «La sede sur ganó el concurso porque, aunque s 
+                                                                       1 
+    Solution Es cierto que el promedio de la sede campestre es # kilos m 
+                                                                       1 
+   Solution Es cierto que el promedio de la sede central es # kilos mayo 
+                                                                       1 
+    Solution Es cierto que el promedio de la sede La Pradera es # kilos  
+                                                                       1 
+   Solution Es cierto que el promedio de la sede La Pradera es # kilos m 
+                                                                       1 
+    Solution Es cierto que el promedio de la sede primaria es # kilos ma 
+                                                                       1 
+    Solution Es cierto que el promedio de la sede secundaria es # kilos  
+                                                                       1 
+    Solution Es cierto que el promedio de la sede sur es # kilos mayor.  
+                                                                       1 
+    Solution Es cierto que el promedio de la sede urbana es # kilos mayo 
+                                                                       1 
+   Solution Es cierto que en la sede central participaron # cursos más.  
+                                                                       1 
+   Solution Es cierto que en la sede La Pradera participó # curso más. L 
+                                                                       1 
+   Solution Es cierto que en la sede norte participaron # cursos más. La 
+                                                                       1 
+   Solution Es cierto que en la sede secundaria participaron # cursos má 
+                                                                       1 
+   Solution Es cierto que en la sede sur participaron # cursos más. La c 
+                                                                       1 
+       Solution Ganó la jornada de la tarde, con $# - # = #$ kilos más.  
+                                                                       1 
+       Solution Ganó la sede campestre, con $# - # = #$ kilos más. Su pr 
+                                                                       1 
+        Solution Ganó la sede El Bosque, con $# - # = #$ kilos más. Part 
+                                                                       1 
+       Solution Ganó la sede norte, con $# - # = #$ kilos más. Participa 
+                                                                       1 
+       Solution Ganó la sede norte, con $# - # = #$ kilos más. Su promed 
+                                                                       1 
+       Solution Ganó la sede secundaria, con $# - # = #$ kilos más. Su p 
+                                                                       1 
+    Solution La cifra # es el total de la jornada de la tarde: $# \\time 
+                                                                       1 
+      Solution La cifra # es el total de la sede norte: $# \\times # = # 
+                                                                       1 
+      Solution La cifra # es el total de la sede rural: $# \\times # = # 
+                                                                       1 
+       Solution La cifra # es el total de la sede sur: $# \\times # = #$ 
+                                                                       1 
+    Solution La cifra # kilos es el promedio de la sede central, un dato 
+                                                                       1 
+    Solution La cifra # kilos es el promedio de la sede La Pradera, un d 
+                                                                       1 
+    Solution La cifra # kilos es el promedio de la sede norte, un dato d 
+                                                                       1 
+    Solution La cifra $# \\times # = #$ cuenta solo lo que aporta el cur 
+                                                                       1 
+FIN

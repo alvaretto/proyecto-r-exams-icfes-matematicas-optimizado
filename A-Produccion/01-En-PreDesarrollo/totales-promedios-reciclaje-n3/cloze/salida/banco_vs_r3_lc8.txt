@@ -1,0 +1,11 @@
+banco actual: 3 claves y 5 distractores
+claves juzgadas por la r3: 1 de 3 
+distractores juzgados por la r3: 0 de 5 
+redacciones sin juicio en la r3:
+[1] "Lo que recogió ese grado dividido entre el número de sus cursos."                       
+[2] "Lo que recogió ese grado dividido entre la cantidad de cursos de ese mismo grado."      
+[3] "Lo que recogió ese grado dividido entre el promedio de sus cursos."                     
+[4] "Lo que recogió ese grado dividido en partes iguales entre sus cursos y luego entre dos."
+[5] "Lo que recogió ese grado dividido entre el número de sus cursos al cuadrado."           
+[6] "Lo que recogió ese grado dividido entre la cantidad de cursos de ambos grados."         
+[7] "Lo que recogió la mayoría de los cursos de ese mismo grado."                            

@@ -1,0 +1,14 @@
+mezcla (semillas 1:100): X5 -4.2 · X6 -0.1 · X10 -7.3 · X6k1 1 · X6k2 1 · X6k3 -2.2 
+semillas usadas: 1001 .. 2258 
+CURSOS   réplica 1 (N = 100): X5 -2.9 · X6 1.3 · X10 -4 · X6k1 2 · X6k2 2 · X6k3 0
+CURSOS   réplica 2 (N = 100): X5 -6.1 · X6 6.7 · X10 1.3 · X6k1 10 · X6k2 10 · X6k3 0
+CURSOS   réplica 3 (N = 100): X5 -4.5 · X6 3 · X10 -0.7 · X6k1 4.5 · X6k2 4.5 · X6k3 0
+CURSOS   réplica 4 (N = 100): X5 -6.4 · X6 7.3 · X10 2.7 · X6k1 11 · X6k2 11 · X6k3 0
+CURSOS   réplica 5 (N = 100): X5 -5.1 · X6 3 · X10 0.7 · X6k1 4.5 · X6k2 4.5 · X6k3 0
+PROMEDIO réplica 1 (N = 100): X5 -6.4 · X6 6 · X10 2.7 · X6k1 9 · X6k2 9 · X6k3 0
+PROMEDIO réplica 2 (N = 100): X5 -4.7 · X6 5.7 · X10 0.7 · X6k1 8.5 · X6k2 8.5 · X6k3 0
+PROMEDIO réplica 3 (N = 100): X5 -8.7 · X6 7 · X10 6 · X6k1 10.5 · X6k2 10.5 · X6k3 0
+PROMEDIO réplica 4 (N = 100): X5 -2 · X6 2 · X10 -4 · X6k1 3 · X6k2 3 · X6k3 0
+PROMEDIO réplica 5 (N = 100): X5 -4.9 · X6 5 · X10 0.7 · X6k1 7.5 · X6k2 7.5 · X6k3 0
+CURSOS   las 500 juntas (solo depuración): X5 -5 · X6 4.3 · X10 0 · X6k1 6.4 · X6k2 6.4 · X6k3 0
+PROMEDIO las 500 juntas (solo depuración): X5 -5.3 · X6 5.1 · X10 1.2 · X6k1 7.7 · X6k2 7.7 · X6k3 0

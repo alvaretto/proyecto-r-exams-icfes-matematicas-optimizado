@@ -1,0 +1,1 @@
+Rscript --no-init-file x6_replicas.R > x6_replicas.txt 2>&1  225,59s user 0,08s system 99% cpu 3:46,63 total

@@ -1019,3 +1019,158 @@ regla anterior solo para el contraste de MC38.
 - **X6 por clave, +9,0 / +9,0 / +0,0 en la rama PROMEDIO:** sigue siendo el dato que el profesor no vio al decidir. Si quiere
   leer X6 clave por clave, la decisión vuelve a él.
 
+### Tanda 9a (2026-10-31): FASE 2C r3 y paso 8, sin sellar
+
+> La hizo el `orquestador-cloze` sobre el md5 `f98f9dda47e4f3cafc4e8b4e82cc956b`, con el verificador de la tanda «Va»
+> (`e11dc058`). No cambiaron el `.Rmd`, el verificador ni `cloze/ejercicio_state.json`: no se selló ningún paso. Evidencia en
+> `cloze/salida/`: `fase2c_r3_detractor.md` (reporte íntegro, sacado de la transcripción del detractor) y `coherencias_r9/`.
+
+**FASE 2C r3 (`AgenteDetractor` nuevo, sin `name:`): `APROBAR_CON_CAMBIOS`, sin ninguna CORRECCIÓN.** Citas: 9 de 9
+(`verificar_citas_detractor.py`, exit 0; el hook `SubagentStop` registró «ENTREGA VERIFICADA»).
+- Comprobado con su código, sin hallazgo: en la Parte 2 solo la clave da el promedio, con todas las lecturas razonables
+  («al cuadrado» como *T*/*n*² y como (*T*/*n*)²; «luego entre dos» como *T*/*n*/2 y como *T*/(*n*/2)), en las semillas 1:100 y
+  analíticamente en todo el espacio paralelo. La explicación actual de la moda cierra el BAJA del paso 8 de la r3. El tipo
+  retirado no deja rastro visible, y el sorteo conservado no cambia nada fuera del RNG (0 diferencias con `898608dd` en 100
+  semillas).
+- Reproducido con su código: E1 (120 versiones, 29 canónicas), L-C6 (P2-R1 +13,6, P2-R2 +21,9 y P2-R3 +7,5 pp), la lista de
+  L-C7 (216 reglas, 0 diferencias), las 9 celdas de L-C2 y su desglose por clave, X6 y X10 en la canónica, RL1 y RL2.
+
+| ID | Severidad · tipo | Qué | Estado |
+|---|---|---|---|
+| H1 | MEDIA · diagnosticidad | «Exacta» en L-C2 lo es sobre el sorteo de la Parte 2, pero muestral sobre la Parte 1 (una sola muestra de N = 100 por estrato). En 5 réplicas disjuntas de N = 100 por rama (la 1 reproduce el verificador), X6 da en CURSOS +1,3 / +6,7 / +3,0 / +7,3 / +3,0 y en PROMEDIO +6,0 / +5,7 / +7,0 / +2,0 / +5,0 pp: todas en «ok». Por clave, las claves 1 y 2 dan en CURSOS +2,0 / +10,0 / +4,5 / +11,0 / +4,5 y en PROMEDIO +9,0 / +8,5 / +10,5 / +3,0 / +7,5 pp; la clave 3, +0,0 en todas. Con las 500 juntas (solo depuración): CURSOS +4,3 (claves 1 y 2: +6,4) y PROMEDIO +5,1 (+7,7). Para CURSOS por clave, el registro de «Va» da +2,0, la menor de las cinco | Al profesor: es la lectura por clave que la decisión «Va» 1 le reservó, ahora en las dos ramas y con réplicas |
+| H2 | MEDIA · cobertura del verificador | Ningún mutante prueba la segunda cláusula de L-C7 («o que pase de su cifra»): `p6_token_juzgar()` exige `round(ex, 1) <= f` y `<= fe`, y MC36 y MC38 solo prueban reglas fuera de la lista. Quedan sin prueba las 32 reglas de la lista firmadas a la mitad de su tope (8 por estrato). El detractor propone MC39 | Para el coordinador: endurecer el verificador (esta tanda no podía tocarlo) |
+| H3 | BAJA · precisión de la Solution | Parte 6: «habría ganado con un curso más solo si su promedio por curso … fuera mayor que la diferencia» da solo la condición necesaria (la relación es «si y solo si») y, por el subjuntivo, en el caso verdadero se lee como contrafáctica. No afirma nada falso | Opcional: cambia el `.Rmd` (reapertura, pasos 3 a 6 y detractor nuevo) |
+
+**Paso 8 (`AgenteValidadorVisual`, sin `name:`; oráculo reconstruido en `cloze/salida/coherencias_r9/`):
+`VEREDICTO_COHERENCIAS: OK`.**
+- El juicio de las 8 opciones de la Parte 2 (3 correctas y 5 incorrectas) lo escribió el validador sin abrir el `.Rmd`, y lo
+  respaldó recalculando cada operación con la tabla mostrada: ninguna incorrecta da el promedio en 200 de 200 filas, y las
+  explicaciones que dicen qué da una operación se cumplen en 240 de 240 apariciones.
+- N = 100: de 126 a 129 comprobaciones por versión (12 720 en total), 0 fallos. Formatos: HTML 100, PDF 100, Moodle 100 (más 30
+  por la ruta de `exportar_moodle_cloze.R`), PDF con el pandoc de RStudio 5 y DOCX 1; 5 529 comprobaciones entre formatos, 0
+  fallos. 88 mutaciones de control, todas cazadas por su sonda.
+- Límite de independencia, declarado por el validador: el volcado del pool le mostró la marca de R/exams junto a cada texto, y
+  este archivo le llegó al contexto (Claude Code lo carga al leer cualquier archivo del subárbol). La evidencia independiente es
+  el recálculo numérico, junto con la función de verdad propia del detractor.
+- BAJA: el DOCX deja los `##ANSWERi##` a la vista (ya declarado); «al cuadrado» admite dos lecturas, las dos falsas, y la
+  explicación describe una; las claves 2 y 3 están redactadas como operación, no como «lo que indica».
+
+**Pendiente antes de la tanda 9b:** H1 y H3, al profesor; H2 (MC39), al coordinador. Si H3 se aplica, cambia el `.Rmd`:
+reapertura y FASE 2C r4 con un detractor nuevo. Si no, la 9b sella el paso 7 con el reporte de la r3 y lo que se decida de H1
+a H3. Los scripts del detractor quedaron en `cloze/salida/fase2c_r3/`.
+
+### L-C8 · El paso 8 se cierra con un oráculo de coherencias que falla ante texto no juzgado (firmada el 2026-10-31)
+
+> **Firmada por el profesor el 2026-10-31**, a propuesta del coordinador, tras preguntar si `salida/coherencias…` se volvía
+> regla o ley permanente del `orquestador-cloze`. Respuesta literal: «Sí», a las dos propuestas: esta ley local y una fila en la
+> tabla de puntos ciegos de `.claude/agents/orquestador-cloze.md`. **No es regla del repo:** según el criterio de promoción, le
+> falta un caso grave o repetido, porque el oráculo dio 0 discrepancias y la Solution falsa del SCHOICE la cazó el detractor.
+> Regla #24 **H-5**: queda por escrito quién decidió, cuándo y por qué.
+
+**Exige.** El paso 8 de este CLOZE se cierra con el oráculo de coherencias de la ronda
+(`cloze/salida/coherencias_r<n>/verificar_coherencias.R`), que cumple cuatro condiciones:
+1. No usa objetos internos del `data_generation` ni abre el `.Rmd` para armar el pool. Toma lo que R/exams emite (`xexams()`)
+   y lo recalcula desde las tablas que se muestran.
+2. Falla ante todo texto de la Parte 2 que no juzgó.
+3. Se rehace cada vez que cambia el banco.
+4. Sus mutaciones de control mueren por su propia sonda, entre ellas una con un texto que no juzgó.
+
+| Exige | Guarda (`coherencias_r9/verificar_coherencias.R`) | Mutante |
+|---|---|---|
+| Falla ante texto no juzgado | S2 por versión: «las cuatro opciones de la Parte 2 salen del banco de ocho textos que juzgué» | «opción de la Parte 2 del tipo retirado»: cazada por esa misma S2. «Cuarta paráfrasis correcta escrita por mí»: cazada, 5 fallos |
+| Se rehace si cambia el banco | S2 global: «las opciones emitidas son EXACTAMENTE los ocho textos que juzgué». Un banco con un texto de más o de menos lo hace fallar | — (la condición es global; las mutaciones actúan sobre una versión) |
+| Juicio propio, sin el generador | Pool `pool_parte2_emitido.*`, juzgado por el validador, más el recálculo de cada operación con la tabla: 200 de 200 filas y 240 de 240 explicaciones | 88 mutaciones de control (40 de coherencias y 48 de formatos), las 88 cazadas por su sonda |
+
+- **Origen, medido.** El oráculo de la tanda 6 (`coherencias_r3/`) solo había juzgado 1 de las 8 redacciones que la Parte 2
+  tiene desde la tanda 8: 1 de las 3 claves y ninguno de los 5 distractores (`cloze/salida/banco_vs_r3_lc8.R`/`.txt`). Con su S2
+  habría fallado, así que hubo que rehacerlo: es `coherencias_r9/`, de la tanda 9a.
+- **Límite, declarado por la tanda 9a.** El juicio del validador no fue ciego: el volcado del pool le mostró la marca de R/exams
+  junto a cada texto, y este archivo le llegó al contexto, porque Claude Code lo carga al leer cualquier archivo del subárbol.
+  La evidencia independiente es el recálculo numérico, junto con la función de verdad propia del detractor.
+- **Endurecimiento** (autónomo, porque endurece): cuando el oráculo se rehaga, el volcado del pool para el juicio se hará sin las
+  marcas de R/exams.
+- **Fila del orquestador** (con el mismo «Sí»): «Paso 8 en verde con un oráculo de coherencias de banco fijo», en la tabla de
+  puntos ciegos de `.claude/agents/orquestador-cloze.md`. El respaldo está en `.claude/backups/2026-10-31-oraculo-coherencias/`.
+  Pasan las invariantes I-1 a I-10 y las cuatro suites que vigilan el orquestador.
+
+
+### Cierre de la tanda 9a (2026-11-02): H2 cerrado con MC39, rótulo de L-C2 y fe de erratas de «Va»
+
+> Lo hizo el coordinador, sin sellar nada. No cambiaron el `.Rmd` (md5 `f98f9dda47e4f3cafc4e8b4e82cc956b`) ni
+> `cloze/ejercicio_state.json` (6/11). Solo cambió `cloze/verificar_espacio_cloze.R`: +37/−5 frente a `e11dc058`. Evidencia en
+> `cloze/salida/`: `verificar_espacio_cloze_r9.txt` (445 s) y `comparar_r9_va.py`/`.txt`.
+
+**H2 de la FASE 2C r3, cerrado: MC39 en E8 (L-C7, la cláusula «o que pase de su cifra»).** Endurece, así que es autónomo (H-5).
+- **Sonda directa** (la que propuso el detractor). No depende del texto, así que sigue probando la cláusula aunque otro ciclo
+  cambie las redacciones. Toma una de las 32 reglas de la lista que están firmadas por debajo del tope de su estrato (8 por
+  estrato) y la sube 1 pp sobre su cifra. Comprueba que `p6_token_juzgar()` la deja pendiente y que `p6_token_juzgar_estrato()`
+  la cubría: CURSOS · P6-V «curso habría ganado», ventaja a +13,5 pp (firmada +12,5, tope +25,0).
+- **Mutante de texto.** BP_gano gana «perdió hubiera tenido», el trigrama que solo llevaba BP_perdio, y con eso pasa a delatar el
+  veredicto. En CURSOS y PROMEDIO sube de +12,5 a +25,0 pp (tope +25,0). Queda pendiente con la firma regla por regla y cubierto
+  con la de estrato: `cazado_por_su_sonda`.
+- La fila de L-C7 en la tabla de leyes de «Va» suma MC39 a MC36 y MC38.
+
+**H1, la parte del coordinador: el rótulo.** En E3, las 13 líneas de X5, X6 y X10 dicen ahora «exacta sobre el sorteo de la
+Parte 2 y muestral sobre la Parte 1 (N = 100)». Las cifras no cambian. La lectura por clave sigue con el profesor.
+
+**Verificador r9: exit 4, «EN ROJO BAJO OVERRIDE FIRMADO», 327 cifras dentro de lo firmado, 0 fallos y 0 pendientes.** Se
+comparó con `verificar_espacio_cloze_va.txt`, devolviendo los 13 rótulos a su forma anterior y apartando las 5 líneas de MC39.
+No queda ninguna línea de diferencia, sin contar los espacios finales de la tabla resumen, que se ensancha con la fila de MC39.
+La primera corrida (2026-10-31, 15:01) se cortó al cerrar la sesión, en la línea 718 de 1 134 y sin resultado. Se repitió
+entera el 2026-11-02.
+
+**L-C8, comprobada en el oráculo de la 9a** (`coherencias_r9/verificar_coherencias.R`): la S2 por versión (línea 235) y la S2
+global (líneas 511-515) están presentes, y la mutación con una redacción nueva (la cuarta paráfrasis correcta) está cazada por
+su sonda (`control_moodle.txt`).
+
+**Fe de erratas de § «Tanda «Va»».** Este archivo solo se amplía, así que la corrección se hace aquí y no en la tabla.
+- La cabecera «Regla, exacta (exceso en pp)», el «exactas» de la fila de L-C2 en la tabla de leyes y el «+6,0 pp en la medida
+  exacta» de la tanda 8 son exactos solo sobre el sorteo de la Parte 2. Sobre la Parte 1 son muestrales: una sola muestra de
+  N = 100 por estrato, la del verificador.
+- En las 5 réplicas disjuntas de la FASE 2C r3, X6 da por rama de +1,3 a +7,3 pp en CURSOS y de +2,0 a +7,0 pp en PROMEDIO.
+  Para las claves 1 y 2, da de +2,0 a +11,0 pp en CURSOS y de +3,0 a +10,5 pp en PROMEDIO.
+- Las cifras de la tabla no cambian; cambia lo que significan. La decisión «Va» 1 se tomó leyéndolas como exactas. Qué
+  significa eso para ella lo decide el profesor (H1); no se relaja nada mientras tanto (H-5).
+
+**Pendiente:** H1 y H3, al profesor; las candidatas del repo #3 a #5 de la 9a (tocan `.claude/`, regla #17); el sello del
+paso 7, en la tanda 9b.
+
+### Decisión del profesor tras la tanda 9a (2026-11-02)
+
+> **Firmada por el profesor el 2026-11-02**, en el diálogo de cierre de la tanda 9a (md5 `f98f9dda47e4f3cafc4e8b4e82cc956b`,
+> verificador r9 en exit 4). Respuestas literales: H1 «(a) Residuo declarado»; H3 «(a) Diferir»; candidatas «#3 Lanzamiento
+> asíncrono, #4 §P7-E iii en el íntegro, #5 FASE 2C y hook de citas» y, al aclarar que también había marcado «Ninguna por
+> ahora», «Las tres, ahora»; paso 7 «(a) Sellar con la r3». Regla #24 **H-5**: queda por escrito quién decidió, cuándo y con qué
+> cifras.
+
+1. **H1: X6 por clave y por rama, residuo declarado.** La puerta sigue juzgando X6 por rama, como en la decisión «Va» 1: exacta
+   sobre el sorteo de la Parte 2 y muestral sobre la Parte 1, con N = 100 por estrato. No se relaja nada. El desglose «por
+   clave» (según cuál de los tres textos de clave de la Parte 2 sale) queda como residuo, con las cifras de
+   `cloze/salida/fase2c_r3/x6_replicas.txt` (5 réplicas disjuntas de N = 100 por rama; la réplica 1 es la del verificador):
+
+   | X6, exceso en pp | Réplicas 1 a 5 | Las 500 juntas (solo depuración) |
+   |---|---|---|
+   | CURSOS, por rama | +1,3 / +6,7 / +3,0 / +7,3 / +3,0 | +4,3 |
+   | CURSOS, claves 1 y 2 (cada una) | +2,0 / +10,0 / +4,5 / +11,0 / +4,5 | +6,4 |
+   | PROMEDIO, por rama | +6,0 / +5,7 / +7,0 / +2,0 / +5,0 | +5,1 |
+   | PROMEDIO, claves 1 y 2 (cada una) | +9,0 / +8,5 / +10,5 / +3,0 / +7,5 | +7,7 |
+   | Clave 3, las dos ramas | +0,0 en las cinco | +0,0 |
+
+   En la mezcla, que es lo que ve el estudiante (la clave de la Parte 2, no la rama), por clave da +1,0 / +1,0 / −2,2 pp
+   (semillas 1:100).
+2. **H3: se difiere.** La reescritura del «solo si … fuera mayor» de la Solution de la Parte 6 pasa al próximo ciclo del CLOZE,
+   junto con el pendiente del SCHOICE. El `.Rmd` no cambia en este ciclo.
+3. **Candidatas del repo #3, #4 y #5 de la 9a: se aplican ahora**, con respaldo y verificación de invariantes (regla #17), en un
+   commit aparte del del CLOZE. #3: los orquestadores describen como bloqueante el lanzamiento sin `name:`, que es asíncrono
+   (y el Paso 0 de la regla #9). #4: aclaración de §P7-E iii en el texto íntegro de la regla #22. #5: cómo transmite un
+   orquestador la FASE 2C sin que lo bloquee el hook de citas.
+4. **Paso 7: se sella con la FASE 2C r3.** MC39 se cableó después de la r3. Es compatible con la regla #9 por tres razones: el
+   `.Rmd` es el mismo md5 que se auditó, MC39 es el cambio que pidió el propio `APROBAR_CON_CAMBIOS` (H2) y ninguna cifra firmada
+   se movió (`cloze/salida/comparar_r9_va.txt`). La nota del sello lo declara, y el próximo detractor revisa MC39.
+
+**¿Ley local o regla?**
+- H1 y H3 no crean ley: un residuo declarado no es una invariante, y H3 es una instancia de la regla #13 v1.2.
+- La lectura del paso 7 podría ser una aclaración de la regla #9. Diría que un cambio pedido por un `APROBAR_CON_CAMBIOS` que no
+  toca el `.Rmd` ni las cifras firmadas no exige otro detractor antes del sello. No se promueve: es la primera vez, no es grave
+  y suaviza la lectura literal de «un detractor que auditó una versión anterior no es FASE 2C». Por H-5, eso lo decide un humano
+  caso por caso.

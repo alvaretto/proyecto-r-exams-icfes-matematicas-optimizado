@@ -1,0 +1,98 @@
+
+=== semilla 7 ===
+pregunta (líneas): 51 → 51 · líneas distintas:  
+opciones: Parte 1 igual: TRUE · Partes 3-5 igual: TRUE · Parte 6 igual: TRUE · Parte 2 igual: FALSE 
+exsolution: Parte 1 igual: TRUE · Partes 3-5 iguales: TRUE · Parte 6 igual: TRUE · Parte 2: r3 0001 r9 0001 
+retroalimentación: iguales las de las Partes 1, 3-5 y 6: TRUE · Parte 2 igual: FALSE 
+Solution: líneas solo en la r3: 4 · solo en la r9: 4 
+  solo r3: - Parte 2. «Lo que recogió ese grado dividido en partes iguales entre sus cursos.» 
+  solo r3: - «Lo que recogió el que queda en el medio al ordenar sus cursos en ese grado.» Eso describe la mediana de lo que recogieron los cursos, no el promedio. 
+  solo r3: - «Lo que recogió cualquiera de sus cursos porque en el grado recogieron lo mismo.» El promedio no dice que todos los cursos recogieron lo mismo: dice cuánto le tocaría a 
+  solo r3: - «Lo que recogió el grado sumando lo de sus cursos.» Eso es el total del grado; el promedio por curso es ese total repartido por igual entre los cursos. 
+  solo r9: - Parte 2. «Lo que recogió ese grado dividido entre el número de sus cursos.» 
+  solo r9: - «Lo que recogió ese grado dividido entre la cantidad de cursos de ambos grados.» Dividir entre los cursos de los dos grados da menos que el promedio de ese grado: lo re 
+  solo r9: - «Lo que recogió ese grado dividido entre el número de sus cursos al cuadrado.» Dividir entre el número de cursos al cuadrado da el promedio dividido otra vez entre los  
+  solo r9: - «Lo que recogió ese grado dividido en partes iguales entre sus cursos y luego entre dos.» Dividir otra vez entre dos da la mitad del promedio: el promedio es lo recogid 
+orden de las líneas comunes de la Solution conservado: TRUE 
+
+=== semilla 3 ===
+pregunta (líneas): 51 → 51 · líneas distintas: 32 
+  r3: **Parte 2.** ¿Qué se compara en la tabla del otro colegio al decidir qué grado ganó el concurso? 
+  r9: **Parte 2.** ¿Qué indica, en la tabla del otro colegio, el promedio de plástico recogido por curso de un grado? 
+opciones: Parte 1 igual: TRUE · Partes 3-5 igual: TRUE · Parte 6 igual: TRUE · Parte 2 igual: FALSE 
+exsolution: Parte 1 igual: TRUE · Partes 3-5 iguales: TRUE · Parte 6 igual: TRUE · Parte 2: r3 1000 r9 1000 
+retroalimentación: iguales las de las Partes 1, 3-5 y 6: TRUE · Parte 2 igual: FALSE 
+Solution: líneas solo en la r3: 6 · solo en la r9: 6 
+  solo r3: - Parte 2. «La cantidad de cursos multiplicada por el promedio de un grado y lo mismo del otro grado.» 
+  solo r3: Parte 2. Gana el grado que recogió más en total, y el total de cada grado es la cantidad de cursos multiplicada por el promedio por curso. Comparar solo los promedios, o  
+  solo r3: **Parte 2 · Comparaciones que no deciden qué grado ganó** 
+  solo r3: - «La cantidad de cursos participantes de un grado y la del otro grado.» Más cursos no garantizan un total mayor si cada curso recogió, en promedio, menos. 
+  solo r3: - «La diferencia entre el promedio por curso de un grado y el del otro grado.» La resta de los promedios compara un curso típico con otro; el concurso se decide por los t 
+  solo r3: - «El promedio por curso de un grado y el del otro grado.» Un promedio mayor no garantiza un total mayor si en ese grado participaron menos cursos. 
+  solo r9: - Parte 2. «Lo que recogió ese grado dividido entre la cantidad de cursos de ese mismo grado.» 
+  solo r9: Parte 2. El promedio por curso es el total del grado dividido entre la cantidad de cursos: lo que le tocaría a cada curso si el total se repartiera por igual. No dice cuá 
+  solo r9: **Parte 2 · Lecturas del promedio que no sirven** 
+  solo r9: - «Lo que recogió ese grado dividido en partes iguales entre sus cursos y luego entre dos.» Dividir otra vez entre dos da la mitad del promedio: el promedio es lo recogid 
+  solo r9: - «Lo que recogió ese grado dividido entre el número de sus cursos al cuadrado.» Dividir entre el número de cursos al cuadrado da el promedio dividido otra vez entre los  
+  solo r9: - «Lo que recogió ese grado dividido entre el promedio de sus cursos.» Dividir lo que recogió el grado entre su promedio da la cantidad de cursos, no el promedio: el prom 
+orden de las líneas comunes de la Solution conservado: TRUE 
+
+=== semilla 2 ===
+pregunta (líneas): 51 → 51 · líneas distintas: 32 
+  r3: **Parte 2.** ¿Qué se compara en la tabla del otro colegio al decidir qué grado ganó el concurso? 
+  r9: **Parte 2.** ¿Qué indica, en la tabla del otro colegio, el promedio de cartón recogido por curso de un grado? 
+opciones: Parte 1 igual: TRUE · Partes 3-5 igual: TRUE · Parte 6 igual: TRUE · Parte 2 igual: FALSE 
+exsolution: Parte 1 igual: TRUE · Partes 3-5 iguales: TRUE · Parte 6 igual: TRUE · Parte 2: r3 0001 r9 0001 
+retroalimentación: iguales las de las Partes 1, 3-5 y 6: TRUE · Parte 2 igual: FALSE 
+Solution: líneas solo en la r3: 6 · solo en la r9: 6 
+  solo r3: - Parte 2. «La suma de lo recogido por los cursos de un grado y la suma del otro grado.» 
+  solo r3: Parte 2. Gana el grado que recogió más en total, y el total de cada grado es la cantidad de cursos multiplicada por el promedio por curso. Comparar solo los promedios, o  
+  solo r3: **Parte 2 · Comparaciones que no deciden qué grado ganó** 
+  solo r3: - «La diferencia entre el promedio por curso de un grado y el del otro grado.» La resta de los promedios compara un curso típico con otro; el concurso se decide por los t 
+  solo r3: - «El promedio por curso de un grado y el del otro grado.» Un promedio mayor no garantiza un total mayor si en ese grado participaron menos cursos. 
+  solo r3: - «El promedio dividido entre la cantidad de cursos de un grado y el del otro grado.» Dividir el promedio entre la cantidad de cursos no da ningún total: el total es su p 
+  solo r9: - Parte 2. «Lo que recogió ese grado dividido en partes iguales entre sus cursos.» 
+  solo r9: Parte 2. El promedio por curso es el total del grado dividido entre la cantidad de cursos: lo que le tocaría a cada curso si el total se repartiera por igual. No dice cuá 
+  solo r9: **Parte 2 · Lecturas del promedio que no sirven** 
+  solo r9: - «Lo que recogió ese grado dividido entre el número de sus cursos al cuadrado.» Dividir entre el número de cursos al cuadrado da el promedio dividido otra vez entre los  
+  solo r9: - «Lo que recogió ese grado dividido entre el promedio de sus cursos.» Dividir lo que recogió el grado entre su promedio da la cantidad de cursos, no el promedio: el prom 
+  solo r9: - «Lo que recogió la mayoría de los cursos de ese mismo grado.» Lo que recogió la mayoría de los cursos, si más de la mitad recogió lo mismo, es la moda, y puede ser dist 
+orden de las líneas comunes de la Solution conservado: TRUE 
+
+=== semilla 1 ===
+pregunta (líneas): 51 → 51 · líneas distintas:  
+opciones: Parte 1 igual: TRUE · Partes 3-5 igual: TRUE · Parte 6 igual: TRUE · Parte 2 igual: FALSE 
+exsolution: Parte 1 igual: TRUE · Partes 3-5 iguales: TRUE · Parte 6 igual: TRUE · Parte 2: r3 0010 r9 0010 
+retroalimentación: iguales las de las Partes 1, 3-5 y 6: TRUE · Parte 2 igual: FALSE 
+Solution: líneas solo en la r3: 4 · solo en la r9: 4 
+  solo r3: - Parte 2. «Lo que recogió ese grado dividido entre sus cursos.» 
+  solo r3: - «Lo que recogió el grado sumando lo de sus cursos.» Eso es el total del grado; el promedio por curso es ese total repartido por igual entre los cursos. 
+  solo r3: - «Lo que recogió la mayoría de sus cursos en ese grado.» Eso describe la moda, el valor más repetido, no el promedio. 
+  solo r3: - «Lo que recogió el que queda en el medio al ordenar sus cursos en ese grado.» Eso describe la mediana de lo que recogieron los cursos, no el promedio. 
+  solo r9: - Parte 2. «Lo que recogió ese grado dividido entre la cantidad de cursos de ese mismo grado.» 
+  solo r9: - «Lo que recogió ese grado dividido en partes iguales entre sus cursos y luego entre dos.» Dividir otra vez entre dos da la mitad del promedio: el promedio es lo recogid 
+  solo r9: - «Lo que recogió la mayoría de los cursos de ese mismo grado.» Lo que recogió la mayoría de los cursos, si más de la mitad recogió lo mismo, es la moda, y puede ser dist 
+  solo r9: - «Lo que recogió ese grado dividido entre la cantidad de cursos de ambos grados.» Dividir entre los cursos de los dos grados da menos que el promedio de ese grado: lo re 
+orden de las líneas comunes de la Solution conservado: TRUE 
+
+=== semilla 4 ===
+pregunta (líneas): 51 → 51 · líneas distintas: 32 
+  r3: **Parte 2.** ¿Qué se compara en la tabla del otro colegio al decidir qué grado ganó el concurso? 
+  r9: **Parte 2.** ¿Qué indica, en la tabla del otro colegio, el promedio de plástico recogido por curso de un grado? 
+opciones: Parte 1 igual: TRUE · Partes 3-5 igual: TRUE · Parte 6 igual: TRUE · Parte 2 igual: FALSE 
+exsolution: Parte 1 igual: TRUE · Partes 3-5 iguales: TRUE · Parte 6 igual: TRUE · Parte 2: r3 1000 r9 1000 
+retroalimentación: iguales las de las Partes 1, 3-5 y 6: TRUE · Parte 2 igual: FALSE 
+Solution: líneas solo en la r3: 6 · solo en la r9: 6 
+  solo r3: - Parte 2. «La suma de lo recogido por los cursos de un grado y la suma del otro grado.» 
+  solo r3: Parte 2. Gana el grado que recogió más en total, y el total de cada grado es la cantidad de cursos multiplicada por el promedio por curso. Comparar solo los promedios, o  
+  solo r3: **Parte 2 · Comparaciones que no deciden qué grado ganó** 
+  solo r3: - «El promedio por curso de un grado y el del otro grado.» Un promedio mayor no garantiza un total mayor si en ese grado participaron menos cursos. 
+  solo r3: - «La cantidad de cursos participantes de un grado y la del otro grado.» Más cursos no garantizan un total mayor si cada curso recogió, en promedio, menos. 
+  solo r3: - «La diferencia entre el promedio por curso de un grado y el del otro grado.» La resta de los promedios compara un curso típico con otro; el concurso se decide por los t 
+  solo r9: - Parte 2. «Lo que recogió ese grado dividido en partes iguales entre sus cursos.» 
+  solo r9: Parte 2. El promedio por curso es el total del grado dividido entre la cantidad de cursos: lo que le tocaría a cada curso si el total se repartiera por igual. No dice cuá 
+  solo r9: **Parte 2 · Lecturas del promedio que no sirven** 
+  solo r9: - «Lo que recogió ese grado dividido entre el promedio de sus cursos.» Dividir lo que recogió el grado entre su promedio da la cantidad de cursos, no el promedio: el prom 
+  solo r9: - «Lo que recogió ese grado dividido en partes iguales entre sus cursos y luego entre dos.» Dividir otra vez entre dos da la mitad del promedio: el promedio es lo recogid 
+  solo r9: - «Lo que recogió ese grado dividido entre el número de sus cursos al cuadrado.» Dividir entre el número de cursos al cuadrado da el promedio dividido otra vez entre los  
+orden de las líneas comunes de la Solution conservado: TRUE 

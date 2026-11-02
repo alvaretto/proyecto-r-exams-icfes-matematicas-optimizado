@@ -1,0 +1,432 @@
+CURSOS|P6-V «participado»|ventaja|+25.0|+25.0
+CURSOS|P6-V «con»|ventaja|+25.0|+25.0
+CURSOS|P6-V «hubiera participado»|ventaja|+25.0|+25.0
+CURSOS|P6-V «participado con»|ventaja|+25.0|+25.0
+CURSOS|P6-V «su promedio»|ventaja|+25.0|+25.0
+CURSOS|P6-V «curso habría»|ventaja|+25.0|+25.0
+CURSOS|P6-V «hubiera participado con»|ventaja|+25.0|+25.0
+CURSOS|P6-V «conservando su promedio»|ventaja|+25.0|+25.0
+CURSOS|P6-V «su promedio por»|ventaja|+25.0|+25.0
+CURSOS|P6-V «por curso habría»|ventaja|+25.0|+25.0
+CURSOS|P6-V «tenido»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «mismo»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «cantidad»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «de»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «hubiera tenido»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «tenido el»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «el mismo»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «mismo promedio»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «curso que»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «que el»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «su cantidad»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «cantidad de»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «de cursos»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «cursos habría»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «hubiera tenido el»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «tenido el mismo»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «el mismo promedio»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «mismo promedio por»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «por curso que»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «curso que el»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «que el que»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «conservando su cantidad»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «su cantidad de»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «cantidad de cursos»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «de cursos habría»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «tantos»|ventaja|+25.0|+25.0
+CURSOS|P6-V «como»|ventaja|+25.0|+25.0
+CURSOS|P6-V «con tantos»|ventaja|+25.0|+25.0
+CURSOS|P6-V «tantos cursos»|ventaja|+25.0|+25.0
+CURSOS|P6-V «cursos como»|ventaja|+25.0|+25.0
+CURSOS|P6-V «como el»|ventaja|+25.0|+25.0
+CURSOS|P6-V «participado con tantos»|ventaja|+25.0|+25.0
+CURSOS|P6-V «con tantos cursos»|ventaja|+25.0|+25.0
+CURSOS|P6-V «tantos cursos como»|ventaja|+25.0|+25.0
+CURSOS|P6-V «cursos como el»|ventaja|+25.0|+25.0
+CURSOS|P6-V «como el que»|ventaja|+25.0|+25.0
+CURSOS|P6-V «perdió hubiera participado»|ventaja|+12.5|+12.5
+CURSOS|P6-V «curso habría ganado»|ventaja|+12.5|+12.5
+CURSOS|P6-V «curso habría perdido»|ventaja|+12.5|+12.5
+CURSOS|P6-V «ganó hubiera tenido»c|ventaja|+12.5|+12.5
+CURSOS|P6-V «cursos habría perdido»c|ventaja|+12.5|+12.5
+CURSOS|P6-V «perdió hubiera tenido»c|ventaja|+12.5|+12.5
+CURSOS|P6-V «cursos habría ganado»c|ventaja|+12.5|+12.5
+CURSOS|P6-V «ganó hubiera participado»|ventaja|+12.5|+12.5
+PROMEDIO|P6-V «participado»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «con»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «hubiera participado»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «participado con»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «su promedio»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «curso habría»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «hubiera participado con»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «conservando su promedio»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «su promedio por»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «por curso habría»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «tantos»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «como»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «con tantos»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «tantos cursos»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «cursos como»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «como el»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «participado con tantos»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «con tantos cursos»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «tantos cursos como»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «cursos como el»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «como el que»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «tenido»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «mismo»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «cantidad»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «de»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «hubiera tenido»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «tenido el»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «el mismo»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «mismo promedio»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «curso que»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «que el»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «su cantidad»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «cantidad de»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «de cursos»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «cursos habría»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «hubiera tenido el»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «tenido el mismo»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «el mismo promedio»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «mismo promedio por»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «por curso que»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «curso que el»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «que el que»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «conservando su cantidad»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «su cantidad de»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «cantidad de cursos»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «de cursos habría»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «perdió hubiera participado»c|ventaja|+12.5|+12.5
+PROMEDIO|P6-V «curso habría ganado»c|ventaja|+12.5|+12.5
+PROMEDIO|P6-V «curso habría perdido»c|ventaja|+12.5|+12.5
+PROMEDIO|P6-V «ganó hubiera participado»c|ventaja|+12.5|+12.5
+PROMEDIO|P6-V «ganó hubiera tenido»|ventaja|+12.5|+12.5
+PROMEDIO|P6-V «cursos habría perdido»|ventaja|+12.5|+12.5
+PROMEDIO|P6-V «perdió hubiera tenido»|ventaja|+12.5|+12.5
+PROMEDIO|P6-V «cursos habría ganado»|ventaja|+12.5|+12.5
+k1|P6-V «participado»c|ventaja|+16.4|+16.4
+k1|P6-V «con»c|ventaja|+16.4|+16.4
+k1|P6-V «hubiera participado»c|ventaja|+16.4|+16.4
+k1|P6-V «participado con»c|ventaja|+16.4|+16.4
+k1|P6-V «su promedio»c|ventaja|+16.4|+16.4
+k1|P6-V «curso habría»c|ventaja|+16.4|+16.4
+k1|P6-V «hubiera participado con»c|ventaja|+16.4|+16.4
+k1|P6-V «conservando su promedio»c|ventaja|+16.4|+16.4
+k1|P6-V «su promedio por»c|ventaja|+16.4|+16.4
+k1|P6-V «por curso habría»c|ventaja|+16.4|+16.4
+k1|P6-V «tantos»c|ventaja|+16.4|+16.4
+k1|P6-V «como»c|ventaja|+16.4|+16.4
+k1|P6-V «con tantos»c|ventaja|+16.4|+16.4
+k1|P6-V «tantos cursos»c|ventaja|+16.4|+16.4
+k1|P6-V «cursos como»c|ventaja|+16.4|+16.4
+k1|P6-V «como el»c|ventaja|+16.4|+16.4
+k1|P6-V «participado con tantos»c|ventaja|+16.4|+16.4
+k1|P6-V «con tantos cursos»c|ventaja|+16.4|+16.4
+k1|P6-V «tantos cursos como»c|ventaja|+16.4|+16.4
+k1|P6-V «cursos como el»c|ventaja|+16.4|+16.4
+k1|P6-V «como el que»c|ventaja|+16.4|+16.4
+k1|P6-V «tenido»|ventaja|+16.4|+16.4
+k1|P6-V «mismo»|ventaja|+16.4|+16.4
+k1|P6-V «cantidad»|ventaja|+16.4|+16.4
+k1|P6-V «de»|ventaja|+16.4|+16.4
+k1|P6-V «hubiera tenido»|ventaja|+16.4|+16.4
+k1|P6-V «tenido el»|ventaja|+16.4|+16.4
+k1|P6-V «el mismo»|ventaja|+16.4|+16.4
+k1|P6-V «mismo promedio»|ventaja|+16.4|+16.4
+k1|P6-V «curso que»|ventaja|+16.4|+16.4
+k1|P6-V «que el»|ventaja|+16.4|+16.4
+k1|P6-V «su cantidad»|ventaja|+16.4|+16.4
+k1|P6-V «cantidad de»|ventaja|+16.4|+16.4
+k1|P6-V «de cursos»|ventaja|+16.4|+16.4
+k1|P6-V «cursos habría»|ventaja|+16.4|+16.4
+k1|P6-V «hubiera tenido el»|ventaja|+16.4|+16.4
+k1|P6-V «tenido el mismo»|ventaja|+16.4|+16.4
+k1|P6-V «el mismo promedio»|ventaja|+16.4|+16.4
+k1|P6-V «mismo promedio por»|ventaja|+16.4|+16.4
+k1|P6-V «por curso que»|ventaja|+16.4|+16.4
+k1|P6-V «curso que el»|ventaja|+16.4|+16.4
+k1|P6-V «que el que»|ventaja|+16.4|+16.4
+k1|P6-V «conservando su cantidad»|ventaja|+16.4|+16.4
+k1|P6-V «su cantidad de»|ventaja|+16.4|+16.4
+k1|P6-V «cantidad de cursos»|ventaja|+16.4|+16.4
+k1|P6-V «de cursos habría»|ventaja|+16.4|+16.4
+k1|P6-V «perdió hubiera participado»c|ventaja|+8.2|+8.2
+k1|P6-V «curso habría ganado»c|ventaja|+8.2|+8.2
+k1|P6-V «curso habría perdido»c|ventaja|+8.2|+8.2
+k1|P6-V «ganó hubiera participado»c|ventaja|+8.2|+8.2
+k1|P6-V «ganó hubiera tenido»|ventaja|+8.2|+8.2
+k1|P6-V «cursos habría perdido»|ventaja|+8.2|+8.2
+k1|P6-V «perdió hubiera tenido»|ventaja|+8.2|+8.2
+k1|P6-V «cursos habría ganado»|ventaja|+8.2|+8.2
+k2|P6-V «tenido»c|ventaja|+16.7|+16.7
+k2|P6-V «mismo»c|ventaja|+16.7|+16.7
+k2|P6-V «cantidad»c|ventaja|+16.7|+16.7
+k2|P6-V «de»c|ventaja|+16.7|+16.7
+k2|P6-V «hubiera tenido»c|ventaja|+16.7|+16.7
+k2|P6-V «tenido el»c|ventaja|+16.7|+16.7
+k2|P6-V «el mismo»c|ventaja|+16.7|+16.7
+k2|P6-V «mismo promedio»c|ventaja|+16.7|+16.7
+k2|P6-V «curso que»c|ventaja|+16.7|+16.7
+k2|P6-V «que el»c|ventaja|+16.7|+16.7
+k2|P6-V «su cantidad»c|ventaja|+16.7|+16.7
+k2|P6-V «cantidad de»c|ventaja|+16.7|+16.7
+k2|P6-V «de cursos»c|ventaja|+16.7|+16.7
+k2|P6-V «cursos habría»c|ventaja|+16.7|+16.7
+k2|P6-V «hubiera tenido el»c|ventaja|+16.7|+16.7
+k2|P6-V «tenido el mismo»c|ventaja|+16.7|+16.7
+k2|P6-V «el mismo promedio»c|ventaja|+16.7|+16.7
+k2|P6-V «mismo promedio por»c|ventaja|+16.7|+16.7
+k2|P6-V «por curso que»c|ventaja|+16.7|+16.7
+k2|P6-V «curso que el»c|ventaja|+16.7|+16.7
+k2|P6-V «que el que»c|ventaja|+16.7|+16.7
+k2|P6-V «conservando su cantidad»c|ventaja|+16.7|+16.7
+k2|P6-V «su cantidad de»c|ventaja|+16.7|+16.7
+k2|P6-V «cantidad de cursos»c|ventaja|+16.7|+16.7
+k2|P6-V «de cursos habría»c|ventaja|+16.7|+16.7
+k2|P6-V «participado»|ventaja|+16.7|+16.7
+k2|P6-V «con»|ventaja|+16.7|+16.7
+k2|P6-V «hubiera participado»|ventaja|+16.7|+16.7
+k2|P6-V «participado con»|ventaja|+16.7|+16.7
+k2|P6-V «su promedio»|ventaja|+16.7|+16.7
+k2|P6-V «curso habría»|ventaja|+16.7|+16.7
+k2|P6-V «hubiera participado con»|ventaja|+16.7|+16.7
+k2|P6-V «conservando su promedio»|ventaja|+16.7|+16.7
+k2|P6-V «su promedio por»|ventaja|+16.7|+16.7
+k2|P6-V «por curso habría»|ventaja|+16.7|+16.7
+k2|P6-V «tantos»|ventaja|+16.7|+16.7
+k2|P6-V «como»|ventaja|+16.7|+16.7
+k2|P6-V «con tantos»|ventaja|+16.7|+16.7
+k2|P6-V «tantos cursos»|ventaja|+16.7|+16.7
+k2|P6-V «cursos como»|ventaja|+16.7|+16.7
+k2|P6-V «como el»|ventaja|+16.7|+16.7
+k2|P6-V «participado con tantos»|ventaja|+16.7|+16.7
+k2|P6-V «con tantos cursos»|ventaja|+16.7|+16.7
+k2|P6-V «tantos cursos como»|ventaja|+16.7|+16.7
+k2|P6-V «cursos como el»|ventaja|+16.7|+16.7
+k2|P6-V «como el que»|ventaja|+16.7|+16.7
+k2|P6-V «ganó hubiera tenido»c|ventaja|+8.4|+8.4
+k2|P6-V «cursos habría perdido»c|ventaja|+8.4|+8.4
+k2|P6-V «perdió hubiera tenido»c|ventaja|+8.4|+8.4
+k2|P6-V «cursos habría ganado»c|ventaja|+8.4|+8.4
+k2|P6-V «perdió hubiera participado»|ventaja|+8.4|+8.4
+k2|P6-V «curso habría ganado»|ventaja|+8.4|+8.4
+k2|P6-V «curso habría perdido»|ventaja|+8.4|+8.4
+k2|P6-V «ganó hubiera participado»|ventaja|+8.4|+8.4
+CURSOS|P6-V «participado»|ventaja|+25.0|+25.0
+CURSOS|P6-V «con»|ventaja|+25.0|+25.0
+CURSOS|P6-V «hubiera participado»|ventaja|+25.0|+25.0
+CURSOS|P6-V «participado con»|ventaja|+25.0|+25.0
+CURSOS|P6-V «su promedio»|ventaja|+25.0|+25.0
+CURSOS|P6-V «curso habría»|ventaja|+25.0|+25.0
+CURSOS|P6-V «hubiera participado con»|ventaja|+25.0|+25.0
+CURSOS|P6-V «conservando su promedio»|ventaja|+25.0|+25.0
+CURSOS|P6-V «su promedio por»|ventaja|+25.0|+25.0
+CURSOS|P6-V «por curso habría»|ventaja|+25.0|+25.0
+CURSOS|P6-V «tenido»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «mismo»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «cantidad»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «de»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «hubiera tenido»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «tenido el»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «el mismo»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «mismo promedio»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «curso que»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «que el»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «su cantidad»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «cantidad de»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «de cursos»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «cursos habría»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «hubiera tenido el»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «tenido el mismo»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «el mismo promedio»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «mismo promedio por»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «por curso que»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «curso que el»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «que el que»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «conservando su cantidad»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «su cantidad de»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «cantidad de cursos»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «de cursos habría»c|ventaja|+25.0|+25.0
+CURSOS|P6-V «tantos»|ventaja|+25.0|+25.0
+CURSOS|P6-V «como»|ventaja|+25.0|+25.0
+CURSOS|P6-V «con tantos»|ventaja|+25.0|+25.0
+CURSOS|P6-V «tantos cursos»|ventaja|+25.0|+25.0
+CURSOS|P6-V «cursos como»|ventaja|+25.0|+25.0
+CURSOS|P6-V «como el»|ventaja|+25.0|+25.0
+CURSOS|P6-V «participado con tantos»|ventaja|+25.0|+25.0
+CURSOS|P6-V «con tantos cursos»|ventaja|+25.0|+25.0
+CURSOS|P6-V «tantos cursos como»|ventaja|+25.0|+25.0
+CURSOS|P6-V «cursos como el»|ventaja|+25.0|+25.0
+CURSOS|P6-V «como el que»|ventaja|+25.0|+25.0
+CURSOS|P6-V «perdió hubiera participado»|ventaja|+12.5|+12.5
+CURSOS|P6-V «curso habría ganado»|ventaja|+12.5|+12.5
+CURSOS|P6-V «curso habría perdido»|ventaja|+12.5|+12.5
+CURSOS|P6-V «ganó hubiera tenido»c|ventaja|+12.5|+12.5
+CURSOS|P6-V «cursos habría perdido»c|ventaja|+12.5|+12.5
+CURSOS|P6-V «perdió hubiera tenido»c|ventaja|+12.5|+12.5
+CURSOS|P6-V «cursos habría ganado»c|ventaja|+12.5|+12.5
+CURSOS|P6-V «ganó hubiera participado»|ventaja|+12.5|+12.5
+PROMEDIO|P6-V «participado»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «con»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «hubiera participado»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «participado con»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «su promedio»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «curso habría»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «hubiera participado con»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «conservando su promedio»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «su promedio por»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «por curso habría»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «tantos»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «como»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «con tantos»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «tantos cursos»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «cursos como»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «como el»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «participado con tantos»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «con tantos cursos»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «tantos cursos como»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «cursos como el»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «como el que»c|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «tenido»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «mismo»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «cantidad»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «de»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «hubiera tenido»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «tenido el»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «el mismo»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «mismo promedio»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «curso que»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «que el»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «su cantidad»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «cantidad de»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «de cursos»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «cursos habría»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «hubiera tenido el»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «tenido el mismo»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «el mismo promedio»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «mismo promedio por»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «por curso que»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «curso que el»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «que el que»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «conservando su cantidad»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «su cantidad de»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «cantidad de cursos»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «de cursos habría»|ventaja|+25.0|+25.0
+PROMEDIO|P6-V «perdió hubiera participado»c|ventaja|+12.5|+12.5
+PROMEDIO|P6-V «curso habría ganado»c|ventaja|+12.5|+12.5
+PROMEDIO|P6-V «curso habría perdido»c|ventaja|+12.5|+12.5
+PROMEDIO|P6-V «ganó hubiera participado»c|ventaja|+12.5|+12.5
+PROMEDIO|P6-V «ganó hubiera tenido»|ventaja|+12.5|+12.5
+PROMEDIO|P6-V «cursos habría perdido»|ventaja|+12.5|+12.5
+PROMEDIO|P6-V «perdió hubiera tenido»|ventaja|+12.5|+12.5
+PROMEDIO|P6-V «cursos habría ganado»|ventaja|+12.5|+12.5
+k1|P6-V «participado»c|ventaja|+16.4|+16.4
+k1|P6-V «con»c|ventaja|+16.4|+16.4
+k1|P6-V «hubiera participado»c|ventaja|+16.4|+16.4
+k1|P6-V «participado con»c|ventaja|+16.4|+16.4
+k1|P6-V «su promedio»c|ventaja|+16.4|+16.4
+k1|P6-V «curso habría»c|ventaja|+16.4|+16.4
+k1|P6-V «hubiera participado con»c|ventaja|+16.4|+16.4
+k1|P6-V «conservando su promedio»c|ventaja|+16.4|+16.4
+k1|P6-V «su promedio por»c|ventaja|+16.4|+16.4
+k1|P6-V «por curso habría»c|ventaja|+16.4|+16.4
+k1|P6-V «tantos»c|ventaja|+16.4|+16.4
+k1|P6-V «como»c|ventaja|+16.4|+16.4
+k1|P6-V «con tantos»c|ventaja|+16.4|+16.4
+k1|P6-V «tantos cursos»c|ventaja|+16.4|+16.4
+k1|P6-V «cursos como»c|ventaja|+16.4|+16.4
+k1|P6-V «como el»c|ventaja|+16.4|+16.4
+k1|P6-V «participado con tantos»c|ventaja|+16.4|+16.4
+k1|P6-V «con tantos cursos»c|ventaja|+16.4|+16.4
+k1|P6-V «tantos cursos como»c|ventaja|+16.4|+16.4
+k1|P6-V «cursos como el»c|ventaja|+16.4|+16.4
+k1|P6-V «como el que»c|ventaja|+16.4|+16.4
+k1|P6-V «tenido»|ventaja|+16.4|+16.4
+k1|P6-V «mismo»|ventaja|+16.4|+16.4
+k1|P6-V «cantidad»|ventaja|+16.4|+16.4
+k1|P6-V «de»|ventaja|+16.4|+16.4
+k1|P6-V «hubiera tenido»|ventaja|+16.4|+16.4
+k1|P6-V «tenido el»|ventaja|+16.4|+16.4
+k1|P6-V «el mismo»|ventaja|+16.4|+16.4
+k1|P6-V «mismo promedio»|ventaja|+16.4|+16.4
+k1|P6-V «curso que»|ventaja|+16.4|+16.4
+k1|P6-V «que el»|ventaja|+16.4|+16.4
+k1|P6-V «su cantidad»|ventaja|+16.4|+16.4
+k1|P6-V «cantidad de»|ventaja|+16.4|+16.4
+k1|P6-V «de cursos»|ventaja|+16.4|+16.4
+k1|P6-V «cursos habría»|ventaja|+16.4|+16.4
+k1|P6-V «hubiera tenido el»|ventaja|+16.4|+16.4
+k1|P6-V «tenido el mismo»|ventaja|+16.4|+16.4
+k1|P6-V «el mismo promedio»|ventaja|+16.4|+16.4
+k1|P6-V «mismo promedio por»|ventaja|+16.4|+16.4
+k1|P6-V «por curso que»|ventaja|+16.4|+16.4
+k1|P6-V «curso que el»|ventaja|+16.4|+16.4
+k1|P6-V «que el que»|ventaja|+16.4|+16.4
+k1|P6-V «conservando su cantidad»|ventaja|+16.4|+16.4
+k1|P6-V «su cantidad de»|ventaja|+16.4|+16.4
+k1|P6-V «cantidad de cursos»|ventaja|+16.4|+16.4
+k1|P6-V «de cursos habría»|ventaja|+16.4|+16.4
+k1|P6-V «perdió hubiera participado»c|ventaja|+8.2|+8.2
+k1|P6-V «curso habría ganado»c|ventaja|+8.2|+8.2
+k1|P6-V «curso habría perdido»c|ventaja|+8.2|+8.2
+k1|P6-V «ganó hubiera participado»c|ventaja|+8.2|+8.2
+k1|P6-V «ganó hubiera tenido»|ventaja|+8.2|+8.2
+k1|P6-V «cursos habría perdido»|ventaja|+8.2|+8.2
+k1|P6-V «perdió hubiera tenido»|ventaja|+8.2|+8.2
+k1|P6-V «cursos habría ganado»|ventaja|+8.2|+8.2
+k2|P6-V «tenido»c|ventaja|+16.7|+16.7
+k2|P6-V «mismo»c|ventaja|+16.7|+16.7
+k2|P6-V «cantidad»c|ventaja|+16.7|+16.7
+k2|P6-V «de»c|ventaja|+16.7|+16.7
+k2|P6-V «hubiera tenido»c|ventaja|+16.7|+16.7
+k2|P6-V «tenido el»c|ventaja|+16.7|+16.7
+k2|P6-V «el mismo»c|ventaja|+16.7|+16.7
+k2|P6-V «mismo promedio»c|ventaja|+16.7|+16.7
+k2|P6-V «curso que»c|ventaja|+16.7|+16.7
+k2|P6-V «que el»c|ventaja|+16.7|+16.7
+k2|P6-V «su cantidad»c|ventaja|+16.7|+16.7
+k2|P6-V «cantidad de»c|ventaja|+16.7|+16.7
+k2|P6-V «de cursos»c|ventaja|+16.7|+16.7
+k2|P6-V «cursos habría»c|ventaja|+16.7|+16.7
+k2|P6-V «hubiera tenido el»c|ventaja|+16.7|+16.7
+k2|P6-V «tenido el mismo»c|ventaja|+16.7|+16.7
+k2|P6-V «el mismo promedio»c|ventaja|+16.7|+16.7
+k2|P6-V «mismo promedio por»c|ventaja|+16.7|+16.7
+k2|P6-V «por curso que»c|ventaja|+16.7|+16.7
+k2|P6-V «curso que el»c|ventaja|+16.7|+16.7
+k2|P6-V «que el que»c|ventaja|+16.7|+16.7
+k2|P6-V «conservando su cantidad»c|ventaja|+16.7|+16.7
+k2|P6-V «su cantidad de»c|ventaja|+16.7|+16.7
+k2|P6-V «cantidad de cursos»c|ventaja|+16.7|+16.7
+k2|P6-V «de cursos habría»c|ventaja|+16.7|+16.7
+k2|P6-V «participado»|ventaja|+16.7|+16.7
+k2|P6-V «con»|ventaja|+16.7|+16.7
+k2|P6-V «hubiera participado»|ventaja|+16.7|+16.7
+k2|P6-V «participado con»|ventaja|+16.7|+16.7
+k2|P6-V «su promedio»|ventaja|+16.7|+16.7
+k2|P6-V «curso habría»|ventaja|+16.7|+16.7
+k2|P6-V «hubiera participado con»|ventaja|+16.7|+16.7
+k2|P6-V «conservando su promedio»|ventaja|+16.7|+16.7
+k2|P6-V «su promedio por»|ventaja|+16.7|+16.7
+k2|P6-V «por curso habría»|ventaja|+16.7|+16.7
+k2|P6-V «tantos»|ventaja|+16.7|+16.7
+k2|P6-V «como»|ventaja|+16.7|+16.7
+k2|P6-V «con tantos»|ventaja|+16.7|+16.7
+k2|P6-V «tantos cursos»|ventaja|+16.7|+16.7
+k2|P6-V «cursos como»|ventaja|+16.7|+16.7
+k2|P6-V «como el»|ventaja|+16.7|+16.7
+k2|P6-V «participado con tantos»|ventaja|+16.7|+16.7
+k2|P6-V «con tantos cursos»|ventaja|+16.7|+16.7
+k2|P6-V «tantos cursos como»|ventaja|+16.7|+16.7
+k2|P6-V «cursos como el»|ventaja|+16.7|+16.7
+k2|P6-V «como el que»|ventaja|+16.7|+16.7
+k2|P6-V «ganó hubiera tenido»c|ventaja|+8.4|+8.4
+k2|P6-V «cursos habría perdido»c|ventaja|+8.4|+8.4
+k2|P6-V «perdió hubiera tenido»c|ventaja|+8.4|+8.4
+k2|P6-V «cursos habría ganado»c|ventaja|+8.4|+8.4
+k2|P6-V «perdió hubiera participado»|ventaja|+8.4|+8.4
+k2|P6-V «curso habría ganado»|ventaja|+8.4|+8.4
+k2|P6-V «curso habría perdido»|ventaja|+8.4|+8.4
+k2|P6-V «ganó hubiera participado»|ventaja|+8.4|+8.4

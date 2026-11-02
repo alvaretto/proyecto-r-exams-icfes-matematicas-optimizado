@@ -42,7 +42,8 @@
 ##       regla por regla (firma_p6_palabras_f98f9dda.tsv, con FIRMA_P6_TOKEN como tope del estrato), sobre la
 ##       enumeración exacta de L-C5, mutantes MC36 y MC38.
 ##       Tras la tanda 8 (decisión «Va» del profesor, 2026-10-31): X5, X6 y X10 exactas sobre el sorteo de la Parte 2
-##       (MC37); L-C7 regla por regla (firma_p6_palabras_f98f9dda.tsv, MC38).
+##       (MC37); L-C7 regla por regla (firma_p6_palabras_f98f9dda.tsv, MC38). Tras la FASE 2C r3: MC39 (H2, la cláusula «o
+##       que pase de su cifra» de L-C7) y el rótulo de L-C2 «muestral sobre la Parte 1» (H1).
 ## Salida: exit 1 = algo falla; 3 = pendiente de firma (una cifra firmada superada o un canal cruzado > +8 pp
 ##   fuera de lo firmado); 4 = EN ROJO bajo override firmado («O-1 corregido» extendido por F-2 y X9 en la
 ##   canónica por L-C3, X6, X9, X10 y X11; la canónica de la Parte 1 regla por regla por la decisión 2 a; todo dentro
@@ -385,7 +386,7 @@ medir_exacta_p2 <- function(L, regla, banco) mean(vapply(L, function(x) mean(vap
 NOM_EXACTAS <- c(REGLA_X5, REGLA_X6, REGLA_X10)
 XT_EX <- sapply(list(mezcla = NAT, CURSOS = CU$CURSOS, PROMEDIO = CU$PROMEDIO), function(L)
   vapply(XREG[NOM_EXACTAS], function(r) medir_exacta_p2(L, r$f, BANCO_P2), 0))
-cat("  Exactas sobre el sorteo de la Parte 2 (3 claves × C(5,3) tríos = 30 combinaciones equiprobables):\n")
+cat("  Exactas sobre el sorteo de la Parte 2 (3 claves × C(5,3) tríos = 30 combinaciones equiprobables) y muestrales sobre la Parte 1 (las mismas N = 100 por estrato):\n")
 print(round(100 * XT_EX, 1))
 ## L-C2 (decisión 3.1 a del profesor, 2026-10-30): un canal cruzado de más de +8 pp que siga abierto no se cierra
 ## solo: queda PENDIENTE DE FIRMA (exit 3) y vuelve al profesor. Una sola función decide, aquí y en el mutante MC17.
@@ -395,7 +396,7 @@ for (i in seq_along(XREG)) for (est in c("mezcla", "CURSOS", "PROMEDIO")) {
   msg <- sprintf("%s, %s: %.1f %% (%+.1f pp sobre %.0f %%)", names(XREG)[i], est, 100 * XT[i, est], 100 * ex, 100 * XREG[[i]]$base)
   if (names(XREG)[i] %in% NOM_EXACTAS) {
     ex <- XT_EX[names(XREG)[i], est] - XREG[[i]]$base
-    msg <- sprintf("%s, %s: exacta sobre el sorteo de la Parte 2 (decisión «Va» del profesor, 2026-10-31) %.1f %% (%+.1f pp sobre %.0f %%); en la muestra %.1f %%",
+    msg <- sprintf("%s, %s: exacta sobre el sorteo de la Parte 2 y muestral sobre la Parte 1 (N = 100; decisión «Va» del profesor, 2026-10-31) %.1f %% (%+.1f pp sobre %.0f %%); en la muestra %.1f %%",
                    names(XREG)[i], est, 100 * XT_EX[names(XREG)[i], est], 100 * ex, 100 * XREG[[i]]$base, 100 * XT[i, est])
   }
   if (veredicto_cruzado(ex) == "ok") ok(TRUE, "batería cruzada: ", msg) else pendiente("canal cruzado > +8 pp (F-2 y L-C2: vuelve al profesor): ", msg)
@@ -405,7 +406,7 @@ for (est in c("mezcla", "CURSOS", "PROMEDIO")) {
   L <- list(mezcla = NAT, CURSOS = CU$CURSOS, PROMEDIO = CU$PROMEDIO)[[est]]
   pc <- vapply(unique(unname(BANCO_P2$clave)), function(k)
     medir_exacta_p2(L, XREG[[REGLA_X6]]$f, list(clave = k, distractores = BANCO_P2$distractores)), 0)
-  cat(sprintf("  X6 exacta, %-8s n = %3d: %.1f %% (%+.1f pp); por clave: %s\n", est, length(L),
+  cat(sprintf("  X6 exacta sobre la Parte 2 (muestral sobre la Parte 1), %-8s n = %3d: %.1f %% (%+.1f pp); por clave: %s\n", est, length(L),
               100 * XT_EX[REGLA_X6, est], 100 * (XT_EX[REGLA_X6, est] - XREG[[REGLA_X6]]$base),
               paste(sprintf("%+.1f", 100 * (pc - XREG[[REGLA_X6]]$base)), collapse = " / ")))
 }
@@ -1101,6 +1102,37 @@ local({
     sprintf("reglas «justamente» pendientes: 0 (masa con error %.3f)", if (is.null(HM$A)) NA else HM$masa_err)
   ok(ver == "cazado_por_su_sonda", sprintf("MC38 (L-C7 regla por regla: la redacción «hubiera tenido el mismo promedio por curso» gana «justamente»): %s — %s", d, ver))
   filas_mut[["MC38"]] <<- c("MC38", "L-C7: regla por palabra fuera de la lista firmada", d, ver, NA) })
+## MC39 (L-C7, la cláusula «o que pase de su cifra»; H2 de la FASE 2C r3, 2026-10-31). MC36 y MC38 solo prueban reglas FUERA
+## de la lista. Aquí, una regla DE la lista sube por encima de su cifra firmada sin pasar el tope de su estrato: la puerta
+## regla por regla la deja pendiente y la de estrato la cubría. Las 32 reglas firmadas a la mitad del tope (8 por estrato) son
+## trigramas que lleva una sola de las dos redacciones de su clase de ventaja. «perdió hubiera tenido» solo está en BP_perdio;
+## el mutante lo pone también en BP_gano, así que pasa a delatar el veredicto como «tenido»: de +12,5 a +25,0 pp en las dos
+## ramas (tope 25,0). Se mide como MC36 y MC38 (h2_exacta sobre la Parte 1 de la semilla 1). Antes, la sonda directa que propuso
+## el detractor: no depende del texto y sigue probando la cláusula si otro ciclo cambia las redacciones.
+local({
+  mitad <- FIRMA_P6_PALABRAS[FIRMA_P6_PALABRAS$firmado_pp < unname(FIRMA_P6_TOKEN[FIRMA_P6_PALABRAS$estrato]) - 1e-9, , drop = FALSE]
+  f39 <- VT7[clave_fila(VT7) == clave_fila(mitad[1, , drop = FALSE]), , drop = FALSE]
+  f39$exceso <- (mitad$firmado_pp[1] + 1) / 100   # 1 pp sobre su cifra, todavía bajo el tope de su estrato
+  ok(nrow(mitad) == 32L && nrow(f39) == 1L && p6_token_juzgar(f39) == "pendiente" && p6_token_juzgar_estrato(f39) == "cubierto",
+     sprintf("MC39, sonda directa (L-C7, «o que pase de su cifra»): %d reglas de la lista bajo el tope de su estrato; %s · %s %s a %+.1f pp (firmada %+.1f, tope %+.1f): pendiente con la regla por regla, cubierta con la de estrato",
+             nrow(mitad), mitad$estrato[1], mitad$id[1], mitad$papel[1], mitad$firmado_pp[1] + 1, mitad$firmado_pp[1], FIRMA_P6_TOKEN[[mitad$estrato[1]]]))
+  m39 <- mutar(list(c("Si el grado que ganó hubiera tenido el mismo promedio por curso que el que perdió, conservando su",
+                      "Si el grado que ganó hubiera tenido el mismo promedio por curso que el que perdió hubiera tenido, conservando su")))
+  if (!is.null(m39$error)) { falla("MC39 MAL CONSTRUIDO: ", m39$error); filas_mut[["MC39"]] <<- c("MC39", "L-C7", "-", "mal_construido", NA); return(invisible()) }
+  HM <- h2_exacta(m39$txt, 1L)
+  llego <- !is.null(HM$A) && HM$masa_err == 0 && any(grepl("que perdió hubiera tenido, conservando", HM$A$c6_txt, fixed = TRUE))
+  VM <- if (llego) p6_token_tabla(HM$A) else NULL
+  if (llego) { VM$veredicto <- p6_token_juzgar(VM); VM$v_estrato <- p6_token_juzgar_estrato(VM) }
+  j39 <- if (llego) VM[grepl("«perdió hubiera tenido»", VM$id, fixed = TRUE) & clave_fila(VM) %in% clave_fila(FIRMA_P6_PALABRAS) &
+                       VM$veredicto == "pendiente" & VM$v_estrato == "cubierto", , drop = FALSE] else VT7[0, ]
+  ver <- if (!llego) "mal_construido" else if (nrow(j39)) "cazado_por_su_sonda" else if (any(VM$veredicto == "pendiente")) "cazado_por_otra" else "no_detectado"
+  d <- if (nrow(j39)) paste(sprintf("%s · %s %s %+.1f pp (firmada %+.1f, tope %+.1f) -> pendiente con la regla por regla; cubierta con la de estrato",
+                                    j39$estrato, j39$id, j39$papel, 100 * j39$exceso,
+                                    vapply(seq_len(nrow(j39)), function(i) firma_p6_f(j39$estrato[i], j39$id[i], j39$papel[i]), 0),
+                                    unname(FIRMA_P6_TOKEN[j39$estrato])), collapse = "; ") else
+    sprintf("ninguna regla «perdió hubiera tenido» de la lista quedó pendiente y cubierta por estrato (masa con error %.3f)", if (is.null(HM$A)) NA else HM$masa_err)
+  ok(ver == "cazado_por_su_sonda", sprintf("MC39 (L-C7, «o que pase de su cifra»: BP_gano gana «perdió hubiera tenido»): %s — %s", d, ver))
+  filas_mut[["MC39"]] <<- c("MC39", "L-C7: regla de la lista por encima de su cifra, bajo el tope de su estrato", d, ver, NA) })
 ## Mutantes de L-C4: cada uno tiene que poner en rojo SU regla, medida con la misma sonda (juzgar, con su p95).
 for (mx in list(list(id = "MC23", c = c("o2 <- sample.int(4L)", "o2 <- 1:4"), regla = "P2-P1", desc = "la clave de la Parte 2, siempre en la primera posición",
                      llego = function(e) identical(as.integer(e$o2), 1:4)),
@@ -1193,7 +1225,7 @@ mut_p1("MP1", "regla", "quedarse con 'promedio'", "tuvo mayor promedio", "tuvo m
 mut_p1("MP2", "regla", "mas digitos", "recogió 40 kilos más", "recogió 4 kilos más")
 cat("  Decisión 2 a: las nueve reglas y sondas al 100 % (+75,0 pp) no pueden subir; ningún mutante puede sacarlas de «cubierto» y se declara.\n")
 TM <- do.call(rbind, filas_mut); colnames(TM) <- c("id", "sonda_esperada", "sonda_real", "veredicto", "semilla")
-cat("\n"); print(TM[TM[, "id"] %in% c("MC19", "MC20", "MC23", "MC24", "MC25", "MC26", "MC27", "MC28", "MC29", "MC31", "MC32", "MC33", "MC34", "MC35", "MC36", "MC37", "MC38", "MP1", "MP2"), c("id", "veredicto", "sonda_esperada", "sonda_real")], quote = FALSE)
+cat("\n"); print(TM[TM[, "id"] %in% c("MC19", "MC20", "MC23", "MC24", "MC25", "MC26", "MC27", "MC28", "MC29", "MC31", "MC32", "MC33", "MC34", "MC35", "MC36", "MC37", "MC38", "MC39", "MP1", "MP2"), c("id", "veredicto", "sonda_esperada", "sonda_real")], quote = FALSE)
 
 ## ---- Resultado ----------------------------------------------------------------------------------
 titulo("RESULTADO")

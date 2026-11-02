@@ -1,0 +1,7 @@
+líneas únicas de texto visible en 100 versiones: r3 = 3419 · r9 = 3394
+solo en la r3: 44 · solo en la r9: 19
+de ellas, SIN relación aparente con la Parte 2: r3 = 4 · r9 = 0
+  solo r3: - «La suma de la cantidad de cursos y el promedio por curso de un grado y la suma del otro grado.» Sumar la cantidad de cursos y el promedio no da ningún total: el total es su producto.
+  solo r3: Falso. El promedio no es lo que recogió el curso que más recogió: ese curso pudo recoger más que el promedio.
+  solo r3: Falso. Sumar la cantidad de cursos y el promedio no da ningún total: el total es su producto.
+  solo r3: La suma de la cantidad de cursos y el promedio por curso de un grado y la suma del otro grado.
