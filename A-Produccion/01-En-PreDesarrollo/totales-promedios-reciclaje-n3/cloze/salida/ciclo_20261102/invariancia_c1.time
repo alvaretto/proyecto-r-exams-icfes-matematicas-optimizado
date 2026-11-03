@@ -1,0 +1,1 @@
+Rscript --no-init-file $P > ciclo_20261102/invariancia_c1.txt 2>&1  58,70s user 0,13s system 99% cpu 59,111 total

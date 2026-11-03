@@ -3,7 +3,7 @@
   "ejercicio": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1",
   "tipo": "cloze",
   "timestamp_inicio": "2026-10-30T21:25:33.191024-05:00",
-  "timestamp_ultima_actualizacion": "2026-11-02T18:36:40.229861-05:00",
+  "timestamp_ultima_actualizacion": "2026-11-03T13:32:20.690968-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -27,54 +27,46 @@
     },
     "generacion_rmd": {
       "completado": true,
-      "timestamp": "2026-10-31T10:36:13.590611-05:00",
+      "timestamp": "2026-11-03T13:29:50.039820-05:00",
       "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd",
-      "nota": "Tanda 8 (2026-10-31), decisión b del profesor: la Parte 2 solo con «promedio»; md5 f98f9dda47e4f3cafc4e8b4e82cc956b. Quitado el tipo retirado (banco, funciones de verdad, su guarda, sus entradas de expl2 y clave2_expl, condicionales de la Solution); el sorteo del tipo se conserva sin uso: RNG idéntico al md5 898608dd en 120 semillas (salida/rng_tanda8.txt). L-C4 v2 exacta (salida/bateria_v2_f98f9dda.txt): P2-R2 +21,9, P2-R1 +13,6, P2-E8c +13,5, P2-E5c +11,1, P2-M3c +10,0 pp = lo firmado; ninguna otra regla de la Parte 2 > +8 pp; regla por token de la Parte 6 = lo firmado en los 5 estratos. Verificador salida/verificar_espacio_cloze_r8b.txt (425 s): exit 3, 0 fallos, 1 pendiente (X6 rama PROMEDIO +8,5 pp en la muestra n = 100; exacta sobre la clave +6,0 pp, salida/x6_estratos_t8.txt), 327 cifras dentro de lo firmado (L-C6 5, L-C7 216, L-C5 67, decisión 2 a 24, O-1 13, L-C3 2), 37 mutantes cazados por su sonda (nuevos MC31 a MC36); E1 111/111; L-C5 idéntica a r7."
+      "nota": "Tanda C1 del ciclo 2026-11-02 del CLOZE (2026-11-03). md5 f98f9dda47e4f3cafc4e8b4e82cc956b -> 27f789dc6327f7d6bda72cded61502cd. Re-empalme del bloque P1 desde el SCHOICE aprobado 63e2713e con empalmar_bloque_p1.R (bloque viejo e293d5c8 lineas 2-561 comprobado linea a linea y sustituido por el marcador; bloque nuevo lineas 2-612, 611 lineas, 4 renombres, analizador sin otros usos de opciones/sol/feedback; salida/ciclo_20261102/empalme_c1.txt). Fuera del bloque, editar_rmd_c1.py (13 patrones, 14 sitios): comentarios, 2 U+00A0 literales a escape, L-6 en la prosa de la Parte 1 de la Solution (unidad y signo dentro de la formula, espacio duro), H3 de la Parte 6. Invariancia semillas 1-1000 (salida/ciclo_20261102/invariancia_c1.txt): .Random.seed final igual a f98f9dda 1000/1000; objetos propios del CLOZE iguales; E1 ampliado contra 63e2713e 0 diferencias; Solution igual tras deshacer L-6 y H3 1000/1000; 0 literales U+00A0/2009/202F/2060."
     },
     "retroalimentacion": {
       "completado": true,
-      "timestamp": "2026-10-31T10:36:13.657048-05:00",
-      "nota": "Tanda 8, md5 f98f9dda47e4f3cafc4e8b4e82cc956b: retroalimentación de la Parte 2 con un solo tipo. clave2_expl única; expl2 con exactamente los 5 distractores del banco, los 5 usados en 100 semillas (sin dato muerto); «Verdadero.» solo en la clave y cada «Falso.» con su explicación; encabezado único «Parte 2 · Lecturas del promedio que no sirven» y sin condicionales por tipo en la Solution: salida/retro_r8.txt (0 fallos)."
+      "timestamp": "2026-11-03T13:30:15.396032-05:00",
+      "nota": "Tanda C1 (md5 27f789dc6327f7d6bda72cded61502cd). Solution: (1) L-6 en la prosa propia de la Parte 1 (procedimiento y caso especifico) con las mismas cadenas que la Solution del SCHOICE 63e2713e: unidad y signo dentro de la formula y espacio duro entre cifra y unidad; (2) H3 de la FASE 2C r3 (diferido el 2026-11-02 a este ciclo): Parte 6 dice 'si y solo si ... es mayor que la diferencia' (condicion necesaria y suficiente, en indicativo). Evidencia salida/ciclo_20261102/invariancia_c1.txt (semillas 1-1000): prosa de la Parte 1 con 0 unidades fuera de la formula, 0 signos fuera, 0 cifra-unidad o El/La con espacio normal (control f98f9dda: 8575 y 15347); H3: marca de HP y HG = el bicondicional leido del texto, 0 discrepancias (HP verdadera 476, HG 518); veredictos y opciones de la Parte 6 iguales a f98f9dda 1000/1000. Regla #19: 0 coincidencias. Regla #25: validar_glifos_latex.R OK. Ortografia: limpio. Las 6 subsecciones se conservan."
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-10-31T10:38:43.884152-05:00",
-      "nota": "Tanda 8, md5 f98f9dda47e4f3cafc4e8b4e82cc956b: render_cloze.R -> salida/render_r8.log (semillas canonica=7 CxC=3 CxP=2 PxC=1 PxP=4): HTML, PDF, DOCX y Moodle OK; NOPS N/A (exams2nops rechaza extype cloze: «cloze exercises»). tex: \\pandocbounded solo como \\providecommand (0 usos), \\LTcaptype{none} x2 con la guarda c@none en el .Rmd. HTML: 0 ##ANSWER; encabezado único de la Parte 2 en 5/5; 0 rastros del tipo retirado en HTML y XML. Moodle: 0 imágenes en gaps. PDF de la canónica (pdf/cloze1.pdf, semilla 7) revisado a ojo, 5 páginas con la Solution: tablas y listas dentro del margen (salida/revision_pdf_r8/c1_montaje.png). Moodle del aula salida/exportar_r8.log: 30/30 con pesos 3|1|1|1|1|1, 60 MULTICHOICE_V, 30 MULTIRESPONSE, 90 NUMERICAL, 0 desplegables, 0 etiquetas en 180 gaps."
+      "timestamp": "2026-11-03T13:32:17.630105-05:00",
+      "nota": "Tanda C1, md5 27f789dc6327f7d6bda72cded61502cd. salida/ciclo_20261102/render_27f789dc/ (render.log): PDF 5 (semillas 7 canonica, 3, 2, 1, 4; los cruces de rama de render_cloze.R), HTML 5 (0 ##ANSWER), DOCX 1, Moodle n = 5 (MULTICHOICE_V, 0 imagenes en el XML). NOPS: N/A, exams2nops rechaza extype cloze ('cloze exercises'). .tex: \\pandocbounded solo como definicion de la plantilla (FASE 2I OK); \\LTcaptype{none} con la guarda c@none (FASE 2K OK). Llamadas exams2* literales con dir= y texdir=, exams2pdf la primera: el hook vio el PDF (2B, 5 paginas leidas a ojo: prosa de la Parte 1 con unidad dentro de la formula y H3 en la Parte 6)."
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-10-31T10:39:50.440436-05:00",
-      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261031-103844-2552080/informe.txt · md5 f98f9dda47e4f3cafc4e8b4e82cc956b · 0 errores / 7 advertencias (2B sin PDF en el comando del hook, PDF revisado en el paso 5; 2E «Tarea»; 2F tabla de metadatos, descripción de evaluación, análisis de distractores, patrón «Es posible que los estudiantes», letra_correcta: las mismas heurísticas de las tandas 1 a 7) · 2G 100/100 · 2H 10 semillas, 0 anomalías · 2I-2O OK · disparado con la ruta absoluta (salida/hook_trigger_r8.log). Stress test visual aparte, N = 100: 100/100, 0 anomalías (salida/stress_n100_r8/stress_test_n100.txt)."
+      "timestamp": "2026-11-03T13:32:20.690968-05:00",
+      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261103-133049-847130/informe.txt · md5 27f789dc6327f7d6bda72cded61502cd · 0 errores / 6 advertencias (las heuristicas conocidas de 2E y 2F; la septima de tandas anteriores, PDF no encontrado, desaparece con exams2pdf primero). 2A APROBADO, 2G 100/100, 2H 10 semillas 0 anomalias, 2I, 2J, 2K, 2L, 2N y 2O OK."
     },
     "detractor_fase2c": {
-      "completado": true,
-      "timestamp": "2026-11-02T18:26:42.008413-05:00",
-      "veredicto": "APROBAR_CON_CAMBIOS",
-      "reporte": "salida/fase2c_r3_detractor.md",
-      "nota": "Tanda 9b (2026-11-02). FASE 2C r3: AgenteDetractor nuevo, sin name, distinto del orquestador que escribió el .Rmd en la tanda 8. Reporte salida/fase2c_r3_detractor.md (md5 70989c4e79f98238340ad3baa60cac81) sobre el .Rmd md5 f98f9dda47e4f3cafc4e8b4e82cc956b (recomprobado hoy). Veredicto APROBAR_CON_CAMBIOS: 0 CORRECCIÓN, 0 críticas, 0 altas; H1 y H2 MEDIA, H3 BAJA. verificar_citas_detractor.py: exit 0, 9 citas, 0 problemas. Cierre por decisión del profesor del 2026-11-02: H1 (X6 por clave y por rama) queda como residuo declarado con salida/fase2c_r3/x6_replicas.txt (md5 ed9646e3…); H2 cerrado con MC39 en verificar_espacio_cloze.R, salida/verificar_espacio_cloze_r9.txt (md5 2e368bd1…, exit 4, 327 cifras cubiertas, 0 fallos, 0 pendientes, MC39 cazado_por_su_sonda); H3 diferido al próximo ciclo (el .Rmd no cambia). MC39 se cableó después de la r3: el profesor lo dio por compatible con la regla #9 (mismo md5 auditado, cambio pedido por el propio APROBAR_CON_CAMBIOS, ninguna cifra firmada movida según salida/comparar_r9_va.txt, 0 líneas de diferencia) y lo revisa el próximo detractor."
+      "completado": false,
+      "timestamp": null,
+      "veredicto": null
     },
     "coherencias_5": {
-      "completado": true,
-      "timestamp": "2026-11-02T18:27:17.101409-05:00",
-      "veredicto": "OK",
-      "reporte": "salida/coherencias_r9/",
-      "nota": "Tanda 9b (2026-11-02). Paso 8 con el oráculo de la tanda 9a (AgenteValidadorVisual sin name; L-C8, firmada 2026-10-31): salida/coherencias_r9/verificar_coherencias.R (md5 d3991ac4…). Los 4 informes y los 7 logs de render declaran el .Rmd md5 f98f9dda47e4f3cafc4e8b4e82cc956b. verificacion_N100.txt (md5 799bc0ee…): N = 100, de 126 a 129 comprobaciones por versión (12 720), fallos por versión 0, fallos globales 0, 40 de 40 mutaciones cazadas por su sonda. verificacion_formatos.txt: 0 fallidas entre formatos (2 declaradas: DOCX de un cloze). control_moodle.txt 25/25, control_html_pdf.txt 12/12 (HTML) y 11/11 (PDF): 88 mutaciones cazadas por su sonda. pdf_pandoc_rstudio.txt: pandoc 3.10 de RStudio, 35 comprobaciones, 0 fallidas, guarda c@none. L-C8 comprobada: S2 por versión (línea 235), S2 global (líneas 511-515) y la mutación con texto no juzgado (cuarta paráfrasis correcta) cazada en verificacion_N100.txt (5 fallos) y control_moodle.txt (2). Límite declarado: el juicio del validador no fue ciego (el volcado mostró la marca y ../.claude/CLAUDE.md llegó a su contexto); la evidencia independiente es el recálculo numérico (200/200 filas, 240/240 explicaciones). BAJA declaradas: DOCX deja ##ANSWERi## a la vista; «al cuadrado» con dos lecturas, las dos falsas; claves 2 y 3 redactadas como operación."
+      "completado": false,
+      "timestamp": null
     },
     "validar_diversidad": {
-      "completado": true,
-      "timestamp": "2026-11-02T18:28:02.445794-05:00",
-      "versiones_unicas": 300,
-      "nota": "Tanda 9b (2026-11-02), .Rmd md5 f98f9dda47e4f3cafc4e8b4e82cc956b. Unicidad: E5 de salida/verificar_espacio_cloze_r9.txt, 300 versiones únicas de 300 (objetivo >= 250); claves distintas por gap en 300 semillas: p1 264, p2 3, p3 125, p4 122, p5 66, p6 35. FASE 2G del arsenal (informe del 2026-10-31 10:38): 100/100 semillas. Diversidad sustantiva (V8): salida/diversidad_sustantiva_r9.txt (vuelta a correr hoy con el md5 en la cabecera; idéntica a diversidad_sustantiva_r8.txt), 6 de 6 gaps medidos, N = 100, errores 0, exit 0: p1 95, p2 3 [baja, WARN_DIV_BAJA], p3 75, p4 74, p5 52, p6 36. p2 fija-justificada: clave conceptual de un solo tipo desde la decisión b, con 3 paráfrasis. Diagnosticidad (V9): salida/diagnosticidad_r9.txt (idéntica a diagnosticidad_r8.txt), PASS, exit 0; p1 H1 0 % / 0 % (margen 2 % / 1 %); p2 H1 0 % / 3 % (margen 4 % / 3 %); H2 y H3 ciegas por prefijo uniforme (declarado), H3b 6 % (p1) y 37 % (p2); p6 excluida por ser mchoice. Por rama: salida/diagnosticidad_por_rama_r8.txt (md5 en la cabecera, n = 100 en los 7 estratos): H1 de 0 % a 5 %; elige la más larga como mucho 34,3 % (margen máximo 2,0 %, inexplotable por §P7-B); elige la más corta en p2 hasta 20 % (por debajo del 25 % del azar)."
+      "completado": false,
+      "timestamp": null,
+      "versiones_unicas": null
     },
     "validar_icfes": {
-      "completado": true,
-      "timestamp": "2026-11-02T18:30:13.849034-05:00",
-      "nota": "Tanda 9b (2026-11-02), .Rmd md5 f98f9dda47e4f3cafc4e8b4e82cc956b. V1-V4: salida/v1_v4_r8.txt (md5 vigente en la cabecera): 6 ##ANSWERi## = 6 tipos (schoice|schoice|num|num|num|mchoice) = 6 partes; orden e inmediatez OK; exsolution/extol coherentes en 100/100 semillas; 6 partes. V5-V11: salida/v5_v11_r9.py -> v5_v11_r9.txt, 0 fallos: V5 N/A por construcción (Flujo B = n) y medido: 390 gaps en 101 XML, 0 con <img/@@PLUGINFILE@@; 100 HTML con 0 ##ANSWER; 0 diagrama_*.png. V6 OK: M6 y M4 del oráculo coherencias_r9 (setequal por contenido, N = 100, 0 fallos). V7 N/A (ninguna parte ofrece opciones de fuera de su conjunto; unicidad de la Parte 2 por S2). V8/V9: artefactos del paso 9. V10 OK en las hipótesis de la Parte 6: guarda stopifnot, MC6 cazado por su sonda, marcas del XML = veredicto recalculado 100/100 y 30/30. V11 OK por valor, contenido e independencia (verificar_espacio_cloze_r9.txt); a un paso, residuo declarado (11-17 % y 33-63 % por rama). Literalidad: salida/literalidad_exextra_r9.py -> literalidad_exextra_r9.txt, 0 fallos: Competencia, Componente, Afirmación, Evidencia (Arg_E1), Descriptor (D3.10 = niveles_oficiales/N3[9]) y Estándar (Aleatorio_6-7[7]) literales en el catálogo canónico (niveles 426ea08a…, evidencias 427d2e29…, estándares 4862e82c…) e iguales carácter a carácter a ITEM_OFICIAL.md, también Nivel, GradoSugerido, Contenido y TemaEspecifico. DOK 2, Bloom Evaluar, Nivel 3: DOK >= 3 => Nivel >= 3 y Bloom Evaluar => Nivel >= 3 se cumplen. Juicio de literalidad del orquestador con script propio (ningún validador del arsenal la certifica)."
+      "completado": false,
+      "timestamp": null
     },
     "aprobacion_usuario": {
-      "completado": true,
-      "timestamp": "2026-11-02T18:36:40.229861-05:00",
-      "nota": "WAIT_USER #3 de la tanda 9b (2026-11-02): el profesor respondió «[a] Aprobar» y aprueba para el aula la versión md5 f98f9dda47e4f3cafc4e8b4e82cc956b (commit b6525e74). Pasos 1-10 sellados, cada uno tras su artefacto. FASE 2C r3 APROBAR_CON_CAMBIOS sin CORRECCIÓN; paso 8 coherencias_r9 con 0 fallos; 300 de 300 únicas; verificador r9 en exit 4 (327 cifras firmadas, 0 fallos, 0 pendientes). Residuos declarados (HANDOFF § Residuos declarados): X6 por clave y por rama (H1), H3 diferido al próximo ciclo, orden de la Parte 6 NO CONCLUYENTE, V11 a un paso, tipográficos de la decisión 2 a y de la 6b, BAJA del paso 8. MC39 no lo ha revisado ningún detractor: lo revisa el próximo. Uso: Moodle (exportar_moodle_cloze.R); el DOCX no es apto para estudiantes; para papel, el SCHOICE. No está en producción: falta la evidencia de aula."
+      "completado": false,
+      "timestamp": null
     }
   },
   "reaperturas": [
@@ -199,6 +191,67 @@
         "arsenal_post_render": {
           "timestamp": "2026-10-31T09:49:21.158258-05:00",
           "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261031-094827-2419561/informe.txt · md5 898608dd2a625c54b905684d4bbdb827 · 0 errores / 7 advertencias (2B sin PDF en el comando del hook; 2E «Tarea»; 2F tabla de metadatos, descripción, análisis de distractores, patrón «Es posible que los estudiantes», letra_correcta; 2O 3 glifos en comentarios R, inocuo) · 2G 100/100 · 2H 10 semillas, 0 anomalías"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-03T13:18:39.506391-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Ciclo 2026-11-02 del CLOZE, tanda C1: re-empalme de la Parte 1 desde el SCHOICE aprobado 63e2713e (decisiones del profesor del 2026-11-02 y 2026-11-03)",
+      "reporte": null,
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render",
+        "detractor_fase2c",
+        "coherencias_5",
+        "validar_diversidad",
+        "validar_icfes",
+        "aprobacion_usuario"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-10-31T10:36:13.590611-05:00",
+          "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd",
+          "nota": "Tanda 8 (2026-10-31), decisión b del profesor: la Parte 2 solo con «promedio»; md5 f98f9dda47e4f3cafc4e8b4e82cc956b. Quitado el tipo retirado (banco, funciones de verdad, su guarda, sus entradas de expl2 y clave2_expl, condicionales de la Solution); el sorteo del tipo se conserva sin uso: RNG idéntico al md5 898608dd en 120 semillas (salida/rng_tanda8.txt). L-C4 v2 exacta (salida/bateria_v2_f98f9dda.txt): P2-R2 +21,9, P2-R1 +13,6, P2-E8c +13,5, P2-E5c +11,1, P2-M3c +10,0 pp = lo firmado; ninguna otra regla de la Parte 2 > +8 pp; regla por token de la Parte 6 = lo firmado en los 5 estratos. Verificador salida/verificar_espacio_cloze_r8b.txt (425 s): exit 3, 0 fallos, 1 pendiente (X6 rama PROMEDIO +8,5 pp en la muestra n = 100; exacta sobre la clave +6,0 pp, salida/x6_estratos_t8.txt), 327 cifras dentro de lo firmado (L-C6 5, L-C7 216, L-C5 67, decisión 2 a 24, O-1 13, L-C3 2), 37 mutantes cazados por su sonda (nuevos MC31 a MC36); E1 111/111; L-C5 idéntica a r7."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-10-31T10:36:13.657048-05:00",
+          "nota": "Tanda 8, md5 f98f9dda47e4f3cafc4e8b4e82cc956b: retroalimentación de la Parte 2 con un solo tipo. clave2_expl única; expl2 con exactamente los 5 distractores del banco, los 5 usados en 100 semillas (sin dato muerto); «Verdadero.» solo en la clave y cada «Falso.» con su explicación; encabezado único «Parte 2 · Lecturas del promedio que no sirven» y sin condicionales por tipo en la Solution: salida/retro_r8.txt (0 fallos)."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-10-31T10:38:43.884152-05:00",
+          "nota": "Tanda 8, md5 f98f9dda47e4f3cafc4e8b4e82cc956b: render_cloze.R -> salida/render_r8.log (semillas canonica=7 CxC=3 CxP=2 PxC=1 PxP=4): HTML, PDF, DOCX y Moodle OK; NOPS N/A (exams2nops rechaza extype cloze: «cloze exercises»). tex: \\pandocbounded solo como \\providecommand (0 usos), \\LTcaptype{none} x2 con la guarda c@none en el .Rmd. HTML: 0 ##ANSWER; encabezado único de la Parte 2 en 5/5; 0 rastros del tipo retirado en HTML y XML. Moodle: 0 imágenes en gaps. PDF de la canónica (pdf/cloze1.pdf, semilla 7) revisado a ojo, 5 páginas con la Solution: tablas y listas dentro del margen (salida/revision_pdf_r8/c1_montaje.png). Moodle del aula salida/exportar_r8.log: 30/30 con pesos 3|1|1|1|1|1, 60 MULTICHOICE_V, 30 MULTIRESPONSE, 90 NUMERICAL, 0 desplegables, 0 etiquetas en 180 gaps."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-10-31T10:39:50.440436-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261031-103844-2552080/informe.txt · md5 f98f9dda47e4f3cafc4e8b4e82cc956b · 0 errores / 7 advertencias (2B sin PDF en el comando del hook, PDF revisado en el paso 5; 2E «Tarea»; 2F tabla de metadatos, descripción de evaluación, análisis de distractores, patrón «Es posible que los estudiantes», letra_correcta: las mismas heurísticas de las tandas 1 a 7) · 2G 100/100 · 2H 10 semillas, 0 anomalías · 2I-2O OK · disparado con la ruta absoluta (salida/hook_trigger_r8.log). Stress test visual aparte, N = 100: 100/100, 0 anomalías (salida/stress_n100_r8/stress_test_n100.txt)."
+        },
+        "detractor_fase2c": {
+          "timestamp": "2026-11-02T18:26:42.008413-05:00",
+          "veredicto": "APROBAR_CON_CAMBIOS",
+          "reporte": "salida/fase2c_r3_detractor.md",
+          "nota": "Tanda 9b (2026-11-02). FASE 2C r3: AgenteDetractor nuevo, sin name, distinto del orquestador que escribió el .Rmd en la tanda 8. Reporte salida/fase2c_r3_detractor.md (md5 70989c4e79f98238340ad3baa60cac81) sobre el .Rmd md5 f98f9dda47e4f3cafc4e8b4e82cc956b (recomprobado hoy). Veredicto APROBAR_CON_CAMBIOS: 0 CORRECCIÓN, 0 críticas, 0 altas; H1 y H2 MEDIA, H3 BAJA. verificar_citas_detractor.py: exit 0, 9 citas, 0 problemas. Cierre por decisión del profesor del 2026-11-02: H1 (X6 por clave y por rama) queda como residuo declarado con salida/fase2c_r3/x6_replicas.txt (md5 ed9646e3…); H2 cerrado con MC39 en verificar_espacio_cloze.R, salida/verificar_espacio_cloze_r9.txt (md5 2e368bd1…, exit 4, 327 cifras cubiertas, 0 fallos, 0 pendientes, MC39 cazado_por_su_sonda); H3 diferido al próximo ciclo (el .Rmd no cambia). MC39 se cableó después de la r3: el profesor lo dio por compatible con la regla #9 (mismo md5 auditado, cambio pedido por el propio APROBAR_CON_CAMBIOS, ninguna cifra firmada movida según salida/comparar_r9_va.txt, 0 líneas de diferencia) y lo revisa el próximo detractor."
+        },
+        "coherencias_5": {
+          "timestamp": "2026-11-02T18:27:17.101409-05:00",
+          "veredicto": "OK",
+          "reporte": "salida/coherencias_r9/",
+          "nota": "Tanda 9b (2026-11-02). Paso 8 con el oráculo de la tanda 9a (AgenteValidadorVisual sin name; L-C8, firmada 2026-10-31): salida/coherencias_r9/verificar_coherencias.R (md5 d3991ac4…). Los 4 informes y los 7 logs de render declaran el .Rmd md5 f98f9dda47e4f3cafc4e8b4e82cc956b. verificacion_N100.txt (md5 799bc0ee…): N = 100, de 126 a 129 comprobaciones por versión (12 720), fallos por versión 0, fallos globales 0, 40 de 40 mutaciones cazadas por su sonda. verificacion_formatos.txt: 0 fallidas entre formatos (2 declaradas: DOCX de un cloze). control_moodle.txt 25/25, control_html_pdf.txt 12/12 (HTML) y 11/11 (PDF): 88 mutaciones cazadas por su sonda. pdf_pandoc_rstudio.txt: pandoc 3.10 de RStudio, 35 comprobaciones, 0 fallidas, guarda c@none. L-C8 comprobada: S2 por versión (línea 235), S2 global (líneas 511-515) y la mutación con texto no juzgado (cuarta paráfrasis correcta) cazada en verificacion_N100.txt (5 fallos) y control_moodle.txt (2). Límite declarado: el juicio del validador no fue ciego (el volcado mostró la marca y ../.claude/CLAUDE.md llegó a su contexto); la evidencia independiente es el recálculo numérico (200/200 filas, 240/240 explicaciones). BAJA declaradas: DOCX deja ##ANSWERi## a la vista; «al cuadrado» con dos lecturas, las dos falsas; claves 2 y 3 redactadas como operación."
+        },
+        "validar_diversidad": {
+          "timestamp": "2026-11-02T18:28:02.445794-05:00",
+          "versiones_unicas": 300,
+          "nota": "Tanda 9b (2026-11-02), .Rmd md5 f98f9dda47e4f3cafc4e8b4e82cc956b. Unicidad: E5 de salida/verificar_espacio_cloze_r9.txt, 300 versiones únicas de 300 (objetivo >= 250); claves distintas por gap en 300 semillas: p1 264, p2 3, p3 125, p4 122, p5 66, p6 35. FASE 2G del arsenal (informe del 2026-10-31 10:38): 100/100 semillas. Diversidad sustantiva (V8): salida/diversidad_sustantiva_r9.txt (vuelta a correr hoy con el md5 en la cabecera; idéntica a diversidad_sustantiva_r8.txt), 6 de 6 gaps medidos, N = 100, errores 0, exit 0: p1 95, p2 3 [baja, WARN_DIV_BAJA], p3 75, p4 74, p5 52, p6 36. p2 fija-justificada: clave conceptual de un solo tipo desde la decisión b, con 3 paráfrasis. Diagnosticidad (V9): salida/diagnosticidad_r9.txt (idéntica a diagnosticidad_r8.txt), PASS, exit 0; p1 H1 0 % / 0 % (margen 2 % / 1 %); p2 H1 0 % / 3 % (margen 4 % / 3 %); H2 y H3 ciegas por prefijo uniforme (declarado), H3b 6 % (p1) y 37 % (p2); p6 excluida por ser mchoice. Por rama: salida/diagnosticidad_por_rama_r8.txt (md5 en la cabecera, n = 100 en los 7 estratos): H1 de 0 % a 5 %; elige la más larga como mucho 34,3 % (margen máximo 2,0 %, inexplotable por §P7-B); elige la más corta en p2 hasta 20 % (por debajo del 25 % del azar)."
+        },
+        "validar_icfes": {
+          "timestamp": "2026-11-02T18:30:13.849034-05:00",
+          "nota": "Tanda 9b (2026-11-02), .Rmd md5 f98f9dda47e4f3cafc4e8b4e82cc956b. V1-V4: salida/v1_v4_r8.txt (md5 vigente en la cabecera): 6 ##ANSWERi## = 6 tipos (schoice|schoice|num|num|num|mchoice) = 6 partes; orden e inmediatez OK; exsolution/extol coherentes en 100/100 semillas; 6 partes. V5-V11: salida/v5_v11_r9.py -> v5_v11_r9.txt, 0 fallos: V5 N/A por construcción (Flujo B = n) y medido: 390 gaps en 101 XML, 0 con <img/@@PLUGINFILE@@; 100 HTML con 0 ##ANSWER; 0 diagrama_*.png. V6 OK: M6 y M4 del oráculo coherencias_r9 (setequal por contenido, N = 100, 0 fallos). V7 N/A (ninguna parte ofrece opciones de fuera de su conjunto; unicidad de la Parte 2 por S2). V8/V9: artefactos del paso 9. V10 OK en las hipótesis de la Parte 6: guarda stopifnot, MC6 cazado por su sonda, marcas del XML = veredicto recalculado 100/100 y 30/30. V11 OK por valor, contenido e independencia (verificar_espacio_cloze_r9.txt); a un paso, residuo declarado (11-17 % y 33-63 % por rama). Literalidad: salida/literalidad_exextra_r9.py -> literalidad_exextra_r9.txt, 0 fallos: Competencia, Componente, Afirmación, Evidencia (Arg_E1), Descriptor (D3.10 = niveles_oficiales/N3[9]) y Estándar (Aleatorio_6-7[7]) literales en el catálogo canónico (niveles 426ea08a…, evidencias 427d2e29…, estándares 4862e82c…) e iguales carácter a carácter a ITEM_OFICIAL.md, también Nivel, GradoSugerido, Contenido y TemaEspecifico. DOK 2, Bloom Evaluar, Nivel 3: DOK >= 3 => Nivel >= 3 y Bloom Evaluar => Nivel >= 3 se cumplen. Juicio de literalidad del orquestador con script propio (ningún validador del arsenal la certifica)."
+        },
+        "aprobacion_usuario": {
+          "timestamp": "2026-11-02T18:36:40.229861-05:00",
+          "nota": "WAIT_USER #3 de la tanda 9b (2026-11-02): el profesor respondió «[a] Aprobar» y aprueba para el aula la versión md5 f98f9dda47e4f3cafc4e8b4e82cc956b (commit b6525e74). Pasos 1-10 sellados, cada uno tras su artefacto. FASE 2C r3 APROBAR_CON_CAMBIOS sin CORRECCIÓN; paso 8 coherencias_r9 con 0 fallos; 300 de 300 únicas; verificador r9 en exit 4 (327 cifras firmadas, 0 fallos, 0 pendientes). Residuos declarados (HANDOFF § Residuos declarados): X6 por clave y por rama (H1), H3 diferido al próximo ciclo, orden de la Parte 6 NO CONCLUYENTE, V11 a un paso, tipográficos de la decisión 2 a y de la 6b, BAJA del paso 8. MC39 no lo ha revisado ningún detractor: lo revisa el próximo. Uso: Moodle (exportar_moodle_cloze.R); el DOCX no es apto para estudiantes; para papel, el SCHOICE. No está en producción: falta la evidencia de aula."
         }
       }
     }

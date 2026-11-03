@@ -582,3 +582,49 @@ nuevo y el pendiente del SCHOICE. Los puntos de abajo son historia: ya están cu
    - «p»: no se toca nada.
 4. **Después de la aprobación:** aula → evidencia de Nivel 3 → promoción. Quedan para el próximo ciclo H3 de la r3, el pendiente
    del SCHOICE (decisión 2 a) y la revisión de MC39 por el próximo detractor.
+
+## Tanda C1 del ciclo 2026-11-02 (2026-11-03): reabierto, 6/11 (registro completo en `../.claude/CLAUDE.md`)
+
+> **Este bloque manda sobre el «Estado» de arriba.** El CLOZE se reabrió (reapertura #5, 13:18:39) y ya no está aprobado.
+> `.Rmd`: `f98f9dda…` → **`27f789dc6327f7d6bda72cded61502cd`**. Verificador: `6901624e…` → **`6e76321a22e2026adaa3a4b5f576f070`**.
+
+- **Qué cambió.**
+  - La Parte 1, re-empalmada por script desde el SCHOICE aprobado `63e2713e` (líneas 2-612). Trae L-6, V1′, S7 y la
+    explicación de ERR-RESTA.
+  - La prosa propia de la Parte 1 en la Solution, con L-6.
+  - H3 en la Parte 6: «si y solo si … es mayor».
+  - Las Partes 2 a 6 no cambian: `.Random.seed`, objetos, veredictos y Solution, iguales en 1000 de 1000 semillas
+    (`salida/ciclo_20261102/invariancia_c1.txt`).
+- **Decisiones del profesor que rigen** (literales en `../.claude/CLAUDE.md`): la (a) del SCHOICE, extendida a la Parte 1;
+  H3, diferido a este ciclo; «Extender por alcance (Recomendada)»; «Mantener 3|1|1|1|1|1 (Recomendada)», con F-3 a +25,5 pp.
+- **Verificador:** exit 4, 368 cifras dentro de lo firmado (327 más las 41 de la S2d), 0 fallos y 0 pendientes. MC40 a
+  MC49, cazados por su sonda. Ninguna cifra firmada del CLOZE se movió (`comparar_r9_c1.txt`). L-8, sin cablear.
+- **Sellos:** paso 3 a las 13:29:50, 4 a las 13:30:15, 5 a las 13:32:17 y 6 a las 13:32:20. Render en
+  `salida/ciclo_20261102/render_27f789dc/`.
+- **6b pareada:** APTO_CON_OBSERVACIONES (N = 100, a 360 y 320 px). La Parte 1 da 0 en todas las métricas de L-6 (control
+  `f98f9dda`: 160/274, 317/335 y 79/98). BAJO nuevo: «diferencia.» sola a 360 px en 99/100, por la redacción de H3.
+- **Residuos.** Siguen los de «Residuos declarados», salvo los de la Parte 1 por el espacio duro, que quedan cerrados
+  (decisión 2 a de la tanda 1). El BAJA 1 de la r3 en las Partes 3 a 6 no cambia: 259/1249 y 206/1249.
+
+### Próximo paso (tanda C1)
+
+1. FASE 2C r4 con un detractor NUEVO, sin `name:`. Qué debe auditar: `../.claude/CLAUDE.md` § «Ciclo 2026-11-02 del CLOZE,
+   tanda C1», incluido MC39.
+2. Pasos 8 a 10. En el paso 8, el oráculo de `coherencias_r9/` juzgó el banco de la Parte 2, que no cambió, pero la Parte 1
+   cambió de texto. Antes de reutilizarlo, comprobar que sus comprobaciones de la Parte 1 leen bien el espacio duro y la
+   unidad dentro de la fórmula: E2 p1 del verificador falló justo por eso (L-C8).
+3. WAIT_USER #3 (paso 11): la aprobación anterior era de `f98f9dda`.
+
+**Verificación del coordinador de la tanda C1 del CLOZE (2026-11-03, sesión `42032564`)**, independiente de sus scripts
+(`cloze/salida/ciclo_20261102/coordinador/`):
+- `verificar_espacio_cloze.R` (`6e76321a…`), repetido: exit 4 en 476 s, con 1409 líneas idénticas a
+  `cloze/salida/ciclo_20261102/verificar_espacio_cloze_c1.txt`. Hay 368 cifras dentro de lo firmado, 0 fallos y 0 pendientes.
+- Invariancia con un script propio (`invariancia_cloze_coordinador.R`), semillas 1 a 1000:
+  - (A) E1: la Parte 1 del CLOZE nuevo (`27f789dc`) es idéntica al SCHOICE aprobado (`63e2713e`) en las 1000. Se compararon
+    opciones, clave, feedback, rama, canónica, tabla y respuesta correcta.
+  - (B) El `.Random.seed` final coincide con el del CLOZE aprobado (`f98f9dda`) en las 1000, y los 18 objetos de las Partes 2 a 6
+    también.
+- Los sellos 3 a 6 llevan el md5 `27f789dc` y cada uno va después de su artefacto (la invariancia a las 13:23 y el render a las
+  13:30). El SCHOICE no se tocó (`63e2713e`, verificador `031d4726`, 11/11).
+- El diff fuera del bloque lo revisé y contiene los comentarios, dos U+00A0 literales pasados a escape, L-6 en la prosa de la
+  Parte 1 y H3 en indicativo.

@@ -1,0 +1,6 @@
+semillas: 1000 · errores de ejecución: 0
+(A) E1, Parte 1 del CLOZE nuevo = SCHOICE (opciones, sol, feedback, rama, es_canonica, tabla_md, respuesta_correcta): 1000 / 1000
+(B) .Random.seed final idéntico al CLOZE aprobado: 1000 / 1000
+(B) Partes 2 a 6 idénticas (18 objetos): 1000 / 1000
+objetos de P26 que existen en el CLOZE nuevo: 18 de 18 
+exit=0 · 46 s

@@ -1,0 +1,18 @@
+CLOZE nuevo 27f789dc6327f7d6bda72cded61502cd · CLOZE viejo f98f9dda47e4f3cafc4e8b4e82cc956b · SCHOICE 63e2713e6ac0bdbf250f4dc33901b2ec 
+Semillas 1 a 1000 (113 canónicas); errores de ejecución: 0
+(a) .Random.seed final distinto de f98f9dda: 0 de 1000
+(b) objetos propios del CLOZE distintos de f98f9dda: ninguno; tras normalizar el espacio duro: 0 diferencias
+[1] "s=1 conjunto de objetos propios distinto"
+[2] "s=2 conjunto de objetos propios distinto"
+[3] "s=3 conjunto de objetos propios distinto"
+[4] "s=4 conjunto de objetos propios distinto"
+[5] "s=5 conjunto de objetos propios distinto"
+[6] "s=6 conjunto de objetos propios distinto"
+(c) E1 ampliado (Parte 1 = SCHOICE 63e2713e, objetos y .Random.seed): 0 diferencias
+    veredictos u opciones de la Parte 6 distintos de f98f9dda: 0 de 1000
+(d) Solution distinta de f98f9dda tras deshacer L-6 y H3: 0 de 1000
+    prosa de la Parte 1: unidad fuera de la fórmula 0 · signo fuera de una fórmula 0 · cifra-unidad o El/La con espacio normal 0 · unidades dentro 8575 (con el signo dentro 5298)
+    control, la misma prosa en f98f9dda: unidad fuera de la fórmula 8575 · cifra-unidad o El/La con espacio normal 15347
+    resto de la Solution (Partes 2 a 6, sin tocar): unidad fuera de la fórmula 6509 · signo fuera 0 · espacio normal 0
+(e) H3: marca de HP y HG = «si y solo si … es mayor que la diferencia», leído del texto: 0 discrepancias en 1000 (HP verdadera en 476, HG en 518)
+exit=0

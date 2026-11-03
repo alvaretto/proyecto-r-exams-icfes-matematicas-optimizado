@@ -1,0 +1,2 @@
+360 delta H nuevo-ref: min 0 max 54 media 25.9 seeds con delta!=0 84
+320 delta H nuevo-ref: min -18 max 36 media 4.5 seeds con delta!=0 47

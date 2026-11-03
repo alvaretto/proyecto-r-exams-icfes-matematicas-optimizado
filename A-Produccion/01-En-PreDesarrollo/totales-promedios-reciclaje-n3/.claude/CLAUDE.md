@@ -2055,3 +2055,150 @@ Paso 11 sellado a las 12:45:40, así que el SCHOICE queda en 11/11. Siguen la ev
   - si se revisa F-3: con RS7 al 93,0 % en la mezcla, la Parte 1 pasa de +19,7 a +25,5 pp sobre el azar.
 - `cloze/empalmar_bloque_p1.R` está atado al md5 `e293d5c8` y a las líneas 2-561. Hay que actualizarlo a `63e2713e` y volver a
   poner el marcador en el lugar del bloque viejo.
+
+### Ciclo 2026-11-02 del CLOZE, tanda C1 (2026-11-03): re-empalme de la Parte 1 y H3; pasos 3 a 6 sellados
+
+> La hizo el `orquestador-cloze` el 2026-11-03 (sesión `42032564`), por encargo del coordinador. Reapertura #5 desde
+> `generacion_rmd` (13:18:39). `.Rmd`: `f98f9dda…` → **`27f789dc6327f7d6bda72cded61502cd`**, sin aprobar.
+> `cloze/verificar_espacio_cloze.R`: `6901624e…` → **`6e76321a22e2026adaa3a4b5f576f070`**. Se detuvo antes de la FASE 2C
+> r4, que lanza el coordinador con un detractor nuevo. Evidencia: `cloze/salida/ciclo_20261102/`. Estado: 6/11.
+
+#### Decisiones del profesor que rigen la tanda (literales; regla #24 H-5)
+
+1. **SCHOICE, 2026-11-02, decisión (a):** U+00A0 se normaliza solo al medir. Rige también la Parte 1 del CLOZE tras el
+   re-empalme (F-2).
+2. **2026-11-02, tras la 9a:** H3 de la FASE 2C r3 del CLOZE, diferido a este ciclo («la Solution de la Parte 6 dice
+   "solo si … fuera mayor"; la relación es "si y solo si"»).
+3. **2026-11-03, sobre la Parte 1:** «Extender por alcance (Recomendada)». Las 41 cifras de la firma de la S2d del
+   SCHOICE (`FIRMA_S2D`) y las leyes L-6, L-7 y L-8 rigen la Parte 1 por identidad, como F-2 extendió «O-1 corregido».
+   El verificador del CLOZE las comprueba sobre su Parte 1. Queda en rojo si alguna se mueve o si aparece otra regla por
+   encima de +8 pp. L-8 todavía no está cableada en el verificador del SCHOICE.
+4. **2026-11-03, sobre F-3:** «Mantener 3|1|1|1|1|1 (Recomendada)». Los pesos no cambian. F-3 se vuelve a firmar con la
+   cifra nueva: con RS7 al 93,0 % en la mezcla, la Parte 1 da (93,0 − 25) × 3/8 = +25,5 pp sobre el azar (antes,
+   +19,7). Queda registrado como declarado.
+
+#### Qué se hizo
+
+- **Re-empalme**, con `cloze/empalmar_bloque_p1.R` actualizado (md5 del SCHOICE `63e2713e`, `fin == 613`). Sin el
+  marcador, el script lee de git el SCHOICE viejo (`8efdf504`, md5 `e293d5c8` comprobado), exige que las líneas 2-561 del
+  CLOZE sean su bloque con los 4 renombres, línea a línea, y solo entonces las cambia por el marcador. Es idempotente.
+  - Bloque nuevo: líneas 2-612 de `63e2713e` (611 líneas), cada renombre una vez.
+  - El analizador no encontró otros usos de `opciones`, `sol` ni `feedback`: las guardas de S1 y L-6 no los usan, así que
+    no hizo falta ningún renombre más.
+  - Salida: `salida/ciclo_20261102/empalme_c1.txt`. Copia previa del script: `empalmar_bloque_p1_e293d5c8.R.txt`.
+- **Fuera del bloque** (`salida/ciclo_20261102/editar_rmd_c1.py`: 13 patrones y 14 sitios, cada uno exigido un número exacto
+  de veces):
+  - los comentarios que nombraban `e293d5c8`;
+  - los 2 U+00A0 literales del código propio, a su escape (mismo valor);
+  - L-6 en la prosa propia de la Parte 1 de la Solution, con las 7 cadenas de la Solution del SCHOICE `63e2713e`
+    («Procedimiento correcto» y «Caso específico»: unidad y signo dentro de la fórmula, y espacio duro);
+  - y H3. Diff: `diff_rmd_f98f9dda_27f789dc.patch`; fuera del bloque, 34 líneas de diferencia.
+- **H3** (Parte 6): «… habría ganado con un curso más si y solo si su promedio por curso, … kilos, es mayor que la
+  diferencia, … kilos; y el grado … habría perdido con un curso menos si y solo si su promedio, … kilos, es mayor que esa
+  diferencia». En indicativo: no presupone que la condición sea falsa.
+
+#### Invariancia (`salida/ciclo_20261102/invariancia_c1.R` → `.txt`, semillas 1 a 1000)
+
+- `.Random.seed` al final del `data_generation`, igual al de `f98f9dda` en 1000/1000, y los objetos propios del CLOZE,
+  iguales. Del bloque viejo faltan solo los que quitó S7: `contexto_tipo` y, en la canónica, `b_debajo` y `lado_gdis`.
+- Parte 1 = SCHOICE `63e2713e` (objetos y `.Random.seed` al final del bloque): 1000/1000, con 113 canónicas.
+- Veredictos y opciones de la Parte 6, iguales a `f98f9dda`: 1000/1000. La Solution, igual en 1000/1000 tras deshacer en el
+  texto el espacio duro, la unidad y el signo dentro de la fórmula, y H3.
+- Prosa de la Parte 1 de la Solution: 0 unidades fuera de la fórmula, 0 signos fuera y 0 cifra-unidad o El/La con espacio
+  normal (control `f98f9dda`: 8575 y 15 347). Quedan 8575 unidades dentro, 5298 con el signo.
+- H3: la marca de HP y HG coincide con el bicondicional leído del texto en 1000/1000 (HP verdadera en 476, HG en 518; sin
+  empates, por construcción de `espacio_paralelo()`).
+- 0 U+00A0, U+2009, U+202F o U+2060 literales en el `.Rmd`. Regla #19: 0. Regla #25: OK. Ortografía: limpio.
+
+#### Verificador (`6e76321a…`; `salida/ciclo_20261102/verificar_espacio_cloze_c1.txt`, 485 s)
+
+**Exit 4: EN ROJO BAJO OVERRIDE FIRMADO, 368 cifras dentro de lo firmado (las 327 de la r9 y las 41 de la S2d), 0 fallos y
+0 pendientes.**
+- Frente a la r9 solo cambian 6 líneas: los dos md5, la línea de MP2 (el patrón lleva el espacio duro; la cifra es la misma)
+  y el recuento del resultado (`comparar_r9_c1.txt`). No se movió ninguna cifra firmada del CLOZE: L-C2 a L-C7, X5, X6, X10,
+  «O-1 corregido» y la decisión 2 a.
+- La primera corrida dio FALLA (1), «E2 p1: 283/330» (`verificar_espacio_cloze_c1a_falla_e2p1.txt`). El oráculo de la Parte 1
+  comparaba el nombre de la tabla, sin U+00A0, con el sujeto de la opción («El Bosque» con U+00A0). Era del oráculo, no del
+  `.Rmd`.
+
+| Cambio | Guarda | Mutante → sonda |
+|---|---|---|
+| `rec()` no lee `lado_gdis`: S7 lo quitó de la canónica y nadie consume el campo en el CLOZE | `ok()`: `rec()` corre en una canónica, sin `lado_gdis`, y en una no canónica | MC40: lo vuelve a leer; en la canónica, «objeto 'lado_gdis' no encontrado» |
+| E4 mide la batería, los márgenes y la canónica de la Parte 1 con U+00A0 como espacio (decisión 1) | `norm_ed()` | MC43: sin normalizar, el margen en palabras de la rama PROMEDIO pasa de 6,5 % a 6,7 % y el canal de largo queda pendiente |
+| MP2 con el espacio duro | `mut_p1()`: el patrón, en una sola opción | MP2: «más dígitos» +75,0 pp, cazado por su sonda |
+| El oráculo de la Parte 1 (E2) lee el sujeto como se ve | `or_p1(x, nf = norm_ed)`: 330/330 | MC49: sin normalizar, 283/330; fallan exactamente las 47 versiones con nombres de dos palabras |
+| Decisión 3: la región S2b-S2d de `SUB/verificar_espacio.R` (`031d4726…`, líneas 471-653, por marcadores únicos) se evalúa sobre las muestras del CLOZE | `veredicto_s2d()` y el cotejo: 41 de 41 iguales a lo firmado; una que se mueva queda pendiente | MC41 (M44 sobre el bloque P1): RS1 58,8 → 72,2 % y 67,8 → 70,0 %, pendiente. MC42 (M45): BE9 38,5 → 50,0 % y BE11 35,8 → 50,0 %, pendientes. Reproducen el SCHOICE |
+| L-6 en la prosa de la Parte 1 de la Solution | sondas a 0 y controles exactos: 600 unidades dentro y 300 con el signo, en 100 versiones | MC45 (unidad), MC46 (signo) y MC47 (espacio normal), aditivos; MC48 (control: 600 → 500) |
+| Sin U+00A0, U+2009, U+202F ni U+2060 literales en el `.Rmd` ni en el verificador | `lit_en()` | MC44 |
+
+- L-7 rige la Parte 1 con la región S2b-S2d (el barrido en las tres lecturas). **L-8 no se cableó:** sigue pendiente en
+  `SUB/verificar_espacio.R`, y sin guarda no es una invariante.
+- F-3: +25,5 pp sobre el azar, declarado (decisión 4). E7 (pesos 3|1|1|1|1|1) sigue en verde.
+
+#### Sellos, uno por uno
+
+- `generacion_rmd`, 13:29:50; `retroalimentacion`, 13:30:15.
+- `renderizado_4_formatos`, 13:32:17: `salida/ciclo_20261102/render_27f789dc/` (PDF 5, HTML 5, DOCX 1, Moodle n = 5; NOPS
+  N/A).
+- `arsenal_post_render`, 13:32:20: informe del hook `20261103-133049-847130`, 0 errores y 6 advertencias; 2G 100/100; 2H 0
+  anomalías.
+- El paso 3 se selló con la invariancia, antes del verificador. La FALLA de su primera corrida era del oráculo y no tocó el
+  `.Rmd`.
+
+#### 6b pareada (`auditor-visual-html`, sin `name:`): APTO_CON_OBSERVACIONES
+
+N = 100 semillas por versión (`27f789dc` frente a `f98f9dda`), a 360 y 320 px: 400 páginas por CDP, con `innerWidth`
+comprobado y la red bloqueada (con red, el MathJax de la CDN sustituía a veces el MathML y las métricas no se repetían).
+Informe íntegro, recuperado de su transcripción: `salida/ciclo_20261102/6b_c1/informe_6b_c1_27f789dc_completo.md`.
+
+| Parte 1, 360 / 320 px | `f98f9dda` | `27f789dc` |
+|---|---|---|
+| fórmula + unidad partidas (de 1158) | 160 / 274 | 0 / 0 |
+| cifra-unidad partidas (de 2003) · El/La (de 475) | 317 / 335 · 79 / 98 | 0 / 0 · 0 / 0 |
+| signo huérfano tras fórmula · renglón que empieza con espacio | 0 · 0 | 0 · 0 |
+
+- Las Partes 2 a 6 salen idénticas en las dos versiones. El BAJA 1 de la r3 (fórmula y unidad partidas) da 259/1249 a
+  360 px y 206/1249 a 320 px; «sirven» sola a 360 px, 100/100; «cuadrado.» sola a 320 px, 32 de 400 opciones; palabras
+  sueltas en la Parte 2, 107/400 y 59/400.
+- Desbordes, tablas fuera de su caja y fórmulas partidas por dentro: 0.
+- **BAJO nuevo (H3):** en la Parte 6 de la Solution, «diferencia.» queda sola en el último renglón a 360 px en 99/100 (0/100
+  en `f98f9dda`, y 0/100 a 320 px). Es cosmético.
+- BAJO: la unidad dentro de la fórmula sale con la letra de la fórmula (el mismo BAJO de la S1b del SCHOICE). BAJO: +26 px
+  de altura media a 360 px.
+
+#### Qué debe auditar la FASE 2C r4 (detractor nuevo, sin `name:`)
+
+- El re-empalme: `empalmar_bloque_p1.R`, el bloque (E1 en 1000 semillas) y las 34 líneas de diferencia fuera del bloque.
+- `rec()` sin `lado_gdis`, MP2, la normalización de E4 y del oráculo E2 p1 (MC43 y MC49), y la extensión de la firma: que
+  la región evaluada sea la del SCHOICE y que las 41 cifras se juzguen con su puerta (MC41 y MC42).
+- Las sondas de L-6 en la prosa de la Parte 1, con sus controles exactos (MC45 a MC48), y la guarda de literales (MC44).
+- H3: la redacción, la verdad del bicondicional en todo el espacio (con una función de verdad propia), que no cambie ningún
+  veredicto, y el BAJO nuevo de la 6b.
+- **MC39**, pendiente de un detractor nuevo desde la r3.
+- F-3, declarado a +25,5 pp, y si L-8 sin cablear deja algo sin guarda en la Parte 1.
+
+#### ¿Ley local o regla?
+
+- **Local, candidata (L-C9; endurece y la firma el profesor):** el re-empalme de la Parte 1 se hace solo por script, desde el
+  md5 aprobado del SCHOICE y comprobando antes el bloque viejo línea a línea. Toda medida u oráculo del CLOZE que lea texto de
+  la Parte 1 lo normaliza como se ve (U+00A0 como espacio), y las guardas de L-6 lo leen crudo. Guardas: los `stopifnot` de
+  `empalmar_bloque_p1.R`, `norm_ed()` y `or_p1()`. Mutantes: MC43 y MC49.
+- **Del repo, nada nuevo.** La FALLA de E2 p1 es otro caso del pendiente 11 de `.claude/docs/HANDOFF_REPO.md` (las
+  herramientas que comparan texto no ven el espacio duro), aunque esta vez falló a la vista. Además, la herramienta Write
+  convirtió en literales los escapes Unicode de dos scripts de esta tanda (U+00A0, pero también U+00BB, U+201D, U+2026,
+  U+2009, U+202F y U+2060). Se arreglaron con un paso de `chr()` y con marcadores. Es la candidata ya anotada, ampliada a
+  Write.
+
+**Verificación del coordinador de la tanda C1 del CLOZE (2026-11-03, sesión `42032564`)**, independiente de sus scripts
+(`cloze/salida/ciclo_20261102/coordinador/`):
+- `verificar_espacio_cloze.R` (`6e76321a…`), repetido: exit 4 en 476 s, con 1409 líneas idénticas a
+  `cloze/salida/ciclo_20261102/verificar_espacio_cloze_c1.txt`. Hay 368 cifras dentro de lo firmado, 0 fallos y 0 pendientes.
+- Invariancia con un script propio (`invariancia_cloze_coordinador.R`), semillas 1 a 1000:
+  - (A) E1: la Parte 1 del CLOZE nuevo (`27f789dc`) es idéntica al SCHOICE aprobado (`63e2713e`) en las 1000. Se compararon
+    opciones, clave, feedback, rama, canónica, tabla y respuesta correcta.
+  - (B) El `.Random.seed` final coincide con el del CLOZE aprobado (`f98f9dda`) en las 1000, y los 18 objetos de las Partes 2 a 6
+    también.
+- Los sellos 3 a 6 llevan el md5 `27f789dc` y cada uno va después de su artefacto (la invariancia a las 13:23 y el render a las
+  13:30). El SCHOICE no se tocó (`63e2713e`, verificador `031d4726`, 11/11).
+- El diff fuera del bloque lo revisé y contiene los comentarios, dos U+00A0 literales pasados a escape, L-6 en la prosa de la
+  Parte 1 y H3 en indicativo.

@@ -1,0 +1,2 @@
+Bloque viejo (e293d5c8, líneas 2-561, 560 líneas) comprobado y sustituido por el marcador.
+Empalmadas 611 líneas (SCHOICE 63e2713e, líneas 2..612) con 4 renombres; .Rmd: 1137 líneas, md5 90514b4556e8fb3e6781975f07e0611d

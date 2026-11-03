@@ -1,0 +1,278 @@
+r9: 1134 líneas · c1: 1410 líneas · solo en r9: 6 · solo en c1: 281
+
+== Líneas de r9 que no están en c1 (cambiadas o retiradas):
+  OK: MP2 (decisión 2 a; copia de la canónica, «recogió 40 kilos más» -> «recogió 4 kilos más»): mas digitos +75.0 pp (firmado +25.0) -> pendiente — cazado_por_su_sonda
+=== RESULTADO: EN ROJO BAJO OVERRIDE FIRMADO (327 cifras dentro de lo firmado: «O-1 corregido», X6, X9, X10 y X11 en la canónica, la canónica de la Parte 1 por la decisión 2 a H2 por «H2 a», y la Parte 2 y la regla por palabra de la Parte 6 firmada regla por regla por la decisión «Va»; 0 fallos, 0 pendientes) ===
+En rojo, cubiertos por un override firmado («O-1 corregido» extendido por F-2; X6, X9, X10 y X11 en la canónica por L-C3; la canónica de la Parte 1 regla por regla por la decisión 2 a; H2 en la Parte 6 por «H2 a» (L-C5); el residuo de la Parte 2 «promedio» (L-C6) y la regla por palabra de la Parte 6 firmada regla por regla (L-C7) por la decisión «Va»; regla #22 §P7-E):
+SCHOICE leído: md5 e293d5c812b1f9790e2bb777b62de9a5 (aprobado para el aula: e293d5c812b1f9790e2bb777b62de9a5)
+Versión verificada: totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd · md5 f98f9dda47e4f3cafc4e8b4e82cc956b
+exit=4 · 445 s
+
+== Líneas nuevas de c1 (primeras 80 caracteres):
+
+                                                                         CURSOS
+                                                                         PROMEDI
+                                                                         canonic
+                                                                         mezcla
+    BE1   canonica   33.3 %  |a1 - a2| (ii)
+    BE10  CURSOS     35.5 %  dos pasos: n2 * |a1 - a2| (iii)
+    BE11  PROMEDIO   35.8 %  dos pasos: |n1 - n2| * a1 (iii)
+    BE12  PROMEDIO   39.2 %  dos pasos: |n1 - n2| * a2 (iii)
+    BE2   mezcla     34.0 %  n1 * a1 (i)
+    BE3   canonica  100.0 %  |n1 - a2| (i)
+    BE4   canonica   33.3 %  |n1 - a2| (ii)
+    BE5   CURSOS     34.0 %  dos pasos: |n1 - n2| * a1 (i)
+    BE5   canonica  100.0 %  dos pasos: |n1 - n2| * a1 (i)
+    BE6   canonica   33.3 %  dos pasos: |n1 - n2| * a1 (ii)
+    BE7   CURSOS     37.0 %  dos pasos: |n1 - n2| * a2 (i)
+    BE8   PROMEDIO   37.0 %  dos pasos: n1 * |a1 - a2| (i)
+    BE9   CURSOS     38.5 %  dos pasos: n1 * |a1 - a2| (iii)
+    RS1   CURSOS     58.8 %  resta: la sede de la opción que cita |aG - aP| gana
+    RS1   PROMEDIO   67.8 %  resta: la sede de la opción que cita |aG - aP| gana
+    RS1   mezcla     54.2 %  resta: la sede de la opción que cita |aG - aP| gana
+    RS2   CURSOS     72.5 %  S_U + resta
+    RS2   PROMEDIO   78.5 %  S_U + resta
+    RS2   canonica   50.0 %  S_U + resta
+    RS2   mezcla     71.0 %  S_U + resta
+    RS3   CURSOS     86.0 %  S_U + S1 + resta
+    RS3   PROMEDIO   79.5 %  S_U + S1 + resta
+    RS3   canonica  100.0 %  S_U + S1 + resta
+    RS3   mezcla     79.0 %  S_U + S1 + resta
+    RS4   CURSOS     82.0 %  S_U + suma + resta
+    RS4   PROMEDIO   90.0 %  S_U + suma + resta
+    RS4   canonica   50.0 %  S_U + suma + resta
+    RS4   mezcla     79.0 %  S_U + suma + resta
+    RS5   CURSOS     93.5 %  S_U + S1 + suma + resta
+    RS5   PROMEDIO   91.0 %  S_U + S1 + suma + resta
+    RS5   canonica  100.0 %  S_U + S1 + suma + resta
+    RS5   mezcla     86.0 %  S_U + S1 + suma + resta
+    RS6   CURSOS     71.0 %  S_U + atípica + resta
+    RS6   PROMEDIO   86.0 %  S_U + atípica + resta
+    RS6   canonica  100.0 %  S_U + atípica + resta
+    RS6   mezcla     81.5 %  S_U + atípica + resta
+    RS7   CURSOS     94.5 %  S_U + S1 + suma + atípica + resta
+    RS7   PROMEDIO   98.0 %  S_U + S1 + suma + atípica + resta
+    RS7   canonica  100.0 %  S_U + S1 + suma + atípica + resta
+    RS7   mezcla     93.0 %  S_U + S1 + suma + atípica + resta
+    RS8   canonica   50.0 %  resta (iii): la sede de la opción que cita |aG - aP
+    a1 * a2                    (i)  25.0  25.0  25.0  25.0 · (ii)  25.0  25.0  2
+    a1 * a2 (iii)                    25.0  25.0  25.0  25.0
+    a1 + a2                    (i)  25.0  25.0  25.0  25.0 · (ii)  25.0  25.0  2
+    a1 + a2 (iii)                    25.0  25.0  25.0  25.0
+    a1 / a2 (entero)           (i)  25.0  25.0  25.0  25.0 · (ii)  25.0  25.0  2
+    a1 / a2 (entero) (iii)           25.0  25.0  25.0  25.0
+    dos pasos: n1 * |a1 - a2|  (i)  23.0  11.0  37.0  25.0 · (ii)  27.0  29.3  2
+    dos pasos: n1 * |a1 - a2| (iii)  29.0  38.5  21.0  25.0
+    dos pasos: n2 * |a1 - a2|  (i)  22.0  14.0  30.2   0.0 · (ii)  24.3  28.3  2
+    dos pasos: n2 * |a1 - a2| (iii)  25.5  35.5  23.2   0.0
+    dos pasos: |n1 - n2| * a1  (i)  29.0  34.0  14.2 100.0 · (ii)  28.3  26.0  2
+    dos pasos: |n1 - n2| * a1 (iii)  28.0  22.0  35.8   0.0
+    dos pasos: |n1 - n2| * a2  (i)  19.8  37.0  10.8  25.0 · (ii)  27.7  26.3  2
+    dos pasos: |n1 - n2| * a2 (iii)  31.8  21.0  39.2  25.0
+    n1 * a1                    (i)  34.0  28.0  32.5  25.0 · (ii)  26.0  25.3  2
+    n1 * a1 (iii)                    22.0  24.0  22.5  25.0
+    n1 * a2                    (i)  25.0  25.8  25.0  25.0 · (ii)  25.0  25.1  2
+    n1 * a2 (iii)                    25.0  24.8  25.0  25.0
+    n1 * n2                    (i)  21.8  21.5  22.8   0.0 · (ii)  23.1  25.2  2
+    n1 * n2 (iii)                    23.8  27.0  26.2   0.0
+    n1 + a1                    (i)  24.8  24.0  25.5  25.0 · (ii)  25.1  25.0  2
+    n1 + a1 (iii)                    25.2  25.5  25.0  25.0
+    n1 + a2                    (i)  23.2  24.0  22.5  25.0 · (ii)  24.2  25.0  2
+    n1 + a2 (iii)                    24.8  25.5  23.5  25.0
+    n1 + n2                    (i)  26.5  25.0  27.0  25.0 · (ii)  24.5  25.0  2
+    n1 + n2 (iii)                    23.5  25.0  24.0  25.0
+    n1 / a1 (entero)           (i)  25.0  24.8  24.5  25.0 · (ii)  25.0  24.8  2
+    n1 / a1 (entero) (iii)           25.0  24.8  25.0  25.0
+    n1 / a2 (entero)           (i)  24.8  24.8  25.0  25.0 · (ii)  25.1  25.1  2
+    n1 / a2 (entero) (iii)           25.2  25.2  25.0  25.0
+    n1 / n2 (entero)           (i)  25.0  25.0  25.0  25.0 · (ii)  25.0  25.0  2
+    n1 / n2 (entero) (iii)           25.0  25.0  25.0  25.0
+    n2 * a1                    (i)  25.0  25.0  25.0  25.0 · (ii)  25.0  25.0  2
+    n2 * a1 (iii)                    25.0  25.0  25.0  25.0
+    n2 * a2                    (i)  32.5  28.7  30.2  25.0 · (ii)  25.8  25.4  2
+    n2 * a2 (iii)                    22.5  23.8  23.2  25.0
+    n2 + a1                    (i)  24.5  24.8  25.0  25.0 · (ii)  24.8  25.1  2
+    n2 + a1 (iii)                    25.0  25.2  25.0  25.0
+    n2 + a2                    (i)  25.0  25.5  24.0  25.0 · (ii)  25.0  25.2  2
+    n2 + a2 (iii)                    25.0  25.0  25.0  25.0
+    n2 / a1 (entero)           (i)  25.0  25.0  24.8  25.0 · (ii)  25.0  25.0  2
+    n2 / a1 (entero) (iii)           25.0  25.0  24.8  25.0
+    n2 / a2 (entero)           (i)  24.8  24.0  24.8  25.0 · (ii)  25.1  25.0  2
+    n2 / a2 (entero) (iii)           25.2  25.5  25.2  25.0
+    resta (iii)                      16.8  13.8  10.8  50.0
+    |a1 - a2|                  (i)  54.2  58.8  67.8   0.0 · (ii)  29.2  28.7  2
+    |a1 - a2| (iii)                  16.8  13.8  10.8  50.0
+    |n1 - a1|                  (i)  24.8  24.0  24.0  25.0 · (ii)  25.1  25.0  2
+    |n1 - a1| (iii)                  25.2  25.5  25.0  25.0
+    |n1 - a2|                  (i)  30.2  23.2  23.8 100.0 · (ii)  25.6  24.9  2
+    |n1 - a2| (iii)                  23.2  25.8  25.8   0.0
+    |n1 - n2|                  (i)  25.8  24.2  24.8  25.0 · (ii)  25.1  25.2  2
+    |n1 - n2| (iii)                  24.8  25.8  25.2  25.0
+    |n2 - a1|                  (i)  26.2  24.5  24.0  25.0 · (ii)  25.2  25.2  2
+    |n2 - a1| (iii)                  24.8  25.5  25.0  25.0
+    |n2 - a2|                  (i)  24.2  25.2  24.0  25.0 · (ii)  25.2  25.2  2
+    |n2 - a2| (iii)                  25.8  25.2  26.0  25.0
+  - [la firma de la S2d] S2b H1: RS1 «resta: la sede de la opción que cita |aG -
+  - [la firma de la S2d] S2b H1: RS2 «S_U + resta», canónica (24 órdenes, exacta
+  - [la firma de la S2d] S2b H1: RS2 «S_U + resta», mezcla de E1: 71.0 % (+46.0 
+  - [la firma de la S2d] S2b H1: RS2 «S_U + resta», rama CURSOS: 72.5 % (+47.5 p
+  - [la firma de la S2d] S2b H1: RS2 «S_U + resta», rama PROMEDIO: 78.5 % (+53.5
+  - [la firma de la S2d] S2b H1: RS3 «S_U + S1 + resta», canónica (24 órdenes, e
+  - [la firma de la S2d] S2b H1: RS3 «S_U + S1 + resta», mezcla de E1: 79.0 % (+
+  - [la firma de la S2d] S2b H1: RS3 «S_U + S1 + resta», rama CURSOS: 86.0 % (+6
+  - [la firma de la S2d] S2b H1: RS3 «S_U + S1 + resta», rama PROMEDIO: 79.5 % (
+  - [la firma de la S2d] S2b H1: RS4 «S_U + suma + resta», canónica (24 órdenes,
+  - [la firma de la S2d] S2b H1: RS4 «S_U + suma + resta», mezcla de E1: 79.0 % 
+  - [la firma de la S2d] S2b H1: RS4 «S_U + suma + resta», rama CURSOS: 82.0 % (
+  - [la firma de la S2d] S2b H1: RS4 «S_U + suma + resta», rama PROMEDIO: 90.0 %
+  - [la firma de la S2d] S2b H1: RS5 «S_U + S1 + suma + resta», canónica (24 órd
+  - [la firma de la S2d] S2b H1: RS5 «S_U + S1 + suma + resta», mezcla de E1: 86
+  - [la firma de la S2d] S2b H1: RS5 «S_U + S1 + suma + resta», rama CURSOS: 93.
+  - [la firma de la S2d] S2b H1: RS5 «S_U + S1 + suma + resta», rama PROMEDIO: 9
+  - [la firma de la S2d] S2b H1: RS6 «S_U + atípica + resta», canónica (24 órden
+  - [la firma de la S2d] S2b H1: RS6 «S_U + atípica + resta», mezcla de E1: 81.5
+  - [la firma de la S2d] S2b H1: RS6 «S_U + atípica + resta», rama CURSOS: 71.0 
+  - [la firma de la S2d] S2b H1: RS6 «S_U + atípica + resta», rama PROMEDIO: 86.
+  - [la firma de la S2d] S2b H1: RS7 «S_U + S1 + suma + atípica + resta», canóni
+  - [la firma de la S2d] S2b H1: RS7 «S_U + S1 + suma + atípica + resta», mezcla
+  - [la firma de la S2d] S2b H1: RS7 «S_U + S1 + suma + atípica + resta», rama C
+  - [la firma de la S2d] S2b H1: RS7 «S_U + S1 + suma + atípica + resta», rama P
+  - [la firma de la S2d] S2b barrido del estímulo: BE1 «|a1 - a2| (ii)», canónic
+  - [la firma de la S2d] S2b barrido del estímulo: BE2 «n1 * a1 (i)», mezcla de 
+  - [la firma de la S2d] S2b barrido del estímulo: BE3 «|n1 - a2| (i)», canónica
+  - [la firma de la S2d] S2b barrido del estímulo: BE4 «|n1 - a2| (ii)», canónic
+  - [la firma de la S2d] S2b barrido del estímulo: BE5 «dos pasos: |n1 - n2| * a
+  - [la firma de la S2d] S2b barrido del estímulo: BE6 «dos pasos: |n1 - n2| * a
+  - [la firma de la S2d] S2b barrido del estímulo: BE7 «dos pasos: |n1 - n2| * a
+  - [la firma de la S2d] S2b barrido del estímulo: BE8 «dos pasos: n1 * |a1 - a2
+  - [la firma de la S2d] S2d barrido (iii): BE10 «dos pasos: n2 * |a1 - a2| (iii
+  - [la firma de la S2d] S2d barrido (iii): BE11 «dos pasos: |n1 - n2| * a1 (iii
+  - [la firma de la S2d] S2d barrido (iii): BE12 «dos pasos: |n1 - n2| * a2 (iii
+  - [la firma de la S2d] S2d barrido (iii): BE9 «dos pasos: n1 * |a1 - a2| (iii)
+  - [la firma de la S2d] S2d lectura (iii): RS8 «resta (iii): la sede de la opci
+  L-8 (ERR-RESTA llena el hueco por debajo de D): firmada el 2026-11-03 y PENDIE
+  OK: C1 · L-6 en la prosa de la Parte 1 de la Solution (100 versiones): unidad 
+  OK: C1 · L-6, controles exactos en la prosa propia de la Parte 1: 600 unidades
+  OK: C1 · L-6: ni el .Rmd ni este verificador llevan U+00A0, U+2009, U+202F o U
+  OK: C1 · extensión por alcance: las 41 cifras de la S2d, medidas sobre la Part
+  OK: C1 · rec() corre en una canónica (semilla 1001, sin lado_gdis en su entorn
+  OK: MC40 (rec() vuelve a leer lado_gdis): en la canónica (semilla 1001) «objet
+  OK: MC41 (M44 del SCHOICE sobre el bloque P1: ERR-RESTA siempre que se pueda):
+  OK: MC42 (M45 del SCHOICE sobre el bloque P1: la fila de G siempre abajo, gi =
+  OK: MC43 (E4 sin normalizar el espacio duro): rama PROMEDIO: con la normalizac
+  OK: MC44 (U+00A0 literal en la línea 24 del .Rmd, mismo valor de ED): la guard
+  OK: MC45 (la cifra de «solo una cita la diferencia correcta» pasa a fórmula co
+  OK: MC46 («Ganó …»: un punto tras el cierre de la fórmula): sig +100 — cazado_
+  OK: MC47 («solo una cita la diferencia correcta»: espacio normal entre cifra y
+  OK: MC48 (caso específico: la unidad desaparece de «a favor de» (solo el contr
+  OK: MC49 (E2 p1 sin normalizar el espacio duro): sin normalizar, el oráculo ac
+  OK: MP2 (decisión 2 a; copia de la canónica, «recogió 40 kilos más» -> «recogi
+  OK: S2b: el barrido reproduce «resta» con sus propias celdas: «|a1 - a2| (i)» 
+  OK: S2d: el barrido reproduce «resta (iii)» con sus propias celdas: «|a1 - a2|
+  OK: firma de la S2d: las 41 cifras firmadas existen en E4 (regla y estrato)
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS1 «resta: la sede de la opció
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS2 «S_U + resta», canónica (24
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS2 «S_U + resta», mezcla de E1
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS2 «S_U + resta», rama CURSOS:
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS2 «S_U + resta», rama PROMEDI
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS3 «S_U + S1 + resta», canónic
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS3 «S_U + S1 + resta», mezcla 
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS3 «S_U + S1 + resta», rama CU
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS3 «S_U + S1 + resta», rama PR
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS4 «S_U + suma + resta», canón
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS4 «S_U + suma + resta», mezcl
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS4 «S_U + suma + resta», rama 
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS5 «S_U + S1 + suma + resta», 
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS6 «S_U + atípica + resta», ca
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS6 «S_U + atípica + resta», me
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS6 «S_U + atípica + resta», ra
+  ROJO, cubierto por la firma de la S2d: S2b H1: RS7 «S_U + S1 + suma + atípica 
+  ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE1 «|a1 - a2
+  ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE2 «n1 * a1 
+  ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE3 «|n1 - a2
+  ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE4 «|n1 - a2
+  ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE5 «dos paso
+  ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE6 «dos paso
+  ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE7 «dos paso
+  ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE8 «dos paso
+  ROJO, cubierto por la firma de la S2d: S2d barrido (iii): BE10 «dos pasos: n2 
+  ROJO, cubierto por la firma de la S2d: S2d barrido (iii): BE11 «dos pasos: |n1
+  ROJO, cubierto por la firma de la S2d: S2d barrido (iii): BE12 «dos pasos: |n1
+  ROJO, cubierto por la firma de la S2d: S2d barrido (iii): BE9 «dos pasos: n1 *
+  ROJO, cubierto por la firma de la S2d: S2d lectura (iii): RS8 «resta (iii): la
+  S2b H1: 27 de 28 cifras (7 reglas × 4 estratos) por encima de +8 pp sobre el a
+  S2b barrido: 28 operaciones (24 de un paso entre dos celdas y 4 de dos pasos) 
+  S2b · H1 de la FASE 2C r6: «resta» y sus combinaciones con las pistas de «O-1 
+  S2b · barrido del estímulo, por fila de la tabla (acierto en %, mezcla / CURSO
+  S2b: ninguna regla de un paso equivale a resolver el ítem. Los dos productos d
+  S2d lectura (iii): «resta» y 27 operaciones × 4 estratos; 5 cifras por encima 
+  S2d · firma del profesor, regla por regla y por estrato (41 cifras; acierto en
+  S2d · lectura (iii), por fila de la tabla (acierto en %, mezcla / CURSOS / PRO
+  firma de la S2d: 41 cifras firmadas (36 de la S2b y 5 de la lectura (iii)), 41
+  región S2b-S2d de SUB/verificar_espacio.R (md5 031d4726f652df60a6d0dd49c8d8524
+  «resta» aplica (alguna opción cita |aG - aP|): mezcla 51 % · CURSOS 45 % · PRO
+=== RESULTADO: EN ROJO BAJO OVERRIDE FIRMADO (368 cifras dentro de lo firmado: «
+==============================================================================
+E4 · C1 · Firma de la S2d (41 cifras) y lectura (iii) sobre la Parte 1 (decisión
+En rojo, cubiertos por un override firmado («O-1 corregido» extendido por F-2; X
+MC40 C1: rec() corre en la canónica
+MC40 MC40 cazado_por_su_sonda
+MC40 objeto 'lado_gdis' no encontrado
+MC41 C1 · S2d: RS1 fuera de «cubierto»
+MC41 ERR-RESTA en el distractor de G 45 -> 63 % (CURSOS) y 57 -> 60 % (PROMEDIO)
+MC41 MC41 cazado_por_su_sonda
+MC42 BE9 CURSOS 38.5 -> 50.0 % «pendiente»; BE10 CURSOS 35.5 -> 25.0 % «ok»; BE1
+MC42 C1 · S2d: BE9 y BE11 fuera de «cubierto»
+MC42 MC42 cazado_por_su_sonda
+MC43 C1: canal de largo PROMEDIO, margen en palabras
+MC43 MC43 cazado_por_su_sonda
+MC43 rama PROMEDIO: con la normalización «declarado» (+10.4 pp; márgenes 2.0 % y
+MC44 1 línea con literal
+MC44 C1 · L-6: sin literales
+MC44 MC44 cazado_por_su_sonda
+MC45 C1 · L-6: uni
+MC45 MC45 cazado_por_su_sonda
+MC45 uni +100
+MC46 C1 · L-6: sig
+MC46 MC46 cazado_por_su_sonda
+MC46 sig +100
+MC47 C1 · L-6: esp
+MC47 MC47 cazado_por_su_sonda
+MC47 esp +100
+MC48 C1 · L-6: dentro
+MC48 MC48 cazado_por_su_sonda
+MC48 dentro -100
+MC49 C1: E2 p1 sin normalizar
+MC49 MC49 cazado_por_su_sonda
+MC49 sin normalizar, el oráculo acierta 283 de 330 versiones; fallan 47, y las v
+SCHOICE leído: md5 63e2713e6ac0bdbf250f4dc33901b2ec (aprobado para el aula: 63e2
+S_U + S1 + resta                                                              10
+S_U + S1 + resta                                                             79.
+S_U + S1 + resta                                                           79.0
+S_U + S1 + resta                                                           86.0
+S_U + S1 + suma + atípica + resta                                             10
+S_U + S1 + suma + atípica + resta                                            98.
+S_U + S1 + suma + atípica + resta                                          93.0
+S_U + S1 + suma + atípica + resta                                          94.5
+S_U + S1 + suma + resta                                                       10
+S_U + S1 + suma + resta                                                      91.
+S_U + S1 + suma + resta                                                    86.0
+S_U + S1 + suma + resta                                                    93.5
+S_U + atípica + resta                                                         10
+S_U + atípica + resta                                                        86.
+S_U + atípica + resta                                                      71.0
+S_U + atípica + resta                                                      81.5
+S_U + resta                                                                    5
+S_U + resta                                                                  78.
+S_U + resta                                                                71.0
+S_U + resta                                                                72.5
+S_U + suma + resta                                                             5
+S_U + suma + resta                                                           90.
+S_U + suma + resta                                                         79.0
+S_U + suma + resta                                                         82.0
+Versión verificada: totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze
+exit=4 segundos=485
+resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede        
+resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede     67.
+resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede   54.2
+resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede   58.8

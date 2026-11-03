@@ -1,0 +1,50 @@
+== nuevo_320 semillas 100 Hmedia 9187 desb 0 spills 0 tab_fuera 0 tab_scroll 0 mathSplit 0
+   P1|El-Bosque 0/475
+   P1|El-Bosque(tabla) 0/24
+   P1|cifra-unidad 0/2003
+   P1|cifra-unidad(tabla) 0/400
+   P1|espacio-inicial 0/1002
+   P1|formula-unidad-dentro 0/1158
+   P1|signo-tras-otro 0/100
+   R|cifra-unidad 0/1355
+   R|cifra-unidad(tabla) 0/400
+   R|espacio-inicial 206/1249
+   R|formula-unidad 206/1249
+== nuevo_360 semillas 100 Hmedia 8100 desb 0 spills 0 tab_fuera 0 tab_scroll 0 mathSplit 0
+   P1|El-Bosque 0/475
+   P1|El-Bosque(tabla) 0/24
+   P1|cifra-unidad 0/2003
+   P1|cifra-unidad(tabla) 0/400
+   P1|espacio-inicial 0/1002
+   P1|formula-unidad-dentro 0/1158
+   P1|signo-tras-otro 0/100
+   R|cifra-unidad 0/1355
+   R|cifra-unidad(tabla) 0/400
+   R|espacio-inicial 259/1249
+   R|formula-unidad 259/1249
+== ref_320 semillas 100 Hmedia 9182 desb 0 spills 0 tab_fuera 0 tab_scroll 0 mathSplit 0
+   P1|El-Bosque 98/475
+   P1|El-Bosque(tabla) 0/24
+   P1|cifra-unidad 335/2003
+   P1|cifra-unidad(tabla) 0/400
+   P1|espacio-inicial 0/1264
+   P1|formula-unidad 274/1158
+   P1|signo-tras-formula 0/42
+   P1|signo-tras-otro 0/100
+   R|cifra-unidad 0/1355
+   R|cifra-unidad(tabla) 0/400
+   R|espacio-inicial 206/1249
+   R|formula-unidad 206/1249
+== ref_360 semillas 100 Hmedia 8074 desb 0 spills 0 tab_fuera 0 tab_scroll 0 mathSplit 0
+   P1|El-Bosque 79/475
+   P1|El-Bosque(tabla) 0/24
+   P1|cifra-unidad 317/2003
+   P1|cifra-unidad(tabla) 0/400
+   P1|espacio-inicial 0/1264
+   P1|formula-unidad 160/1158
+   P1|signo-tras-formula 0/42
+   P1|signo-tras-otro 0/100
+   R|cifra-unidad 0/1355
+   R|cifra-unidad(tabla) 0/400
+   R|espacio-inicial 259/1249
+   R|formula-unidad 259/1249
