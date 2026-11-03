@@ -3,7 +3,7 @@
   "ejercicio": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1",
   "tipo": "schoice",
   "timestamp_inicio": "2026-10-29T06:13:12.230996-05:00",
-  "timestamp_ultima_actualizacion": "2026-11-03T08:12:18.319267-05:00",
+  "timestamp_ultima_actualizacion": "2026-11-03T12:45:40.742302-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -47,26 +47,31 @@
       "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1/20261103-081020-313328/informe.txt (copia en salida/ciclo_20261102/s2a/arsenal_63e2713e_informe.txt) · md5 63e2713e6ac0bdbf250f4dc33901b2ec · 0 errores / 6 advertencias (las heurísticas de S1 y S1b; la séptima de la S1b, «PDF no encontrado», desaparece porque dir= va literal) · 2A APROBADO · 2B preview de 3 páginas, leídas · 2G 100/100 · 2H 0 anomalías en 10 semillas · 2I sin patrones de Error 16/17 sobre los .tex del render · 2J, 2K, 2N, 2O OK"
     },
     "detractor_fase2c": {
-      "completado": false,
-      "timestamp": null,
-      "veredicto": null
+      "completado": true,
+      "timestamp": "2026-11-03T10:50:28.085464-05:00",
+      "veredicto": "APROBAR_CON_CAMBIOS",
+      "nota": "Tanda S2d. FASE 2C r5 (salida/fase2c_r5_detractor.md, AgenteDetractor nuevo sin name, auditó 6c9d7705) y r6 (salida/fase2c_r6_detractor.md, otro AgenteDetractor nuevo sin name, auditó 63e2713e): veredicto del detractor r5 y r6, APROBAR_CON_CAMBIOS; ninguna CORRECCIÓN; citas verificadas por el coordinador al entregarse, 14/14 y 17/17 (hoy fallan 9 y 6, todas en código corregido después: s2d/citas_r5_al_sellar.txt y citas_r6_al_sellar.txt; de la r6 ninguna al .Rmd). md5 sellado: 63e2713e6ac0bdbf250f4dc33901b2ec, sin reapertura. Hallazgos r5: H1 controles exactos y separadores por complemento con M34-M41 (S2a); H2 cerrado por la decisión del profesor «Cerrarlo ahora (Recomendada)» (S2a, único cambio del .Rmd); H3 tabla candidata de L-6 (S2a); H4 cap_s1b2.py sin literales (S2a); H5 guarda real del canal 2 con M40 (S2a). Hallazgos r6: H1 (ALTA, diagnosticidad) canal «resta» medido en la S2b, enumerado en la S2c por la decisión «Enumerar §P7-F primero (Recomendada)» (estructural, ningún rediseño viable) y firmado por la decisión «Firmar las 41 (Recomendada)»: 36 cifras de la S2b y 5 de la lectura (iii), cableadas regla por regla en verificar_espacio.R (md5 031d4726f652df60a6d0dd49c8d8524b: exit 4, 78 canales cubiertos 13+24+41, 0 fallos, 0 pendientes; M44 y M45 cazados por su sonda; s2d/verificar_espacio_s2d_run1.txt); H2 juzgar_s1() simétrico y M42/M43 aditivos (S2b); H3 tabla candidata de L-6 corregida, opción b (S2b); H4 cap_s1b2.py con -E -P y assert (S2b). Por decisión del profesor el paso se sella con la r5 y la r6 porque el .Rmd no cambia; los cambios del verificador posteriores a la r6 (S2b y S2d) los revisa el próximo detractor."
     },
     "coherencias_5": {
-      "completado": false,
-      "timestamp": null
+      "completado": true,
+      "timestamp": "2026-11-03T10:51:20.653763-05:00",
+      "nota": "Tanda S2d, md5 63e2713e6ac0bdbf250f4dc33901b2ec. Validador independiente (AgenteValidadorVisual nuevo, sin name): COHERENCIAS_OK, las 5 cumplen. N declarado: HTML 100 (set.seed(8001), 7 canónicas), PDF 70 (3 canónicas), DOCX 50 (5), Moodle 40 (4), NOPS 2. Una sola afirmación verdadera, recalculada desde la tabla mostrada, y es la marcada en 100/100 HTML, 40/40 Moodle (fraction 100) y 2/2 NOPS; reparto 2+2 en 100/100; D y la aritmética de la Solution correctas en 100/100; feedback «Verdadero» solo en la verdadera; Solution sin letra ni orden (regla #19, INC-SOLUTION-ORDEN) en 100/100; pandocbounded solo como definición no-op; guardia c@none en la línea 619; glifos OK; 70 PDF compilan; canónica contra originales/orig_pregunta_50.png con diferencias solo deliberadas (L-6, exshuffle, formato de tabla). Hallazgos: 0 CRÍTICA, ALTA y MEDIA; 3 BAJA: ERR-TOTAL leído como total en 20 de 93 no canónicas de su muestra, residuo firmado en O-1 corregido (por enumeración, 8536/39116 y 3928/19640, igual que siempre); clave canónica «fue de 20 kilos más», declarada por H-2; NOPS sin canónica y pandocbounded comprobado solo en el último exercise1.tex. Reporte íntegro: salida/ciclo_20261102/s2d/paso8_coherencias_63e2713e.md; renders en s2d/paso8/."
     },
     "validar_diversidad": {
-      "completado": false,
-      "timestamp": null,
-      "versiones_unicas": null
+      "completado": true,
+      "timestamp": "2026-11-03T10:51:57.797965-05:00",
+      "versiones_unicas": 271,
+      "nota": "Tanda S2d, md5 63e2713e6ac0bdbf250f4dc33901b2ec (en la cabecera de cada salida). validar_diversidad_sustantiva.R, N = 100: PASS, 100/100 evaluadas, 95 valores únicos de la respuesta correcta, 0 errores, 0 indeterminadas. validar_diagnosticidad.R, N = 100: PASS; H1 más larga 0 % (margen mediano 2 %) y más corta 0 % (1 %); H2 y H3 ciegas por prefijo uniforme (no es PASS de esas sondas, es ausencia de medición); H3b 6 %. H1 por rama (verificar_espacio.R E2, N = 100 por rama): 0 % en CURSOS y en PROMEDIO; §P7-B: clave única más larga con margen mediano 1,9 % (máx 2,5 %). validar_multisemilla.R, N = 100: APROBADO, tasa de éxito 100 %. Versiones únicas: 271/300 (semillas 1 a 300, opciones ordenadas, método r4b; 0 errores, 30 canónicas). Batería §P7 de 48 reglas: mezcla +0,3 pp y CURSOS +0,7 pp PASS; PROMEDIO +10,4 pp por largo, residuo §P7-B declarado (margen 2,0 % y 6,5 %). Verificador 031d4726…: exit 4, 78 canales en rojo cubiertos (13 O-1 corregido, 24 decisión 2 a, 41 firma de la S2d), 0 fallos, 0 pendientes; dos corridas idénticas byte a byte. Salidas: salida/ciclo_20261102/s2d/paso9/ y s2d/verificar_espacio_s2d_run1.txt y run2.txt."
     },
     "validar_icfes": {
-      "completado": false,
-      "timestamp": null
+      "completado": true,
+      "timestamp": "2026-11-03T10:52:27.944172-05:00",
+      "nota": "Tanda S2d, md5 63e2713e6ac0bdbf250f4dc33901b2ec. Estructura R/exams: Question, Answerlist, Solution y Meta-information presentes; exname, extype schoice, exsolution dinámico (mchoice2string(sol)), exshuffle TRUE, extol 0. Seis dimensiones en exextra (Type, Competencia, Componente, Afirmacion, Evidencia, Nivel) más Descriptor D3.10, Estandar, DOK 2, Bloom Evaluar, SOLO Relacional, TipoMetacognicion evaluacion_afirmacion, ItemOriginal MAT-2026-07-050 y GradoSugerido 6°-7°. validar_literalidad_exextra.py --item ITEM_OFICIAL.md: exit 0, 0 fallos; Competencia, Componente, Afirmación, Evidencia (Arg_E1), Descriptor (niveles_oficiales/N3[9], D3.10) y Estándar (Aleatorio_6-7[7]) literales en el catálogo canónico de Todo-Pajaro (md5 de los cuatro catálogos en la salida). Nivel-DOK: DOK 2 no activa DOK>=3 => Nivel>=3; Bloom Evaluar => Nivel>=3 se cumple con Nivel 3 (L-4: el Nivel es el literal de la ficha y el DOK no se infla). Salida: salida/ciclo_20261102/s2d/paso10/paso10_icfes.txt."
     },
     "aprobacion_usuario": {
-      "completado": false,
-      "timestamp": null
+      "completado": true,
+      "timestamp": "2026-11-03T12:45:40.742302-05:00",
+      "nota": "WAIT_USER #3 del ciclo 2026-11-02 (tanda S2d), 2026-11-03. Respuesta literal del profesor: «[a] Aprobar (Recomendada)». md5 del .Rmd aprobado: 63e2713e6ac0bdbf250f4dc33901b2ec (sustituye a la aprobación de e293d5c8). Leyes locales firmadas en la misma respuesta: «L-6, dos filas (Recomendada)», «L-7 barrido (Recomendada)» y «L-8 hueco bajo D». ERR-TOTAL: «Mantener y cablear (Recomendada)». Evidencia: salida/fase2c_r5_detractor.md, salida/fase2c_r6_detractor.md y salida/ciclo_20261102/s2d/ (verificador exit 4, 78 canales, repetido por el coordinador con salida idéntica)."
     }
   },
   "reaperturas": [

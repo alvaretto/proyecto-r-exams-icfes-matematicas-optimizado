@@ -1,0 +1,55 @@
+== md5 63e2713e6ac0bdbf250f4dc33901b2ec
+== Meta-information
+exname: totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Competencia]: Argumentación
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Valida procedimientos y estrategias matemáticas utilizadas para dar solución a problemas.
+exextra[Evidencia]: Plantea afirmaciones que sustentan o refutan una interpretación dada a la información disponible en el marco de la solución de un problema.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.10 — Justifica afirmaciones utilizando planteamientos y operaciones aritméticas o haciendo uso directo de un concepto, es decir, a partir de un único argumento.
+exextra[Contenido]: Estadística
+exextra[TemaEspecifico]: Promedio y total de datos
+exextra[Estandar]: Predigo y justifico razonamientos y conclusiones usando información estadística. (6°-7°, Pensamiento aleatorio)
+exextra[DOK]: 2
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: evaluacion_afirmacion
+exextra[ItemOriginal]: MAT-2026-07-050
+exextra[GradoSugerido]: 6°-7°
+== validar_literalidad_exextra.py
+md5 del .Rmd: 63e2713e6ac0bdbf250f4dc33901b2ec
+catálogo niveles-mat.json 426ea08a3746c669a1467df579284ca7
+catálogo evidencias-mat.json 427d2e29c9a5a99da619ee2526fbd785
+catálogo estandares-mat-ebc.json 4862e82c3cd19b31af4b2f2784bb4aef
+catálogo estructura-prueba-mat.json 330f5f841063af8db7486777ee407f9d
+
+[OK] Competencia: 'Argumentación'
+   literal en evidencias-mat.json /evidencias_oficiales/Arg_E1/competencia
+   literal en evidencias-mat.json /evidencias_oficiales/Arg_E2/competencia
+   literal en evidencias-mat.json /evidencias_oficiales/Arg_E3/competencia
+[OK] Componente: 'Aleatorio'
+   literal en estructura-prueba-mat.json /contenidos/equivalencia_componente/Estadística
+[OK] Afirmacion: 'Valida procedimientos y estrategias matemáticas utilizadas para dar solución a problemas.'
+   literal en evidencias-mat.json /afirmaciones_oficiales/Argumentación/texto_oficial
+[OK] Evidencia: 'Plantea afirmaciones que sustentan o refutan una interpretación dada a la información disponible en el marco de la solución de un problema.'
+   literal en evidencias-mat.json /evidencias_oficiales/Arg_E1/texto_oficial
+[OK] Descriptor (texto tras ' — '): 'Justifica afirmaciones utilizando planteamientos y operaciones aritméticas o haciendo uso directo de un concepto, es decir, a partir de un único argumento.'
+   literal en niveles-mat.json /niveles_oficiales/N3[9]
+   literal en niveles-mat.json /mapeo_codigos_proyecto_a_oficial/D3.10/texto_oficial
+[OK] Estandar (texto antes de ' ('): 'Predigo y justifico razonamientos y conclusiones usando información estadística.'
+   literal en estandares-mat-ebc.json /estandares_oficiales_por_pensamiento_grado/Aleatorio_6-7[7]
+
+TOTAL fallos: 0
+exit_literalidad=0
+== estructura R/exams (secciones a columna 0)
+Question: 1
+Answerlist: 0
+Solution: 1
+Meta-information: 1
+== coherencia Nivel-DOK: Nivel 3, DOK 2, Bloom Evaluar, SOLO Relacional. DOK>=3 => Nivel>=3: no aplica (DOK 2). Bloom Evaluar => Nivel>=3: cumple (Nivel 3). L-4: Nivel literal de la ficha, sin inflar el DOK.
+== Answerlist: no va a columna 0 en el fuente; la emite exams::answerlist() desde un chunk (líneas de arriba), y sale en el render («Answerlist» en las 100 versiones de paso9/multisemilla.txt).

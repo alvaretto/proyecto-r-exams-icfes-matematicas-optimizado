@@ -1,0 +1,257 @@
+154a155,196
+>   S2d · firma del profesor, regla por regla y por estrato (41 cifras; acierto en %, como se firmó):
+>     RS1   mezcla     54.2 %  resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede
+>     RS1   CURSOS     58.8 %  resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede
+>     RS1   PROMEDIO   67.8 %  resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede
+>     RS2   mezcla     71.0 %  S_U + resta
+>     RS2   CURSOS     72.5 %  S_U + resta
+>     RS2   PROMEDIO   78.5 %  S_U + resta
+>     RS2   canonica   50.0 %  S_U + resta
+>     RS3   mezcla     79.0 %  S_U + S1 + resta
+>     RS3   CURSOS     86.0 %  S_U + S1 + resta
+>     RS3   PROMEDIO   79.5 %  S_U + S1 + resta
+>     RS3   canonica  100.0 %  S_U + S1 + resta
+>     RS4   mezcla     79.0 %  S_U + suma + resta
+>     RS4   CURSOS     82.0 %  S_U + suma + resta
+>     RS4   PROMEDIO   90.0 %  S_U + suma + resta
+>     RS4   canonica   50.0 %  S_U + suma + resta
+>     RS5   mezcla     86.0 %  S_U + S1 + suma + resta
+>     RS5   CURSOS     93.5 %  S_U + S1 + suma + resta
+>     RS5   PROMEDIO   91.0 %  S_U + S1 + suma + resta
+>     RS5   canonica  100.0 %  S_U + S1 + suma + resta
+>     RS6   mezcla     81.5 %  S_U + atípica + resta
+>     RS6   CURSOS     71.0 %  S_U + atípica + resta
+>     RS6   PROMEDIO   86.0 %  S_U + atípica + resta
+>     RS6   canonica  100.0 %  S_U + atípica + resta
+>     RS7   mezcla     93.0 %  S_U + S1 + suma + atípica + resta
+>     RS7   CURSOS     94.5 %  S_U + S1 + suma + atípica + resta
+>     RS7   PROMEDIO   98.0 %  S_U + S1 + suma + atípica + resta
+>     RS7   canonica  100.0 %  S_U + S1 + suma + atípica + resta
+>     BE1   canonica   33.3 %  |a1 - a2| (ii)
+>     BE2   mezcla     34.0 %  n1 * a1 (i)
+>     BE3   canonica  100.0 %  |n1 - a2| (i)
+>     BE4   canonica   33.3 %  |n1 - a2| (ii)
+>     BE5   CURSOS     34.0 %  dos pasos: |n1 - n2| * a1 (i)
+>     BE5   canonica  100.0 %  dos pasos: |n1 - n2| * a1 (i)
+>     BE6   canonica   33.3 %  dos pasos: |n1 - n2| * a1 (ii)
+>     BE7   CURSOS     37.0 %  dos pasos: |n1 - n2| * a2 (i)
+>     BE8   PROMEDIO   37.0 %  dos pasos: n1 * |a1 - a2| (i)
+>     RS8   canonica   50.0 %  resta (iii): la sede de la opción que cita |aG - aP| pierde; azar entre las dos de la otra
+>     BE9   CURSOS     38.5 %  dos pasos: n1 * |a1 - a2| (iii)
+>     BE10  CURSOS     35.5 %  dos pasos: n2 * |a1 - a2| (iii)
+>     BE11  PROMEDIO   35.8 %  dos pasos: |n1 - n2| * a1 (iii)
+>     BE12  PROMEDIO   39.2 %  dos pasos: |n1 - n2| * a2 (iii)
+189,216c231,258
+<   PENDIENTE DE FIRMA: S2b H1: «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», mezcla de E1: 54.2 % (+29.2 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», rama CURSOS: 58.8 % (+33.8 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», rama PROMEDIO: 67.8 % (+42.8 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + resta», mezcla de E1: 71.0 % (+46.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + resta», rama CURSOS: 72.5 % (+47.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + resta», rama PROMEDIO: 78.5 % (+53.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + resta», canónica (24 órdenes, exacta): 50.0 % (+25.0 pp sobre el azar); peso en la mezcla +2.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + resta», mezcla de E1: 79.0 % (+54.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + resta», rama CURSOS: 86.0 % (+61.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + resta», rama PROMEDIO: 79.5 % (+54.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + suma + resta», mezcla de E1: 79.0 % (+54.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + suma + resta», rama CURSOS: 82.0 % (+57.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + suma + resta», rama PROMEDIO: 90.0 % (+65.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + suma + resta», canónica (24 órdenes, exacta): 50.0 % (+25.0 pp sobre el azar); peso en la mezcla +2.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + resta», mezcla de E1: 86.0 % (+61.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + resta», rama CURSOS: 93.5 % (+68.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + resta», rama PROMEDIO: 91.0 % (+66.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + atípica + resta», mezcla de E1: 81.5 % (+56.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + atípica + resta», rama CURSOS: 71.0 % (+46.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + atípica + resta», rama PROMEDIO: 86.0 % (+61.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + atípica + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + atípica + resta», mezcla de E1: 93.0 % (+68.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + atípica + resta», rama CURSOS: 94.5 % (+69.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + atípica + resta», rama PROMEDIO: 98.0 % (+73.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + atípica + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   S2b H1: 27 de 28 cifras (7 reglas × 4 estratos) por encima de +8 pp sobre el azar: pendientes de firma
+---
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS1 «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», mezcla de E1: 54.2 % (+29.2 pp sobre el azar) (firmado hasta 54.2 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS1 «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», rama CURSOS: 58.8 % (+33.8 pp sobre el azar) (firmado hasta 58.8 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS1 «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», rama PROMEDIO: 67.8 % (+42.8 pp sobre el azar) (firmado hasta 67.8 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS2 «S_U + resta», mezcla de E1: 71.0 % (+46.0 pp sobre el azar) (firmado hasta 71.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS2 «S_U + resta», rama CURSOS: 72.5 % (+47.5 pp sobre el azar) (firmado hasta 72.5 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS2 «S_U + resta», rama PROMEDIO: 78.5 % (+53.5 pp sobre el azar) (firmado hasta 78.5 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS2 «S_U + resta», canónica (24 órdenes, exacta): 50.0 % (+25.0 pp sobre el azar); peso en la mezcla +2.50 pp (firmado hasta 50.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS3 «S_U + S1 + resta», mezcla de E1: 79.0 % (+54.0 pp sobre el azar) (firmado hasta 79.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS3 «S_U + S1 + resta», rama CURSOS: 86.0 % (+61.0 pp sobre el azar) (firmado hasta 86.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS3 «S_U + S1 + resta», rama PROMEDIO: 79.5 % (+54.5 pp sobre el azar) (firmado hasta 79.5 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS3 «S_U + S1 + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp (firmado hasta 100.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS4 «S_U + suma + resta», mezcla de E1: 79.0 % (+54.0 pp sobre el azar) (firmado hasta 79.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS4 «S_U + suma + resta», rama CURSOS: 82.0 % (+57.0 pp sobre el azar) (firmado hasta 82.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS4 «S_U + suma + resta», rama PROMEDIO: 90.0 % (+65.0 pp sobre el azar) (firmado hasta 90.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS4 «S_U + suma + resta», canónica (24 órdenes, exacta): 50.0 % (+25.0 pp sobre el azar); peso en la mezcla +2.50 pp (firmado hasta 50.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS5 «S_U + S1 + suma + resta», mezcla de E1: 86.0 % (+61.0 pp sobre el azar) (firmado hasta 86.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS5 «S_U + S1 + suma + resta», rama CURSOS: 93.5 % (+68.5 pp sobre el azar) (firmado hasta 93.5 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS5 «S_U + S1 + suma + resta», rama PROMEDIO: 91.0 % (+66.0 pp sobre el azar) (firmado hasta 91.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS5 «S_U + S1 + suma + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp (firmado hasta 100.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS6 «S_U + atípica + resta», mezcla de E1: 81.5 % (+56.5 pp sobre el azar) (firmado hasta 81.5 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS6 «S_U + atípica + resta», rama CURSOS: 71.0 % (+46.0 pp sobre el azar) (firmado hasta 71.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS6 «S_U + atípica + resta», rama PROMEDIO: 86.0 % (+61.0 pp sobre el azar) (firmado hasta 86.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS6 «S_U + atípica + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp (firmado hasta 100.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS7 «S_U + S1 + suma + atípica + resta», mezcla de E1: 93.0 % (+68.0 pp sobre el azar) (firmado hasta 93.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS7 «S_U + S1 + suma + atípica + resta», rama CURSOS: 94.5 % (+69.5 pp sobre el azar) (firmado hasta 94.5 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS7 «S_U + S1 + suma + atípica + resta», rama PROMEDIO: 98.0 % (+73.0 pp sobre el azar) (firmado hasta 98.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b H1: RS7 «S_U + S1 + suma + atípica + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp (firmado hasta 100.0 %)
+>   S2b H1: 27 de 28 cifras (7 reglas × 4 estratos) por encima de +8 pp sobre el azar: 27 cubiertas por la firma de la S2d y 0 pendientes
+247,256c289,298
+<   PENDIENTE DE FIRMA: S2b barrido del estímulo: «|a1 - a2| (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b barrido del estímulo: «n1 * a1 (i)», mezcla de E1: 34.0 % (+9.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b barrido del estímulo: «|n1 - a2| (i)», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b barrido del estímulo: «|n1 - a2| (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b barrido del estímulo: «dos pasos: |n1 - n2| * a1 (i)», rama CURSOS: 34.0 % (+9.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b barrido del estímulo: «dos pasos: |n1 - n2| * a1 (i)», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b barrido del estímulo: «dos pasos: |n1 - n2| * a1 (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b barrido del estímulo: «dos pasos: |n1 - n2| * a2 (i)», rama CURSOS: 37.0 % (+12.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   PENDIENTE DE FIRMA: S2b barrido del estímulo: «dos pasos: n1 * |a1 - a2| (i)», rama PROMEDIO: 37.0 % (+12.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+<   S2b barrido: 28 operaciones (24 de un paso entre dos celdas y 4 de dos pasos) × 2 lecturas × 4 estratos; 9 cifras por encima de +8 pp sobre el azar, pendientes de firma (sin «|a1 - a2| (i)», que es «resta»)
+---
+>   ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE1 «|a1 - a2| (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp (firmado hasta 33.3 %)
+>   ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE2 «n1 * a1 (i)», mezcla de E1: 34.0 % (+9.0 pp sobre el azar) (firmado hasta 34.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE3 «|n1 - a2| (i)», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp (firmado hasta 100.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE4 «|n1 - a2| (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp (firmado hasta 33.3 %)
+>   ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE5 «dos pasos: |n1 - n2| * a1 (i)», rama CURSOS: 34.0 % (+9.0 pp sobre el azar) (firmado hasta 34.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE5 «dos pasos: |n1 - n2| * a1 (i)», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp (firmado hasta 100.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE6 «dos pasos: |n1 - n2| * a1 (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp (firmado hasta 33.3 %)
+>   ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE7 «dos pasos: |n1 - n2| * a2 (i)», rama CURSOS: 37.0 % (+12.0 pp sobre el azar) (firmado hasta 37.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2b barrido del estímulo: BE8 «dos pasos: n1 * |a1 - a2| (i)», rama PROMEDIO: 37.0 % (+12.0 pp sobre el azar) (firmado hasta 37.0 %)
+>   S2b barrido: 28 operaciones (24 de un paso entre dos celdas y 4 de dos pasos) × 2 lecturas × 4 estratos; 9 cifras por encima de +8 pp sobre el azar (sin «|a1 - a2| (i)», que es «resta»): 9 cubiertas por la firma de la S2d y 0 pendientes
+257a300,338
+>   S2d · lectura (iii), por fila de la tabla (acierto en %, mezcla / CURSOS / PROMEDIO / canónica):
+>     resta (iii)                      16.8  13.8  10.8  50.0
+>     n1 + n2 (iii)                    23.5  25.0  24.0  25.0
+>     |n1 - n2| (iii)                  24.8  25.8  25.2  25.0
+>     n1 * n2 (iii)                    23.8  27.0  26.2   0.0
+>     n1 / n2 (entero) (iii)           25.0  25.0  25.0  25.0
+>     a1 + a2 (iii)                    25.0  25.0  25.0  25.0
+>     |a1 - a2| (iii)                  16.8  13.8  10.8  50.0
+>     a1 * a2 (iii)                    25.0  25.0  25.0  25.0
+>     a1 / a2 (entero) (iii)           25.0  25.0  25.0  25.0
+>     n1 + a1 (iii)                    25.2  25.5  25.0  25.0
+>     |n1 - a1| (iii)                  25.2  25.5  25.0  25.0
+>     n1 * a1 (iii)                    22.0  24.0  22.5  25.0
+>     n1 / a1 (entero) (iii)           25.0  24.8  25.0  25.0
+>     n2 + a2 (iii)                    25.0  25.0  25.0  25.0
+>     |n2 - a2| (iii)                  25.8  25.2  26.0  25.0
+>     n2 * a2 (iii)                    22.5  23.8  23.2  25.0
+>     n2 / a2 (entero) (iii)           25.2  25.5  25.2  25.0
+>     n1 + a2 (iii)                    24.8  25.5  23.5  25.0
+>     |n1 - a2| (iii)                  23.2  25.8  25.8   0.0
+>     n1 * a2 (iii)                    25.0  24.8  25.0  25.0
+>     n1 / a2 (entero) (iii)           25.2  25.2  25.0  25.0
+>     n2 + a1 (iii)                    25.0  25.2  25.0  25.0
+>     |n2 - a1| (iii)                  24.8  25.5  25.0  25.0
+>     n2 * a1 (iii)                    25.0  25.0  25.0  25.0
+>     n2 / a1 (entero) (iii)           25.0  25.0  24.8  25.0
+>     dos pasos: |n1 - n2| * a1 (iii)  28.0  22.0  35.8   0.0
+>     dos pasos: |n1 - n2| * a2 (iii)  31.8  21.0  39.2  25.0
+>     dos pasos: n1 * |a1 - a2| (iii)  29.0  38.5  21.0  25.0
+>     dos pasos: n2 * |a1 - a2| (iii)  25.5  35.5  23.2   0.0
+>   OK: S2d: el barrido reproduce «resta (iii)» con sus propias celdas: «|a1 - a2| (iii)» es la misma regla, y se juzga una sola vez 
+>   ROJO, cubierto por la firma de la S2d: S2d lectura (iii): RS8 «resta (iii): la sede de la opción que cita |aG - aP| pierde; azar entre las dos de la otra», canónica (24 órdenes, exacta): 50.0 % (+25.0 pp sobre el azar); peso en la mezcla +2.50 pp (firmado hasta 50.0 %)
+>   ROJO, cubierto por la firma de la S2d: S2d barrido (iii): BE11 «dos pasos: |n1 - n2| * a1 (iii)», rama PROMEDIO: 35.8 % (+10.7 pp sobre el azar) (firmado hasta 35.8 %)
+>   ROJO, cubierto por la firma de la S2d: S2d barrido (iii): BE12 «dos pasos: |n1 - n2| * a2 (iii)», rama PROMEDIO: 39.2 % (+14.3 pp sobre el azar) (firmado hasta 39.2 %)
+>   ROJO, cubierto por la firma de la S2d: S2d barrido (iii): BE9 «dos pasos: n1 * |a1 - a2| (iii)», rama CURSOS: 38.5 % (+13.5 pp sobre el azar) (firmado hasta 38.5 %)
+>   ROJO, cubierto por la firma de la S2d: S2d barrido (iii): BE10 «dos pasos: n2 * |a1 - a2| (iii)», rama CURSOS: 35.5 % (+10.5 pp sobre el azar) (firmado hasta 35.5 %)
+>   S2d lectura (iii): «resta» y 27 operaciones × 4 estratos; 5 cifras por encima de +8 pp sobre el azar (sin «|a1 - a2| (iii)», que es «resta (iii)»): 5 cubiertas por la firma de la S2d y 0 pendientes
+>   OK: firma de la S2d: las 41 cifras firmadas existen en E4 (regla y estrato) 
+>   firma de la S2d: 41 cifras firmadas (36 de la S2b y 5 de la lectura (iii)), 41 iguales a lo firmado (a un decimal)
+332c413,414
+<   OK: M44 (ERR-RESTA siempre que se pueda; su cuota en el distractor de G pasa de 45 a 63 % en CURSOS y de 57 a 60 % en PROMEDIO): «resta» sube de 58.8 a 72.2 % en CURSOS y de 67.8 a 70.0 % en PROMEDIO, y sigue pendiente de firma — cazado_por_su_sonda 
+---
+>   OK: M44 (ERR-RESTA siempre que se pueda; su cuota en el distractor de G pasa de 45 a 63 % en CURSOS y de 57 a 60 % en PROMEDIO): «resta» sube de 58.8 a 72.2 % en CURSOS y de 67.8 a 70.0 % en PROMEDIO; frente a la firma de la S2d (RS1: 58.8 y 67.8 %) queda «pendiente» en CURSOS y «pendiente» en PROMEDIO — cazado_por_su_sonda 
+>   OK: M45 (la fila de G siempre abajo, gi = 2), lectura (iii) de las de dos pasos frente a la firma de la S2d: BE9 CURSOS 38.5 -> 50.0 % «pendiente»; BE10 CURSOS 35.5 -> 25.0 % «ok»; BE11 PROMEDIO 35.8 -> 50.0 % «pendiente»; BE12 PROMEDIO 39.2 -> 25.0 % «ok»; 0 renders con error — cazado_por_su_sonda 
+363c445
+< En rojo, cubiertos por un override firmado («O-1 corregido», 2026-10-29; decisión 2 a, 2026-10-31; regla #22 §P7-E):
+---
+> En rojo, cubiertos por un override firmado («O-1 corregido», 2026-10-29; decisión 2 a, 2026-10-31; firma de la S2d, 2026-11-03; regla #22 §P7-E):
+376a459,499
+>   - [la firma de la S2d] S2b H1: RS1 «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», mezcla de E1: 54.2 % (+29.2 pp sobre el azar) (firmado hasta 54.2 %)
+>   - [la firma de la S2d] S2b H1: RS1 «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», rama CURSOS: 58.8 % (+33.8 pp sobre el azar) (firmado hasta 58.8 %)
+>   - [la firma de la S2d] S2b H1: RS1 «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», rama PROMEDIO: 67.8 % (+42.8 pp sobre el azar) (firmado hasta 67.8 %)
+>   - [la firma de la S2d] S2b H1: RS2 «S_U + resta», mezcla de E1: 71.0 % (+46.0 pp sobre el azar) (firmado hasta 71.0 %)
+>   - [la firma de la S2d] S2b H1: RS2 «S_U + resta», rama CURSOS: 72.5 % (+47.5 pp sobre el azar) (firmado hasta 72.5 %)
+>   - [la firma de la S2d] S2b H1: RS2 «S_U + resta», rama PROMEDIO: 78.5 % (+53.5 pp sobre el azar) (firmado hasta 78.5 %)
+>   - [la firma de la S2d] S2b H1: RS2 «S_U + resta», canónica (24 órdenes, exacta): 50.0 % (+25.0 pp sobre el azar); peso en la mezcla +2.50 pp (firmado hasta 50.0 %)
+>   - [la firma de la S2d] S2b H1: RS3 «S_U + S1 + resta», mezcla de E1: 79.0 % (+54.0 pp sobre el azar) (firmado hasta 79.0 %)
+>   - [la firma de la S2d] S2b H1: RS3 «S_U + S1 + resta», rama CURSOS: 86.0 % (+61.0 pp sobre el azar) (firmado hasta 86.0 %)
+>   - [la firma de la S2d] S2b H1: RS3 «S_U + S1 + resta», rama PROMEDIO: 79.5 % (+54.5 pp sobre el azar) (firmado hasta 79.5 %)
+>   - [la firma de la S2d] S2b H1: RS3 «S_U + S1 + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp (firmado hasta 100.0 %)
+>   - [la firma de la S2d] S2b H1: RS4 «S_U + suma + resta», mezcla de E1: 79.0 % (+54.0 pp sobre el azar) (firmado hasta 79.0 %)
+>   - [la firma de la S2d] S2b H1: RS4 «S_U + suma + resta», rama CURSOS: 82.0 % (+57.0 pp sobre el azar) (firmado hasta 82.0 %)
+>   - [la firma de la S2d] S2b H1: RS4 «S_U + suma + resta», rama PROMEDIO: 90.0 % (+65.0 pp sobre el azar) (firmado hasta 90.0 %)
+>   - [la firma de la S2d] S2b H1: RS4 «S_U + suma + resta», canónica (24 órdenes, exacta): 50.0 % (+25.0 pp sobre el azar); peso en la mezcla +2.50 pp (firmado hasta 50.0 %)
+>   - [la firma de la S2d] S2b H1: RS5 «S_U + S1 + suma + resta», mezcla de E1: 86.0 % (+61.0 pp sobre el azar) (firmado hasta 86.0 %)
+>   - [la firma de la S2d] S2b H1: RS5 «S_U + S1 + suma + resta», rama CURSOS: 93.5 % (+68.5 pp sobre el azar) (firmado hasta 93.5 %)
+>   - [la firma de la S2d] S2b H1: RS5 «S_U + S1 + suma + resta», rama PROMEDIO: 91.0 % (+66.0 pp sobre el azar) (firmado hasta 91.0 %)
+>   - [la firma de la S2d] S2b H1: RS5 «S_U + S1 + suma + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp (firmado hasta 100.0 %)
+>   - [la firma de la S2d] S2b H1: RS6 «S_U + atípica + resta», mezcla de E1: 81.5 % (+56.5 pp sobre el azar) (firmado hasta 81.5 %)
+>   - [la firma de la S2d] S2b H1: RS6 «S_U + atípica + resta», rama CURSOS: 71.0 % (+46.0 pp sobre el azar) (firmado hasta 71.0 %)
+>   - [la firma de la S2d] S2b H1: RS6 «S_U + atípica + resta», rama PROMEDIO: 86.0 % (+61.0 pp sobre el azar) (firmado hasta 86.0 %)
+>   - [la firma de la S2d] S2b H1: RS6 «S_U + atípica + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp (firmado hasta 100.0 %)
+>   - [la firma de la S2d] S2b H1: RS7 «S_U + S1 + suma + atípica + resta», mezcla de E1: 93.0 % (+68.0 pp sobre el azar) (firmado hasta 93.0 %)
+>   - [la firma de la S2d] S2b H1: RS7 «S_U + S1 + suma + atípica + resta», rama CURSOS: 94.5 % (+69.5 pp sobre el azar) (firmado hasta 94.5 %)
+>   - [la firma de la S2d] S2b H1: RS7 «S_U + S1 + suma + atípica + resta», rama PROMEDIO: 98.0 % (+73.0 pp sobre el azar) (firmado hasta 98.0 %)
+>   - [la firma de la S2d] S2b H1: RS7 «S_U + S1 + suma + atípica + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp (firmado hasta 100.0 %)
+>   - [la firma de la S2d] S2b barrido del estímulo: BE1 «|a1 - a2| (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp (firmado hasta 33.3 %)
+>   - [la firma de la S2d] S2b barrido del estímulo: BE2 «n1 * a1 (i)», mezcla de E1: 34.0 % (+9.0 pp sobre el azar) (firmado hasta 34.0 %)
+>   - [la firma de la S2d] S2b barrido del estímulo: BE3 «|n1 - a2| (i)», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp (firmado hasta 100.0 %)
+>   - [la firma de la S2d] S2b barrido del estímulo: BE4 «|n1 - a2| (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp (firmado hasta 33.3 %)
+>   - [la firma de la S2d] S2b barrido del estímulo: BE5 «dos pasos: |n1 - n2| * a1 (i)», rama CURSOS: 34.0 % (+9.0 pp sobre el azar) (firmado hasta 34.0 %)
+>   - [la firma de la S2d] S2b barrido del estímulo: BE5 «dos pasos: |n1 - n2| * a1 (i)», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp (firmado hasta 100.0 %)
+>   - [la firma de la S2d] S2b barrido del estímulo: BE6 «dos pasos: |n1 - n2| * a1 (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp (firmado hasta 33.3 %)
+>   - [la firma de la S2d] S2b barrido del estímulo: BE7 «dos pasos: |n1 - n2| * a2 (i)», rama CURSOS: 37.0 % (+12.0 pp sobre el azar) (firmado hasta 37.0 %)
+>   - [la firma de la S2d] S2b barrido del estímulo: BE8 «dos pasos: n1 * |a1 - a2| (i)», rama PROMEDIO: 37.0 % (+12.0 pp sobre el azar) (firmado hasta 37.0 %)
+>   - [la firma de la S2d] S2d lectura (iii): RS8 «resta (iii): la sede de la opción que cita |aG - aP| pierde; azar entre las dos de la otra», canónica (24 órdenes, exacta): 50.0 % (+25.0 pp sobre el azar); peso en la mezcla +2.50 pp (firmado hasta 50.0 %)
+>   - [la firma de la S2d] S2d barrido (iii): BE11 «dos pasos: |n1 - n2| * a1 (iii)», rama PROMEDIO: 35.8 % (+10.7 pp sobre el azar) (firmado hasta 35.8 %)
+>   - [la firma de la S2d] S2d barrido (iii): BE12 «dos pasos: |n1 - n2| * a2 (iii)», rama PROMEDIO: 39.2 % (+14.3 pp sobre el azar) (firmado hasta 39.2 %)
+>   - [la firma de la S2d] S2d barrido (iii): BE9 «dos pasos: n1 * |a1 - a2| (iii)», rama CURSOS: 38.5 % (+13.5 pp sobre el azar) (firmado hasta 38.5 %)
+>   - [la firma de la S2d] S2d barrido (iii): BE10 «dos pasos: n2 * |a1 - a2| (iii)», rama CURSOS: 35.5 % (+10.5 pp sobre el azar) (firmado hasta 35.5 %)
+405,444c528
+< Pendientes de firma del profesor (> +8 pp o premisa firmada superada; exit 3):
+<   - S2b H1: «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», mezcla de E1: 54.2 % (+29.2 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», rama CURSOS: 58.8 % (+33.8 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», rama PROMEDIO: 67.8 % (+42.8 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + resta», mezcla de E1: 71.0 % (+46.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + resta», rama CURSOS: 72.5 % (+47.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + resta», rama PROMEDIO: 78.5 % (+53.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + resta», canónica (24 órdenes, exacta): 50.0 % (+25.0 pp sobre el azar); peso en la mezcla +2.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + S1 + resta», mezcla de E1: 79.0 % (+54.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + S1 + resta», rama CURSOS: 86.0 % (+61.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + S1 + resta», rama PROMEDIO: 79.5 % (+54.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + S1 + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + suma + resta», mezcla de E1: 79.0 % (+54.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + suma + resta», rama CURSOS: 82.0 % (+57.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + suma + resta», rama PROMEDIO: 90.0 % (+65.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + suma + resta», canónica (24 órdenes, exacta): 50.0 % (+25.0 pp sobre el azar); peso en la mezcla +2.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + S1 + suma + resta», mezcla de E1: 86.0 % (+61.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + S1 + suma + resta», rama CURSOS: 93.5 % (+68.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + S1 + suma + resta», rama PROMEDIO: 91.0 % (+66.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + S1 + suma + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + atípica + resta», mezcla de E1: 81.5 % (+56.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + atípica + resta», rama CURSOS: 71.0 % (+46.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + atípica + resta», rama PROMEDIO: 86.0 % (+61.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + atípica + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + S1 + suma + atípica + resta», mezcla de E1: 93.0 % (+68.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + S1 + suma + atípica + resta», rama CURSOS: 94.5 % (+69.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + S1 + suma + atípica + resta», rama PROMEDIO: 98.0 % (+73.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b H1: «S_U + S1 + suma + atípica + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b barrido del estímulo: «|a1 - a2| (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b barrido del estímulo: «n1 * a1 (i)», mezcla de E1: 34.0 % (+9.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b barrido del estímulo: «|n1 - a2| (i)», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b barrido del estímulo: «|n1 - a2| (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b barrido del estímulo: «dos pasos: |n1 - n2| * a1 (i)», rama CURSOS: 34.0 % (+9.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b barrido del estímulo: «dos pasos: |n1 - n2| * a1 (i)», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b barrido del estímulo: «dos pasos: |n1 - n2| * a1 (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b barrido del estímulo: «dos pasos: |n1 - n2| * a2 (i)», rama CURSOS: 37.0 % (+12.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+<   - S2b barrido del estímulo: «dos pasos: n1 * |a1 - a2| (i)», rama PROMEDIO: 37.0 % (+12.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+< 
+< === RESULTADO: PENDIENTE DE FIRMA (36; 0 fallos) ===
+< exit=3 · 129 s · 2026-11-03T09:11:33-05:00
+---
+> === RESULTADO: EN ROJO BAJO OVERRIDE FIRMADO (78 canales: 13 dentro del alcance de O-1 corregido, 24 de la decisión 2 a y 41 de la firma de la S2d; 0 fallos, 0 pendientes) ===

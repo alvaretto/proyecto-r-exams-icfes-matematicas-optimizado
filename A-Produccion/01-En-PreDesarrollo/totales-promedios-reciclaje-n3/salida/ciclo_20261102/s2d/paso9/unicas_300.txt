@@ -1,0 +1,4 @@
+md5 63e2713e6ac0bdbf250f4dc33901b2ec 
+semillas 1 a 300: 0 con error, 30 canónicas
+versiones unicas (opciones ordenadas): 271 / 300
+versiones unicas (enunciado + tabla + opciones ordenadas): 271 / 300

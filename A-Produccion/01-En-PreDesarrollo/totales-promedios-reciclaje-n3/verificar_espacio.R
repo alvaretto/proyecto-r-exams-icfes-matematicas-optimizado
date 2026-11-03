@@ -38,13 +38,19 @@
 ##        pendientes de firma (exit 3). M44 fuerza ERR-RESTA; M19 mueve también el barrido. ESTIMULO_SC dice qué mide E4.
 ##        H2: juzgar_s1() simétrico («cazado_por_su_sonda_y_control») y M42 y M43, aditivos. M28 juzga solo los
 ##        pendientes nuevos del proceso sin normalizar.
+## Tanda S2d (2026-11-03), decisión del profesor «Firmar las 41 (Recomendada)»: FIRMA_S2D, regla por regla y por estrato
+##        (§P7-E), con las 36 cifras de la S2b (RS1-RS7, BE1-BE8) y las 5 de la lectura (iii) de la S2c (RS8, BE9-BE12).
+##        E4 mide ahora la lectura (iii) («la sede que cita la cifra pierde») en «resta» y en el barrido. Dentro de su
+##        cifra: «ROJO, cubierto por la firma de la S2d» (exit 4); por encima, en otro estrato o una regla nueva > +8 pp:
+##        pendiente (exit 3). M44 saca «resta» de «cubierto»; M45 (la fila de G siempre abajo) saca las de dos pasos (iii).
 ## Ciclo 2026-11-02, tanda S1: espacio duro (S1) en el oráculo léxico, en M16 y en la Solution (sonda S1-Sol,
 ##        mutantes M23-M27); MOLDES sin el parámetro m (S7); la canónica regla por regla con las 24 cifras de
 ##        la decisión 2 a y sus mutantes MP1 y MP2 (S3); el estímulo de la batería, declarado (§P7-G, S4).
 ##        Decisión (a) del profesor: la batería y los márgenes miden con U+00A0 convertido en espacio (mutante M28).
 ## Uso: Rscript --no-init-file verificar_espacio.R [ruta.Rmd]
 ##      exit 1 = algo falla; 3 = pendiente de firma (un canal supera lo firmado o es nuevo); 4 = EN ROJO
-##      bajo override firmado (todo dentro del alcance de «O-1 corregido» y de la decisión 2 a); 0 = sin canales en rojo.
+##      bajo override firmado (todo dentro del alcance de «O-1 corregido», de la decisión 2 a y de la firma de la S2d);
+##      0 = sin canales en rojo.
 ##      Regla #22 §P7-E: un canal aceptado por override sigue en rojo; nunca se reporta como PASS.
 ##      VERIF_N=<n> solo para depuración (regla #23): corre E1-E4 hasta las sondas y sale; la cifra
 ##      oficial es la de N = 100, el default.
@@ -476,16 +482,22 @@ ok(st_ok, sprintf("O-1: S_todos estructural: en toda versión no canónica, una 
 ## estudiante no sabe qué fila gana: rotular las celdas por G y P presupone la respuesta. Se añaden, declaradas, las
 ## cuatro operaciones de dos pasos que usa el ítem (las ventajas parciales de calculos_tabla()).
 ## Estratos: la mezcla de E1, las ramas CURSOS y PROMEDIO (N = 100 cada una) y la canónica por enumeración exacta (24
-## órdenes), con su peso en la mezcla (0,10 × exceso). Ninguna regla de la S2b está firmada: toda la que pase de +8 pp
-## sobre el azar queda PENDIENTE DE FIRMA (exit 3, O-1 § Alcance). M44 (E5) fuerza ERR-RESTA y tiene que subir «resta»;
-## M19 tiene que subir el producto de una fila. Nada de esta sección consume el RNG.
+## órdenes), con su peso en la mezcla (0,10 × exceso). En la S2b ninguna estaba firmada; desde la S2d rige FIRMA_S2D
+## (abajo), regla por regla y por estrato, y lo que pase de +8 pp fuera de ella queda PENDIENTE DE FIRMA (exit 3, O-1
+## § Alcance). M44 (E5) fuerza ERR-RESTA y tiene que sacar «resta» de «cubierto»; M19 tiene que subir el producto de una
+## fila. Nada de esta sección consume el RNG.
 lee_i <- function(x, r) { if (is.na(r)) return(0.25); v <- vapply(x$opciones, cif, 0); h <- which(v %in% r)
   if (length(h) != 1L) return(0.25); S <- x$sede_o == x$sede_o[h]; S[h] <- FALSE; sc(S, x$clave) }
 lee_ii <- function(x, r) { if (is.na(r)) return(0.25); sc(!(vapply(x$opciones, cif, 0) %in% r), x$clave) }
+## S2d: (iii) la sede de la opción que cita el resultado pierde, y se elige al azar entre las dos opciones de la otra sede;
+## sin cita, azar. Es la de la S2c (s2c/bloque_s2c.R), sin cambios. Su máximo es 50 %: elige entre dos opciones.
+lee_iii <- function(x, r) { if (is.na(r)) return(0.25); v <- vapply(x$opciones, cif, 0); h <- which(v %in% r)
+  if (length(h) != 1L) return(0.25); sc(x$sede_o != x$sede_o[h], x$clave) }
 aplica_r <- function(x, r) !is.na(r) && any(vapply(x$opciones, cif, 0) %in% r)
 delta_t <- function(x) abs(x$tabla[3] - x$tabla[4])
 su_set <- function(x) x$sede_o != x$sede_o[x$rol == "psin"]
 R_RESTA <- "resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede"
+R_RESTA_III <- "resta (iii): la sede de la opción que cita |aG - aP| pierde; azar entre las dos de la otra"
 H1_REGLAS <- setNames(list(
   function(x) lee_i(x, delta_t(x)),
   function(x) { v <- vapply(x$opciones, cif, 0); sc(filtra(su_set(x), v %in% delta_t(x)), x$clave) },
@@ -502,17 +514,65 @@ EST_S2B <- list(mezcla = NAT, CURSOS = CU$CURSOS, PROMEDIO = CU$PROMEDIO, canoni
 mide <- function(reglas) t(vapply(reglas, function(f) vapply(EST_S2B, function(V)
   if (length(V)) mean(vapply(V, f, 0)) else NA_real_, 0), numeric(length(EST_S2B))))
 ROT_S2B <- c(mezcla = "mezcla de E1", CURSOS = "rama CURSOS", PROMEDIO = "rama PROMEDIO", canonica = "canónica (24 órdenes, exacta)")
+## ---- S2d (2026-11-03): la firma del profesor, regla por regla y por estrato (§P7-E) ------------------------------
+## Decisión del profesor tras la S2c, literal: «Firmar las 41 (Recomendada)». Override estructural, como O-1 (regla #24
+## H-5; .claude/CLAUDE.md local, § «Ciclo 2026-11-02 (SCHOICE), tanda S2d»): las 36 cifras de la S2b
+## (salida/ciclo_20261102/s2b/tabla_firma_s2b.md: RS1-RS7 y BE1-BE8) y las 5 de la lectura (iii) que midió la S2c sobre
+## el diseño actual (s2c/salida_B0.txt, líneas 311-322: RS8 y BE9-BE12). Acierto en %, a un decimal, como se firmó, y se
+## compara igual. Dentro de su cifra: «ROJO, cubierto por la firma de la S2d» (exit 4), nunca PASS. Por encima de su
+## cifra, la misma regla en otro estrato por encima de +8 pp, o una regla nueva por encima de +8 pp: PENDIENTE (exit 3).
+## No hay tope por estrato ni por familia: cada fila cubre solo su regla en su estrato. Estratos: mezcla de E1, ramas
+## CURSOS y PROMEDIO (N = 100 cada una) y canónica (24 órdenes, exacta). M44 y M45 (E5) sacan cifras de «cubierto».
+POR_S2D <- "la firma de la S2d"
+EST4 <- c("mezcla", "CURSOS", "PROMEDIO", "canonica")
+fila_s2d <- function(id, regla, estrato, acierto) data.frame(id = id, regla = regla, estrato = estrato, acierto = acierto,
+                                                             stringsAsFactors = FALSE)
+FIRMA_S2D <- do.call(rbind, list(
+  ## 27 cifras de H1 de la r6 («resta» y sus combinaciones con las pistas de «O-1 corregido»; tabla de la S2b)
+  fila_s2d("RS1", R_RESTA, EST4[1:3], c(54.2, 58.8, 67.8)),
+  fila_s2d("RS2", "S_U + resta", EST4, c(71.0, 72.5, 78.5, 50.0)),
+  fila_s2d("RS3", "S_U + S1 + resta", EST4, c(79.0, 86.0, 79.5, 100.0)),
+  fila_s2d("RS4", "S_U + suma + resta", EST4, c(79.0, 82.0, 90.0, 50.0)),
+  fila_s2d("RS5", "S_U + S1 + suma + resta", EST4, c(86.0, 93.5, 91.0, 100.0)),
+  fila_s2d("RS6", "S_U + atípica + resta", EST4, c(81.5, 71.0, 86.0, 100.0)),
+  fila_s2d("RS7", "S_U + S1 + suma + atípica + resta", EST4, c(93.0, 94.5, 98.0, 100.0)),
+  ## 9 cifras del barrido del estímulo, lecturas (i) y (ii) (tabla de la S2b)
+  fila_s2d("BE1", "|a1 - a2| (ii)", "canonica", 33.3),
+  fila_s2d("BE2", "n1 * a1 (i)", "mezcla", 34.0),
+  fila_s2d("BE3", "|n1 - a2| (i)", "canonica", 100.0),
+  fila_s2d("BE4", "|n1 - a2| (ii)", "canonica", 33.3),
+  fila_s2d("BE5", "dos pasos: |n1 - n2| * a1 (i)", c("CURSOS", "canonica"), c(34.0, 100.0)),
+  fila_s2d("BE6", "dos pasos: |n1 - n2| * a1 (ii)", "canonica", 33.3),
+  fila_s2d("BE7", "dos pasos: |n1 - n2| * a2 (i)", "CURSOS", 37.0),
+  fila_s2d("BE8", "dos pasos: n1 * |a1 - a2| (i)", "PROMEDIO", 37.0),
+  ## 5 cifras de la lectura (iii) (S2c, diseño actual B0)
+  fila_s2d("RS8", R_RESTA_III, "canonica", 50.0),
+  fila_s2d("BE9", "dos pasos: n1 * |a1 - a2| (iii)", "CURSOS", 38.5),
+  fila_s2d("BE10", "dos pasos: n2 * |a1 - a2| (iii)", "CURSOS", 35.5),
+  fila_s2d("BE11", "dos pasos: |n1 - n2| * a1 (iii)", "PROMEDIO", 35.8),
+  fila_s2d("BE12", "dos pasos: |n1 - n2| * a2 (iii)", "PROMEDIO", 39.2)))
+stopifnot(nrow(FIRMA_S2D) == 41L, !anyDuplicated(paste(FIRMA_S2D$regla, FIRMA_S2D$estrato)),
+          all(FIRMA_S2D$estrato %in% EST4), all(FIRMA_S2D$acierto - 25 > 8))
+writeLines(sprintf("  S2d · firma del profesor, regla por regla y por estrato (%d cifras; acierto en %%, como se firmó):", nrow(FIRMA_S2D)))
+writeLines(sprintf("    %-5s %-9s %5.1f %%  %s", FIRMA_S2D$id, FIRMA_S2D$estrato, FIRMA_S2D$acierto, FIRMA_S2D$regla))
+veredicto_s2d <- function(rg, es, tasa) {
+  if (is.na(tasa) || tasa - 0.25 <= 0.08 + 1e-9) return("ok")
+  i <- which(FIRMA_S2D$regla == rg & FIRMA_S2D$estrato == es)
+  if (length(i) == 1L && round(100 * tasa, 1) <= FIRMA_S2D$acierto[i] + 1e-9) "cubierto" else "pendiente"
+}
 juzga_s2b <- function(TABX, grupo) {
-  n_pend <- 0L
+  n <- c(cubierto = 0L, pendiente = 0L)
   for (rg in rownames(TABX)) for (es in colnames(TABX)) {
-    tasa <- TABX[rg, es]; if (is.na(tasa)) next; ex <- tasa - 0.25
-    if (ex <= 0.08 + 1e-9) next
-    n_pend <- n_pend + 1L
-    pendiente(sprintf("%s: «%s», %s: %.1f %% (%+.1f pp sobre el azar)%s; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)",
-                      grupo, rg, ROT_S2B[[es]], 100 * tasa, 100 * ex,
-                      if (es == "canonica") sprintf("; peso en la mezcla %+.2f pp", 10 * ex) else ""))
+    tasa <- TABX[rg, es]; v <- veredicto_s2d(rg, es, tasa); if (v == "ok") next
+    ex <- tasa - 0.25; i <- which(FIRMA_S2D$regla == rg & FIRMA_S2D$estrato == es)
+    m <- sprintf("%s: %s«%s», %s: %.1f %% (%+.1f pp sobre el azar)%s", grupo, if (length(i) == 1L) paste0(FIRMA_S2D$id[i], " ") else "",
+                 rg, ROT_S2B[[es]], 100 * tasa, 100 * ex, if (es == "canonica") sprintf("; peso en la mezcla %+.2f pp", 10 * ex) else "")
+    n[[v]] <- n[[v]] + 1L
+    if (v == "cubierto") firmado(sprintf("%s (firmado hasta %.1f %%)", m, FIRMA_S2D$acierto[i]), por = POR_S2D)
+    else if (length(i) == 1L) pendiente(sprintf("%s, por encima de lo firmado (%.1f %%): vuelve al profesor", m, FIRMA_S2D$acierto[i]))
+    else pendiente(paste0(m, "; regla nueva por encima de +8 pp, sin firma en este estrato: vuelve al profesor (O-1 § Alcance)"))
   }
-  n_pend
+  n
 }
 writeLines("  S2b · H1 de la FASE 2C r6: «resta» y sus combinaciones con las pistas de «O-1 corregido» (acierto en %):")
 TAB_H1 <- mide(H1_REGLAS)
@@ -525,8 +585,8 @@ writeLines(sprintf("  «resta» aplica (alguna opción cita |aG - aP|): mezcla %
                    100 * apl_r[["mezcla"]], 100 * apl_r[["CURSOS"]], 100 * apl_r[["PROMEDIO"]], 100 * apl_r[["canonica"]],
                    length(nc_h), paste(sprintf("%s (%d)", names(quien), as.integer(quien)), collapse = ", ")))
 np_h1 <- juzga_s2b(TAB_H1, "S2b H1")
-writeLines(sprintf("  S2b H1: %d de %d cifras (%d reglas × 4 estratos) por encima de +8 pp sobre el azar: pendientes de firma",
-                   np_h1, length(TAB_H1), nrow(TAB_H1)))
+writeLines(sprintf("  S2b H1: %d de %d cifras (%d reglas × 4 estratos) por encima de +8 pp sobre el azar: %d cubiertas por la firma de la S2d y %d pendientes",
+                   sum(np_h1), length(TAB_H1), nrow(TAB_H1), np_h1[["cubierto"]], np_h1[["pendiente"]]))
 ## Barrido del estímulo: las celdas por fila de la tabla (gi = la fila de G).
 celdas <- function(x) { tb <- x$tabla
   if (isTRUE(x$gi == 1)) c(n1 = tb[[1]], a1 = tb[[3]], n2 = tb[[2]], a2 = tb[[4]]) else c(n1 = tb[[2]], a1 = tb[[4]], n2 = tb[[1]], a2 = tb[[3]]) }
@@ -543,7 +603,8 @@ OPS_EST[["dos pasos: |n1 - n2| * a1"]] <- function(cc) abs(cc[["n1"]] - cc[["n2"
 OPS_EST[["dos pasos: |n1 - n2| * a2"]] <- function(cc) abs(cc[["n1"]] - cc[["n2"]]) * cc[["a2"]]
 OPS_EST[["dos pasos: n1 * |a1 - a2|"]] <- function(cc) cc[["n1"]] * abs(cc[["a1"]] - cc[["a2"]])
 OPS_EST[["dos pasos: n2 * |a1 - a2|"]] <- function(cc) cc[["n2"]] * abs(cc[["a1"]] - cc[["a2"]])
-regla_de <- function(fr, lec) { force(fr); force(lec); function(x) { r <- fr(celdas(x)); if (lec == "i") lee_i(x, r) else lee_ii(x, r) } }
+regla_de <- function(fr, lec) { force(fr); force(lec); function(x) { r <- fr(celdas(x))
+  if (lec == "i") lee_i(x, r) else if (lec == "ii") lee_ii(x, r) else if (lec == "iii") lee_iii(x, r) else stop("lectura desconocida: ", lec) } }
 BARRIDO <- list()
 for (nm_op in names(OPS_EST)) { BARRIDO[[paste(nm_op, "(i)")]] <- regla_de(OPS_EST[[nm_op]], "i")
   BARRIDO[[paste(nm_op, "(ii)")]] <- regla_de(OPS_EST[[nm_op]], "ii") }
@@ -557,9 +618,38 @@ for (nm_op in names(OPS_EST)) {
 ok(isTRUE(all.equal(TAB_EST["|a1 - a2| (i)", ], TAB_H1[R_RESTA, ])),
    "S2b: el barrido reproduce «resta» con sus propias celdas: «|a1 - a2| (i)» es la misma regla, y se juzga una sola vez, en H1")
 np_est <- juzga_s2b(TAB_EST[rownames(TAB_EST) != "|a1 - a2| (i)", , drop = FALSE], "S2b barrido del estímulo")
-writeLines(sprintf("  S2b barrido: %d operaciones (24 de un paso entre dos celdas y 4 de dos pasos) × 2 lecturas × 4 estratos; %d cifras por encima de +8 pp sobre el azar, pendientes de firma (sin «|a1 - a2| (i)», que es «resta»)",
-                   length(OPS_EST), np_est))
+writeLines(sprintf("  S2b barrido: %d operaciones (24 de un paso entre dos celdas y 4 de dos pasos) × 2 lecturas × 4 estratos; %d cifras por encima de +8 pp sobre el azar (sin «|a1 - a2| (i)», que es «resta»): %d cubiertas por la firma de la S2d y %d pendientes",
+                   length(OPS_EST), sum(np_est), np_est[["cubierto"]], np_est[["pendiente"]]))
 writeLines("  S2b: ninguna regla de un paso equivale a resolver el ítem. Los dos productos de fila juntos (n1 * a1 y n2 * a2) son los dos totales, y compararlos es resolverlo; cada uno por separado es «un solo total» y se mide.")
+## ---- S2d: la lectura (iii), en «resta» y en el barrido (L-7 candidata, ampliada) ----------------------------------
+## La S2c la midió en su copia del instrumento (s2c/bloque_s2c.R) y halló 5 cifras por encima de +8 pp que la S2b no
+## medía; el profesor las firmó en la S2d. Es el canal inverso de (i) (Incidente F, punto 4). Por construcción, cuando
+## aplica, la cifra es la de padv (en la canónica, la de la C), así que señala como perdedora a la misma sede que S_U.
+## Se mide en «resta» y en las 28 operaciones del barrido, en los cuatro estratos; «|a1 - a2| (iii)» es «resta (iii)»,
+## se coteja con ella y se juzga una sola vez. No se miden sus combinaciones con S_U. Nada de esta sección consume el RNG.
+TAB_RESTA_III <- mide(setNames(list(function(x) lee_iii(x, delta_t(x))), R_RESTA_III))
+BARRIDO_III <- list()
+for (nm_op in names(OPS_EST)) BARRIDO_III[[paste(nm_op, "(iii)")]] <- regla_de(OPS_EST[[nm_op]], "iii")
+TAB_EST3 <- mide(BARRIDO_III)
+writeLines("  S2d · lectura (iii), por fila de la tabla (acierto en %, mezcla / CURSOS / PROMEDIO / canónica):")
+writeLines(do.call(sprintf, c(list("    %-31s %5.1f %5.1f %5.1f %5.1f", "resta (iii)"), as.list(round(100 * TAB_RESTA_III[R_RESTA_III, ], 1)))))
+for (nm_op in names(OPS_EST))
+  writeLines(do.call(sprintf, c(list("    %-31s %5.1f %5.1f %5.1f %5.1f", paste(nm_op, "(iii)")), as.list(round(100 * TAB_EST3[paste(nm_op, "(iii)"), ], 1)))))
+ok(isTRUE(all.equal(TAB_EST3["|a1 - a2| (iii)", ], TAB_RESTA_III[R_RESTA_III, ])),
+   "S2d: el barrido reproduce «resta (iii)» con sus propias celdas: «|a1 - a2| (iii)» es la misma regla, y se juzga una sola vez")
+np_r3 <- juzga_s2b(TAB_RESTA_III, "S2d lectura (iii)")
+np_e3 <- juzga_s2b(TAB_EST3[rownames(TAB_EST3) != "|a1 - a2| (iii)", , drop = FALSE], "S2d barrido (iii)")
+writeLines(sprintf("  S2d lectura (iii): «resta» y %d operaciones × 4 estratos; %d cifras por encima de +8 pp sobre el azar (sin «|a1 - a2| (iii)», que es «resta (iii)»): %d cubiertas por la firma de la S2d y %d pendientes",
+                   length(OPS_EST) - 1L, sum(np_r3) + sum(np_e3), np_r3[["cubierto"]] + np_e3[["cubierto"]], np_r3[["pendiente"]] + np_e3[["pendiente"]]))
+## Cotejo de la firma: cada una de las 41 filas existe en E4 y se compara con lo firmado, a un decimal. Una cifra que baja
+## sigue cubierta, pero se declara aquí: lo firmado son las cifras de este diseño (md5 63e2713e).
+TAB_S2D <- rbind(TAB_H1, TAB_EST, TAB_RESTA_III, TAB_EST3)
+v_s2d <- mapply(function(rg, es) if (rg %in% rownames(TAB_S2D)) TAB_S2D[rg, es] else NA_real_, FIRMA_S2D$regla, FIRMA_S2D$estrato)
+ok(!anyNA(v_s2d), sprintf("firma de la S2d: las %d cifras firmadas existen en E4 (regla y estrato)", nrow(FIRMA_S2D)))
+ig_s2d <- !is.na(v_s2d) & abs(round(100 * v_s2d, 1) - FIRMA_S2D$acierto) < 1e-9
+writeLines(sprintf("  firma de la S2d: %d cifras firmadas (36 de la S2b y 5 de la lectura (iii)), %d iguales a lo firmado (a un decimal)%s",
+                   nrow(FIRMA_S2D), sum(ig_s2d), if (all(ig_s2d)) "" else paste0(" — distintas: ", paste(sprintf("%s %s %.1f %% (firmado %.1f %%)",
+                   FIRMA_S2D$id, FIRMA_S2D$estrato, 100 * v_s2d, FIRMA_S2D$acierto)[!ig_s2d], collapse = "; "))))
 
 source(file.path(REPO, ".claude/scripts/bateria_referencia_icfes.R"))        # B2: 34 reglas de referencia
 sede_txt <- function(s) sub(" gan[oó] .*$", "", s)
@@ -602,10 +692,11 @@ NA_FAM <- c(signo = "todas las cifras son positivas y ninguna opción niega ni c
 ESTIMULO_SC <- paste(
   "E4 mide aparte el estímulo, sobre la tabla tal como se muestra: las cuatro celdas citadas tal cual (S1 y S1b); el",
   "orden de las filas (S2); la sede por su perfil de cursos o de promedio (S3 a S6); la resta de los promedios,",
-  "|aG - aP| («resta», S2b), sola y con S_U y las pistas firmadas en «O-1 corregido»; y las operaciones de un paso entre",
-  "dos celdas (suma, resta, producto y cociente entero), con las lecturas (i) y (ii), más las cuatro de dos pasos que usa",
-  "el ítem (barrido, S2b). No mide otras operaciones de dos o más pasos ni el texto del enunciado fuera de los nombres",
-  "de las sedes. En la canónica, regla por regla (decisión 2 a y S2b)")
+  "|aG - aP| («resta», S2b), en sus tres lecturas, y en la (i) también con S_U y las pistas firmadas en «O-1 corregido»;",
+  "y las operaciones de un paso entre dos celdas (suma, resta, producto y cociente entero), con las lecturas (i), (ii) y",
+  "(iii), más las cuatro de dos pasos que usa el ítem (barrido, S2b y S2d). No mide otras operaciones de dos o más pasos,",
+  "las combinaciones del barrido o de la lectura (iii) con S_U, ni el texto del enunciado fuera de los nombres de las",
+  "sedes. En la canónica, regla por regla (decisión 2 a, S2b y S2d)")
 for (est in list(list("mezcla natural", NAT), list("rama CURSOS", CU$CURSOS), list("rama PROMEDIO", CU$PROMEDIO))) {
   V <- est[[2]]; if (length(V) < 20) { cat("  ", est[[1]], ": NO CONCLUYENTE (n < 20)\n"); next }
   res <- evaluar_bateria(REGLAS, lapply(V, function(x) norm_ed(x$opciones)), vapply(V, `[[`, 0L, "clave"),
@@ -900,7 +991,8 @@ if (exists("CM") && is.list(CM) && all(c("CURSOS", "PROMEDIO") %in% names(CM))) 
                              100 * b19[1, 2], 100 * t19[1, 2], 100 * b19[2, 2], 100 * t19[2, 2]))
 } else falla("M19, también en el barrido (S2b): no hay estratos de M19")
 ## M44 (S2b, H1 de la FASE 2C r6): con ERR-RESTA como distractor de G siempre que se pueda, la cifra |aG - aP| sale más a
-## menudo, y «resta» tiene que subir en las dos ramas y seguir pendiente de firma (visible). Mismo método que M19.
+## menudo, y «resta» tiene que subir en las dos ramas. Desde la S2d, además, tiene que salir de «cubierto» (RS1 de la firma
+## de la S2d) por la misma puerta que la firma, veredicto_s2d(), en alguna rama. Mismo método que M19.
 mm <- mutar(list(c("cod_gdis <- pick(unique(cand_g$codigo))",
                    'cod_gdis <- if ("ERR-RESTA" %in% cand_g$codigo) "ERR-RESTA" else pick(unique(cand_g$codigo))')))
 if (!is.null(mm$error)) falla(paste("M44 MAL CONSTRUIDO:", mm$error)) else {
@@ -913,12 +1005,38 @@ if (!is.null(mm$error)) falla(paste("M44 MAL CONSTRUIDO:", mm$error)) else {
   cuota_resta <- function(L) vapply(L, function(V) mean(vapply(V, function(x) identical(x$cod_gdis, "ERR-RESTA"), TRUE)), 0)
   q0 <- cuota_resta(CU[c("CURSOS", "PROMEDIO")]); q44 <- cuota_resta(C44)
   t0 <- TAB_H1[R_RESTA, c("CURSOS", "PROMEDIO")]; t44 <- vapply(C44, function(V) mean(vapply(V, H1_REGLAS[[R_RESTA]], 0)), 0)
+  v44 <- vapply(c("CURSOS", "PROMEDIO"), function(b) veredicto_s2d(R_RESTA, b, t44[[b]]), "")
   ver44 <- if (!all(lengths(C44) >= 20L) || !all(q44 > q0)) "mal_construido" else if (!all(t44 > t0)) "no_detectado" else
-    if (!all(t44 - 0.25 > 0.08 + 1e-9)) "no_detectado" else "cazado_por_su_sonda"
+    if (!any(v44 == "pendiente")) "no_detectado" else "cazado_por_su_sonda"
   ok(ver44 == "cazado_por_su_sonda",
-     sprintf("M44 (ERR-RESTA siempre que se pueda; su cuota en el distractor de G pasa de %.0f a %.0f %% en CURSOS y de %.0f a %.0f %% en PROMEDIO): «resta» sube de %.1f a %.1f %% en CURSOS y de %.1f a %.1f %% en PROMEDIO, y sigue pendiente de firma — %s",
+     sprintf("M44 (ERR-RESTA siempre que se pueda; su cuota en el distractor de G pasa de %.0f a %.0f %% en CURSOS y de %.0f a %.0f %% en PROMEDIO): «resta» sube de %.1f a %.1f %% en CURSOS y de %.1f a %.1f %% en PROMEDIO; frente a la firma de la S2d (RS1: %.1f y %.1f %%) queda «%s» en CURSOS y «%s» en PROMEDIO — %s",
              100 * q0[["CURSOS"]], 100 * q44[["CURSOS"]], 100 * q0[["PROMEDIO"]], 100 * q44[["PROMEDIO"]],
-             100 * t0[["CURSOS"]], 100 * t44[["CURSOS"]], 100 * t0[["PROMEDIO"]], 100 * t44[["PROMEDIO"]], ver44))
+             100 * t0[["CURSOS"]], 100 * t44[["CURSOS"]], 100 * t0[["PROMEDIO"]], 100 * t44[["PROMEDIO"]],
+             FIRMA_S2D$acierto[FIRMA_S2D$id == "RS1" & FIRMA_S2D$estrato == "CURSOS"],
+             FIRMA_S2D$acierto[FIRMA_S2D$id == "RS1" & FIRMA_S2D$estrato == "PROMEDIO"], v44[["CURSOS"]], v44[["PROMEDIO"]], ver44))
+}
+## M45 (S2d, lectura (iii)): con la fila de G siempre abajo (gi = 2: la posición de la fila de G deja de sortearse, P4),
+## la fila 1 es siempre la de P, así que n1 * |a1 - a2| (CURSOS: nP · δ) y |n1 - n2| * a1 (PROMEDIO: k · aP) son siempre la
+## cifra de padv (parcialP), y su lectura (iii) tiene que subir y salir de «cubierto» de la firma de la S2d (BE9, BE11) por
+## la misma puerta, veredicto_s2d(). Mismo método que M19 y M44; un render con error lo clasifica «cazado_por_otra».
+mm <- mutar(list(c("gi <- pick(1:2)", "gi <- 2L")))
+if (!is.null(mm$error)) falla(paste("M45 MAL CONSTRUIDO:", mm$error)) else {
+  C45 <- list(CURSOS = list(), PROMEDIO = list()); err45 <- 0L
+  for (s in 1000L + seq_len(TOPE)) {
+    if (all(lengths(C45) >= N)) break
+    r <- correr(s, mm$expr); if (!is.null(r$err)) { err45 <- err45 + 1L; next }
+    if (isTRUE(r$env$es_canonica)) next
+    x <- rasgos(r$env); if (length(C45[[x$rama]]) < N) C45[[x$rama]][[length(C45[[x$rama]]) + 1]] <- x
+  }
+  F45 <- FIRMA_S2D[FIRMA_S2D$id %in% c("BE9", "BE10", "BE11", "BE12"), ]
+  t45 <- mapply(function(rg, es) if (length(C45[[es]])) mean(vapply(C45[[es]], BARRIDO_III[[rg]], 0)) else NA_real_, F45$regla, F45$estrato)
+  v45 <- mapply(veredicto_s2d, F45$regla, F45$estrato, t45)
+  llego45 <- all(lengths(C45) >= 20L) && all(vapply(c(C45$CURSOS, C45$PROMEDIO), function(x) identical(as.integer(x$gi), 2L), TRUE)) &&
+    any(vapply(c(CU$CURSOS, CU$PROMEDIO), function(x) identical(as.integer(x$gi), 1L), TRUE))
+  ver45 <- if (!llego45) "mal_construido" else if (err45 > 0L) "cazado_por_otra" else if (any(v45 == "pendiente")) "cazado_por_su_sonda" else "no_detectado"
+  ok(ver45 == "cazado_por_su_sonda",
+     sprintf("M45 (la fila de G siempre abajo, gi = 2), lectura (iii) de las de dos pasos frente a la firma de la S2d: %s; %d renders con error — %s",
+             paste(sprintf("%s %s %.1f -> %.1f %% «%s»", F45$id, F45$estrato, F45$acierto, 100 * t45, v45), collapse = "; "), err45, ver45))
 }
 ## Mutante de medición M20 (H3 de la FASE 2C r4): una celda de la canónica cambia DESPUÉS de tabla_df.
 ## La guarda del .Rmd no lo ve (mira tabla_df); la sonda H3 r4 sobre tabla_md sí.
@@ -1113,6 +1231,7 @@ if (NORMALIZAR_ED) {
   pend <- grep("PENDIENTE DE FIRMA:", sal, value = TRUE, fixed = TRUE)
   ## S2b: este proceso ya sale con exit 3 por los pendientes de H1 y del barrido, que no dependen de la normalización.
   ## M28 juzga los pendientes NUEVOS del proceso sin normalizar: los que este proceso no tiene.
+  ## S2d: con la firma de la S2d este proceso ya no tiene pendientes; el filtro se conserva y no quita nada.
   pend <- pend[!trimws(sub("^ *PENDIENTE DE FIRMA: ", "", pend)) %in% PENDIENTES]
   larg <- grep("canal de largo (rama PROMEDIO)", pend, value = TRUE, fixed = TRUE)
   m_pal <- if (length(larg) == 1L) as.numeric(sub("^.*márgenes [0-9.]+ % y ([0-9.]+) %.*$", "\\1", larg)) else NA_real_
@@ -1120,7 +1239,7 @@ if (NORMALIZAR_ED) {
   ok(ver28 == "cazado_por_su_sonda", sprintf("M28 (sin la normalización del espacio duro al medir; exit %s): %d pendiente(s); %s — %s",
                                              format(attr(sal, "status")), length(pend), if (length(larg)) trimws(larg) else "-", ver28))
 }
-if (length(FIRMADOS)) cat("\nEn rojo, cubiertos por un override firmado («O-1 corregido», 2026-10-29; decisión 2 a, 2026-10-31; regla #22 §P7-E):\n",
+if (length(FIRMADOS)) cat("\nEn rojo, cubiertos por un override firmado («O-1 corregido», 2026-10-29; decisión 2 a, 2026-10-31; firma de la S2d, 2026-11-03; regla #22 §P7-E):\n",
                           paste0("  - [", POR, "] ", FIRMADOS, "\n"), sep = "")
 if (length(RESIDUOS)) cat("\nResiduos declarados §P7-B (margen < 15 %: inexplotables, no son defecto):\n",
                           paste0("  - ", RESIDUOS, "\n"), sep = "")
@@ -1129,7 +1248,7 @@ if (length(PENDIENTES)) cat("\nPendientes de firma del profesor (> +8 pp o premi
 
 cat("\n=== RESULTADO:", if (length(fallos)) sprintf("FALLA (%d)", length(fallos)) else
   if (length(PENDIENTES)) sprintf("PENDIENTE DE FIRMA (%d; 0 fallos)", length(PENDIENTES)) else
-  if (length(FIRMADOS)) sprintf("EN ROJO BAJO OVERRIDE FIRMADO (%d canales: %d dentro del alcance de O-1 corregido y %d de la decisión 2 a; 0 fallos, 0 pendientes)",
-                                 length(FIRMADOS), sum(POR == "O-1 corregido"), sum(POR == "la decisión 2 a")) else
+  if (length(FIRMADOS)) sprintf("EN ROJO BAJO OVERRIDE FIRMADO (%d canales: %d dentro del alcance de O-1 corregido, %d de la decisión 2 a y %d de la firma de la S2d; 0 fallos, 0 pendientes)",
+                                 length(FIRMADOS), sum(POR == "O-1 corregido"), sum(POR == "la decisión 2 a"), sum(POR == POR_S2D)) else
   "APROBADO (0 fallos)", "===\n")
 quit(status = if (length(fallos)) 1L else if (length(PENDIENTES)) 3L else if (length(FIRMADOS)) 4L else 0L)

@@ -1,0 +1,5 @@
+e42b855ba4986ad99ed0e77532a37f05  .claude/CLAUDE.md
+f6976e2883f1a6a2cac7683cfaf49291  HANDOFF.md
+9c65474801b5b838183a0507233b8ea1  verificar_espacio.R
+63e2713e6ac0bdbf250f4dc33901b2ec  totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd
+8ae1fa15ce7c9892212b1a1392cf5964  ejercicio_state.json

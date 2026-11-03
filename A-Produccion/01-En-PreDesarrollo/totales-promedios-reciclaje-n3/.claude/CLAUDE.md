@@ -1926,3 +1926,132 @@ Acierto en %, CURSOS / PROMEDIO.
      - Antes de mover una cifra de lado, se enumera qué hueco de magnitud llena (lugar de D, canal 2).
 
      Es la forma enumerable del ciclo de desplazamiento de canal, y D2 lo muestra en estado puro.
+
+### Ciclo 2026-11-02 (SCHOICE), tanda S2d
+
+> La hizo el `orquestador-schoice` el 2026-11-03, tras la S2c. El `.Rmd` no cambia (md5 `63e2713e6ac0bdbf250f4dc33901b2ec`):
+> sin reapertura y sin commit. Cambian el verificador y el registro, y se sellan los pasos 7 a 10, uno por uno. Se detiene en el
+> WAIT_USER #3, sin sellar `aprobacion_usuario`. Evidencia: `salida/ciclo_20261102/s2d/`.
+
+#### Decisiones del profesor (2026-11-03), literales
+
+> Transmitidas por el coordinador en el encargo de la tanda S2d. Regla #24 **H-5**: queda por escrito quién decidió, cuándo y
+> con qué cifras.
+
+1. **H2 de la FASE 2C r5.** Respuesta literal: «Cerrarlo ahora (Recomendada)». Aplicada en la tanda S2a (md5 `63e2713e`).
+2. **H1 de la FASE 2C r6.** Respuesta literal: «Enumerar §P7-F primero (Recomendada)». Hecha en la tanda S2c: ningún rediseño
+   es viable, y el canal es estructural.
+3. **Tras la S2c.** Respuesta literal: **«Firmar las 41 (Recomendada)»**. Override estructural, regla por regla y por estrato
+   (§P7-E), como O-1:
+   - las **36 cifras de la S2b** (RS1 a RS7 por estrato, con la canónica exacta, y BE1 a BE8): las de
+     `salida/ciclo_20261102/s2b/tabla_firma_s2b.md`;
+   - las **5 de la lectura (iii)** que midió la S2c sobre el diseño actual (B0, `salida/ciclo_20261102/s2c/salida_B0.txt`,
+     líneas 311 a 322):
+     - «resta» (iii) en la canónica: 50,0 % (+25,0 pp);
+     - «dos pasos: n1 * |a1 - a2| (iii)» en CURSOS: 38,5 % (+13,5);
+     - «dos pasos: n2 * |a1 - a2| (iii)» en CURSOS: 35,5 % (+10,5);
+     - «dos pasos: |n1 - n2| * a1 (iii)» en PROMEDIO: 35,8 % (+10,7);
+     - «dos pasos: |n1 - n2| * a2 (iii)» en PROMEDIO: 39,2 % (+14,3).
+   - El paso 7 se sella con la r5 y la r6, porque el `.Rmd` no cambia. Los cambios del verificador posteriores a la r6 los
+     revisará el próximo detractor.
+
+**Identificadores del cableado.** RS1 a RS7 y BE1 a BE8 son los de `tabla_firma_s2b.md`. RS8 es «resta (iii)» en la canónica, y
+BE9 a BE12 son las cuatro de dos pasos (iii), en el orden de la lista de arriba.
+
+**Qué cubre.** Cada cifra cubre solo su regla en su estrato, hasta su cifra a un decimal. Quedan pendientes, y vuelven al
+profesor: una cifra por encima de la firmada, la misma regla en otro estrato por encima de +8 pp y cualquier regla nueva por
+encima de +8 pp. Un tope por estrato o por familia no cuenta como alcance firmado. No cubre ningún defecto de CORRECCIÓN. Qué
+significa para la Parte 1 del CLOZE (F-2) y para los pesos de F-3 se decide en el ciclo del CLOZE.
+
+#### Cableado de la firma y de la lectura (iii) (tanda S2d)
+
+- **`verificar_espacio.R`: `9c654748…` → `031d4726f652df60a6d0dd49c8d8524b`.** Lo editó `s2d/editar_verificador_s2d.py`: 17 cambios,
+  cada patrón exigido una sola vez, con la copia previa en `s2d/verificar_espacio_9c654748_antes.R.txt`. Ni el verificador ni el
+  `.Rmd` llevan U+00A0, U+2009, U+202F ni U+2060 literales.
+- **Lectura (iii) en E4.** `lee_iii()` es la de la S2c, sin cambios: la sede de la opción que cita el resultado pierde, y se elige
+  al azar entre las dos opciones de la otra sede; su máximo es 50 %. Se mide en «resta» (`R_RESTA_III`) y en las 28 operaciones del
+  barrido, en los cuatro estratos. «|a1 - a2| (iii)» se coteja con «resta (iii)» y se juzga una sola vez. Reproduce la S2c: «resta
+  (iii)» da 16,8 / 13,8 / 10,8 / 50,0 % (mezcla / CURSOS / PROMEDIO / canónica), igual que `s2c/salida_B0.txt`, y por encima de
+  +8 pp quedan exactamente las 5 cifras firmadas, con las mismas cifras a un decimal.
+- **`FIRMA_S2D`**: 41 filas (identificador, regla, estrato y acierto a un decimal), impresas al correr el verificador.
+  `veredicto_s2d()` es la única puerta, para el juicio y para los mutantes. Da «ok» con +8 pp o menos; «cubierto» si la fila de
+  esa regla y ese estrato existe y la cifra no pasa de lo firmado; y «pendiente» en cualquier otro caso. Un cotejo final comprueba
+  que las 41 filas existen en E4 y que las 41 valen lo firmado a un decimal: «41 iguales a lo firmado».
+- **Mutantes**, los dos por la misma puerta:
+  - M44 (ERR-RESTA siempre que se pueda): «resta» sube de 58,8 a 72,2 % en CURSOS y de 67,8 a 70,0 % en PROMEDIO, y queda
+    «pendiente» en las dos ramas, fuera de RS1. Veredicto: `cazado_por_su_sonda`.
+  - M45, nuevo (la fila de G siempre abajo, `gi <- 2L`): BE9 pasa de 38,5 a 50,0 % y BE11 de 35,8 a 50,0 %, las dos «pendientes»;
+    BE10 y BE12 bajan a 25,0 %, y no hay renders con error. Veredicto: `cazado_por_su_sonda`.
+  - M19 sigue moviendo el barrido, y M28 sigue cazado, con su único pendiente.
+- **Resultado:** exit 4, «EN ROJO BAJO OVERRIDE FIRMADO (78 canales: 13 dentro del alcance de O-1 corregido, 24 de la decisión 2 a
+  y 41 de la firma de la S2d; 0 fallos, 0 pendientes)», en 134 y 135 s. Las dos corridas son idénticas byte a byte (528 líneas,
+  md5 `f3d6801a35011116f7c1b5126852d8a2`; `s2d/cmp_run1_run2.txt`). Frente a la S2b solo desaparecen los 36 pendientes, sus dos
+  resúmenes y el resultado, y se añaden las 41 cubiertas, las dos tablas y los cotejos (`s2d/diff_verificador_s2b_a_s2d.txt`).
+  Ninguna de las 37 cifras anteriores se mueve.
+- **Lo que mostró M45.** La lectura (iii) de las de dos pasos depende del sorteo de la fila de G (P4). Con la fila fija, la cifra
+  de padv sale siempre en la misma operación, y la regla llega al máximo de (iii), el 50 %. Con el sorteo, se reparte entre dos
+  operaciones, y cada una queda entre el 35,5 y el 39,2 %.
+
+#### Sellos de la tanda S2d, uno por uno
+
+| Paso | Sello | Artefacto |
+|---|---|---|
+| 7 `detractor_fase2c`, `APROBAR_CON_CAMBIOS` | 10:50:28 | `salida/fase2c_r5_detractor.md` y `salida/fase2c_r6_detractor.md`. Citas al sellar: hoy fallan 9 de 14 y 6 de 17, todas en código corregido después, y ninguna de la r6 apunta al `.Rmd` (`s2d/citas_r5_al_sellar.txt`, `s2d/citas_r6_al_sellar.txt`) |
+| 8 `coherencias_5` | 10:51:20 | `s2d/paso8_coherencias_63e2713e.md` (`AgenteValidadorVisual` nuevo, sin `name:`: COHERENCIAS_OK, 0 CRÍTICA, ALTA y MEDIA, 3 BAJA) y `s2d/paso8/` |
+| 9 `validar_diversidad`, 271 únicas | 10:51:57 | `s2d/paso9/`: diversidad sustantiva PASS (95 valores de D), diagnosticidad PASS, multisemilla 100/100 y 271/300 únicas; más las dos corridas del verificador |
+| 10 `validar_icfes` | 10:52:27 | `s2d/paso10/paso10_icfes.txt`: `validar_literalidad_exextra.py`, exit 0 y 0 fallos |
+
+`aprobacion_usuario` queda sin sellar: WAIT_USER #3, con el paquete en el `HANDOFF.md`, § «tanda S2d».
+
+#### ¿Ley local o regla?
+- **Local, candidatas** (endurecen; las firma el profesor; texto exacto en el `HANDOFF.md`): la tabla de L-6 corregida en la S2b;
+  L-7, ampliada con la lectura (iii) y ya cableada; y L-8, que todavía no tiene guarda en `verificar_espacio.R`.
+- **Del repo:** ninguna nueva. Las candidatas de la S2b y de la S2c siguen pendientes de la decisión del profesor.
+
+### Aprobación del SCHOICE y leyes firmadas (2026-11-03, WAIT_USER #3 de la tanda S2d)
+
+> **Firmado por el profesor el 2026-11-03** y transmitido por el coordinador (sesión `42032564`). Respuestas literales:
+> 1 «[a] Aprobar (Recomendada)»; 2 «L-6, dos filas (Recomendada)», «L-7 barrido (Recomendada)» y «L-8 hueco bajo D»;
+> 3 «Mantener y cablear (Recomendada)». Regla #24 **H-5**.
+
+**Aprobado para el aula:** el `.Rmd` con md5 `63e2713e6ac0bdbf250f4dc33901b2ec`, que sustituye a la aprobación de `e293d5c8`.
+Paso 11 sellado a las 12:45:40, así que el SCHOICE queda en 11/11. Siguen la evidencia de aula (Nivel 3) y, después, la promoción.
+
+**L-6 · cláusulas firmadas (amplían la tabla firmada de L-6; su texto es el de la candidata corregida en la S2b):**
+
+| Exige | Guarda | Mutante |
+|---|---|---|
+| La unidad que cierra una fórmula («kilos», «curso(s)») va dentro de ella: `$… = T\ \text{kilos}$` | `stopifnot` «L-6: la unidad que cierra una fórmula va dentro de la fórmula» (líneas 594-595). Solo ve el espacio normal y U+00A0; los demás separadores los cubre solo la sonda S1-Sol fórmula del verificador | M30 (guarda); M31, M39a-c y M43 (sonda); M34 (control, 1158 → 1151) |
+| El signo que sigue a una fórmula, con unidad o sin ella (`. , : ; ! ? ) ] » ”` y `…`), va dentro de ella: `$… = T\ \text{kilos.}$` y `$… = δ\text{.}$` | `stopifnot` «L-6: el signo que sigue a una fórmula, con unidad o sin ella, va dentro de la fórmula» (líneas 601-602), que admite hasta 3 caracteres que no sean letra ASCII, cifra, `$` ni salto de línea; más la sonda S1-Sol signo | M33 y M37 (guarda); M32, M38, M41a-c y M42a-c (sonda); M35 y M36 (controles, 730 → 721 y 42 → 0) |
+
+**L-7 · Barrido del estímulo (firmada; ya cableada en la S2d).**
+- Exige: E4 mide «resta», sus combinaciones con las pistas firmadas y el barrido de las operaciones de un paso entre dos celdas,
+  más las cuatro de dos pasos. Lo hace en las lecturas (i), (ii) y (iii), por estrato y en la canónica exacta. Toda cifra por
+  encima de +8 pp fuera de `FIRMA_S2D` (su regla, su estrato y hasta su cifra) queda pendiente (exit 3).
+- Guardas:
+  - `juzga_s2b()` con `veredicto_s2d()`;
+  - los cotejos «|a1 - a2| (i)» = «resta» y «|a1 - a2| (iii)» = «resta (iii)»;
+  - el cotejo de las 41 filas, que tienen que existir y valer lo firmado.
+- Mutantes: M44 (RS1 sale de «cubierto»), M45 (BE9 y BE11 salen de «cubierto») y M19.
+
+**L-8 · ERR-RESTA llena el hueco por debajo de D (firmada; PENDIENTE DE CABLEAR).**
+- Exige: el canal 2 y «resta» están acoplados. Todo cambio del pool de G, o de quién cita δ, mide en la misma pasada S7, el lugar
+  de D y las 13 cifras de «O-1 corregido».
+- Guarda: el conteo exacto de `salida/ciclo_20261102/s2c/enumerar_espacio_s2c.R`, llevado a E3.
+- Mutante: D4, con el que S7 tiene que pasar de +8 pp.
+- Hoy vive solo en el instrumento de la S2c. **Mientras no esté cableada en `verificar_espacio.R`, no es una invariante**
+  ([[feedback_invariante_sin_guardia]]). La cablea el próximo ciclo del SCHOICE, o la tanda del CLOZE si toca este verificador.
+
+**ERR-TOTAL (residuo de «O-1 corregido»): la firma sigue vigente.**
+- Las cifras oficiales no cambiaron desde la ronda 3: 9 % en CURSOS y 17 % en PROMEDIO con N = 100 por rama, y una exposición
+  exacta por configuraciones de 8536/39116 = 21,8 % y 3928/19640 = 20,0 %. Salen idénticas en las rondas 3, 4 y 4b, en la S1 y en
+  la S2d.
+- El 21,5 % del paso 8 (20 de 93) es otra muestra.
+- Pendiente: cablear la cuota de ERR-TOTAL por rama en el verificador en el próximo ciclo, para que una subida real se vea.
+
+**Para el CLOZE (ciclo siguiente):** la Parte 1 hereda por el re-empalme las opciones, la tabla y los canales.
+- Decide el profesor:
+  - si la firma de las 41 y las L-6, L-7 y L-8 se extienden a la Parte 1, como F-2 extendió «O-1 corregido»;
+  - si se revisa F-3: con RS7 al 93,0 % en la mezcla, la Parte 1 pasa de +19,7 a +25,5 pp sobre el azar.
+- `cloze/empalmar_bloque_p1.R` está atado al md5 `e293d5c8` y a las líneas 2-561. Hay que actualizarlo a `63e2713e` y volver a
+  poner el marcador en el lugar del bloque viejo.

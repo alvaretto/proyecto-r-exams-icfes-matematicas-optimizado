@@ -699,3 +699,119 @@ CRÍTICOS, ALTOS ni MEDIOS. Reporte íntegro: `salida/ciclo_20261102/s1b/6b/rela
   2. Con (a): cablear la firma en `verificar_espacio.R` (exit 4) y decidir si el paso 7 se sella con la r6 o con un detractor nuevo.
      Con (b): reapertura desde `generacion_rmd`, pasos 3 a 6, 6b y FASE 2C r7 con un detractor nuevo y sin `name:`.
   3. Después, los pasos 8 a 10 y el WAIT_USER #3.
+
+## Ciclo 2026-11-02, tanda S2d (2026-11-03): firma cableada, pasos 7 a 10 sellados y WAIT_USER #3
+
+- **Origen.** Decisiones del profesor del 2026-11-03, literales: H2 de la r5, «Cerrarlo ahora (Recomendada)», aplicada en la S2a;
+  H1 de la r6, «Enumerar §P7-F primero (Recomendada)», hecha en la S2c; y, tras la S2c, «Firmar las 41 (Recomendada)». Registro:
+  `.claude/CLAUDE.md` local, § «Ciclo 2026-11-02 (SCHOICE), tanda S2d».
+- **Hecho.** Evidencia en `salida/ciclo_20261102/s2d/`.
+  - `verificar_espacio.R` pasa de `9c654748…` a `031d4726f652df60a6d0dd49c8d8524b`. Lleva la lectura (iii) en E4 y la firma regla
+    por regla, `FIRMA_S2D` (41 filas), con M44 adaptado y M45 nuevo, los dos cazados por su sonda.
+  - Verificador: exit 4, 78 canales cubiertos (13 + 24 + 41), 0 fallos y 0 pendientes. Dos corridas idénticas byte a byte. Las 5
+    cifras de la lectura (iii) reproducen las de la S2c.
+  - Sellos, cada uno después de su artefacto: paso 7 a las 10:50:28 (con la r5 y la r6), paso 8 a las 10:51:20, paso 9 a las
+    10:51:57 y paso 10 a las 10:52:27. **10 de 11.** El `.Rmd` no cambió (`63e2713e6ac0bdbf250f4dc33901b2ec`): sin reapertura y sin
+    commit. `cloze/` no se tocó. No se corrió la suite de tests: no cambió código del repo, solo el verificador del subproyecto.
+
+### Paquete del WAIT_USER #3
+
+**Qué se aprueba: el md5 `63e2713e6ac0bdbf250f4dc33901b2ec`.** Qué cambió frente a la versión aprobada para el aula (`e293d5c8…`):
+- S1 (`4cffbe8b`): espacio duro (`ED`, U+00A0 escrito como escape) entre cifra y unidad y en «El Bosque» y «La Pradera»; fuera el
+  código muerto (S7).
+- S1b (`6c9d7705`): la unidad que cierra una fórmula y el signo que la sigue van dentro de ella (V1′: `$… = T\ \text{kilos.}$`); y
+  fuera `lado_gdis` en la canónica.
+- S2a (`63e2713e`): el punto que sigue a la fórmula de ERR-RESTA, dentro de ella (`\text{.}$`); y la guarda del signo, generalizada.
+- S2b, S2c y S2d no tocan el `.Rmd`: solo el verificador, el instrumento y el registro.
+- Invariancia, semillas 1 a 1000 (S1, S1b y S2a): `.Random.seed`, la tabla, la clave y la rama, idénticas; las opciones, idénticas
+  salvo el espacio duro; la Solution y el feedback, idénticos salvo el sitio de la unidad y del signo.
+
+**Pasos 7 a 10.**
+- Paso 7: veredicto del detractor r5 y r6: APROBAR_CON_CAMBIOS, sin ninguna CORRECCIÓN (`salida/fase2c_r5_detractor.md` y
+  `salida/fase2c_r6_detractor.md`).
+- Paso 8: COHERENCIAS_OK, 5 de 5, con 3 BAJA (abajo). N: HTML 100, PDF 70, DOCX 50, Moodle 40 y NOPS 2.
+- Paso 9: diversidad sustantiva PASS (95 valores de D en 100); diagnosticidad PASS (H1 0 %, margen mediano 2 %; H2 y H3 ciegas por
+  el prefijo uniforme; H3b 6 %); H1 por rama, 0 % en CURSOS y en PROMEDIO; multisemilla 100/100; 271/300 versiones únicas.
+- Paso 10: literalidad de `exextra`, 0 fallos (exit 0). Nivel 3, DOK 2, Bloom Evaluar y SOLO Relacional.
+
+**Residuos, con sus cifras.**
+- Overrides firmados, en rojo y cubiertos (exit 4, nunca PASS):
+  - «O-1 corregido», 13 cifras: S_U, 50,0 % en las dos ramas; sus cinco combinaciones con S1, suma y atípica, hasta 81,5 % en
+    CURSOS y 74,5 % en PROMEDIO; y S1 en PROMEDIO, +8,4 pp.
+  - La decisión 2 a, 24 cifras exactas de la canónica (12 reglas y 12 sondas), hasta +75,0 pp, con un peso en la mezcla de hasta
+    +7,50 pp.
+  - La firma de la S2d, 41 cifras. «Resta» sola (RS1): 54,2 / 58,8 / 67,8 % (mezcla / CURSOS / PROMEDIO). Con S_U y las pistas
+    firmadas (RS7): 93,0 / 94,5 / 98,0 % y 100,0 % en la canónica. El barrido, 9 cifras (BE1 a BE8, de 33,3 a 100,0 %). La lectura
+    (iii), 5: RS8, 50,0 % en la canónica, y BE9 a BE12, de 35,5 a 39,2 %.
+- Declarado sin firma (§P7-B): el canal de largo en PROMEDIO, +10,4 pp, con un margen máximo de 2,0 % en caracteres y 6,5 % en
+  palabras.
+- BAJOS de las 6b:
+  - «kilos.» sale con la letra de la fórmula;
+  - la fórmula pasa entera a un renglón propio y deja uno corto antes;
+  - a 320 px, «= 210 kilos.» queda cerca del borde derecho (semilla 53), sin desborde medido.
+- BAJA del paso 8: ERR-TOTAL leído como «total» (20 de las 93 no canónicas de su muestra; residuo ya firmado en «O-1 corregido»);
+  la clave canónica «fue de 20 kilos más», declarada por H-2; y NOPS sin canónica en su muestra de 2.
+- La caja del Moodle del colegio, sin medir: el servidor respondió HTTP 530 en la S1. La tabla vale por identidad con `e293d5c8`
+  (0 de 100 fuera de su caja a 320 y 360 px, medido el 2026-10-30), pero la caja no se volvió a medir.
+
+**Leyes locales candidatas, para firmar** (endurecen).
+1. **Tabla de L-6, corregida en la S2b.** Texto exacto de las celdas en el `.claude/CLAUDE.md` local, § «tanda S2b», «Tabla
+   candidata de L-6, corregida». Dos filas:
+   - Exige: «La unidad que cierra una fórmula («kilos», «curso(s)») va dentro de ella». Guarda: el `stopifnot` «L-6: la unidad que
+     cierra una fórmula va dentro de la fórmula» (líneas 594-595), que solo ve el espacio normal y U+00A0; los demás separadores
+     los cubre solo la sonda S1-Sol fórmula del verificador. Mutantes: M30 (guarda); M31, M39a-c y M43 (sonda); M34 (control,
+     1158 → 1151).
+   - Exige: «El signo que sigue a una fórmula, con unidad o sin ella (`. , : ; ! ? ) ] » ”` y `…`), va dentro de ella». Guarda: el
+     `stopifnot` «L-6: el signo que sigue a una fórmula, con unidad o sin ella, va dentro de la fórmula» (líneas 601-602), que admite
+     hasta 3 caracteres que no sean letra ASCII, cifra, `$` ni salto de línea, más la sonda S1-Sol signo. Mutantes: M33 y M37
+     (guarda); M32, M38, M41a-c y M42a-c (sonda); M35 y M36 (controles, 730 → 721 y 42 → 0).
+2. **L-7 · Barrido del estímulo, ampliada con la lectura (iii)**, ya cableada en la S2d.
+   - Exige: E4 mide «resta», sus combinaciones con las pistas firmadas y el barrido de las operaciones de un paso entre dos celdas,
+     más las cuatro de dos pasos, en las lecturas (i), (ii) y (iii), por estrato y en la canónica exacta. Toda cifra por encima de
+     +8 pp fuera de `FIRMA_S2D` (su regla, su estrato y hasta su cifra) queda pendiente (exit 3).
+   - Guardas: `juzga_s2b()` con `veredicto_s2d()`; los cotejos «|a1 - a2| (i)» = «resta» y «|a1 - a2| (iii)» = «resta (iii)»; y el
+     cotejo de las 41 filas, que tienen que existir y valer lo firmado.
+   - Mutantes: M44 (RS1 sale de «cubierto»), M45 (BE9 y BE11 salen de «cubierto») y M19 (sube el producto de una fila).
+3. **L-8 · ERR-RESTA llena el hueco por debajo de D**, de la S2c.
+   - Exige: el canal 2 y «resta» están acoplados. Todo cambio del pool de G, o de quién cita δ, mide en la misma pasada S7, el
+     lugar de D y las 13 cifras de «O-1 corregido».
+   - Guarda propuesta: el conteo exacto de `s2c/enumerar_espacio_s2c.R` en E3. Mutante propuesto: D4, con el que S7 tiene que pasar
+     de +8 pp.
+   - **No está cableada** en `verificar_espacio.R`: vive en el instrumento de la S2c. Si se firma, la cablea la tanda siguiente.
+
+**Nota de F-3 para el CLOZE.** Los pesos 3|1|1|1|1|1 se firmaron con el atajo del 77,6 %, que daba a la Parte 1 +19,7 pp de la nota
+de la pregunta sobre el azar. Con RS7 en el 93,0 % en la mezcla, la Parte 1 pasa a (93,0 − 25) × 3/8 = +25,5 pp, y supera la premisa
+de F-3. Se decide en el ciclo del CLOZE.
+
+**Pregunta al profesor:** (a) aprobar el md5 `63e2713e` para el aula y sellar `aprobacion_usuario`; (r) corregir, diciendo qué y
+desde qué paso; (p) pausar.
+
+**Próximo paso.**
+- Con (a): sellar el paso 11 con la nota de la aprobación. Después, el commit selectivo (`salida/` se añade con `git add -f`, sin
+  `render_*`, `shots/` ni perfiles de Chromium) y el re-empalme de la Parte 1 del CLOZE (F-2).
+- Con (r): reapertura desde el paso que corresponda y FASE 2C con un detractor nuevo, sin `name:`.
+- En cualquier caso, el próximo detractor revisa los cambios del verificador de la S2b y de la S2d.
+
+**Precisión sobre la BAJA 1 del paso 8, para el WAIT_USER #3.** En la muestra del validador (`set.seed(8001)`, 93 versiones no
+canónicas), ERR-TOTAL sale en 20 (21,5 %), justo por encima del 17-21 % del residuo «ERR-TOTAL leído como total» de «O-1 corregido».
+Con la muestra oficial del verificador (N = 100 por rama), su cuota en el distractor de G es del 9 % en CURSOS y del 17 % en
+PROMEDIO, y por enumeración la exposición es la de siempre (8536 de 39116 configuraciones de G en CURSOS y 3928 de 19640 en
+PROMEDIO). No es CORRECCIÓN: es una lectura que el detractor y el paso 8 juzgan no razonable. Pero «O-1 corregido» § Alcance dice que
+una medición por encima de una cifra firmada vuelve al profesor, así que se le lleva aquí, sin relajar nada (H-5).
+
+## Aprobado para el aula (2026-11-03): SCHOICE 11/11, md5 `63e2713e`
+
+- WAIT_USER #3, respuesta literal: «[a] Aprobar (Recomendada)». Paso 11 sellado a las 12:45:40 (sustituye la aprobación de
+  `e293d5c8`).
+- Leyes locales firmadas: L-6 (dos filas), L-7 (barrido del estímulo) y L-8 (ERR-RESTA llena el hueco bajo D; **pendiente de
+  cablear**). Texto en el `.claude/CLAUDE.md` local, § «Aprobación del SCHOICE y leyes firmadas».
+- ERR-TOTAL: la firma sigue vigente (las cifras oficiales no cambiaron desde la ronda 3); queda por cablear su cuota por rama.
+- **Próximo paso:** el ciclo del CLOZE (`cloze/`).
+  - Re-empalmar la Parte 1 desde `63e2713e`: actualizar `empalmar_bloque_p1.R` (md5 y rango) y reponer el marcador.
+  - Quitar `lado_gdis` de `rec()`.
+  - Adaptar MP2 al espacio duro y aplicar la decisión (a) en E4, solo en la Parte 1.
+  - H3 en la Parte 6.
+  - Pasos 3-6 y FASE 2C r4 con un detractor nuevo, que revise también MC39.
+  - Pasos 8-10 y WAIT_USER #3.
+  - Antes de empezar, el profesor decide si las 41 y las L-6/L-7/L-8 se extienden a la Parte 1 (como F-2) y si revisa F-3.
+- Después, la evidencia de aula (Nivel 3) y la promoción.
