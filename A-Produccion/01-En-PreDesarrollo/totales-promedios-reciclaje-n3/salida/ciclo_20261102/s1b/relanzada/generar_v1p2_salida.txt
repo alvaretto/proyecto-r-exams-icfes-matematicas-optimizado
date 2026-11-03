@@ -1,0 +1,8 @@
+«\\ \\text{unidad}$» en el fuente: 21
+  comentario    1  líneas [26]
+  sin_signo     6  líneas [249, 276, 578, 645, 676, 678]
+  pegado       14  líneas [250, 261, 277, 282, 283, 299, 300, 314, 321, 337, 579, 580, 643, 677]
+sitios cambiados: 14 -> /home/bootcamp/.cache/s1b2/v1p/ej.Rmd
+«\\ \\text{unidad}$» en el fuente: 7
+  comentario    1  líneas [26]
+  sin_signo     6  líneas [249, 276, 578, 645, 676, 678]

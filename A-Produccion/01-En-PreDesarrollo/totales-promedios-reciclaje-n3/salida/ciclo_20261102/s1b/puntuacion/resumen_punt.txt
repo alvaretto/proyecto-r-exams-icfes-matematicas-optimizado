@@ -1,0 +1,11 @@
+errores de captura: 0
+--- 360 px (N = 100 semillas)
+base   fórmula+unidad partidas 132/1158 | signo huérfano tras la fórmula   0/142 en 0 semillas {} | desbordes 0 | cifra-unidad 0
+final  fórmula+unidad partidas   0/1158 | signo huérfano tras la fórmula  34/872 en 34 semillas {'.': 34} | desbordes 0 | cifra-unidad 0
+v2     fórmula+unidad partidas   0/1158 | signo huérfano tras la fórmula   0/872 en 0 semillas {} | desbordes 0 | cifra-unidad 0
+v1p    fórmula+unidad partidas   0/428 | signo huérfano tras la fórmula   0/142 en 0 semillas {} | desbordes 0 | cifra-unidad 0
+--- 320 px (N = 100 semillas)
+base   fórmula+unidad partidas 259/1158 | signo huérfano tras la fórmula   0/142 en 0 semillas {} | desbordes 0 | cifra-unidad 0
+final  fórmula+unidad partidas   0/1158 | signo huérfano tras la fórmula   5/872 en 5 semillas {'.': 3, ':': 2} | desbordes 0 | cifra-unidad 0
+v2     fórmula+unidad partidas   0/1158 | signo huérfano tras la fórmula   0/872 en 0 semillas {} | desbordes 0 | cifra-unidad 0
+v1p    fórmula+unidad partidas   0/428 | signo huérfano tras la fórmula   0/142 en 0 semillas {} | desbordes 0 | cifra-unidad 0

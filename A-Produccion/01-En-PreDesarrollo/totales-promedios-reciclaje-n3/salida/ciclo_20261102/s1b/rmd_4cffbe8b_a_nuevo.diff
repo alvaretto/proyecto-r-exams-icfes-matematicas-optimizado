@@ -1,0 +1,75 @@
+24a25,27
+> ## Tanda S1b (2026-11-02, decisión del profesor «Arreglarlo ahora»): cuando la cifra cierra una fórmula, la unidad va
+> ## DENTRO de ella, «$a \\times b = T\\ \\text{kilos}$», y no fuera con ED: Chromium parte el renglón entre la fórmula
+> ## y el espacio duro (6b de S1, N = 100: 132 de 1158 a 360 px y 259 de 1158 a 320 px). El PDF ya no lo partía.
+246,247c249,250
+<          "totales. ", cap1(p$nomG), " recogió $", p$nG, " \\times ", p$aG, " = ", p$TG, "$", ED, "kilos y ", p$nomP,
+<          ", $", p$nP, " \\times ", p$aP, " = ", p$TP, "$", ED, "kilos: la diferencia es ", p$D, ED, "kilos.")),
+---
+>          "totales. ", cap1(p$nomG), " recogió $", p$nG, " \\times ", p$aG, " = ", p$TG, "\\ \\text{kilos}$ y ", p$nomP,
+>          ", $", p$nP, " \\times ", p$aP, " = ", p$TP, "\\ \\text{kilos}$: la diferencia es ", p$D, ED, "kilos.")),
+258c261
+<          ED, "cursos, la diferencia entre los totales es $", p$TG, " - ", p$TP, " = ", p$D, "$", ED, "kilos.")),
+---
+>          ED, "cursos, la diferencia entre los totales es $", p$TG, " - ", p$TP, " = ", p$D, "\\ \\text{kilos}$.")),
+273,274c276,277
+<              " \\times ", p$delta, " = ", p$parcialP, "$", ED, "kilos que compensan parte de esa ventaja. La diferencia ",
+<              "es $", af$x, " - ", p$parcialP, " = ", p$D, "$", ED, "kilos.")
+---
+>              " \\times ", p$delta, " = ", p$parcialP, "\\ \\text{kilos}$ que compensan parte de esa ventaja. La diferencia ",
+>              "es $", af$x, " - ", p$parcialP, " = ", p$D, "\\ \\text{kilos}$.")
+279,280c282,283
+<              p$parcialP, "$", ED, "kilos. La diferencia es $",
+<              af$x, " - ", p$parcialP, " = ", p$D, "$", ED, "kilos.")
+---
+>              p$parcialP, "\\ \\text{kilos}$. La diferencia es $",
+>              af$x, " - ", p$parcialP, " = ", p$D, "\\ \\text{kilos}$.")
+296,297c299,300
+<          p$aG, " = ", p$TG, "$", ED, "kilos. No es la diferencia: falta restarle el total de ", p$nomP, ", y $", p$TG,
+<          " - ", p$TP, " = ", p$D, "$", ED, "kilos.")),
+---
+>          p$aG, " = ", p$TG, "\\ \\text{kilos}$. No es la diferencia: falta restarle el total de ", p$nomP, ", y $", p$TG,
+>          " - ", p$TP, " = ", p$D, "\\ \\text{kilos}$.")),
+311c314
+<              "menos cursos: su total, $", p$nP, " \\times ", p$aP, " = ", p$TP, "$", ED, "kilos, es menor que el de ",
+---
+>              "menos cursos: su total, $", p$nP, " \\times ", p$aP, " = ", p$TP, "\\ \\text{kilos}$, es menor que el de ",
+318c321
+<              p$parcialG, "$", ED, "kilos. ", no_gano(p))
+---
+>              p$parcialG, "\\ \\text{kilos}$. ", no_gano(p))
+334c337
+<          p$parcialG, "$", ED, "kilos. ", no_gano(p))),
+---
+>          p$parcialG, "\\ \\text{kilos}$. ", no_gano(p))),
+575,577c578,580
+<   clave = paste0("Verdadero. ", cap1(nomG), " recogió $", d$nG, " \\times ", d$aG, " = ", d$TG, "$", ED, "kilos y ",
+<                  nomP, ", $", d$nP, " \\times ", d$aP, " = ", d$TP, "$", ED, "kilos: ganó por $", d$TG, " - ", d$TP, " = ",
+<                  d$D, "$", ED, "kilos."),
+---
+>   clave = paste0("Verdadero. ", cap1(nomG), " recogió $", d$nG, " \\times ", d$aG, " = ", d$TG, "\\ \\text{kilos}$ y ",
+>                  nomP, ", $", d$nP, " \\times ", d$aP, " = ", d$TP, "\\ \\text{kilos}$: ganó por $", d$TG, " - ", d$TP, " = ",
+>                  d$D, "\\ \\text{kilos}$."),
+584a588,593
+> ## L-6 (tanda S1b): ninguna fórmula del feedback ni del análisis de los distractores cierra en «$» seguido de la
+> ## unidad; la unidad va dentro de la fórmula. explica() es pura (regla #1), así que llamarla aquí no mueve el RNG.
+> stopifnot("L-6: la unidad que cierra una fórmula va dentro de la fórmula" =
+>             !any(grepl(paste0("\\$[ ", ED, "]+(kilos?|cursos?)\\b"),
+>                        c(fb, vapply(c("gdis", "padv", "psin"), function(r)
+>                          errores_conceptuales[[afs[[r]]$codigo]]$explica(params, afs[[r]]), "")), perl = TRUE)))
+634c643
+<       "$", ED, "kilos.\n", sep = "")
+---
+>       "\\ \\text{kilos}$.\n", sep = "")
+636c645
+< cat("\nGanó ", nomG, ", con $", d$TG, " - ", d$TP, " = ", d$D, "$", ED, "kilos más. ",
+---
+> cat("\nGanó ", nomG, ", con $", d$TG, " - ", d$TP, " = ", d$D, "\\ \\text{kilos}$ más. ",
+667,669c676,678
+< cat("En esta versión, ", nomG, " recogió $", d$nG, " \\times ", d$aG, " = ", d$TG, "$", ED, "kilos y ", nomP, " recogió $",
+<     d$nP, " \\times ", d$aP, " = ", d$TP, "$", ED, "kilos. La diferencia es $", d$TG, " - ", d$TP, " = ", d$D,
+<     "$", ED, "kilos a favor de ", nomG, ".\n\n", sep = "")
+---
+> cat("En esta versión, ", nomG, " recogió $", d$nG, " \\times ", d$aG, " = ", d$TG, "\\ \\text{kilos}$ y ", nomP, " recogió $",
+>     d$nP, " \\times ", d$aP, " = ", d$TP, "\\ \\text{kilos}$. La diferencia es $", d$TG, " - ", d$TP, " = ", d$D,
+>     "\\ \\text{kilos}$ a favor de ", nomG, ".\n\n", sep = "")

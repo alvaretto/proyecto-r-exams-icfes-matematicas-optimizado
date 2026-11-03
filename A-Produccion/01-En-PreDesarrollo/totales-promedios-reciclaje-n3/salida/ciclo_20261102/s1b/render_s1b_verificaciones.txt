@@ -1,0 +1,10 @@
+pandocbounded en .tex: 5
+LTcaptype: 1 · guard c@none en .Rmd: 1
+	ext{kilos} en .tex: 12
+pdf/ej1.pdf: 3 pág · renglones que empiezan por la unidad tras cifra o fórmula: 0
+pdf/ej2.pdf: 3 pág · renglones que empiezan por la unidad tras cifra o fórmula: 0
+pdf/ej3.pdf: 3 pág · renglones que empiezan por la unidad tras cifra o fórmula: 0
+pdf/ej4.pdf: 3 pág · renglones que empiezan por la unidad tras cifra o fórmula: 0
+pdf/ej5.pdf: 3 pág · renglones que empiezan por la unidad tras cifra o fórmula: 0
+nops/ej1.pdf: 4 pág · renglones que empiezan por la unidad tras cifra o fórmula: 0
+Moodle (n=100, set.seed(1)): preguntas 100 · unidad dentro de \(..\): 1160 · cierre \)</span> + espacio + unidad: 0 · <math>: 0

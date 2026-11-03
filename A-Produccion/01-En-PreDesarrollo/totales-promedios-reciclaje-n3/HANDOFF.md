@@ -501,3 +501,76 @@ semillas pareadas contra `e293d5c8`, a 360 y 320 px: 400 capturas por CDP, con `
     Cambiar eso toca la Solution, así que lo decide el profesor.
 - **BAJO.** En 23 semillas a 360 px y en 1 a 320 px hay uno o dos renglones más («15 kilos» pasa entero al renglón
   siguiente). Es el efecto esperado, sin desbordes.
+
+## Ciclo 2026-11-02, tanda S1b (2026-11-02, relanzada el 2026-11-03)
+
+- **Primera S1b (2026-11-02).**
+  - Aplicó V1 (md5 `5cf5b12f…`): la unidad que cierra una fórmula va dentro de ella.
+  - Su 6b dio APTO_CON_OBSERVACIONES: el punto quedaba solo tras la fórmula en 34 semillas a 360 px y en 5 a 320 px.
+  - Se interrumpió a las 20:34, sin reporte, a mitad de medir V2 y V1′. Esa medición tenía dos defectos del instrumento.
+- **Decisiones del profesor (2026-11-03).**
+  - «V1′ (Recomendada)»: el signo que sigue a la unidad entra en la fórmula, `$… = T\ \text{kilos.}$`.
+  - «En esta S1b (Recomendada)»: fuera la asignación muerta de `lado_gdis` en la canónica, que cierra S7.
+- **Relanzada (2026-11-03).**
+  - La medición pareada, con el instrumento corregido, da 0 para V1′ en HTML (360 y 320 px), PDF y Moodle. Los controles
+    positivos ven cada defecto: 4cffbe8b y V1 en HTML, e293d5c8 y un control sintético en PDF, V1 en Moodle.
+  - Aplicada: `.Rmd` md5 **`6c9d77058b32fdd8291a1ebaab581c8f`**, con 14 sitios.
+  - Invariancia en 1000/1000 semillas.
+  - Verificador (`bd6eda09…`): exit 4, 37 canales, 0 fallos y 0 pendientes, con M30 a M33 cazados por su sonda.
+  - Reapertura #8 y pasos 3 a 6 sellados uno por uno: **6 de 11**.
+  - Detalle y cifras: `.claude/CLAUDE.md` local, § «Ciclo 2026-11-02 (SCHOICE), tanda S1b». Evidencia:
+    `salida/ciclo_20261102/s1b/relanzada/`.
+- **Declarado.**
+  - Fuera del alcance de V1′ quedan las fórmulas que NO cierran en unidad seguidas de un signo: 425 en 1000 semillas, 40 en
+    el Moodle de 100. El mecanismo es el mismo, pero en HTML hubo 0 partidas en 100 semillas por ancho (42 casos).
+  - El `pdf/ej1.pdf` del render oficial de la primera S1b (`s1b/render_5cf5b12f/pdf/`) quedó sobrescrito por el PDF de
+    medición de 100 ejercicios. Los renders no se versionan, y las verificaciones de aquel render siguen en
+    `s1b/render_s1b_verificaciones.txt`.
+- **Próximo paso (tanda S2).**
+  1. FASE 2C con un detector nuevo, sin `name:`. Sobre `6c9d7705`, frente a `4cffbe8b` y `e293d5c8`, tiene que revisar:
+     - V1′, la guarda nueva de L-6 y su cláusula candidata;
+     - S7;
+     - los cambios del verificador: S1-Sol signo, M30 a M33, el `ok()` de S7 y el control de S1-Sol fórmula;
+     - el instrumento de medición (`cap_s1b2.py`, `pdf_renglones_bbox.py`).
+  2. Pasos 8 a 10.
+  3. WAIT_USER #3. La aprobación anterior era de `e293d5c8`. El profesor firma además la cláusula candidata de L-6 y ve los
+     residuos: la letra de «kilos.» dentro de la fórmula y las fórmulas sin unidad seguidas de un signo.
+- **Después, la tanda del re-empalme del CLOZE:**
+  - quitar la lectura de `lado_gdis` en `rec()` (`cloze/verificar_espacio_cloze.R`, línea 117);
+  - adaptar MP2 al espacio duro;
+  - aplicar la decisión (a) en E4;
+  - llevar V1′ a la Parte 1 (F-2).
+
+  Hasta entonces, el verificador del CLOZE no puede correr la canónica contra este `.Rmd`.
+
+**6b pareada de la tanda S1b relanzada, recibida** (`auditor-visual-html`, sin `name:`): **APTO_CON_OBSERVACIONES**, sin
+CRÍTICOS, ALTOS ni MEDIOS. Reporte íntegro: `salida/ciclo_20261102/s1b/6b/relanzada/informe_6b_6c9d7705_completo.md`.
+- N = 100 semillas por versión y ancho, a 360 y 320 px. El HTML final es idéntico byte a byte al de la V1′ medida
+  (`cmp`, 100 de 100).
+- Frente a 4cffbe8b, e293d5c8 y 5cf5b12f, V1′ da 0 en las seis métricas. Los controles positivos reproducen sus cifras: 132
+  y 259, 34 y 5, y 341/74 y 347/55.
+- Leyó 9 imágenes a resolución completa: 1 par y 8 recortes, de las semillas 1, 5 y 7 a 360 px y 24, 25, 40, 53 y 59 a
+  320 px. En V1 se ve el signo solo en las 8 semillas; en el final, en ninguna.
+- BAJOS:
+  - «kilos.» sale con la letra de la fórmula (ya declarado en V1).
+  - La fórmula pasa entera al renglón siguiente y deja uno corto antes.
+  - A 320 px, «= 210 kilos.» queda cerca del borde derecho (semilla 53), sin desborde medido.
+
+**Verificación del coordinador (2026-11-03, sesión `42032564`), independiente de los scripts de la tanda**
+(`salida/ciclo_20261102/s1b/relanzada/coordinador/`):
+- `verificar_espacio.R`, repetido: exit 4 en 110 s, con las 283 líneas idénticas a `relanzada/verificar_espacio_s1b2.txt`
+  (sin contar la línea de cierre).
+- Invariancia con un script propio (`invariancia_coordinador.R`), del `.Rmd` de HEAD (`4cffbe8b`) frente a `6c9d7705`, en
+  las semillas 1 a 1000:
+  - `.Random.seed` idéntico en las 1000;
+  - objetos, enunciado y opciones idénticos en las 1000;
+  - Solution y feedback idénticos en las 1000, tras devolver la unidad y el signo a la forma vieja;
+  - 0 fórmulas que cierran antes de su unidad y 0 signos fuera;
+  - 11 575 unidades dentro de la fórmula (el control viejo da 11 575 fuera), 7 298 de ellas con el signo dentro.
+- Diff del `.Rmd`, revisado. Solo cambian:
+  - cadenas dentro de los chunks: 20 cierres, 14 de ellos con signo;
+  - S7: 4 líneas sustituidas por 2 de comentario;
+  - dos `stopifnot` nuevos.
+  Ninguna prosa Markdown cambia.
+- Corrección al reporte de la tanda: `salida/` sí está ignorado (`.gitignore`, `**/salida/`). La evidencia se añade con
+  `git add -f`, sin los `render_*`, las `shots/` ni perfiles de Chromium.

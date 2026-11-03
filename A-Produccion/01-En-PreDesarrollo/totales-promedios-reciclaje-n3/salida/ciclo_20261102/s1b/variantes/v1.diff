@@ -1,0 +1,64 @@
+246,247c246,247
+<          "totales. ", cap1(p$nomG), " recogió $", p$nG, " \\times ", p$aG, " = ", p$TG, "$", ED, "kilos y ", p$nomP,
+<          ", $", p$nP, " \\times ", p$aP, " = ", p$TP, "$", ED, "kilos: la diferencia es ", p$D, ED, "kilos.")),
+---
+>          "totales. ", cap1(p$nomG), " recogió $", p$nG, " \\times ", p$aG, " = ", p$TG, "\\ \\text{kilos}$ y ", p$nomP,
+>          ", $", p$nP, " \\times ", p$aP, " = ", p$TP, "\\ \\text{kilos}$: la diferencia es ", p$D, ED, "kilos.")),
+258c258
+<          ED, "cursos, la diferencia entre los totales es $", p$TG, " - ", p$TP, " = ", p$D, "$", ED, "kilos.")),
+---
+>          ED, "cursos, la diferencia entre los totales es $", p$TG, " - ", p$TP, " = ", p$D, "\\ \\text{kilos}$.")),
+273,274c273,274
+<              " \\times ", p$delta, " = ", p$parcialP, "$", ED, "kilos que compensan parte de esa ventaja. La diferencia ",
+<              "es $", af$x, " - ", p$parcialP, " = ", p$D, "$", ED, "kilos.")
+---
+>              " \\times ", p$delta, " = ", p$parcialP, "\\ \\text{kilos}$ que compensan parte de esa ventaja. La diferencia ",
+>              "es $", af$x, " - ", p$parcialP, " = ", p$D, "\\ \\text{kilos}$.")
+279,280c279,280
+<              p$parcialP, "$", ED, "kilos. La diferencia es $",
+<              af$x, " - ", p$parcialP, " = ", p$D, "$", ED, "kilos.")
+---
+>              p$parcialP, "\\ \\text{kilos}$. La diferencia es $",
+>              af$x, " - ", p$parcialP, " = ", p$D, "\\ \\text{kilos}$.")
+296,297c296,297
+<          p$aG, " = ", p$TG, "$", ED, "kilos. No es la diferencia: falta restarle el total de ", p$nomP, ", y $", p$TG,
+<          " - ", p$TP, " = ", p$D, "$", ED, "kilos.")),
+---
+>          p$aG, " = ", p$TG, "\\ \\text{kilos}$. No es la diferencia: falta restarle el total de ", p$nomP, ", y $", p$TG,
+>          " - ", p$TP, " = ", p$D, "\\ \\text{kilos}$.")),
+311c311
+<              "menos cursos: su total, $", p$nP, " \\times ", p$aP, " = ", p$TP, "$", ED, "kilos, es menor que el de ",
+---
+>              "menos cursos: su total, $", p$nP, " \\times ", p$aP, " = ", p$TP, "\\ \\text{kilos}$, es menor que el de ",
+318c318
+<              p$parcialG, "$", ED, "kilos. ", no_gano(p))
+---
+>              p$parcialG, "\\ \\text{kilos}$. ", no_gano(p))
+334c334
+<          p$parcialG, "$", ED, "kilos. ", no_gano(p))),
+---
+>          p$parcialG, "\\ \\text{kilos}$. ", no_gano(p))),
+575,577c575,577
+<   clave = paste0("Verdadero. ", cap1(nomG), " recogió $", d$nG, " \\times ", d$aG, " = ", d$TG, "$", ED, "kilos y ",
+<                  nomP, ", $", d$nP, " \\times ", d$aP, " = ", d$TP, "$", ED, "kilos: ganó por $", d$TG, " - ", d$TP, " = ",
+<                  d$D, "$", ED, "kilos."),
+---
+>   clave = paste0("Verdadero. ", cap1(nomG), " recogió $", d$nG, " \\times ", d$aG, " = ", d$TG, "\\ \\text{kilos}$ y ",
+>                  nomP, ", $", d$nP, " \\times ", d$aP, " = ", d$TP, "\\ \\text{kilos}$: ganó por $", d$TG, " - ", d$TP, " = ",
+>                  d$D, "\\ \\text{kilos}$."),
+634c634
+<       "$", ED, "kilos.\n", sep = "")
+---
+>       "\\ \\text{kilos}$.\n", sep = "")
+636c636
+< cat("\nGanó ", nomG, ", con $", d$TG, " - ", d$TP, " = ", d$D, "$", ED, "kilos más. ",
+---
+> cat("\nGanó ", nomG, ", con $", d$TG, " - ", d$TP, " = ", d$D, "\\ \\text{kilos}$ más. ",
+667,669c667,669
+< cat("En esta versión, ", nomG, " recogió $", d$nG, " \\times ", d$aG, " = ", d$TG, "$", ED, "kilos y ", nomP, " recogió $",
+<     d$nP, " \\times ", d$aP, " = ", d$TP, "$", ED, "kilos. La diferencia es $", d$TG, " - ", d$TP, " = ", d$D,
+<     "$", ED, "kilos a favor de ", nomG, ".\n\n", sep = "")
+---
+> cat("En esta versión, ", nomG, " recogió $", d$nG, " \\times ", d$aG, " = ", d$TG, "\\ \\text{kilos}$ y ", nomP, " recogió $",
+>     d$nP, " \\times ", d$aP, " = ", d$TP, "\\ \\text{kilos}$. La diferencia es $", d$TG, " - ", d$TP, " = ", d$D,
+>     "\\ \\text{kilos}$ a favor de ", nomG, ".\n\n", sep = "")

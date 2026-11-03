@@ -1,0 +1,17 @@
+errores de captura: 0 · anchos de ventana medidos (innerWidth): [320, 360]
+--- 360 px (N = 100 semillas)
+final fórmula+unidad partidas   0/1158 | signo huérfano tras una fórmula   0/42 {} en 0 semillas [] | tras otro elemento 0/100 | renglón con espacio inicial tras una fórmula   0/885 | cifra-unidad 0/2403 | El/La 0/499 | fórmula partida por dentro 0 | desbordes 0 | tabla fuera de su caja 0 (tablas 100)
+      alto frente a base: más alto en 34, más bajo en 29, máx ±18 px
+base  fórmula+unidad partidas 132/1158 | signo huérfano tras una fórmula   0/42 {} en 0 semillas [] | tras otro elemento 0/100 | renglón con espacio inicial tras una fórmula 132/1264 | cifra-unidad 0/2403 | El/La 0/499 | fórmula partida por dentro 0 | desbordes 0 | tabla fuera de su caja 0 (tablas 100)
+e293  fórmula+unidad partidas 139/1158 | signo huérfano tras una fórmula   0/42 {} en 0 semillas [] | tras otro elemento 0/100 | renglón con espacio inicial tras una fórmula   0/1264 | cifra-unidad 341/2403 | El/La 74/499 | fórmula partida por dentro 0 | desbordes 0 | tabla fuera de su caja 0 (tablas 100)
+      alto frente a base: más alto en 0, más bajo en 23, máx ±36 px
+v1    fórmula+unidad partidas   0/1158 | signo huérfano tras una fórmula  34/772 {'.': 34} en 34 semillas [1, 5, 6, 7, 11, 13, 17, 18, 27, 29, 34, 35, 38, 41, 42] | tras otro elemento 0/100 | renglón con espacio inicial tras una fórmula   0/534 | cifra-unidad 0/2403 | El/La 0/499 | fórmula partida por dentro 0 | desbordes 0 | tabla fuera de su caja 0 (tablas 100)
+      alto frente a base: más alto en 34, más bajo en 29, máx ±18 px
+--- 320 px (N = 100 semillas)
+final fórmula+unidad partidas   0/1158 | signo huérfano tras una fórmula   0/42 {} en 0 semillas [] | tras otro elemento 0/100 | renglón con espacio inicial tras una fórmula   0/885 | cifra-unidad 0/2403 | El/La 0/499 | fórmula partida por dentro 0 | desbordes 0 | tabla fuera de su caja 0 (tablas 100)
+      alto frente a base: más alto en 5, más bajo en 15, máx ±18 px
+base  fórmula+unidad partidas 259/1158 | signo huérfano tras una fórmula   0/42 {} en 0 semillas [] | tras otro elemento 0/100 | renglón con espacio inicial tras una fórmula 259/1264 | cifra-unidad 0/2403 | El/La 0/499 | fórmula partida por dentro 0 | desbordes 0 | tabla fuera de su caja 0 (tablas 100)
+e293  fórmula+unidad partidas 259/1158 | signo huérfano tras una fórmula   0/42 {} en 0 semillas [] | tras otro elemento 0/100 | renglón con espacio inicial tras una fórmula   0/1264 | cifra-unidad 347/2403 | El/La 55/499 | fórmula partida por dentro 0 | desbordes 0 | tabla fuera de su caja 0 (tablas 100)
+      alto frente a base: más alto en 0, más bajo en 1, máx ±18 px
+v1    fórmula+unidad partidas   0/1158 | signo huérfano tras una fórmula   5/772 {'.': 3, ':': 2} en 5 semillas [24, 25, 40, 53, 59] | tras otro elemento 0/100 | renglón con espacio inicial tras una fórmula   0/534 | cifra-unidad 0/2403 | El/La 0/499 | fórmula partida por dentro 0 | desbordes 0 | tabla fuera de su caja 0 (tablas 100)
+      alto frente a base: más alto en 5, más bajo en 17, máx ±18 px

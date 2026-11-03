@@ -1,0 +1,78 @@
+246,247c246,247
+<          "totales. ", cap1(p$nomG), " recogió $", p$nG, " \\times ", p$aG, " = ", p$TG, "$", ED, "kilos y ", p$nomP,
+<          ", $", p$nP, " \\times ", p$aP, " = ", p$TP, "$", ED, "kilos: la diferencia es ", p$D, ED, "kilos.")),
+---
+>          "totales. ", cap1(p$nomG), " recogió <span style='white-space:nowrap'>$", p$nG, " \\times ", p$aG, " = ", p$TG, "$", ED, "kilos</span> y ", p$nomP,
+>          ", <span style='white-space:nowrap'>$", p$nP, " \\times ", p$aP, " = ", p$TP, "$", ED, "kilos</span>: la diferencia es ", p$D, ED, "kilos.")),
+258c258
+<          ED, "cursos, la diferencia entre los totales es $", p$TG, " - ", p$TP, " = ", p$D, "$", ED, "kilos.")),
+---
+>          ED, "cursos, la diferencia entre los totales es <span style='white-space:nowrap'>$", p$TG, " - ", p$TP, " = ", p$D, "$", ED, "kilos</span>.")),
+272,274c272,274
+<              " y olvida que en ", p$nomP, " cada curso recogió, en promedio, ", p$delta, ED, "kilos más: $", p$nP,
+<              " \\times ", p$delta, " = ", p$parcialP, "$", ED, "kilos que compensan parte de esa ventaja. La diferencia ",
+<              "es $", af$x, " - ", p$parcialP, " = ", p$D, "$", ED, "kilos.")
+---
+>              " y olvida que en ", p$nomP, " cada curso recogió, en promedio, ", p$delta, ED, "kilos más: <span style='white-space:nowrap'>$", p$nP,
+>              " \\times ", p$delta, " = ", p$parcialP, "$", ED, "kilos</span> que compensan parte de esa ventaja. La diferencia ",
+>              "es <span style='white-space:nowrap'>$", af$x, " - ", p$parcialP, " = ", p$D, "$", ED, "kilos</span>.")
+278,280c278,280
+<              if (p$k == 1) " más, que aporta $" else " más, que aportan $", p$k, " \\times ", p$aP, " = ",
+<              p$parcialP, "$", ED, "kilos. La diferencia es $",
+<              af$x, " - ", p$parcialP, " = ", p$D, "$", ED, "kilos.")
+---
+>              if (p$k == 1) " más, que aporta <span style='white-space:nowrap'>$" else " más, que aportan <span style='white-space:nowrap'>$", p$k, " \\times ", p$aP, " = ",
+>              p$parcialP, "$", ED, "kilos</span>. La diferencia es <span style='white-space:nowrap'>$",
+>              af$x, " - ", p$parcialP, " = ", p$D, "$", ED, "kilos</span>.")
+295,297c295,297
+<        explica = function(p, af) paste0("La cifra ", af$x, " es el total de ", p$nomG, ": $", p$nG, " \\times ",
+<          p$aG, " = ", p$TG, "$", ED, "kilos. No es la diferencia: falta restarle el total de ", p$nomP, ", y $", p$TG,
+<          " - ", p$TP, " = ", p$D, "$", ED, "kilos.")),
+---
+>        explica = function(p, af) paste0("La cifra ", af$x, " es el total de ", p$nomG, ": <span style='white-space:nowrap'>$", p$nG, " \\times ",
+>          p$aG, " = ", p$TG, "$", ED, "kilos</span>. No es la diferencia: falta restarle el total de ", p$nomP, ", y <span style='white-space:nowrap'>$", p$TG,
+>          " - ", p$TP, " = ", p$D, "$", ED, "kilos</span>.")),
+311c311
+<              "menos cursos: su total, $", p$nP, " \\times ", p$aP, " = ", p$TP, "$", ED, "kilos, es menor que el de ",
+---
+>              "menos cursos: su total, <span style='white-space:nowrap'>$", p$nP, " \\times ", p$aP, " = ", p$TP, "$", ED, "kilos</span>, es menor que el de ",
+316c316
+<              p$nomG, " ", participaron_txt(p$k), if (p$k == 1) " más, que aporta $" else " más, que aportan $",
+---
+>              p$nomG, " ", participaron_txt(p$k), if (p$k == 1) " más, que aporta <span style='white-space:nowrap'>$" else " más, que aportan <span style='white-space:nowrap'>$",
+318c318
+<              p$parcialG, "$", ED, "kilos. ", no_gano(p))
+---
+>              p$parcialG, "$", ED, "kilos</span>. ", no_gano(p))
+333,334c333,334
+<          " cada curso recogió, en promedio, ", p$delta, ED, "kilos más: $", p$nG, " \\times ", p$delta, " = ",
+<          p$parcialG, "$", ED, "kilos. ", no_gano(p))),
+---
+>          " cada curso recogió, en promedio, ", p$delta, ED, "kilos más: <span style='white-space:nowrap'>$", p$nG, " \\times ", p$delta, " = ",
+>          p$parcialG, "$", ED, "kilos</span>. ", no_gano(p))),
+575,577c575,577
+<   clave = paste0("Verdadero. ", cap1(nomG), " recogió $", d$nG, " \\times ", d$aG, " = ", d$TG, "$", ED, "kilos y ",
+<                  nomP, ", $", d$nP, " \\times ", d$aP, " = ", d$TP, "$", ED, "kilos: ganó por $", d$TG, " - ", d$TP, " = ",
+<                  d$D, "$", ED, "kilos."),
+---
+>   clave = paste0("Verdadero. ", cap1(nomG), " recogió <span style='white-space:nowrap'>$", d$nG, " \\times ", d$aG, " = ", d$TG, "$", ED, "kilos</span> y ",
+>                  nomP, ", <span style='white-space:nowrap'>$", d$nP, " \\times ", d$aP, " = ", d$TP, "$", ED, "kilos</span>: ganó por <span style='white-space:nowrap'>$", d$TG, " - ", d$TP, " = ",
+>                  d$D, "$", ED, "kilos</span>."),
+633,634c633,634
+<   cat("- ", cap1(conj$nombres[r]), ": $", n_fila[r], " \\times ", a_fila[r], " = ", n_fila[r] * a_fila[r],
+<       "$", ED, "kilos.\n", sep = "")
+---
+>   cat("- ", cap1(conj$nombres[r]), ": <span style='white-space:nowrap'>$", n_fila[r], " \\times ", a_fila[r], " = ", n_fila[r] * a_fila[r],
+>       "$", ED, "kilos</span>.\n", sep = "")
+636c636
+< cat("\nGanó ", nomG, ", con $", d$TG, " - ", d$TP, " = ", d$D, "$", ED, "kilos más. ",
+---
+> cat("\nGanó ", nomG, ", con <span style='white-space:nowrap'>$", d$TG, " - ", d$TP, " = ", d$D, "$", ED, "kilos</span> más. ",
+667,669c667,669
+< cat("En esta versión, ", nomG, " recogió $", d$nG, " \\times ", d$aG, " = ", d$TG, "$", ED, "kilos y ", nomP, " recogió $",
+<     d$nP, " \\times ", d$aP, " = ", d$TP, "$", ED, "kilos. La diferencia es $", d$TG, " - ", d$TP, " = ", d$D,
+<     "$", ED, "kilos a favor de ", nomG, ".\n\n", sep = "")
+---
+> cat("En esta versión, ", nomG, " recogió <span style='white-space:nowrap'>$", d$nG, " \\times ", d$aG, " = ", d$TG, "$", ED, "kilos</span> y ", nomP, " recogió <span style='white-space:nowrap'>$",
+>     d$nP, " \\times ", d$aP, " = ", d$TP, "$", ED, "kilos</span>. La diferencia es <span style='white-space:nowrap'>$", d$TG, " - ", d$TP, " = ", d$D,
+>     "$", ED, "kilos</span> a favor de ", nomG, ".\n\n", sep = "")

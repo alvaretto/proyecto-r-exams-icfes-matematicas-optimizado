@@ -1,0 +1,11 @@
+12a13
+>   OK: S7: en la canónica, el lado del distractor de G sale de sus cifras (x = 40, D = 20): «encima» 
+220a222
+>   OK: M33 (el feedback de la clave deja el punto fuera de la fórmula (revierte V1')) cazado por su sonda «L-6: el signo que sigue a la unidad de una fórmula va dentro de la fórmula» en la semilla 1
+231a234,235
+>   OK: S1-Sol signo: en las 100 versiones de E1, ninguna fórmula que cierra en su unidad deja fuera el signo que la sigue (0); unidad con el signo dentro en 100 de 100 versiones (730 en total) 
+>   OK: M32 (la lista de totales del procedimiento correcto saca el punto de la fórmula; el patrón aparece 1 vez): la sonda S1-Sol signo lo detecta en 200 casos, y S1-Sol y S1-Sol fórmula en 0 (cazado por su sonda) 
+279c283
+< EXIT=4
+---
+> exit=4

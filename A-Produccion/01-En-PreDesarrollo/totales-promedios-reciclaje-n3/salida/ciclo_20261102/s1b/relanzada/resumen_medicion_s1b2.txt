@@ -1,0 +1,39 @@
+Tanda S1b relanzada (2026-11-03) — medición pareada de V1′ (2a5e59a1), V1 (5cf5b12f), V2 corregida (0ba64a97) y la base
+(4cffbe8b), más e293d5c8 (aprobada) como referencia. Semillas 1..100. Renders: ../render_<md5>/ (render_versiones.R).
+Instrumento HTML: cap_s1b2.py (defectos 1 y 2 de cap_s1b_punt.py corregidos) + resumir_s1b2.py -> resumen_html_s1b2.txt.
+PDF: pdf_renglones_bbox.py (detector v2, por coordenadas) -> pdf_renglones_bbox.txt; control positivo sintético ->
+pdf_control_positivo_signo.txt. PDF y Moodle: medir_pdf_moodle2.py -> metricas_pdf_moodle_s1b2.json.
+
+HTML (MathML; 360 y 320 px; familia B, N = 100 completo, 1000 capturas, 0 errores, innerWidth 360 y 320)
+                                    e293d5c8     4cffbe8b     5cf5b12f V1   0ba64a97 V2   2a5e59a1 V1′
+  fórmula+unidad partidas   360     139/1158     132/1158        0/1158       0/1158        0/1158
+                            320     259/1158     259/1158        0/1158       0/1158        0/1158
+  signo huérfano tras fórmula 360     0/42         0/42         34/772        0/772         0/42
+  (todos los signos)        320       0/42         0/42          5/772        0/772         0/42
+  renglón con espacio       360       0/1264     132/1264        0/534        0/1692        0/885
+  inicial tras fórmula      320       0/1264     259/1264        0/534        0/1692        0/885
+  cifra-unidad (2403 = 2003 fuera de la tabla + 400 en celdas)  341 / 347 en e293; 0 en las demás (360 / 320)
+  El/La Bosque/Pradera (499)                                     74 / 55 en e293; 0 en las demás
+  fórmula partida por dentro · desbordes · tabla fuera de su caja: 0 en todas
+  V1, semillas con el signo solo: 360 [1,5,6,7,11,13,17,18,27,29,34,35,38,41,42,46,47,51,54,59,63,66,68,70,72,73,75,76,
+     77,81,86,95,96,97] (34; las mismas de la 6b de V1) · 320 [24,25,40,53,59] ('.' 3, ':' 2)
+  Denominador de «signo tras fórmula» en V1′: 42 fórmulas que NO cierran en unidad seguidas de «.» (fuera del alcance de V1′).
+
+PDF (exams2pdf de 100 ejercicios, 229-230 páginas; compila: \text{kilos.} 730 veces en el .tex de V1′)
+  renglones físicos que empiezan por la unidad tras una fórmula: e293 122 (control) · 4cffbe8b, V1, V2, V1′: 0
+  renglones físicos que empiezan por un signo: 0 en las cinco · control positivo sintético (V1 con \newline antes del
+     punto de la lista de totales, 10 ejercicios): 20 de 20
+  El flujo de pdftotext sin coordenadas daba 62 (y la v1 del detector por coordenadas 38) en las cinco versiones: la
+     negrita «**total**.» es una fuente Type 3 con otra caja vertical y se separaba de su renglón. Era la extracción.
+  \pandocbounded: solo la definición \providecommand de la plantilla.
+
+Moodle (exams2moodle, n = 100, set.seed(1); MathJax \(…\); 100 preguntas en las cinco)
+                                        e293   4cffbe8b   V1    V2    V1′
+  <math>                                  0       0        0     0     0
+  unidad dentro de \(…\)                  0       0      1160    0   1160
+  unidad y signo dentro de \(…\)          0       0        0     0    733
+  signo tras \)</span> de fórmula con unidad  0   0      733     0      0   (V1 = control positivo)
+  unidad fuera tras \)</span>          1160    1160       0   1160     0   (V2: dentro de span nowrap, 1160)
+  signo tras \)</span> sin unidad (fuera del alcance): 40 en e293, 4cffbe8b, V2 y V1′; 773 = 733 + 40 en V1.
+
+VEREDICTO: V1′ cierra en HTML, PDF y Moodle (0 en cada métrica), con controles positivos que ven cada defecto.

@@ -1,0 +1,24 @@
+semillas: 1000 1000 · modo: v1p 
+.Random.seed idéntico al final de data_generation: 1000 de 1000 
+texto enunciado idéntico byte a byte: 1000 / 1000 · idéntico tras normalizar la posición del signo: 1000 / 1000
+texto opciones  idéntico byte a byte: 1000 / 1000 · idéntico tras normalizar la posición del signo: 1000 / 1000
+texto solucion  idéntico byte a byte:    0 / 1000 · idéntico tras normalizar la posición del signo: 1000 / 1000
+texto feedback  idéntico byte a byte:    0 / 1000 · idéntico tras normalizar la posición del signo: 1000 / 1000
+objeto tabla_md   idéntico: 1000 / 1000
+objeto enunciado  idéntico: 1000 / 1000
+objeto opciones   idéntico: 1000 / 1000
+objeto feedback   idéntico: 1000 / 1000
+objeto sol        idéntico: 1000 / 1000
+objeto rama       idéntico: 1000 / 1000
+objeto canon      idéntico: 1000 / 1000
+objeto nomG       idéntico: 1000 / 1000
+objeto conj_filas idéntico: 1000 / 1000
+TEXTO EMITIDO, signo tras el cierre de una fórmula que termina en su unidad: A 7298 · B 0
+TEXTO EMITIDO, unidad con el signo dentro de la fórmula: A 0 · B 7298 (B: en 1000 de 1000 versiones)
+TEXTO EMITIDO, fórmula que cierra antes de su unidad («$» + espacio + unidad): A 0 · B 0
+B, lo que sigue al cierre «$» de una fórmula que termina en su unidad (» marca el cierre):
+
+   »  » y  » L  » a  » g  » m  » l  » N  » e  » q 
+3799 2201 2009 1000 1000 1000  201  176  113   76 
+Informativo: fórmulas que NO terminan en unidad seguidas de un signo: A 425 · B 425
+U+00A0 restantes (todos los textos): A 27141 · B 27141 

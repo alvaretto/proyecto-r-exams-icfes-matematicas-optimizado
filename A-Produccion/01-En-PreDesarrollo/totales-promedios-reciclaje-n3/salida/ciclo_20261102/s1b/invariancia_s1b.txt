@@ -1,0 +1,13 @@
+semillas: 1000 1000 
+.Random.seed idéntico al final de data_generation: 1000 de 1000 
+texto enunciado idéntico byte a byte: 1000 / 1000 · idéntico tras pasar la unidad a la fórmula: 1000 / 1000
+texto opciones  idéntico byte a byte: 1000 / 1000 · idéntico tras pasar la unidad a la fórmula: 1000 / 1000
+texto solucion  idéntico byte a byte:    0 / 1000 · idéntico tras pasar la unidad a la fórmula: 1000 / 1000
+texto feedback  idéntico byte a byte:    0 / 1000 · idéntico tras pasar la unidad a la fórmula: 1000 / 1000
+tabla_md idéntica byte a byte: 1000 
+enunciado (objeto) idéntico: 1000 
+opciones (objeto) idénticas byte a byte: 1000 
+sol, rama, canónica idénticas: 1000 
+Solution + feedback, fórmula que cierra antes de su unidad («$» + espacio + unidad): antes 11575 (control positivo) · después 0
+Solution + feedback, unidad dentro de la fórmula: antes 0 · después 11575
+U+00A0 restantes (total, todos los textos): antes 38716 · después 27141 

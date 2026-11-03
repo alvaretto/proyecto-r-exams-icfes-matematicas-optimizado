@@ -1,0 +1,60 @@
+{
+ "ref": {
+  "paginas": 230,
+  "renglones_que_empiezan_por_unidad": 390,
+  "tras_formula": 117,
+  "tras_cifra": 117,
+  "formula_unidad_juntas": 1158
+ },
+ "base": {
+  "paginas": 229,
+  "renglones_que_empiezan_por_unidad": 151,
+  "tras_formula": 0,
+  "tras_cifra": 0,
+  "formula_unidad_juntas": 1158,
+  "moodle": {
+   "math_inline_mathjax": 1307,
+   "mathml": 0,
+   "cierre_fuera_con_ED": 1160,
+   "cierre_fuera_espacio": 0,
+   "unidad_dentro": 0,
+   "span_nowrap": 0,
+   "nowrap_con_formula": 0,
+   "preguntas": 100
+  }
+ },
+ "v1": {
+  "paginas": 229,
+  "renglones_que_empiezan_por_unidad": 151,
+  "tras_formula": 0,
+  "tras_cifra": 0,
+  "formula_unidad_juntas": 1158,
+  "moodle": {
+   "math_inline_mathjax": 1307,
+   "mathml": 0,
+   "cierre_fuera_con_ED": 0,
+   "cierre_fuera_espacio": 0,
+   "unidad_dentro": 1160,
+   "span_nowrap": 0,
+   "nowrap_con_formula": 0,
+   "preguntas": 100
+  }
+ },
+ "v2": {
+  "paginas": 229,
+  "renglones_que_empiezan_por_unidad": 151,
+  "tras_formula": 0,
+  "tras_cifra": 0,
+  "formula_unidad_juntas": 1158,
+  "moodle": {
+   "math_inline_mathjax": 1307,
+   "mathml": 0,
+   "cierre_fuera_con_ED": 1160,
+   "cierre_fuera_espacio": 0,
+   "unidad_dentro": 0,
+   "span_nowrap": 1130,
+   "nowrap_con_formula": 1130,
+   "preguntas": 100
+  }
+ }
+}

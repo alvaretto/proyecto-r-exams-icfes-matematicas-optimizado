@@ -1380,3 +1380,139 @@ semillas pareadas contra `e293d5c8`, a 360 y 320 px: 400 capturas por CDP, con `
     Cambiar eso toca la Solution, así que lo decide el profesor.
 - **BAJO.** En 23 semillas a 360 px y en 1 a 320 px hay uno o dos renglones más («15 kilos» pasa entero al renglón
   siguiente). Es el efecto esperado, sin desbordes.
+
+### Ciclo 2026-11-02 (SCHOICE), tanda S1b
+
+> La hizo el `orquestador-schoice` en dos sesiones. La primera, el 2026-11-02, se interrumpió a las 20:34, sin reporte
+> final y a mitad de una medición. La relanzada, el 2026-11-03, la terminó. Evidencia: `salida/ciclo_20261102/s1b/`; la
+> de la relanzada, en `s1b/relanzada/`.
+
+**La primera S1b (2026-11-02, decisión del profesor «Arreglarlo ahora»).**
+- Aplicó V1: cuando la cifra cierra una fórmula, la unidad va dentro de ella, `$… = T\ \text{kilos}$`, en 20 sitios.
+  Así quedó el md5 `5cf5b12f02e942091a3af899a81a2d6c`, con la guarda «L-6: la unidad que cierra una fórmula va dentro de la
+  fórmula», M30, M31 y la sonda S1-Sol fórmula. Selló los pasos 3 a 6.
+- **6b de V1: APTO_CON_OBSERVACIONES** (`s1b/6b/informe_6b_v1_5cf5b12f.md`).
+  - MEDIO: cuando la fórmula queda al final del renglón, el punto baja solo al siguiente: 34 semillas a 360 px y 5 a 320 px,
+    más 2 «:». Chromium admite un corte entre el `<math>`, que es atómico, y el signo que lo sigue.
+  - BAJO: «kilos» sale con la letra de la fórmula.
+  - BAJO: la fórmula entera queda en un renglón propio.
+- La medición posterior (V2 y V1′) quedó sin cerrar, y su instrumento tenía dos defectos:
+  1. «Fórmula + unidad partidas» no reconocía la unidad con el signo dentro y contaba sobre 428, no sobre 1158.
+  2. El detector de huérfanos solo miraba `[.,:;]`.
+
+**Decisión del profesor (2026-11-03).** Respuesta literal: «V1′ (Recomendada)». V1′ es V1 con el signo que sigue a la
+unidad dentro de la fórmula: `$… = T\ \text{kilos.}$`. Se mide en HTML, PDF y Moodle, pareada con V1 y V2, y se aplica solo
+si cierra en los tres. **Ampliación**, con respuesta literal «En esta S1b (Recomendada)»: en la misma reapertura se quita la
+asignación muerta de `lado_gdis` en la canónica. Es el cierre de S7, el código muerto que quedaba.
+
+**Medición pareada** (semillas 1 a 100; resumen en `relanzada/resumen_medicion_s1b2.txt`). El instrumento corregido es
+`relanzada/cap_s1b2.py`. Sigue en HTML.
+
+| HTML, 360 / 320 px | e293d5c8 | 4cffbe8b | V1 | V2 | V1′ |
+|---|---|---|---|---|---|
+| fórmula + unidad partidas (de 1158) | 139 / 259 | 132 / 259 | 0 / 0 | 0 / 0 | **0 / 0** |
+| signo huérfano tras una fórmula, todos los signos | 0 / 0 | 0 / 0 | **34 / 5** | 0 / 0 | **0 / 0** |
+| renglón que empieza con un espacio tras una fórmula | 0 / 0 | 132 / 259 | 0 / 0 | 0 / 0 | **0 / 0** |
+| cifra-unidad (de 2403) · El/La (de 499) | 341 / 347 · 74 / 55 | 0 · 0 | 0 · 0 | 0 · 0 | **0 · 0** |
+
+- En V1 el signo queda solo en las mismas semillas que vio su 6b.
+- Desbordes, tablas fuera de su caja y fórmulas partidas por dentro: 0 en las cinco.
+- **PDF** (100 ejercicios). Se mide con coordenadas, con `relanzada/pdf_renglones_bbox.py`:
+  - Renglones que empiezan por la unidad tras una fórmula: 122 en e293d5c8 y 0 en las demás.
+  - Renglones que empiezan por un signo: 0 en las cinco. El control positivo sintético, un salto de renglón forzado ante el
+    punto, da 20 de 20.
+  - `pdftotext` sin coordenadas daba 62 en las cinco, y la primera versión del detector 38. La causa es la negrita
+    «**total**.»: es una fuente Type 3 con otra caja vertical, y la extracción la separaba de su renglón. El PDF está bien.
+  - Compila con `\text{kilos.}` (730 veces).
+- **Moodle** (n = 100, `set.seed(1)`):
+  - V1′: 733 unidades con el signo dentro de `\(…\)`, 0 signos tras el cierre de una fórmula con unidad y 0 `<math>`.
+  - V1 es el control positivo: 733 signos fuera.
+- **V1′ cierra en los tres formatos.**
+
+**Aplicación.**
+- `.Rmd` md5 **`6c9d77058b32fdd8291a1ebaab581c8f`**. Son 14 sitios: la cadena `\\ \\text{kilos}$` aparece 21 veces en el
+  fuente de V1.
+  - 1 es el comentario de cabecera (línea 26). Por eso V1 tocó 20 sitios.
+  - 6 van seguidos de texto sin signo: « y », « que compensan», « más», « a favor de».
+  - 14 llevan el signo pegado.
+  - Ningún signo viene en otra cadena del `paste0`/`cat` (`relanzada/generar_v1p2.py`).
+- Prueba sobre el texto emitido, semillas 1 a 1000: los signos tras el cierre de una fórmula con unidad bajan de 7298 a 0.
+- Además, la guarda «L-6: el signo que sigue a la unidad de una fórmula va dentro de la fórmula» (endurecer) y S7.
+
+**Invariancia** (`relanzada/invariancia_*.txt`, semillas 1 a 1000):
+- `.Random.seed` idéntico en las 1000.
+- Enunciado, opciones y tabla idénticos byte a byte.
+- Solution y feedback idénticos tras normalizar la posición del signo.
+- La V1′ medida y la aplicada coinciden byte a byte.
+- Quitar `lado_gdis` no cambia ni un byte de la salida.
+
+**Verificador** (md5 `bd6eda09d54c8dae355371e291df95f6`, `relanzada/verificar_espacio_s1b2.txt`):
+- Exit 4, con 37 canales (13 de «O-1 corregido» y 24 de la decisión 2 a), 0 fallos y 0 pendientes. Ninguna cifra firmada se
+  mueve: el diff con la salida de V1 solo añade líneas.
+- Cambios:
+  - **S1-Sol signo**, con su control positivo: el signo dentro aparece en 100 de 100 versiones.
+  - **M32**, cazado por esa sonda en 200 casos; S1-Sol y S1-Sol fórmula no lo ven.
+  - **M33**, cazado por la guarda nueva.
+  - **M30**, adaptado a `kilos.` y cazado.
+  - **M31**, sin cambios y cazado.
+  - El control positivo de S1-Sol fórmula había bajado de 1158 a 428 y seguía en OK. Ahora cuenta la unidad con o sin signo.
+  - **S7:** `rasgos()` calcula el lado de la canónica a partir de sus cifras. Un `ok()` comprueba que da «encima» (x = 40,
+    D = 20).
+- La salida con y sin S7 es idéntica línea a línea.
+
+**El CLOZE.** Hasta el re-empalme, `cloze/verificar_espacio_cloze.R` no puede correr la canónica contra este `.Rmd`, porque
+`rec()` (línea 117) lee `lado_gdis`. Ya estaba desfasado desde S1: su E1 no coincide. Por F-2, V1′ rige también la Parte 1.
+
+**Workflow.**
+- Reapertura #8, 2026-11-03 06:59:39.
+- Sellos, cada uno con su propio `complete` y después de su artefacto: `generacion_rmd` a las 07:04:12, `retroalimentacion`
+  a las 07:04:21, `renderizado_4_formatos` a las 07:06:32 y `arsenal_post_render` a las 07:06:40. Quedan 6 de 11.
+- El render está en `s1b/render_6c9d7705/`: HTML, PDF, DOCX, NOPS y Moodle n = 100.
+- Arsenal: 0 errores y 7 advertencias heurísticas. La FASE 2G da 100/100 y la 2H, 0 anomalías.
+
+**Candidata a cláusula de L-6, pendiente de la firma del profesor** (la tabla firmada de L-6 no se toca):
+
+| Exige | Guarda | Mutante |
+|---|---|---|
+| Una fórmula que cierra en su unidad («kilos», «curso(s)») lleva dentro el signo que la sigue (`. , : ; ! ? ) ] » ”` y `…`): `$… = T\ \text{kilos.}$` | `stopifnot` «L-6: el signo que sigue a la unidad de una fórmula va dentro de la fórmula» (feedback y análisis de los distractores) y sonda S1-Sol signo de `verificar_espacio.R` (opciones, Solution y feedback emitidos; control positivo: el signo dentro en todas las versiones) | M33 (el feedback de la clave deja el punto fuera) y M32 (la lista de totales de la Solution lo saca) |
+
+**¿Ley local o regla?**
+- Local: la cláusula de arriba. Endurece, y la firma el profesor.
+- Del repo, candidata:
+  - Un control positivo con umbral bajo (`>= N`) no ve que su cuenta cae cuando cambia el texto que cuenta. Le pasó al
+    instrumento HTML y al verificador.
+  - `pdftotext` separa de su renglón la negrita en fuente Type 3. Una medición de renglones del PDF va por coordenadas y
+    por solape vertical.
+  - Las dos son generales e invisibles a los gates. Tocan `.claude/`, así que lo decide el profesor.
+
+**6b pareada de la tanda S1b relanzada, recibida** (`auditor-visual-html`, sin `name:`): **APTO_CON_OBSERVACIONES**, sin
+CRÍTICOS, ALTOS ni MEDIOS. Reporte íntegro: `salida/ciclo_20261102/s1b/6b/relanzada/informe_6b_6c9d7705_completo.md`.
+- N = 100 semillas por versión y ancho, a 360 y 320 px. El HTML final es idéntico byte a byte al de la V1′ medida
+  (`cmp`, 100 de 100).
+- Frente a 4cffbe8b, e293d5c8 y 5cf5b12f, V1′ da 0 en las seis métricas. Los controles positivos reproducen sus cifras: 132
+  y 259, 34 y 5, y 341/74 y 347/55.
+- Leyó 9 imágenes a resolución completa: 1 par y 8 recortes, de las semillas 1, 5 y 7 a 360 px y 24, 25, 40, 53 y 59 a
+  320 px. En V1 se ve el signo solo en las 8 semillas; en el final, en ninguna.
+- BAJOS:
+  - «kilos.» sale con la letra de la fórmula (ya declarado en V1).
+  - La fórmula pasa entera al renglón siguiente y deja uno corto antes.
+  - A 320 px, «= 210 kilos.» queda cerca del borde derecho (semilla 53), sin desborde medido.
+
+**Verificación del coordinador (2026-11-03, sesión `42032564`), independiente de los scripts de la tanda**
+(`salida/ciclo_20261102/s1b/relanzada/coordinador/`):
+- `verificar_espacio.R`, repetido: exit 4 en 110 s, con las 283 líneas idénticas a `relanzada/verificar_espacio_s1b2.txt`
+  (sin contar la línea de cierre).
+- Invariancia con un script propio (`invariancia_coordinador.R`), del `.Rmd` de HEAD (`4cffbe8b`) frente a `6c9d7705`, en
+  las semillas 1 a 1000:
+  - `.Random.seed` idéntico en las 1000;
+  - objetos, enunciado y opciones idénticos en las 1000;
+  - Solution y feedback idénticos en las 1000, tras devolver la unidad y el signo a la forma vieja;
+  - 0 fórmulas que cierran antes de su unidad y 0 signos fuera;
+  - 11 575 unidades dentro de la fórmula (el control viejo da 11 575 fuera), 7 298 de ellas con el signo dentro.
+- Diff del `.Rmd`, revisado. Solo cambian:
+  - cadenas dentro de los chunks: 20 cierres, 14 de ellos con signo;
+  - S7: 4 líneas sustituidas por 2 de comentario;
+  - dos `stopifnot` nuevos.
+  Ninguna prosa Markdown cambia.
+- Corrección al reporte de la tanda: `salida/` sí está ignorado (`.gitignore`, `**/salida/`). La evidencia se añade con
+  `git add -f`, sin los `render_*`, las `shots/` ni perfiles de Chromium.

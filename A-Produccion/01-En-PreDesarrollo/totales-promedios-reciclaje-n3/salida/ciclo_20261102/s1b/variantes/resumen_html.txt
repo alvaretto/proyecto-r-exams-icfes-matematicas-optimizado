@@ -1,0 +1,17 @@
+errores de captura: 0  iw: [320, 360]
+--- 360 px
+ref   formula+unidad partidas 139/1158 (fuera 139/1158, dentro 0/0, math en >1 caja 0) | cifra-unidad texto 341/2003 | El/La 74/475 | desbordes 0 | tabla fuera 0 | nowrap 0
+       alto vs base: más alto en 0, más bajo en 23, igual en 77; máx 0 px, mín -36 px
+base  formula+unidad partidas 132/1158 (fuera 132/1158, dentro 0/0, math en >1 caja 0) | cifra-unidad texto 0/2003 | El/La 0/475 | desbordes 0 | tabla fuera 0 | nowrap 0
+v1    formula+unidad partidas   0/1158 (fuera 0/0, dentro 0/1158, math en >1 caja 0) | cifra-unidad texto 0/2003 | El/La 0/475 | desbordes 0 | tabla fuera 0 | nowrap 0
+       alto vs base: más alto en 34, más bajo en 29, igual en 37; máx 18 px, mín -18 px
+v2    formula+unidad partidas   0/1158 (fuera 0/1158, dentro 0/0, math en >1 caja 0) | cifra-unidad texto 0/2003 | El/La 0/475 | desbordes 0 | tabla fuera 0 | nowrap 1141
+       alto vs base: más alto en 45, más bajo en 0, igual en 55; máx 18 px, mín 0 px
+--- 320 px
+ref   formula+unidad partidas 259/1158 (fuera 259/1158, dentro 0/0, math en >1 caja 0) | cifra-unidad texto 347/2003 | El/La 55/475 | desbordes 0 | tabla fuera 0 | nowrap 0
+       alto vs base: más alto en 0, más bajo en 1, igual en 99; máx 0 px, mín -18 px
+base  formula+unidad partidas 259/1158 (fuera 259/1158, dentro 0/0, math en >1 caja 0) | cifra-unidad texto 0/2003 | El/La 0/475 | desbordes 0 | tabla fuera 0 | nowrap 0
+v1    formula+unidad partidas   0/1158 (fuera 0/0, dentro 0/1158, math en >1 caja 0) | cifra-unidad texto 0/2003 | El/La 0/475 | desbordes 0 | tabla fuera 0 | nowrap 0
+       alto vs base: más alto en 5, más bajo en 17, igual en 78; máx 18 px, mín -18 px
+v2    formula+unidad partidas   3/1158 (fuera 3/1158, dentro 0/0, math en >1 caja 0) | cifra-unidad texto 0/2003 | El/La 0/475 | desbordes 0 | tabla fuera 0 | nowrap 1141
+       alto vs base: más alto en 6, más bajo en 0, igual en 94; máx 18 px, mín 0 px

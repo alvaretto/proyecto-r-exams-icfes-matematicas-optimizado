@@ -1,0 +1,9 @@
+semillas: 1000 · errores de ejecución: 0
+.Random.seed idéntico tras data_generation: 1000 / 1000
+objetos (opciones, sol, rama, es_canonica, tabla_md, enunciado) idénticos: 1000 / 1000
+texto emitido, enunciado idéntico byte a byte: 1000 / 1000 · opciones: 1000 / 1000
+Solution: byte a byte 0 / 1000 · tras volver a la forma vieja 1000 / 1000
+feedback: byte a byte 0 / 1000 · tras volver a la forma vieja 1000 / 1000
+nuevo: fórmula que cierra antes de su unidad 0 · signo fuera tras \text{unidad}$ 0
+nuevo: unidad dentro de la fórmula 11575 (con signo dentro 7298) · control viejo, fórmula que cierra antes de la unidad: 11575
+exit=0 · 21 s

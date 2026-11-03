@@ -1,0 +1,5 @@
+errores de captura: 0  iw: [320, 360]
+--- 360 px
+v2    formula+unidad partidas   0/1158 (fuera 0/1158, dentro 0/0, math en >1 caja 0) | cifra-unidad texto 0/2003 | El/La 0/475 | desbordes 0 | tabla fuera 0 | nowrap 1158
+--- 320 px
+v2    formula+unidad partidas   0/1158 (fuera 0/1158, dentro 0/0, math en >1 caja 0) | cifra-unidad texto 0/2003 | El/La 0/475 | desbordes 0 | tabla fuera 0 | nowrap 1158

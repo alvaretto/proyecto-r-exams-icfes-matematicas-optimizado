@@ -1,0 +1,1 @@
+cmp identicos=100 distintos=0

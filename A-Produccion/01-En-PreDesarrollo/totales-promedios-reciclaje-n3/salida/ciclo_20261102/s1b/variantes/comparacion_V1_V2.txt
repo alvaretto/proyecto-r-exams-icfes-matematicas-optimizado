@@ -1,0 +1,30 @@
+Tanda S1b (2026-11-02) — V1 frente a V2, pareadas sobre el .Rmd 4cffbe8b (solo cambian los 20 cierres «"$", ED, "kilos»)
+V1: unidad dentro de la fórmula, $… = T\ \text{kilos}$  ·  V2: <span style='white-space:nowrap'> desde el $ que abre hasta la unidad
+Generador: generar_variantes.py · renders: render_variantes.R · métricas: cap_s1b.py (../), medir_pdf_moodle.py
+
+HTML (exams2html, MathML; semillas 1..100 x 360 y 320 px; familia B, N = 100 completo)
+  fórmula + unidad partidas            360 px          320 px
+  e293d5c8 (aprobada)                  139/1158        259/1158
+  4cffbe8b (S1)                        132/1158        259/1158   (coincide con la 6b de S1: el instrumento es el mismo)
+  V1                                     0/1158          0/1158   (la <math> no se parte en ninguna: 0 con más de una caja)
+  V2, 1.ª generación                     0/1158          3/1158   (defecto del GENERADOR: 17 sitios sin span, las ramas if de «aporta $»)
+  V2 corregida                           0/1158          0/1158   (1158 span nowrap)
+  cifra-unidad en texto y El/La: 0 en las cuatro salvo e293d5c8 · desbordes 0 · tabla fuera de su caja 0
+  alto frente a 4cffbe8b: V1 más alto en 34 / más bajo en 29 (360), 5 / 17 (320); V2 más alto en 45 (360), 6 (320); máx ±18 px
+
+PDF (exams2pdf de 100 ejercicios en un PDF, semillas 1..100; pdftotext)
+  renglones que empiezan por la unidad tras una fórmula / tras una cifra
+  e293d5c8: 117 / 117 (control positivo)  ·  4cffbe8b: 0 / 0  ·  V1: 0 / 0  ·  V2: 0 / 0   (229-230 páginas)
+  En el PDF el residuo no existía: pandoc emite «$…$~kilos» y TeX no corta tras el cierre de la fórmula seguido de penalización.
+  V2 en PDF = 4cffbe8b: pandoc descarta los atributos del span. V1 compila: \text{} viene de amsmath en la plantilla.
+
+Moodle (exams2moodle, n = 100, set.seed(1); MathJax: <span class="math inline">\(…\)</span>, 0 <math>)
+  4cffbe8b: 1160 cierres «\)</span>» + U+00A0 + unidad (el mismo punto de corte que en HTML)
+  V1: 1160 unidades dentro de \(…\), 0 cierres fuera. MathJax 3.2.2 (el del Moodle del colegio) no parte las fórmulas en línea.
+  V2 corregida: el XML conserva style="white-space:nowrap" en los 1160; que lo conserve el purificador HTML del servidor al
+      mostrar la pregunta es NO VERIFICABLE desde aquí (el servidor respondió HTTP 530 en S1).
+
+Decisión: cierran las dos en HTML y PDF; en Moodle, V1 no depende del servidor y V2 sí. Por la regla del profesor
+(«si cierran las dos, V1, porque no mete HTML crudo») -> V1.
+Coste declarado de V1: «kilos» dentro de la fórmula sale con la fuente matemática (serif) en HTML y en MathJax; en el PDF,
+\text usa la fuente del texto.

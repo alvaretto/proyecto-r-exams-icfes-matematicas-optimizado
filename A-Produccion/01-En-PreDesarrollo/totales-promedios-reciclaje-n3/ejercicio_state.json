@@ -3,7 +3,7 @@
   "ejercicio": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1",
   "tipo": "schoice",
   "timestamp_inicio": "2026-10-29T06:13:12.230996-05:00",
-  "timestamp_ultima_actualizacion": "2026-11-02T19:54:11.260700-05:00",
+  "timestamp_ultima_actualizacion": "2026-11-03T07:06:40.412209-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -27,24 +27,24 @@
     },
     "generacion_rmd": {
       "completado": true,
-      "timestamp": "2026-11-02T19:51:22.766001-05:00",
+      "timestamp": "2026-11-03T07:04:12.324962-05:00",
       "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd",
-      "nota": "Ciclo 2026-11-02, tanda S1. .Rmd md5 4cffbe8b1924b749c36d2b92369e4a83: S1 (espacio duro ED, L-6), S5, S6 y S7 (lado_gdis se conserva en la canónica: lo leen rasgos() y rec() del CLOZE). Artefactos: salida/ciclo_20261102/invariancia_s1_s7.txt (frente a e293d5c8: .Random.seed idéntico 1000/1000 y texto idéntico salvo el espacio; frente a 5f6f3cf3: idéntico byte a byte 1000/1000) y verificar_espacio_s1_final.txt (verificador b9ed1d78…, exit 4, 37 canales cubiertos, 0 fallos, 0 pendientes; M1-M29, MP1 y MP2 cazados por su sonda). Ortografía: 0 errores."
+      "nota": "Tanda S1b relanzada (2026-11-03). .Rmd md5 6c9d77058b32fdd8291a1ebaab581c8f (desde 5cf5b12f): V1′ en los 14 sitios donde una fórmula que cierra en «kilos» va seguida de un signo, guarda «L-6: el signo que sigue a la unidad…» y S7 (fuera lado_gdis de la canónica). Invariancia 1000/1000 (salida/ciclo_20261102/s1b/relanzada/invariancia_*.txt). verificar_espacio.R md5 bd6eda09…: exit 4, 37 canales, 0 fallos, 0 pendientes; M30-M33 cazados por su sonda (relanzada/verificar_espacio_s1b2.txt)"
     },
     "retroalimentacion": {
       "completado": true,
-      "timestamp": "2026-11-02T19:51:27.599037-05:00",
-      "nota": "Ciclo 2026-11-02, tanda S1. Solution y feedback por opción del md5 4cffbe8b…: idénticos a e293d5c8 salvo el espacio duro en 1000/1000 semillas e idénticos byte a byte a 5f6f3cf3 (salida/ciclo_20261102/invariancia_s1_s7.txt); 0 cifras o nombres partidos por un espacio normal (sonda S1-Sol, N = 100, y M27 cazado: verificar_espacio_s1_final.txt); regla #19: 0 coincidencias de letra o «Opción [A-D]» en la Solution; ortografía: 0 errores."
+      "timestamp": "2026-11-03T07:04:21.803994-05:00",
+      "nota": "Tanda S1b relanzada, .Rmd md5 6c9d77058b32fdd8291a1ebaab581c8f. La Solution y el feedback solo cambian la posición del signo que sigue a la unidad de una fórmula: idénticos a los de 5cf5b12f tras normalizarla en 1000/1000 semillas (relanzada/invariancia_v1_a_v1p.txt); las seis secciones metacognitivas, sin cambios. Regla #19: 0 coincidencias (relanzada/regla19_6c9d7705.txt). Sonda S1-Sol signo: 0 signos fuera; unidad con el signo dentro en 100/100 versiones"
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-11-02T19:53:54.522233-05:00",
-      "nota": "Ciclo 2026-11-02, tanda S1, md5 4cffbe8b…: salida/ciclo_20261102/render_4cffbe8b/ (HTML 3, PDF 3 examen + 3 solución, DOCX 3, NOPS 2; semillas 7 canónica, 6 «El Bosque», 3) y moodle_100/ (100 XML, semillas 1-100, con generar_moodle_100.R copiado con el md5 nuevo). Validación realista: \\pandocbounded 0 en exercise1.tex (PDF y NOPS); \\LTcaptype presente y guarda c@none en el .Rmd (FASE 2K OK); PDF de la canónica revisado a ojo en sus 4 páginas, también la Solution (pdf_canonica_montaje.png)."
+      "timestamp": "2026-11-03T07:06:32.232723-05:00",
+      "nota": "Tanda S1b relanzada, .Rmd md5 6c9d77058b32fdd8291a1ebaab581c8f. salida/ciclo_20261102/s1b/render_6c9d7705/: HTML 3, PDF 3 (3 páginas cada uno), DOCX 3, NOPS 2 (4 páginas) y Moodle n = 100 (100 preguntas, 0 <math>, 733 unidades con el signo dentro de \\(…\\), 0 signos tras el cierre). \\pandocbounded: 0 usos (solo la definición de la plantilla). \\LTcaptype con la guarda del contador none en el .Rmd. Las 3 páginas del PDF de la versión 1 se revisaron a ojo. Verificaciones: relanzada/render_6c9d7705_verificaciones.txt"
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-11-02T19:54:11.260700-05:00",
-      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1/20261102-195156-185511/informe.txt · md5 4cffbe8b1924b749c36d2b92369e4a83 · 0 errores / 7 advertencias (las heurísticas de siempre: Tarea, tabla de metadatos, descripción, análisis de distractores, patrón ICFES, letra_correcta, PDF de 2B); FASE 2G 100/100, 2H 0 anomalías, 2O sin glifos. Corrida anterior con 1 error en 2D (identificador separacion en un comentario), corregido antes de esta."
+      "timestamp": "2026-11-03T07:06:40.412209-05:00",
+      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1/20261103-070521-197492/informe.txt (copia en salida/ciclo_20261102/s1b/relanzada/arsenal_6c9d7705_informe.txt) · md5 6c9d77058b32fdd8291a1ebaab581c8f · 0 errores / 7 advertencias (heurísticas, las mismas de S1) · 2G 100/100 · 2H 0 anomalías · 2J, 2K, 2O OK · 2B y 2I sin PDF/.tex localizable por el hook (dir= en variable): comprobados a mano en el paso 5"
     },
     "detractor_fase2c": {
       "completado": false,
@@ -343,6 +343,68 @@
         "retroalimentacion": {
           "timestamp": "2026-11-02T19:48:30.792040-05:00",
           "nota": "Ciclo 2026-11-02, tanda S1. Solution y feedback por opción del md5 5f6f3cf3…: idénticos a e293d5c8 salvo el espacio duro en 1000/1000 semillas (salida/ciclo_20261102/invariancia_s1_s7.txt); 0 cifras o nombres partidos por un espacio normal (sonda S1-Sol, N = 100, y M27 cazado: verificar_espacio_s1_decision_a.txt); regla #19: 0 coincidencias de letra o «Opción [A-D]» en la Solution."
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-02T20:22:50.018037-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Ciclo 2026-11-02, tanda S1b: residuo fórmula + unidad de la 6b (decisión del profesor «Arreglarlo ahora»)",
+      "reporte": null,
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-11-02T19:51:22.766001-05:00",
+          "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd",
+          "nota": "Ciclo 2026-11-02, tanda S1. .Rmd md5 4cffbe8b1924b749c36d2b92369e4a83: S1 (espacio duro ED, L-6), S5, S6 y S7 (lado_gdis se conserva en la canónica: lo leen rasgos() y rec() del CLOZE). Artefactos: salida/ciclo_20261102/invariancia_s1_s7.txt (frente a e293d5c8: .Random.seed idéntico 1000/1000 y texto idéntico salvo el espacio; frente a 5f6f3cf3: idéntico byte a byte 1000/1000) y verificar_espacio_s1_final.txt (verificador b9ed1d78…, exit 4, 37 canales cubiertos, 0 fallos, 0 pendientes; M1-M29, MP1 y MP2 cazados por su sonda). Ortografía: 0 errores."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-11-02T19:51:27.599037-05:00",
+          "nota": "Ciclo 2026-11-02, tanda S1. Solution y feedback por opción del md5 4cffbe8b…: idénticos a e293d5c8 salvo el espacio duro en 1000/1000 semillas e idénticos byte a byte a 5f6f3cf3 (salida/ciclo_20261102/invariancia_s1_s7.txt); 0 cifras o nombres partidos por un espacio normal (sonda S1-Sol, N = 100, y M27 cazado: verificar_espacio_s1_final.txt); regla #19: 0 coincidencias de letra o «Opción [A-D]» en la Solution; ortografía: 0 errores."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-11-02T19:53:54.522233-05:00",
+          "nota": "Ciclo 2026-11-02, tanda S1, md5 4cffbe8b…: salida/ciclo_20261102/render_4cffbe8b/ (HTML 3, PDF 3 examen + 3 solución, DOCX 3, NOPS 2; semillas 7 canónica, 6 «El Bosque», 3) y moodle_100/ (100 XML, semillas 1-100, con generar_moodle_100.R copiado con el md5 nuevo). Validación realista: \\pandocbounded 0 en exercise1.tex (PDF y NOPS); \\LTcaptype presente y guarda c@none en el .Rmd (FASE 2K OK); PDF de la canónica revisado a ojo en sus 4 páginas, también la Solution (pdf_canonica_montaje.png)."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-11-02T19:54:11.260700-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1/20261102-195156-185511/informe.txt · md5 4cffbe8b1924b749c36d2b92369e4a83 · 0 errores / 7 advertencias (las heurísticas de siempre: Tarea, tabla de metadatos, descripción, análisis de distractores, patrón ICFES, letra_correcta, PDF de 2B); FASE 2G 100/100, 2H 0 anomalías, 2O sin glifos. Corrida anterior con 1 error en 2D (identificador separacion en un comentario), corregido antes de esta."
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-03T06:59:39.655504-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Ciclo 2026-11-02, tanda S1b relanzada el 2026-11-03: V1′, el signo que sigue a la unidad entra en la fórmula (decisión del profesor del 2026-11-03). En la misma reapertura, cierre de S7: fuera la asignación muerta de lado_gdis en la canónica (decisión del profesor del 2026-11-03, «En esta S1b (Recomendada)»)",
+      "reporte": "A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/salida/ciclo_20261102/s1b/6b/informe_6b_v1_5cf5b12f.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-11-02T20:25:49.621283-05:00",
+          "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd",
+          "nota": "Ciclo 2026-11-02, tanda S1b. .Rmd md5 5cf5b12f02e942091a3af899a81a2d6c (desde 4cffbe8b): variante V1, la unidad que cierra una fórmula va dentro de ella (\"\\\\ \\\\text{kilos}$\", 20 sitios de la Solution y el feedback) y guarda «L-6: la unidad que cierra una fórmula va dentro de la fórmula» en data_generation. Elegida tras medir V1 y V2 pareadas (salida/ciclo_20261102/s1b/variantes/). Artefactos: s1b/invariancia_s1b.txt (.Random.seed idéntico 1000/1000; enunciado, opciones y tabla idénticos byte a byte; Solution y feedback idénticos salvo la unidad dentro de la fórmula: 11575 sitios antes, 0 después) y s1b/verificar_espacio_s1b.txt (verificador 833a1e43…, exit 4, 37 canales cubiertos, 0 fallos, 0 pendientes; M1-M31, MP1 y MP2 cazados por su sonda). Ortografía: 0 errores. Glifos (regla #25): OK. U+00A0/U+2060 literales: 0."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-11-02T20:25:58.301945-05:00",
+          "nota": "Tanda S1b, .Rmd 5cf5b12f…: la Solution y el feedback solo cambian en la posición de la unidad («\\ \\text{kilos}$» dentro de la fórmula, 20 sitios); el texto que se lee es el mismo (s1b/invariancia_s1b.txt: idéntico tras la conversión en 1000/1000). Regla #19: 0 coincidencias en Solution y en el chunk solucion (s1b/regla19_s1b.txt). Regla #13: la prosa no cambia de contenido; S1-Sol, S1-Sol fórmula, M27, M30 y M31 en verde (s1b/verificar_espacio_s1b.txt)."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-11-02T20:27:47.767149-05:00",
+          "nota": "Tanda S1b, .Rmd 5cf5b12f…: HTML (3), PDF (5 semillas, 3 páginas cada uno), DOCX y NOPS (4 páginas) en salida/ciclo_20261102/s1b/render_5cf5b12f/, más Moodle n = 100 (moodle_100/ej.xml). Comprobado (s1b/render_s1b_verificaciones.txt): \\pandocbounded solo en la definición no-op de la plantilla (0 usos); \\LTcaptype con su guard c@none; 0 renglones que empiezan por la unidad tras cifra o fórmula en los 5 PDF y en el NOPS; Moodle: 1160 fórmulas con la unidad dentro de \\(…\\) y 0 cierres antes de la unidad. PDF ej1 revisado en sus 3 páginas (montaje a 50 ppp, estructura: tabla dentro del margen, Solution completa)."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-11-02T20:27:51.688242-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1/20261102-202646-266781/informe.txt · md5 5cf5b12f02e942091a3af899a81a2d6c · 0 errores / 7 advertencias (las mismas 7 heurísticas de S1: Tarea, tabla de metadatos, descripción de evaluación, análisis de distractores, patrón ICFES, letra_correcta y PDF de la 2B). 2G 100/100; 2H 0 anomalías; 2J, 2K, 2N y 2O en verde. La 2I no vio el .tex (texdir por file.path): revisado a mano, 0 usos de \\pandocbounded."
         }
       }
     }

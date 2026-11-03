@@ -1,0 +1,17 @@
+== render oficial 6c9d7705 (tanda S1b relanzada) ==
+html: ej1.html ej2.html ej3.html 
+pdf: ej1.pdf ej2.pdf ej3.pdf 
+tex: ej1.pdf ej1.tex ej2.pdf ej2.tex ej3.pdf ej3.tex exercise1.tex 
+docx: ej1.docx ej2.docx ej3.docx 
+nops: ej1.pdf ej2.pdf ej.rds 
+moodle_100: ej.xml 
+ej1.pdf: Pages:           3
+ej2.pdf: Pages:           3
+ej3.pdf: Pages:           3
+ej1.pdf: Pages:           4
+ej2.pdf: Pages:           4
+\pandocbounded en los .tex: 3 líneas; usos (no la definición \providecommand): 0
+\LTcaptype en los .tex: 1 · guarda @ifundefined{c@none} en el .Rmd: 1
+tex: unidad y signo dentro 7 · signo tras el cierre con unidad 0
+Moodle: preguntas 100 · <math 0 · unidad+signo dentro 733 · signo tras \)</span> de fórmula con unidad 0
+HTML: $ visibles fuera de math 0 · 	ext fuera de math 0

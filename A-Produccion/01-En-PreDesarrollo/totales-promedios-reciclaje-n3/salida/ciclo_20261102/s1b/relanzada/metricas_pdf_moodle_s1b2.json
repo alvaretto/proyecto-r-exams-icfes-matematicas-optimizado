@@ -1,0 +1,242 @@
+{
+ "e293": {
+  "paginas": 230,
+  "renglones_que_empiezan_por_unidad": 390,
+  "por_unidad_tras_formula": 117,
+  "por_unidad_tras_cifra": 117,
+  "renglones_que_empiezan_por_signo": 62,
+  "ejemplos_signo": [
+   [
+    " de cartón, es decir, el mayor",
+    "."
+   ],
+   [
+    " de cartón, es decir, el mayor",
+    "."
+   ],
+   [
+    "d de papel, es decir, el mayor",
+    "."
+   ],
+   [
+    "d de papel, es decir, el mayor",
+    "."
+   ],
+   [
+    " de cartón, es decir, el mayor",
+    "."
+   ]
+  ],
+  "formula_unidad_juntas": 1158,
+  "tex_unidad_y_signo_dentro": 0,
+  "tex_signo_tras_cierre_con_unidad": 0,
+  "tex_pandocbounded": 1,
+  "log_errores_latex": 0,
+  "log_undefined": 0,
+  "log_encontrado": false,
+  "moodle": {
+   "preguntas": 100,
+   "math_inline_mathjax": 1307,
+   "mathml": 0,
+   "unidad_dentro": 0,
+   "unidad_y_signo_dentro": 0,
+   "signo_tras_cierre_con_unidad": 0,
+   "unidad_fuera_tras_cierre": 1160,
+   "signo_tras_unidad_fuera": 733,
+   "signo_tras_cualquier_cierre": 40,
+   "span_nowrap": 0
+  }
+ },
+ "base": {
+  "paginas": 229,
+  "renglones_que_empiezan_por_unidad": 151,
+  "por_unidad_tras_formula": 0,
+  "por_unidad_tras_cifra": 0,
+  "renglones_que_empiezan_por_signo": 62,
+  "ejemplos_signo": [
+   [
+    " de cartón, es decir, el mayor",
+    "."
+   ],
+   [
+    " de cartón, es decir, el mayor",
+    "."
+   ],
+   [
+    "d de papel, es decir, el mayor",
+    "."
+   ],
+   [
+    "d de papel, es decir, el mayor",
+    "."
+   ],
+   [
+    " de cartón, es decir, el mayor",
+    "."
+   ]
+  ],
+  "formula_unidad_juntas": 1158,
+  "tex_unidad_y_signo_dentro": 0,
+  "tex_signo_tras_cierre_con_unidad": 0,
+  "tex_pandocbounded": 1,
+  "log_errores_latex": 0,
+  "log_undefined": 0,
+  "log_encontrado": false,
+  "moodle": {
+   "preguntas": 100,
+   "math_inline_mathjax": 1307,
+   "mathml": 0,
+   "unidad_dentro": 0,
+   "unidad_y_signo_dentro": 0,
+   "signo_tras_cierre_con_unidad": 0,
+   "unidad_fuera_tras_cierre": 1160,
+   "signo_tras_unidad_fuera": 733,
+   "signo_tras_cualquier_cierre": 40,
+   "span_nowrap": 0
+  }
+ },
+ "v1": {
+  "paginas": 229,
+  "renglones_que_empiezan_por_unidad": 151,
+  "por_unidad_tras_formula": 0,
+  "por_unidad_tras_cifra": 0,
+  "renglones_que_empiezan_por_signo": 62,
+  "ejemplos_signo": [
+   [
+    " de cartón, es decir, el mayor",
+    "."
+   ],
+   [
+    " de cartón, es decir, el mayor",
+    "."
+   ],
+   [
+    "d de papel, es decir, el mayor",
+    "."
+   ],
+   [
+    "d de papel, es decir, el mayor",
+    "."
+   ],
+   [
+    " de cartón, es decir, el mayor",
+    "."
+   ]
+  ],
+  "formula_unidad_juntas": 1158,
+  "tex_unidad_y_signo_dentro": 0,
+  "tex_signo_tras_cierre_con_unidad": 730,
+  "tex_pandocbounded": 1,
+  "log_errores_latex": 0,
+  "log_undefined": 0,
+  "log_encontrado": false,
+  "moodle": {
+   "preguntas": 100,
+   "math_inline_mathjax": 1307,
+   "mathml": 0,
+   "unidad_dentro": 1160,
+   "unidad_y_signo_dentro": 0,
+   "signo_tras_cierre_con_unidad": 733,
+   "unidad_fuera_tras_cierre": 0,
+   "signo_tras_unidad_fuera": 0,
+   "signo_tras_cualquier_cierre": 773,
+   "span_nowrap": 0
+  }
+ },
+ "v2": {
+  "paginas": 229,
+  "renglones_que_empiezan_por_unidad": 151,
+  "por_unidad_tras_formula": 0,
+  "por_unidad_tras_cifra": 0,
+  "renglones_que_empiezan_por_signo": 62,
+  "ejemplos_signo": [
+   [
+    " de cartón, es decir, el mayor",
+    "."
+   ],
+   [
+    " de cartón, es decir, el mayor",
+    "."
+   ],
+   [
+    "d de papel, es decir, el mayor",
+    "."
+   ],
+   [
+    "d de papel, es decir, el mayor",
+    "."
+   ],
+   [
+    " de cartón, es decir, el mayor",
+    "."
+   ]
+  ],
+  "formula_unidad_juntas": 1158,
+  "tex_unidad_y_signo_dentro": 0,
+  "tex_signo_tras_cierre_con_unidad": 0,
+  "tex_pandocbounded": 1,
+  "log_errores_latex": 0,
+  "log_undefined": 0,
+  "log_encontrado": false,
+  "moodle": {
+   "preguntas": 100,
+   "math_inline_mathjax": 1307,
+   "mathml": 0,
+   "unidad_dentro": 0,
+   "unidad_y_signo_dentro": 0,
+   "signo_tras_cierre_con_unidad": 0,
+   "unidad_fuera_tras_cierre": 1160,
+   "signo_tras_unidad_fuera": 733,
+   "signo_tras_cualquier_cierre": 40,
+   "span_nowrap": 1160
+  }
+ },
+ "v1p": {
+  "paginas": 229,
+  "renglones_que_empiezan_por_unidad": 151,
+  "por_unidad_tras_formula": 0,
+  "por_unidad_tras_cifra": 0,
+  "renglones_que_empiezan_por_signo": 62,
+  "ejemplos_signo": [
+   [
+    " de cartón, es decir, el mayor",
+    "."
+   ],
+   [
+    " de cartón, es decir, el mayor",
+    "."
+   ],
+   [
+    "d de papel, es decir, el mayor",
+    "."
+   ],
+   [
+    "d de papel, es decir, el mayor",
+    "."
+   ],
+   [
+    " de cartón, es decir, el mayor",
+    "."
+   ]
+  ],
+  "formula_unidad_juntas": 1158,
+  "tex_unidad_y_signo_dentro": 730,
+  "tex_signo_tras_cierre_con_unidad": 0,
+  "tex_pandocbounded": 1,
+  "log_errores_latex": 0,
+  "log_undefined": 0,
+  "log_encontrado": false,
+  "moodle": {
+   "preguntas": 100,
+   "math_inline_mathjax": 1307,
+   "mathml": 0,
+   "unidad_dentro": 1160,
+   "unidad_y_signo_dentro": 733,
+   "signo_tras_cierre_con_unidad": 0,
+   "unidad_fuera_tras_cierre": 0,
+   "signo_tras_unidad_fuera": 0,
+   "signo_tras_cualquier_cierre": 40,
+   "span_nowrap": 0
+  }
+ }
+}
