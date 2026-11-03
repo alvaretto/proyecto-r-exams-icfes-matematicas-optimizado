@@ -13,9 +13,14 @@ Tanda S2a (H4 de la FASE 2C r5): en el JS, los U+00A0 y los signos no ASCII de l
   (\\u00a0, \\u00bb, \\u201d, \\u2026). Hasta la S2a el JS llevaba 10 U+00A0 literales, aunque esta
   línea decía que no. Un assert comprueba que ni el JS ni este archivo llevan U+00A0, U+2009, U+202F o U+2060
   literales. Los comentarios del JS conservan sus tildes.
-Uso: python3 -I cap_s1b2.py v1=<dir_html>,v2=<dir_html>,... <anchos: 360,320> <salida.json> <dir_capturas|-> <perfil>
-     <dir_html>/sNNN/ej1.html, semillas 1..100. El perfil de Chromium va FUERA del repo."""
+Uso: python3 -E -P cap_s1b2.py v1=<dir_html>,v2=<dir_html>,... <anchos: 360,320> <salida.json> <dir_capturas|-> <perfil>
+     <dir_html>/sNNN/ej1.html, semillas 1..100. El perfil de Chromium va FUERA del repo.
+Tanda S2b (H4 de la FASE 2C r6): -E -P y no -I. websockets está en el site de usuario, que -I deja fuera; -P no mete
+  en sys.path el directorio del script ni el de trabajo, y -E ignora las variables PYTHON*. El directorio de trabajo
+  va FUERA del repo: lo comprueba un assert antes de importar websockets."""
 import asyncio, json, os, sys, subprocess, time, base64, urllib.request
+MARCA_REPO = "/RepositorioMatematicasICFES_R_Exams/"
+assert MARCA_REPO not in os.path.realpath(os.getcwd()) + "/", "el directorio de trabajo va fuera del repo (H4 de la r6)"
 import websockets
 HTD = dict(x.split("=", 1) for x in sys.argv[1].split(","))
 VERS = list(HTD)

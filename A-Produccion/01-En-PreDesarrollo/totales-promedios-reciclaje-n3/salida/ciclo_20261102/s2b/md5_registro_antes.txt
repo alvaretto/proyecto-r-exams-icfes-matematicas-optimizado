@@ -1,0 +1,2 @@
+59abed0eff9f348ccf9bf877b8ef2dea  /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/.claude/CLAUDE.md
+a5ff724707ef18635a19eda24d734200  /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/HANDOFF.md

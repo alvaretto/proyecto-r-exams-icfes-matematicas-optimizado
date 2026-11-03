@@ -1,0 +1,170 @@
+154a155,257
+>   S2b · H1 de la FASE 2C r6: «resta» y sus combinaciones con las pistas de «O-1 corregido» (acierto en %):
+>                                                                          mezcla
+> resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede   54.2
+> S_U + resta                                                                71.0
+> S_U + S1 + resta                                                           79.0
+> S_U + suma + resta                                                         79.0
+> S_U + S1 + suma + resta                                                    86.0
+> S_U + atípica + resta                                                      81.5
+> S_U + S1 + suma + atípica + resta                                          93.0
+>                                                                          CURSOS
+> resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede   58.8
+> S_U + resta                                                                72.5
+> S_U + S1 + resta                                                           86.0
+> S_U + suma + resta                                                         82.0
+> S_U + S1 + suma + resta                                                    93.5
+> S_U + atípica + resta                                                      71.0
+> S_U + S1 + suma + atípica + resta                                          94.5
+>                                                                          PROMEDIO
+> resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede     67.8
+> S_U + resta                                                                  78.5
+> S_U + S1 + resta                                                             79.5
+> S_U + suma + resta                                                           90.0
+> S_U + S1 + suma + resta                                                      91.0
+> S_U + atípica + resta                                                        86.0
+> S_U + S1 + suma + atípica + resta                                            98.0
+>                                                                          canonica
+> resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede        0
+> S_U + resta                                                                    50
+> S_U + S1 + resta                                                              100
+> S_U + suma + resta                                                             50
+> S_U + S1 + suma + resta                                                       100
+> S_U + atípica + resta                                                         100
+> S_U + S1 + suma + atípica + resta                                             100
+>   «resta» aplica (alguna opción cita |aG - aP|): mezcla 51 % · CURSOS 45 % · PROMEDIO 57 % · canónica 100 %; en las 144 no canónicas de E1 y de los estratos en que aplica, la opción que la cita es: G ERR-RESTA (144)
+>   PENDIENTE DE FIRMA: S2b H1: «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», mezcla de E1: 54.2 % (+29.2 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», rama CURSOS: 58.8 % (+33.8 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», rama PROMEDIO: 67.8 % (+42.8 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + resta», mezcla de E1: 71.0 % (+46.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + resta», rama CURSOS: 72.5 % (+47.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + resta», rama PROMEDIO: 78.5 % (+53.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + resta», canónica (24 órdenes, exacta): 50.0 % (+25.0 pp sobre el azar); peso en la mezcla +2.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + resta», mezcla de E1: 79.0 % (+54.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + resta», rama CURSOS: 86.0 % (+61.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + resta», rama PROMEDIO: 79.5 % (+54.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + suma + resta», mezcla de E1: 79.0 % (+54.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + suma + resta», rama CURSOS: 82.0 % (+57.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + suma + resta», rama PROMEDIO: 90.0 % (+65.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + suma + resta», canónica (24 órdenes, exacta): 50.0 % (+25.0 pp sobre el azar); peso en la mezcla +2.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + resta», mezcla de E1: 86.0 % (+61.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + resta», rama CURSOS: 93.5 % (+68.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + resta», rama PROMEDIO: 91.0 % (+66.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + atípica + resta», mezcla de E1: 81.5 % (+56.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + atípica + resta», rama CURSOS: 71.0 % (+46.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + atípica + resta», rama PROMEDIO: 86.0 % (+61.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + atípica + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + atípica + resta», mezcla de E1: 93.0 % (+68.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + atípica + resta», rama CURSOS: 94.5 % (+69.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + atípica + resta», rama PROMEDIO: 98.0 % (+73.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + atípica + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   S2b H1: 27 de 28 cifras (7 reglas × 4 estratos) por encima de +8 pp sobre el azar: pendientes de firma
+>   S2b · barrido del estímulo, por fila de la tabla (acierto en %, mezcla / CURSOS / PROMEDIO / canónica; «aplica»: alguna opción cita el resultado):
+>     n1 + n2                    (i)  26.5  25.0  27.0  25.0 · (ii)  24.5  25.0  25.0  25.0 · aplica   6.0   8.0   8.0   0.0
+>     |n1 - n2|                  (i)  25.8  24.2  24.8  25.0 · (ii)  25.1  25.2  25.1  25.0 · aplica   1.0   3.0   1.0   0.0
+>     n1 * n2                    (i)  21.8  21.5  22.8   0.0 · (ii)  23.1  25.2  25.1   0.0 · aplica  13.0  14.0   9.0 100.0
+>     n1 / n2 (entero)           (i)  25.0  25.0  25.0  25.0 · (ii)  25.0  25.0  25.0  25.0 · aplica   0.0   0.0   0.0   0.0
+>     a1 + a2                    (i)  25.0  25.0  25.0  25.0 · (ii)  25.0  25.0  25.0  25.0 · aplica   0.0   0.0   0.0   0.0
+>     |a1 - a2|                  (i)  54.2  58.8  67.8   0.0 · (ii)  29.2  28.7  29.8  33.3 · aplica  51.0  45.0  57.0 100.0
+>     a1 * a2                    (i)  25.0  25.0  25.0  25.0 · (ii)  25.0  25.0  25.0  25.0 · aplica   0.0   0.0   0.0   0.0
+>     a1 / a2 (entero)           (i)  25.0  25.0  25.0  25.0 · (ii)  25.0  25.0  25.0  25.0 · aplica   0.0   0.0   0.0   0.0
+>     n1 + a1                    (i)  24.8  24.0  25.5  25.0 · (ii)  25.1  25.0  25.2  25.0 · aplica   1.0   4.0   2.0   0.0
+>     |n1 - a1|                  (i)  24.8  24.0  24.0  25.0 · (ii)  25.1  25.0  24.7  25.0 · aplica   1.0   4.0   4.0   0.0
+>     n1 * a1                    (i)  34.0  28.0  32.5  25.0 · (ii)  26.0  25.3  25.8  25.0 · aplica  12.0   4.0  10.0   0.0
+>     n1 / a1 (entero)           (i)  25.0  24.8  24.5  25.0 · (ii)  25.0  24.8  24.8  25.0 · aplica   0.0   1.0   2.0   0.0
+>     n2 + a2                    (i)  25.0  25.5  24.0  25.0 · (ii)  25.0  25.2  24.7  25.0 · aplica   0.0   2.0   4.0   0.0
+>     |n2 - a2|                  (i)  24.2  25.2  24.0  25.0 · (ii)  25.2  25.2  25.3  25.0 · aplica   3.0   3.0   4.0   0.0
+>     n2 * a2                    (i)  32.5  28.7  30.2  25.0 · (ii)  25.8  25.4  25.6  25.0 · aplica  10.0   5.0   7.0   0.0
+>     n2 / a2 (entero)           (i)  24.8  24.0  24.8  25.0 · (ii)  25.1  25.0  25.1  25.0 · aplica   1.0   4.0   1.0   0.0
+>     n1 + a2                    (i)  23.2  24.0  22.5  25.0 · (ii)  24.2  25.0  23.2  25.0 · aplica   7.0   4.0  10.0   0.0
+>     |n1 - a2|                  (i)  30.2  23.2  23.8 100.0 · (ii)  25.6  24.9  25.1  33.3 · aplica  15.0   7.0   9.0 100.0
+>     n1 * a2                    (i)  25.0  25.8  25.0  25.0 · (ii)  25.0  25.1  25.0  25.0 · aplica   0.0   1.0   0.0   0.0
+>     n1 / a2 (entero)           (i)  24.8  24.8  25.0  25.0 · (ii)  25.1  25.1  25.0  25.0 · aplica   1.0   1.0   0.0   0.0
+>     n2 + a1                    (i)  24.5  24.8  25.0  25.0 · (ii)  24.8  25.1  25.0  25.0 · aplica   2.0   1.0   4.0   0.0
+>     |n2 - a1|                  (i)  26.2  24.5  24.0  25.0 · (ii)  25.2  25.2  24.7  25.0 · aplica   3.0   6.0   4.0   0.0
+>     n2 * a1                    (i)  25.0  25.0  25.0  25.0 · (ii)  25.0  25.0  25.0  25.0 · aplica   0.0   0.0   0.0   0.0
+>     n2 / a1 (entero)           (i)  25.0  25.0  24.8  25.0 · (ii)  25.0  25.0  24.8  25.0 · aplica   0.0   0.0   1.0   0.0
+>     dos pasos: |n1 - n2| * a1  (i)  29.0  34.0  14.2 100.0 · (ii)  28.3  26.0  28.6  33.3 · aplica  40.0  12.0  43.0 100.0
+>     dos pasos: |n1 - n2| * a2  (i)  19.8  37.0  10.8  25.0 · (ii)  27.7  26.3  29.8  25.0 · aplica  33.0  16.0  57.0   0.0
+>     dos pasos: n1 * |a1 - a2|  (i)  23.0  11.0  37.0  25.0 · (ii)  27.0  29.3  26.3  25.0 · aplica  24.0  56.0  16.0   0.0
+>     dos pasos: n2 * |a1 - a2|  (i)  22.0  14.0  30.2   0.0 · (ii)  24.3  28.3  25.6   0.0 · aplica  28.0  48.0   7.0 100.0
+>   OK: S2b: el barrido reproduce «resta» con sus propias celdas: «|a1 - a2| (i)» es la misma regla, y se juzga una sola vez, en H1 
+>   PENDIENTE DE FIRMA: S2b barrido del estímulo: «|a1 - a2| (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b barrido del estímulo: «n1 * a1 (i)», mezcla de E1: 34.0 % (+9.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b barrido del estímulo: «|n1 - a2| (i)», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b barrido del estímulo: «|n1 - a2| (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b barrido del estímulo: «dos pasos: |n1 - n2| * a1 (i)», rama CURSOS: 34.0 % (+9.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b barrido del estímulo: «dos pasos: |n1 - n2| * a1 (i)», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b barrido del estímulo: «dos pasos: |n1 - n2| * a1 (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b barrido del estímulo: «dos pasos: |n1 - n2| * a2 (i)», rama CURSOS: 37.0 % (+12.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   PENDIENTE DE FIRMA: S2b barrido del estímulo: «dos pasos: n1 * |a1 - a2| (i)», rama PROMEDIO: 37.0 % (+12.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+>   S2b barrido: 28 operaciones (24 de un paso entre dos celdas y 4 de dos pasos) × 2 lecturas × 4 estratos; 9 cifras por encima de +8 pp sobre el azar, pendientes de firma (sin «|a1 - a2| (i)», que es «resta»)
+>   S2b: ninguna regla de un paso equivale a resolver el ítem. Los dos productos de fila juntos (n1 * a1 y n2 * a2) son los dos totales, y compararlos es resolverlo; cada uno por separado es «un solo total» y se mide.
+227a331,332
+>   OK: M19, también en el barrido (S2b): el producto de una fila sube en las dos ramas («n1 * a1 (i)»: CURSOS 28.0 -> 40.0 %, PROMEDIO 32.5 -> 46.8 %; «n2 * a2 (i)»: CURSOS 28.7 -> 42.2 %, PROMEDIO 30.2 -> 37.8 %) 
+>   OK: M44 (ERR-RESTA siempre que se pueda; su cuota en el distractor de G pasa de 45 a 63 % en CURSOS y de 57 a 60 % en PROMEDIO): «resta» sube de 58.8 a 72.2 % en CURSOS y de 67.8 a 70.0 % en PROMEDIO, y sigue pendiente de firma — cazado_por_su_sonda 
+242,248c347,357
+<   OK: M38 (la lista de totales pierde la unidad y deja el punto fuera de la fórmula, «= 200$.»): S1 0, S1-Sol fórmula 0, S1-Sol signo 200; la clase anterior: 0; controles: unidad dentro 958 (falla), unidad con el signo dentro 530 (falla), signo dentro sin unidad 42 — sonda esperada «S1-Sol signo»: cazado_por_su_sonda 
+<   OK: M39a (la lista de totales saca la unidad de la fórmula con U+2009, espacio fino (mutante de la r5)): S1 0, S1-Sol fórmula 200, S1-Sol signo 0; la clase anterior: 0; controles: unidad dentro 958 (falla), unidad con el signo dentro 530 (falla), signo dentro sin unidad 42 — sonda esperada «S1-Sol fórmula»: cazado_por_su_sonda 
+<   OK: M41a (la lista de totales deja el punto fuera de la fórmula tras U+2009, espacio fino): S1 0, S1-Sol fórmula 0, S1-Sol signo 200; la clase anterior: 0; controles: unidad dentro 1158, unidad con el signo dentro 530 (falla), signo dentro sin unidad 42 — sonda esperada «S1-Sol signo»: cazado_por_su_sonda 
+<   OK: M39b (la lista de totales saca la unidad de la fórmula con U+202F, espacio duro estrecho (mutante de la r5)): S1 0, S1-Sol fórmula 200, S1-Sol signo 0; la clase anterior: 0; controles: unidad dentro 958 (falla), unidad con el signo dentro 530 (falla), signo dentro sin unidad 42 — sonda esperada «S1-Sol fórmula»: cazado_por_su_sonda 
+<   OK: M41b (la lista de totales deja el punto fuera de la fórmula tras U+202F, espacio duro estrecho): S1 0, S1-Sol fórmula 0, S1-Sol signo 200; la clase anterior: 0; controles: unidad dentro 1158, unidad con el signo dentro 530 (falla), signo dentro sin unidad 42 — sonda esperada «S1-Sol signo»: cazado_por_su_sonda 
+<   OK: M39c (la lista de totales saca la unidad de la fórmula con U+2060, unión de palabras (mutante de la r5)): S1 0, S1-Sol fórmula 200, S1-Sol signo 0; la clase anterior: 0; controles: unidad dentro 958 (falla), unidad con el signo dentro 530 (falla), signo dentro sin unidad 42 — sonda esperada «S1-Sol fórmula»: cazado_por_su_sonda 
+<   OK: M41c (la lista de totales deja el punto fuera de la fórmula tras U+2060, unión de palabras): S1 0, S1-Sol fórmula 0, S1-Sol signo 200; la clase anterior: 0; controles: unidad dentro 1158, unidad con el signo dentro 530 (falla), signo dentro sin unidad 42 — sonda esperada «S1-Sol signo»: cazado_por_su_sonda 
+---
+>   OK: M38 (la lista de totales pierde la unidad y deja el punto fuera de la fórmula, «= 200$.»): S1 0, S1-Sol fórmula 0, S1-Sol signo 200; la clase anterior: 0; controles: unidad dentro 958 (falla), unidad con el signo dentro 530 (falla), signo dentro sin unidad 42 — sonda esperada «S1-Sol signo»: cazado_por_su_sonda_y_control (esperado: cazado_por_su_sonda_y_control) 
+>   OK: M39a (la lista de totales saca la unidad de la fórmula con U+2009, espacio fino (mutante de la r5)): S1 0, S1-Sol fórmula 200, S1-Sol signo 0; la clase anterior: 0; controles: unidad dentro 958 (falla), unidad con el signo dentro 530 (falla), signo dentro sin unidad 42 — sonda esperada «S1-Sol fórmula»: cazado_por_su_sonda_y_control (esperado: cazado_por_su_sonda_y_control) 
+>   OK: M41a (la lista de totales deja el punto fuera de la fórmula tras U+2009, espacio fino): S1 0, S1-Sol fórmula 0, S1-Sol signo 200; la clase anterior: 0; controles: unidad dentro 1158, unidad con el signo dentro 530 (falla), signo dentro sin unidad 42 — sonda esperada «S1-Sol signo»: cazado_por_su_sonda_y_control (esperado: cazado_por_su_sonda_y_control) 
+>   OK: M39b (la lista de totales saca la unidad de la fórmula con U+202F, espacio duro estrecho (mutante de la r5)): S1 0, S1-Sol fórmula 200, S1-Sol signo 0; la clase anterior: 0; controles: unidad dentro 958 (falla), unidad con el signo dentro 530 (falla), signo dentro sin unidad 42 — sonda esperada «S1-Sol fórmula»: cazado_por_su_sonda_y_control (esperado: cazado_por_su_sonda_y_control) 
+>   OK: M41b (la lista de totales deja el punto fuera de la fórmula tras U+202F, espacio duro estrecho): S1 0, S1-Sol fórmula 0, S1-Sol signo 200; la clase anterior: 0; controles: unidad dentro 1158, unidad con el signo dentro 530 (falla), signo dentro sin unidad 42 — sonda esperada «S1-Sol signo»: cazado_por_su_sonda_y_control (esperado: cazado_por_su_sonda_y_control) 
+>   OK: M39c (la lista de totales saca la unidad de la fórmula con U+2060, unión de palabras (mutante de la r5)): S1 0, S1-Sol fórmula 200, S1-Sol signo 0; la clase anterior: 0; controles: unidad dentro 958 (falla), unidad con el signo dentro 530 (falla), signo dentro sin unidad 42 — sonda esperada «S1-Sol fórmula»: cazado_por_su_sonda_y_control (esperado: cazado_por_su_sonda_y_control) 
+>   OK: M41c (la lista de totales deja el punto fuera de la fórmula tras U+2060, unión de palabras): S1 0, S1-Sol fórmula 0, S1-Sol signo 200; la clase anterior: 0; controles: unidad dentro 1158, unidad con el signo dentro 530 (falla), signo dentro sin unidad 42 — sonda esperada «S1-Sol signo»: cazado_por_su_sonda_y_control (esperado: cazado_por_su_sonda_y_control) 
+>   OK: M42a (aditivo: «Comprobación: $D$» antes de «Propiedades del concepto», seguida de U+2009, espacio fino, y un punto): S1 0, S1-Sol fórmula 0, S1-Sol signo 100; la clase anterior: 0; controles: unidad dentro 1158, unidad con el signo dentro 730, signo dentro sin unidad 42 — sonda esperada «S1-Sol signo»: cazado_por_su_sonda 
+>   OK: M42b (aditivo: «Comprobación: $D$» antes de «Propiedades del concepto», seguida de U+202F, espacio duro estrecho, y un punto): S1 0, S1-Sol fórmula 0, S1-Sol signo 100; la clase anterior: 0; controles: unidad dentro 1158, unidad con el signo dentro 730, signo dentro sin unidad 42 — sonda esperada «S1-Sol signo»: cazado_por_su_sonda 
+>   OK: M42c (aditivo: «Comprobación: $D$» antes de «Propiedades del concepto», seguida de U+2060, unión de palabras, y un punto): S1 0, S1-Sol fórmula 0, S1-Sol signo 100; la clase anterior: 0; controles: unidad dentro 1158, unidad con el signo dentro 730, signo dentro sin unidad 42 — sonda esperada «S1-Sol signo»: cazado_por_su_sonda 
+>   OK: M43 (aditivo: «Comprobación: $D$» antes de «Propiedades del concepto», seguida de U+2060, unión de palabras, y «kilos»): S1 0, S1-Sol fórmula 100, S1-Sol signo 0; la clase anterior: 0; controles: unidad dentro 1158, unidad con el signo dentro 730, signo dentro sin unidad 42 — sonda esperada «S1-Sol fórmula»: cazado_por_su_sonda 
+296,297c405,443
+< === RESULTADO: EN ROJO BAJO OVERRIDE FIRMADO (37 canales: 13 dentro del alcance de O-1 corregido y 24 de la decisión 2 a; 0 fallos, 0 pendientes) ===
+< exit=4 · 109 s · 2026-11-03T08:08:20-05:00
+---
+> Pendientes de firma del profesor (> +8 pp o premisa firmada superada; exit 3):
+>   - S2b H1: «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», mezcla de E1: 54.2 % (+29.2 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», rama CURSOS: 58.8 % (+33.8 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», rama PROMEDIO: 67.8 % (+42.8 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + resta», mezcla de E1: 71.0 % (+46.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + resta», rama CURSOS: 72.5 % (+47.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + resta», rama PROMEDIO: 78.5 % (+53.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + resta», canónica (24 órdenes, exacta): 50.0 % (+25.0 pp sobre el azar); peso en la mezcla +2.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + S1 + resta», mezcla de E1: 79.0 % (+54.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + S1 + resta», rama CURSOS: 86.0 % (+61.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + S1 + resta», rama PROMEDIO: 79.5 % (+54.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + S1 + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + suma + resta», mezcla de E1: 79.0 % (+54.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + suma + resta», rama CURSOS: 82.0 % (+57.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + suma + resta», rama PROMEDIO: 90.0 % (+65.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + suma + resta», canónica (24 órdenes, exacta): 50.0 % (+25.0 pp sobre el azar); peso en la mezcla +2.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + S1 + suma + resta», mezcla de E1: 86.0 % (+61.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + S1 + suma + resta», rama CURSOS: 93.5 % (+68.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + S1 + suma + resta», rama PROMEDIO: 91.0 % (+66.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + S1 + suma + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + atípica + resta», mezcla de E1: 81.5 % (+56.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + atípica + resta», rama CURSOS: 71.0 % (+46.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + atípica + resta», rama PROMEDIO: 86.0 % (+61.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + atípica + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + S1 + suma + atípica + resta», mezcla de E1: 93.0 % (+68.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + S1 + suma + atípica + resta», rama CURSOS: 94.5 % (+69.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + S1 + suma + atípica + resta», rama PROMEDIO: 98.0 % (+73.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b H1: «S_U + S1 + suma + atípica + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b barrido del estímulo: «|a1 - a2| (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b barrido del estímulo: «n1 * a1 (i)», mezcla de E1: 34.0 % (+9.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b barrido del estímulo: «|n1 - a2| (i)», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b barrido del estímulo: «|n1 - a2| (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b barrido del estímulo: «dos pasos: |n1 - n2| * a1 (i)», rama CURSOS: 34.0 % (+9.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b barrido del estímulo: «dos pasos: |n1 - n2| * a1 (i)», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b barrido del estímulo: «dos pasos: |n1 - n2| * a1 (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b barrido del estímulo: «dos pasos: |n1 - n2| * a2 (i)», rama CURSOS: 37.0 % (+12.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+>   - S2b barrido del estímulo: «dos pasos: n1 * |a1 - a2| (i)», rama PROMEDIO: 37.0 % (+12.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)
+> 
+> === RESULTADO: PENDIENTE DE FIRMA (36; 0 fallos) ===

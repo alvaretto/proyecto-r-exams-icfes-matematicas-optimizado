@@ -32,6 +32,12 @@
 ##        mutante que quita un solo sitio (M34, M35, M36), y separadores ampliados a todo carácter que no sea letra ni
 ##        cifra (M39 y M41, con U+2009, U+202F y U+2060). H5: guarda real del canal 2 sobre lado_gdis (M40); fuera el
 ##        ok() tautológico de S7.
+## Tanda S2b (2026-11-03), FASE 2C r6. H1: el canal «resta» (la opción que cita |aG - aP| delata a la sede que gana) y sus
+##        combinaciones con las pistas de «O-1 corregido», por estrato y en la canónica exacta; y el barrido de las
+##        operaciones de un paso entre dos celdas de la tabla (§P7, cierre por familias; §P7-G). Ninguna está firmada:
+##        pendientes de firma (exit 3). M44 fuerza ERR-RESTA; M19 mueve también el barrido. ESTIMULO_SC dice qué mide E4.
+##        H2: juzgar_s1() simétrico («cazado_por_su_sonda_y_control») y M42 y M43, aditivos. M28 juzga solo los
+##        pendientes nuevos del proceso sin normalizar.
 ## Ciclo 2026-11-02, tanda S1: espacio duro (S1) en el oráculo léxico, en M16 y en la Solution (sonda S1-Sol,
 ##        mutantes M23-M27); MOLDES sin el parámetro m (S7); la canónica regla por regla con las 24 cifras de
 ##        la decisión 2 a y sus mutantes MP1 y MP2 (S3); el estímulo de la batería, declarado (§P7-G, S4).
@@ -456,6 +462,105 @@ st_ok <- all(vapply(c(CU$CURSOS, CU$PROMEDIO), function(x) {
 ok(st_ok, sprintf("O-1: S_todos estructural: en toda versión no canónica, una sola opción dice «todos» y es de G (medido: CURSOS %.1f %%, PROMEDIO %.1f %%; 50 %% por construcción)",
                   100 * TAB["S_todos elige la opción con «todos»", "CURSOS"], 100 * TAB["S_todos elige la opción con «todos»", "PROMEDIO"]))
 
+## ---- S2b (FASE 2C r6, H1): el canal «resta» y el barrido del estímulo -----------------------------------------------
+## H1 de la r6 (ALTA, DIAGNOSTICIDAD): ERR-RESTA va siempre del lado de G y cita δ = |aG - aP|, la resta de los dos
+## promedios de la tabla, y en las no canónicas ninguna otra opción la cita. Quien resta los promedios y encuentra la cifra
+## en una opción sabe, sin calcular ningún total, que esa sede ganó y que la clave es la otra opción de esa sede. R_dif
+## busca diferencias entre cifras de las OPCIONES; la tabla solo entraba como pertenencia (S1, S1b) o en el canal 3.
+## Mismo criterio que R_dif y las sondas de O-1: la primera cifra de cada opción (cif) y sc(). Dos lecturas:
+##  (i)  la sede de la opción que cita el resultado gana, y se elige la otra opción de esa sede; sin cita, azar;
+##  (ii) la opción que cita el resultado es falsa y se descarta; sin cita, azar.
+## Las combinaciones con las pistas firmadas de «O-1 corregido» aplican «resta» al final, con filtra(): «… + resta».
+## §P7 (cierre por familias) y §P7-G: el barrido mide las dos lecturas en cada operación de un paso entre dos celdas de la
+## tabla TAL COMO SE MUESTRA (fila 1 y fila 2): suma, resta, producto y cociente cuando es entero. Va por fila porque el
+## estudiante no sabe qué fila gana: rotular las celdas por G y P presupone la respuesta. Se añaden, declaradas, las
+## cuatro operaciones de dos pasos que usa el ítem (las ventajas parciales de calculos_tabla()).
+## Estratos: la mezcla de E1, las ramas CURSOS y PROMEDIO (N = 100 cada una) y la canónica por enumeración exacta (24
+## órdenes), con su peso en la mezcla (0,10 × exceso). Ninguna regla de la S2b está firmada: toda la que pase de +8 pp
+## sobre el azar queda PENDIENTE DE FIRMA (exit 3, O-1 § Alcance). M44 (E5) fuerza ERR-RESTA y tiene que subir «resta»;
+## M19 tiene que subir el producto de una fila. Nada de esta sección consume el RNG.
+lee_i <- function(x, r) { if (is.na(r)) return(0.25); v <- vapply(x$opciones, cif, 0); h <- which(v %in% r)
+  if (length(h) != 1L) return(0.25); S <- x$sede_o == x$sede_o[h]; S[h] <- FALSE; sc(S, x$clave) }
+lee_ii <- function(x, r) { if (is.na(r)) return(0.25); sc(!(vapply(x$opciones, cif, 0) %in% r), x$clave) }
+aplica_r <- function(x, r) !is.na(r) && any(vapply(x$opciones, cif, 0) %in% r)
+delta_t <- function(x) abs(x$tabla[3] - x$tabla[4])
+su_set <- function(x) x$sede_o != x$sede_o[x$rol == "psin"]
+R_RESTA <- "resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede"
+H1_REGLAS <- setNames(list(
+  function(x) lee_i(x, delta_t(x)),
+  function(x) { v <- vapply(x$opciones, cif, 0); sc(filtra(su_set(x), v %in% delta_t(x)), x$clave) },
+  function(x) { v <- vapply(x$opciones, cif, 0); sc(filtra(filtra(su_set(x), v %in% x$tabla), v %in% delta_t(x)), x$clave) },
+  function(x) { v <- vapply(x$opciones, cif, 0); sc(filtra(filtra(su_set(x), es_suma(v)), v %in% delta_t(x)), x$clave) },
+  function(x) { v <- vapply(x$opciones, cif, 0); S <- filtra(filtra(su_set(x), v %in% x$tabla), es_suma(v))
+    sc(filtra(S, v %in% delta_t(x)), x$clave) },
+  function(x) { v <- vapply(x$opciones, cif, 0); sc(filtra(filtra(su_set(x), atipica(v)), v %in% delta_t(x)), x$clave) },
+  function(x) { v <- vapply(x$opciones, cif, 0); S <- filtra(filtra(filtra(su_set(x), v %in% x$tabla), es_suma(v)), atipica(v))
+    sc(filtra(S, v %in% delta_t(x)), x$clave) }),
+  c(R_RESTA, "S_U + resta", "S_U + S1 + resta", "S_U + suma + resta", "S_U + S1 + suma + resta", "S_U + atípica + resta",
+    "S_U + S1 + suma + atípica + resta"))
+EST_S2B <- list(mezcla = NAT, CURSOS = CU$CURSOS, PROMEDIO = CU$PROMEDIO, canonica = CANON_V)
+mide <- function(reglas) t(vapply(reglas, function(f) vapply(EST_S2B, function(V)
+  if (length(V)) mean(vapply(V, f, 0)) else NA_real_, 0), numeric(length(EST_S2B))))
+ROT_S2B <- c(mezcla = "mezcla de E1", CURSOS = "rama CURSOS", PROMEDIO = "rama PROMEDIO", canonica = "canónica (24 órdenes, exacta)")
+juzga_s2b <- function(TABX, grupo) {
+  n_pend <- 0L
+  for (rg in rownames(TABX)) for (es in colnames(TABX)) {
+    tasa <- TABX[rg, es]; if (is.na(tasa)) next; ex <- tasa - 0.25
+    if (ex <= 0.08 + 1e-9) next
+    n_pend <- n_pend + 1L
+    pendiente(sprintf("%s: «%s», %s: %.1f %% (%+.1f pp sobre el azar)%s; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance)",
+                      grupo, rg, ROT_S2B[[es]], 100 * tasa, 100 * ex,
+                      if (es == "canonica") sprintf("; peso en la mezcla %+.2f pp", 10 * ex) else ""))
+  }
+  n_pend
+}
+writeLines("  S2b · H1 de la FASE 2C r6: «resta» y sus combinaciones con las pistas de «O-1 corregido» (acierto en %):")
+TAB_H1 <- mide(H1_REGLAS)
+print(round(100 * TAB_H1, 1))
+apl_r <- vapply(EST_S2B, function(V) if (length(V)) mean(vapply(V, function(x) aplica_r(x, delta_t(x)), TRUE)) else NA_real_, 0)
+nc_h <- Filter(function(x) !isTRUE(x$canon) && aplica_r(x, delta_t(x)), c(NAT, CU$CURSOS, CU$PROMEDIO))
+quien <- table(vapply(nc_h, function(x) { h <- which(vapply(x$opciones, cif, 0) %in% delta_t(x))
+  paste(x$sede_o[h], if (x$rol[h] == "gdis") x$cod_gdis else x$rol[h]) }, ""))
+writeLines(sprintf("  «resta» aplica (alguna opción cita |aG - aP|): mezcla %.0f %% · CURSOS %.0f %% · PROMEDIO %.0f %% · canónica %.0f %%; en las %d no canónicas de E1 y de los estratos en que aplica, la opción que la cita es: %s",
+                   100 * apl_r[["mezcla"]], 100 * apl_r[["CURSOS"]], 100 * apl_r[["PROMEDIO"]], 100 * apl_r[["canonica"]],
+                   length(nc_h), paste(sprintf("%s (%d)", names(quien), as.integer(quien)), collapse = ", ")))
+np_h1 <- juzga_s2b(TAB_H1, "S2b H1")
+writeLines(sprintf("  S2b H1: %d de %d cifras (%d reglas × 4 estratos) por encima de +8 pp sobre el azar: pendientes de firma",
+                   np_h1, length(TAB_H1), nrow(TAB_H1)))
+## Barrido del estímulo: las celdas por fila de la tabla (gi = la fila de G).
+celdas <- function(x) { tb <- x$tabla
+  if (isTRUE(x$gi == 1)) c(n1 = tb[[1]], a1 = tb[[3]], n2 = tb[[2]], a2 = tb[[4]]) else c(n1 = tb[[2]], a1 = tb[[4]], n2 = tb[[1]], a2 = tb[[3]]) }
+OPS_UN_PASO <- list(suma = function(a, b) a + b, resta = function(a, b) abs(a - b), producto = function(a, b) a * b,
+                    cociente = function(a, b) { M <- max(a, b); m <- min(a, b); if (m > 0 && M %% m == 0) M / m else NA_real_ })
+op_de <- function(g, a, b) { force(g); force(a); force(b); function(cc) g(cc[[a]], cc[[b]]) }
+OPS_EST <- list()
+for (par_c in list(c("n1", "n2"), c("a1", "a2"), c("n1", "a1"), c("n2", "a2"), c("n1", "a2"), c("n2", "a1")))
+  for (op_c in names(OPS_UN_PASO))
+    OPS_EST[[switch(op_c, suma = sprintf("%s + %s", par_c[1], par_c[2]), resta = sprintf("|%s - %s|", par_c[1], par_c[2]),
+                    producto = sprintf("%s * %s", par_c[1], par_c[2]), cociente = sprintf("%s / %s (entero)", par_c[1], par_c[2]))]] <-
+      op_de(OPS_UN_PASO[[op_c]], par_c[1], par_c[2])
+OPS_EST[["dos pasos: |n1 - n2| * a1"]] <- function(cc) abs(cc[["n1"]] - cc[["n2"]]) * cc[["a1"]]
+OPS_EST[["dos pasos: |n1 - n2| * a2"]] <- function(cc) abs(cc[["n1"]] - cc[["n2"]]) * cc[["a2"]]
+OPS_EST[["dos pasos: n1 * |a1 - a2|"]] <- function(cc) cc[["n1"]] * abs(cc[["a1"]] - cc[["a2"]])
+OPS_EST[["dos pasos: n2 * |a1 - a2|"]] <- function(cc) cc[["n2"]] * abs(cc[["a1"]] - cc[["a2"]])
+regla_de <- function(fr, lec) { force(fr); force(lec); function(x) { r <- fr(celdas(x)); if (lec == "i") lee_i(x, r) else lee_ii(x, r) } }
+BARRIDO <- list()
+for (nm_op in names(OPS_EST)) { BARRIDO[[paste(nm_op, "(i)")]] <- regla_de(OPS_EST[[nm_op]], "i")
+  BARRIDO[[paste(nm_op, "(ii)")]] <- regla_de(OPS_EST[[nm_op]], "ii") }
+TAB_EST <- mide(BARRIDO)
+APL_EST <- mide(lapply(OPS_EST, function(fr) { force(fr); function(x) as.numeric(aplica_r(x, fr(celdas(x)))) }))
+writeLines("  S2b · barrido del estímulo, por fila de la tabla (acierto en %, mezcla / CURSOS / PROMEDIO / canónica; «aplica»: alguna opción cita el resultado):")
+for (nm_op in names(OPS_EST)) {
+  z <- round(100 * c(TAB_EST[paste(nm_op, "(i)"), ], TAB_EST[paste(nm_op, "(ii)"), ], APL_EST[nm_op, ]), 1)
+  writeLines(do.call(sprintf, c(list("    %-26s (i) %5.1f %5.1f %5.1f %5.1f · (ii) %5.1f %5.1f %5.1f %5.1f · aplica %5.1f %5.1f %5.1f %5.1f", nm_op), as.list(z))))
+}
+ok(isTRUE(all.equal(TAB_EST["|a1 - a2| (i)", ], TAB_H1[R_RESTA, ])),
+   "S2b: el barrido reproduce «resta» con sus propias celdas: «|a1 - a2| (i)» es la misma regla, y se juzga una sola vez, en H1")
+np_est <- juzga_s2b(TAB_EST[rownames(TAB_EST) != "|a1 - a2| (i)", , drop = FALSE], "S2b barrido del estímulo")
+writeLines(sprintf("  S2b barrido: %d operaciones (24 de un paso entre dos celdas y 4 de dos pasos) × 2 lecturas × 4 estratos; %d cifras por encima de +8 pp sobre el azar, pendientes de firma (sin «|a1 - a2| (i)», que es «resta»)",
+                   length(OPS_EST), np_est))
+writeLines("  S2b: ninguna regla de un paso equivale a resolver el ítem. Los dos productos de fila juntos (n1 * a1 y n2 * a2) son los dos totales, y compararlos es resolverlo; cada uno por separado es «un solo total» y se mide.")
+
 source(file.path(REPO, ".claude/scripts/bateria_referencia_icfes.R"))        # B2: 34 reglas de referencia
 sede_txt <- function(s) sub(" gan[oó] .*$", "", s)
 grupo <- function(l) if (all(l) || !any(l)) NA else l
@@ -491,12 +596,16 @@ I_REGLAS <- list(   # congeladas el 2026-10-29, antes de medir (§P7-C)
 REGLAS <- c(B2, I_REGLAS)
 NA_FAM <- c(signo = "todas las cifras son positivas y ninguna opción niega ni compara con desigualdades")
 ## Regla #22 §P7-G (S4, ciclo 2026-11-02): la batería solo recibe las opciones. Los canales del estímulo (el
-## enunciado y la tabla) se miden aparte, en las sondas de E4, que sí ven la tabla: S1 y S1b leen sus cifras;
-## S2 y S3, sus filas; S5, S7 y S_U, las sedes que muestra, y sus combinaciones firmadas en «O-1 corregido»;
-## y en la canónica, regla por regla (decisión 2 a). Declararlo no mueve ninguna cifra.
-ESTIMULO_SC <- paste("los canales del enunciado y de la tabla se miden aparte, en las sondas de E4 (S1 y S1b leen",
-                     "las cifras de la tabla; S2 y S3, sus filas; S5, S7 y S_U, las sedes que muestra, y sus",
-                     "combinaciones) y, en la canónica, regla por regla (decisión 2 a)")
+## enunciado y la tabla) se miden aparte, en las sondas de E4, que sí ven la tabla.
+## S2b (H1 de la FASE 2C r6): la declaración de la S4 decía que E4 medía los canales de la tabla, y no medía la resta de
+## los promedios («resta»). Ahora dice exactamente qué mide E4 y qué no. Declararlo no mueve ninguna cifra.
+ESTIMULO_SC <- paste(
+  "E4 mide aparte el estímulo, sobre la tabla tal como se muestra: las cuatro celdas citadas tal cual (S1 y S1b); el",
+  "orden de las filas (S2); la sede por su perfil de cursos o de promedio (S3 a S6); la resta de los promedios,",
+  "|aG - aP| («resta», S2b), sola y con S_U y las pistas firmadas en «O-1 corregido»; y las operaciones de un paso entre",
+  "dos celdas (suma, resta, producto y cociente entero), con las lecturas (i) y (ii), más las cuatro de dos pasos que usa",
+  "el ítem (barrido, S2b). No mide otras operaciones de dos o más pasos ni el texto del enunciado fuera de los nombres",
+  "de las sedes. En la canónica, regla por regla (decisión 2 a y S2b)")
 for (est in list(list("mezcla natural", NAT), list("rama CURSOS", CU$CURSOS), list("rama PROMEDIO", CU$PROMEDIO))) {
   V <- est[[2]]; if (length(V) < 20) { cat("  ", est[[1]], ": NO CONCLUYENTE (n < 20)\n"); next }
   res <- evaluar_bateria(REGLAS, lapply(V, function(x) norm_ed(x$opciones)), vapply(V, `[[`, 0L, "clave"),
@@ -780,6 +889,37 @@ if (!is.null(mm$error)) falla(paste("M19 MAL CONSTRUIDO:", mm$error)) else {
   ok(any(sup), sprintf("M19 (ERR-TOTAL siempre que se pueda): sale de lo firmado en %d de %d cifras de O-1 corregido (mayor exceso: %s, rama %s, %.1f %% frente a %.1f %%)",
                        sum(sup), length(sup), rownames(TM)[row(TM)[peor]], colnames(TM)[col(TM)[peor]], 100 * TM[peor], 100 * FIRMA_O1[peor]))
 }
+## S2b: M19 mueve también el barrido. Con ERR-TOTAL siempre que se pueda, el producto de una fila (un solo total) cita
+## T_G más a menudo, así que «n1 * a1 (i)» y «n2 * a2 (i)» tienen que subir en las dos ramas.
+if (exists("CM") && is.list(CM) && all(c("CURSOS", "PROMEDIO") %in% names(CM))) {
+  P19 <- c("n1 * a1 (i)", "n2 * a2 (i)")
+  t19 <- sapply(P19, function(rg) vapply(CM[c("CURSOS", "PROMEDIO")], function(V) mean(vapply(V, BARRIDO[[rg]], 0)), 0))
+  b19 <- t(TAB_EST[P19, c("CURSOS", "PROMEDIO")])
+  ok(all(t19 > b19), sprintf("M19, también en el barrido (S2b): el producto de una fila sube en las dos ramas («n1 * a1 (i)»: CURSOS %.1f -> %.1f %%, PROMEDIO %.1f -> %.1f %%; «n2 * a2 (i)»: CURSOS %.1f -> %.1f %%, PROMEDIO %.1f -> %.1f %%)",
+                             100 * b19[1, 1], 100 * t19[1, 1], 100 * b19[2, 1], 100 * t19[2, 1],
+                             100 * b19[1, 2], 100 * t19[1, 2], 100 * b19[2, 2], 100 * t19[2, 2]))
+} else falla("M19, también en el barrido (S2b): no hay estratos de M19")
+## M44 (S2b, H1 de la FASE 2C r6): con ERR-RESTA como distractor de G siempre que se pueda, la cifra |aG - aP| sale más a
+## menudo, y «resta» tiene que subir en las dos ramas y seguir pendiente de firma (visible). Mismo método que M19.
+mm <- mutar(list(c("cod_gdis <- pick(unique(cand_g$codigo))",
+                   'cod_gdis <- if ("ERR-RESTA" %in% cand_g$codigo) "ERR-RESTA" else pick(unique(cand_g$codigo))')))
+if (!is.null(mm$error)) falla(paste("M44 MAL CONSTRUIDO:", mm$error)) else {
+  C44 <- list(CURSOS = list(), PROMEDIO = list())
+  for (s in 1000L + seq_len(TOPE)) {
+    if (all(lengths(C44) >= N)) break
+    r <- correr(s, mm$expr); if (!is.null(r$err) || isTRUE(r$env$es_canonica)) next
+    x <- rasgos(r$env); if (length(C44[[x$rama]]) < N) C44[[x$rama]][[length(C44[[x$rama]]) + 1]] <- x
+  }
+  cuota_resta <- function(L) vapply(L, function(V) mean(vapply(V, function(x) identical(x$cod_gdis, "ERR-RESTA"), TRUE)), 0)
+  q0 <- cuota_resta(CU[c("CURSOS", "PROMEDIO")]); q44 <- cuota_resta(C44)
+  t0 <- TAB_H1[R_RESTA, c("CURSOS", "PROMEDIO")]; t44 <- vapply(C44, function(V) mean(vapply(V, H1_REGLAS[[R_RESTA]], 0)), 0)
+  ver44 <- if (!all(lengths(C44) >= 20L) || !all(q44 > q0)) "mal_construido" else if (!all(t44 > t0)) "no_detectado" else
+    if (!all(t44 - 0.25 > 0.08 + 1e-9)) "no_detectado" else "cazado_por_su_sonda"
+  ok(ver44 == "cazado_por_su_sonda",
+     sprintf("M44 (ERR-RESTA siempre que se pueda; su cuota en el distractor de G pasa de %.0f a %.0f %% en CURSOS y de %.0f a %.0f %% en PROMEDIO): «resta» sube de %.1f a %.1f %% en CURSOS y de %.1f a %.1f %% en PROMEDIO, y sigue pendiente de firma — %s",
+             100 * q0[["CURSOS"]], 100 * q44[["CURSOS"]], 100 * q0[["PROMEDIO"]], 100 * q44[["PROMEDIO"]],
+             100 * t0[["CURSOS"]], 100 * t44[["CURSOS"]], 100 * t0[["PROMEDIO"]], 100 * t44[["PROMEDIO"]], ver44))
+}
 ## Mutante de medición M20 (H3 de la FASE 2C r4): una celda de la canónica cambia DESPUÉS de tabla_df.
 ## La guarda del .Rmd no lo ve (mira tabla_df); la sonda H3 r4 sobre tabla_md sí.
 mm <- mutar(list(c('x, "</span>")', 'sub("45", "46", x), "</span>")')))
@@ -899,7 +1039,12 @@ SONDAS_S1 <- c("S1" = PAT_S1, "S1-Sol fórmula" = PAT_S1F, "S1-Sol signo" = PAT_
 CONTROLES_S1 <- list("unidad dentro" = list(pat = PAT_DENTRO, n = CTRL_DENTRO),
                      "unidad con el signo dentro" = list(pat = PAT_SIGNO_DENTRO, n = CTRL_SIGNO),
                      "signo dentro sin unidad" = list(pat = PAT_SIN_U, n = CTRL_SIN_U))
+## S2b (H2 de la FASE 2C r6): juzgar_s1() es simétrico. Un mutante de sonda que además hace fallar un control exacto sale
+## «cazado_por_su_sonda_y_control»: prueba que la sonda es sensible, no que la clase ampliada sea necesaria. Los que lo hacen
+## por construcción (quitan la unidad de la fórmula o le sacan el signo) lo declaran aquí; los aditivos (M42, M43), no.
+ESPERA_CONTROL <- c("M38", "M39a", "M39b", "M39c", "M41a", "M41b", "M41c")
 juzgar_s1 <- function(id, desc, de, a, sonda, vieja = NULL) {
+  esperado <- if (id %in% ESPERA_CONTROL) "cazado_por_su_sonda_y_control" else "cazado_por_su_sonda"
   m <- mut_lin(de, a)
   if (is.null(m$lin)) return(invisible(falla(sprintf("%s MAL CONSTRUIDO: el patrón «%s» aparece %d veces (se exige 1)", id, substr(de, 1, 40), m$n))))
   t <- textos_sol(m$lin, 1:N)
@@ -908,15 +1053,17 @@ juzgar_s1 <- function(id, desc, de, a, sonda, vieja = NULL) {
   cc <- vapply(CONTROLES_S1, function(z) sum(cuenta_v(t, z$pat)), 0)
   cmal <- cc != vapply(CONTROLES_S1, function(z) z$n, 0)
   ver <- if (identical(m$lin, l)) "mal_construido" else if (sonda %in% names(SONDAS_S1)) {
-    if (s[[sonda]] == 0) "no_detectado" else if (any(s[names(s) != sonda] > 0)) "cazado_por_otra" else "cazado_por_su_sonda"
+    if (s[[sonda]] == 0) "no_detectado" else if (any(s[names(s) != sonda] > 0)) "cazado_por_otra" else
+      if (any(cmal)) "cazado_por_su_sonda_y_control" else "cazado_por_su_sonda"
   } else {
     if (any(s > 0) || any(cmal[names(cmal) != sonda])) "cazado_por_otra" else if (!cmal[[sonda]]) "no_detectado" else "cazado_por_su_sonda"
   }
   v_txt <- if (is.null(vieja)) "" else sprintf("; la clase anterior: %s", sum(cuenta_v(t, vieja)))
-  ok(ver == "cazado_por_su_sonda",
-     sprintf("%s (%s): S1 %s, S1-Sol fórmula %s, S1-Sol signo %s%s; controles: %s — sonda esperada «%s»: %s",
+  ok(ver == esperado,
+     sprintf("%s (%s): S1 %s, S1-Sol fórmula %s, S1-Sol signo %s%s; controles: %s — sonda esperada «%s»: %s%s",
              id, desc, s[[1]], s[[2]], s[[3]], v_txt,
-             paste(sprintf("%s %s%s", names(cc), cc, ifelse(cmal, " (falla)", "")), collapse = ", "), sonda, ver))
+             paste(sprintf("%s %s%s", names(cc), cc, ifelse(cmal, " (falla)", "")), collapse = ", "), sonda, ver,
+             if (esperado == "cazado_por_su_sonda") "" else paste0(" (esperado: ", esperado, ")")))
 }
 juzgar_s1("M34", "la explicación de ERR-PARCIAL, rama CURSOS, saca la unidad de su fórmula «… que compensan»; quita un solo sitio",
           'p$parcialP, "\\\\ \\\\text{kilos}$ que compensan', 'p$parcialP, "$ que compensan', "unidad dentro")
@@ -932,6 +1079,19 @@ for (cp in list(c("a", "2009", "espacio fino"), c("b", "202f", "espacio duro est
   juzgar_s1(paste0("M41", cp[1]), sprintf("la lista de totales deja el punto fuera de la fórmula tras U+%s, %s", toupper(cp[2]), cp[3]),
             PAT_M32, sprintf('"\\\\ \\\\text{kilos}$", intToUtf8(0x%s), ".\\n", sep = "")', cp[2]), "S1-Sol signo", vieja = PAT_S1S_VIEJA)
 }
+## S2b (H2 de la FASE 2C r6): mutantes ADITIVOS. Una frase nueva antes de «Propiedades del concepto», «Comprobación: $D$»,
+## seguida de un separador y un punto (M42, sonda S1-Sol signo) o de U+2060 y «kilos» (M43, sonda S1-Sol fórmula). No quitan
+## nada, así que los tres controles exactos no se mueven y la clase anterior da 0: solo los ve la clase ampliada, que es lo
+## único que la clase ampliada aporta (la clase de defecto de H2 de la r5). Separadores y saltos de línea, con intToUtf8().
+for (cp in list(c("a", "2009", "espacio fino"), c("b", "202f", "espacio duro estrecho"), c("c", "2060", "unión de palabras")))
+  juzgar_s1(paste0("M42", cp[1]), sprintf("aditivo: «Comprobación: $D$» antes de «Propiedades del concepto», seguida de U+%s, %s, y un punto", toupper(cp[2]), cp[3]),
+            'encabezado("Propiedades del concepto")',
+            sprintf('cat("Comprobación: $", d$D, "$", intToUtf8(0x%s), ".", intToUtf8(c(10L, 10L)), sep = ""); encabezado("Propiedades del concepto")', cp[2]),
+            "S1-Sol signo", vieja = PAT_S1S_VIEJA)
+juzgar_s1("M43", "aditivo: «Comprobación: $D$» antes de «Propiedades del concepto», seguida de U+2060, unión de palabras, y «kilos»",
+          'encabezado("Propiedades del concepto")',
+          'cat("Comprobación: $", d$D, "$", intToUtf8(0x2060), "kilos.", intToUtf8(c(10L, 10L)), sep = ""); encabezado("Propiedades del concepto")',
+          "S1-Sol fórmula", vieja = PAT_S1F_VIEJA)
 ## L-6 (firmada el 2026-11-02): ED es una variable con el escape de U+00A0 y el .Rmd no lleva el carácter literal
 ## (la herramienta de edición convierte el escape en literal sin avisar). M29 escribe el literal en la definición de ED.
 lit_ok <- function(lin) !any(grepl("\u00a0", lin, fixed = TRUE)) && length(grep('^ED <- "\\\\u00a0"', lin)) == 1L
@@ -951,6 +1111,9 @@ if (NORMALIZAR_ED) {
   sal <- suppressWarnings(system2(file.path(R.home("bin"), "Rscript"), c("--no-init-file", shQuote(yo), shQuote(normalizePath(rmd))),
                                   stdout = TRUE, stderr = TRUE, env = "VERIF_SIN_NORMALIZAR=1"))
   pend <- grep("PENDIENTE DE FIRMA:", sal, value = TRUE, fixed = TRUE)
+  ## S2b: este proceso ya sale con exit 3 por los pendientes de H1 y del barrido, que no dependen de la normalización.
+  ## M28 juzga los pendientes NUEVOS del proceso sin normalizar: los que este proceso no tiene.
+  pend <- pend[!trimws(sub("^ *PENDIENTE DE FIRMA: ", "", pend)) %in% PENDIENTES]
   larg <- grep("canal de largo (rama PROMEDIO)", pend, value = TRUE, fixed = TRUE)
   m_pal <- if (length(larg) == 1L) as.numeric(sub("^.*márgenes [0-9.]+ % y ([0-9.]+) %.*$", "\\1", larg)) else NA_real_
   ver28 <- if (!length(larg)) "no_detectado" else if (!isTRUE(m_pal == 6.7)) "mal_construido" else if (length(pend) != 1L) "cazado_por_otra" else "cazado_por_su_sonda"

@@ -1,0 +1,14 @@
+
+== cifra: primera ==
+E1 (mezcla)  n=100 · aplica  51.0 % · acierto  54.2 % (exceso +29.2 pp) · opción citada de G: 42/51 · es ERR-RESTA: 42/51
+CURSOS       n=100 · aplica  45.0 % · acierto  58.8 % (exceso +33.8 pp) · opción citada de G: 45/45 · es ERR-RESTA: 45/45
+PROMEDIO     n=100 · aplica  57.0 % · acierto  67.8 % (exceso +42.8 pp) · opción citada de G: 57/57 · es ERR-RESTA: 57/57
+canónica    n=  1 · aplica 100.0 % · acierto   0.0 % (exceso -25.0 pp) · opción citada de G: 0/1 · es ERR-RESTA: 0/1
+
+== cifra: cualquiera ==
+E1 (mezcla)  n=100 · aplica  51.0 % · acierto  54.2 % (exceso +29.2 pp) · opción citada de G: 42/51 · es ERR-RESTA: 42/51
+CURSOS       n=100 · aplica  45.0 % · acierto  58.8 % (exceso +33.8 pp) · opción citada de G: 45/45 · es ERR-RESTA: 45/45
+PROMEDIO     n=100 · aplica  57.0 % · acierto  67.8 % (exceso +42.8 pp) · opción citada de G: 57/57 · es ERR-RESTA: 57/57
+canónica    n=  1 · aplica 100.0 % · acierto   0.0 % (exceso -25.0 pp) · opción citada de G: 0/1 · es ERR-RESTA: 0/1
+
+última semilla usada en E2: 1269
