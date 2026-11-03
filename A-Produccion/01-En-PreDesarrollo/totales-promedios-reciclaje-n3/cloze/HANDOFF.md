@@ -665,3 +665,50 @@ nuevo y el pendiente del SCHOICE. Los puntos de abajo son historia: ya están cu
 `salida/ciclo_20261102/c1b/6b_c1b/informe_6b_c1b_6f6f1b13.md`). «diferencia.» sola en el último renglón a 360 px: 99/100 en
 `27f789dc` → 0/100 en `6f6f1b13`; 0 cortes entre cifra y «kilos» (400 pares) y 0 desbordes; la Parte 1, idéntica y con 0 cortes de
 L-6. BAJO declarado: a 320 px, «habría | ganado.» puede partirse a mitad del párrafo (3 de 6 recortes; sin medir en las 100).
+
+## Tanda C1c del ciclo 2026-11-02 (2026-11-03): H1 de la FASE 2C r5, 6/11 (registro completo en `../.claude/CLAUDE.md`)
+
+> **Este bloque manda sobre los de las tandas C1 y C1b y sobre el «Estado» de arriba.** Reapertura #7 desde `generacion_rmd` (18:19:27).
+> `.Rmd`: `6f6f1b13…` → **`ef2c96dc1c2b667fa904ea231329b4dc`**. Verificador: `6d37faad…` → **`04349f26559ac32cc7f8f0a439c470b6`**.
+> Sin aprobar. Se detuvo antes de la FASE 2C r6. Evidencia: `salida/ciclo_20261102/c1c/`.
+
+- **Qué cambió (decisión del profesor del 2026-11-03, «Corregir ahora (Recomendada)»).** Una sola frase de la Solution: «Por eso, con
+  un curso más o uno menos, basta comparar ese promedio con la diferencia entre los totales: si el promedio es mayor, el ganador
+  cambia; si es menor, no.» Nada más cambia en el `.Rmd`.
+- **Invariancia** (`invariancia_c1c.txt`): deshacer la frase da `6f6f1b13` byte a byte. Semillas 1 a 1000: `.Random.seed`, objetos y E1,
+  0 diferencias, y ningún objeto nuevo; Solution idéntica salvo la frase. Texto emitido por `xexams`, semillas 1 a 100: 0 diferencias.
+- **Verificador:** exit 4, 368 cifras dentro de lo firmado, 0 fallos y 0 pendientes; las 368 líneas firmadas, idénticas a la C1b, y 0
+  líneas distintas fuera de las añadidas (`comparar_c1b_c1c.txt`). Sonda nueva Crit-P6, con control exacto 100 y sus mutantes MC56 y
+  MC57. H3 de la r5: `mut_h1()` con la convención `_y_otra` y `_y_control` (MC50 y MC54 `_y_otra`, MC51 `_y_otra_y_control`, MC53 sin
+  cambio), el comentario de «marca» corregido y MC55, mutante del entorno que prueba esa componente sola.
+- **Sellos:** paso 3 a las 18:32:18.418, 5 a las 18:32:18.605, 6 a las 18:32:18.779 y 4 a las 18:33:01.054. **Desviación declarada:** el
+  paso 4 quedó después del 5 y del 6, y los otros tres a 361 ms entre sí, porque una comprobación previa mal puesta bloqueó el del 4
+  (exigía «frase nueva 1» en `cloze.xml`, que trae 5 versiones). Los artefactos son anteriores a todos los sellos. Render en
+  `salida/ciclo_20261102/c1c/render_ef2c96dc/`; arsenal 0 errores y 6 advertencias, 2G 100/100, 2H 0 anomalías.
+- **6b pareada** (`auditor-visual-html`, sin `name:`, N = 100 por versión, a 360 y 320 px): APTO_CON_OBSERVACIONES. Informe en
+  `salida/ciclo_20261102/c1c/6b_c1c/informe_6b_c1c_ef2c96dc.md`. Una sola palabra en el último renglón, 0/100; 0 cortes entre cifra y
+  «kilos»; 0 desbordes; la Parte 1, idéntica y con 0 cortes de L-6.
+
+**Residuo de H2, con las cifras del md5 final** (`6b_c1c/contar_h2_c1c.txt`; sustituye a las de `6f6f1b13`):
+
+| Corte | 360 px | 320 px | Antes, 360 px | Antes, 320 px |
+|---|---|---|---|---|
+| «habría ⏎ ganado.» | 0/57 | 0/57 | 0/57 | 57/57 |
+| «habría ⏎ seguido ganando.» | 19/51 | 19/51 | 29/51 | 43/51 |
+| Páginas con alguno de los dos | 19/100 | 19/100 | 29/100 | 84/100 |
+| «no le ⏎ habría alcanzado» | 0/43 | 0/43 | 0/43 | 43/43 |
+| «habría ⏎ sumado» | 100/100 | 0/100 | 41/100 | 100/100 |
+
+Control positivo: la referencia `6f6f1b13` reproduce exactamente las cifras de la r5. El corte se desplaza, no desaparece, y no viola
+ninguna ley. Por decisión del profesor no lleva espacio duro.
+
+**Lectura que la frase deja abierta (medida, no corregida):** no dice a qué grado se aplica el criterio. Aplicado a una BC con *k* = 1,
+que siempre va en sentido inverso (rama PROMEDIO: el que perdió pierde un curso o el que ganó gana uno), da el veredicto contrario en
+183 de 1000 versiones (`lectura_criterio_c1c.txt`; sin la acotación eran 421). La lectura buscada es verdadera en 1000 de 1000. Va a la
+r6 y al profesor. Por la regla de parada, si solo es un BAJA de redacción, queda como residuo declarado.
+
+### Próximo paso (tanda C1c)
+
+1. FASE 2C r6 con un detractor NUEVO, sin `name:`. Qué debe auditar: `../.claude/CLAUDE.md` § «Ciclo 2026-11-02 del CLOZE, tanda C1c».
+2. Según su veredicto: si no abre una CORRECCIÓN, tanda C2, con el paso 8 (oráculo r10 nuevo, con los diez puntos de la r5 y el criterio
+   literal de esta tanda) y los pasos 9 y 10.

@@ -1,0 +1,4 @@
+páginas sin párrafo: 0
+versión ancho | habría/ganado | habría/seguido ganando | A o B (páginas) | no le/habría alcanzado | habría/sumado | páginas
+n 360 | 0/57 | 29/51 | 29/100 | 0/43 | 41/100 | 100
+n 320 | 57/57 | 43/51 | 84/100 | 43/43 | 100/100 | 100

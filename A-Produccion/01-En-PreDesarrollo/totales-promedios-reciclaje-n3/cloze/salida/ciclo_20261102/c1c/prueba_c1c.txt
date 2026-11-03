@@ -1,0 +1,33 @@
+Versión verificada: totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd · md5 ef2c96dc1c2b667fa904ea231329b4dc
+SCHOICE leído: md5 63e2713e6ac0bdbf250f4dc33901b2ec (aprobado para el aula: 63e2713e6ac0bdbf250f4dc33901b2ec; re-empalmado en la tanda C1)
+  OK: C1 · L-6 en la prosa de la Parte 1 de la Solution (100 versiones): unidad fuera de una fórmula 0 · signo fuera de una fórmula 0 · cifra-unidad o El/La con espacio normal 0 · versiones sin la prosa de la Parte 1 0 
+  OK: C1 · L-6, controles exactos en la prosa propia de la Parte 1: 600 unidades dentro de la fórmula (esperadas 600) y 300 con el signo dentro (esperadas 300) 
+  OK: C1 · L-6: ni el .Rmd ni este verificador llevan U+00A0, U+2009, U+202F o U+2060 literales 
+  OK: C1b · H1-Sol, párrafo «Parte 6.» de la Solution (100 versiones), leído del texto: comparaciones falsas 0 · cifra o grado que no son los de la tabla 0 · conclusión que no se sigue del «más» o «menos» 0 · conclusión contra la marca de HP o HG 0 · cifra-kilos con espacio normal 0 · versiones sin el párrafo 0 
+  OK: C1b · H1-Sol, control exacto: 200 comparaciones con cifras (esperadas 200), 100 con «un curso más» y 100 con «un curso menos» (esperadas 100 y 100); por rama: «un curso más» y «más» 57, «un curso más» y «menos» 43, «un curso menos» y «más» 49, «un curso menos» y «menos» 51 
+  OK: C1c · Crit-P6, criterio general del párrafo «Parte 6.» (100 versiones), leído del texto crudo: sin el literal exactamente una vez 0 · con cifras en el tramo general 0 · versiones sin el párrafo 0 
+  OK: C1c · Crit-P6, control exacto: 100 apariciones del criterio literal (esperadas 100) 
+  OK: MC50 («un curso más» dice «menos» también cuando el promedio supera la diferencia): falsa +57, concl +57; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100) — cazado_por_su_sonda_y_otra (esperado: cazado_por_su_sonda_y_otra) 
+  OK: MC51 (vuelve a la redacción de 27f789dc): falsa +43, marca +43; control: 100 comparaciones (100 «un curso más», 0 «un curso menos»; esperadas 200, 100 y 100) — cazado_por_su_sonda_y_otra_y_control (esperado: cazado_por_su_sonda_y_otra_y_control) 
+  OK: MC53 («un curso más»: espacio normal entre la diferencia y «kilos»): esp +100; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100) — cazado_por_su_sonda (esperado: cazado_por_su_sonda) 
+  OK: MC54 («un curso más» cita el promedio del grado que ganó): falsa +30, cifra +100; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100) — cazado_por_su_sonda_y_otra (esperado: cazado_por_su_sonda_y_otra) 
+  OK: MC55 (la marca de HP, volteada en una copia de los entornos): marca +100; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100) — cazado_por_su_sonda (esperado: cazado_por_su_sonda) 
+  OK: MC56 (vuelve a la frase de 6f6f1b13, sin tocar las comparaciones): falta +100; control: 0 apariciones del literal (sin mutar 100); H1-Sol no se mueve — cazado_por_su_sonda 
+  OK: MC57 (una cifra de la versión en el tramo general, con el literal intacto): cifra +100; control: 100 apariciones del literal (sin mutar 100); H1-Sol no se mueve — cazado_por_su_sonda 
+     [,1] [,2]                                
+MC50 MC50 cazado_por_su_sonda_y_otra          
+MC51 MC51 cazado_por_su_sonda_y_otra_y_control
+MC53 MC53 cazado_por_su_sonda                 
+MC54 MC54 cazado_por_su_sonda_y_otra          
+MC55 MC55 cazado_por_su_sonda                 
+MC56 MC56 cazado_por_su_sonda                 
+MC57 MC57 cazado_por_su_sonda                 
+     [,3]                                                                                                                  
+MC50 falsa +57, concl +57; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100) 
+MC51 falsa +43, marca +43; control: 100 comparaciones (100 «un curso más», 0 «un curso menos»; esperadas 200, 100 y 100)   
+MC53 esp +100; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100)             
+MC54 falsa +30, cifra +100; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100)
+MC55 marca +100; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100)           
+MC56 falta +100; control: 0 apariciones del literal (sin mutar 100); H1-Sol no se mueve                                    
+MC57 cifra +100; control: 100 apariciones del literal (sin mutar 100); H1-Sol no se mueve                                  
+fallos: 0 

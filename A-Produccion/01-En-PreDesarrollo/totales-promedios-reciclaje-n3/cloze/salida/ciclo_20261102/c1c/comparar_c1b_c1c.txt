@@ -1,0 +1,39 @@
+c1b: 1434 líneas (1415 comparables) · c1c: 1448 líneas (1415 comparables)
+apartadas en c1c: 33
+    Versión verificada: totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd · md5 ef2c96dc1c2b667fa904ea231329b4dc
+      OK: C1c · Crit-P6, criterio general del párrafo «Parte 6.» (100 versiones), leído del texto crudo: sin el literal exactamente una vez 0 · con cifras en el tramo general 0 · versiones sin el párrafo 0
+      OK: C1c · Crit-P6, control exacto: 100 apariciones del criterio literal (esperadas 100)
+      OK: MC50 («un curso más» dice «menos» también cuando el promedio supera la diferencia): falsa +57, concl +57; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100) — cazado_por_su_sonda_y_otra (esperado: ca
+      OK: MC51 (vuelve a la redacción de 27f789dc): falsa +43, marca +43; control: 100 comparaciones (100 «un curso más», 0 «un curso menos»; esperadas 200, 100 y 100) — cazado_por_su_sonda_y_otra_y_control (esperado: cazado_por_su_sonda_y_otra_y_control
+      OK: MC53 («un curso más»: espacio normal entre la diferencia y «kilos»): esp +100; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100) — cazado_por_su_sonda (esperado: cazado_por_su_sonda)
+      OK: MC54 («un curso más» cita el promedio del grado que ganó): falsa +30, cifra +100; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100) — cazado_por_su_sonda_y_otra (esperado: cazado_por_su_sonda_y_otra
+      OK: MC55 (la marca de HP, volteada en una copia de los entornos): marca +100; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100) — cazado_por_su_sonda (esperado: cazado_por_su_sonda)
+      OK: MC56 (vuelve a la frase de 6f6f1b13, sin tocar las comparaciones): falta +100; control: 0 apariciones del literal (sin mutar 100); H1-Sol no se mueve — cazado_por_su_sonda
+      OK: MC57 (una cifra de la versión en el tramo general, con el literal intacto): cifra +100; control: 100 apariciones del literal (sin mutar 100); H1-Sol no se mueve — cazado_por_su_sonda
+    MC50 MC50 cazado_por_su_sonda_y_otra
+    MC51 MC51 cazado_por_su_sonda_y_otra_y_control
+    MC53 MC53 cazado_por_su_sonda
+    MC54 MC54 cazado_por_su_sonda_y_otra
+    MC55 MC55 cazado_por_su_sonda
+    MC56 MC56 cazado_por_su_sonda
+    MC57 MC57 cazado_por_su_sonda
+    MC50 C1b · H1-Sol: falsa
+    MC51 C1b · H1-Sol: falsa
+    MC53 C1b · H1-Sol: esp
+    MC54 C1b · H1-Sol: cifra
+    MC55 C1b · H1-Sol: marca
+    MC56 C1c · Crit-P6: falta
+    MC57 C1c · Crit-P6: cifra
+    MC50 falsa +57, concl +57; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100)
+    MC51 falsa +43, marca +43; control: 100 comparaciones (100 «un curso más», 0 «un curso menos»; esperadas 200, 100 y 100)
+    MC53 esp +100; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100)
+    MC54 falsa +30, cifra +100; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100)
+    MC55 marca +100; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100)
+    MC56 falta +100; control: 0 apariciones del literal (sin mutar 100); H1-Sol no se mueve
+    MC57 cifra +100; control: 100 apariciones del literal (sin mutar 100); H1-Sol no se mueve
+    === RESULTADO: EN ROJO BAJO OVERRIDE FIRMADO (368 cifras dentro de lo firmado: «O-1 corregido», X6, X9, X10 y X11 en la canónica, la canónica de la Parte 1 por la decisión 2 a H2 por «H2 a», y la Parte 2 y la regla por palabra de la Parte 6 firmada r
+    exit=4 segundos=479 fin=18:30:36
+líneas «ROJO, cubierto por»: c1b 368 · c1c 368 · idénticas una a una: True
+diferencias fuera de lo apartado: 0
+=== RESULTADO: EN ROJO BAJO OVERRIDE FIRMADO (368 cifras dentro de lo firmado: «O-1 corregido», X6, X9, X10 y X11 en la canónica, la canónica de la Parte 1 por la decisión 2 a H2 por «H2 a», y la Parte 2 y la regla por palabra de la Parte 6 firmada regla por regla por la decisión «Va», y la firma de la S2d extendida a la Parte 1; 0 fallos, 0 pendientes) ===
+exit=4 segundos=479 fin=18:30:36

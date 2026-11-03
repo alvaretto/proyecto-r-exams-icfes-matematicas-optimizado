@@ -1,0 +1,13 @@
+CLOZE nuevo ef2c96dc1c2b667fa904ea231329b4dc · CLOZE viejo 6f6f1b1311b0d681bd974c719ecd75d5 · SCHOICE 63e2713e6ac0bdbf250f4dc33901b2ec 
+(a) deshacer la frase en el .Rmd nuevo da 6f6f1b13 byte a byte: TRUE
+    chunk data_generation idéntico: TRUE
+Semillas 1 a 1000 (113 canónicas); errores de ejecución: 0
+(b) .Random.seed final distinto de 6f6f1b13: 0 de 1000 · objetos distintos: 0 · versiones con objetos nuevos o que faltan: 0 · objetos por versión (incluidos los ocultos): de 157 a 182
+(c) E1 (Parte 1 = SCHOICE 63e2713e, objetos y .Random.seed al final del bloque): 0 diferencias
+(d) Solution emitida distinta de 6f6f1b13 fuera de la frase: 0 de 1000 · párrafo «Parte 6.» distinto fuera de la frase: 0 de 1000 · control (cada frase solo en su versión) fallido: 0 de 1000
+    Párrafo nuevo, ejemplos (~ = U+00A0):
+    semilla 1: Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo promedio suma ese promedio al total, y un curso menos lo resta. Por eso, con un curso más o uno menos, basta comparar ese promedio con la diferencia entre los totales: si el promedio es mayor, el ganador cambia; si es menor, no. Con un curso más, el grado sexto habría sumado a su total 53~kilos, más que la diferencia de 37~kilos: habría ganado. Con un curso menos, el grado séptimo habría restado a su total 51~kilos, más que la diferencia de 37~kilos: habría~perdido.
+    semilla 10: Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo promedio suma ese promedio al total, y un curso menos lo resta. Por eso, con un curso más o uno menos, basta comparar ese promedio con la diferencia entre los totales: si el promedio es mayor, el ganador cambia; si es menor, no. Con un curso más, el grado séptimo habría sumado a su total 27~kilos, menos que la diferencia de 33~kilos: no le habría alcanzado para ganar. Con un curso menos, el grado sexto habría restado a su total 42~kilos, más que la diferencia de 33~kilos: habría~perdido.
+[1] TRUE
+(e) Texto emitido (xexams, después de exshuffle), semillas 1 a 100: 0 diferencias en enunciado, questionlist, solutionlist, metainformación salvo file, o solution fuera de la frase · la frase, una vez en cada versión: 100 de 100
+exit=0 segundos=127 fin=18:25:58

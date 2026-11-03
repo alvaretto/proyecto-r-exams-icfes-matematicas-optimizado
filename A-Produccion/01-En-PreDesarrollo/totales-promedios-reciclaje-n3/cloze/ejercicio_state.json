@@ -3,7 +3,7 @@
   "ejercicio": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1",
   "tipo": "cloze",
   "timestamp_inicio": "2026-10-30T21:25:33.191024-05:00",
-  "timestamp_ultima_actualizacion": "2026-11-03T16:42:23.489372-05:00",
+  "timestamp_ultima_actualizacion": "2026-11-03T18:33:01.054202-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -27,24 +27,24 @@
     },
     "generacion_rmd": {
       "completado": true,
-      "timestamp": "2026-11-03T16:41:59.633933-05:00",
+      "timestamp": "2026-11-03T18:32:18.418009-05:00",
       "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd",
-      "nota": "Tanda C1b del ciclo 2026-11-02 del CLOZE (2026-11-03). md5 27f789dc6327f7d6bda72cded61502cd -> 6f6f1b1311b0d681bd974c719ecd75d5. H1 de la FASE 2C r4, decision del profesor del 2026-11-03 'Reescribir ahora (Recomendada)'. Script salida/ciclo_20261102/c1b/editar_rmd_c1b.py (2 patrones, cada uno exigido 1 vez; diff_rmd_27f789dc_c1b.patch). data_generation: hp_supera <- dp$aP > dp$D, hg_supera <- dp$aG > dp$D y stopifnot 'H1 r4: la comparacion de la Solution de la Parte 6 coincide con los veredictos sorteados de HP y HG' (MC52). Invariancia c1b/invariancia_c1b.txt, semillas 1 a 1000 (113 canonicas): .Random.seed 0 diferencias; E1 contra el SCHOICE 63e2713e 0; objetos de 27f789dc 0 diferencias (nuevos solo hp_supera y hg_supera, = v_hp y v_hg); fuera de los chunks data_generation y solucion el .Rmd es identico byte a byte; Solution identica salvo el parrafo Parte 6 en 1000/1000. Verificador 6d37faad687a5fc11e69b763429b6624 (c1b/verificar_espacio_cloze_c1b.txt, 472 s): exit 4, 368 cifras dentro de lo firmado, 0 fallos, 0 pendientes; 0 lineas distintas de la C1 fuera de las anadidas (c1b/comparar_c1_c1b.txt)."
+      "nota": "Tanda C1c del ciclo 2026-11-02 del CLOZE (2026-11-03). md5 6f6f1b1311b0d681bd974c719ecd75d5 -> ef2c96dc1c2b667fa904ea231329b4dc. H1 de la FASE 2C r5, decisión del profesor del 2026-11-03 «Corregir ahora (Recomendada)»: una sola frase de la Solution. Script salida/ciclo_20261102/c1c/editar_rmd_c1c.py (patrón exigido 1 vez; diff_rmd_6f6f1b13_c1c.patch). Invariancia c1c/invariancia_c1c.txt, semillas 1 a 1000 (113 canónicas): deshacer la frase da 6f6f1b13 byte a byte; .Random.seed 0 diferencias; objetos 0 diferencias y 0 nuevos; E1 contra el SCHOICE 63e2713e 0; xexams 1 a 100, 0 diferencias. Verificador 04349f26559ac32cc7f8f0a439c470b6 (c1c/verificar_espacio_cloze_c1c.txt, 479 s): exit 4, 368 cifras dentro de lo firmado, 0 fallos, 0 pendientes; 0 líneas distintas de la C1b fuera de las añadidas (c1c/comparar_c1b_c1c.txt)."
     },
     "retroalimentacion": {
       "completado": true,
-      "timestamp": "2026-11-03T16:42:07.265616-05:00",
-      "nota": "Tanda C1b (md5 6f6f1b1311b0d681bd974c719ecd75d5). Solution: el parrafo 'Parte 6.' resuelve cada comparacion con las cifras de la version (H1 de la FASE 2C r4): criterio general sin cifras ('basta comparar ese promedio con la diferencia entre los totales: si es mayor, el ganador cambia; si es menor, no') y dos frases con la cifra, 'mas' o 'menos' segun hp_supera/hg_supera y la conclusion que se sigue ('habria ganado'/'no le habria alcanzado para ganar'; 'habria perdido'/'habria seguido ganando'); ED entre cifra y kilos (L-6) y en las dos ultimas palabras. Sonda H1-Sol del verificador (100 versiones, leida del texto): 0 comparaciones falsas, 0 cifras o grados ajenos a la tabla, 0 conclusiones que no se siguen, 0 contra la marca de HP o HG, 0 cifra-kilos con espacio normal; control exacto 200/200 (100 y 100). Invariancia 1000 semillas: 2000 comparaciones, 0 falsas, 0 contra la marca (HP verdadera 476, HG 518); control 27f789dc: 656/1000 versiones con alguna comparacion falsa leida suelta. Regla #19: 0. Regla #25: OK. Ortografia: limpio. Literales U+00A0/U+2009/U+202F/U+2060: 0 (c1b/reglas_texto_c1b.txt)."
+      "timestamp": "2026-11-03T18:33:01.054202-05:00",
+      "nota": "Tanda C1c (md5 ef2c96dc1c2b667fa904ea231329b4dc). Solution: criterio general del párrafo «Parte 6.» con su alcance y su sujeto («Por eso, con un curso más o uno menos, basta comparar ese promedio con la diferencia entre los totales: si el promedio es mayor, el ganador cambia; si es menor, no.»); H1 de la FASE 2C r5. Solution emitida idéntica salvo la frase, y el resto del párrafo idéntico byte a byte, en 1000/1000. Sonda nueva Crit-P6 (100 versiones, texto crudo): literal una vez por versión, 0 cifras en el tramo general, control exacto 100; H1-Sol sin cambios (200 comparaciones, 0 falsas). Reglas #19 y #25, ortografía y literales: limpias (c1c/reglas_texto_c1c.txt). La frase, una vez por versión en HTML, PDF, DOCX y Moodle (c1c/formatos_parrafo_c1c.txt). Sellado DESPUÉS de los pasos 5 y 6: la comprobación previa exigía «frase nueva 1» también en cloze.xml, que trae las 5 versiones (5 = una por versión), y bloqueó este sello; se corrigió la comprobación, no el artefacto. Los artefactos son anteriores a todos los sellos (invariancia 18:25:58, verificador 18:30:36)."
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-11-03T16:42:13.647181-05:00",
-      "nota": "Tanda C1b, md5 6f6f1b1311b0d681bd974c719ecd75d5. salida/ciclo_20261102/c1b/render_6f6f1b13/ (render.log): exams2pdf primero con dir= y texdir= literales y ruta absoluta del .Rmd; PDF 5, HTML 5 (0 ##ANSWER), DOCX 1, Moodle n = 5 (15 gaps de eleccion, 0 con imagen). NOPS: N/A, exams2nops rechaza extype cloze ('cloze exercises'). .tex: 6, 0 usos de pandocbounded fuera de providecommand, LTcaptype{none} 2 con la guarda. PDF revisado: el parrafo 'Parte 6.' dentro del margen (pagina 2 de la vista previa del hook), coherente con las marcas."
+      "timestamp": "2026-11-03T18:32:18.605354-05:00",
+      "nota": "Tanda C1c, md5 ef2c96dc1c2b667fa904ea231329b4dc. salida/ciclo_20261102/c1c/render_ef2c96dc/ (render.log): exams2pdf primero con dir= y texdir= literales y ruta absoluta del .Rmd; PDF 5, HTML 5 (0 ##ANSWER), DOCX 1, Moodle n = 5 (15 gaps de elección, 0 con imagen). NOPS: N/A, exams2nops rechaza extype cloze («cloze exercises»). .tex: 6, 0 usos de pandocbounded fuera de providecommand, LTcaptype{none} 2 con la guarda. PDF revisado: las 5 páginas de la vista previa del hook leídas una a una, dentro del margen, con el párrafo «Parte 6.» en la página 2 y coherente con las marcas."
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-11-03T16:42:23.489372-05:00",
-      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261103-163617-186493/informe.txt · md5 6f6f1b1311b0d681bd974c719ecd75d5 · 0 errores / 6 advertencias (las heuristicas conocidas de 2E y 2F, las mismas de la C1). 2A APROBADO; 2B 5 paginas (la 2, con el parrafo Parte 6 de la Solution, leida); 2G 100/100; 2H 10 semillas, 0 anomalias; 2I, 2J, 2K, 2L, 2N y 2O en verde. 2M: auditoria 6b pareada lanzada aparte (auditor-visual-html, sin name)."
+      "timestamp": "2026-11-03T18:32:18.779810-05:00",
+      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261103-182447-345966/informe.txt · md5 ef2c96dc1c2b667fa904ea231329b4dc · 0 errores / 6 advertencias (las heurísticas conocidas de 2E y 2F, las mismas de la C1b). 2A APROBADO; 2B 5 páginas, las 5 leídas; 2G 100/100; 2H 10 semillas, 0 anomalías; 2I, 2J, 2K, 2L, 2N y 2O en verde. 2M: auditoría 6b pareada lanzada aparte (auditor-visual-html, sin name)."
     },
     "detractor_fase2c": {
       "completado": false,
@@ -283,6 +283,37 @@
         "arsenal_post_render": {
           "timestamp": "2026-11-03T13:32:20.690968-05:00",
           "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261103-133049-847130/informe.txt · md5 27f789dc6327f7d6bda72cded61502cd · 0 errores / 6 advertencias (las heuristicas conocidas de 2E y 2F; la septima de tandas anteriores, PDF no encontrado, desaparece con exams2pdf primero). 2A APROBADO, 2G 100/100, 2H 10 semillas 0 anomalias, 2I, 2J, 2K, 2L, 2N y 2O OK."
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-03T18:19:27.386449-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Ciclo 2026-11-02 del CLOZE, tanda C1c: H1 de la FASE 2C r5 (criterio general de la Parte 6), decisión del profesor del 2026-11-03 «Corregir ahora (Recomendada)»",
+      "reporte": "salida/fase2c_r5_detractor.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-11-03T16:41:59.633933-05:00",
+          "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd",
+          "nota": "Tanda C1b del ciclo 2026-11-02 del CLOZE (2026-11-03). md5 27f789dc6327f7d6bda72cded61502cd -> 6f6f1b1311b0d681bd974c719ecd75d5. H1 de la FASE 2C r4, decision del profesor del 2026-11-03 'Reescribir ahora (Recomendada)'. Script salida/ciclo_20261102/c1b/editar_rmd_c1b.py (2 patrones, cada uno exigido 1 vez; diff_rmd_27f789dc_c1b.patch). data_generation: hp_supera <- dp$aP > dp$D, hg_supera <- dp$aG > dp$D y stopifnot 'H1 r4: la comparacion de la Solution de la Parte 6 coincide con los veredictos sorteados de HP y HG' (MC52). Invariancia c1b/invariancia_c1b.txt, semillas 1 a 1000 (113 canonicas): .Random.seed 0 diferencias; E1 contra el SCHOICE 63e2713e 0; objetos de 27f789dc 0 diferencias (nuevos solo hp_supera y hg_supera, = v_hp y v_hg); fuera de los chunks data_generation y solucion el .Rmd es identico byte a byte; Solution identica salvo el parrafo Parte 6 en 1000/1000. Verificador 6d37faad687a5fc11e69b763429b6624 (c1b/verificar_espacio_cloze_c1b.txt, 472 s): exit 4, 368 cifras dentro de lo firmado, 0 fallos, 0 pendientes; 0 lineas distintas de la C1 fuera de las anadidas (c1b/comparar_c1_c1b.txt)."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-11-03T16:42:07.265616-05:00",
+          "nota": "Tanda C1b (md5 6f6f1b1311b0d681bd974c719ecd75d5). Solution: el parrafo 'Parte 6.' resuelve cada comparacion con las cifras de la version (H1 de la FASE 2C r4): criterio general sin cifras ('basta comparar ese promedio con la diferencia entre los totales: si es mayor, el ganador cambia; si es menor, no') y dos frases con la cifra, 'mas' o 'menos' segun hp_supera/hg_supera y la conclusion que se sigue ('habria ganado'/'no le habria alcanzado para ganar'; 'habria perdido'/'habria seguido ganando'); ED entre cifra y kilos (L-6) y en las dos ultimas palabras. Sonda H1-Sol del verificador (100 versiones, leida del texto): 0 comparaciones falsas, 0 cifras o grados ajenos a la tabla, 0 conclusiones que no se siguen, 0 contra la marca de HP o HG, 0 cifra-kilos con espacio normal; control exacto 200/200 (100 y 100). Invariancia 1000 semillas: 2000 comparaciones, 0 falsas, 0 contra la marca (HP verdadera 476, HG 518); control 27f789dc: 656/1000 versiones con alguna comparacion falsa leida suelta. Regla #19: 0. Regla #25: OK. Ortografia: limpio. Literales U+00A0/U+2009/U+202F/U+2060: 0 (c1b/reglas_texto_c1b.txt)."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-11-03T16:42:13.647181-05:00",
+          "nota": "Tanda C1b, md5 6f6f1b1311b0d681bd974c719ecd75d5. salida/ciclo_20261102/c1b/render_6f6f1b13/ (render.log): exams2pdf primero con dir= y texdir= literales y ruta absoluta del .Rmd; PDF 5, HTML 5 (0 ##ANSWER), DOCX 1, Moodle n = 5 (15 gaps de eleccion, 0 con imagen). NOPS: N/A, exams2nops rechaza extype cloze ('cloze exercises'). .tex: 6, 0 usos de pandocbounded fuera de providecommand, LTcaptype{none} 2 con la guarda. PDF revisado: el parrafo 'Parte 6.' dentro del margen (pagina 2 de la vista previa del hook), coherente con las marcas."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-11-03T16:42:23.489372-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261103-163617-186493/informe.txt · md5 6f6f1b1311b0d681bd974c719ecd75d5 · 0 errores / 6 advertencias (las heuristicas conocidas de 2E y 2F, las mismas de la C1). 2A APROBADO; 2B 5 paginas (la 2, con el parrafo Parte 6 de la Solution, leida); 2G 100/100; 2H 10 semillas, 0 anomalias; 2I, 2J, 2K, 2L, 2N y 2O en verde. 2M: auditoria 6b pareada lanzada aparte (auditor-visual-html, sin name)."
         }
       }
     }

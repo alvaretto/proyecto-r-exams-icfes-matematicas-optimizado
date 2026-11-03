@@ -1,0 +1,34 @@
+Semillas 1 a 1000. Afirmación de ventaja: BP 505 · BC 495
+BC con k >= 2 (fuera del alcance de «un curso más o uno menos»): 273
+BC con k = 1, sentido previsto: 0 versiones · el criterio da el veredicto real en 0 · da el contrario en 0
+BC con k = 1, sentido inverso: 222 versiones · el criterio da el veredicto real en 39 · da el contrario en 183
+Versiones donde el criterio, aplicado dentro de su alcance literal, da el veredicto contrario: 183 de 1000
+
+Rama × k (todas las versiones):
+          k (3 = 3 o más)
+rama         1   2   3
+  CURSOS   111 243 114
+  PROMEDIO 460  71   1
+
+Rama × tipo de afirmación de ventaja × marca:
+                   marca FALSE TRUE
+rama     id                        
+CURSOS   BC_gano             0  122
+         BC_perdio           0  108
+         BP_gano           114    0
+         BP_perdio         124    0
+PROMEDIO BC_gano           131    0
+         BC_perdio         134    0
+         BP_gano             0  145
+         BP_perdio           0  122
+
+sign(nG - nP) por rama:
+          
+            -1   1
+  CURSOS     0 468
+  PROMEDIO 532   0
+
+Sin la acotación (frase de 6f6f1b13), el criterio aplicado a toda BC da el veredicto contrario en 421 de 495 BC (421 de 1000 versiones).
+Con la acotación, las BC con k >= 2 quedan fuera de su alcance (273, de las que 238 daban el contrario), y quedan dentro las 222 con k = 1, todas en sentido inverso (183 dan el contrario).
+
+Control contra la r5, semillas 1 a 205: 102 BC, y el criterio sin acotar da el contrario en 80 (la r5 publicó 102 y 80).

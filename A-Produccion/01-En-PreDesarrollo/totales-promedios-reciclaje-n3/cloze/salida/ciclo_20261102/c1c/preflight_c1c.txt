@@ -1,0 +1,27 @@
+OK   1 .claude/CLAUDE.md índice ICFES
+OK   2 workflow-state.sh help + --tipo cloze
+OK   3 hooks ejecutables y bash -n
+4 exams 2.4.2
+OK   5 ruta_destino bajo 01-En-PreDesarrollo
+OK   6-16,25 existe .claude/rules/codigo-rmd.md
+OK   6-16,25 existe .claude/rules/markdown-imagenes-pdf.md
+OK   6-16,25 existe tests/testthat/test_pandocbounded_y_solution_coherence.R
+OK   6-16,25 existe .claude/rules/solution-letter-independence.md
+OK   6-16,25 existe tests/testthat/test_letter_independence.R
+OK   6-16,25 existe .claude/rules/markdown-tablas-pandoc.md
+OK   6-16,25 existe .claude/skills/generar-cloze/SKILL.md
+OK   6-16,25 existe .claude/rules/graficos-como-opciones.md
+OK   6-16,25 existe .claude/rules/diversidad-sustantiva.md
+OK   6-16,25 existe .claude/scripts/validar_diversidad_sustantiva.R
+OK   6-16,25 existe .claude/scripts/validar_diagnosticidad.R
+OK   12 FASE 2J en el hook
+OK   12 FASE 2K en el hook
+OK   12 FASE 2L en el hook
+OK   12 FASE 2N en el hook
+OK   12 FASE 2O en el hook
+OK   14 ejemplo CLOZE canónico (metadato extype: cloze)
+OK   19 snippets F6 cascada
+20 set.seed en el .Rmd: 0 · reloj: 0
+OK   23 padre es ejercicio (ejercicio_state.json + .claude/ + HANDOFF/ITEM_OFICIAL)
+23 leídos: A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/.claude/CLAUDE.md (CLOZE hermano, F-1 a F-4, L-C1 a L-C8, L-6, C1, C1b, r4, r5 y las decisiones), A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/cloze/HANDOFF.md (desde la C1), A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/cloze/salida/fase2c_r5_detractor.md; .claude/ del destino: no existe (convención del CLOZE hermano)
+OK   entrada legible
