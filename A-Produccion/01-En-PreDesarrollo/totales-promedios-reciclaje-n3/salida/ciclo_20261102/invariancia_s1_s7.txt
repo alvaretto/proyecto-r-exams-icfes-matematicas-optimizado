@@ -1,0 +1,17 @@
+semillas: 1000 1000 
+.Random.seed idéntico al final de data_generation: 1000 de 1000 
+texto enunciado idéntico salvo el espacio duro: 1000 / 1000; con diferencias de espacio: 153
+texto opciones  idéntico salvo el espacio duro: 1000 / 1000; con diferencias de espacio: 1000
+texto solucion  idéntico salvo el espacio duro: 1000 / 1000; con diferencias de espacio: 1000
+texto feedback  idéntico salvo el espacio duro: 1000 / 1000; con diferencias de espacio: 1000
+tabla_md idéntica byte a byte: 1000 
+sol, rama, canónica idénticas: 1000 
+opciones idénticas salvo el espacio: 1000 
+opciones  cifra-unidad o nombre con espacio normal: antes  5111 (control positivo) · después 0
+solucion  cifra-unidad o nombre con espacio normal: antes 25228 (control positivo) · después 0
+feedback  cifra-unidad o nombre con espacio normal: antes  6918 (control positivo) · después 0
+enunciado cifra-unidad o nombre con espacio normal: antes  4306 (control positivo) · después 4000
+
+   N_kilos    $_kilos La_Pradera  El_Bosque   N_cursos    N_curso 
+     18026      11575       3152       3138       1257        721 
+comentario: 1000 semillas, objetos y texto idénticos byte a byte a 5f6f3cf3: 1000 de 1000 

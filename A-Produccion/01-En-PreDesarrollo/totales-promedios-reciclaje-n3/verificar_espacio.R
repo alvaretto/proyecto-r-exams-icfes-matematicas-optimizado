@@ -21,9 +21,13 @@
 ## Ronda 4 (FASE 2C r4): el alcance firmado de «O-1 corregido» como tabla de cifras (H1, mutante M19)
 ##        y la canónica cotejada también sobre la tabla mostrada, tabla_md (H3, mutante M20).
 ## Ronda 4b (FASE 2C r4b, H1): guarda estructural de los encabezados de la Solution (mutantes M21, M22).
+## Ciclo 2026-11-02, tanda S1: espacio duro (S1) en el oráculo léxico, en M16 y en la Solution (sonda S1-Sol,
+##        mutantes M23-M27); MOLDES sin el parámetro m (S7); la canónica regla por regla con las 24 cifras de
+##        la decisión 2 a y sus mutantes MP1 y MP2 (S3); el estímulo de la batería, declarado (§P7-G, S4).
+##        Decisión (a) del profesor: la batería y los márgenes miden con U+00A0 convertido en espacio (mutante M28).
 ## Uso: Rscript --no-init-file verificar_espacio.R [ruta.Rmd]
 ##      exit 1 = algo falla; 3 = pendiente de firma (un canal supera lo firmado o es nuevo); 4 = EN ROJO
-##      bajo override firmado (todo dentro del alcance de «O-1 corregido»); 0 = sin canales en rojo.
+##      bajo override firmado (todo dentro del alcance de «O-1 corregido» y de la decisión 2 a); 0 = sin canales en rojo.
 ##      Regla #22 §P7-E: un canal aceptado por override sigue en rojo; nunca se reporta como PASS.
 ##      VERIF_N=<n> solo para depuración (regla #23): corre E1-E4 hasta las sondas y sale; la cifra
 ##      oficial es la de N = 100, el default.
@@ -37,6 +41,15 @@ rmd <- if (length(args)) args[1] else
 REPO <- "/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams"
 N <- as.integer(Sys.getenv("VERIF_N", "100")); TOPE <- max(600L, 6L * N)
 DEPURACION <- N != 100L
+## Decisión (a) del profesor (2026-11-02, tanda S1): la batería §P7 y los márgenes de largo (caracteres y palabras)
+## miden el texto que lee el estudiante, con el espacio duro (U+00A0) convertido en espacio. ntok() de
+## bateria_referencia_icfes.R cuenta palabras con \\s+, que en R no separa en U+00A0, y subía el margen en palabras
+## de la rama PROMEDIO de 6,5 % a 6,7 % sin que cambiara ninguna palabra (HANDOFF_REPO, pendiente 11). Las guardas
+## S1 y S1-Sol y los mutantes M23-M27 miran el texto crudo, sin normalizar. M28 corre este mismo verificador sin la
+## normalización (VERIF_SIN_NORMALIZAR=1): el margen vuelve a 6,7 % y queda pendiente. Rige también para la Parte 1
+## del CLOZE tras el re-empalme (F-2); lo aplica la tanda del CLOZE.
+NORMALIZAR_ED <- Sys.getenv("VERIF_SIN_NORMALIZAR") != "1"
+norm_ed <- function(o) if (NORMALIZAR_ED) gsub("\u00a0", " ", o, fixed = TRUE) else o
 l <- readLines(rmd, encoding = "UTF-8")
 i0 <- grep("^```\\{r data_generation", l); cierres <- which(l == "```"); i1 <- cierres[cierres > i0][1]
 CODIGO <- paste(l[(i0 + 1):(i1 - 1)], collapse = "\n")
@@ -128,7 +141,7 @@ ok(fuera_g == 0L, "H1: toda cifra posible del distractor de G ya la excluyen la 
 ## la presente como cantidad; y (c) cuánto cambiaría si se admitiera la lectura «total» aunque el texto
 ## no la traiga (exposición declarada, no defecto).
 ORACULO_CLAUSULA <- paste0("(fue de|fue|fueron|recogió|recogieron|sumó|sumaron|llegó a|alcanzó|reunió|juntó|",
-                           "juntaron|con|de|es|son|hubo) [0-9]+ kilos")
+                           "juntaron|con|de|es|son|hubo) [0-9]+[ \u00a0]kilos")   # S1: espacio normal o duro
 n_txt <- 0L; adm_total <- 0L; clausula <- 0L
 expo <- c(CURSOS = 0L, PROMEDIO = 0L); expo_tg <- expo; conf_g <- expo
 for (b in c("CURSOS", "PROMEDIO")) {
@@ -143,7 +156,7 @@ for (b in c("CURSOS", "PROMEDIO")) {
       lapply(c("U_a", "U_b", "U_c", "U_d"), function(m) list(m = m, x = f$D + 1, sede = "P")))
     for (cc in casos) {
       S <- if (cc$sede == "G") "la sede norte" else "la sede sur"; O <- if (cc$sede == "G") "la sede sur" else "la sede norte"
-      t <- env0$MOLDES[[cc$m]]$f(S, O, cc$x, "papel"); n_txt <- n_txt + 1L
+      t <- env0$MOLDES[[cc$m]]$f(S, O, cc$x); n_txt <- n_txt + 1L
       if ("total" %in% env0$lecturas_de(t)) adm_total <- adm_total + 1L
       if (grepl(ORACULO_CLAUSULA, t)) clausula <- clausula + 1L
       if (cc$sede == "G" && cc$x != f$D) {
@@ -178,7 +191,7 @@ celdas_md <- function(md) {
   f <- grep("^\\|", strsplit(md, "\n", fixed = TRUE)[[1]], value = TRUE)
   f <- f[!grepl("^\\|[-:| ]+\\|$", f)]
   x <- unlist(lapply(f, function(r) trimws(strsplit(sub("^\\|", "", sub("\\|$", "", r)), "|", fixed = TRUE)[[1]])))
-  gsub(" ", " ", gsub("<span[^>]*>|</span>|\\*\\*", "", x))
+  gsub("\u00a0", " ", gsub("<span[^>]*>|</span>|\\*\\*", "", x))
 }
 canon_tabla_ok <- function(env) { cm <- paste(celdas_md(env$tabla_md), collapse = "|")
   nchar(cm) == 119L && env$pond(cm) == 695221 }
@@ -313,7 +326,7 @@ for (est in list(list("mezcla", NAT), list("CURSOS", CU$CURSOS), list("PROMEDIO"
   L <- sapply(est[[2]], function(x) setNames(nchar(x$opciones), x$rol)[c("clave", "gdis", "padv", "psin")])
   cat(sprintf("  largo medio por papel (%s): %s\n", est[[1]], paste(sprintf("%s %.0f", rownames(L), rowMeans(L)), collapse = " · ")))
   ## §P7-B: margen relativo de la clave sobre la segunda cuando es la única más larga / más corta.
-  mg <- function(f) { z <- vapply(est[[2]], function(x) { L <- nchar(x$opciones); k <- x$clave
+  mg <- function(f) { z <- vapply(est[[2]], function(x) { L <- nchar(norm_ed(x$opciones)); k <- x$clave
     if (sum(L == f(L)) != 1 || L[k] != f(L)) return(NA_real_); abs(L[k] - f(L[-k])) / f(L[-k]) }, 0); z[!is.na(z)] }
   ml <- mg(max); mc <- mg(min)
   cat(sprintf("  §P7-B (%s): clave única más larga en %d versiones, margen mediano %.1f %% (máx %.1f %%); única más corta en %d, margen mediano %.1f %%\n",
@@ -368,7 +381,9 @@ FIRMADOS <- character(0)
 hasta <- function(x, lim) round(100 * x, 1) <= round(100 * lim, 1)
 ## Regla #22 §P7-E: la batería se deja en rojo; el override no la vuelve PASS. Dentro del alcance firmado
 ## el canal se reporta como ROJO CUBIERTO (exit 4), y por encima como PENDIENTE DE FIRMA (exit 3).
-firmado <- function(msg) { FIRMADOS <<- c(FIRMADOS, msg); cat("  ROJO, cubierto por O-1 corregido:", msg, "\n") }
+POR <- character(0)   # qué override cubre cada canal en rojo
+firmado <- function(msg, por = "O-1 corregido") { FIRMADOS <<- c(FIRMADOS, msg); POR <<- c(POR, por)
+  cat("  ROJO, cubierto por ", por, ": ", msg, "\n", sep = "") }
 juzga <- function(s, est, tasa) {
   ex <- tasa - 0.25
   if (ex <= 0.08) return(invisible(ok(TRUE, sprintf("H5: %s, %s: %.1f %% (%+.1f pp; obliga > +8)", s, est, 100 * tasa, 100 * ex))))
@@ -450,10 +465,17 @@ I_REGLAS <- list(   # congeladas el 2026-10-29, antes de medir (§P7-C)
     s <- vapply(o, sede_txt, ""); grupo(s == s[which.max(nchar(o))]) }))
 REGLAS <- c(B2, I_REGLAS)
 NA_FAM <- c(signo = "todas las cifras son positivas y ninguna opción niega ni compara con desigualdades")
+## Regla #22 §P7-G (S4, ciclo 2026-11-02): la batería solo recibe las opciones. Los canales del estímulo (el
+## enunciado y la tabla) se miden aparte, en las sondas de E4, que sí ven la tabla: S1 y S1b leen sus cifras;
+## S2 y S3, sus filas; S5, S7 y S_U, las sedes que muestra, y sus combinaciones firmadas en «O-1 corregido»;
+## y en la canónica, regla por regla (decisión 2 a). Declararlo no mueve ninguna cifra.
+ESTIMULO_SC <- paste("los canales del enunciado y de la tabla se miden aparte, en las sondas de E4 (S1 y S1b leen",
+                     "las cifras de la tabla; S2 y S3, sus filas; S5, S7 y S_U, las sedes que muestra, y sus",
+                     "combinaciones) y, en la canónica, regla por regla (decisión 2 a)")
 for (est in list(list("mezcla natural", NAT), list("rama CURSOS", CU$CURSOS), list("rama PROMEDIO", CU$PROMEDIO))) {
   V <- est[[2]]; if (length(V) < 20) { cat("  ", est[[1]], ": NO CONCLUYENTE (n < 20)\n"); next }
-  res <- evaluar_bateria(REGLAS, lapply(V, `[[`, "opciones"), vapply(V, `[[`, 0L, "clave"),
-                         familias_no_aplicables = NA_FAM)
+  res <- evaluar_bateria(REGLAS, lapply(V, function(x) norm_ed(x$opciones)), vapply(V, `[[`, 0L, "clave"),
+                         familias_no_aplicables = NA_FAM, estimulo_no_aplicable = ESTIMULO_SC)
   top <- head(res$detalle, 4)
   cat(sprintf("  batería §P7 (%d reglas) %-14s n=%d: máx %.1f %% (%s), techo nulo %.1f %%, exceso %+.1f pp -> %s\n",
               length(REGLAS), est[[1]], length(V), 100 * res$max_obs, res$regla_top, 100 * res$techo_nulo,
@@ -462,7 +484,7 @@ for (est in list(list("mezcla natural", NAT), list("rama CURSOS", CU$CURSOS), li
   if (est[[1]] == "mezcla natural") VEREDICTO_MEZCLA <- res
   ## H2 de la FASE 2C r3: el canal de largo depende del bloque de semillas, así que su margen §P7-B se
   ## mide en TODO estrato, supere o no +8 pp con esta muestra; un margen >= 15 % sería explotable.
-  mg_e <- function(f) vapply(V, function(x) { L <- nchar(x$opciones); k <- x$clave
+  mg_e <- function(f) vapply(V, function(x) { L <- nchar(norm_ed(x$opciones)); k <- x$clave
     if (sum(L == f(L)) != 1 || L[k] != f(L)) return(NA_real_); abs(L[k] - f(L[-k])) / f(L[-k]) }, 0)
   mmax_e <- max(c(mg_e(max), mg_e(min), 0), na.rm = TRUE)
   t_larga <- res$detalle$tasa[res$detalle$regla == "la mas larga (chars)"]
@@ -475,15 +497,16 @@ for (est in list(list("mezcla natural", NAT), list("rama CURSOS", CU$CURSOS), li
     ## de largo y se exige el margen; si las dos cosas se cumplen, es residuo declarado, no defecto.
     LARGO <- c("la mas larga (chars)", "la mas corta (chars)", "molde atipico (n tokens)",
                "sede de la opción más larga (relacional)")
-    res2 <- evaluar_bateria(Filter(function(r) !r$nombre %in% LARGO, REGLAS), lapply(V, `[[`, "opciones"),
-                            vapply(V, `[[`, 0L, "clave"), familias_no_aplicables = NA_FAM)
+    res2 <- evaluar_bateria(Filter(function(r) !r$nombre %in% LARGO, REGLAS), lapply(V, function(x) norm_ed(x$opciones)),
+                            vapply(V, `[[`, 0L, "clave"), familias_no_aplicables = NA_FAM,
+                            estimulo_no_aplicable = ESTIMULO_SC)
     ## Margen §P7-B en caracteres: la clave como única más larga y como única más corta.
-    marg <- function(f) vapply(V, function(x) { L <- nchar(x$opciones); k <- x$clave
+    marg <- function(f) vapply(V, function(x) { L <- nchar(norm_ed(x$opciones)); k <- x$clave
       if (sum(L == f(L)) != 1 || L[k] != f(L)) return(NA_real_); abs(L[k] - f(L[-k])) / f(L[-k]) }, 0)
     mmax <- max(c(marg(max), marg(min), 0), na.rm = TRUE)
     ## H5 (FASE 2C, ronda 1): «molde atipico» es de la familia formato y cuenta palabras; su margen se
     ## mide en palabras, con el mismo 15 %: la clave elegida frente a la opción de conteo más cercano.
-    mt <- vapply(V, function(x) { k <- vapply(x$opciones, ntok, 0L); dv <- abs(k - stats::median(k))
+    mt <- vapply(V, function(x) { k <- vapply(norm_ed(x$opciones), ntok, 0L); dv <- abs(k - stats::median(k))
       if (all(dv == 0) || which.max(dv) != x$clave) return(NA_real_)
       cerca <- k[-x$clave][which.min(abs(k[-x$clave] - k[x$clave]))]; abs(k[x$clave] - cerca) / cerca }, 0)
     tmax <- max(c(mt, 0), na.rm = TRUE)
@@ -505,11 +528,64 @@ for (est in list(list("mezcla natural", NAT), list("rama CURSOS", CU$CURSOS), li
 }
 if (length(CANON_V)) {
   sc_reg <- vapply(REGLAS, function(r) mean(vapply(CANON_V, function(x) {
-    S <- tryCatch(.conjunto_de(r$fn(x$opciones), 4L), error = function(e) rep(FALSE, 4)); sc(S, x$clave) }, 0)), 0)
+    S <- tryCatch(.conjunto_de(r$fn(norm_ed(x$opciones)), 4L), error = function(e) rep(FALSE, 4)); sc(S, x$clave) }, 0)), 0)
   ord <- order(-sc_reg)[1:5]
   cat(sprintf("  canónica (enumeración exacta, 24 órdenes): máx %.1f %% (%s); exceso en la mezcla = 0,10 x %+.1f pp = %+.1f pp\n",
               100 * max(sc_reg), REGLAS[[which.max(sc_reg)]]$nombre, 100 * (max(sc_reg) - 0.25), 10 * (max(sc_reg) - 0.25)))
   cat("      top:", paste(sprintf("%s %.1f%%", vapply(REGLAS[ord], `[[`, "", "nombre"), 100 * sc_reg[ord]), collapse = " · "), "\n")
+}
+## ---- Decisión 2 a (S3, ciclo 2026-11-02): la canónica, regla por regla -----------------------------
+## Decisión del profesor del 2026-10-31 (tanda 3 del CLOZE, .claude/CLAUDE.md local): override de la canónica
+## REGLA POR REGLA, por dominancia (en la canónica, el atajo firmado de «O-1 corregido» acierta el 100 %).
+## Cifras EXACTAS de los 24 órdenes de las opciones del impreso (cloze/salida/p1_canonica_exacta_96cfcf35.txt;
+## por E1 del CLOZE son las de este SCHOICE): 12 reglas de la batería §P7 y 12 sondas de E4, en pp sobre el
+## 25 % del azar, comparadas redondeadas a un decimal, como se firmaron. Son FIRMA_P1_CANON y FIRMA_P1_SONDAS
+## de cloze/verificar_espacio_cloze.R (E4). Dentro: «ROJO, cubierto» (exit 4), nunca PASS. Por encima, o con
+## cualquier otra regla o sonda > +8 pp en la canónica: PENDIENTE (exit 3). Sustituye a la firma por el máximo
+## (0,10 × 75 pp) de «O-1 corregido» (aclaración ii de §P7-E). Las nueve que están al 100 % (+75,0 pp) no
+## pueden subir: no admiten mutante, y se declara. MP1 y MP2 (E5) sacan de «cubierto» dos de las que están al 50 %.
+FIRMA_P1_CANON <- c("la que MAS comparte" = 75.0, "quedarse con 'total'" = 75.0, "cifra mediana" = 75.0, "mas digitos" = 25.0,
+                    "primer numero PAR" = 25.0, "ultimo multiplo de 10" = 25.0, "quedarse con 'promedio'" = 25.0,
+                    "par con más palabras en común (relacional)" = 25.0, "descartar ultimo negativo" = 8.3,
+                    "par por sede: menor cifra" = 8.3, "descartar sin cifra" = 8.3, "descartar 'de más'" = 8.3)
+FIRMA_P1_SONDAS <- c("S1 descarta cifras de la tabla" = 25.0, "S2 par de la sede de la fila 1" = 25.0,
+                     "S3 par de la sede de más cursos" = 25.0, "S5 más cursos + menor cifra del par" = 75.0,
+                     "S7 G real + menor cifra del par (cota canal 2)" = 75.0, "S_U la sede de la razón sin sustento pierde" = 25.0,
+                     "S_U + S1 (par de G sin la cifra de la tabla)" = 75.0, "S_U + suma (par de G sin la cifra que es suma de otras dos)" = 25.0,
+                     "Atípica: descarta la cifra que dobla a todas las demás" = 8.3, "S_U + S1 + suma (las dos pistas)" = 75.0,
+                     "S_U + atípica" = 75.0, "S_U + S1 + suma + atípica" = 75.0)
+perms <- function(v) if (length(v) <= 1) list(v) else do.call(c, lapply(seq_along(v), function(i) lapply(perms(v[-i]), function(p) c(v[i], p))))
+canon_v <- function(CA) lapply(perms(1:4), function(p) { x <- CA; x$opciones <- CA$opciones[p]; x$sede_o <- CA$sede_o[p]
+  x$rol <- CA$rol[p]; x$nom_o <- CA$nom_o[p]; x$clave <- which(p == CA$clave); x })
+canon_p1 <- function(CV) {
+  r <- vapply(REGLAS, function(rg) mean(vapply(CV, function(x) {
+    S <- tryCatch(.conjunto_de(rg$fn(norm_ed(x$opciones)), 4L), error = function(e) rep(FALSE, 4)); sc(S, x$clave) }, 0)), 0)
+  names(r) <- vapply(REGLAS, function(rg) rg$nombre, "")
+  s <- as.matrix(sondas(CV))[, 1]; s <- s[!grepl("frecuencia", names(s))]
+  list(reglas = 100 * (r - 0.25), sondas = 100 * (s - 0.25))
+}
+veredicto_p1c <- function(exc, firma) vapply(names(exc), function(nm) { e <- exc[[nm]]
+  if (e <= 8 + 1e-9) "ok" else if (nm %in% names(firma) && round(e, 1) <= firma[[nm]]) "cubierto" else "pendiente" }, "")
+if (is.null(CANON)) falla("decisión 2 a: no se encontró la canónica; no se puede juzgar") else {
+  C1 <- canon_p1(canon_v(CANON))
+  ok(all(names(FIRMA_P1_CANON) %in% names(C1$reglas)) && all(names(FIRMA_P1_SONDAS) %in% names(C1$sondas)),
+     "decisión 2 a: las 12 reglas y las 12 sondas firmadas existen en la batería y en E4")
+  for (cl in list(list("regla", C1$reglas, FIRMA_P1_CANON), list("sonda", C1$sondas, FIRMA_P1_SONDAS))) {
+    vv <- veredicto_p1c(cl[[2]], cl[[3]])
+    for (nm in names(vv)[vv != "ok"]) {
+      m <- sprintf("canónica, %s «%s»: %+.1f pp exactos (24 órdenes); peso en la mezcla %+.2f pp", cl[[1]], nm, cl[[2]][[nm]], cl[[2]][[nm]] / 10)
+      if (vv[[nm]] == "cubierto") firmado(paste0(m, sprintf(" (firmado hasta %+.1f pp)", cl[[3]][[nm]])), por = "la decisión 2 a")
+      else pendiente(paste0(m, if (nm %in% names(cl[[3]])) sprintf(", por encima de lo firmado (%+.1f pp)", cl[[3]][[nm]]) else
+                                 ", fuera de lo firmado en la decisión 2 a"))
+    }
+    igual <- vapply(names(cl[[3]]), function(nm) isTRUE(round(cl[[2]][[nm]], 1) == cl[[3]][[nm]]), TRUE)
+    cat(sprintf("  decisión 2 a, %ss: %d firmadas, %d iguales a lo firmado (a un decimal)%s; por encima de +8 pp en la canónica: %d\n",
+                cl[[1]], length(cl[[3]]), sum(igual), if (all(igual)) "" else paste0(" — distintas: ", paste(names(igual)[!igual], collapse = ", ")),
+                sum(vv != "ok")))
+  }
+  nl_can <- mean(vapply(canon_v(CANON), function(x) { n <- nchar(x$opciones); sc(n != max(n), x$clave) }, 0))
+  cat(sprintf("  RESIDUO DECLARADO (decisión 2 a: fuera de la batería congelada, §P7-C): en la canónica, «descarta la más larga» %.1f %% (%+.1f pp)\n",
+              100 * nl_can, 100 * (nl_can - 0.25)))
 }
 
 ## ---- E5. Mutantes (Incidente P): en memoria, patrón único, sonda propia -----------
@@ -545,7 +621,7 @@ MUT <- list(
        cambios = list(c("P_CANON <- 0.10", "P_CANON <- 0.20")), llego = function(e) e$P_CANON == 0.20),
   list(id = "M7", sonda = "L-1: sin vocabulario de error", desc = "mete «estudiantes» en un molde",
        cambios = list(c("hay más alumnos para recoger", "hay más estudiantes para recoger")),
-       llego = function(e) grepl("estudiantes", e$MOLDES$U_c$f("S", "O", 1, "papel"))),
+       llego = function(e) grepl("estudiantes", e$MOLDES$U_c$f("S", "O", 1))),
   list(id = "M8", sonda = "L-3: la canónica va en la rama CURSOS", desc = "pone la canónica en la rama PROMEDIO",
        cambios = list(c('rama <- if (es_canonica) "CURSOS" else', 'rama <- if (es_canonica) "PROMEDIO" else')),
        llego = function(e) !isTRUE(e$es_canonica) || e$rama == "PROMEDIO"),
@@ -572,9 +648,9 @@ MUT <- list(
   ## vuelve verdadera con «total»); M18 pone una cifra fuera del complemento del comparativo.
   list(id = "M16", sonda = "regla #13 v1.1: ninguna lectura que admite el texto cambia el veredicto",
        desc = "vuelve al cierre «su total fue de x kilos más que el de O» (lectura alternativa)",
-       cambios = list(c('cierre <- function(x, O) paste0("su total fue más alto que el de ", O, " en ", x, " kilos.")',
-                        'cierre <- function(x, O) paste0("su total fue de ", x, " kilos más que el de ", O, ".")')),
-       llego = function(e) !isTRUE(e$es_canonica) && grepl("fue de [0-9]+ kilos más que", e$afs$clave$texto)),
+       cambios = list(c('cierre <- function(x, O) paste0("su total fue más alto que el de ", O, " en ", x, ED, "kilos.")',
+                        'cierre <- function(x, O) paste0("su total fue de ", x, ED, "kilos más que el de ", O, ".")')),
+       llego = function(e) !isTRUE(e$es_canonica) && grepl("fue de [0-9]+[ \u00a0]kilos más que", e$afs$clave$texto)),
   list(id = "M17", sonda = "regla #13 v1.1: ninguna lectura que admite el texto cambia el veredicto",
        desc = "ERR-TOTAL con el cierre «fue de T_G kilos más que» (ERR-TOTAL y la lectura alternativa)",
        cambios = list(c('afirmacion(molde_gdis, "G", fila_g$x, cod_gdis)',
@@ -584,7 +660,26 @@ MUT <- list(
   list(id = "M18", sonda = "regla #13 v1.1: la cifra va solo en el complemento",
        desc = "una razón sin sustento cita otra cifra («durante 5 días más»)",
        cambios = list(c("reciclaron durante más días que los demás", "reciclaron durante 5 días más que los demás")),
-       llego = function(e) identical(e$afs$psin$molde, "U_d")))
+       llego = function(e) identical(e$afs$psin$molde, "U_d")),
+  ## Ciclo 2026-11-02 (S1): el espacio duro. M23 lo pone en la canónica fuera de su sitio (la guarda verbatim lo
+  ## compara sin él y no lo ve); M24 lo quita de la canónica; M25, de «El Bosque»; M26, del cierre de las no
+  ## canónicas, que vigila la guarda del complemento.
+  list(id = "M23", sonda = "S1: en la canónica, el espacio duro solo entre cifra y unidad",
+       desc = "la canónica lleva un espacio duro fuera de su sitio («que la sede»)",
+       cambios = list(c('"kilos más que la sede de secundaria."', '"kilos más que la", ED, "sede de secundaria."')),
+       llego = function(e) grepl("que la\u00a0sede de secundaria", e$CANON_OPCIONES[["A"]], fixed = TRUE)),
+  list(id = "M24", sonda = "S1: espacio duro entre cifra y unidad",
+       desc = "la canónica pierde el espacio duro de «40 kilos»",
+       cambios = list(c('porque recogió 40", ED, "kilos más', 'porque recogió 40 kilos más')),
+       llego = function(e) grepl("recogió 40 kilos", e$CANON_OPCIONES[["A"]], fixed = TRUE)),
+  list(id = "M25", sonda = "S1: espacio duro entre cifra y unidad",
+       desc = "«El Bosque» vuelve al espacio normal en los nombres",
+       cambios = list(c('paste0("la sede El", ED, "Bosque")', '"la sede El Bosque"')),
+       llego = function(e) identical(e$CONJUNTOS[[5]]$nombres[1], "la sede El Bosque")),
+  list(id = "M26", sonda = "regla #13 v1.1: la cifra va solo en el complemento",
+       desc = "el cierre de las no canónicas pierde el espacio duro",
+       cambios = list(c('" en ", x, ED, "kilos.")', '" en ", x, " kilos.")')),
+       llego = function(e) !isTRUE(e$es_canonica) && grepl(" en [0-9]+ kilos\\.$", e$afs$clave$texto)))
 for (mu in MUT) {
   mm <- mutar(mu$cambios)
   if (!is.null(mm$error)) { falla(sprintf("%s MAL CONSTRUIDO: %s", mu$id, mm$error)); next }
@@ -636,7 +731,64 @@ if (!is.null(mm$error)) falla(paste("M20 MAL CONSTRUIDO:", mm$error)) else {
   ok(!is.null(envM) && grepl("46 kilos", envM$tabla_md, fixed = TRUE) && !canon_tabla_ok(envM),
      "M20 (cambia una celda de la canónica en tabla_md, no en tabla_df): el .Rmd no lo caza y la sonda H3 r4 sí")
 }
-if (length(FIRMADOS)) cat("\nEn rojo, cubiertos por el override firmado «O-1 corregido» (2026-10-29; regla #22 §P7-E):\n", paste0("  - ", FIRMADOS, "\n"), sep = "")
+## Mutantes de la decisión 2 a (S3): COPIAS del registro canónico con una opción retocada (la canónica es verbatim
+## y su guarda de literales aborta cualquier mutante en el código). Cada uno tiene que sacar SU regla de «cubierto»,
+## con la misma puerta (canon_p1 + veredicto_p1c, 24 órdenes). Son MP1 y MP2 de cloze/verificar_espacio_cloze.R (E8);
+## MP2 lleva el espacio duro de S1 en su patrón.
+mut_p1 <- function(id, regla, de, a) {
+  i <- grep(de, CANON$opciones, fixed = TRUE)
+  if (length(i) != 1L) return(invisible(falla(sprintf("%s MAL CONSTRUIDO: «%s» aparece en %d opciones de la canónica", id, de, length(i)))))
+  CM <- CANON; CM$opciones[i] <- sub(de, a, CM$opciones[i], fixed = TRUE)
+  ex <- canon_p1(canon_v(CM))$reglas; vv <- veredicto_p1c(ex, FIRMA_P1_CANON)
+  llego <- !identical(CM$opciones, CANON$opciones) && identical(CM$clave, CANON$clave)
+  ver <- if (!llego) "mal_construido" else if (vv[[regla]] == "pendiente") "cazado_por_su_sonda" else "no_detectado"
+  ok(ver == "cazado_por_su_sonda", sprintf("%s (decisión 2 a; copia de la canónica, «%s» -> «%s»): %s %+.1f pp (firmado %+.1f) -> %s — %s",
+                                           id, de, a, regla, ex[[regla]], FIRMA_P1_CANON[[regla]], vv[[regla]], ver))
+}
+if (!is.null(CANON)) {
+  mut_p1("MP1", "quedarse con 'promedio'", "tuvo mayor promedio", "tuvo mayor media")
+  mut_p1("MP2", "mas digitos", "recogió 40\u00a0kilos más", "recogió 4\u00a0kilos más")
+  cat("  Decisión 2 a: las nueve reglas y sondas al 100 % (+75,0 pp) no pueden subir; ningún mutante puede sacarlas de «cubierto».\n")
+}
+## S1 (ciclo 2026-11-02), sonda S1-Sol: en las opciones, la Solution y el feedback por opción que se emiten, ninguna cifra
+## (ni fórmula que cierra en $) separada de su unidad por un espacio normal, ni «El Bosque» o «La Pradera». La guarda
+## de data_generation no ve la Solution, que se arma en su propio chunk. M27 quita un espacio duro de la Solution.
+chunk_de <- function(lin, nm) { i0 <- grep(paste0("^```\\{r ", nm, "[,}]"), lin); i1 <- which(lin == "```"); i1 <- i1[i1 > i0][1]
+  parse(text = paste(lin[(i0 + 1):(i1 - 1)], collapse = "\n"), encoding = "UTF-8") }
+PAT_S1 <- "[0-9$] (kilos?|cursos?)\\b|El Bosque|La Pradera"
+s1_sol <- function(lin, semillas) {
+  ch <- lapply(c("opciones", "solucion", "feedback"), function(nm) chunk_de(lin, nm))
+  sum(vapply(semillas, function(s) { r <- correr(s); if (!is.null(r$err)) return(NA_real_)
+    t <- paste(unlist(lapply(ch, function(e) capture.output(eval(e, envir = r$env)))), collapse = "\n")
+    lengths(regmatches(t, gregexpr(PAT_S1, t, perl = TRUE))) }, 0))
+}
+n_s1 <- s1_sol(l, 1:N)
+ok(identical(n_s1, 0), sprintf("S1-Sol: en las %d versiones de E1, opciones, Solution y feedback sin cifra ni nombre partido por un espacio normal (%s)", N, n_s1))
+l_m27 <- sub('d$D,\n    "$", ED, "kilos a favor de "', 'd$D,\n    "$ kilos a favor de "', paste(l, collapse = "\n"), fixed = TRUE)
+l_m27 <- strsplit(l_m27, "\n", fixed = TRUE)[[1]]
+n_m27 <- if (identical(l_m27, l)) NA else s1_sol(l_m27, 1:N)
+ok(!is.na(n_m27) && n_m27 > 0, sprintf("M27 (la Solution pierde el espacio duro de «kilos a favor de»): la sonda S1-Sol lo detecta en %s casos", n_m27))
+## L-6 (firmada el 2026-11-02): ED es una variable con el escape de U+00A0 y el .Rmd no lleva el carácter literal
+## (la herramienta de edición convierte el escape en literal sin avisar). M29 escribe el literal en la definición de ED.
+lit_ok <- function(lin) !any(grepl("\u00a0", lin, fixed = TRUE)) && length(grep('^ED <- "\\\\u00a0"', lin)) == 1L
+ok(lit_ok(l), "L-6: el .Rmd no lleva el carácter U+00A0 literal y define ED con su escape")
+l_m29 <- sub('ED <- "\\u00a0"', paste0('ED <- "', "\u00a0", '"'), l, fixed = TRUE)
+ok(!identical(l_m29, l) && !lit_ok(l_m29), "M29 (ED con el carácter literal): la guarda L-6 lo detecta")
+## M28 (decisión (a)): el mismo verificador, en otro proceso, sin la normalización del espacio duro. Tiene que dar un
+## solo pendiente, el canal de largo de la rama PROMEDIO, con el margen en palabras de 6,7 % (la cifra sin normalizar).
+if (NORMALIZAR_ED) {
+  yo <- normalizePath(sub("^--file=", "", arg_file[1]))
+  sal <- suppressWarnings(system2(file.path(R.home("bin"), "Rscript"), c("--no-init-file", shQuote(yo), shQuote(normalizePath(rmd))),
+                                  stdout = TRUE, stderr = TRUE, env = "VERIF_SIN_NORMALIZAR=1"))
+  pend <- grep("PENDIENTE DE FIRMA:", sal, value = TRUE, fixed = TRUE)
+  larg <- grep("canal de largo (rama PROMEDIO)", pend, value = TRUE, fixed = TRUE)
+  m_pal <- if (length(larg) == 1L) as.numeric(sub("^.*márgenes [0-9.]+ % y ([0-9.]+) %.*$", "\\1", larg)) else NA_real_
+  ver28 <- if (!length(larg)) "no_detectado" else if (!isTRUE(m_pal == 6.7)) "mal_construido" else if (length(pend) != 1L) "cazado_por_otra" else "cazado_por_su_sonda"
+  ok(ver28 == "cazado_por_su_sonda", sprintf("M28 (sin la normalización del espacio duro al medir; exit %s): %d pendiente(s); %s — %s",
+                                             format(attr(sal, "status")), length(pend), if (length(larg)) trimws(larg) else "-", ver28))
+}
+if (length(FIRMADOS)) cat("\nEn rojo, cubiertos por un override firmado («O-1 corregido», 2026-10-29; decisión 2 a, 2026-10-31; regla #22 §P7-E):\n",
+                          paste0("  - [", POR, "] ", FIRMADOS, "\n"), sep = "")
 if (length(RESIDUOS)) cat("\nResiduos declarados §P7-B (margen < 15 %: inexplotables, no son defecto):\n",
                           paste0("  - ", RESIDUOS, "\n"), sep = "")
 if (length(PENDIENTES)) cat("\nPendientes de firma del profesor (> +8 pp o premisa firmada superada; exit 3):\n",
@@ -644,6 +796,7 @@ if (length(PENDIENTES)) cat("\nPendientes de firma del profesor (> +8 pp o premi
 
 cat("\n=== RESULTADO:", if (length(fallos)) sprintf("FALLA (%d)", length(fallos)) else
   if (length(PENDIENTES)) sprintf("PENDIENTE DE FIRMA (%d; 0 fallos)", length(PENDIENTES)) else
-  if (length(FIRMADOS)) sprintf("EN ROJO BAJO OVERRIDE FIRMADO (%d canales dentro del alcance de O-1 corregido; 0 fallos, 0 pendientes)", length(FIRMADOS)) else
+  if (length(FIRMADOS)) sprintf("EN ROJO BAJO OVERRIDE FIRMADO (%d canales: %d dentro del alcance de O-1 corregido y %d de la decisión 2 a; 0 fallos, 0 pendientes)",
+                                 length(FIRMADOS), sum(POR == "O-1 corregido"), sum(POR == "la decisión 2 a")) else
   "APROBADO (0 fallos)", "===\n")
 quit(status = if (length(fallos)) 1L else if (length(PENDIENTES)) 3L else if (length(FIRMADOS)) 4L else 0L)

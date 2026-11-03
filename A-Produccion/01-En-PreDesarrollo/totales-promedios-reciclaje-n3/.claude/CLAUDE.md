@@ -1239,3 +1239,144 @@ manual. Queda en el pendiente 10 de `HANDOFF_REPO.md`, y se lleva al profesor.
 - El hueco del hook cumple el criterio de promoción: es general, porque vale para todo detractor; es grave, porque desactiva en
   silencio la defensa contra citas inventadas; se repitió dos veces; ningún gate lo ve, y `test_citas_detractor.R` no lo cubre.
   No crea una regla nueva: amplía la guarda de la regla #9 v1.6. Toca `.claude/` (regla #17), así que lo decide el profesor.
+
+### Ciclo 2026-11-02 (SCHOICE), tanda S1: detenida en el verificador, pendiente de decisión del profesor
+
+> La hizo el `orquestador-schoice` por orden del profesor del 2026-11-02 («Hazlo ya»): el pendiente de arriba. Reapertura #5
+> desde `generacion_rmd` (2/11). El `.Rmd` pasa del md5 `e293d5c8…` (aprobado para el aula; sigue en `HEAD`) a
+> `5f6f3cf3e89241cd017b9febe0c71ddd`, **sin aprobar**. No se selló ningún paso. Evidencia: `salida/ciclo_20261102/`.
+
+**Qué se aplicó.**
+- **S1.** `ED <- "\u00a0"`, nunca el carácter literal. Va entre la cifra (o la fórmula que cierra en `$`) y «kilos» o «curso(s)»
+  en las opciones, la Solution y el feedback, y en «El Bosque» y «La Pradera» (los nombres salen en el enunciado, las opciones y
+  la Solution). En la canónica, las palabras del impreso no cambian (H-2): el espacio duro va en «40 kilos», «20 kilos» y
+  «5 kilos», y la guarda verbatim compara sin él. Las celdas de cifras de la tabla conservan el espacio normal.
+- **S5 y S6.** Comentarios de `tabla_responsiva()` y del espacio duro, con el umbral del Moodle del colegio.
+- **S7.** Fuera `contexto_tipo`, el campo `tipo` de las plantillas (la estructura queda como comentario, regla #11), la rama
+  `dif_cursos` de `verdad()` (un tipo desconocido ahora aborta), `b_debajo` en la canónica y el parámetro `m` de `MOLDES`.
+  **`lado_gdis` se conserva en la canónica:** lo leen `rasgos()` de `verificar_espacio.R` y `rec()` de
+  `cloze/verificar_espacio_cloze.R` (línea 117). Se quita en la tanda del re-empalme, junto con esa lectura.
+- **S3.** `verificar_espacio.R` lleva la canónica regla por regla: `FIRMA_P1_CANON` y `FIRMA_P1_SONDAS`, las 24 cifras de
+  la decisión 2 a, con MP1 y MP2. Las nueve al 100 % no pueden subir: no admiten mutante.
+- **S4.** La batería declara el estímulo (`ESTIMULO_SC`). Deja de imprimir `SIN_COBERTURA` y las cifras no se mueven.
+- **Guardas nuevas** (endurecer): en `data_generation`, «S1: espacio duro entre cifra y unidad y en los nombres de dos palabras»
+  y «S1: en la canónica, el espacio duro solo entre cifra y unidad»; en el verificador, la sonda S1-Sol (opciones, Solution y
+  feedback). Mutantes M23 a M27, cada uno cazado por su sonda.
+
+**Invariancia, semillas 1 a 1000** (`salida/ciclo_20261102/invariancia_s1_s7.txt`):
+- `.Random.seed` sale idéntico al final de `data_generation` en las 1000.
+- Enunciado, opciones, Solution y feedback son idénticos salvo el espacio en las 1000.
+- La tabla es idéntica byte a byte, y también la clave, la rama y la canónica.
+- Quedan 0 cifras separadas de su unidad por un espacio normal. Control positivo, antes: 5111 en las opciones, 25 228 en la
+  Solution y 6918 en el feedback.
+
+**Por qué se detuvo.** `verificar_espacio.R` sale con exit 3: PENDIENTE DE FIRMA (1; 0 fallos).
+- Las 13 cifras de «O-1 corregido» salen iguales, las 24 de la decisión 2 a salen exactas y no aparece ninguna regla nueva por
+  encima de +8 pp.
+- Cambia una sola cifra del alcance declarado (`FIRMA_LARGO`): el margen en palabras del canal de largo de la rama PROMEDIO,
+  que pasa de 6,5 % a 6,7 %.
+- **Causa:** `ntok()` de `.claude/scripts/bateria_referencia_icfes.R` cuenta palabras con `strsplit(…, "\\s+")`, y en R `\s`
+  no casa U+00A0, así que «15 kilos» cuenta como una palabra. Todas las opciones pierden las mismas, la diferencia absoluta no
+  cambia y baja el denominador (2/31 = 6,45 % pasa a 2/30 = 6,67 %). El estudiante lee las mismas palabras.
+- **Comprobado.** Con el texto normalizado antes de medir, el verificador da exit 4, con 37 canales (13 de «O-1 corregido» y
+  24 de la decisión 2 a) y 0 pendientes, y el margen vuelve a 6,5 %. Es una copia sin aplicar,
+  `salida/ciclo_20261102/verificar_whatif.R`. Diff de cifras: `salida/ciclo_20261102/diff_cifras_antes_s1.txt`.
+
+**Decisión pendiente (regla #24 H-5: relajar nunca es autónomo).**
+- (a) Medir sobre el texto que lee el estudiante. El verificador pasaría U+00A0 a espacio antes de la batería y de los márgenes.
+  Cambia la entrada del instrumento, no la batería (§P7-C) ni ninguna cifra firmada.
+- (b) Firmar el margen nuevo: 6,7 % en palabras.
+- (c) Quitar el espacio duro de las opciones. No resuelve el BAJA 1, que está en las opciones.
+
+El CLOZE lee este `.Rmd` y este verificador (`RMD_S` y `VER_S`), así que su E1 deja de coincidir hasta el re-empalme (no
+medido). Por F-2, la decisión rige también la Parte 1 del CLOZE.
+
+**¿Ley local o regla?**
+- **Candidata a ley local (L-6, espacio duro).** Las cifras y los nombres de dos palabras van con `ED`, nunca con el literal.
+  Tiene guardas y mutantes (M23 a M27). Es endurecer; queda como ley si el profesor la confirma.
+- **Candidata del repo.** Un contador de palabras con `\s` no separa en U+00A0. Es general (toda batería que cuente palabras
+  sobre un ítem con espacio duro), ningún gate lo ve y movió una cifra del alcance firmado. Ampliaría la regla #22 §P7 o la
+  herramienta; no crearía una regla nueva. Toca `.claude/` (regla #17), así que lo decide el profesor.
+
+#### Decisión del profesor tras la parada de la tanda S1 (2026-11-02)
+
+> **Firmada por el profesor el 2026-11-02** y transmitida por el coordinador. Respuestas literales: 1 «(a) Normalizar al medir
+> (Recomendada)»; 2 «Firmar L-6 (Recomendada)»; 3 «Anotar (Recomendada)». Regla #24 **H-5**.
+
+1. **(a) La batería y los márgenes miden el texto que lee el estudiante.**
+   - En `verificar_espacio.R`, `norm_ed()` convierte U+00A0 en espacio en lo que entra a la batería §P7 (también en la
+     canónica) y a los márgenes de largo, en caracteres y en palabras.
+   - Las guardas S1, S1-Sol y L-6 y los mutantes M23 a M27 y M29 miran el texto crudo, con el espacio duro.
+   - **M28** corre el mismo verificador sin la normalización (`VERIF_SIN_NORMALIZAR=1`). Da un solo pendiente, el canal de
+     largo de la rama PROMEDIO con el 6,7 % en palabras, y queda cazado por su sonda.
+   - **Resultado** (verificador md5 `b9ed1d78…`, `.Rmd` `5f6f3cf3…`, `salida/ciclo_20261102/verificar_espacio_s1_decision_a.txt`):
+     exit 4 y 37 canales en rojo cubiertos (13 de «O-1 corregido» y 24 de la decisión 2 a), con 0 fallos y 0 pendientes. El
+     margen en palabras vuelve al 6,5 %.
+   - **Rige también para la Parte 1 del CLOZE tras el re-empalme (F-2).** Lo aplica la tanda del CLOZE, no la del SCHOICE.
+2. **L-6, firmada** (abajo).
+3. **`ntok()` del repo, anotado.** El coordinador lo dejó en `.claude/docs/HANDOFF_REPO.md`, pendiente 11. El helper
+   compartido no se toca.
+
+### L-6 · Espacio duro entre cifra y unidad y en los nombres de dos palabras (firmada el 2026-11-02)
+
+Endurece L-1 a raíz de los BAJA 1 y 2 de la 6b del CLOZE: un renglón no parte una cifra de su unidad («15 / kilos») ni un
+nombre de sede («El / Bosque»).
+
+| Exige | Guarda | Mutante |
+|---|---|---|
+| `ED <- "\u00a0"` es una variable; el `.Rmd` no lleva el carácter literal | «L-6: el .Rmd no lleva el carácter U+00A0 literal…» (`verificar_espacio.R`) | M29: `ED` con el literal |
+| Opciones y enunciado sin una cifra separada de su unidad («kilos», «curso(s)») por un espacio normal, ni «El Bosque» o «La Pradera» | `stopifnot` «S1: espacio duro entre cifra y unidad y en los nombres de dos palabras» | M24 (la canónica, en «40 kilos»), M25 («El Bosque») |
+| Canónica: las palabras del impreso no cambian (H-2) y el espacio duro va solo entre cifra y unidad, tres veces | `stopifnot` «S1: en la canónica, el espacio duro solo entre cifra y unidad», más «L-1: canónica verbatim (opciones)», que compara sin el espacio duro | M23 (espacio duro fuera de su sitio), M4 (verbatim) |
+| El cierre de las no canónicas lleva el espacio duro | `stopifnot` «regla #13 v1.1: la cifra va solo en el complemento» | M26 |
+| Opciones, Solution y feedback emitidos sin una cifra ni un nombre partido | sonda S1-Sol (`verificar_espacio.R`) | M27 |
+| La batería §P7 y los márgenes miden con U+00A0 convertido en espacio (decisión (a)) | `norm_ed()` | M28 |
+
+La tabla queda fuera: sus celdas de cifras conservan el espacio normal. Es una decisión declarada, sin guarda; la tabla salió
+idéntica byte a byte en las semillas 1 a 1000.
+
+#### Cierre de la tanda S1 (2026-11-02): pasos 3 a 6 sellados, uno por uno
+
+- **md5 final del `.Rmd`: `4cffbe8b1924b749c36d2b92369e4a83`.** La primera corrida del arsenal dio 1 error en la FASE 2D: el
+  comentario de S5 nombraba el identificador de un argumento de la F2 terminado en «-cion». Se reescribió el comentario.
+  Reapertura #6 desde `generacion_rmd`. La salida es idéntica byte a byte a la de `5f6f3cf3` en 1000 de 1000 semillas
+  (`salida/ciclo_20261102/invariancia_s1_s7.txt`).
+- **Verificador** (md5 `b9ed1d78…`, `salida/ciclo_20261102/verificar_espacio_s1_final.txt`): exit 4 y 37 canales cubiertos
+  (13 de «O-1 corregido» y 24 de la decisión 2 a), con 0 fallos y 0 pendientes. M1 a M29, MP1 y MP2 quedan cazados por su sonda.
+- **Sellos.** Cada paso se selló con su propio `complete`, en una llamada aparte, después de su artefacto:
+  `generacion_rmd`, `retroalimentacion` (regla #19: 0 coincidencias), `renderizado_4_formatos`
+  (`salida/ciclo_20261102/render_4cffbe8b/`: HTML, PDF, DOCX y NOPS; Moodle en `moodle_100/`, con N = 100) y
+  `arsenal_post_render`. Quedan 6 de 11.
+- **Arsenal:** 0 errores y 7 advertencias heurísticas. La FASE 2G da 100/100 y la 2H, 0 anomalías; la 2O no encuentra glifos
+  que rompan pdflatex. En el PDF, `\pandocbounded` aparece 0 veces. La canónica se revisó a ojo en sus 4 páginas.
+- **Caja del Moodle del colegio:** `salida/r4b/medir_qtext_moodle.py` queda **NO VERIFICABLE**, porque el servidor respondió
+  HTTP 530. Como evidencia sustituta: en los 100 XML de Moodle (semillas 1 a 100), el HTML de la tabla es idéntico byte a byte
+  al de `e293d5c8`, y el resto del enunciado también, salvo el espacio duro
+  (`salida/ciclo_20261102/tablas_moodle_vs_e293d5c8.txt`). Por eso la medición del 2026-10-30 (0/100 tablas fuera de su caja a
+  320 y a 360 px) vale para la tabla por identidad. La caja no se volvió a medir.
+- **6b pareada** (`auditor-visual-html`, sin `name:`): seguía en marcha cuando el orquestador agotó sus turnos. Escribe en
+  `salida/ciclo_20261102/6b/`, y su reporte se recupera de la transcripción (Paso 0 de la regla #9).
+
+**¿Ley local o regla?** L-6 queda firmada (arriba). La herramienta de edición convirtió tres veces en literal un U+00A0
+escrito como escape en texto del agente. En este `.Rmd` lo vigila ya la guarda de L-6 con M29. La candidata del repo es la
+misma que la de `ntok()`: el espacio duro es invisible para los gates. Se anota en ese pendiente y no crea ley nueva.
+**6b pareada, recibida** (`auditor-visual-html`, sin `name:`; resultado: APTO_CON_OBSERVACIONES). La muestra fueron 100
+semillas pareadas contra `e293d5c8`, a 360 y 320 px: 400 capturas por CDP, con `innerWidth` comprobado. Evidencia en
+`salida/ciclo_20261102/6b/` (`metricas.json`, `shots/`, `pares/`). El auditor leyó a ojo 4 de los 12 pares, y lo declara.
+
+| Métrica (100 semillas) | 360 ref → nuevo | 320 ref → nuevo |
+|---|---|---|
+| Desborde horizontal, o tabla fuera de su caja | 0 → 0 | 0 → 0 |
+| «cifra kilos/curso(s)» en texto, partidos | 341 → **0** (de 2003) | 347 → **0** (de 2003) |
+| «El Bosque»/«La Pradera» fuera de la tabla, partidos | 74 → **0** (de 475) | 55 → **0** (de 475) |
+| Fórmula `$…$` seguida de «kilos», partidos | 139 → **132** (de 1158) | 259 → **259** (de 1158) |
+
+- **MEDIO, residuo de S1.** Cuando la cifra cierra una fórmula de la Solution («a × b = T kilos», «A − B = D kilos más»),
+  Chromium admite un salto entre el `<math>` y el U+00A0, así que «kilos» sigue quedando sola en el renglón siguiente. Además
+  ese renglón empieza ahora con un espacio: es un BAJO, que en la referencia no se veía porque el espacio colapsaba. No afecta a
+  las opciones ni al enunciado.
+  - Así, el BAJA 1 del CLOZE queda cerrado en las opciones y en el texto plano, pero no en las fórmulas de la Solution.
+  - La guarda S1-Sol de L-6 mira el texto fuente, no el renglón, así que no lo ve.
+  - El auditor sugiere, sin haberlo probado, envolver fórmula, espacio duro y unidad en `white-space:nowrap`, o usar U+2060.
+    Cambiar eso toca la Solution, así que lo decide el profesor.
+- **BAJO.** En 23 semillas a 360 px y en 1 a 320 px hay uno o dos renglones más («15 kilos» pasa entero al renglón
+  siguiente). Es el efecto esperado, sin desbordes.

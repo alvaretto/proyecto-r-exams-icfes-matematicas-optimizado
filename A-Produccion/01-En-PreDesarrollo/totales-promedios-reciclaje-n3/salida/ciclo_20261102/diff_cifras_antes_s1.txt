@@ -1,0 +1,151 @@
+123c123
+<   ROJO, cubierto por O-1 corregido: O-1 corregido: S1 descarta cifras de la tabla, rama PROMEDIO: 33.4 % (+8.4 pp; firmado hasta +8,4 pp) 
+---
+>   ROJO, cubierto por O-1 corregido: O-1 corregido: S1 descarta cifras de la tabla, rama PROMEDIO: 33.4 % (+8.4 pp; firmado hasta +8,4 pp)
+134,139c134,139
+<   ROJO, cubierto por O-1 corregido: O-1: S_U, rama CURSOS: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7) 
+<   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 (par de G sin la cifra de la tabla), rama CURSOS: 71.0 % (firmado hasta 71.0 %) 
+<   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + suma (par de G sin la cifra que es suma de otras dos), rama CURSOS: 60.5 % (firmado hasta 60.5 %) 
+<   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 + suma (las dos pistas), rama CURSOS: 79.0 % (firmado hasta 79.0 %) 
+<   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + atípica, rama CURSOS: 51.5 % (firmado hasta 51.5 %) 
+<   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 + suma + atípica, rama CURSOS: 81.5 % (firmado hasta 81.5 %) 
+---
+>   ROJO, cubierto por O-1 corregido: O-1: S_U, rama CURSOS: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7)
+>   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 (par de G sin la cifra de la tabla), rama CURSOS: 71.0 % (firmado hasta 71.0 %)
+>   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + suma (par de G sin la cifra que es suma de otras dos), rama CURSOS: 60.5 % (firmado hasta 60.5 %)
+>   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 + suma (las dos pistas), rama CURSOS: 79.0 % (firmado hasta 79.0 %)
+>   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + atípica, rama CURSOS: 51.5 % (firmado hasta 51.5 %)
+>   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 + suma + atípica, rama CURSOS: 81.5 % (firmado hasta 81.5 %)
+142,147c142,147
+<   ROJO, cubierto por O-1 corregido: O-1: S_U, rama PROMEDIO: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7) 
+<   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 (par de G sin la cifra de la tabla), rama PROMEDIO: 55.0 % (firmado hasta 55.0 %) 
+<   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + suma (par de G sin la cifra que es suma de otras dos), rama PROMEDIO: 62.0 % (firmado hasta 62.0 %) 
+<   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 + suma (las dos pistas), rama PROMEDIO: 67.0 % (firmado hasta 67.0 %) 
+<   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + atípica, rama PROMEDIO: 58.0 % (firmado hasta 58.0 %) 
+<   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 + suma + atípica, rama PROMEDIO: 74.5 % (firmado hasta 74.5 %) 
+---
+>   ROJO, cubierto por O-1 corregido: O-1: S_U, rama PROMEDIO: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7)
+>   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 (par de G sin la cifra de la tabla), rama PROMEDIO: 55.0 % (firmado hasta 55.0 %)
+>   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + suma (par de G sin la cifra que es suma de otras dos), rama PROMEDIO: 62.0 % (firmado hasta 62.0 %)
+>   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 + suma (las dos pistas), rama PROMEDIO: 67.0 % (firmado hasta 67.0 %)
+>   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + atípica, rama PROMEDIO: 58.0 % (firmado hasta 58.0 %)
+>   ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 + suma + atípica, rama PROMEDIO: 74.5 % (firmado hasta 74.5 %)
+151c151
+<   batería §P7 (48 reglas) mezcla natural n=100: máx 33.0 % (cifra mediana), techo nulo 32.7 %, exceso +0.3 pp -> SIN_COBERTURA
+---
+>   batería §P7 (48 reglas) mezcla natural n=100: máx 33.0 % (cifra mediana), techo nulo 32.7 %, exceso +0.3 pp -> PASS
+155c155
+<   batería §P7 (48 reglas) rama CURSOS    n=100: máx 33.5 % (sede de la opción más larga (relacional)), techo nulo 32.8 %, exceso +0.7 pp -> SIN_COBERTURA
+---
+>   batería §P7 (48 reglas) rama CURSOS    n=100: máx 33.5 % (sede de la opción más larga (relacional)), techo nulo 32.8 %, exceso +0.7 pp -> PASS
+159c159
+<   batería §P7 (48 reglas) rama PROMEDIO  n=100: máx 43.0 % (la mas larga (chars)), techo nulo 32.6 %, exceso +10.4 pp -> SIN_COBERTURA
+---
+>   batería §P7 (48 reglas) rama PROMEDIO  n=100: máx 43.0 % (la mas larga (chars)), techo nulo 32.6 %, exceso +10.4 pp -> BLOQUEA
+162,164c162,164
+<   margen de «molde atipico» en palabras (rama PROMEDIO): acierta en 41 versiones, mediano 3.3 %, máximo 6.5 %
+<   RESIDUO DECLARADO §P7-B (rama PROMEDIO): exceso +10.4 pp por reglas de largo con margen máximo 2.0 % en caracteres y 6.5 % en palabras, < 15 % (inexplotable); sin ellas, exceso -0.1 pp (siempre la 1a)
+<   OK: §P7-B, dentro de lo declarado en O-1 corregido: canal de largo (rama PROMEDIO): +10.4 pp, márgenes 2.0 % y 6.5 %; declarado hasta +10,4 pp, 2,7 % y 6,5 % 
+---
+>   margen de «molde atipico» en palabras (rama PROMEDIO): acierta en 41 versiones, mediano 3.4 %, máximo 6.7 %
+>   RESIDUO DECLARADO §P7-B (rama PROMEDIO): exceso +10.4 pp por reglas de largo con margen máximo 2.0 % en caracteres y 6.7 % en palabras, < 15 % (inexplotable); sin ellas, exceso -0.1 pp (siempre la 1a)
+>   PENDIENTE DE FIRMA: canal de largo (rama PROMEDIO): +10.4 pp, márgenes 2.0 % y 6.7 %; declarado hasta +10,4 pp, 2,7 % y 6,5 % 
+166a167,194
+>   OK: decisión 2 a: las 12 reglas y las 12 sondas firmadas existen en la batería y en E4 
+>   ROJO, cubierto por la decisión 2 a: canónica, regla «mas digitos»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, regla «primer numero PAR»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, regla «la que MAS comparte»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, regla «ultimo multiplo de 10»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, regla «descartar ultimo negativo»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, regla «par por sede: menor cifra»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, regla «descartar sin cifra»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, regla «quedarse con 'total'»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, regla «quedarse con 'promedio'»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, regla «descartar 'de más'»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, regla «cifra mediana»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, regla «par con más palabras en común (relacional)»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   decisión 2 a, reglas: 12 firmadas, 12 iguales a lo firmado (a un decimal); por encima de +8 pp en la canónica: 12
+>   ROJO, cubierto por la decisión 2 a: canónica, sonda «S1 descarta cifras de la tabla»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, sonda «S2 par de la sede de la fila 1»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, sonda «S3 par de la sede de más cursos»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, sonda «S5 más cursos + menor cifra del par»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, sonda «S7 G real + menor cifra del par (cota canal 2)»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, sonda «S_U la sede de la razón sin sustento pierde»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, sonda «S_U + S1 (par de G sin la cifra de la tabla)»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, sonda «S_U + suma (par de G sin la cifra que es suma de otras dos)»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, sonda «Atípica: descarta la cifra que dobla a todas las demás»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, sonda «S_U + S1 + suma (las dos pistas)»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, sonda «S_U + atípica»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   ROJO, cubierto por la decisión 2 a: canónica, sonda «S_U + S1 + suma + atípica»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   decisión 2 a, sondas: 12 firmadas, 12 iguales a lo firmado (a un decimal); por encima de +8 pp en la canónica: 12
+>   RESIDUO DECLARADO (decisión 2 a: fuera de la batería congelada, §P7-C): en la canónica, «descarta la más larga» 33.3 % (+8.3 pp)
+168a197,198
+>   Decisión 2 a: las nueve reglas y sondas al 100 % (+75,0 pp) no pueden subir; ningún mutante puede sacarlas de «cubierto».
+>   OK: S1-Sol: en las 100 versiones de E1, opciones, Solution y feedback sin cifra ni nombre partido por un espacio normal (0) 
+170,183c200,237
+< En rojo, cubiertos por el override firmado «O-1 corregido» (2026-10-29; regla #22 §P7-E):
+<   - O-1 corregido: S1 descarta cifras de la tabla, rama PROMEDIO: 33.4 % (+8.4 pp; firmado hasta +8,4 pp)
+<   - O-1: S_U, rama CURSOS: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7)
+<   - O-1 corregido: S_U + S1 (par de G sin la cifra de la tabla), rama CURSOS: 71.0 % (firmado hasta 71.0 %)
+<   - O-1 corregido: S_U + suma (par de G sin la cifra que es suma de otras dos), rama CURSOS: 60.5 % (firmado hasta 60.5 %)
+<   - O-1 corregido: S_U + S1 + suma (las dos pistas), rama CURSOS: 79.0 % (firmado hasta 79.0 %)
+<   - O-1 corregido: S_U + atípica, rama CURSOS: 51.5 % (firmado hasta 51.5 %)
+<   - O-1 corregido: S_U + S1 + suma + atípica, rama CURSOS: 81.5 % (firmado hasta 81.5 %)
+<   - O-1: S_U, rama PROMEDIO: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7)
+<   - O-1 corregido: S_U + S1 (par de G sin la cifra de la tabla), rama PROMEDIO: 55.0 % (firmado hasta 55.0 %)
+<   - O-1 corregido: S_U + suma (par de G sin la cifra que es suma de otras dos), rama PROMEDIO: 62.0 % (firmado hasta 62.0 %)
+<   - O-1 corregido: S_U + S1 + suma (las dos pistas), rama PROMEDIO: 67.0 % (firmado hasta 67.0 %)
+<   - O-1 corregido: S_U + atípica, rama PROMEDIO: 58.0 % (firmado hasta 58.0 %)
+<   - O-1 corregido: S_U + S1 + suma + atípica, rama PROMEDIO: 74.5 % (firmado hasta 74.5 %)
+---
+> En rojo, cubiertos por un override firmado («O-1 corregido», 2026-10-29; decisión 2 a, 2026-10-31; regla #22 §P7-E):
+>   - [O-1 corregido] O-1 corregido: S1 descarta cifras de la tabla, rama PROMEDIO: 33.4 % (+8.4 pp; firmado hasta +8,4 pp)
+>   - [O-1 corregido] O-1: S_U, rama CURSOS: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7)
+>   - [O-1 corregido] O-1 corregido: S_U + S1 (par de G sin la cifra de la tabla), rama CURSOS: 71.0 % (firmado hasta 71.0 %)
+>   - [O-1 corregido] O-1 corregido: S_U + suma (par de G sin la cifra que es suma de otras dos), rama CURSOS: 60.5 % (firmado hasta 60.5 %)
+>   - [O-1 corregido] O-1 corregido: S_U + S1 + suma (las dos pistas), rama CURSOS: 79.0 % (firmado hasta 79.0 %)
+>   - [O-1 corregido] O-1 corregido: S_U + atípica, rama CURSOS: 51.5 % (firmado hasta 51.5 %)
+>   - [O-1 corregido] O-1 corregido: S_U + S1 + suma + atípica, rama CURSOS: 81.5 % (firmado hasta 81.5 %)
+>   - [O-1 corregido] O-1: S_U, rama PROMEDIO: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7)
+>   - [O-1 corregido] O-1 corregido: S_U + S1 (par de G sin la cifra de la tabla), rama PROMEDIO: 55.0 % (firmado hasta 55.0 %)
+>   - [O-1 corregido] O-1 corregido: S_U + suma (par de G sin la cifra que es suma de otras dos), rama PROMEDIO: 62.0 % (firmado hasta 62.0 %)
+>   - [O-1 corregido] O-1 corregido: S_U + S1 + suma (las dos pistas), rama PROMEDIO: 67.0 % (firmado hasta 67.0 %)
+>   - [O-1 corregido] O-1 corregido: S_U + atípica, rama PROMEDIO: 58.0 % (firmado hasta 58.0 %)
+>   - [O-1 corregido] O-1 corregido: S_U + S1 + suma + atípica, rama PROMEDIO: 74.5 % (firmado hasta 74.5 %)
+>   - [la decisión 2 a] canónica, regla «mas digitos»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   - [la decisión 2 a] canónica, regla «primer numero PAR»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   - [la decisión 2 a] canónica, regla «la que MAS comparte»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   - [la decisión 2 a] canónica, regla «ultimo multiplo de 10»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   - [la decisión 2 a] canónica, regla «descartar ultimo negativo»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+>   - [la decisión 2 a] canónica, regla «par por sede: menor cifra»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+>   - [la decisión 2 a] canónica, regla «descartar sin cifra»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+>   - [la decisión 2 a] canónica, regla «quedarse con 'total'»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   - [la decisión 2 a] canónica, regla «quedarse con 'promedio'»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   - [la decisión 2 a] canónica, regla «descartar 'de más'»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+>   - [la decisión 2 a] canónica, regla «cifra mediana»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   - [la decisión 2 a] canónica, regla «par con más palabras en común (relacional)»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   - [la decisión 2 a] canónica, sonda «S1 descarta cifras de la tabla»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   - [la decisión 2 a] canónica, sonda «S2 par de la sede de la fila 1»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   - [la decisión 2 a] canónica, sonda «S3 par de la sede de más cursos»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   - [la decisión 2 a] canónica, sonda «S5 más cursos + menor cifra del par»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   - [la decisión 2 a] canónica, sonda «S7 G real + menor cifra del par (cota canal 2)»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   - [la decisión 2 a] canónica, sonda «S_U la sede de la razón sin sustento pierde»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   - [la decisión 2 a] canónica, sonda «S_U + S1 (par de G sin la cifra de la tabla)»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   - [la decisión 2 a] canónica, sonda «S_U + suma (par de G sin la cifra que es suma de otras dos)»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+>   - [la decisión 2 a] canónica, sonda «Atípica: descarta la cifra que dobla a todas las demás»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+>   - [la decisión 2 a] canónica, sonda «S_U + S1 + suma (las dos pistas)»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   - [la decisión 2 a] canónica, sonda «S_U + atípica»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+>   - [la decisión 2 a] canónica, sonda «S_U + S1 + suma + atípica»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+186c240
+<   - §P7-B rama PROMEDIO: +10.4 pp por reglas de largo, margen máximo 2.0 % en caracteres y 6.5 % en palabras (inexplotable)
+---
+>   - §P7-B rama PROMEDIO: +10.4 pp por reglas de largo, margen máximo 2.0 % en caracteres y 6.7 % en palabras (inexplotable)
+188,189c242,246
+< === RESULTADO: EN ROJO BAJO OVERRIDE FIRMADO (13 canales dentro del alcance de O-1 corregido; 0 fallos, 0 pendientes) ===
+< exit=4 
+---
+> Pendientes de firma del profesor (> +8 pp o premisa firmada superada; exit 3):
+>   - canal de largo (rama PROMEDIO): +10.4 pp, márgenes 2.0 % y 6.7 %; declarado hasta +10,4 pp, 2,7 % y 6,5 %
+> 
+> === RESULTADO: PENDIENTE DE FIRMA (1; 0 fallos) ===
+> exit=3 

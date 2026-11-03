@@ -3,7 +3,7 @@
   "ejercicio": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1",
   "tipo": "schoice",
   "timestamp_inicio": "2026-10-29T06:13:12.230996-05:00",
-  "timestamp_ultima_actualizacion": "2026-10-29T21:19:51.998747-05:00",
+  "timestamp_ultima_actualizacion": "2026-11-02T19:54:11.260700-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -27,52 +27,46 @@
     },
     "generacion_rmd": {
       "completado": true,
-      "timestamp": "2026-10-29T20:51:24.332245-05:00",
+      "timestamp": "2026-11-02T19:51:22.766001-05:00",
       "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd",
-      "nota": "Ronda 4b (reapertura 4): la regresión del relleno de B1 medida por el 6b r4 se corrige con cabeceras al 90 % y 0,5 em a la izquierda de las columnas 2 y 3 (F05). Resto igual a r4 (md5 7d5855da): cursos_txt retirado, espacio duro en las celdas de El Bosque/La Pradera, causa raíz y explica() de ERR-TOTAL, encabezados con \\nobreak + \\@afterheading. verificar_espacio.R (con las guardas H1/H3 de la FASE 2C r4 y los mutantes M19/M20): APROBADO (0 fallos), salida/verificar_espacio_ronda4b.txt. md5 e293d5c812b1f9790e2bb777b62de9a5"
+      "nota": "Ciclo 2026-11-02, tanda S1. .Rmd md5 4cffbe8b1924b749c36d2b92369e4a83: S1 (espacio duro ED, L-6), S5, S6 y S7 (lado_gdis se conserva en la canónica: lo leen rasgos() y rec() del CLOZE). Artefactos: salida/ciclo_20261102/invariancia_s1_s7.txt (frente a e293d5c8: .Random.seed idéntico 1000/1000 y texto idéntico salvo el espacio; frente a 5f6f3cf3: idéntico byte a byte 1000/1000) y verificar_espacio_s1_final.txt (verificador b9ed1d78…, exit 4, 37 canales cubiertos, 0 fallos, 0 pendientes; M1-M29, MP1 y MP2 cazados por su sonda). Ortografía: 0 errores."
     },
     "retroalimentacion": {
       "completado": true,
-      "timestamp": "2026-10-29T20:51:24.389865-05:00",
-      "nota": "Solution igual a la de r4 (md5 7d5855da): causa raíz de ERR-TOTAL, explica() sin paréntesis, encabezados sin huérfano al pie (14/60 → 0/60 con las semillas 700001-700060; 18/100 → 0/100 pareados según el detractor r4); texto visible del HTML idéntico a r4 en 100/100 versiones"
+      "timestamp": "2026-11-02T19:51:27.599037-05:00",
+      "nota": "Ciclo 2026-11-02, tanda S1. Solution y feedback por opción del md5 4cffbe8b…: idénticos a e293d5c8 salvo el espacio duro en 1000/1000 semillas e idénticos byte a byte a 5f6f3cf3 (salida/ciclo_20261102/invariancia_s1_s7.txt); 0 cifras o nombres partidos por un espacio normal (sonda S1-Sol, N = 100, y M27 cazado: verificar_espacio_s1_final.txt); regla #19: 0 coincidencias de letra o «Opción [A-D]» en la Solution; ortografía: 0 errores."
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-10-29T20:51:24.447735-05:00",
-      "nota": "Ronda 4b: HTML (20), PDF (3), DOCX (3), NOPS (2) y Moodle (20) exit 0 en salida/r4b/; 0 fugas (span, font-size, padding, nobreak, afterheading) en HTML, Moodle, DOCX, PDF y NOPS; tabla en 100 HTML reales: no cabe en su caja en 0/100 a 360 px, 9/100 a 320 px (las canónicas, igual que r3) y 0/100 a 1024 px; separación mínima entre cabeceras 11,2-13,5 px (r3: 4-5,8 px); capturas a 360 px de la canónica y de El Bosque revisadas; salida/r4/medicion_relleno_tabla.md"
+      "timestamp": "2026-11-02T19:53:54.522233-05:00",
+      "nota": "Ciclo 2026-11-02, tanda S1, md5 4cffbe8b…: salida/ciclo_20261102/render_4cffbe8b/ (HTML 3, PDF 3 examen + 3 solución, DOCX 3, NOPS 2; semillas 7 canónica, 6 «El Bosque», 3) y moodle_100/ (100 XML, semillas 1-100, con generar_moodle_100.R copiado con el md5 nuevo). Validación realista: \\pandocbounded 0 en exercise1.tex (PDF y NOPS); \\LTcaptype presente y guarda c@none en el .Rmd (FASE 2K OK); PDF de la canónica revisado a ojo en sus 4 páginas, también la Solution (pdf_canonica_montaje.png)."
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-10-29T20:51:24.505028-05:00",
-      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1/20261029-204340-1175936/informe.txt · md5 e293d5c812b1f9790e2bb777b62de9a5 · 0 errores / 7 advertencias (6 heurísticas 2E/2F; 2B sin PDF en el primer exams2 del comando, PDF de salida/r4b/pdf revisado aparte); 2G 100/100, 2H 10 semillas 0 anomalías"
+      "timestamp": "2026-11-02T19:54:11.260700-05:00",
+      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1/20261102-195156-185511/informe.txt · md5 4cffbe8b1924b749c36d2b92369e4a83 · 0 errores / 7 advertencias (las heurísticas de siempre: Tarea, tabla de metadatos, descripción, análisis de distractores, patrón ICFES, letra_correcta, PDF de 2B); FASE 2G 100/100, 2H 0 anomalías, 2O sin glifos. Corrida anterior con 1 error en 2D (identificador separacion en un comentario), corregido antes de esta."
     },
     "detractor_fase2c": {
-      "completado": true,
-      "timestamp": "2026-10-29T21:05:03.337256-05:00",
-      "veredicto": "APROBAR_CON_CAMBIOS",
-      "nota": "FASE 2C r4b: AgenteDetractor NUEVO sin name (distinto de los de r1-r4), md5 e293d5c812b1f9790e2bb777b62de9a5, base HEAD cd94b59a; 0 CORRECCIÓN, 0 críticas, 0 altas; cabeceras separadas 13,5-16,3 px (r3: 6-9,5); la tabla no desborda en más versiones que r3 a 360 ni a 320 px (pareado N = 100); 0 fugas en HTML, Moodle, PDF, NOPS y DOCX; Question idéntica a r3 en 100/100 (9 canónicas); Solution: solo cambian la causa raíz y explica() de ERR-TOTAL, verdaderas; huérfanos al pie r4b 0 / r3 42 / mutante sin el bloque 51 (por cada ~230 saltos); H1 BAJA testing (guarda del encabezado: HECHA en verificar_espacio.R con M21/M22), H2 BAJA (espacio duro: más desborde solo con cajas < 240 px), H3 BAJA (HANDOFF), H4 MEDIA deuda F2; 8 citas OK; reporte salida/fase2c_r4b_detractor.md"
+      "completado": false,
+      "timestamp": null,
+      "veredicto": null
     },
     "coherencias_5": {
-      "completado": true,
-      "timestamp": "2026-10-29T21:05:03.394680-05:00",
-      "nota": "Paso 8: COHERENCIAS_CON_OBSERVACIONES del paso 8 r4 (Sonnet independiente, 5/5 cumplen, 130 HTML + 46 PDF + 12 DOCX + 24 Moodle, 0 fallos; salida/paso8_r4_coherencias.md) + invariancia r4 → r4b: texto visible del HTML idéntico en 100/100 versiones (solo cambia el estilo de los span de la tabla) y Question idéntica a r3 en 100/100 según la FASE 2C r4b; 4 BAJA de código muerto para un ciclo futuro"
+      "completado": false,
+      "timestamp": null
     },
     "validar_diversidad": {
-      "completado": true,
-      "timestamp": "2026-10-29T21:05:03.452621-05:00",
-      "versiones_unicas": 271,
-      "nota": "r4b (md5 e293d5c8): 271/300 únicas (opciones ordenadas, método r3); diversidad sustantiva --n 100 PASS (95 valores de D); diagnosticidad --n 100 PASS (H1 0 %, H2/H3 ciegas, H3b 6 %); multisemilla 100/100 (FASE 2G); verificar_espacio.R APROBADO (0 fallos) con FIRMA_O1 (12 cifras dentro de lo firmado), H3 r4, H1 r4b y mutantes M19-M22; salida/r4b/paso9_validadores.txt y salida/verificar_espacio_ronda4b.txt"
+      "completado": false,
+      "timestamp": null,
+      "versiones_unicas": null
     },
     "validar_icfes": {
-      "completado": true,
-      "timestamp": "2026-10-29T21:05:03.510085-05:00",
-      "nota": "Meta-information idéntica a r3 (0 líneas ex* en diff_r3_r4b.patch); exextra cotejados contra los catálogos oficiales de Todo-Pajaro (evidencias-mat, niveles-mat D3.10, estandares-mat-ebc): literales; Nivel 3, DOK 2, Bloom Evaluar, SOLO Relacional"
+      "completado": false,
+      "timestamp": null
     },
     "aprobacion_usuario": {
-      "completado": true,
-      "timestamp": "2026-10-29T21:19:51.998747-05:00",
-      "veredicto": "aprobado para el aula",
-      "nota": "WAIT_USER #3 de las rondas 4 y 4b (2026-10-29), respuesta a: el profesor aprueba para el aula la versión md5 e293d5c812b1f9790e2bb777b62de9a5, con los 6 bajos de la ronda 3 corregidos y la regresión del relleno de la tabla corregida en la 4b. Residuos para otro ciclo (HANDOFF § Rondas 4 y 4b): deuda F2 (MEDIA), espacio duro con cajas < 240 px (BAJA), 4 restos de código muerto (BAJA). O-1 corregido sigue cubriendo la versión (verificar_espacio.R APROBADO, 0 fallos). No está en producción: falta la evidencia de aula."
+      "completado": false,
+      "timestamp": null
     }
   },
   "reaperturas": [
@@ -269,6 +263,86 @@
         "validar_icfes": {
           "timestamp": "2026-10-29T19:48:33.100819-05:00",
           "nota": "Meta-information idéntica a la de r3 (0 líneas ex* en el diff); exextra cotejados de nuevo con un script contra los catálogos de Todo-Pajaro: Afirmación y Evidencia en evidencias-mat.json, D3.10 en niveles-mat.json, Estándar en estandares-mat-ebc.json; Nivel 3, DOK 2 (DOK ≥ 3 ⇒ Nivel ≥ 3 no aplica), Bloom Evaluar, SOLO Relacional"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-02T19:27:58.916684-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Ciclo 2026-11-02 (decisión del profesor «Hazlo ya»): pendiente del SCHOICE (espacio duro S1, decisión 2 a S3, §P7-G S4, comentarios S5-S6, código muerto S7)",
+      "reporte": null,
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render",
+        "detractor_fase2c",
+        "coherencias_5",
+        "validar_diversidad",
+        "validar_icfes",
+        "aprobacion_usuario"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-10-29T20:51:24.332245-05:00",
+          "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd",
+          "nota": "Ronda 4b (reapertura 4): la regresión del relleno de B1 medida por el 6b r4 se corrige con cabeceras al 90 % y 0,5 em a la izquierda de las columnas 2 y 3 (F05). Resto igual a r4 (md5 7d5855da): cursos_txt retirado, espacio duro en las celdas de El Bosque/La Pradera, causa raíz y explica() de ERR-TOTAL, encabezados con \\nobreak + \\@afterheading. verificar_espacio.R (con las guardas H1/H3 de la FASE 2C r4 y los mutantes M19/M20): APROBADO (0 fallos), salida/verificar_espacio_ronda4b.txt. md5 e293d5c812b1f9790e2bb777b62de9a5"
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-10-29T20:51:24.389865-05:00",
+          "nota": "Solution igual a la de r4 (md5 7d5855da): causa raíz de ERR-TOTAL, explica() sin paréntesis, encabezados sin huérfano al pie (14/60 → 0/60 con las semillas 700001-700060; 18/100 → 0/100 pareados según el detractor r4); texto visible del HTML idéntico a r4 en 100/100 versiones"
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-10-29T20:51:24.447735-05:00",
+          "nota": "Ronda 4b: HTML (20), PDF (3), DOCX (3), NOPS (2) y Moodle (20) exit 0 en salida/r4b/; 0 fugas (span, font-size, padding, nobreak, afterheading) en HTML, Moodle, DOCX, PDF y NOPS; tabla en 100 HTML reales: no cabe en su caja en 0/100 a 360 px, 9/100 a 320 px (las canónicas, igual que r3) y 0/100 a 1024 px; separación mínima entre cabeceras 11,2-13,5 px (r3: 4-5,8 px); capturas a 360 px de la canónica y de El Bosque revisadas; salida/r4/medicion_relleno_tabla.md"
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-10-29T20:51:24.505028-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1/20261029-204340-1175936/informe.txt · md5 e293d5c812b1f9790e2bb777b62de9a5 · 0 errores / 7 advertencias (6 heurísticas 2E/2F; 2B sin PDF en el primer exams2 del comando, PDF de salida/r4b/pdf revisado aparte); 2G 100/100, 2H 10 semillas 0 anomalías"
+        },
+        "detractor_fase2c": {
+          "timestamp": "2026-10-29T21:05:03.337256-05:00",
+          "veredicto": "APROBAR_CON_CAMBIOS",
+          "nota": "FASE 2C r4b: AgenteDetractor NUEVO sin name (distinto de los de r1-r4), md5 e293d5c812b1f9790e2bb777b62de9a5, base HEAD cd94b59a; 0 CORRECCIÓN, 0 críticas, 0 altas; cabeceras separadas 13,5-16,3 px (r3: 6-9,5); la tabla no desborda en más versiones que r3 a 360 ni a 320 px (pareado N = 100); 0 fugas en HTML, Moodle, PDF, NOPS y DOCX; Question idéntica a r3 en 100/100 (9 canónicas); Solution: solo cambian la causa raíz y explica() de ERR-TOTAL, verdaderas; huérfanos al pie r4b 0 / r3 42 / mutante sin el bloque 51 (por cada ~230 saltos); H1 BAJA testing (guarda del encabezado: HECHA en verificar_espacio.R con M21/M22), H2 BAJA (espacio duro: más desborde solo con cajas < 240 px), H3 BAJA (HANDOFF), H4 MEDIA deuda F2; 8 citas OK; reporte salida/fase2c_r4b_detractor.md"
+        },
+        "coherencias_5": {
+          "timestamp": "2026-10-29T21:05:03.394680-05:00",
+          "nota": "Paso 8: COHERENCIAS_CON_OBSERVACIONES del paso 8 r4 (Sonnet independiente, 5/5 cumplen, 130 HTML + 46 PDF + 12 DOCX + 24 Moodle, 0 fallos; salida/paso8_r4_coherencias.md) + invariancia r4 → r4b: texto visible del HTML idéntico en 100/100 versiones (solo cambia el estilo de los span de la tabla) y Question idéntica a r3 en 100/100 según la FASE 2C r4b; 4 BAJA de código muerto para un ciclo futuro"
+        },
+        "validar_diversidad": {
+          "timestamp": "2026-10-29T21:05:03.452621-05:00",
+          "versiones_unicas": 271,
+          "nota": "r4b (md5 e293d5c8): 271/300 únicas (opciones ordenadas, método r3); diversidad sustantiva --n 100 PASS (95 valores de D); diagnosticidad --n 100 PASS (H1 0 %, H2/H3 ciegas, H3b 6 %); multisemilla 100/100 (FASE 2G); verificar_espacio.R APROBADO (0 fallos) con FIRMA_O1 (12 cifras dentro de lo firmado), H3 r4, H1 r4b y mutantes M19-M22; salida/r4b/paso9_validadores.txt y salida/verificar_espacio_ronda4b.txt"
+        },
+        "validar_icfes": {
+          "timestamp": "2026-10-29T21:05:03.510085-05:00",
+          "nota": "Meta-information idéntica a r3 (0 líneas ex* en diff_r3_r4b.patch); exextra cotejados contra los catálogos oficiales de Todo-Pajaro (evidencias-mat, niveles-mat D3.10, estandares-mat-ebc): literales; Nivel 3, DOK 2, Bloom Evaluar, SOLO Relacional"
+        },
+        "aprobacion_usuario": {
+          "timestamp": "2026-10-29T21:19:51.998747-05:00",
+          "veredicto": "aprobado para el aula",
+          "nota": "WAIT_USER #3 de las rondas 4 y 4b (2026-10-29), respuesta a: el profesor aprueba para el aula la versión md5 e293d5c812b1f9790e2bb777b62de9a5, con los 6 bajos de la ronda 3 corregidos y la regresión del relleno de la tabla corregida en la 4b. Residuos para otro ciclo (HANDOFF § Rondas 4 y 4b): deuda F2 (MEDIA), espacio duro con cajas < 240 px (BAJA), 4 restos de código muerto (BAJA). O-1 corregido sigue cubriendo la versión (verificar_espacio.R APROBADO, 0 fallos). No está en producción: falta la evidencia de aula."
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-02T19:51:22.728895-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Ciclo 2026-11-02, tanda S1: la FASE 2D del arsenal rechazó un comentario de S5 que nombraba el identificador separacion; se reescribe el comentario (md5 5f6f3cf3 -> 4cffbe8b, salida idéntica byte a byte en 1000/1000 semillas) y los sellos 3 y 4, que nombraban el md5 anterior, se rehacen.",
+      "reporte": null,
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-11-02T19:48:22.534123-05:00",
+          "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd",
+          "nota": "Ciclo 2026-11-02, tanda S1. .Rmd md5 5f6f3cf3e89241cd017b9febe0c71ddd: S1 (espacio duro ED, L-6), S5, S6 y S7 (lado_gdis se conserva en la canónica: lo leen rasgos() y rec() del CLOZE). Artefactos: salida/ciclo_20261102/invariancia_s1_s7.txt (.Random.seed idéntico 1000/1000; texto idéntico salvo el espacio) y verificar_espacio_s1_decision_a.txt (verificador b9ed1d78…, exit 4, 37 canales cubiertos, 0 fallos, 0 pendientes; mutantes M1-M29, MP1 y MP2 cazados por su sonda)."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-11-02T19:48:30.792040-05:00",
+          "nota": "Ciclo 2026-11-02, tanda S1. Solution y feedback por opción del md5 5f6f3cf3…: idénticos a e293d5c8 salvo el espacio duro en 1000/1000 semillas (salida/ciclo_20261102/invariancia_s1_s7.txt); 0 cifras o nombres partidos por un espacio normal (sonda S1-Sol, N = 100, y M27 cazado: verificar_espacio_s1_decision_a.txt); regla #19: 0 coincidencias de letra o «Opción [A-D]» en la Solution."
         }
       }
     }

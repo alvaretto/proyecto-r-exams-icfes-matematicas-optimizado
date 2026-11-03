@@ -294,6 +294,17 @@ Rscript tests/testthat/test_post_exams2_cwd.R      # el ejercicio sale del .Rmd;
     (`hook_success`), no vio el marcador, salió con 0 y no dejó registro. En los dos casos el coordinador verificó las
     citas a mano antes del sello (11 y 8, sin problemas).
 
+11. **`ntok()` no separa palabras en U+00A0** (anotado el 2026-11-02, decisión del profesor: «Anotar»). En
+    `.claude/scripts/bateria_referencia_icfes.R`, `ntok()` cuenta con `strsplit(…, "\\s+")`. En R, `\s` no reconoce el
+    espacio duro, ni con TRE ni con perl, así que «15 kilos» cuenta como una sola palabra.
+    - Lo destapó la tanda S1 del SCHOICE de `totales-promedios-reciclaje-n3`: el margen en palabras de la rama PROMEDIO
+      pasó de 6,5 % a 6,7 % sin que cambiara el texto leído. Ese ejercicio lo resuelve normalizando U+00A0 en su propio
+      verificador (decisión «(a)»).
+    - Hoy solo esos dos `.Rmd` llevan espacio duro. `sistema-ecuaciones-eliminacion-n4/cloze/p7_vara.R` también usa el
+      helper, sin espacio duro.
+    - El arreglo va en un ciclo propio: cambiar `ntok()`, volver a medir la vara de §P7-A sobre el corpus de 426 ítems,
+      que no está en este repo, y repetir el control de no-relleno de §P7-C antes de promoverlo.
+
 ## Respaldos del día (fuera de git, regla #17)
 
 - `.claude/backups/2026-11-02-md5-validadores/` y `.claude/backups/2026-11-02-literalidad-exextra/`: los dos validadores

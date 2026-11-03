@@ -451,3 +451,53 @@ exit 4; antes, «PENDIENTE DE FIRMA (11; 0 fallos)» permanente. En la ronda 4b 
     El hito pendiente sigue siendo el 13.
 
 Aprobado para llevarlo al aula el 2026-10-29 (md5 `e293d5c8…`, ronda 4b); no está en producción.
+
+## Ciclo 2026-11-02, tanda S1: detenida en el verificador
+
+- Reapertura #5 desde `generacion_rmd`: quedan 2 de 11 pasos. El `.Rmd` en disco es el md5 `5f6f3cf3…`, sin aprobar. La versión
+  aprobada para el aula (`e293d5c8…`) sigue en `HEAD`: `git show HEAD:<ruta del .Rmd>`.
+- S1, S3, S4, S5, S6 y S7 están aplicados. `.Random.seed` sale idéntico en las semillas 1 a 1000, y el texto también, salvo el
+  espacio.
+- El verificador sale con exit 3 por una sola cifra: el margen en palabras del canal de largo de la rama PROMEDIO pasa de 6,5 %
+  a 6,7 %. Lo causa el contador de palabras de la batería, que no separa en U+00A0. Detalle y opciones: `.claude/CLAUDE.md` local,
+  § «Ciclo 2026-11-02 (SCHOICE), tanda S1». Evidencia: `salida/ciclo_20261102/`.
+- **Próximo paso:** el profesor decide (a), (b) o (c). Con la decisión, la tanda S1 sigue así:
+  1. Aplicarla y volver a correr el verificador (con la (a) se espera exit 4).
+  2. Sellar los pasos 3 y 4.
+  3. Renderizar los 4 formatos con el hook y sellar los pasos 5 y 6.
+  4. Hacer la 6b pareada contra `e293d5c8…` a 360 y 320 px, más la caja de Moodle.
+
+  Después viene la tanda S2: FASE 2C, pasos 8 a 10 y WAIT_USER #3.
+
+**Actualización (2026-11-02, cierre de la tanda S1).** El profesor decidió (a), firmó L-6 y anotó lo de `ntok()`. El `.Rmd`
+quedó en el md5 `4cffbe8b…`, con los pasos 3 a 6 sellados uno por uno (6 de 11). El verificador da exit 4, con 37 canales,
+0 fallos y 0 pendientes. La caja de Moodle quedó NO VERIFICABLE (HTTP 530); las tablas son idénticas byte a byte en 100/100.
+Detalle: `.claude/CLAUDE.md` local, § «Cierre de la tanda S1».
+- **Próximo paso:**
+  1. Recoger la 6b pareada de `salida/ciclo_20261102/6b/`, o de su transcripción si no dejó informe.
+  2. Tanda S2: FASE 2C con un detractor nuevo, sin `name:`. Tiene que revisar S1, L-6, M23 a M29, MP1 y MP2.
+  3. Pasos 8 a 10.
+  4. WAIT_USER #3: la aprobación anterior era de `e293d5c8`.
+- **Después, la tanda del re-empalme del CLOZE:** quitar `lado_gdis` de la canónica y de `rec()`, adaptar MP2 al espacio duro
+  y aplicar la decisión (a) en E4.
+**6b pareada, recibida** (`auditor-visual-html`, sin `name:`; resultado: APTO_CON_OBSERVACIONES). La muestra fueron 100
+semillas pareadas contra `e293d5c8`, a 360 y 320 px: 400 capturas por CDP, con `innerWidth` comprobado. Evidencia en
+`salida/ciclo_20261102/6b/` (`metricas.json`, `shots/`, `pares/`). El auditor leyó a ojo 4 de los 12 pares, y lo declara.
+
+| Métrica (100 semillas) | 360 ref → nuevo | 320 ref → nuevo |
+|---|---|---|
+| Desborde horizontal, o tabla fuera de su caja | 0 → 0 | 0 → 0 |
+| «cifra kilos/curso(s)» en texto, partidos | 341 → **0** (de 2003) | 347 → **0** (de 2003) |
+| «El Bosque»/«La Pradera» fuera de la tabla, partidos | 74 → **0** (de 475) | 55 → **0** (de 475) |
+| Fórmula `$…$` seguida de «kilos», partidos | 139 → **132** (de 1158) | 259 → **259** (de 1158) |
+
+- **MEDIO, residuo de S1.** Cuando la cifra cierra una fórmula de la Solution («a × b = T kilos», «A − B = D kilos más»),
+  Chromium admite un salto entre el `<math>` y el U+00A0, así que «kilos» sigue quedando sola en el renglón siguiente. Además
+  ese renglón empieza ahora con un espacio: es un BAJO, que en la referencia no se veía porque el espacio colapsaba. No afecta a
+  las opciones ni al enunciado.
+  - Así, el BAJA 1 del CLOZE queda cerrado en las opciones y en el texto plano, pero no en las fórmulas de la Solution.
+  - La guarda S1-Sol de L-6 mira el texto fuente, no el renglón, así que no lo ve.
+  - El auditor sugiere, sin haberlo probado, envolver fórmula, espacio duro y unidad en `white-space:nowrap`, o usar U+2060.
+    Cambiar eso toca la Solution, así que lo decide el profesor.
+- **BAJO.** En 23 semillas a 360 px y en 1 a 320 px hay uno o dos renglones más («15 kilos» pasa entero al renglón
+  siguiente). Es el efecto esperado, sin desbordes.
