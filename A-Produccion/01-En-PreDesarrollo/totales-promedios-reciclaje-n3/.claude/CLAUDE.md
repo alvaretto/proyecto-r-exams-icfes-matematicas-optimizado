@@ -1804,3 +1804,125 @@ las dos filas rigen también la Parte 1 del CLOZE tras el re-empalme.
 
 **Restos fuera del repo.** La prueba del assert de `cap_s1b2.py` desde fuera del repo dejó `/tmp/x.json` y el perfil de
 Chromium `/tmp/perfil_inexistente_s2b/`, sin ningún proceso vivo. El permiso no dejó borrarlos.
+
+### Ciclo 2026-11-02 (SCHOICE), tanda S2c (§P7-F)
+
+> La hizo el `orquestador-schoice` el 2026-11-03, por decisión del profesor tras la S2b, literal: «Enumerar §P7-F primero
+> (Recomendada)». Solo análisis: el `.Rmd` sigue en `63e2713e6ac0bdbf250f4dc33901b2ec` y `verificar_espacio.R` en
+> `9c65474801b5b838183a0507233b8ea1`, sin reapertura, sin sellos (6/11) y sin commit. Todo rediseño se midió con mutaciones en
+> memoria del `data_generation`. Evidencia: `salida/ciclo_20261102/s2c/`.
+
+**Instrumento.**
+- `verificar_s2c.R` (md5 `669eae285fd1ea55f31177b490e1ec1e`) lo genera `construir_verificador_s2c.R` a partir de `verificar_espacio.R`:
+  E1 a E4 y la decisión 2 a íntegros, sin los mutantes de E5. Aplica en memoria los 23 pares de `candidatos_s2c.R` (cada patrón,
+  una sola vez) con los parámetros de cada candidato (`configs_s2c.sh`). Corridas: `salida_<ID>.txt` y `res_<ID>.rds`.
+- **Controles.** B0, sin mutación, reproduce la S2b (RS1 54,2 / 58,8 / 67,8 / 0,0 %; 36 pendientes; exit 3). D0, con la mutación
+  y los parámetros nulos, da B0 idéntico (`modelo_lecturas_s2c.txt`), y en las semillas 1 a 40 salen las mismas opciones, la misma
+  clave y el mismo feedback que el original (`smoke_s2c.R`).
+- **Parches de la copia, declarados.** E3 enumera la unión de los dos espacios (padv con parcialP y con δ). S7 y el canal 2
+  toleran una opción sin cifra (solo la tiene D2). Y, fuera de la batería congelada (§P7-C), se miden la lectura (iii) de «resta»
+  y del barrido («la sede de la opción que cita el resultado pierde; azar entre las dos de la otra») y el canal de formato con S_U.
+
+**Enumeración del espacio** (exacta y sin RNG: `enumerar_espacio_s2c.R`, `enumeracion_espacio_s2c.txt`).
+
+| Papel | ¿Puede citar δ? | Texto y restricción |
+|---|---|---|
+| Clave (G) | No | D ≠ δ por construcción (L-2) |
+| Distractor de G | Sí: es ERR-RESTA, hoy | δ es la cifra de G que cae bajo D. Sin δ, G tiene cifra bajo D solo en el 30,4 % de las 2134 combinaciones de CURSOS y en el 3,7 % de las 982 de PROMEDIO: ERR-PARCIAL (= D + parcialP) y ERR-TOTAL (= T_G) quedan siempre encima, y los promedios solo si D > 20. En el 43,1 % (CURSOS) y el 56,5 % (PROMEDIO) de los pares (combinación, lugar de D) que usa el generador, algún reparto de lados obliga a ERR-RESTA |
+| Ventaja de P (padv) | CURSOS: sí, ERR-PROM con δ, la C del impreso con el cierre común. PROMEDIO: no hay texto coherente | En PROMEDIO, P tiene el MENOR promedio en 982 de 982 combinaciones: la frase de la C no le sirve, y un ERR-CURSOS que cite δ presentaría la ventaja por curso de G como ventaja total de P. δ cae del mismo lado de D que parcialP en el 52,3 % (CURSOS) y el 41,0 % (PROMEDIO) de los pares |
+| Razón sin sustento (psin) | Solo si se relaja la guarda H1 de la r1 (su cifra no sale de `calculos_tabla()`); relajar es decisión del profesor (H-5) | Factible, con psin del lado de δ y con G con cifra de su lado sin δ, en el 44,4 % (CURSOS) y el 36,5 % (PROMEDIO) de los pares |
+
+- Toda afirmación de P que cita δ es falsa en todo el espacio (6 moldes por rama: 0 de 2134 y 0 de 982). L-2 se conserva en todos
+  los candidatos: 6258 combinaciones de la unión, 0 violaciones, y 0 abortos en las 369 semillas de E1 y E2 (F1).
+- El lugar de D es b + 1 con b uniforme: en promedio hay 1,5 cifras de distractor bajo D. Como δ < D en el 93,7 % (CURSOS) y el
+  83,8 % (PROMEDIO) de las combinaciones, δ en P ocupa el hueco «debajo» que hoy llena G, y el canal 2 (S7) se abre.
+
+**Modelo de las tres lecturas.** Explica las cifras, no las sustituye; coincide al 0,1 con lo medido en los 14 casos de
+`modelo_lecturas_s2c.txt`. Si δ lo cita G en una fracción aG de las versiones y P en una aP:
+- (i) RS1 = 25 + 75·aG − 25·aP;
+- (ii) «descartar la que cita δ» = 25 + 25·(aG + aP)/3;
+- (iii) «la sede que cita δ pierde» = 25 + 25·(aP − aG).
+
+Con aP = 2·aG las tres valen 25 + 25·s/3 (s = aG + aP), su mínimo común, que no pasa de +8,3 pp. Con S_U, RS2 = 50 + 50·aG: solo
+vuelve a lo firmado de S_U (50 %) con aG = 0.
+
+**Tabla de decisión** (`tabla_decision_s2c.md`, generada desde `res_<ID>.rds` por `tabla_decision_s2c.R`; N = 100 por estrato).
+Acierto en %, CURSOS / PROMEDIO.
+
+| Candidato | Qué cambia | RS1 | (iii) | RS2 | RS7 | O-1 corregido: cifras por encima de lo firmado (de 13) | S7, canal 2 (pp sobre el 50 %) | Otros | Fallos / pendientes |
+|---|---|---|---|---|---|---|---|---|---|
+| B0 (hoy) | — | 58,8 / 67,8 | 13,8 / 10,8 | 72,5 / 78,5 | 94,5 / 98,0 | 0 | −7,0 / −4,0 | — | 0 / 36 |
+| D1c40 | CURSOS: padv cita δ con p = 0,4; PROMEDIO, igual | 31,2 / 67,8 | 30,2 / 10,8 | 61,5 / 78,5 | 95,5 / 98,0 | 3, todas de CURSOS | +6,0 / −4,0 | Canal de largo en CURSOS +14,3 pp (margen 2,0 %), por encima de lo declarado (+10,4) | 0 / 41 |
+| D1q50 | δ en P con p = 0,5 (padv en CURSOS, psin en PROMEDIO) | 23,8 / 60,8 | 34,8 / 14,8 | 58,5 / 75,5 | 94,5 / 97,0 | 6 | +9,0 / −1,0 | En PROMEDIO, δ en P solo en el 10 % | 2 / 45 |
+| D1q100 | Igual, con p = 1 | 0,0 / 49,2 | 50,0 / 21,8 | 50,0 / 71,0 | 88,0 / 97,0 | 7 | +19,0 / +8,0 | — | 3 / 49 |
+| D3 | CURSOS: ERR-RESTA pasa a P (padv, siempre) | 0,0 / 67,8 | 50,0 / 10,8 | 50,0 / 78,5 | 88,0 / 98,0 | 3 | +19,0 / −4,0 | — | 2 / 42 |
+| D3b | D3, y en PROMEDIO sin δ | 0,0 / 25,0 | 50,0 / 25,0 | 50,0 / 50,0 | 88,0 / 99,0 | 8 | +19,0 / +19,0 | — | 5 / 48 |
+| D4 | ERR-RESTA fuera de G | 25,0 / 25,0 | 25,0 / 25,0 | 50,0 / 50,0 | 98,5 / 99,0 | 10 | +9,0 / +19,0 | — | 5 / 47 |
+| D2 | ERR-RESTA sin cifra («en lo mismo que se diferencian los dos promedios») | 25,0 / 25,0 | 25,0 / 25,0 | 50,0 / 50,0 | 73,0 / 70,0 | 1 | +14,5 / +21,5 | S_U + «descartar la que no cita cifra»: 72,5 / 78,5; con las tres pistas y «resta», 92,5 / 98,0. Lugar de D roto (4.º puesto: 8 % y 0 %). Batería §P7: +14,3 / +8,7 / +12,5 pp (mezcla / CURSOS / PROMEDIO) | 9 / 34 |
+
+- En todos, la canónica no cambia: las 24 cifras de la decisión 2 a salen iguales, y RS1 sigue en 0,0 % exacto.
+- La respuesta correcta sigue variando en todos: de 43 a 58 valores distintos de D en cada estrato de 100 versiones (hoy, de 46
+  a 50).
+- Barrido (i)/(ii), sin «resta»: hoy 9 cifras por encima de +8 pp; en los candidatos, de 9 a 15.
+
+**Viables y no viables.** Ninguno es viable. El canal es estructural, y por §P7-F toca override, no rediseño.
+- **D4, D3b y D3** sacan δ de G en una rama o en las dos y reabren el canal 2: ERR-RESTA era la cifra de G bajo D. Suben de 3 a 10
+  cifras firmadas, porque el distractor de G queda repartido entre ERR-DATO, ERR-PARCIAL y ERR-TOTAL, que ya delatan S1, suma y
+  atípica.
+- **D1q50 y D1q100** suben de 6 a 7 cifras firmadas y fallan en el canal 2. En PROMEDIO dejan RS1 en el 60,8 % y el 49,2 %: no hay
+  vehículo coherente.
+- **D2** desplaza el canal tal cual: «descartar la que no cita cifra» con S_U da 72,5 / 78,5 %, las mismas cifras de RS2 hoy. Además
+  rompe el lugar de D y la batería, y tiene 9 fallos.
+- **D1c40** es el único sin fallos, y deja «resta» en CURSOS dentro de +8 pp en sus tres lecturas (31,2 / 30,6 / 30,2 %). Pero no toca
+  PROMEDIO (RS1 67,8 %), sube 3 cifras firmadas de CURSOS y el canal de largo por encima de lo declarado, y RS7 no baja (95,5 %).
+  No evita la firma: cambia qué se firma.
+- Lo estructural no es la resta: con S_U firmado, quien sabe qué sede ganó solo tiene que separar la clave del distractor de G, y
+  todos los tipos de error del pool lo delatan con una operación de un paso o con una pista superficial. RS7 queda entre el 88,0 y
+  el 99,0 % en todo candidato que conserva la cifra en las cuatro opciones.
+
+**Qué costaría D1c40, si el profesor lo quisiera de todos modos.**
+- Reapertura desde `generacion_rmd`, pasos 3 a 6, 6b y FASE 2C r7 con un detractor nuevo, sin `name:`.
+- En el mismo cambio, la guarda de L-6 de la línea 595, ampliada (H3 (a) de la r6).
+- Unas 21 líneas de `data_generation` (`tamano_cambio_s2c.txt`) y un texto propio para la explicación de ERR-PROM con δ, que en
+  la medición reutiliza la de la C.
+- En `verificar_espacio.R`:
+  - E3, con la unión de los espacios;
+  - recalibrar los controles exactos de E1 ligados a ERR-RESTA (1158, 730 y 42) y los mutantes M36, M37 y M44;
+  - dos mutantes nuevos: uno que devuelva δ a G y otro que lo ponga en G y en P a la vez (canal 8).
+- La firma de las 3 cifras de CURSOS, del canal de largo y de «resta» en PROMEDIO.
+- Re-empalme y medida de la Parte 1 del CLOZE (F-2). La premisa de F-3 sigue rota, porque RS7 no baja.
+
+**Hallazgo nuevo: la lectura (iii).**
+- En el diseño actual (B0) da 5 cifras por encima de +8 pp que la S2b no medía:
+  - en la canónica, «|a1 − a2| (iii)», 50,0 % (+25,0 pp);
+  - en CURSOS, «n1 · |a1 − a2|» +13,5 pp y «n2 · |a1 − a2|» +10,5 pp;
+  - en PROMEDIO, «|n1 − n2| · a1» +10,7 pp y «|n1 − n2| · a2» +14,3 pp.
+- Por construcción, cuando aplica, la cifra es la de padv (o, en la canónica, la de la C), así que señala como perdedora a la misma
+  sede que S_U.
+- Se declaran fuera de la batería congelada (§P7-C). Las decide el profesor: entran en la firma o en la batería del próximo ciclo.
+
+**No se midió.**
+- Un reparto de lados que priorice la cifra de G bajo D cuando P cita δ, para cerrar S7: exige D > 20 (30,4 % y 3,7 % de las
+  combinaciones).
+- psin con δ en CURSOS, otros valores de p y un ERR-CURSOS con δ en PROMEDIO (descartado por incoherente).
+- Un tipo de error nuevo de G con cifra bajo D. La diferencia de los productos cruzados (nG·aP − nP·aG), por ejemplo, queda siempre
+  encima de D en CURSOS y es negativa en PROMEDIO.
+- «S_U + (iii)», las combinaciones del barrido con S_U y las operaciones de dos o más pasos fuera de las cuatro del ítem.
+- Nada se renderizó (ningún `.Rmd` cambió), ni se midió la Parte 1 del CLOZE. Tampoco se corrió la suite de tests: no cambió
+  código del repo.
+
+**¿Ley local o regla?**
+- **Local, candidatas** (endurecen; las confirma el profesor):
+  - **L-8 · ERR-RESTA llena el hueco bajo D.** El canal 2 y «resta» están acoplados. Todo cambio del pool de G, o de quién cita δ,
+    mide en la misma pasada S7, el lugar de D y las 13 cifras de «O-1 corregido». Guarda: el conteo exacto de
+    `enumerar_espacio_s2c.R` en E3. Mutante: D4, con el que S7 tiene que pasar de +8 pp.
+  - **L-7, ampliada:** el barrido también con la lectura (iii).
+- **Del repo, candidatas.** Tocan `.claude/` (regla #17), así que las decide el profesor:
+  1. §P7-G: el barrido del estímulo se mide en las tres lecturas, y la (iii) es el canal inverso de la (i) (Incidente F, punto 4).
+     Sin ella, la S2b dejó sin ver 5 cifras por encima de +8 pp.
+  2. Texto íntegro de §P7-F:
+     - En un ítem 2 + 2, una pista que marca una sola opción no baja de 25 + 25·s/3 en sus tres lecturas.
+     - Con un atajo firmado que da la sede ganadora, toda pista sobre el distractor de G suma 50·aG.
+     - Antes de mover una cifra de lado, se enumera qué hueco de magnitud llena (lugar de D, canal 2).
+
+     Es la forma enumerable del ciclo de desplazamiento de canal, y D2 lo muestra en estado puro.

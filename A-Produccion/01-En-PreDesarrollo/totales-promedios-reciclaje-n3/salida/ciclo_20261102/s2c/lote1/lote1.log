@@ -1,0 +1,9 @@
+B0: exit=3 segundos=42
+D0: exit=3 segundos=72
+D1q50: exit=1 segundos=72
+D1q100: exit=1 segundos=73
+D3: exit=1 segundos=66
+D3b: exit=1 segundos=73
+D4: exit=1 segundos=56
+D2: exit=1 segundos=74
+lote1 exit=0

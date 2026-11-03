@@ -1,0 +1,7 @@
+49f6f14ec5a7bb9a254d48104e196263  candidatos_s2c.R
+669eae285fd1ea55f31177b490e1ec1e  verificar_s2c.R
+5cff35592956d0979b59430f49a9b2f9  bloque_s2c.R
+1307d70970ecb8559dcecbfd4dcddadd  construir_verificador_s2c.R
+120facb10a7541c494d49874aade7a01  configs_s2c.sh
+57a8cd17e94689022aa9eca970b932f9  tabla_decision_s2c.R
+f7e6f28a2a07c1035b30da7dbbfbb2d0  enumerar_espacio_s2c.R

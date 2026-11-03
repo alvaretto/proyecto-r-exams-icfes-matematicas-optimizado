@@ -1,0 +1,16 @@
+B0     CURSOS   aG  45 % aP   0 % · (i) modelo  58.8 medido  58.8 · (ii)  28.8 /  28.7 · (iii)  13.8 /  13.8
+B0     PROMEDIO aG  57 % aP   0 % · (i) modelo  67.8 medido  67.8 · (ii)  29.8 /  29.8 · (iii)  10.8 /  10.8
+D1c40  CURSOS   aG  23 % aP  44 % · (i) modelo  31.2 medido  31.2 · (ii)  30.6 /  30.6 · (iii)  30.2 /  30.2
+D1c40  PROMEDIO aG  57 % aP   0 % · (i) modelo  67.8 medido  67.8 · (ii)  29.8 /  29.8 · (iii)  10.8 /  10.8
+D1q50  CURSOS   aG  17 % aP  56 % · (i) modelo  23.8 medido  23.8 · (ii)  31.1 /  31.1 · (iii)  34.8 /  34.8
+D1q50  PROMEDIO aG  51 % aP  10 % · (i) modelo  60.8 medido  60.8 · (ii)  30.1 /  30.1 · (iii)  14.8 /  14.8
+D1q100 CURSOS   aG   0 % aP 100 % · (i) modelo   0.0 medido   0.0 · (ii)  33.3 /  33.3 · (iii)  50.0 /  50.0
+D1q100 PROMEDIO aG  42 % aP  29 % · (i) modelo  49.2 medido  49.2 · (ii)  30.9 /  30.9 · (iii)  21.8 /  21.8
+D3     CURSOS   aG   0 % aP 100 % · (i) modelo   0.0 medido   0.0 · (ii)  33.3 /  33.3 · (iii)  50.0 /  50.0
+D3     PROMEDIO aG  57 % aP   0 % · (i) modelo  67.8 medido  67.8 · (ii)  29.8 /  29.8 · (iii)  10.8 /  10.8
+D3b    CURSOS   aG   0 % aP 100 % · (i) modelo   0.0 medido   0.0 · (ii)  33.3 /  33.3 · (iii)  50.0 /  50.0
+D3b    PROMEDIO aG   0 % aP   0 % · (i) modelo  25.0 medido  25.0 · (ii)  25.0 /  25.0 · (iii)  25.0 /  25.0
+D4     CURSOS   aG   0 % aP   0 % · (i) modelo  25.0 medido  25.0 · (ii)  25.0 /  25.0 · (iii)  25.0 /  25.0
+D4     PROMEDIO aG   0 % aP   0 % · (i) modelo  25.0 medido  25.0 · (ii)  25.0 /  25.0 · (iii)  25.0 /  25.0
+B0, lote 1 frente a lote 2 (TAB, TAB_H1, TAB_EST, PENDIENTES): TRUE 
+D0 frente a B0 (TAB, TAB_H1, TAB_INV, TAB_EST, TAB_EST3, PENDIENTES): TRUE 

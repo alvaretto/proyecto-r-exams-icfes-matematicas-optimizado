@@ -662,3 +662,40 @@ CRÍTICOS, ALTOS ni MEDIOS. Reporte íntegro: `salida/ciclo_20261102/s1b/6b/rela
   3. Después, los pasos 8 a 10 y el WAIT_USER #3.
 - **Restos fuera del repo:** `/tmp/x.json` y `/tmp/perfil_inexistente_s2b/`, de la prueba del assert de `cap_s1b2.py`. El
   permiso no dejó borrarlos.
+
+## Ciclo 2026-11-02, tanda S2c (2026-11-03): enumeración de §P7-F
+
+- **Origen.** Decisión del profesor tras la S2b, literal: «Enumerar §P7-F primero (Recomendada)». Solo análisis: el `.Rmd` sigue en
+  `63e2713e6ac0bdbf250f4dc33901b2ec` y `verificar_espacio.R` en `9c65474801b5b838183a0507233b8ea1`, sin reapertura, sin sellos
+  (**6 de 11**) y sin commit.
+- **Hecho.** Todo en `salida/ciclo_20261102/s2c/`:
+  - el instrumento, `verificar_s2c.R`: copia de E1 a E4 y de la decisión 2 a, sin E5, con mutaciones en memoria de `candidatos_s2c.R`;
+  - los controles: B0, que reproduce la S2b, y D0, que reproduce B0;
+  - la enumeración exacta del espacio, `enumeracion_espacio_s2c.txt`;
+  - nueve corridas con N = 100 por estrato y la canónica exacta: `salida_<ID>.txt` y `res_<ID>.rds`;
+  - la tabla generada, `tabla_decision_s2c.md`.
+- **Resultado: ningún candidato es viable. El canal es estructural, y por §P7-F toca override.**
+  - ERR-RESTA es la cifra de G que cae bajo D. Sin δ, G tiene cifra bajo D solo en el 30,4 % de las combinaciones de CURSOS y en el
+    3,7 % de las de PROMEDIO. Los candidatos que sacan δ de G en alguna rama, o lo reducen a menos de la mitad (D1q50), reabren el canal 2 (S7, de
+    +9,0 a +21,5 pp), y todos suben alguna de
+    las 13 cifras de «O-1 corregido» (de 1 a 10).
+  - En PROMEDIO no hay texto coherente para δ del lado de P, porque allí P tiene el menor promedio (982 de 982 combinaciones). Solo
+    cabe la razón sin sustento, relajando la guarda H1 de la r1 (H-5), y es factible en el 36,5 % de los casos.
+  - El mejor resultado parcial es D1c40 (padv cita δ en CURSOS con p = 0,4). Deja «resta» en CURSOS dentro de +8 pp en sus tres
+    lecturas (31,2 / 30,6 / 30,2 %). Pero no toca PROMEDIO (67,8 %), sube 3 cifras firmadas de CURSOS y el canal de largo
+    (+14,3 pp, margen 2,0 %), y RS7 no baja (95,5 / 98,0 %). No evita la firma: cambia qué se firma.
+  - D2 (ERR-RESTA sin cifra) desplaza el canal tal cual: S_U + «descartar la que no cita cifra» da 72,5 / 78,5 %, las mismas cifras de
+    RS2 hoy, y rompe el lugar de D y la batería.
+  - **Hallazgo nuevo.** La lectura (iii), «la sede que cita la cifra pierde», da en el diseño actual 5 cifras por encima de +8 pp que
+    la S2b no medía, todas con la información de S_U. Se declaran fuera de la batería congelada (§P7-C).
+- **Próximo paso.**
+  1. La decisión del profesor sobre H1 con esta evidencia:
+     - (a) firmar regla por regla las 36 cifras de la S2b, y decidir si las 5 de la lectura (iii) entran en la firma o en la batería
+       del próximo ciclo;
+     - (b) aplicar de todos modos D1c40, cuyo costo detalla el `.claude/CLAUDE.md` local;
+     - (c) otra.
+
+     Decide también la tabla candidata de L-6 corregida, la candidata L-8 y la ampliación de L-7 con la lectura (iii).
+  2. Con (a): cablear la firma en `verificar_espacio.R` (exit 4) y decidir si el paso 7 se sella con la r6 o con un detractor nuevo.
+     Con (b): reapertura desde `generacion_rmd`, pasos 3 a 6, 6b y FASE 2C r7 con un detractor nuevo y sin `name:`.
+  3. Después, los pasos 8 a 10 y el WAIT_USER #3.

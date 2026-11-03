@@ -1,0 +1,4 @@
+63e2713e6ac0bdbf250f4dc33901b2ec  totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd
+9c65474801b5b838183a0507233b8ea1  verificar_espacio.R
+cf690f26207e3a4917e75d61f6cfc188  .claude/CLAUDE.md
+1af14b0a6f36938f41f84ce53aabd510  HANDOFF.md

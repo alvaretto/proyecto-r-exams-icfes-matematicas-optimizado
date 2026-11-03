@@ -1,0 +1,371 @@
+S2c: candidato D1c40, 23 cambios aplicados en memoria (patrón único cada uno)
+=== verificar_espacio.R — totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd ===
+
+[E1] Mezcla natural, N = 100
+  OK: 100/100 versiones sin error 
+  rama CURSOS (canónica incluida): 44 % · canónicas: 9/100
+  OK: L-3: frecuencia global de la rama CURSOS cerca de 50 % (tolerancia ±12 pp a N = 100) 
+  versiones únicas (opciones): 98/100
+
+[E2] Cuotas por rama, N = 100 cada una (semillas 1001.., tope 600 )
+  OK: estrato CURSOS: n = 100 (n < 20 sería NO CONCLUYENTE) 
+  OK: estrato PROMEDIO: n = 100 (n < 20 sería NO CONCLUYENTE) 
+  OK: se encontró la instancia canónica 
+  OK: canal 2 (H5 r5): en las 291 no canónicas de E1 y de los estratos, la cifra falsa de G cae del lado de D sorteado para ella (debajo en 142, encima en 149); fuera de su lado: 0 
+
+[E3] Enumeración del espacio de parámetros
+  OK: rama CURSOS: 4293 combinaciones válidas, 2560 con cifra de G bajo D 
+  OK: L-3 sin dominancia y gana G (CURSOS) 
+  OK: rama PROMEDIO: 1965 combinaciones válidas, 1120 con cifra de G bajo D 
+  OK: L-3 sin dominancia y gana G (PROMEDIO) 
+  OK: L-2: en 6258 combinaciones x todos los moldes y cifras, la clave es la única verdadera (0 violaciones) 
+  OK: L-2.3: en la rama PROMEDIO la frase «G ganó porque ... mayor promedio con δ kilos de más» es verdadera en 1965/1965 (por eso no se usa para G) 
+  OK: H1/F1: en las 6258 combinaciones queda cifra admisible para la razón sin sustento, debajo y encima de D (0 sin ella) 
+  OK: H1: toda cifra posible del distractor de G ya la excluyen la tabla o calculos_tabla() 
+  OK: regla #13 v1.1: de 218084 textos no canónicos (todos los moldes y cifras), ninguno admite la lectura «total» (0) 
+  OK: regla #13 v1.1, oráculo léxico propio: ninguna cifra va en una cláusula que la presente como cantidad (0 de 218084) 
+  OK: exposición a la lectura «total»: solo la cifra T_G (ERR-TOTAL) la volvería verdadera 
+  exposición declarada (el texto no admite esa lectura): leída «en x kilos» como el total, la cifra falsa de G sería verdadera en 17172 de 78656 configuraciones de G en CURSOS y 7860 de 39300 en PROMEDIO (todas con x = T_G)
+  OK: regla #13 v1.1, canónica (semilla 7): solo la clave verbatim cambia con la lectura «el total fue de 20 kilos», que no vuelve verdadera ninguna opción (cambian: clave; verdaderas con «total»: 0) 
+  OK: H3 r4: canónica verbatim sobre la tabla mostrada (tabla_md), semilla 7 
+  OK: H1 r4b: los 8 encabezados de la Solution salen de encabezado(), con \nobreak y \@afterheading 
+  OK: M21 (quita \nobreak y \@afterheading de encabezado()): la sonda H1 r4b lo detecta 
+  OK: M22 (un encabezado vuelve a cat("**…**")): la sonda H1 r4b lo detecta 
+  OK: H6: los 7 calcula() se detienen fuera de contexto 
+  OK: L-2.3: el distractor de G nunca usa un molde de ventaja 
+  OK: tabla: ancho máximo 81 de 85 en las 18 combinaciones de contexto y material 
+
+[E4] Diagnosticidad
+                                                            mezcla CURSOS
+H1 clave única más larga (margen 15 %)                         0.0    0.0
+H1 clave única más corta (margen 15 %)                         0.0    0.0
+clave es la más larga (sin margen)                            27.7   45.2
+clave es la más corta (sin margen)                            12.7   15.8
+canal 2: cifra falsa de G menor que D                         44.0   44.0
+S1 descarta cifras de la tabla                                32.1   29.7
+S1b se queda con cifras de la tabla                            8.2   10.5
+S2 par de la sede de la fila 1                                27.0   22.5
+S3 par de la sede de más cursos                               22.0   50.0
+S4 par de la sede de mayor promedio                           28.0    0.0
+S5 más cursos + menor cifra del par                           31.0   56.0
+S6 mayor promedio + menor cifra del par                       25.0    0.0
+S7 G real + menor cifra del par (cota canal 2)                56.0   56.0
+S_U la sede de la razón sin sustento pierde                   50.0   50.0
+S_todos elige la opción con «todos»                           38.2   50.0
+R_dif la cifra que es diferencia de otras dos                 28.5   27.0
+S_U + S1 (par de G sin la cifra de la tabla)                  63.5   77.0
+S_U + suma (par de G sin la cifra que es suma de otras dos)   56.5   54.0
+Atípica: descarta la cifra que dobla a todas las demás        27.7   27.1
+S_U + S1 + suma (las dos pistas)                              69.5   78.0
+S_U + atípica                                                 65.5   61.0
+S_U + S1 + suma + atípica                                     80.0   87.0
+D es la menor cifra (frecuencia)                              22.0   24.0
+D es la 2.ª cifra (frecuencia)                                33.0   23.0
+D es la 3.ª cifra (frecuencia)                                19.0   24.0
+D es la 4.ª cifra (frecuencia)                                26.0   29.0
+única opción sin cifra (frecuencia)                            9.0    0.0
+clave con token exclusivo (frecuencia)                       100.0  100.0
+                                                            PROMEDIO canonica
+H1 clave única más larga (margen 15 %)                           0.0      0.0
+H1 clave única más corta (margen 15 %)                           0.0      0.0
+clave es la más larga (sin margen)                              41.2      0.0
+clave es la más corta (sin margen)                              16.8      0.0
+canal 2: cifra falsa de G menor que D                           54.0      0.0
+S1 descarta cifras de la tabla                                  33.4     50.0
+S1b se queda con cifras de la tabla                              3.2      0.0
+S2 par de la sede de la fila 1                                  28.5     50.0
+S3 par de la sede de más cursos                                  0.0     50.0
+S4 par de la sede de mayor promedio                             50.0      0.0
+S5 más cursos + menor cifra del par                              0.0    100.0
+S6 mayor promedio + menor cifra del par                         46.0      0.0
+S7 G real + menor cifra del par (cota canal 2)                  46.0    100.0
+S_U la sede de la razón sin sustento pierde                     50.0     50.0
+S_todos elige la opción con «todos»                             54.0     25.0
+R_dif la cifra que es diferencia de otras dos                   31.1     25.0
+S_U + S1 (par de G sin la cifra de la tabla)                    55.0    100.0
+S_U + suma (par de G sin la cifra que es suma de otras dos)     62.0     50.0
+Atípica: descarta la cifra que dobla a todas las demás          26.8     33.3
+S_U + S1 + suma (las dos pistas)                                67.0    100.0
+S_U + atípica                                                   58.0    100.0
+S_U + S1 + suma + atípica                                       74.5    100.0
+D es la menor cifra (frecuencia)                                24.0      0.0
+D es la 2.ª cifra (frecuencia)                                  25.0    100.0
+D es la 3.ª cifra (frecuencia)                                  24.0      0.0
+D es la 4.ª cifra (frecuencia)                                  27.0      0.0
+única opción sin cifra (frecuencia)                              0.0    100.0
+clave con token exclusivo (frecuencia)                         100.0    100.0
+  cuota del tipo de error del distractor de G, por rama (%):
+            CURSOS PROMEDIO
+ERR-DATO        40        3
+ERR-RESTA       23       57
+ERR-PARCIAL     20       23
+ERR-TOTAL       17       17
+  OK: ERR-TOTAL alcanzable en las dos ramas 
+  largo medio por papel (mezcla): clave 156 · gdis 153 · padv 154 · psin 157
+  §P7-B (mezcla): clave única más larga en 18 versiones, margen mediano 1.8 % (máx 2.0 %); única más corta en 8, margen mediano 0.6 %
+  largo medio por papel (CURSOS): clave 160 · gdis 159 · padv 159 · psin 158
+  §P7-B (CURSOS): clave única más larga en 36 versiones, margen mediano 1.7 % (máx 2.0 %); única más corta en 13, margen mediano 0.7 %
+  largo medio por papel (PROMEDIO): clave 160 · gdis 160 · padv 160 · psin 158
+  §P7-B (PROMEDIO): clave única más larga en 32 versiones, margen mediano 1.9 % (máx 2.0 %); única más corta en 13, margen mediano 0.7 %
+  (las tasas de acierto se comparan con el azar, 25 %; «canal 2» y las frecuencias no son tasas de acierto)
+  OK: canal 2: en las no canónicas la cifra falsa de G queda por debajo de D cerca del 50 % 
+  OK: canal 2 en la rama CURSOS: «menor cifra del par ganador» +6.0 pp sobre el 50 % de quien ya sabe qué sede ganó (obliga > +8) 
+  OK: lugar de D entre las cifras, rama CURSOS: puesto 1 en el 24 % (25 % ± 12) 
+  OK: lugar de D entre las cifras, rama CURSOS: puesto 2 en el 23 % (25 % ± 12) 
+  OK: lugar de D entre las cifras, rama CURSOS: puesto 3 en el 24 % (25 % ± 12) 
+  OK: lugar de D entre las cifras, rama CURSOS: puesto 4 en el 29 % (25 % ± 12) 
+  OK: H1 clave única más larga (margen 15 %) en la rama CURSOS: 0 % (bloquea el 100 %; aviso desde 90 %) 
+  OK: H1 clave única más corta (margen 15 %) en la rama CURSOS: 0 % (bloquea el 100 %; aviso desde 90 %) 
+  OK: canal 2 en la rama PROMEDIO: «menor cifra del par ganador» -4.0 pp sobre el 50 % de quien ya sabe qué sede ganó (obliga > +8) 
+  OK: lugar de D entre las cifras, rama PROMEDIO: puesto 1 en el 24 % (25 % ± 12) 
+  OK: lugar de D entre las cifras, rama PROMEDIO: puesto 2 en el 25 % (25 % ± 12) 
+  OK: lugar de D entre las cifras, rama PROMEDIO: puesto 3 en el 24 % (25 % ± 12) 
+  OK: lugar de D entre las cifras, rama PROMEDIO: puesto 4 en el 27 % (25 % ± 12) 
+  OK: H1 clave única más larga (margen 15 %) en la rama PROMEDIO: 0 % (bloquea el 100 %; aviso desde 90 %) 
+  OK: H1 clave única más corta (margen 15 %) en la rama PROMEDIO: 0 % (bloquea el 100 %; aviso desde 90 %) 
+  OK: canal 3: en toda versión, a lo sumo un distractor cita un dato de la tabla en kilos, y nunca la clave 
+  OK: H5: S1 descarta cifras de la tabla, rama CURSOS: 29.7 % (+4.7 pp; obliga > +8) 
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S1 descarta cifras de la tabla, rama PROMEDIO: 33.4 % (+8.4 pp; firmado hasta +8,4 pp)
+  OK: H5: S1b se queda con cifras de la tabla, rama CURSOS: 10.5 % (-14.5 pp; obliga > +8) 
+  OK: H5: S1b se queda con cifras de la tabla, rama PROMEDIO: 3.2 % (-21.8 pp; obliga > +8) 
+  OK: H5: S2 par de la sede de la fila 1, rama CURSOS: 22.5 % (-2.5 pp; obliga > +8) 
+  OK: H5: S2 par de la sede de la fila 1, rama PROMEDIO: 28.5 % (+3.5 pp; obliga > +8) 
+  RESIDUO PENDIENTE DE FIRMA (§P7-D agotado): S1 descarta cifras de la tabla, mezcla ponderada: 33.6 % (+8.6 pp; cota del diseño +8,3 pp)
+  OK: H5: S2 par de la sede de la fila 1, mezcla ponderada: 28.2 % (+3.2 pp; obliga > +8) 
+  OK: H5: S3 par de la sede de más cursos, mezcla ponderada: 25.0 % (+0.0 pp; obliga > +8) 
+  OK: H5: S4 par de la sede de mayor promedio, mezcla ponderada: 25.0 % (+0.0 pp; obliga > +8) 
+  OK: H5: S5 más cursos + menor cifra del par, mezcla ponderada: 32.4 % (+7.4 pp; obliga > +8) 
+  OK: H5: S6 mayor promedio + menor cifra del par, mezcla ponderada: 23.0 % (-2.0 pp; obliga > +8) 
+  ROJO, cubierto por O-1 corregido: O-1: S_U, rama CURSOS: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7)
+  PENDIENTE DE FIRMA: O-1 corregido: S_U + S1 (par de G sin la cifra de la tabla), rama CURSOS: 77.0 %, por encima de lo firmado (71.0 %): vuelve al profesor 
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + suma (par de G sin la cifra que es suma de otras dos), rama CURSOS: 54.0 % (firmado hasta 60.5 %)
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 + suma (las dos pistas), rama CURSOS: 78.0 % (firmado hasta 79.0 %)
+  PENDIENTE DE FIRMA: O-1 corregido: S_U + atípica, rama CURSOS: 61.0 %, por encima de lo firmado (51.5 %): vuelve al profesor 
+  PENDIENTE DE FIRMA: O-1 corregido: S_U + S1 + suma + atípica, rama CURSOS: 87.0 %, por encima de lo firmado (81.5 %): vuelve al profesor 
+  OK: R_dif la cifra que es diferencia de otras dos, rama CURSOS: +2.0 pp (obliga > +8) 
+  OK: Atípica: descarta la cifra que dobla a todas las demás, rama CURSOS: +2.1 pp (obliga > +8) 
+  ROJO, cubierto por O-1 corregido: O-1: S_U, rama PROMEDIO: 50.0 %, +16.7 pp atribuibles (alcance firmado: +16,7)
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 (par de G sin la cifra de la tabla), rama PROMEDIO: 55.0 % (firmado hasta 55.0 %)
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + suma (par de G sin la cifra que es suma de otras dos), rama PROMEDIO: 62.0 % (firmado hasta 62.0 %)
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 + suma (las dos pistas), rama PROMEDIO: 67.0 % (firmado hasta 67.0 %)
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + atípica, rama PROMEDIO: 58.0 % (firmado hasta 58.0 %)
+  ROJO, cubierto por O-1 corregido: O-1 corregido: S_U + S1 + suma + atípica, rama PROMEDIO: 74.5 % (firmado hasta 74.5 %)
+  OK: R_dif la cifra que es diferencia de otras dos, rama PROMEDIO: +6.1 pp (obliga > +8) 
+  OK: Atípica: descarta la cifra que dobla a todas las demás, rama PROMEDIO: +1.8 pp (obliga > +8) 
+  OK: O-1: S_todos estructural: en toda versión no canónica, una sola opción dice «todos» y es de G (medido: CURSOS 50.0 %, PROMEDIO 54.0 %; 50 % por construcción) 
+  S2b · H1 de la FASE 2C r6: «resta» y sus combinaciones con las pistas de «O-1 corregido» (acierto en %):
+                                                                         mezcla
+resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede   45.5
+S_U + resta                                                                68.5
+S_U + S1 + resta                                                           79.0
+S_U + suma + resta                                                         74.0
+S_U + S1 + suma + resta                                                    85.0
+S_U + atípica + resta                                                      83.0
+S_U + S1 + suma + atípica + resta                                          94.5
+                                                                         CURSOS
+resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede   31.2
+S_U + resta                                                                61.5
+S_U + S1 + resta                                                           86.5
+S_U + suma + resta                                                         64.5
+S_U + S1 + suma + resta                                                    87.0
+S_U + atípica + resta                                                      72.0
+S_U + S1 + suma + atípica + resta                                          95.5
+                                                                         PROMEDIO
+resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede     67.8
+S_U + resta                                                                  78.5
+S_U + S1 + resta                                                             79.5
+S_U + suma + resta                                                           90.0
+S_U + S1 + suma + resta                                                      91.0
+S_U + atípica + resta                                                        86.0
+S_U + S1 + suma + atípica + resta                                            98.0
+                                                                         canonica
+resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede        0
+S_U + resta                                                                    50
+S_U + S1 + resta                                                              100
+S_U + suma + resta                                                             50
+S_U + S1 + suma + resta                                                       100
+S_U + atípica + resta                                                         100
+S_U + S1 + suma + atípica + resta                                             100
+  «resta» aplica (alguna opción cita |aG - aP|): mezcla 66 % · CURSOS 67 % · PROMEDIO 57 % · canónica 100 %; en las 181 no canónicas de E1 y de los estratos en que aplica, la opción que la cita es: G ERR-RESTA (117), P padv (64)
+  PENDIENTE DE FIRMA: S2b H1: «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», mezcla de E1: 45.5 % (+20.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «resta: la sede de la opción que cita |aG - aP| gana; la otra de esa sede», rama PROMEDIO: 67.8 % (+42.8 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + resta», mezcla de E1: 68.5 % (+43.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + resta», rama CURSOS: 61.5 % (+36.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + resta», rama PROMEDIO: 78.5 % (+53.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + resta», canónica (24 órdenes, exacta): 50.0 % (+25.0 pp sobre el azar); peso en la mezcla +2.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + resta», mezcla de E1: 79.0 % (+54.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + resta», rama CURSOS: 86.5 % (+61.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + resta», rama PROMEDIO: 79.5 % (+54.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + suma + resta», mezcla de E1: 74.0 % (+49.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + suma + resta», rama CURSOS: 64.5 % (+39.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + suma + resta», rama PROMEDIO: 90.0 % (+65.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + suma + resta», canónica (24 órdenes, exacta): 50.0 % (+25.0 pp sobre el azar); peso en la mezcla +2.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + resta», mezcla de E1: 85.0 % (+60.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + resta», rama CURSOS: 87.0 % (+62.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + resta», rama PROMEDIO: 91.0 % (+66.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + atípica + resta», mezcla de E1: 83.0 % (+58.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + atípica + resta», rama CURSOS: 72.0 % (+47.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + atípica + resta», rama PROMEDIO: 86.0 % (+61.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + atípica + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + atípica + resta», mezcla de E1: 94.5 % (+69.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + atípica + resta», rama CURSOS: 95.5 % (+70.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + atípica + resta», rama PROMEDIO: 98.0 % (+73.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b H1: «S_U + S1 + suma + atípica + resta», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  S2b H1: 26 de 28 cifras (7 reglas × 4 estratos) por encima de +8 pp sobre el azar: pendientes de firma
+  S2b · barrido del estímulo, por fila de la tabla (acierto en %, mezcla / CURSOS / PROMEDIO / canónica; «aplica»: alguna opción cita el resultado):
+    n1 + n2                    (i)  25.5  24.8  27.0  25.0 · (ii)  24.8  24.4  25.0  25.0 · aplica  10.0  13.0   8.0   0.0
+    |n1 - n2|                  (i)  24.8  24.2  24.8  25.0 · (ii)  25.1  25.2  25.1  25.0 · aplica   1.0   3.0   1.0   0.0
+    n1 * n2                    (i)  23.2  22.2  22.8   0.0 · (ii)  23.2  25.9  25.1   0.0 · aplica  15.0  11.0   9.0 100.0
+    n1 / n2 (entero)           (i)  25.0  25.0  25.0  25.0 · (ii)  25.0  25.0  25.0  25.0 · aplica   0.0   0.0   0.0   0.0
+    a1 + a2                    (i)  25.0  25.0  25.0  25.0 · (ii)  25.0  25.0  25.0  25.0 · aplica   0.0   0.0   0.0   0.0
+    |a1 - a2|                  (i)  45.5  31.2  67.8   0.0 · (ii)  30.5  30.6  29.8  33.3 · aplica  66.0  67.0  57.0 100.0
+    a1 * a2                    (i)  25.0  25.0  25.0  25.0 · (ii)  25.0  25.0  25.0  25.0 · aplica   0.0   0.0   0.0   0.0
+    a1 / a2 (entero)           (i)  25.0  25.0  25.0  25.0 · (ii)  25.0  25.0  25.0  25.0 · aplica   0.0   0.0   0.0   0.0
+    n1 + a1                    (i)  24.5  24.2  25.5  25.0 · (ii)  25.2  24.6  25.2  25.0 · aplica   2.0   3.0   2.0   0.0
+    |n1 - a1|                  (i)  24.5  22.8  24.0  25.0 · (ii)  24.8  25.4  24.7  25.0 · aplica   2.0   9.0   4.0   0.0
+    n1 * a1                    (i)  36.2  28.7  32.5  25.0 · (ii)  26.2  25.4  25.8  25.0 · aplica  15.0   5.0  10.0   0.0
+    n1 / a1 (entero)           (i)  24.8  25.0  24.5  25.0 · (ii)  25.1  25.0  24.8  25.0 · aplica   1.0   0.0   2.0   0.0
+    n2 + a2                    (i)  24.5  24.0  24.0  25.0 · (ii)  25.2  25.0  24.7  25.0 · aplica   2.0   4.0   4.0   0.0
+    |n2 - a2|                  (i)  24.0  24.2  24.0  25.0 · (ii)  25.0  25.2  25.3  25.0 · aplica   4.0   3.0   4.0   0.0
+    n2 * a2                    (i)  31.0  34.0  30.2  25.0 · (ii)  25.7  26.0  25.6  25.0 · aplica   8.0  12.0   7.0   0.0
+    n2 / a2 (entero)           (i)  24.8  24.0  24.8  25.0 · (ii)  25.1  25.0  25.1  25.0 · aplica   1.0   4.0   1.0   0.0
+    n1 + a2                    (i)  23.5  24.8  22.5  25.0 · (ii)  24.5  25.1  23.2  25.0 · aplica   6.0   1.0  10.0   0.0
+    |n1 - a2|                  (i)  30.5  25.2  23.8 100.0 · (ii)  25.5  24.9  25.1  33.3 · aplica  14.0   3.0   9.0 100.0
+    n1 * a2                    (i)  25.0  25.0  25.0  25.0 · (ii)  25.0  25.0  25.0  25.0 · aplica   0.0   0.0   0.0   0.0
+    n1 / a2 (entero)           (i)  24.8  25.0  25.0  25.0 · (ii)  25.1  25.0  25.0  25.0 · aplica   1.0   0.0   0.0   0.0
+    n2 + a1                    (i)  24.2  24.8  25.0  25.0 · (ii)  24.6  25.1  25.0  25.0 · aplica   3.0   5.0   4.0   0.0
+    |n2 - a1|                  (i)  24.5  23.2  24.0  25.0 · (ii)  25.2  24.2  24.7  25.0 · aplica   2.0   7.0   4.0   0.0
+    n2 * a1                    (i)  25.8  25.0  25.0  25.0 · (ii)  25.1  25.0  25.0  25.0 · aplica   1.0   0.0   0.0   0.0
+    n2 / a1 (entero)           (i)  25.0  25.0  24.8  25.0 · (ii)  25.0  25.0  24.8  25.0 · aplica   0.0   0.0   1.0   0.0
+    dos pasos: |n1 - n2| * a1  (i)  29.0  35.5  14.2 100.0 · (ii)  28.3  26.2  28.6  33.3 · aplica  40.0  14.0  43.0 100.0
+    dos pasos: |n1 - n2| * a2  (i)  20.5  37.8  10.8  25.0 · (ii)  27.8  26.4  29.8  25.0 · aplica  34.0  17.0  57.0   0.0
+    dos pasos: n1 * |a1 - a2|  (i)  25.5  17.5  37.0  25.0 · (ii)  26.2  27.2  26.3  25.0 · aplica  14.0  30.0  16.0   0.0
+    dos pasos: n2 * |a1 - a2|  (i)  24.2  18.2  30.2   0.0 · (ii)  23.2  27.3  25.6   0.0 · aplica  19.0  27.0   7.0 100.0
+  OK: S2b: el barrido reproduce «resta» con sus propias celdas: «|a1 - a2| (i)» es la misma regla, y se juzga una sola vez, en H1 
+  PENDIENTE DE FIRMA: S2b barrido del estímulo: «|a1 - a2| (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b barrido del estímulo: «n1 * a1 (i)», mezcla de E1: 36.2 % (+11.2 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b barrido del estímulo: «n2 * a2 (i)», rama CURSOS: 34.0 % (+9.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b barrido del estímulo: «|n1 - a2| (i)», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b barrido del estímulo: «|n1 - a2| (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b barrido del estímulo: «dos pasos: |n1 - n2| * a1 (i)», rama CURSOS: 35.5 % (+10.5 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b barrido del estímulo: «dos pasos: |n1 - n2| * a1 (i)», canónica (24 órdenes, exacta): 100.0 % (+75.0 pp sobre el azar); peso en la mezcla +7.50 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b barrido del estímulo: «dos pasos: |n1 - n2| * a1 (ii)», canónica (24 órdenes, exacta): 33.3 % (+8.3 pp sobre el azar); peso en la mezcla +0.83 pp; regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b barrido del estímulo: «dos pasos: |n1 - n2| * a2 (i)», rama CURSOS: 37.8 % (+12.8 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  PENDIENTE DE FIRMA: S2b barrido del estímulo: «dos pasos: n1 * |a1 - a2| (i)», rama PROMEDIO: 37.0 % (+12.0 pp sobre el azar); regla nueva por encima de +8 pp, sin firma: vuelve al profesor (O-1 § Alcance) 
+  S2b barrido: 28 operaciones (24 de un paso entre dos celdas y 4 de dos pasos) × 2 lecturas × 4 estratos; 10 cifras por encima de +8 pp sobre el azar, pendientes de firma (sin «|a1 - a2| (i)», que es «resta»)
+  S2b: ninguna regla de un paso equivale a resolver el ítem. Los dos productos de fila juntos (n1 * a1 y n2 * a2) son los dos totales, y compararlos es resolverlo; cada uno por separado es «un solo total» y se mide.
+  batería §P7 (48 reglas) mezcla natural n=100: máx 33.0 % (la que MAS comparte), techo nulo 32.7 %, exceso +0.3 pp -> PASS
+      top: la que MAS comparte 33.0% · cifra mediana 33.0% · siempre la 3a 32.0% · quedarse con 'promedio' 32.0%
+  OK: §P7-B mezcla natural: «la más larga» acierta 25.0 %; margen máximo de largo 2.0 % < 15 % (inexplotable) 
+  OK: §P7-A mezcla natural: exceso +0.3 pp (obliga > +8) 
+  batería §P7 (48 reglas) rama CURSOS    n=100: máx 47.0 % (la mas larga (chars)), techo nulo 32.7 %, exceso +14.3 pp -> BLOQUEA
+      top: la mas larga (chars) 47.0% · sede de la opción más larga (relacional) 39.0% · el numero mayor 29.0% · siempre la 1a 29.0%
+  OK: §P7-B rama CURSOS: «la más larga» acierta 47.0 %; margen máximo de largo 2.0 % < 15 % (inexplotable) 
+  margen de «molde atipico» en palabras (rama CURSOS): acierta en 19 versiones, mediano 6.5 %, máximo 6.5 %
+  RESIDUO DECLARADO §P7-B (rama CURSOS): exceso +14.3 pp por reglas de largo con margen máximo 2.0 % en caracteres y 6.5 % en palabras, < 15 % (inexplotable); sin ellas, exceso -3.4 pp (el numero mayor)
+  PENDIENTE DE FIRMA: canal de largo (rama CURSOS): +14.3 pp, márgenes 2.0 % y 6.5 %; declarado hasta +10,4 pp, 2,7 % y 6,5 % 
+  batería §P7 (48 reglas) rama PROMEDIO  n=100: máx 43.0 % (la mas larga (chars)), techo nulo 32.6 %, exceso +10.4 pp -> BLOQUEA
+      top: la mas larga (chars) 43.0% · molde atipico (n tokens) 41.0% · sede de la opción más larga (relacional) 37.5% · siempre la 1a 32.0%
+  OK: §P7-B rama PROMEDIO: «la más larga» acierta 43.0 %; margen máximo de largo 2.0 % < 15 % (inexplotable) 
+  margen de «molde atipico» en palabras (rama PROMEDIO): acierta en 41 versiones, mediano 3.3 %, máximo 6.5 %
+  RESIDUO DECLARADO §P7-B (rama PROMEDIO): exceso +10.4 pp por reglas de largo con margen máximo 2.0 % en caracteres y 6.5 % en palabras, < 15 % (inexplotable); sin ellas, exceso -0.1 pp (siempre la 1a)
+  OK: §P7-B, dentro de lo declarado en O-1 corregido: canal de largo (rama PROMEDIO): +10.4 pp, márgenes 2.0 % y 6.5 %; declarado hasta +10,4 pp, 2,7 % y 6,5 % 
+  canónica (enumeración exacta, 24 órdenes): máx 100.0 % (la que MAS comparte); exceso en la mezcla = 0,10 x +75.0 pp = +7.5 pp
+      top: la que MAS comparte 100.0% · quedarse con 'total' 100.0% · cifra mediana 100.0% · mas digitos 50.0% · primer numero PAR 50.0% 
+  OK: decisión 2 a: las 12 reglas y las 12 sondas firmadas existen en la batería y en E4 
+  ROJO, cubierto por la decisión 2 a: canónica, regla «mas digitos»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, regla «primer numero PAR»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, regla «la que MAS comparte»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, regla «ultimo multiplo de 10»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, regla «descartar ultimo negativo»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, regla «par por sede: menor cifra»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, regla «descartar sin cifra»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, regla «quedarse con 'total'»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, regla «quedarse con 'promedio'»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, regla «descartar 'de más'»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, regla «cifra mediana»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, regla «par con más palabras en común (relacional)»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  decisión 2 a, reglas: 12 firmadas, 12 iguales a lo firmado (a un decimal); por encima de +8 pp en la canónica: 12
+  ROJO, cubierto por la decisión 2 a: canónica, sonda «S1 descarta cifras de la tabla»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, sonda «S2 par de la sede de la fila 1»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, sonda «S3 par de la sede de más cursos»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, sonda «S5 más cursos + menor cifra del par»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, sonda «S7 G real + menor cifra del par (cota canal 2)»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, sonda «S_U la sede de la razón sin sustento pierde»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, sonda «S_U + S1 (par de G sin la cifra de la tabla)»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, sonda «S_U + suma (par de G sin la cifra que es suma de otras dos)»: +25.0 pp exactos (24 órdenes); peso en la mezcla +2.50 pp (firmado hasta +25.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, sonda «Atípica: descarta la cifra que dobla a todas las demás»: +8.3 pp exactos (24 órdenes); peso en la mezcla +0.83 pp (firmado hasta +8.3 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, sonda «S_U + S1 + suma (las dos pistas)»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, sonda «S_U + atípica»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  ROJO, cubierto por la decisión 2 a: canónica, sonda «S_U + S1 + suma + atípica»: +75.0 pp exactos (24 órdenes); peso en la mezcla +7.50 pp (firmado hasta +75.0 pp)
+  decisión 2 a, sondas: 12 firmadas, 12 iguales a lo firmado (a un decimal); por encima de +8 pp en la canónica: 12
+  RESIDUO DECLARADO (decisión 2 a: fuera de la batería congelada, §P7-C): en la canónica, «descarta la más larga» 33.3 % (+8.3 pp)
+
+[S2c] Medidas adicionales del candidato D1c40 
+  S2c · canal de formato con S_U (relevante en D2):
+                                                        mezcla CURSOS PROMEDIO
+S_U + descartar la opción sin cifra                       50.0   50.0       50
+S_U + S1 + suma + atípica + resta + descartar sin cifra   94.5   95.5       98
+                                                        canonica
+S_U + descartar la opción sin cifra                           50
+S_U + S1 + suma + atípica + resta + descartar sin cifra      100
+  S2c · lectura (iii) de «resta» (fuera de la batería congelada, §P7-C: solo para comparar candidatos):
+                                                                                           mezcla
+resta (iii): la sede de la opción que cita |aG - aP| pierde; azar entre las dos de la otra     23
+                                                                                           CURSOS
+resta (iii): la sede de la opción que cita |aG - aP| pierde; azar entre las dos de la otra   30.2
+                                                                                           PROMEDIO
+resta (iii): la sede de la opción que cita |aG - aP| pierde; azar entre las dos de la otra     10.8
+                                                                                           canonica
+resta (iii): la sede de la opción que cita |aG - aP| pierde; azar entre las dos de la otra       50
+  S2c H1 (RS1-RS7): 26 cifras > +8 pp
+  S2c barrido (i)/(ii), sin «|a1 - a2| (i)»: 10 cifras > +8 pp: n1 * a1 (i) [mezcla] 36.2 % (+11.2 pp) · n2 * a2 (i) [CURSOS] 34.0 % (+9.0 pp) · dos pasos: |n1 - n2| * a1 (i) [CURSOS] 35.5 % (+10.5 pp) · dos pasos: |n1 - n2| * a2 (i) [CURSOS] 37.8 % (+12.8 pp) · dos pasos: n1 * |a1 - a2| (i) [PROMEDIO] 37.0 % (+12.0 pp) · |a1 - a2| (ii) [canonica] 33.3 % (+8.3 pp) · |n1 - a2| (i) [canonica] 100.0 % (+75.0 pp) · |n1 - a2| (ii) [canonica] 33.3 % (+8.3 pp) · dos pasos: |n1 - n2| * a1 (i) [canonica] 100.0 % (+75.0 pp) · dos pasos: |n1 - n2| * a1 (ii) [canonica] 33.3 % (+8.3 pp)
+  S2c barrido (iii): 3 cifras > +8 pp: dos pasos: |n1 - n2| * a1 (iii) [PROMEDIO] 35.8 % (+10.7 pp) · dos pasos: |n1 - n2| * a2 (iii) [PROMEDIO] 39.2 % (+14.3 pp) · |a1 - a2| (iii) [canonica] 50.0 % (+25.0 pp)
+  S2c · quién cita δ = |aG - aP| en las no canónicas (%):
+        mezcla CURSOS PROMEDIO
+G         40.7     23       57
+P         22.0     44        0
+ninguna   37.4     33       43
+  S2c F1: 369 semillas corridas en E1 y E2; abortos: 0; de las 291 no canónicas guardadas, padv con δ: 64, psin con δ: 0, cascada (P sin δ por falta de lado): 0
+  S2c · diversidad sustantiva rápida (no canónicas):
+                    mezcla CURSOS PROMEDIO
+n                     91.0    100      100
+D_distintos           46.0     49       50
+tablas_distintas      88.0     95       95
+D_mas_frecuente_pct    7.7      6        6
+claves_distintas      89.0     98       97
+  S2c · las 13 cifras de «O-1 corregido»: 3 por encima de lo firmado
+       rama                                                       regla medido
+1    CURSOS                 S_U la sede de la razón sin sustento pierde   50.0
+2    CURSOS                S_U + S1 (par de G sin la cifra de la tabla)   77.0
+3    CURSOS S_U + suma (par de G sin la cifra que es suma de otras dos)   54.0
+4    CURSOS                            S_U + S1 + suma (las dos pistas)   78.0
+5    CURSOS                                               S_U + atípica   61.0
+6    CURSOS                                   S_U + S1 + suma + atípica   87.0
+7  PROMEDIO                 S_U la sede de la razón sin sustento pierde   50.0
+8  PROMEDIO                S_U + S1 (par de G sin la cifra de la tabla)   55.0
+9  PROMEDIO S_U + suma (par de G sin la cifra que es suma de otras dos)   62.0
+10 PROMEDIO                            S_U + S1 + suma (las dos pistas)   67.0
+11 PROMEDIO                                               S_U + atípica   58.0
+12 PROMEDIO                                   S_U + S1 + suma + atípica   74.5
+13 PROMEDIO                              S1 descarta cifras de la tabla   33.4
+   firmado excede
+1     50.0  FALSE
+2     71.0   TRUE
+3     60.5  FALSE
+4     79.0  FALSE
+5     51.5   TRUE
+6     81.5   TRUE
+7     50.0  FALSE
+8     55.0  FALSE
+9     62.0  FALSE
+10    67.0  FALSE
+11    58.0  FALSE
+12    74.5  FALSE
+13    33.4  FALSE
+  S2c · decisión 2 a: 12 de 12 reglas y 12 de 12 sondas iguales a lo firmado
+
+=== RESULTADO S2c (D1c40): PENDIENTE DE FIRMA (41) ===
+exit=3 segundos=70

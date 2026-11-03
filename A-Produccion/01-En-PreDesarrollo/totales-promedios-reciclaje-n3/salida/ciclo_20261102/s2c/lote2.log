@@ -1,0 +1,11 @@
+B0: exit=3 segundos=64
+D0: exit=3 segundos=81
+D1c40: exit=3 segundos=70
+D1q50: exit=1 segundos=73
+D1q100: exit=1 segundos=73
+D3: exit=1 segundos=66
+D3b: exit=1 segundos=82
+D4: exit=1 segundos=79
+D2: exit=1 segundos=87
+lote2 exit=0
+tabla_decision_s2c.md: 202 líneas, 9 candidatos

@@ -1,0 +1,30 @@
+                          CURSOS PROMEDIO
+combinaciones             2134.0    982.0
+delta_bajo_D_pct            93.7     83.8
+parcialP_bajo_D_pct         47.0     28.0
+G_bajo_D_sin_delta_pct      30.4      3.7
+versiones_b               6268.0   2787.0
+original                  6268.0   2787.0
+G_resta_forzosa           2702.0   1574.0
+psin_delta                2783.0   1018.0
+D4_factible               4917.0   2000.0
+padv_delta_mismo_lado     3280.0   1143.0
+original_pct               100.0    100.0
+G_resta_forzosa_pct         43.1     56.5
+psin_delta_pct              44.4     36.5
+D4_factible_pct             78.4     71.8
+padv_delta_mismo_lado_pct   52.3     41.0
+rama CURSOS   P cita δ con el molde P_a : verdadera en 0 de 2134 combinaciones
+rama CURSOS   P cita δ con el molde P_b : verdadera en 0 de 2134 combinaciones
+rama CURSOS   P cita δ con el molde U_a : verdadera en 0 de 2134 combinaciones
+rama CURSOS   P cita δ con el molde U_b : verdadera en 0 de 2134 combinaciones
+rama CURSOS   P cita δ con el molde U_c : verdadera en 0 de 2134 combinaciones
+rama CURSOS   P cita δ con el molde U_d : verdadera en 0 de 2134 combinaciones
+rama PROMEDIO P cita δ con el molde M_a : verdadera en 0 de 982 combinaciones
+rama PROMEDIO P cita δ con el molde M_b : verdadera en 0 de 982 combinaciones
+rama PROMEDIO P cita δ con el molde U_a : verdadera en 0 de 982 combinaciones
+rama PROMEDIO P cita δ con el molde U_b : verdadera en 0 de 982 combinaciones
+rama PROMEDIO P cita δ con el molde U_c : verdadera en 0 de 982 combinaciones
+rama PROMEDIO P cita δ con el molde U_d : verdadera en 0 de 982 combinaciones
+rama PROMEDIO: P tiene el mayor promedio en 0 de 982 combinaciones (la frase de la C no le sirve)
+exit=0
