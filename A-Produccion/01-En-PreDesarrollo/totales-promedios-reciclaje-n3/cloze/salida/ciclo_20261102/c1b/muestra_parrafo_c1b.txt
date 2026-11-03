@@ -1,0 +1,21 @@
+semilla 10 · PROMEDIO · HP FALSE · HG TRUE · D' = 33, a'_G = 42, a'_P = 27
+  Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo promedio suma ese promedio al total, y un curso menos lo resta. Por eso basta comparar ese promedio con la diferencia entre los totales: si es mayor, el ganador cambia; si es menor, no. Con un curso más, el grado séptimo habría sumado a su total 27~kilos, menos que la diferencia de 33~kilos: no le habría alcanzado para ganar. Con un curso menos, el grado sexto habría restado a su total 42~kilos, más que la diferencia de 33~kilos: habría~perdido.
+
+semilla 1 · CURSOS · HP TRUE · HG TRUE · D' = 37, a'_G = 51, a'_P = 53
+  Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo promedio suma ese promedio al total, y un curso menos lo resta. Por eso basta comparar ese promedio con la diferencia entre los totales: si es mayor, el ganador cambia; si es menor, no. Con un curso más, el grado sexto habría sumado a su total 53~kilos, más que la diferencia de 37~kilos: habría ganado. Con un curso menos, el grado séptimo habría restado a su total 51~kilos, más que la diferencia de 37~kilos: habría~perdido.
+
+semilla 2 · PROMEDIO · HP TRUE · HG TRUE · D' = 15, a'_G = 45, a'_P = 35
+  Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo promedio suma ese promedio al total, y un curso menos lo resta. Por eso basta comparar ese promedio con la diferencia entre los totales: si es mayor, el ganador cambia; si es menor, no. Con un curso más, el grado sexto habría sumado a su total 35~kilos, más que la diferencia de 15~kilos: habría ganado. Con un curso menos, el grado séptimo habría restado a su total 45~kilos, más que la diferencia de 15~kilos: habría~perdido.
+
+semilla 5 · CURSOS · HP TRUE · HG FALSE · D' = 27, a'_G = 24, a'_P = 39
+  Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo promedio suma ese promedio al total, y un curso menos lo resta. Por eso basta comparar ese promedio con la diferencia entre los totales: si es mayor, el ganador cambia; si es menor, no. Con un curso más, el grado sexto habría sumado a su total 39~kilos, más que la diferencia de 27~kilos: habría ganado. Con un curso menos, el grado séptimo habría restado a su total 24~kilos, menos que la diferencia de 27~kilos: habría seguido~ganando.
+
+semilla 10 · PROMEDIO · HP FALSE · HG TRUE · D' = 33, a'_G = 42, a'_P = 27
+  Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo promedio suma ese promedio al total, y un curso menos lo resta. Por eso basta comparar ese promedio con la diferencia entre los totales: si es mayor, el ganador cambia; si es menor, no. Con un curso más, el grado séptimo habría sumado a su total 27~kilos, menos que la diferencia de 33~kilos: no le habría alcanzado para ganar. Con un curso menos, el grado sexto habría restado a su total 42~kilos, más que la diferencia de 33~kilos: habría~perdido.
+
+semilla 11 · CURSOS · HP FALSE · HG FALSE · D' = 42, a'_G = 33, a'_P = 37
+  Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo promedio suma ese promedio al total, y un curso menos lo resta. Por eso basta comparar ese promedio con la diferencia entre los totales: si es mayor, el ganador cambia; si es menor, no. Con un curso más, el grado séptimo habría sumado a su total 37~kilos, menos que la diferencia de 42~kilos: no le habría alcanzado para ganar. Con un curso menos, el grado octavo habría restado a su total 33~kilos, menos que la diferencia de 42~kilos: habría seguido~ganando.
+
+semilla 16 · PROMEDIO · HP FALSE · HG FALSE · D' = 52, a'_G = 46, a'_P = 32
+  Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo promedio suma ese promedio al total, y un curso menos lo resta. Por eso basta comparar ese promedio con la diferencia entre los totales: si es mayor, el ganador cambia; si es menor, no. Con un curso más, el grado séptimo habría sumado a su total 32~kilos, menos que la diferencia de 52~kilos: no le habría alcanzado para ganar. Con un curso menos, el grado noveno habría restado a su total 46~kilos, menos que la diferencia de 52~kilos: habría seguido~ganando.
+

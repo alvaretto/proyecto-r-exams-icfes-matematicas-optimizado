@@ -1,0 +1,26 @@
+md5 27f789dc6327f7d6bda72cded61502cd 
+canónicas en 1:100: 9 · extra: 122,130,140,143,152,153,170,178,182,198,205 
+clozetype: schoice schoice num num num mchoice · lengths sol: 4 4 1 1 1 4 · ql: 15 · sl: 15 · exsolution: totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1: FALSE, FALSE, FALSE, TRUE | FALSE, FALSE, TRUE, FALSE | 371 | 408 | 37 | TRUE, FALSE, TRUE, FALSE 
+
+Resumen: ver=111 · can=20 · tot_alt=22 · h3_falsa_emb=70 · arit_n=2826 · arit_mal=0 · mismo_que_E1=0 
+Fallos: 20 
+   s=7 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=27 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=42 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=47 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=54 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=63 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=66 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=68 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=72 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=122 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=130 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=140 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=143 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=152 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=153 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=170 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=178 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=182 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=198 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 
+   s=205 P1 texto no juzgado: La sede primaria ganó el concurso porque recogió 40 kilos más que la sede de secundaria. 

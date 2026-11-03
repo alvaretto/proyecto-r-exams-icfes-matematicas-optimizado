@@ -2202,3 +2202,237 @@ Informe íntegro, recuperado de su transcripción: `salida/ciclo_20261102/6b_c1/
   13:30). El SCHOICE no se tocó (`63e2713e`, verificador `031d4726`, 11/11).
 - El diff fuera del bloque lo revisé y contiene los comentarios, dos U+00A0 literales pasados a escape, L-6 en la prosa de la
   Parte 1 y H3 en indicativo.
+
+### FASE 2C r4 del CLOZE (2026-11-03): APROBAR_CON_CAMBIOS, sin CORRECCIÓN
+
+> `AgenteDetractor` nuevo, sin `name:`, sobre el md5 `27f789dc…`. Fue el segundo intento. El primero, lanzado a las 14:00, murió
+> sin entregar en el corte eléctrico de las 14:19: el Paso 0 de la regla #9 no encontró marcador en su transcripción, y lo que
+> dejó a medias no se usó. El segundo, lanzado a las 14:32, entregó a las 14:53. El reporte íntegro, sacado de su transcripción,
+> está en `cloze/salida/fase2c_r4_detractor.md`. Citas: 15 de 15 (`verificar_citas_detractor.py`, exit 0; el hook registró
+> «ENTREGA VERIFICADA»). Su evidencia estaba en el scratchpad de la sesión (tmpfs) y se copió a `cloze/salida/fase2c_r4/`.
+
+| ID | Severidad · tipo | Qué | Estado |
+|---|---|---|---|
+| H1 | BAJA · precisión de la Solution (regla #13) | Parte 6: «si y solo si su promedio por curso, *a*′_P kilos, es mayor que la diferencia, *D*′ kilos…». La comparación va en indicativo y con las cifras de la versión. El bicondicional es verdadero, pero la comparación, leída suelta, es falsa en 70 de 111 versiones según el detractor. Según el coordinador, en 62 de 100 (`salida/ciclo_20261102/coordinador/h1_r4_coordinador.*`: HP falsa en 43 y HG en 51, sin empates). Es el reflejo del H3 de la r3. Se suma el BAJO de la 6b de la C1: «diferencia.» queda sola a 360 px en 99 de 100 | Decisión del profesor, abajo: se reescribe ahora |
+| H2 | BAJA · cobertura del verificador | El mutante de texto de MC39 añade 3 n-gramas exclusivos de BP_gano y deja otros 3 exclusivos de BC_gano. Ninguno está en la lista de L-C7, así que muere también por la cláusula «fuera de la lista». El detractor lo dedujo de los conjuntos de textos, sin correr `h2_exacta()` con el mutante. Además, el veredicto dice `cazado_por_su_sonda` en cuanto `j39` tiene filas, y no hay línea base | Endurecer, autónomo (H-5): veredicto `cazado_por_su_sonda_y_otra`, con el conteo de pendientes fuera de `j39`, y línea base `h2_exacta(COD_C, 1L)`, con las filas de `j39` en «cubierto» |
+| H3 | BAJA · procedimiento (L-C8) | `coherencias_r9/verificar_coherencias.R` compara contra literales del texto anterior (líneas 360, 398, 403 y 414) y escribe un `.rds` en el directorio de trabajo (línea 610). No sirve para `27f789dc`: fallaría a la vista, así que no daría un falso verde | El paso 8 se cierra con un oráculo r10 nuevo, con los seis puntos del reporte |
+
+Comprobado por el detractor, sin hallazgo:
+- el re-empalme: idéntico byte a byte salvo los 4 renombres, y el script comprueba el md5 y el bloque viejo;
+- el verificador: exit 4, con 1409 líneas idénticas a c1;
+- la CORRECCIÓN en las 111 versiones de E1, con funciones de verdad propias sobre el texto emitido: 0 fallos; de 2 826
+  igualdades aritméticas, ninguna falsa; la canónica, igual al impreso en las 20;
+- MC39: prueba la cláusula, con el matiz de H2;
+- F-3: la cuenta de +25,5 pp es correcta;
+- L-8: está declarada sin cablear, y su guarda real es indirecta.
+
+### Decisión del profesor tras la FASE 2C r4 del CLOZE (2026-11-03)
+
+> **Firmada por el profesor el 2026-11-03** y transmitida por el coordinador. Respuesta literal: «Reescribir ahora
+> (Recomendada)». Regla #24 **H-5**: queda por escrito quién decidió, cuándo y con qué cifras.
+
+1. **H1 se reescribe en este ciclo.**
+   - En el párrafo «Parte 6.» de la Solution, cada comparación con cifras de la versión va resuelta: dice «más» o «menos»
+     según los datos y la conclusión que sigue. Por ejemplo: «sumaría 27 kilos, menos que la diferencia de 33 kilos: no le
+     alcanzaría para ganar». El criterio general puede quedarse, pero sin cifras.
+   - Toca el `.Rmd`, así que lleva reapertura desde `generacion_rmd` (tanda C1b), pasos 3 a 6, 6b y una FASE 2C r5 con un
+     detractor nuevo. Después viene la tanda C2.
+   - La recomendación del coordinador se apoyó en dos razones: la regla #13 v1.1 exige reescribir una frase cuando otra lectura
+     razonable cambia su verdad, y es la segunda ronda que marca este párrafo (H3 de la r3 y H1 de la r4).
+2. **H2 y H3 se aplican en cualquier caso, porque endurecen:** H2 en el verificador, en la C1b; H3 en el paso 8, en la C2.
+
+### Ciclo 2026-11-02 del CLOZE, tanda C1b (2026-11-03): H1 y H2 de la FASE 2C r4; pasos 3 a 6 sellados
+
+> La hizo el `orquestador-cloze` el 2026-11-03, por encargo del coordinador. Reapertura #6 desde `generacion_rmd` (16:27:09),
+> con el reporte `cloze/salida/fase2c_r4_detractor.md`. `.Rmd`: `27f789dc…` → **`6f6f1b1311b0d681bd974c719ecd75d5`**, sin aprobar.
+> `cloze/verificar_espacio_cloze.R`: `6e76321a…` → **`6d37faad687a5fc11e69b763429b6624`**. Se detuvo antes de la FASE 2C r5,
+> que lanza el coordinador con un detractor nuevo. Evidencia: `cloze/salida/ciclo_20261102/c1b/`. Estado: 6/11.
+
+#### Decisión que rige la tanda (literal; regla #24 H-5)
+
+- **2026-11-03, tras la FASE 2C r4:** «Reescribir ahora (Recomendada)». H1 se reescribe en este ciclo. H2 se aplica en el
+  verificador porque endurece (autónomo).
+
+#### La redacción nueva del párrafo «Parte 6.» de la Solution (H1)
+
+- Queda el criterio general, sin cifras: «Un curso más con el mismo promedio suma ese promedio al total, y un curso menos lo
+  resta. Por eso basta comparar ese promedio con la diferencia entre los totales: si es mayor, el ganador cambia; si es menor,
+  no.»
+- Siguen dos frases con las cifras de la versión, cada una resuelta con los datos («más» o «menos») y con la conclusión que se
+  sigue. Ejemplos (semillas 1, 5, 10 y 11):
+  - HP verdadera: «Con un curso más, el grado sexto habría sumado a su total 53 kilos, más que la diferencia de 37 kilos:
+    habría ganado.»
+  - HP falsa: «Con un curso más, el grado séptimo habría sumado a su total 27 kilos, menos que la diferencia de 33 kilos: no le
+    habría alcanzado para ganar.» (la semilla 10 que citó el coordinador)
+  - HG verdadera: «Con un curso menos, el grado sexto habría restado a su total 42 kilos, más que la diferencia de 33 kilos:
+    habría perdido.»
+  - HG falsa: «Con un curso menos, el grado séptimo habría restado a su total 24 kilos, menos que la diferencia de 27 kilos:
+    habría seguido ganando.»
+- **Por qué es verdadera.** *T*′_P + *a*′_P > *T*′_G ⇔ *a*′_P > *D*′, y *T*′_G − *a*′_G < *T*′_P ⇔ *a*′_G > *D*′; los empates
+  los excluyen `espacio_paralelo()` y la guarda «Parte 6: hipótesis sin empate». La palabra («más» o «menos») sale de
+  `hp_supera <- dp$aP > dp$D` y `hg_supera <- dp$aG > dp$D`, y la conclusión, de la misma comparación. Un `stopifnot` nuevo del
+  `data_generation` («H1 r4: la comparación de la Solution de la Parte 6 coincide con los veredictos sorteados de HP y HG») las
+  ata a `v_hp` y `v_hg`, que dan la marca.
+- **Cómo se comprobó la propuesta del detractor.** Su aritmética era correcta. Se cambió: «restaría» lleva ahora su
+  complemento («a su total»), y la cifra va justo antes de la comparación («habría sumado a su total 27 kilos, menos que…»),
+  para que «menos que la diferencia» no pueda leerse como referida al total. Los tiempos van todos en condicional compuesto,
+  como la opción de la Parte 6 («… habría ganado el concurso»): por eso «no le habría alcanzado para ganar» y no «no le
+  alcanzaría», que era el ejemplo del registro de la decisión. Lo audita la r5.
+- L-6: espacio duro (`ED`) entre cada cifra y «kilos». También entre las dos últimas palabras («habría perdido», «seguido
+  ganando»), para que el párrafo no termine con una palabra sola en su último renglón (el BAJO de la 6b de la C1). Lo mide la
+  6b de esta tanda. Reglas #19, #25 y ortografía: limpias. Ningún U+00A0, U+2009, U+202F ni U+2060 literal.
+
+#### Diff (`c1b/diff_rmd_27f789dc_c1b.patch`, script `c1b/editar_rmd_c1b.py`: 2 patrones, cada uno exigido una vez)
+
+- `data_generation`: `hp_supera`, `hg_supera` y su `stopifnot` (6 líneas, con 3 de comentario), después de la guarda de la
+  retroalimentación de la Parte 6. Sin sorteos.
+- `solucion`: el `cat()` del párrafo «Parte 6.», con 3 líneas de comentario. Nada más cambia.
+
+#### Invariancia (`c1b/invariancia_c1b.R` → `.txt`, semillas 1 a 1000, 113 canónicas, 60 s)
+
+- `.Random.seed` al final del `data_generation`, igual al de `27f789dc` en 1000/1000.
+- E1: la Parte 1 = SCHOICE `63e2713e` (objetos y `.Random.seed` al final del bloque P1): 0 diferencias.
+- Todos los objetos de `27f789dc`, idénticos; los únicos nuevos son `hp_supera` y `hg_supera`, iguales a `v_hp` y `v_hg`.
+- Fuera de los chunks `data_generation` y `solucion`, el `.Rmd` es idéntico byte a byte: con lo anterior, el enunciado, las
+  opciones, las marcas y el feedback de las seis partes salen iguales.
+- La Solution emitida es idéntica salvo el párrafo «Parte 6.» en 1000/1000.
+- En el párrafo nuevo, leído del texto: 2000 comparaciones con cifras, 0 falsas, 0 conclusiones que no se siguen y 0 contra la
+  marca de HP o HG (HP verdadera en 476, HG en 518). Control: en `27f789dc`, 656 de 1000 versiones tienen alguna comparación
+  falsa leída suelta.
+
+#### Verificador (`6d37faad…`; `c1b/verificar_espacio_cloze_c1b.txt`, 472 s)
+
+**Exit 4: EN ROJO BAJO OVERRIDE FIRMADO, 368 cifras dentro de lo firmado, 0 fallos y 0 pendientes.** Frente a la C1, ninguna
+línea cambia fuera de las 33 que añade la C1b (`c1b/comparar_c1_c1b.py` → `.txt`): no se movió ninguna cifra firmada.
+
+| Cambio | Guarda o sonda | Mutante → resultado |
+|---|---|---|
+| H1: la comparación sale de los datos | `stopifnot` «H1 r4: …» del `data_generation` | MC52 (`hp_supera` con el promedio del grado que ganó): cazado por su sonda en la semilla 5 |
+| H1: cada comparación con cifras del párrafo «Parte 6.» es verdadera, leída del TEXTO de la Solution emitida (las cifras y el «más» o «menos», con la tabla del otro colegio leída como se muestra) | sonda H1-Sol (100 versiones): falsa 0, cifra 0, concl 0, marca 0, esp 0; control exacto: 200 comparaciones, 100 «un curso más» y 100 «un curso menos» (ramas: 57/43 y 49/51) | MC50 (invierte «más» en «menos» en la rama verdadera de HP): falsa +57, concl +57, `cazado_por_su_sonda`. MC51 (vuelve a la redacción de `27f789dc`): falsa +43, marca +43 y el control cae a 100, `cazado_por_su_sonda_y_control`, declarado así. MC53 (espacio normal ante «kilos»): esp +100. MC54 (cita el promedio del que ganó): cifra +100, falsa +30. Los cuatro, aditivos salvo MC51 |
+| H2: MC39 con línea base y conteo | `h2_exacta(COD_C, 1L)` sin mutar: las dos filas de `j39` salen +12,5 pp, «cubierto» | MC39 de texto: CURSOS y PROMEDIO, «perdió hubiera tenido», +12,5 → +25,0 pp, pendiente con la firma regla por regla y cubierta con la de estrato; además abre 33 pendientes nuevos fuera de `j39`, entre ellos los 6 n-gramas que dedujo el detractor (y «perdió hubiera» y «que perdió hubiera»): `cazado_por_su_sonda_y_otra`. Los 100 pendientes que la línea base ya tiene con una sola Parte 1 no cuentan |
+
+- La sonda directa de MC39 (sin texto) no cambia.
+- Con una sola Parte 1, la medida no es la firmada (100 pendientes en la línea base sin mutar). Por eso la línea base es la
+  prueba: sin ella, «sube de +12,5» comparaba con la cifra firmada sobre 100 Partes 1.
+
+#### Sellos, uno por uno
+
+- `generacion_rmd` 16:41:59 (después del verificador, 16:41:03); `retroalimentacion` 16:42:07; `renderizado_4_formatos`
+  16:42:13 (`c1b/render_6f6f1b13/`, 16:36: PDF 5, HTML 5, DOCX 1, Moodle n = 5; NOPS N/A por `cloze exercises`);
+  `arsenal_post_render` 16:42:23 (informe del hook `20261103-163617-186493`: 0 errores y las 6 advertencias heurísticas de la
+  C1; 2G 100/100; 2H 0 anomalías). Cada nota lleva el md5 `6f6f1b13…`.
+
+#### Qué debe auditar la FASE 2C r5 (detractor nuevo, sin `name:`)
+
+- La redacción nueva: su verdad en todo el espacio, con una función de verdad propia (las dos ramas del otro colegio y las tres
+  combinaciones de veredictos de cada una); sus otras lecturas (regla #13 v1.1: «menos que la diferencia», «el ganador
+  cambia», «habría restado a su total»); la concordancia y los tiempos (el cambio a «no le habría alcanzado»); y el espacio duro
+  de las dos últimas palabras.
+- La sonda H1-Sol: que lea del texto, que su patrón vea también la redacción vieja, su control exacto, y MC50 a MC54 (cada uno
+  por su sonda; MC51 también por el control, como se declara), y la guarda de MC52.
+- H2: la línea base de MC39, que los 33 pendientes nuevos los abra el mutante (los 100 de la línea base se excluyen) y que el
+  veredicto lo diga.
+- La invariancia (1000 semillas) y la 6b de esta tanda.
+- Siguen de la C1: L-8 sin cablear en el verificador del SCHOICE y F-3 declarado a +25,5 pp. H3 de la r4 (el oráculo r10 del
+  paso 8) va en la C2.
+
+#### ¿Ley local o regla?
+
+- **Local, candidata (L-C10; endurece y la firma el profesor):** la Solution no imprime una comparación con cifras de la versión
+  que, leída suelta, pueda ser falsa. Cada una va resuelta con los datos, con su conclusión, y el criterio general va sin cifras.
+  Guardas: el `stopifnot` «H1 r4» (MC52) y la sonda H1-Sol del verificador (MC50, MC51, MC53 y MC54). Es la segunda ronda que
+  marca este párrafo (H3 de la r3 y H1 de la r4).
+- **Del repo, nada nuevo por H1:** la regla #13 v1.1 ya lo cubre («toda lectura razonable cuenta»; las afirmaciones de la
+  Solution sobre cifras sorteadas se garantizan con su `stopifnot`). No es grave (BAJA).
+- **Del repo, candidata (toca `.claude/`, regla #17; lo decide el profesor):** un mutante que se mide sobre una muestra distinta
+  de la firmada (aquí, una Parte 1 en lugar de 100) necesita su línea base en esa misma muestra. Sin ella, «sube de su cifra»
+  compara con otra medida, y un mutante podía darse por cazado aunque la regla ya estuviera pendiente sin mutar. Sería una
+  obligación más del contrato de mutación de los orquestadores. Es general, ningún gate lo ve y lo encontró un detractor.
+
+#### 6b pareada de la tanda C1b (`auditor-visual-html`, sin `name:`): APTO_CON_OBSERVACIONES
+
+N = 100 semillas por versión (`6f6f1b13` frente a `27f789dc`), a 360 y 320 px: 400 páginas por CDP, con `innerWidth`
+comprobado y la red bloqueada. Instrumento `cap7.py` (el de la C1 más una sonda del párrafo, por `Range.getClientRects()`).
+Informe: `cloze/salida/ciclo_20261102/c1b/6b_c1b/informe_6b_c1b_6f6f1b13.md`, con `metricas.json` y 8 recortes leídos a
+resolución completa (6 del NUEVO, con las cuatro conclusiones, y 2 de la REFERENCIA).
+
+| Párrafo «Parte 6.» | NUEVO 360 | REF 360 | NUEVO 320 | REF 320 |
+|---|---|---|---|---|
+| Último renglón con una sola palabra | **0/100** | 99/100 (control positivo: «diferencia.») | 0/100 | 0/100 |
+| Renglones (media) | 13,5 | 11,0 | 15,6 | 12,0 |
+| Cortes entre cifra y «kilos» · desborde · palabras partidas | 0/400 · 0 · 0 | 0/300 · 0 · 0 | 0/400 · 0 · 0 | 0/300 · 0 · 0 |
+
+- **El BAJO de la 6b de la C1 queda cerrado:** «diferencia.» sola a 360 px pasa de 99/100 a 0/100.
+- La Parte 1 sale idéntica en las dos versiones, con 0 cortes en todas las métricas de L-6 (fórmula con la unidad dentro 0/1158;
+  cifra-unidad 0/2003; El/La 0/475). Las Partes 2 a 6 conservan el residuo heredado (fórmula + unidad partidas 263/1249 a 360 px
+  y 209/1249 a 320 px, igual en las dos; la C1 medía 259 y 206 con otra copia de los HTML).
+- Desbordes, tablas fuera de su caja, fórmulas partidas por dentro y fugas de markup: 0. Altura media de página: +45 px a 360 px
+  (+0,56 %) y +65 px a 320 px (+0,70 %).
+- **BAJO (residuo declarado):** a 320 px, en la frase de «un curso más», el renglón puede partir la conclusión entre «habría» y
+  su participio («habría | ganado.»; en 3 de los 6 recortes del NUEVO). El espacio duro solo ata las dos últimas palabras del
+  párrafo. Es un corte normal de un tiempo compuesto, no deja palabras solas y no se midió su frecuencia en las 100 semillas.
+
+**Verificación del coordinador de la tanda C1b del CLOZE (2026-11-03, sesión `358ab328`)**, independiente de sus scripts
+(`cloze/salida/ciclo_20261102/coordinador/`):
+- `verificar_espacio_cloze.R` (`6d37faad…`), repetido: exit 4 en 470 s. Sus 1433 líneas son idénticas a las de
+  `cloze/salida/ciclo_20261102/c1b/verificar_espacio_cloze_c1b.txt`, que solo tiene además su línea de cierre. Hay 368 cifras
+  dentro de lo firmado, 0 fallos y 0 pendientes.
+- Invariancia con un script propio (`invariancia_cloze_coordinador_c1b.R`), del CLOZE de la C1 (`27f789dc`, sacado de git en
+  `45b1b34c`) al de la C1b (`6f6f1b13`):
+  - (A) Semillas 1 a 1000. E1 (la Parte 1, igual al SCHOICE `63e2713e`), el `.Random.seed` final y los 180 objetos comunes,
+    idénticos en las 1000. Los únicos objetos nuevos son `hp_supera` y `hg_supera`, y coinciden con `v_hp` y `v_hg` en las 1000.
+    Son verdaderos en 476 y 518 semillas.
+  - (B) Texto emitido (`xexams`), semillas 1 a 100. El enunciado, la `questionlist`, la `solutionlist`, la metainformación y la
+    Solution fuera del párrafo «Parte 6.», idénticos en las 100. En el párrafo nuevo, las cifras y los grados son los del párrafo
+    viejo de la misma semilla en 100 de 100. Las 200 comparaciones son verdaderas leídas sueltas, y las 200 conclusiones se siguen
+    de ellas. Salen las cuatro combinaciones de ramas.
+- En `27f789dc`, antes de la C1b, 62 de 100 versiones tenían alguna comparación falsa leída suelta (`h1_r4_coordinador.txt`).
+- Los sellos 3 a 6 llevan el md5 `6f6f1b13`, y cada uno va después de su artefacto. El diff del `.Rmd` toca solo los dos sitios
+  declarados (21 líneas, sin sorteos nuevos) y no lleva literales U+00A0, U+2009, U+202F ni U+2060.
+
+### FASE 2C r5 del CLOZE (2026-11-03): APROBAR_CON_CAMBIOS, sin CORRECCIÓN
+
+> `AgenteDetractor` nuevo, sin `name:`, sobre el md5 `6f6f1b13…` de la tanda C1b, todavía sin commit. Se lanzó a las 16:59 y
+> entregó a las 17:18. El reporte íntegro, sacado de su transcripción, está en `cloze/salida/fase2c_r5_detractor.md`. Citas: 12
+> de 12 (exit 0; el hook registró «ENTREGA VERIFICADA»). La evidencia está en `~/.cache/fase2c_r5_cloze/`, y sus scripts y
+> salidas de texto, en `cloze/salida/fase2c_r5/`.
+
+| ID | Severidad · tipo | Qué | Estado |
+|---|---|---|---|
+| H1 | BAJA · precisión de la Solution (regla #13 v1.1) | El criterio general nuevo («Por eso basta comparar ese promedio con la diferencia entre los totales: si es mayor, el ganador cambia; si es menor, no») admite dos lecturas que lo vuelven falso. (a) «si es mayor» puede tomar como sujeto «la diferencia», que es el antecedente más cercano, y así el criterio se invierte. (b) El alcance no dice que vale para un curso más o uno menos. Aplicado a la afirmación de ventaja por cursos (102 de 205 versiones), da el veredicto equivocado en 80. Con la lectura buscada es verdadero en 205 de 205 | Al profesor. Alternativa del detractor: «Por eso, con un curso más o uno menos, basta comparar ese promedio con la diferencia entre los totales: si el promedio es mayor, el ganador cambia; si es menor, no.» Toca el `.Rmd` |
+| H2 | BAJA · visual: el residuo está mal declarado | El corte de la conclusión en dos renglones no es ocasional. Medido por el detractor con N = 100: «habría ⏎ ganado.» sale en 57 de 57 a 320 px; «habría ⏎ seguido ganando.», en 43 de 51 a 320 px y en 29 de 51 a 360 px. Las páginas con alguno de los dos son 84 de 100 a 320 px y 29 de 100 a 360 px. No se viola ninguna ley | Hay que corregir la declaración del residuo. Lo del espacio duro tras «habría» lo decide el profesor |
+| H3 | BAJA · cobertura del verificador | `mut_h1()` (línea 1541) da `cazado_por_su_sonda` aunque fallen también otras componentes, así que MC50, MC51 y MC54 no siguen la convención `_y_otra`. La componente «marca» (línea 748) lee `en$sol_p6` y no el `exsolution` emitido, aunque el comentario de la línea 712 diga lo contrario. El detractor comprobó aparte que las conclusiones coinciden con el `exsolution` emitido en 205 de 205 | Endurecer, autónomo (H-5). El coordinador lo comprobó en el código (líneas 1541-1542 y 748) |
+
+Comprobado por el detractor, sin hallazgo:
+- la verdad del párrafo nuevo en 205 versiones: 410 comparaciones y 410 conclusiones, con el contrafactual calculado desde la
+  tabla que se muestra;
+- los tiempos: «no le habría alcanzado» es correcto, y el «no le alcanzaría» de la decisión iba como ejemplo;
+- L-6 y las reglas #19 y #25;
+- la guarda «H1 r4» (MC52) y el control exacto de H1-Sol;
+- MC39, con su línea base;
+- la invariancia, en 100 semillas;
+- la CORRECCIÓN de las seis partes en 205 versiones: de 5 251 igualdades, ninguna falsa; la canónica, 20 de 20.
+
+Además dejó la lista de lo que tiene que comprobar el oráculo r10 del paso 8.
+
+### Decisión del profesor tras la FASE 2C r5 del CLOZE (2026-11-03)
+
+> **Firmada por el profesor el 2026-11-03** y transmitida por el coordinador. Respuestas literales: H1 «Corregir ahora
+> (Recomendada)»; H2 «Solo declararlo (Recomendada)»; commit «Sí, ahora (Recomendada)». Regla #24 **H-5**: queda por escrito quién
+> decidió, cuándo y con qué cifras.
+
+1. **H1 se corrige ahora, con una sola frase.** El criterio general pasa a decir: «Por eso, con un curso más o uno menos, basta
+   comparar ese promedio con la diferencia entre los totales: si el promedio es mayor, el ganador cambia; si es menor, no.» Toca
+   el `.Rmd`, así que lleva una tanda C1c (reapertura desde `generacion_rmd`, pasos 3 a 6 y 6b) y una FASE 2C r6 con un detractor
+   nuevo.
+   - **Regla de parada, aceptada con esta opción:** si la r6 solo trae BAJAs de redacción de este párrafo, quedan como residuo
+     declarado. Es la tercera redacción que se marca en el párrafo (H3 de la r3, H1 de la r4 y H1 de la r5). Una CORRECCIÓN se
+     corrige siempre.
+2. **H2 queda como residuo, con su frecuencia real.** El `.Rmd` no cambia por esto, y no se pone espacio duro tras «habría».
+   - Cifras del detractor (N = 100, sobre `6f6f1b13`): «habría ⏎ ganado.», 57 de 57 a 320 px y 0 de 57 a 360 px; «habría ⏎ seguido
+     ganando.», 43 de 51 a 320 px y 29 de 51 a 360 px; páginas con alguno de los dos, 84 de 100 a 320 px y 29 de 100 a 360 px.
+     Además, «no le ⏎ habría alcanzado», 43 de 43 a 320 px, y «habría ⏎ sumado», 100 de 100 a 320 px y 41 de 100 a 360 px.
+   - Esto corrige la declaración de la tanda C1b, que decía «puede partir» y «no se midió su frecuencia». La 6b de la C1c mide las
+     mismas cifras sobre el md5 final.
+3. **H3 (verificador) lo aplica la tanda C1c,** porque endurece (H-5).
+4. **Commit y push de la C1b,** con la evidencia de la r4 y la r5, antes de la C1c.

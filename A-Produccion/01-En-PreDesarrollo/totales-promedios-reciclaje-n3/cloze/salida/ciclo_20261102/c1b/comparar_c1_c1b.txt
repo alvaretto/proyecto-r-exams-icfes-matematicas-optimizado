@@ -1,0 +1,38 @@
+c1: 1410 líneas (1401 comparables) · c1b: 1434 líneas (1401 comparables)
+apartadas en c1b: 33
+    Versión verificada: totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd · md5 6f6f1b1311b0d681bd974c719ecd75d5
+      OK: C1b · H1-Sol, párrafo «Parte 6.» de la Solution (100 versiones), leído del texto: comparaciones falsas 0 · cifra o grado que no son los de la tabla 0 · conclusión que no se sigue del «más» o «menos» 0 · conclusión contra la 
+      OK: C1b · H1-Sol, control exacto: 200 comparaciones con cifras (esperadas 200), 100 con «un curso más» y 100 con «un curso menos» (esperadas 100 y 100); por rama: «un curso más» y «más» 57, «un curso más» y «menos» 43, «un curso
+      OK: MC52 (hp_supera compara el promedio del grado que ganó con la diferencia) cazado por su sonda en la semilla 5
+         id   veredicto           semilla
+    MC52 MC52 cazado_por_su_sonda 5
+    MC52 H1 r4: la comparación de la Solution de la Parte 6 coincide
+      OK: MC39 (L-C7, «o que pase de su cifra»: BP_gano gana «perdió hubiera tenido»): CURSOS · P6-V «perdió hubiera tenido»c ventaja +25.0 pp (firmada +12.5, tope +25.0; línea base +12.5, «cubierto») -> pendiente con la regla por reg
+      OK: MC50 («un curso más» dice «menos» también cuando el promedio supera la diferencia): falsa +57, concl +57; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100) — cazado_por_su_sonda 
+      OK: MC51 (vuelve a la redacción de 27f789dc): falsa +43, marca +43; control: 100 comparaciones (100 «un curso más», 0 «un curso menos»; esperadas 200, 100 y 100) — cazado_por_su_sonda_y_control (esperado: cazado_por_su_sonda_y_c
+      OK: MC53 («un curso más»: espacio normal entre la diferencia y «kilos»): esp +100; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100) — cazado_por_su_sonda (esperado: cazado_por_su_so
+      OK: MC54 («un curso más» cita el promedio del grado que ganó): falsa +30, cifra +100; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100) — cazado_por_su_sonda (esperado: cazado_por_su
+         id   veredicto
+    MC52 MC52 cazado_por_su_sonda
+    MC39 MC39 cazado_por_su_sonda_y_otra
+    MC50 MC50 cazado_por_su_sonda
+    MC51 MC51 cazado_por_su_sonda_y_control
+    MC53 MC53 cazado_por_su_sonda
+    MC54 MC54 cazado_por_su_sonda
+    MC52 H1 r4: la comparación de la Solution de la Parte 6 coincide
+    MC39 L-C7: regla de la lista por encima de su cifra, bajo el tope de su estrato
+    MC50 C1b · H1-Sol: falsa
+    MC51 C1b · H1-Sol: falsa
+    MC53 C1b · H1-Sol: esp
+    MC54 C1b · H1-Sol: cifra
+    MC52 H1 r4: la comparación de la Solution de la Parte 6 coincide con los veredictos sorteados d
+    MC39 CURSOS · P6-V «perdió hubiera tenido»c ventaja +25.0 pp (firmada +12.5, tope +25.0; línea base +12.5, «cubierto») -> pendiente con la regla por regla; cubierta con la de estrato; PROMEDIO · P6-V «perdió hubiera tenido» ventaj
+    MC50 falsa +57, concl +57; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100)
+    MC51 falsa +43, marca +43; control: 100 comparaciones (100 «un curso más», 0 «un curso menos»; esperadas 200, 100 y 100)
+    MC53 esp +100; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100)
+    MC54 falsa +30, cifra +100; control: 200 comparaciones (100 «un curso más», 100 «un curso menos»; esperadas 200, 100 y 100)
+    === RESULTADO: EN ROJO BAJO OVERRIDE FIRMADO (368 cifras dentro de lo firmado: «O-1 corregido», X6, X9, X10 y X11 en la canónica, la canónica de la Parte 1 por la decisión 2 a H2 por «H2 a», y la Parte 2 y la regla por palabra de 
+    exit=4 segundos=472 fin=16:41:03
+diferencias fuera de lo apartado: 0
+=== RESULTADO: EN ROJO BAJO OVERRIDE FIRMADO (368 cifras dentro de lo firmado: «O-1 corregido», X6, X9, X10 y X11 en la canónica, la canónica de la Parte 1 por la decisión 2 a H2 por «H2 a», y la Parte 2 y la regla por palabra de la Parte 6 firmada regla por regla por la decisión «Va», y la firma de la S2d extendida a la Parte 1; 0 fallos, 0 pendientes) ===
+exit=4 segundos=472 fin=16:41:03

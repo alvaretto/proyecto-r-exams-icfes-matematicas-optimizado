@@ -1,0 +1,105 @@
+versiones: 205 · canónicas (tabla del impreso): 20 · canónicas = impreso: 20 
+  concl_FALSE_FALSE = 69
+  concl_FALSE_TRUE = 39
+  concl_TRUE_FALSE = 30
+  concl_TRUE_TRUE = 67
+  fb_ganador = 205
+  fb_hg = 205
+  fb_hp = 205
+  fb_ventaja = 205
+  igualdades = 5251
+  p6_cmp_RE_CMP_nuevo = 410
+  p6_esp_normal = 0
+  rama2_CURSOS_hpFALSE_hgFALSE = 33
+  rama2_CURSOS_hpTRUE_hgFALSE = 30
+  rama2_CURSOS_hpTRUE_hgTRUE = 34
+  rama2_PROMEDIO_hpFALSE_hgFALSE = 36
+  rama2_PROMEDIO_hpFALSE_hgTRUE = 39
+  rama2_PROMEDIO_hpTRUE_hgTRUE = 33
+  ramas_más_más = 67
+  ramas_más_menos = 30
+  ramas_menos_más = 39
+  ramas_menos_menos = 69
+FALLOS: 0 
+
+== Esqueletos de la Parte 1 (rama | verdad | texto) ==
+  46  PROMEDIO | v=FALSE | la sede <L> ganó el concurso porque, aunque su promedio fue menor, participaron más cursos y su total fue más alto que el de la sede <W> en <N> kilos.
+  41  CURSOS | v=FALSE | la sede <L> ganó el concurso porque tuvo mayor promedio y, aunque participaron menos cursos, su total fue más alto que el de la sede <W> en <N> kilos.
+  39  PROMEDIO | v=FALSE | la sede <L> ganó el concurso porque participaron más cursos y, aunque el promedio fue menor, su total fue más alto que el de la sede <W> en <N> kilos.
+  31  CURSOS | v=FALSE | la sede <L> ganó el concurso porque, aunque participaron menos cursos, tuvo mayor promedio y su total fue más alto que el de la sede <W> en <N> kilos.
+  29  CURSOS | v=TRUE | la sede <W> ganó el concurso porque participaron más cursos y, aunque el promedio fue menor, su total fue más alto que el de la sede <L> en <N> kilos.
+  27  PROMEDIO | v=FALSE | la sede <L> ganó el concurso porque en sus cursos hay más alumnos para recoger, y por eso su total fue más alto que el de la sede <W> en <N> kilos.
+  26  PROMEDIO | v=TRUE | la sede <W> ganó el concurso porque, aunque participaron menos cursos, tuvo mayor promedio y su total fue más alto que el de la sede <L> en <N> kilos.
+  25  PROMEDIO | v=FALSE | la sede <W> ganó el concurso porque, después de juntar lo que recogieron todos sus cursos, su total fue más alto que el de la sede <L> en <N> kilos.
+  24  CURSOS | v=FALSE | la sede <L> ganó el concurso porque, al sumar solo lo que recogieron sus cursos más grandes, su total fue más alto que el de la sede <W> en <N> kilos.
+  24  CURSOS | v=FALSE | la sede <W> ganó el concurso porque, después de juntar lo que recogieron todos sus cursos, su total fue más alto que el de la sede <L> en <N> kilos.
+  24  PROMEDIO | v=FALSE | la sede <L> ganó el concurso porque sus cursos reciclaron durante más días que los demás, y su total fue más alto que el de la sede <W> en <N> kilos.
+  24  PROMEDIO | v=FALSE | la sede <W> ganó el concurso porque, al sumar lo que recogieron todos y cada uno de sus cursos, su total fue más alto que el de la sede <L> en <N> kilos.
+  23  PROMEDIO | v=TRUE | la sede <W> ganó el concurso porque tuvo mayor promedio y, aunque participaron menos cursos, su total fue más alto que el de la sede <L> en <N> kilos.
+  22  CURSOS | v=FALSE | la sede <L> ganó el concurso porque sus cursos reciclaron durante más días que los demás, y su total fue más alto que el de la sede <W> en <N> kilos.
+  22  PROMEDIO | v=FALSE | la sede <L> ganó el concurso porque en ella hubo un curso que recogió más que los otros, y su total fue más alto que el de la sede <W> en <N> kilos.
+  22  PROMEDIO | v=FALSE | la sede <W> ganó el concurso porque, aunque participaron menos cursos, tuvo mayor promedio y su total fue más alto que el de la sede <L> en <N> kilos.
+  21  CURSOS | v=FALSE | la sede <W> ganó el concurso porque, al sumar lo que recogieron todos y cada uno de sus cursos, su total fue más alto que el de la sede <L> en <N> kilos.
+  20  CURSOS | v=FALSE | la sede <L> ganó el concurso porque en ella hubo un curso que recogió más que los otros, aumentando la cantidad de papel recogida en todo el colegio.
+  20  CURSOS | v=FALSE | la sede <L> ganó porque, aunque participaron menos cursos, tuvo mayor promedio con <N> kilos de más.
+  20  CURSOS | v=FALSE | la sede <W> ganó el concurso porque recogió <N> kilos más que la sede de <L>.
+  20  CURSOS | v=TRUE | la sede <W> ganó el concurso porque participaron más cursos y aunque el promedio fue menor, el total fue de <N> kilos más.
+  18  PROMEDIO | v=TRUE | la sede <W> ganó el concurso porque, al sumar lo que recogieron todos y cada uno de sus cursos, su total fue más alto que el de la sede <L> en <N> kilos.
+  18  PROMEDIO | v=TRUE | la sede <W> ganó el concurso porque, después de juntar lo que recogieron todos sus cursos, su total fue más alto que el de la sede <L> en <N> kilos.
+  17  CURSOS | v=FALSE | la sede <L> ganó el concurso porque en ella hubo un curso que recogió más que los otros, y su total fue más alto que el de la sede <W> en <N> kilos.
+  17  CURSOS | v=FALSE | la sede <W> ganó el concurso porque, aunque su promedio fue menor, participaron más cursos y su total fue más alto que el de la sede <L> en <N> kilos.
+  16  CURSOS | v=TRUE | la sede <W> ganó el concurso porque, aunque su promedio fue menor, participaron más cursos y su total fue más alto que el de la sede <L> en <N> kilos.
+  14  CURSOS | v=TRUE | la sede <W> ganó el concurso porque, al sumar lo que recogieron todos y cada uno de sus cursos, su total fue más alto que el de la sede <L> en <N> kilos.
+  14  PROMEDIO | v=FALSE | la sede <W> ganó el concurso porque tuvo mayor promedio y, aunque participaron menos cursos, su total fue más alto que el de la sede <L> en <N> kilos.
+  13  CURSOS | v=TRUE | la sede <W> ganó el concurso porque, después de juntar lo que recogieron todos sus cursos, su total fue más alto que el de la sede <L> en <N> kilos.
+  13  PROMEDIO | v=FALSE | la jornada de la <L> ganó el concurso porque, aunque su promedio fue menor, participaron más cursos y su total fue más alto que el de la jornada de la <W> en <N> kilos.
+  12  PROMEDIO | v=FALSE | la sede <L> ganó el concurso porque, al sumar solo lo que recogieron sus cursos más grandes, su total fue más alto que el de la sede <W> en <N> kilos.
+  11  PROMEDIO | v=FALSE | la jornada de la <W> ganó el concurso porque, al sumar lo que recogieron todos y cada uno de sus cursos, su total fue más alto que el de la jornada de la <L> en <N> kilos.
+  10  CURSOS | v=FALSE | la sede <W> ganó el concurso porque participaron más cursos y, aunque el promedio fue menor, su total fue más alto que el de la sede <L> en <N> kilos.
+  10  PROMEDIO | v=FALSE | la jornada de la <L> ganó el concurso porque en ella hubo un curso que recogió más que los otros, y su total fue más alto que el de la jornada de la <W> en <N> kilos.
+  10  PROMEDIO | v=FALSE | la jornada de la <L> ganó el concurso porque participaron más cursos y, aunque el promedio fue menor, su total fue más alto que el de la jornada de la <W> en <N> kilos.
+  10  PROMEDIO | v=TRUE | la jornada de la <W> ganó el concurso porque tuvo mayor promedio y, aunque participaron menos cursos, su total fue más alto que el de la jornada de la <L> en <N> kilos.
+   9  CURSOS | v=FALSE | la sede <L> ganó el concurso porque en sus cursos hay más alumnos para recoger, y por eso su total fue más alto que el de la sede <W> en <N> kilos.
+   8  PROMEDIO | v=FALSE | la jornada de la <L> ganó el concurso porque sus cursos reciclaron durante más días que los demás, y su total fue más alto que el de la jornada de la <W> en <N> kilos.
+   6  PROMEDIO | v=TRUE | la jornada de la <W> ganó el concurso porque, aunque participaron menos cursos, tuvo mayor promedio y su total fue más alto que el de la jornada de la <L> en <N> kilos.
+   5  PROMEDIO | v=FALSE | la jornada de la <W> ganó el concurso porque, después de juntar lo que recogieron todos sus cursos, su total fue más alto que el de la jornada de la <L> en <N> kilos.
+   4  PROMEDIO | v=FALSE | la jornada de la <W> ganó el concurso porque tuvo mayor promedio y, aunque participaron menos cursos, su total fue más alto que el de la jornada de la <L> en <N> kilos.
+   4  PROMEDIO | v=TRUE | la jornada de la <W> ganó el concurso porque, al sumar lo que recogieron todos y cada uno de sus cursos, su total fue más alto que el de la jornada de la <L> en <N> kilos.
+   3  CURSOS | v=FALSE | la jornada de la <L> ganó el concurso porque, aunque participaron menos cursos, tuvo mayor promedio y su total fue más alto que el de la jornada de la <W> en <N> kilos.
+   3  CURSOS | v=FALSE | la jornada de la <W> ganó el concurso porque, al sumar lo que recogieron todos y cada uno de sus cursos, su total fue más alto que el de la jornada de la <L> en <N> kilos.
+   3  PROMEDIO | v=FALSE | la jornada de la <L> ganó el concurso porque en sus cursos hay más alumnos para recoger, y por eso su total fue más alto que el de la jornada de la <W> en <N> kilos.
+   3  PROMEDIO | v=FALSE | la jornada de la <W> ganó el concurso porque, aunque participaron menos cursos, tuvo mayor promedio y su total fue más alto que el de la jornada de la <L> en <N> kilos.
+   3  PROMEDIO | v=TRUE | la jornada de la <W> ganó el concurso porque, después de juntar lo que recogieron todos sus cursos, su total fue más alto que el de la jornada de la <L> en <N> kilos.
+   2  CURSOS | v=FALSE | la jornada de la <L> ganó el concurso porque en sus cursos hay más alumnos para recoger, y por eso su total fue más alto que el de la jornada de la <W> en <N> kilos.
+   2  CURSOS | v=FALSE | la jornada de la <L> ganó el concurso porque tuvo mayor promedio y, aunque participaron menos cursos, su total fue más alto que el de la jornada de la <W> en <N> kilos.
+   2  CURSOS | v=FALSE | la jornada de la <W> ganó el concurso porque participaron más cursos y, aunque el promedio fue menor, su total fue más alto que el de la jornada de la <L> en <N> kilos.
+   2  CURSOS | v=TRUE | la jornada de la <W> ganó el concurso porque participaron más cursos y, aunque el promedio fue menor, su total fue más alto que el de la jornada de la <L> en <N> kilos.
+   2  CURSOS | v=TRUE | la jornada de la <W> ganó el concurso porque, al sumar lo que recogieron todos y cada uno de sus cursos, su total fue más alto que el de la jornada de la <L> en <N> kilos.
+   2  PROMEDIO | v=FALSE | la jornada de la <L> ganó el concurso porque, al sumar solo lo que recogieron sus cursos más grandes, su total fue más alto que el de la jornada de la <W> en <N> kilos.
+   1  CURSOS | v=FALSE | la jornada de la <L> ganó el concurso porque en ella hubo un curso que recogió más que los otros, y su total fue más alto que el de la jornada de la <W> en <N> kilos.
+   1  CURSOS | v=FALSE | la jornada de la <L> ganó el concurso porque sus cursos reciclaron durante más días que los demás, y su total fue más alto que el de la jornada de la <W> en <N> kilos.
+   1  CURSOS | v=FALSE | la jornada de la <L> ganó el concurso porque, al sumar solo lo que recogieron sus cursos más grandes, su total fue más alto que el de la jornada de la <W> en <N> kilos.
+   1  CURSOS | v=TRUE | la jornada de la <W> ganó el concurso porque, aunque su promedio fue menor, participaron más cursos y su total fue más alto que el de la jornada de la <L> en <N> kilos.
+
+Invariancia 6f6f1b13 vs 27f789dc (100 semillas): diferencias 200 
+1 meta file
+1 cifras del párrafo
+2 meta file
+2 cifras del párrafo
+3 meta file
+3 cifras del párrafo
+4 meta file
+4 cifras del párrafo
+5 meta file
+5 cifras del párrafo
+6 meta file
+6 cifras del párrafo
+7 meta file
+7 cifras del párrafo
+8 meta file
+8 cifras del párrafo
+9 meta file
+9 cifras del párrafo
+10 meta file
+10 cifras del párrafo
+RE_CMP de la sonda H1-Sol sobre la redacción vieja: comparaciones reconocidas 100 en 100 versiones

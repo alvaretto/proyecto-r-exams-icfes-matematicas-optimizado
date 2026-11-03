@@ -1,0 +1,25 @@
+937a938,944
+> ## H1 de la FASE 2C r4 (tanda C1b, decisión del profesor del 2026-11-03 «Reescribir ahora (Recomendada)»): la Solution de
+> ## la Parte 6 resuelve cada comparación con las cifras de la versión. La comparación sale de los datos y tiene que
+> ## coincidir con los veredictos sorteados de HP y HG (los empates los excluye «Parte 6: hipótesis sin empate»). MC52.
+> hp_supera <- dp$aP > dp$D
+> hg_supera <- dp$aG > dp$D
+> stopifnot("H1 r4: la comparación de la Solution de la Parte 6 coincide con los veredictos sorteados de HP y HG" =
+>             hp_supera == v_hp && hg_supera == v_hg)
+1055a1063,1065
+> ## H1 de la FASE 2C r4 (tanda C1b, 2026-11-03): cada comparación con cifras de la versión va resuelta con los datos
+> ## (hp_supera y hg_supera, del data_generation) y lleva la conclusión que se sigue; el criterio general va sin cifras.
+> ## Las dos últimas palabras llevan el espacio duro: el párrafo no termina con una palabra sola en su último renglón.
+1057,1060c1067,1073
+<     "promedio al total, y un curso menos lo resta. Por eso el grado ", per_par, " habría ganado con un curso más ",
+<     "si y solo si su promedio por curso, ", dp$aP, ED, "kilos, es mayor que la diferencia, ", dp$D, ED, "kilos; y el grado ",
+<     gan_par, " habría perdido con un curso menos si y solo si su promedio, ", dp$aG, ED, "kilos, es mayor que esa ",
+<     "diferencia.\n\n", sep = "")
+---
+>     "promedio al total, y un curso menos lo resta. Por eso basta comparar ese promedio con la diferencia entre los ",
+>     "totales: si es mayor, el ganador cambia; si es menor, no. Con un curso más, el grado ", per_par,
+>     " habría sumado a su total ", dp$aP, ED, "kilos, ", if (hp_supera) "más" else "menos", " que la diferencia de ",
+>     dp$D, ED, "kilos: ", if (hp_supera) "habría ganado" else "no le habría alcanzado para ganar",
+>     ". Con un curso menos, el grado ", gan_par, " habría restado a su total ", dp$aG, ED, "kilos, ",
+>     if (hg_supera) "más" else "menos", " que la diferencia de ", dp$D, ED, "kilos: ",
+>     if (hg_supera) paste0("habría", ED, "perdido") else paste0("habría seguido", ED, "ganando"), ".\n\n", sep = "")

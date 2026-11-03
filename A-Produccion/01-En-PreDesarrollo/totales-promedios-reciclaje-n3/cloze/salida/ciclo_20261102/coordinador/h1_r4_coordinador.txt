@@ -1,0 +1,8 @@
+md5 del .Rmd: 27f789dc6327f7d6bda72cded61502cd · semillas 1 a 100
+versiones leídas: 100 
+empates (aP == D o aG == D): 0 
+«su promedio por curso … es mayor que la diferencia» (HP) falsa como enunciado suelto: 43 
+«su promedio … es mayor que esa diferencia» (HG) falsa como enunciado suelto: 51 
+al menos una de las dos falsa: 62 de 100 (62 %)
+las dos verdaderas: 38 · las dos falsas: 32 
+ejemplo (semilla 10): «su promedio por curso, 27 kilos, es mayor que la diferencia, 33 kilos»

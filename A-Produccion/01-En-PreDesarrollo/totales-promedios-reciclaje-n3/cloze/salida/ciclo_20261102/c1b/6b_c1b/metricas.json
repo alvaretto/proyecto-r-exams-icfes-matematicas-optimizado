@@ -1,0 +1,261 @@
+{
+ "nuevo_360": {
+  "H_sum": 814482,
+  "P1|El-Bosque(tabla)|n": 24,
+  "P1|El-Bosque(tabla)|sp": 0,
+  "P1|El-Bosque|n": 475,
+  "P1|El-Bosque|sp": 0,
+  "P1|cifra-unidad(tabla)|n": 400,
+  "P1|cifra-unidad(tabla)|sp": 0,
+  "P1|cifra-unidad|n": 2003,
+  "P1|cifra-unidad|sp": 0,
+  "P1|espacio-inicial|n": 1005,
+  "P1|espacio-inicial|sp": 0,
+  "P1|formula-unidad-dentro|n": 1158,
+  "P1|formula-unidad-dentro|sp": 0,
+  "P1|signo-tras-otro|n": 100,
+  "P1|signo-tras-otro|sp": 0,
+  "R|cifra-unidad(tabla)|n": 400,
+  "R|cifra-unidad(tabla)|sp": 0,
+  "R|cifra-unidad|n": 1455,
+  "R|cifra-unidad|sp": 0,
+  "R|espacio-inicial|n": 1249,
+  "R|espacio-inicial|sp": 263,
+  "R|formula-unidad|n": 1249,
+  "R|formula-unidad|sp": 263,
+  "mathSplit": 0,
+  "p6_kcut": 0,
+  "p6_kn": 400,
+  "p6_lastTok1": 35,
+  "p6_lastWords1": 0,
+  "p6_nb": 500,
+  "p6_ovf": 0,
+  "p6_tokSplit": 0,
+  "semillas": 100,
+  "spills": 0,
+  "tablas_fuera": 0,
+  "tablas_scroll": 0
+ },
+ "nuevo_360_p6": {
+  "renglones_media": 13.51,
+  "renglones_min": 13,
+  "renglones_max": 14,
+  "hist_renglones": {
+   "13": 49,
+   "14": 51
+  },
+  "hist_palabras_ultimo": {
+   "2": 35,
+   "4": 26,
+   "5": 5,
+   "6": 33,
+   "7": 1
+  },
+  "ejemplos_ultimo": [
+   [
+    1,
+    "37 kilos: habría perdido."
+   ],
+   [
+    2,
+    "15 kilos: habría perdido."
+   ],
+   [
+    3,
+    "11 kilos: habría perdido."
+   ]
+  ]
+ },
+ "nuevo_320": {
+  "H_sum": 925422,
+  "P1|El-Bosque(tabla)|n": 24,
+  "P1|El-Bosque(tabla)|sp": 0,
+  "P1|El-Bosque|n": 475,
+  "P1|El-Bosque|sp": 0,
+  "P1|cifra-unidad(tabla)|n": 400,
+  "P1|cifra-unidad(tabla)|sp": 0,
+  "P1|cifra-unidad|n": 2003,
+  "P1|cifra-unidad|sp": 0,
+  "P1|espacio-inicial|n": 1005,
+  "P1|espacio-inicial|sp": 0,
+  "P1|formula-unidad-dentro|n": 1158,
+  "P1|formula-unidad-dentro|sp": 0,
+  "P1|signo-tras-otro|n": 100,
+  "P1|signo-tras-otro|sp": 0,
+  "R|cifra-unidad(tabla)|n": 400,
+  "R|cifra-unidad(tabla)|sp": 0,
+  "R|cifra-unidad|n": 1455,
+  "R|cifra-unidad|sp": 0,
+  "R|espacio-inicial|n": 1249,
+  "R|espacio-inicial|sp": 209,
+  "R|formula-unidad|n": 1249,
+  "R|formula-unidad|sp": 209,
+  "mathSplit": 0,
+  "p6_kcut": 0,
+  "p6_kn": 400,
+  "p6_lastTok1": 54,
+  "p6_lastWords1": 0,
+  "p6_nb": 500,
+  "p6_ovf": 0,
+  "p6_tokSplit": 0,
+  "semillas": 100,
+  "spills": 0,
+  "tablas_fuera": 0,
+  "tablas_scroll": 0
+ },
+ "nuevo_320_p6": {
+  "renglones_media": 15.59,
+  "renglones_min": 15,
+  "renglones_max": 16,
+  "hist_renglones": {
+   "15": 41,
+   "16": 59
+  },
+  "hist_palabras_ultimo": {
+   "2": 54,
+   "3": 5,
+   "4": 9,
+   "5": 32
+  },
+  "ejemplos_ultimo": [
+   [
+    1,
+    "de 37 kilos: habría perdido."
+   ],
+   [
+    2,
+    "de 15 kilos: habría perdido."
+   ],
+   [
+    3,
+    "de 11 kilos: habría perdido."
+   ]
+  ]
+ },
+ "ref_360": {
+  "H_sum": 809946,
+  "P1|El-Bosque(tabla)|n": 24,
+  "P1|El-Bosque(tabla)|sp": 0,
+  "P1|El-Bosque|n": 475,
+  "P1|El-Bosque|sp": 0,
+  "P1|cifra-unidad(tabla)|n": 400,
+  "P1|cifra-unidad(tabla)|sp": 0,
+  "P1|cifra-unidad|n": 2003,
+  "P1|cifra-unidad|sp": 0,
+  "P1|espacio-inicial|n": 1005,
+  "P1|espacio-inicial|sp": 0,
+  "P1|formula-unidad-dentro|n": 1158,
+  "P1|formula-unidad-dentro|sp": 0,
+  "P1|signo-tras-otro|n": 100,
+  "P1|signo-tras-otro|sp": 0,
+  "R|cifra-unidad(tabla)|n": 400,
+  "R|cifra-unidad(tabla)|sp": 0,
+  "R|cifra-unidad|n": 1355,
+  "R|cifra-unidad|sp": 0,
+  "R|espacio-inicial|n": 1249,
+  "R|espacio-inicial|sp": 263,
+  "R|formula-unidad|n": 1249,
+  "R|formula-unidad|sp": 263,
+  "mathSplit": 0,
+  "p6_kcut": 0,
+  "p6_kn": 300,
+  "p6_lastTok1": 99,
+  "p6_lastWords1": 99,
+  "p6_nb": 300,
+  "p6_ovf": 0,
+  "p6_tokSplit": 0,
+  "semillas": 100,
+  "spills": 0,
+  "tablas_fuera": 0,
+  "tablas_scroll": 0
+ },
+ "ref_360_p6": {
+  "renglones_media": 10.99,
+  "renglones_min": 10,
+  "renglones_max": 11,
+  "hist_renglones": {
+   "11": 99,
+   "10": 1
+  },
+  "hist_palabras_ultimo": {
+   "1": 99,
+   "7": 1
+  },
+  "ejemplos_ultimo": [
+   [
+    1,
+    "diferencia."
+   ],
+   [
+    2,
+    "diferencia."
+   ],
+   [
+    3,
+    "diferencia."
+   ]
+  ]
+ },
+ "ref_320": {
+  "H_sum": 918960,
+  "P1|El-Bosque(tabla)|n": 24,
+  "P1|El-Bosque(tabla)|sp": 0,
+  "P1|El-Bosque|n": 475,
+  "P1|El-Bosque|sp": 0,
+  "P1|cifra-unidad(tabla)|n": 400,
+  "P1|cifra-unidad(tabla)|sp": 0,
+  "P1|cifra-unidad|n": 2003,
+  "P1|cifra-unidad|sp": 0,
+  "P1|espacio-inicial|n": 1005,
+  "P1|espacio-inicial|sp": 0,
+  "P1|formula-unidad-dentro|n": 1158,
+  "P1|formula-unidad-dentro|sp": 0,
+  "P1|signo-tras-otro|n": 100,
+  "P1|signo-tras-otro|sp": 0,
+  "R|cifra-unidad(tabla)|n": 400,
+  "R|cifra-unidad(tabla)|sp": 0,
+  "R|cifra-unidad|n": 1355,
+  "R|cifra-unidad|sp": 0,
+  "R|espacio-inicial|n": 1249,
+  "R|espacio-inicial|sp": 209,
+  "R|formula-unidad|n": 1249,
+  "R|formula-unidad|sp": 209,
+  "mathSplit": 0,
+  "p6_kcut": 0,
+  "p6_kn": 300,
+  "p6_lastTok1": 0,
+  "p6_lastWords1": 0,
+  "p6_nb": 300,
+  "p6_ovf": 0,
+  "p6_tokSplit": 0,
+  "semillas": 100,
+  "spills": 0,
+  "tablas_fuera": 0,
+  "tablas_scroll": 0
+ },
+ "ref_320_p6": {
+  "renglones_media": 12.0,
+  "renglones_min": 12,
+  "renglones_max": 12,
+  "hist_renglones": {
+   "12": 100
+  },
+  "hist_palabras_ultimo": {
+   "3": 100
+  },
+  "ejemplos_ultimo": [
+   [
+    1,
+    "que esa diferencia."
+   ],
+   [
+    2,
+    "que esa diferencia."
+   ],
+   [
+    3,
+    "que esa diferencia."
+   ]
+  ]
+ }
+}

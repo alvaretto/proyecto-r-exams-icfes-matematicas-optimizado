@@ -628,3 +628,40 @@ nuevo y el pendiente del SCHOICE. Los puntos de abajo son historia: ya están cu
   13:30). El SCHOICE no se tocó (`63e2713e`, verificador `031d4726`, 11/11).
 - El diff fuera del bloque lo revisé y contiene los comentarios, dos U+00A0 literales pasados a escape, L-6 en la prosa de la
   Parte 1 y H3 en indicativo.
+
+## Tanda C1b del ciclo 2026-11-02 (2026-11-03): H1 y H2 de la FASE 2C r4, 6/11 (registro completo en `../.claude/CLAUDE.md`)
+
+> **Este bloque manda sobre el de la tanda C1 y sobre el «Estado» de arriba.** Reapertura #6 desde `generacion_rmd` (16:27:09).
+> `.Rmd`: `27f789dc…` → **`6f6f1b1311b0d681bd974c719ecd75d5`**. Verificador: `6e76321a…` → **`6d37faad687a5fc11e69b763429b6624`**.
+> Sin aprobar. Se detuvo antes de la FASE 2C r5. Evidencia: `salida/ciclo_20261102/c1b/`.
+
+- **Qué cambió (decisión del profesor del 2026-11-03, «Reescribir ahora (Recomendada)»).**
+  - El párrafo «Parte 6.» de la Solution: el criterio general queda sin cifras («basta comparar ese promedio con la diferencia
+    entre los totales: si es mayor, el ganador cambia; si es menor, no»), y cada comparación con cifras va resuelta con los datos
+    y con su conclusión. Por ejemplo, en la semilla 10: «Con un curso más, el grado séptimo habría sumado a su total 27 kilos,
+    menos que la diferencia de 33 kilos: no le habría alcanzado para ganar. Con un curso menos, el grado sexto habría restado a
+    su total 42 kilos, más que la diferencia de 33 kilos: habría perdido.»
+  - En el `data_generation`, `hp_supera` y `hg_supera` (la comparación, calculada con los datos) y un `stopifnot` que las ata a
+    `v_hp` y `v_hg`. Sin sorteos nuevos.
+- **Invariancia, semillas 1 a 1000** (`invariancia_c1b.txt`): `.Random.seed`, E1, los objetos y el `.Rmd` fuera de los dos
+  chunks, idénticos a `27f789dc`; la Solution, idéntica salvo el párrafo. En el párrafo nuevo, 2000 comparaciones, 0 falsas y 0
+  contra la marca. Control: en `27f789dc`, 656 de 1000 versiones tenían alguna comparación falsa leída suelta.
+- **Verificador:** exit 4, 368 cifras dentro de lo firmado, 0 fallos y 0 pendientes; ninguna línea distinta de la C1 fuera de las
+  añadidas (`comparar_c1_c1b.txt`). Sonda nueva H1-Sol (falsa, cifra, concl, marca, esp y el control exacto de dos comparaciones
+  por versión), con MC50, MC51, MC53 y MC54, y la guarda con MC52, todos cazados por su sonda (MC51 también por el control,
+  declarado). MC39 (H2): línea base «cubierto» a +12,5 pp y `cazado_por_su_sonda_y_otra`, con 33 pendientes nuevos fuera de `j39`.
+- **Sellos:** paso 3 a las 16:41:59, 4 a las 16:42:07, 5 a las 16:42:13 y 6 a las 16:42:23. Render en
+  `salida/ciclo_20261102/c1b/render_6f6f1b13/`; arsenal 0 errores y 6 advertencias, 2G 100/100, 2H 0 anomalías.
+- **6b pareada** (`auditor-visual-html`, sin `name:`): ver el bloque que sigue, cuando llegue.
+
+### Próximo paso (tanda C1b)
+
+1. FASE 2C r5 con un detractor NUEVO, sin `name:`. Qué debe auditar: `../.claude/CLAUDE.md` § «Ciclo 2026-11-02 del CLOZE,
+   tanda C1b».
+2. Tanda C2: el paso 8 con un oráculo r10 nuevo (H3 de la r4, con los seis puntos de su reporte), y los pasos 9 y 10.
+3. WAIT_USER #3 (paso 11): la aprobación anterior era de `f98f9dda`.
+
+**6b pareada de la tanda C1b: APTO_CON_OBSERVACIONES** (N = 100 por versión, a 360 y 320 px; informe en
+`salida/ciclo_20261102/c1b/6b_c1b/informe_6b_c1b_6f6f1b13.md`). «diferencia.» sola en el último renglón a 360 px: 99/100 en
+`27f789dc` → 0/100 en `6f6f1b13`; 0 cortes entre cifra y «kilos» (400 pares) y 0 desbordes; la Parte 1, idéntica y con 0 cortes de
+L-6. BAJO declarado: a 320 px, «habría | ganado.» puede partirse a mitad del párrafo (3 de 6 recortes; sin medir en las 100).
