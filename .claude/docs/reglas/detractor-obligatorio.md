@@ -722,6 +722,14 @@ Con el detractor obligatorio:
 - **Ya había pasado.** En la tanda 6 del mismo CLOZE, el reporte de la 6b llegó después de que el orquestador
   cerrara el suyo. Las definiciones de los orquestadores seguían diciendo «subagente bloqueante».
 - **Decisión:** el profesor aprobó las candidatas #3 y #5 de la tanda 9a el 2026-11-02 («Las tres, ahora»).
+- **El hook de citas ve también la entrega por `SubagentHandback` (2026-11-02).** `verificar_citas_detractor.py --hook`
+  leía solo el texto final. Un subagente puede entregar con la herramienta `SubagentHandback`, que lleva el reporte en
+  `input.message`, y entonces el hook corría, no veía el marcador, salía con 0 y no dejaba registro. Pasó con los
+  detractores r4 y r4b del SCHOICE de `totales-promedios-reciclaje-n3` (2026-10-29), y los cubrió la verificación manual
+  del coordinador. Ahora, si el texto no trae el marcador, el hook lee el último mensaje de la transcripción y evalúa el
+  handback. La norma no cambia. Guarda: `test_citas_detractor.R`, con una transcripción de handback que bloquea con citas
+  inventadas, registra la entrega con citas reales y un mutante sobre una copia que deja pasar el reporte sin evaluarlo.
+  Con la transcripción real del r4b, el hook nuevo evalúa sus 8 citas y el anterior no devuelve nada.
 
 ### Cambios v1.6 (2026-10-20) — citas verificables, con hook que no deja terminar
 - **Origen**: el 2026-06-16 un detractor reportó un «bug crítico» sobre una reconstrucción

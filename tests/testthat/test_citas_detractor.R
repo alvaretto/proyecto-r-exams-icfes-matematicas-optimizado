@@ -140,6 +140,72 @@ test_that("una entrada ilegible no bloquea (falla abierto)", {
   expect_equal(r$texto, "")
 })
 
+# --- Entrega por SubagentHandback (2026-11-02) ---------------------------------
+# Los detractores r4 y r4b del SCHOICE de totales-promedios-reciclaje-n3 (2026-10-29)
+# entregaron con la herramienta SubagentHandback: el reporte iba en input.message, el
+# hook solo leía el texto final, salió con 0 y no dejó registro. La transcripción de
+# abajo copia la forma de aquellos registros: un texto anterior y, al final, el handback.
+transcripcion_handback <- function(archivo) {
+  f <- tempfile("transcripcion-", fileext = ".jsonl")
+  rep <- paste(readLines(archivo, warn = FALSE), collapse = "\n")
+  regs <- list(
+    list(type = "assistant", message = list(role = "assistant",
+         content = list(list(type = "text", text = "Empiezo la auditoría.")))),
+    list(type = "user", message = list(role = "user",
+         content = list(list(type = "tool_result", tool_use_id = "t0", content = "ok")))),
+    list(type = "assistant", message = list(role = "assistant",
+         content = list(list(type = "tool_use", id = "t1", name = "SubagentHandback",
+                             input = list(message = rep)))))
+  )
+  writeLines(vapply(regs, function(r) as.character(jsonlite::toJSON(r, auto_unbox = TRUE)), ""), f)
+  f
+}
+entrada_handback <- function(transcripcion, agente) {
+  jsonlite::toJSON(list(hook_event_name = "SubagentStop", agent_id = agente, agent_type = "AgenteDetractor",
+                        cwd = repo_root, stop_hook_active = FALSE, last_assistant_message = "",
+                        agent_transcript_path = transcripcion), auto_unbox = TRUE)
+}
+
+test_that("un reporte entregado con SubagentHandback también se evalúa", {
+  skip_if_not_installed("jsonlite")
+  estado <- tempfile("citas-estado-")
+  dir.create(estado)
+  env <- c(paste0("CITAS_DETRACTOR_ESTADO=", estado), "CITAS_DETRACTOR_VENTANA=0")
+  r <- correr("--hook", input = entrada_handback(transcripcion_handback(reporte("inventada")), "agente-hb"), env = env)
+  expect_equal(jsonlite::fromJSON(r$texto)$decision, "block", info = r$texto)
+  r_ok <- correr("--hook", input = entrada_handback(transcripcion_handback(reporte("ok")), "agente-hb-ok"), env = env)
+  expect_equal(r_ok$texto, "")
+  expect_match(paste(readLines(file.path(estado, "citas-detractor.log")), collapse = "\n"),
+               "agente=agente-hb-ok .*ENTREGA VERIFICADA")
+})
+
+# Mutante sobre una COPIA: sin la lectura del handback, el mismo reporte inventado pasa sin
+# evaluarse y sin registro, como el 2026-10-29. Si el mutante bloqueara, el test de arriba no
+# probaría la lectura del handback.
+test_that("sin la lectura del handback, el reporte pasa sin evaluar (mutante)", {
+  skip_if_not_installed("jsonlite")
+  src <- readLines(SCRIPT, warn = FALSE)
+  i <- grep("p.get('name') == 'SubagentHandback'", src, fixed = TRUE)
+  expect_length(i, 1)
+  mut <- src
+  mut[i] <- sub("'SubagentHandback'", "'NoExiste'", mut[i], fixed = TRUE)
+  dir_m <- tempfile("citas-mut-")
+  dir.create(dir_m)
+  script_m <- file.path(dir_m, "verificar_citas_detractor.py")
+  writeLines(mut, script_m)
+  estado <- tempfile("citas-estado-")
+  dir.create(estado)
+  old <- setwd(repo_root)
+  on.exit(setwd(old), add = TRUE)
+  out <- suppressWarnings(system2(PY, c("-I", shQuote(script_m), "--hook"), stdout = TRUE, stderr = TRUE,
+    input = entrada_handback(transcripcion_handback(reporte("inventada")), "agente-mut"),
+    env = c(paste0("CITAS_DETRACTOR_ESTADO=", estado), "CITAS_DETRACTOR_VENTANA=0")))
+  expect_equal(paste(out, collapse = "\n"), "",
+    info = "MUTANTE no aislado: sin la lectura del handback debía dejar pasar el reporte")
+  expect_false(file.exists(file.path(estado, "citas-detractor.log")),
+    info = "sin la lectura del handback el hook no debía registrar nada")
+})
+
 # =============================================================================
 context("Cableado de la defensa (estático)")
 

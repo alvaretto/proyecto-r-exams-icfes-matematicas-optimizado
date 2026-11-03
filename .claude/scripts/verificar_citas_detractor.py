@@ -30,6 +30,10 @@ En modo --hook: si el último mensaje del subagente trae VEREDICTO_DETRACTOR y a
 verifica, responde {"decision": "block", "reason": …}: el subagente NO termina y recibe la
 lista de citas a corregir. Tope: 3 bloqueos por agente (luego deja terminar y lo registra).
 Estado y registro en $CITAS_DETRACTOR_ESTADO (por defecto ~/.claude/hooks/logs).
+El último mensaje puede ser texto o una llamada a la herramienta SubagentHandback, que lleva el
+reporte en input.message: se evalúan los dos (2026-11-02). Antes solo se leía el texto, y dos
+detractores del SCHOICE de totales-promedios-reciclaje-n3 entregaron por handback sin que el hook
+los viera ni lo registrara.
 """
 import hashlib
 import html
@@ -185,23 +189,44 @@ def formato_bloque():
             'VEREDICTO_DETRACTOR: …')
 
 
+def leer_transcripcion(ruta):
+    """Del registro de assistant más reciente con contenido, devuelve (texto, handback).
+
+    handback es el input.message de la herramienta SubagentHandback, si ese registro la trae.
+    Un subagente que entrega por handback no deja el reporte como texto, así que leer solo el
+    texto dejaba el reporte sin evaluar (2026-11-02).
+    """
+    try:
+        for raw in reversed(pathlib.Path(os.path.expanduser(ruta)).read_text().splitlines()):
+            d = json.loads(raw)
+            if d.get('type') != 'assistant':
+                continue
+            partes = d.get('message', {}).get('content', [])
+            if not isinstance(partes, list):
+                partes = [{'text': str(partes)}]
+            texto = ''.join(p.get('text', '') for p in partes if isinstance(p, dict))
+            handback = ''.join(str((p.get('input') or {}).get('message', '')) for p in partes
+                               if isinstance(p, dict) and p.get('type') == 'tool_use'
+                               and p.get('name') == 'SubagentHandback')
+            if texto or handback:
+                return texto, handback
+    except Exception:
+        pass
+    return '', ''
+
+
 def modo_hook():
     try:
         datos = json.load(sys.stdin)
     except Exception:
         return 0  # Entrada ilegible: no se bloquea (falla abierto, como pre-write-rmd-gate).
     mensaje = datos.get('last_assistant_message') or ''
-    if not mensaje and datos.get('agent_transcript_path'):
-        try:
-            for raw in reversed(pathlib.Path(os.path.expanduser(datos['agent_transcript_path'])).read_text().splitlines()):
-                d = json.loads(raw)
-                if d.get('type') == 'assistant':
-                    partes = d.get('message', {}).get('content', [])
-                    mensaje = ''.join(p.get('text', '') for p in partes if isinstance(p, dict))
-                    if mensaje:
-                        break
-        except Exception:
-            mensaje = ''
+    if MARCADOR not in mensaje and datos.get('agent_transcript_path'):
+        texto, handback = leer_transcripcion(datos['agent_transcript_path'])
+        if MARCADOR in handback:
+            mensaje = handback
+        elif not mensaje:
+            mensaje = texto
     if MARCADOR not in mensaje:
         return 0
     repo = raiz_repo(datos.get('cwd') or os.getcwd())

@@ -283,8 +283,9 @@ Rscript tests/testthat/test_post_exams2_cwd.R      # el ejercicio sale del .Rmd;
    - El cotejo literal de los `exextra` contra el catálogo canónico no lo certifica ningún validador del arsenal. Hay un
      modelo en `…/totales-promedios-reciclaje-n3/cloze/salida/literalidad_exextra_r9.py`; incorporarlo ampliaría el
      paso 10 de los dos orquestadores.
-10. **El hook de citas no ve un reporte entregado con `SubagentHandback`** (auditoría del 2026-11-02, pendiente de
-    decisión). `verificar_citas_detractor.py --hook` lee solo `last_assistant_message` o el último texto de la
+10. ~~**El hook de citas no ve un reporte entregado con `SubagentHandback`**~~. **Cerrado el 2026-11-02** («Arreglarlo
+    ahora», v3.36.1): el hook evalúa también el handback, con su guarda y su mutante en `test_citas_detractor.R`.
+    Diagnóstico original (auditoría del 2026-11-02): `verificar_citas_detractor.py --hook` lee solo `last_assistant_message` o el último texto de la
     transcripción. Los detractores r4 (19:47) y r4b (21:03) del SCHOICE de `totales-promedios-reciclaje-n3`, el
     2026-10-29, entregaron con la herramienta `SubagentHandback` (el reporte va en `input.message`). El hook corrió
     (`hook_success`), no vio el marcador, salió con 0 y no dejó registro. En los dos casos el coordinador verificó las
@@ -292,6 +293,8 @@ Rscript tests/testthat/test_post_exams2_cwd.R      # el ejercicio sale del .Rmd;
 
 ## Respaldos del día (fuera de git, regla #17)
 
+- `.claude/backups/2026-11-02-hook-handback/`: `verificar_citas_detractor.py` y `test_citas_detractor.R` antes del
+  arreglo del handback, con `sha256_antes.txt`.
 - `.claude/backups/2026-11-02-candidatas-9a/`: los dos orquestadores, la regla #9 (compacta e íntegra), el íntegro de
   la #22, el índice, su changelog y `test_contrato_entrega_orquestadores.R`, antes de `acdaac24`, con
   `sha256_antes.txt`.

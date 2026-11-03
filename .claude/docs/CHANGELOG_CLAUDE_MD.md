@@ -8,6 +8,25 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.36.1 (2026-11-02)
+
+- **Hook de citas de la regla #9: evalúa también el reporte entregado con `SubagentHandback`.** No cambia la norma ni la
+  versión compacta. Se añade a «Cambios v1.7» del texto íntegro.
+  - **Qué pasaba:** `verificar_citas_detractor.py --hook` leía solo el texto final del subagente. Un reporte entregado
+    con la herramienta `SubagentHandback` (en `input.message`) no tenía marcador a la vista, así que el hook salía con 0
+    sin evaluar nada ni dejar registro.
+  - **Origen:** la auditoría del sellado del SCHOICE de `totales-promedios-reciclaje-n3` (2026-11-02). Sus detractores r4
+    y r4b (2026-10-29) entregaron así, y los cubrió la verificación manual del coordinador (11 y 8 citas, sin problemas).
+  - **Arreglo:** si el texto no trae el marcador, el hook lee el último mensaje de la transcripción y evalúa el handback.
+  - **Guarda:** `test_citas_detractor.R`, con dos bloques nuevos:
+    - una transcripción de handback que bloquea con citas inventadas y registra la entrega con citas reales;
+    - un mutante sobre una copia que deja pasar el reporte sin evaluarlo.
+    Con la transcripción real del r4b, el hook nuevo evalúa sus 8 citas y el anterior no devuelve nada.
+  - **Decisión:** el profesor eligió «Arreglarlo ahora» el 2026-11-02.
+  - **Promoción:** cumple el criterio, porque es general, se repitió y ningún gate lo veía. Amplía una guarda que ya
+    existía y no crea una regla nueva.
+- **Respaldo previo:** `.claude/backups/2026-11-02-hook-handback/`.
+
 ### Cambios v3.36.0 (2026-11-02)
 
 - **Regla #9 v1.7: el lanzamiento sin `name:` es asíncrono.** Cambia la versión compacta (Paso 0).

@@ -189,7 +189,7 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.36.0 (regla #9 v1.7: el lanzamiento sin `name:` es asíncrono, en el Paso 0 y en los dos orquestadores, que tampoco copian el marcador del detractor al transmitirlo; regla #22, texto íntegro: «exacta» dice sobre qué sorteos lo es y sobre cuáles es muestral)
+**Versión**: 3.36.1 (el hook de citas de la regla #9 evalúa también el reporte entregado con `SubagentHandback`; antes: v3.36.0, regla #9 v1.7, el lanzamiento sin `name:` es asíncrono, y regla #22, texto íntegro, «exacta» dice sobre qué sorteos lo es)
 **Fecha**: 2026-11-02
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)
