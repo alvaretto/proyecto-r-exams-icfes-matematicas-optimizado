@@ -1,0 +1,26 @@
+---
+author: Fixture
+---
+
+Question
+========
+Texto mínimo.
+
+Solution
+========
+Texto.
+
+Meta-information
+================
+exname: fixture literalidad
+extype: schoice
+exsolution: 1000
+exshuffle: TRUE
+exextra[Type]: SCHOICE
+exextra[Competencia]: Argumentación
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Valida procedimientos y estrategias matematicas utilizadas para dar solución a problemas.
+exextra[Evidencia]: Plantea afirmaciones que sustentan o refutan una interpretación dada a la información disponible en el marco de la solución de un problema.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.10 — Justifica afirmaciones utilizando planteamientos y operaciones aritméticas o haciendo uso directo de un concepto, es decir, a partir de un único argumento.
+exextra[Estandar]: Predigo y justifico razonamientos y conclusiones usando información estadística. (6°-7°, Pensamiento aleatorio)

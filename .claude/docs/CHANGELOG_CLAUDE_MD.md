@@ -8,6 +8,28 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.37.0 (2026-11-02)
+
+- **Regla #7: la literalidad de `exextra` tiene validador.** Cambian la versión compacta y la íntegra, § 2b.
+  - **Qué es:** `.claude/scripts/validar_literalidad_exextra.py`, que el paso 10 de `orquestador-schoice.md` y
+    `orquestador-cloze.md` ejecuta, en paridad. Ese paso decía hasta ahora «juicio humano, no automatizado».
+  - **Qué compara:** Competencia, Componente, Afirmación y Evidencia (obligatorias), y Descriptor y Estándar si están,
+    contra los JSON del catálogo de Matemáticas y contra `ITEM_OFICIAL.md`.
+  - **Códigos de salida:** exit 1 bloquea el sello. Un FORMATO (solo tildes o mayúsculas) es FALLA, pero trae el literal
+    que hay que copiar. Exit 2 es NO VERIFICABLE.
+  - **Suite:** `test_literalidad_exextra.R`, con un minicatálogo propio para que corra en CI.
+  - **Ajustes tras medirlo sobre los 228 `.Rmd` en desarrollo:**
+    - un Estándar literal sin «(código)» salía FALLA: ahora, sin separador, se compara el valor entero;
+    - una diferencia solo de tildes se etiqueta FORMATO, como dice la regla.
+  - **Resultado de esa medición:** 9 pasan, 19 no son verificables y 200 fallan. De los 200, 136 no tienen `exextra`.
+  - **Sin migración en bloque:** el próximo ciclo de cada ejercicio no podrá sellar el paso 10 sin corregirlos.
+- **Familia A: el md5 del `.Rmd` en la salida.** `validar_diversidad_sustantiva.R` y `validar_diagnosticidad.R` (de
+  `.claude/scripts/`, no symlinks de I-10) imprimen `md5 del .Rmd: <md5> (<ruta>)`. Cada suite lleva su guarda y un
+  mutante. Ningún consumidor del repo lee esas salidas por la primera línea.
+- **Origen:** las candidatas 1 y 2 de la tanda 9b del CLOZE de `totales-promedios-reciclaje-n3`, anotadas el 2026-11-02 y
+  pedidas el mismo día («Hazlo ya»).
+- **Respaldos:** `.claude/backups/2026-11-02-md5-validadores/` y `.claude/backups/2026-11-02-literalidad-exextra/`.
+
 ### Cambios v3.36.1 (2026-11-02)
 
 - **Hook de citas de la regla #9: evalúa también el reporte entregado con `SubagentHandback`.** No cambia la norma ni la

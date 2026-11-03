@@ -248,3 +248,38 @@ test_that("H3b NO bloquea cuando H3 sí es aplicable (calibración de relevo)", 
   expect_false(grepl("ERR_DIAG_SUPERFICIAL", r$texto, fixed = TRUE))
   expect_equal(r$exit, 0L)
 })
+
+# ---------------------------------------------------------------------------
+# Procedencia: el validador escribe el md5 del .Rmd que midió (2026-11-02).
+# Origen: la tanda 9b del CLOZE de totales-promedios-reciclaje-n3 repitió las
+# mediciones porque su salida no decía a qué versión correspondía.
+# El detector es una FUNCIÓN de la ruta del validador: se verifica por mutación
+# sobre una COPIA en tempdir(), nunca sobre el archivo real.
+# ---------------------------------------------------------------------------
+linea_md5_presente <- function(script, rmd) {
+  salida <- suppressWarnings(system2("Rscript", c(script, rmd, "--n", "20"),
+                                     stdout = TRUE, stderr = TRUE))
+  esperado <- sprintf("md5 del .Rmd: %s (%s)",
+                      unname(tools::md5sum(rmd)), rmd)
+  esperado %in% salida
+}
+
+test_that("validar_diagnosticidad.R imprime el md5 exacto del .Rmd medido", {
+  skip_if(!file.exists(SCRIPT_DIAG), "script no disponible")
+  rmd <- fixture_rmd(base_chars = 100, extra_chars = 5)
+  on.exit(unlink(rmd), add = TRUE)
+  expect_true(linea_md5_presente(SCRIPT_DIAG, rmd))
+})
+
+test_that("MUTANTE: sin la línea del md5 el detector la ve ausente", {
+  skip_if(!file.exists(SCRIPT_DIAG), "script no disponible")
+  copia <- file.path(tempdir(), "validador_sin_md5.R")
+  on.exit(unlink(copia), add = TRUE)
+  src <- readLines(SCRIPT_DIAG, warn = FALSE)
+  mut <- src[!grepl("md5 del .Rmd", src, fixed = TRUE)]
+  expect_lt(length(mut), length(src))
+  writeLines(mut, copia)
+  rmd <- fixture_rmd(base_chars = 100, extra_chars = 5)
+  on.exit(unlink(rmd), add = TRUE)
+  expect_false(linea_md5_presente(copia, rmd))
+})

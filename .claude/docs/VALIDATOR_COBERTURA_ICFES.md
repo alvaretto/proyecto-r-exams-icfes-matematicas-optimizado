@@ -25,7 +25,7 @@ El agente `validator` del Context Engineering global tiene la función de "crear
 La lista vive en `tests/run_all_tests.R`; la columna «Qué valida» copia su campo `nombre`.
 
 <!-- SUITES:INICIO — generado por tests/sincronizar_doc_suites.R; no editar a mano -->
-Cifras (derivadas del runner): 46 suites, 442 bloques `test_that` y 8 suites sin `watch`.
+Cifras (derivadas del runner): 47 suites, 458 bloques `test_that` y 8 suites sin `watch`.
 
 | # | Archivo | Qué valida |
 |---|---------|-----------|
@@ -52,31 +52,32 @@ Cifras (derivadas del runner): 46 suites, 442 bloques `test_that` y 8 suites sin
 | 21 | `test_citas_detractor.R` | Citas verificables del detractor: hook SubagentStop (Regla #9 v1.6) |
 | 22 | `test_contrato_entrega_orquestadores.R` | Contrato de entrega de los orquestadores (paridad con el detractor) |
 | 23 | `test_nomenclatura_rmd.R` | Nomenclatura oficial de .Rmd (fuente única + gate + citas) |
-| 24 | `test_muestra_estandar.R` | Muestra estándar de validación N=100 (regla #23) |
-| 25 | `test_validar_multisemilla_invocable.R` | Invocabilidad de validar\_multisemilla (Error 31) |
-| 26 | `test_diversidad_sustantiva.R` | Diversidad Sustantiva (Regla #22) |
-| 27 | `test_diagnosticidad.R` | Diagnosticidad de distractores (V9, margen relativo de H1) |
-| 28 | `test_barco_bbox_invariante.R` | Invariante I-2 barco (bbox del casco == clave) |
-| 29 | `test_permutaciones_invariantes.R` | Invariantes I-1..I-7 permutaciones (clave == n!) |
-| 30 | `test_diversidad_grafica_circular.R` | Diversidad grafica circular (tabla, meses y par del error) |
-| 31 | `test_fase2i_pandocbounded_detector.R` | FASE 2I: detector \pandocbounded distingue definicion de uso |
-| 32 | `test_post_exams2_pipefail.R` | Hook post-render: activacion, 2N y 2O sin carrera de SIGPIPE (pipefail) |
-| 33 | `test_is_latex_output_rexams.R` | is\_latex\_output() es FALSE en los pipelines de R/exams |
-| 34 | `test_tabla_responsiva_pdf.R` | Familia F2: tabla\_responsiva() no deja tablas fuera del margen del PDF |
-| 35 | `test_bateria_eliminacion.R` | Bateria de eliminacion: cierre por familias + techo nulo (regla #22 P7) |
-| 36 | `test_glifos_latex.R` | FASE 2O: glifos Unicode que rompen pdflatex (ERR\_GLIFO\_LATEX) |
-| 37 | `test_render_html_shots_truncamiento.R` | render\_html\_shots: capturas moviles truncadas en silencio |
-| 38 | `test_workflow_state_flujo_b.R` | workflow-state: flujo\_b no se sella con la sola decision (regla #16) |
-| 39 | `test_workflow_state_reopen.R` | workflow-state: reopen des-sella desde un paso y registra el motivo (regla #16) |
-| 40 | `test_workflow_state_status_sello.R` | workflow-state: status avisa de la firma del auto-sello del hook v6.2 (pasos 5 y 6 sin nota) |
-| 41 | `test_presupuesto_contexto_reglas.R` | Presupuesto de contexto de .claude/rules/ (compactas + texto integro) |
-| 42 | `test_barras_campeonato_clave.R` | barras-campeonato-baloncesto-n3: clave y figuras leidas del dibujo (+7 mutantes) y cotejo con la ficha MAT-2026-1-015 |
-| 43 | `test_barras_campeonato_cloze.R` | barras-campeonato-baloncesto-n3 CLOZE: 6 claves leidas del dibujo y del texto (+5 mutantes, Semilleros) |
-| 44 | `test_post_exams2_informe.R` | Hook post-render: el informe llega al modelo en JSON, avisa si no halla el .Rmd y 2I-2L con ruta relativa (v6.2) |
-| 45 | `test_post_exams2_cwd.R` | Hook post-render v6.3: el ejercicio sale del .Rmd y no del cwd; no escribe en el repo ni sella (8 casos + mutantes) |
-| 46 | `test_doc_suites_sincronizada.R` | Documento de cobertura sincronizado: tabla de suites generada desde el runner, fases y version del hook |
+| 24 | `test_literalidad_exextra.R` | Literalidad de exextra contra el catálogo canónico (paso 10, solo Matemáticas) |
+| 25 | `test_muestra_estandar.R` | Muestra estándar de validación N=100 (regla #23) |
+| 26 | `test_validar_multisemilla_invocable.R` | Invocabilidad de validar\_multisemilla (Error 31) |
+| 27 | `test_diversidad_sustantiva.R` | Diversidad Sustantiva (Regla #22) |
+| 28 | `test_diagnosticidad.R` | Diagnosticidad de distractores (V9, margen relativo de H1) |
+| 29 | `test_barco_bbox_invariante.R` | Invariante I-2 barco (bbox del casco == clave) |
+| 30 | `test_permutaciones_invariantes.R` | Invariantes I-1..I-7 permutaciones (clave == n!) |
+| 31 | `test_diversidad_grafica_circular.R` | Diversidad grafica circular (tabla, meses y par del error) |
+| 32 | `test_fase2i_pandocbounded_detector.R` | FASE 2I: detector \pandocbounded distingue definicion de uso |
+| 33 | `test_post_exams2_pipefail.R` | Hook post-render: activacion, 2N y 2O sin carrera de SIGPIPE (pipefail) |
+| 34 | `test_is_latex_output_rexams.R` | is\_latex\_output() es FALSE en los pipelines de R/exams |
+| 35 | `test_tabla_responsiva_pdf.R` | Familia F2: tabla\_responsiva() no deja tablas fuera del margen del PDF |
+| 36 | `test_bateria_eliminacion.R` | Bateria de eliminacion: cierre por familias + techo nulo (regla #22 P7) |
+| 37 | `test_glifos_latex.R` | FASE 2O: glifos Unicode que rompen pdflatex (ERR\_GLIFO\_LATEX) |
+| 38 | `test_render_html_shots_truncamiento.R` | render\_html\_shots: capturas moviles truncadas en silencio |
+| 39 | `test_workflow_state_flujo_b.R` | workflow-state: flujo\_b no se sella con la sola decision (regla #16) |
+| 40 | `test_workflow_state_reopen.R` | workflow-state: reopen des-sella desde un paso y registra el motivo (regla #16) |
+| 41 | `test_workflow_state_status_sello.R` | workflow-state: status avisa de la firma del auto-sello del hook v6.2 (pasos 5 y 6 sin nota) |
+| 42 | `test_presupuesto_contexto_reglas.R` | Presupuesto de contexto de .claude/rules/ (compactas + texto integro) |
+| 43 | `test_barras_campeonato_clave.R` | barras-campeonato-baloncesto-n3: clave y figuras leidas del dibujo (+7 mutantes) y cotejo con la ficha MAT-2026-1-015 |
+| 44 | `test_barras_campeonato_cloze.R` | barras-campeonato-baloncesto-n3 CLOZE: 6 claves leidas del dibujo y del texto (+5 mutantes, Semilleros) |
+| 45 | `test_post_exams2_informe.R` | Hook post-render: el informe llega al modelo en JSON, avisa si no halla el .Rmd y 2I-2L con ruta relativa (v6.2) |
+| 46 | `test_post_exams2_cwd.R` | Hook post-render v6.3: el ejercicio sale del .Rmd y no del cwd; no escribe en el repo ni sella (8 casos + mutantes) |
+| 47 | `test_doc_suites_sincronizada.R` | Documento de cobertura sincronizado: tabla de suites generada desde el runner, fases y version del hook |
 
-En modo rápido (`R_TESTS_QUICK=1`, el del pre-push) corren siempre las 8 suites sin `watch` (1, 2, 5, 7, 9, 10, 13 y 41). Las otras 38 corren solo si cambió algún archivo que vigilan.
+En modo rápido (`R_TESTS_QUICK=1`, el del pre-push) corren siempre las 8 suites sin `watch` (1, 2, 5, 7, 9, 10, 13 y 42). Las otras 39 corren solo si cambió algún archivo que vigilan.
 <!-- SUITES:FIN -->
 
 ---

@@ -145,6 +145,15 @@ exextra[GradoSugerido]: 6°-7°
 - El corrector `corregir_ortografia_espanol.R` excluye las líneas `exextra`: la literalidad se comprueba
   contra el catálogo en el paso 10 (`validar_icfes`), no con el corrector. Una diferencia solo de formato
   frente a la ficha (tildes, «°», mayúsculas) se reporta como FORMATO, no como contenido distinto.
+- **Validador (2026-11-02):** `python3 -I .claude/scripts/validar_literalidad_exextra.py <rmd> --item <ITEM_OFICIAL.md>`,
+  que el paso 10 de los dos orquestadores ejecuta. Compara Competencia, Componente, Afirmación y Evidencia
+  (obligatorias), y Descriptor y Estándar si están, contra los JSON del catálogo de Matemáticas y contra la ficha.
+  - Exit 1 bloquea el sello del paso 10. Un FORMATO es FALLA, pero trae el literal que hay que copiar.
+  - Exit 2 es NO VERIFICABLE y se declara en la nota del sello.
+  - Medido ese día sobre los 228 `.Rmd` de `01-En-PreDesarrollo/` y `02-En-Desarrollo/`: 9 pasan, 19 no son
+    verificables y 200 fallan. De los 200, 136 no tienen ningún `exextra`, y el resto lleva sobre todo valores en ASCII o
+    parafraseados. No se migran en bloque: los corrige el próximo ciclo de cada ejercicio, que el paso 10 ya no deja
+    sellar sin hacerlo.
 - **Historial**: hasta el 2026-10-22 esta sección decía «`exextra[...]` siempre ASCII» y contradecía a la
   nomenclatura y a los orquestadores; un ejercicio llegó a conservar `6-7` frente al `6°-7°` de su ficha
   amparado en la versión vieja.

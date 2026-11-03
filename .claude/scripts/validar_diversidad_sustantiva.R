@@ -31,6 +31,7 @@ n <- 100L
 if ("--n" %in% args) { v <- suppressWarnings(as.integer(args[which(args == "--n") + 1])); if (!is.na(v)) n <- v }
 if (n < 5L) n <- 100L
 if (is.na(rmd) || !file.exists(rmd)) { cat("WARN_DIV_INDET: .Rmd no encontrado:", rmd, "\n"); quit(status = 0) }
+cat("md5 del .Rmd: ", unname(tools::md5sum(rmd)), " (", rmd, ")\n", sep = "")
 
 rmd <- normalizePath(rmd)
 lines <- readLines(rmd, warn = FALSE)

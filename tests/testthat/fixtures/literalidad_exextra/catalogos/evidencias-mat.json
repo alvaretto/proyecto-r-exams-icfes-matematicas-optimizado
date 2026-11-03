@@ -1,0 +1,13 @@
+{
+ "afirmaciones_oficiales": {
+  "Argumentación": {
+   "texto_oficial": "Valida procedimientos y estrategias matemáticas utilizadas para dar solución a problemas."
+  }
+ },
+ "evidencias_oficiales": {
+  "Arg_E1": {
+   "competencia": "Argumentación",
+   "texto_oficial": "Plantea afirmaciones que sustentan o refutan una interpretación dada a la información disponible en el marco de la solución de un problema."
+  }
+ }
+}

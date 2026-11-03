@@ -65,6 +65,7 @@ if ("--n" %in% args) { v <- suppressWarnings(as.integer(args[which(args == "--n"
 if ("--umbral" %in% args) { v <- suppressWarnings(as.numeric(args[which(args == "--umbral") + 1])); if (!is.na(v)) umbral <- v }
 if ("--margen" %in% args) { v <- suppressWarnings(as.numeric(args[which(args == "--margen") + 1])); if (!is.na(v)) margen <- v }
 if (is.na(rmd) || !file.exists(rmd)) { cat("WARN_DIAG_INDET: .Rmd no encontrado:", rmd, "\n"); quit(status = 0) }
+cat("md5 del .Rmd: ", unname(tools::md5sum(rmd)), " (", rmd, ")\n", sep = "")
 
 lines <- readLines(rmd, warn = FALSE)
 # `exclozetype` clasifica cada Parte del CLOZE como un todo. No basta mirar una

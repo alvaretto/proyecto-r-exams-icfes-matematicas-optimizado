@@ -1067,11 +1067,10 @@ orientación > infografías > TEA. Ante discrepancia gana el PDF oficial.
   md5 `6339b53011f5e43480a19b3c6c5c9bab` (constructo, competencias y estructura).
 - Si el catálogo no está montado en la máquina, **no adivino**: aborto el paso 10 con
   `[VERIFICAR: catálogo canónico no disponible]` y lo reporto.
-- **Esta comprobación es JUICIO HUMANO, no automatizada.** Ningún script del arsenal compara los
-  `exextra[…]` del `.Rmd` contra los JSON del catálogo: la literalidad la verifico yo, campo por
-  campo, abriendo el JSON. Lo digo explícitamente porque el resto del paso 10 sí tiene validadores y
-  es fácil suponer que este también — un «paso 10 OK» no significa que un script haya certificado la
-  literalidad del descriptor.
+- **Literalidad de `exextra`** (tanda 9b del CLOZE de `totales-promedios-reciclaje-n3`, 2026-11-02):
+  `python3 -I .claude/scripts/validar_literalidad_exextra.py <rmd> --item <ITEM_OFICIAL.md>`. Exit 1
+  bloquea el sello del paso 10; exit 2 es NO VERIFICABLE y se declara en la nota del sello. Solo
+  Matemáticas; la coherencia Nivel↔DOK sigue siendo juicio mío.
 
 **Coherencia obligatoria Nivel ↔ DOK** (regla #1): `DOK ≥ 3 ⇒ Nivel ICFES ≥ 3`; `Bloom = Evaluar ⇒
 Nivel ≥ 3`. Un DOK 3 con Nivel 2 es contradictorio y descalibra el banco. Las tres competencias

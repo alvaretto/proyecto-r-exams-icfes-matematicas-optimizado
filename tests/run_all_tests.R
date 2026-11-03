@@ -245,6 +245,13 @@ suites <- list(
               "orquestador-schoice", "orquestador-cloze")
   ),
   list(
+    nombre = "Literalidad de exextra contra el catálogo canónico (paso 10, solo Matemáticas)",
+    archivo = "tests/testthat/test_literalidad_exextra.R",
+    critico = TRUE,
+    watch = c("validar_literalidad_exextra", "test_literalidad_exextra",
+              "orquestador-schoice", "orquestador-cloze")
+  ),
+  list(
     nombre = "Muestra estándar de validación N=100 (regla #23)",
     archivo = "tests/testthat/test_muestra_estandar.R",
     critico = TRUE,

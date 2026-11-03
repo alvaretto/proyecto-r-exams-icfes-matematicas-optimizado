@@ -276,10 +276,13 @@ Rscript tests/testthat/test_post_exams2_cwd.R      # el ejercicio sale del .Rmd;
 8. ~~Suite completa y push de la v3.33.0 (`e9c85009`)~~. **Cerrado el 2026-10-30:** 46/46 (1266,3 s) y push
    `8efdf504..e9c85009`; detalle en § «2026-10-29», v3.33.0. El commit de este archivo se empuja a
    continuación.
-9. **Mejoras de herramienta anotadas el 2026-11-02** (decisión del profesor: «Anotar»), propuestas por la tanda 9b del
-   CLOZE de `totales-promedios-reciclaje-n3`. Ninguna produjo un defecto:
-   - `validar_diversidad_sustantiva.R` y `validar_diagnosticidad.R` (en `SOURCES/scripts_validacion/`, I-10) no escriben
-     en su salida el md5 del `.Rmd` que midieron. Por eso la 9b los repitió para probar a qué versión correspondían.
+9. ~~**Mejoras de herramienta anotadas el 2026-11-02**~~. **Cerrado el mismo día** («Hazlo ya», v3.37.0): los dos
+   validadores escriben el md5, y existe `validar_literalidad_exextra.py`, con su suite, en el paso 10 de los dos
+   orquestadores. Fe de erratas: los dos validadores son archivos normales de `.claude/scripts/`, no symlinks de
+   `SOURCES/scripts_validacion/` (I-10), como decía esta nota. Texto original, propuesto por la tanda 9b del CLOZE de
+   `totales-promedios-reciclaje-n3`:
+   - `validar_diversidad_sustantiva.R` y `validar_diagnosticidad.R` no escriben en su salida el md5 del `.Rmd` que
+     midieron. Por eso la 9b los repitió para probar a qué versión correspondían.
    - El cotejo literal de los `exextra` contra el catálogo canónico no lo certifica ningún validador del arsenal. Hay un
      modelo en `…/totales-promedios-reciclaje-n3/cloze/salida/literalidad_exextra_r9.py`; incorporarlo ampliaría el
      paso 10 de los dos orquestadores.
@@ -293,6 +296,8 @@ Rscript tests/testthat/test_post_exams2_cwd.R      # el ejercicio sale del .Rmd;
 
 ## Respaldos del día (fuera de git, regla #17)
 
+- `.claude/backups/2026-11-02-md5-validadores/` y `.claude/backups/2026-11-02-literalidad-exextra/`: los dos validadores
+  y sus tests, y los dos orquestadores con `tests/run_all_tests.R`, antes de la v3.37.0.
 - `.claude/backups/2026-11-02-hook-handback/`: `verificar_citas_detractor.py` y `test_citas_detractor.R` antes del
   arreglo del handback, con `sha256_antes.txt`.
 - `.claude/backups/2026-11-02-candidatas-9a/`: los dos orquestadores, la regla #9 (compacta e íntegra), el íntegro de

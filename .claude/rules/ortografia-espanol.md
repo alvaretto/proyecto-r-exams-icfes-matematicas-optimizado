@@ -10,6 +10,6 @@
 
 **Sin tilde (excepciones):** nombres de variables R; identificadores de R-exams (`exname`, `exsection`, `extype`, `exsolution`, `exshuffle`, `extol`) y las **claves** `exextra[Nombre]`, siempre ASCII; inglés técnico; demostrativos "Esta/Este".
 
-**Valores de `exextra`: literales del catálogo ICFES** (2026-10-22). Se copian tal cual del catálogo canónico o de la ficha, con tildes, mayúsculas y signos: `exextra[Competencia]: Argumentación`, `exextra[GradoSugerido]: 6°-7°`. No son identificadores: R/exams los guarda como texto UTF-8 y los cuatro formatos renderizan. Los valores en ASCII que ya existen se corrigen al tocar el ejercicio, sin migración en bloque.
+**Valores de `exextra`: literales del catálogo ICFES** (2026-10-22). Se copian tal cual del catálogo canónico o de la ficha, con tildes, mayúsculas y signos: `exextra[Competencia]: Argumentación`, `exextra[GradoSugerido]: 6°-7°`. No son identificadores: R/exams los guarda como texto UTF-8 y los cuatro formatos renderizan. Los valores en ASCII que ya existen se corrigen al tocar el ejercicio, sin migración en bloque. Se verifican con `python3 -I .claude/scripts/validar_literalidad_exextra.py <rmd> --item <ITEM_OFICIAL.md>` (paso 10 de los orquestadores, solo Matemáticas; exit 1 bloquea el sello, y un FORMATO trae el literal que hay que copiar).
 
 **Validar:** `Rscript .claude/scripts/corregir_ortografia_espanol.R archivo.Rmd` (`--fix` para aplicar). Su "limpio" no prueba que haya tildes. **NUNCA** `git commit --no-verify`.
