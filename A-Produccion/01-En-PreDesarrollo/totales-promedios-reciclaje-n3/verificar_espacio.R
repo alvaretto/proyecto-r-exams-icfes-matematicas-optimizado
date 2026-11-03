@@ -26,6 +26,12 @@
 ## Tanda S1b relanzada (2026-11-03): V1', el signo que sigue a la unidad entra en la fórmula («\\text{kilos.}$»):
 ##        sonda S1-Sol signo (M32), guarda «L-6: el signo que sigue a la unidad…» (M33) y M30 adaptado. S7 cerrado: la
 ##        canónica ya no asigna lado_gdis y rasgos() calcula su lado de las cifras.
+## Tanda S2a (2026-11-03), FASE 2C r5. H2, decisión del profesor «Cerrarlo ahora»: la sonda S1-Sol signo cubre toda
+##        fórmula, con unidad o sin ella (M37 para la guarda del .Rmd; M38 para la sonda). H1: controles positivos
+##        exactos (1158, 730 y el signo dentro de una fórmula sin unidad, uno por versión con ERR-RESTA), cada uno con un
+##        mutante que quita un solo sitio (M34, M35, M36), y separadores ampliados a todo carácter que no sea letra ni
+##        cifra (M39 y M41, con U+2009, U+202F y U+2060). H5: guarda real del canal 2 sobre lado_gdis (M40); fuera el
+##        ok() tautológico de S7.
 ## Ciclo 2026-11-02, tanda S1: espacio duro (S1) en el oráculo léxico, en M16 y en la Solution (sonda S1-Sol,
 ##        mutantes M23-M27); MOLDES sin el parámetro m (S7); la canónica regla por regla con las 24 cifras de
 ##        la decisión 2 a y sus mutantes MP1 y MP2 (S3); el estímulo de la batería, declarado (§P7-G, S4).
@@ -68,15 +74,16 @@ correr <- function(seed, expr = EXPR) {
   list(env = env, err = err)
 }
 cif <- function(s) { v <- regmatches(s, gregexpr("[0-9]+", s))[[1]]; if (length(v)) as.numeric(v[1]) else NA_real_ }
-## S7 (tanda S1b relanzada, decisión del profesor del 2026-11-03): la canónica ya no asigna lado_gdis, que no usaba; su
-## lado se calcula de sus cifras (x del distractor de G frente a D). En las demás versiones se lee lado_gdis, como antes.
+## S7 (tanda S1b relanzada, decisión del profesor del 2026-11-03): la canónica ya no asigna lado_gdis, que no usaba.
+## H5 de la FASE 2C r5 (tanda S2a): lado es el lado SORTEADO para la cifra falsa de G (lado_gdis), y lo consume la
+## guarda real del canal 2 (E2). La canónica no sortea lado: NA, y la guarda la deja fuera.
 rasgos <- function(env) with(env, list(
   canon = es_canonica, rama = rama, opciones = opciones, clave = which(sol), rol = rol_opcion,
   D = d$D, X = afs$gdis$x, cod_gdis = afs$gdis$codigo, molde_gdis = afs$gdis$molde,
   molde_clave = afs$clave$molde, molde_padv = afs$padv$molde, molde_psin = afs$psin$molde,
   sede_o = vapply(afs[rol_opcion], `[[`, "", "sede"), nom_o = ifelse(vapply(afs[rol_opcion], `[[`, "", "sede") == "G",
   nomG, nomP), fila1 = conj$nombres[1], tabla = c(d$nG, d$nP, d$aG, d$aP), gi = gi,
-  lado = if (isTRUE(es_canonica)) (if (afs$gdis$x > d$D) "encima" else "debajo") else lado_gdis))
+  lado = if (isTRUE(es_canonica)) NA_character_ else lado_gdis))
 
 cat("=== verificar_espacio.R —", basename(rmd), "===\n")
 
@@ -104,9 +111,16 @@ for (s in 1000L + seq_len(TOPE)) {
 }
 for (b in names(CU)) ok(length(CU[[b]]) >= 20, sprintf("estrato %s: n = %d (n < 20 sería NO CONCLUYENTE)", b, length(CU[[b]])))
 ok(!is.null(CANON), "se encontró la instancia canónica")
-## S7: en la canónica, el lado sale de sus cifras y tiene que seguir dando «encima» (5 < 20 (D) < 40).
-ok(identical(CANON$lado, "encima") && isTRUE(CANON$X > CANON$D),
-   sprintf("S7: en la canónica, el lado del distractor de G sale de sus cifras (x = %s, D = %s): «%s»", CANON$X, CANON$D, CANON$lado))
+## H5 de la FASE 2C r5 (tanda S2a): el ok() de S7 era tautológico (el lado de la canónica salía de sus cifras, y la
+## guarda verbatim ya fija x = 40 y D = 20). Lo sustituye una guarda real del canal 2 en las no canónicas de E1 y de los
+## estratos: la cifra falsa de G cae del lado de D que se sorteó para ella (lado_gdis). M40 quita el filtro
+## «cand_g <- cand_g[lado_ok, ]» y la tiene que ver esta guarda.
+lado_cumple <- function(x) isTRUE(x$canon) || isTRUE((x$X < x$D) == (x$lado == "debajo"))
+VL <- Filter(function(x) !isTRUE(x$canon), c(NAT, CU$CURSOS, CU$PROMEDIO))
+n_lado_mal <- sum(!vapply(c(NAT, CU$CURSOS, CU$PROMEDIO), lado_cumple, TRUE))
+ok(n_lado_mal == 0L, sprintf("canal 2 (H5 r5): en las %d no canónicas de E1 y de los estratos, la cifra falsa de G cae del lado de D sorteado para ella (debajo en %d, encima en %d); fuera de su lado: %d",
+                             length(VL), sum(vapply(VL, function(x) identical(x$lado, "debajo"), TRUE)),
+                             sum(vapply(VL, function(x) identical(x$lado, "encima"), TRUE)), n_lado_mal))
 
 ## ---- E3. Enumeración exacta del espacio (L-2.4) --------------------------------
 cat("\n[E3] Enumeración del espacio de parámetros\n")
@@ -697,10 +711,18 @@ MUT <- list(
        cambios = list(c('d$D, "\\\\ \\\\text{kilos.}$"),', 'd$D, "$", ED, "kilos."),')),
        llego = function(e) grepl("\\$\u00a0kilos\\.$", e$fb[["clave"]])),
   ## Tanda S1b relanzada: M33 saca el punto de la fórmula en el feedback de la clave («\\text{kilos}$.», como en V1).
-  list(id = "M33", sonda = "L-6: el signo que sigue a la unidad de una fórmula va dentro de la fórmula",
+  list(id = "M33", sonda = "L-6: el signo que sigue a una fórmula, con unidad o sin ella, va dentro de la fórmula",
        desc = "el feedback de la clave deja el punto fuera de la fórmula (revierte V1')",
        cambios = list(c('d$D, "\\\\ \\\\text{kilos.}$"),', 'd$D, "\\\\ \\\\text{kilos}$."),')),
-       llego = function(e) grepl("\\\\text\\{kilos\\}\\$\\.$", e$fb[["clave"]])))
+       llego = function(e) grepl("\\\\text\\{kilos\\}\\$\\.$", e$fb[["clave"]])),
+  ## Tanda S2a (H2 de la FASE 2C r5): M37 devuelve el punto de la explicación de ERR-RESTA fuera de su fórmula sin
+  ## unidad («= 5$.»), como en 6c9d7705. La guarda del signo de la S1b solo miraba las fórmulas con unidad: no lo veía.
+  list(id = "M37", sonda = "L-6: el signo que sigue a una fórmula, con unidad o sin ella, va dentro de la fórmula",
+       desc = "la explicación de ERR-RESTA deja el punto fuera de su fórmula sin unidad (revierte H2)",
+       cambios = list(c('p$delta, "\\\\text{.}$ Esa resta', 'p$delta, "$. Esa resta')),
+       llego = function(e) grepl("= 5$. Esa resta", e$errores_conceptuales[["ERR-RESTA"]]$explica(
+         list(aG = 40, aP = 45, delta = 5, tipo = "sede", nG = 5, nP = 4, TG = 200, TP = 180, D = 20), list(x = 5)),
+         fixed = TRUE)))
 for (mu in MUT) {
   mm <- mutar(mu$cambios)
   if (!is.null(mm$error)) { falla(sprintf("%s MAL CONSTRUIDO: %s", mu$id, mm$error)); next }
@@ -727,6 +749,21 @@ mm <- mutar(list(c('if (f$p_tabla) cand_g <- cand_g[cand_g$codigo != "ERR-DATO",
 V <- list(); for (s in 3000L + seq_len(TOPE)) { r <- correr(s, mm$expr); if (is.null(r$err) && !r$env$es_canonica) V[[length(V) + 1]] <- rasgos(r$env); if (length(V) >= N) break }
 n_c3 <- sum(!vapply(V, c3_v, TRUE))
 ok(n_c3 > 0, sprintf("M15 (quita el filtro del canal 3): la guarda del canal 3 lo detecta en %d de %d versiones", n_c3, length(V)))
+## Mutante de medición M40 (H5 de la FASE 2C r5): sin el filtro del lado sorteado, la cifra falsa de G puede caer del
+## otro lado de D. La guarda real del canal 2 (E2) lo tiene que ver, sin que ninguna guarda del .Rmd aborte el render.
+mm <- mutar(list(c("cand_g <- cand_g[lado_ok, ]", "cand_g <- cand_g")))
+if (!is.null(mm$error)) falla(paste("M40 MAL CONSTRUIDO:", mm$error)) else {
+  V <- list(); err40 <- 0L; llego40 <- FALSE
+  for (s in seq_len(N)) {
+    r <- correr(s, mm$expr); if (!is.null(r$err)) { err40 <- err40 + 1L; next }
+    if (!isTRUE(r$env$es_canonica) && nrow(r$env$cand_g) > sum(r$env$lado_ok)) llego40 <- TRUE
+    V[[length(V) + 1]] <- rasgos(r$env)
+  }
+  n40 <- sum(!vapply(V, lado_cumple, TRUE))
+  ver40 <- if (!llego40) "mal_construido" else if (err40 > 0L) "cazado_por_otra" else if (n40 > 0L) "cazado_por_su_sonda" else "no_detectado"
+  ok(ver40 == "cazado_por_su_sonda", sprintf("M40 (quita el filtro cand_g[lado_ok, ]): la guarda real del canal 2 lo detecta en %d de %d versiones de E1 (%d con error) — %s",
+                                             n40, length(V), err40, ver40))
+}
 ## Mutante de medición M19 (H1 de la FASE 2C r4): con ERR-TOTAL como distractor de G siempre que se
 ## pueda, la cifra atípica sale más a menudo y algún atajo de O-1 debe salir de lo firmado.
 mm <- mutar(list(c("cod_gdis <- pick(unique(cand_g$codigo))",
@@ -777,49 +814,73 @@ if (!is.null(CANON)) {
 chunk_de <- function(lin, nm) { i0 <- grep(paste0("^```\\{r ", nm, "[,}]"), lin); i1 <- which(lin == "```"); i1 <- i1[i1 > i0][1]
   parse(text = paste(lin[(i0 + 1):(i1 - 1)], collapse = "\n"), encoding = "UTF-8") }
 PAT_S1 <- "[0-9$] (kilos?|cursos?)\\b|El Bosque|La Pradera"
-s1_sol <- function(lin, semillas, pat = PAT_S1) {
+## Tanda S2a (H1 de la FASE 2C r5): el texto emitido se calcula una sola vez por versión del .Rmd (memoria por
+## contenido), y el data_generation sale del mismo texto que las otras tres partes, así que un mutante del
+## data_generation (M34, M35, M36) llega también a la Solution. Con el .Rmd sin mutar es el mismo EXPR de siempre.
+MEMO_SOL <- list()
+textos_sol <- function(lin, semillas) {
+  for (m in MEMO_SOL) if (identical(m$lin, lin) && identical(m$sem, semillas)) return(m$t)
+  ex <- chunk_de(lin, "data_generation")
   ch <- lapply(c("opciones", "solucion", "feedback"), function(nm) chunk_de(lin, nm))
-  sum(vapply(semillas, function(s) { r <- correr(s); if (!is.null(r$err)) return(NA_real_)
-    t <- paste(unlist(lapply(ch, function(e) capture.output(eval(e, envir = r$env)))), collapse = "\n")
-    lengths(regmatches(t, gregexpr(pat, t, perl = TRUE))) }, 0))
+  t <- vapply(semillas, function(s) { r <- correr(s, ex); if (!is.null(r$err)) return(NA_character_)
+    paste(unlist(lapply(ch, function(e) capture.output(eval(e, envir = r$env)))), collapse = "\n") }, "")
+  MEMO_SOL[[length(MEMO_SOL) + 1L]] <<- list(lin = lin, sem = semillas, t = t)
+  t
 }
+cuenta_v <- function(t, pat) vapply(t, function(x) if (is.na(x)) NA_real_ else
+  as.numeric(lengths(regmatches(x, gregexpr(pat, x, perl = TRUE)))), 0, USE.NAMES = FALSE)
+s1_sol <- function(lin, semillas, pat = PAT_S1) sum(cuenta_v(textos_sol(lin, semillas), pat))
+s1_sol_v <- function(lin, semillas, pat) cuenta_v(textos_sol(lin, semillas), pat)
 n_s1 <- s1_sol(l, 1:N)
 ok(identical(n_s1, 0), sprintf("S1-Sol: en las %d versiones de E1, opciones, Solution y feedback sin cifra ni nombre partido por un espacio normal (%s)", N, n_s1))
 l_m27 <- sub('d$D,\n    "\\\\ \\\\text{kilos}$ a favor de "', 'd$D,\n    "$ kilos a favor de "', paste(l, collapse = "\n"), fixed = TRUE)
 l_m27 <- strsplit(l_m27, "\n", fixed = TRUE)[[1]]
 n_m27 <- if (identical(l_m27, l)) NA else s1_sol(l_m27, 1:N)
 ok(!is.na(n_m27) && n_m27 > 0, sprintf("M27 (la Solution pierde el espacio duro de «kilos a favor de»): la sonda S1-Sol lo detecta en %s casos", n_m27))
-## Tanda S1b, sonda S1-Sol fórmula: ninguna fórmula cierra en «$» seguido de espacio (normal o duro) y la unidad. Control
-## positivo: la unidad dentro de la fórmula («\\ \\text{kilos}$») aparece en todas las versiones. M31 revierte la
-## variante en «kilos a favor de» y tiene que verlo esta sonda, no S1-Sol (con el espacio duro, S1-Sol no lo ve).
-PAT_S1F <- "\\$[ \u00a0]+(kilos?|cursos?)\\b"
-## Tanda S1b relanzada: con V1' la unidad puede llevar el signo dentro («\\text{kilos.}$»); el control positivo la cuenta
-## con o sin signo (sin esto bajaba de 1158 a 428 y seguía en OK: el mismo defecto que el instrumento HTML de la S1b).
-n_s1f <- s1_sol(l, 1:N, PAT_S1F); n_dentro <- s1_sol(l, 1:N, "\\\\ \\\\text\\{(kilos?|cursos?)[.,:;!?)\\]\u00bb\u201d\u2026]?\\}\\$")
-ok(identical(n_s1f, 0) && n_dentro >= N, sprintf("S1-Sol fórmula: en las %d versiones de E1, ninguna fórmula cierra antes de su unidad (%s); unidad dentro de la fórmula: %s", N, n_s1f, n_dentro))
+## Tanda S1b, sonda S1-Sol fórmula: ninguna fórmula cierra en «$» seguido de la unidad. M31 revierte la variante en
+## «kilos a favor de» y tiene que verlo esta sonda, no S1-Sol (con el espacio duro, S1-Sol no lo ve).
+## Tanda S2a (H1 de la FASE 2C r5):
+##  - Separadores. Entre el cierre de una fórmula y la unidad, o entre el cierre y el signo (S1-Sol signo), las sondas
+##    admiten hasta tres caracteres cualesquiera que no sean letra ni cifra: espacio normal, U+00A0, U+2009, U+202F,
+##    U+2060… La clase anterior era una lista negra (espacio normal o U+00A0) y no veía el espacio fino (M39, M41).
+##  - Controles positivos exactos, deterministas con las semillas 1..100. Con un umbral (>= N, > 0) no veían que su
+##    cuenta bajara: la r5 sacó la unidad de la lista de totales con U+2009, y el control pasó de 1158 a 958 en OK.
+##    Cada uno lleva un mutante que quita un solo sitio (M34, M35, M36).
+SIG_S1 <- "[.,:;!?)\\]»”…]"
+SEP_S1 <- "[^A-Za-z0-9$\\n]{0,3}"
+PAT_S1F <- paste0("\\$", SEP_S1, "(kilos?|cursos?)\\b")
+PAT_S1F_VIEJA <- paste0("\\$[ ", intToUtf8(0xa0), "]+(kilos?|cursos?)\\b")
+PAT_DENTRO <- paste0("\\\\ \\\\text\\{(kilos?|cursos?)", SIG_S1, "?\\}\\$")
+CTRL_DENTRO <- 1158; CTRL_SIGNO <- 730; CTRL_SIN_U <- 42
+n_s1f <- s1_sol(l, 1:N, PAT_S1F); n_dentro <- s1_sol(l, 1:N, PAT_DENTRO)
+ok(identical(n_s1f, 0) && isTRUE(n_dentro == CTRL_DENTRO),
+   sprintf("S1-Sol fórmula: en las %d versiones de E1, ninguna fórmula cierra antes de su unidad, con ningún separador (%s); unidad dentro de la fórmula: %s (control exacto: %s)",
+           N, n_s1f, n_dentro, CTRL_DENTRO))
 l_m31 <- sub('d$D,\n    "\\\\ \\\\text{kilos}$ a favor de "', 'd$D,\n    "$", ED, "kilos a favor de "', paste(l, collapse = "\n"), fixed = TRUE)
 l_m31 <- strsplit(l_m31, "\n", fixed = TRUE)[[1]]
 n_m31 <- if (identical(l_m31, l)) NA else s1_sol(l_m31, 1:N, PAT_S1F)
 n_m31_s1 <- if (identical(l_m31, l)) NA else s1_sol(l_m31, 1:N)
 ok(!is.na(n_m31) && n_m31 > 0 && identical(n_m31_s1, 0), sprintf("M31 (la Solution vuelve a cerrar la fórmula antes de «kilos a favor de», con el espacio duro): la sonda S1-Sol fórmula lo detecta en %s casos y S1-Sol en %s (cazado por su sonda)", n_m31, n_m31_s1))
-## Tanda S1b relanzada (2026-11-03, V1'), sonda S1-Sol signo: ninguna fórmula que cierra en su unidad deja fuera el
-## signo que la sigue («\\text{kilos}$.»): con el signo fuera, Chromium parte el renglón entre la fórmula y el signo (6b
-## de V1: el punto solo en 34 semillas a 360 px y en 5 a 320 px). Control positivo: la unidad con el signo dentro
-## («\\text{kilos.}$») aparece en todas las versiones. M32 saca el punto de la fórmula en la lista de totales del
-## procedimiento correcto, y tiene que verlo esta sonda, no S1-Sol ni S1-Sol fórmula.
-SIG_S1 <- "[.,:;!?)\\]»”…]"
-PAT_S1S <- paste0("\\\\text\\{(kilos?|cursos?)\\}\\$", SIG_S1)
-s1_sol_v <- function(lin, semillas, pat) {
-  ch <- lapply(c("opciones", "solucion", "feedback"), function(nm) chunk_de(lin, nm))
-  vapply(semillas, function(s) { r <- correr(s); if (!is.null(r$err)) return(NA_real_)
-    t <- paste(unlist(lapply(ch, function(e) capture.output(eval(e, envir = r$env)))), collapse = "\n")
-    lengths(regmatches(t, gregexpr(pat, t, perl = TRUE))) }, 0)
-}
+## Sonda S1-Sol signo (tanda S1b relanzada, V1'; generalizada en la tanda S2a por la decisión del profesor «Cerrarlo
+## ahora»): ninguna fórmula, con unidad o sin ella, deja fuera el signo que la sigue. Con el signo fuera, Chromium parte
+## el renglón entre la fórmula y el signo (6b de V1: el punto solo en 34 semillas a 360 px y en 5 a 320 px). Hasta la
+## S2a la sonda pedía la unidad («\\text{kilos}$.») y no veía el «= 5$.» de ERR-RESTA (42 casos en 100 versiones).
+## Controles exactos: la unidad con el signo dentro («\\text{kilos.}$», 730) y el signo dentro de una fórmula sin
+## unidad («\\text{.}$»), uno por versión con ERR-RESTA como distractor de G (42 en E1). M32, M38 y M41 prueban la sonda.
+PAT_S1S <- paste0("\\$", SEP_S1, SIG_S1)
+PAT_S1S_VIEJA <- paste0("\\\\text\\{(kilos?|cursos?)\\}\\$", SIG_S1)
+PAT_SIGNO_DENTRO <- paste0("\\\\text\\{(kilos?|cursos?)", SIG_S1, "\\}\\$")
+PAT_SIN_U <- paste0("\\\\text\\{", SIG_S1, "\\}\\$")
 n_s1s <- s1_sol(l, 1:N, PAT_S1S)
-v_dentro_s <- s1_sol_v(l, 1:N, paste0("\\\\text\\{(kilos?|cursos?)", SIG_S1, "\\}\\$"))
-ok(identical(n_s1s, 0) && !anyNA(v_dentro_s) && all(v_dentro_s > 0),
-   sprintf("S1-Sol signo: en las %d versiones de E1, ninguna fórmula que cierra en su unidad deja fuera el signo que la sigue (%s); unidad con el signo dentro en %d de %d versiones (%s en total)",
-           N, n_s1s, sum(v_dentro_s > 0, na.rm = TRUE), N, sum(v_dentro_s)))
+v_dentro_s <- s1_sol_v(l, 1:N, PAT_SIGNO_DENTRO)
+ok(identical(n_s1s, 0) && !anyNA(v_dentro_s) && all(v_dentro_s > 0) && isTRUE(sum(v_dentro_s) == CTRL_SIGNO),
+   sprintf("S1-Sol signo: en las %d versiones de E1, ninguna fórmula, con unidad o sin ella, deja fuera el signo que la sigue (%s); unidad con el signo dentro en %d de %d versiones (%s en total; control exacto: %s)",
+           N, n_s1s, sum(v_dentro_s > 0, na.rm = TRUE), N, sum(v_dentro_s), CTRL_SIGNO))
+es_resta <- vapply(NAT, function(x) identical(x$cod_gdis, "ERR-RESTA"), TRUE)
+v_sin_u <- s1_sol_v(l, 1:N, PAT_SIN_U)
+ok(!anyNA(v_sin_u) && isTRUE(sum(v_sin_u) == CTRL_SIN_U) && sum(es_resta) == CTRL_SIN_U && identical(v_sin_u > 0, es_resta),
+   sprintf("S1-Sol signo, fórmula sin unidad: el signo dentro («\\text{.}$») sale %s veces, en las %d versiones de E1 con ERR-RESTA como distractor de G y solo en ellas (control exacto: %s)",
+           sum(v_sin_u), sum(es_resta), CTRL_SIN_U))
 PAT_M32 <- '"\\\\ \\\\text{kilos.}$\\n", sep = "")'
 n_p32 <- sum(lengths(regmatches(l, gregexpr(PAT_M32, l, fixed = TRUE))))
 l_m32 <- sub(PAT_M32, '"\\\\ \\\\text{kilos}$.\\n", sep = "")', l, fixed = TRUE)
@@ -828,12 +889,61 @@ n_m32_otras <- if (is.na(n_m32)) NA else s1_sol(l_m32, 1:N) + s1_sol(l_m32, 1:N,
 ok(n_p32 == 1L && !is.na(n_m32) && n_m32 > 0 && identical(n_m32_otras, 0),
    sprintf("M32 (la lista de totales del procedimiento correcto saca el punto de la fórmula; el patrón aparece %d vez): la sonda S1-Sol signo lo detecta en %s casos, y S1-Sol y S1-Sol fórmula en %s (cazado por su sonda)",
            n_p32, n_m32, n_m32_otras))
+## Tanda S2a: mutantes de las sondas y de los controles exactos de S1-Sol, sobre el texto del .Rmd en memoria
+## (mut_lin() exige que el patrón aparezca una sola vez). Cada uno declara su sonda: la que tiene que cazarlo, con las
+## otras dos sondas en 0. Los de control quitan un solo sitio, y solo los caza su control exacto. Los caracteres
+## especiales se insertan con intToUtf8(), nunca literales.
+mut_lin <- function(de, a) { tx <- paste(l, collapse = "\n"); n <- lengths(regmatches(tx, gregexpr(de, tx, fixed = TRUE)))
+  list(n = n, lin = if (n == 1L) strsplit(sub(de, a, tx, fixed = TRUE), "\n", fixed = TRUE)[[1]] else NULL) }
+SONDAS_S1 <- c("S1" = PAT_S1, "S1-Sol fórmula" = PAT_S1F, "S1-Sol signo" = PAT_S1S)
+CONTROLES_S1 <- list("unidad dentro" = list(pat = PAT_DENTRO, n = CTRL_DENTRO),
+                     "unidad con el signo dentro" = list(pat = PAT_SIGNO_DENTRO, n = CTRL_SIGNO),
+                     "signo dentro sin unidad" = list(pat = PAT_SIN_U, n = CTRL_SIN_U))
+juzgar_s1 <- function(id, desc, de, a, sonda, vieja = NULL) {
+  m <- mut_lin(de, a)
+  if (is.null(m$lin)) return(invisible(falla(sprintf("%s MAL CONSTRUIDO: el patrón «%s» aparece %d veces (se exige 1)", id, substr(de, 1, 40), m$n))))
+  t <- textos_sol(m$lin, 1:N)
+  if (anyNA(t)) return(invisible(falla(sprintf("MUTANTE %s CAZADO POR LA SONDA EQUIVOCADA: el data_generation aborta en %d versiones", id, sum(is.na(t))))))
+  s <- vapply(SONDAS_S1, function(p) sum(cuenta_v(t, p)), 0)
+  cc <- vapply(CONTROLES_S1, function(z) sum(cuenta_v(t, z$pat)), 0)
+  cmal <- cc != vapply(CONTROLES_S1, function(z) z$n, 0)
+  ver <- if (identical(m$lin, l)) "mal_construido" else if (sonda %in% names(SONDAS_S1)) {
+    if (s[[sonda]] == 0) "no_detectado" else if (any(s[names(s) != sonda] > 0)) "cazado_por_otra" else "cazado_por_su_sonda"
+  } else {
+    if (any(s > 0) || any(cmal[names(cmal) != sonda])) "cazado_por_otra" else if (!cmal[[sonda]]) "no_detectado" else "cazado_por_su_sonda"
+  }
+  v_txt <- if (is.null(vieja)) "" else sprintf("; la clase anterior: %s", sum(cuenta_v(t, vieja)))
+  ok(ver == "cazado_por_su_sonda",
+     sprintf("%s (%s): S1 %s, S1-Sol fórmula %s, S1-Sol signo %s%s; controles: %s — sonda esperada «%s»: %s",
+             id, desc, s[[1]], s[[2]], s[[3]], v_txt,
+             paste(sprintf("%s %s%s", names(cc), cc, ifelse(cmal, " (falla)", "")), collapse = ", "), sonda, ver))
+}
+juzgar_s1("M34", "la explicación de ERR-PARCIAL, rama CURSOS, saca la unidad de su fórmula «… que compensan»; quita un solo sitio",
+          'p$parcialP, "\\\\ \\\\text{kilos}$ que compensan', 'p$parcialP, "$ que compensan', "unidad dentro")
+juzgar_s1("M35", "la explicación de ERR-PROM con el molde P_ven pierde la coma de su fórmula; quita un solo sitio",
+          '"\\\\ \\\\text{kilos,}$ es menor que el de "', '"\\\\ \\\\text{kilos}$ es menor que el de "', "unidad con el signo dentro")
+juzgar_s1("M36", "la explicación de ERR-RESTA pierde el punto de su fórmula sin unidad; quita el único sitio",
+          'p$delta, "\\\\text{.}$ Esa resta', 'p$delta, "$ Esa resta', "signo dentro sin unidad")
+juzgar_s1("M38", "la lista de totales pierde la unidad y deja el punto fuera de la fórmula, «= 200$.»",
+          PAT_M32, '"$.\\n", sep = "")', "S1-Sol signo", vieja = PAT_S1S_VIEJA)
+for (cp in list(c("a", "2009", "espacio fino"), c("b", "202f", "espacio duro estrecho"), c("c", "2060", "unión de palabras"))) {
+  juzgar_s1(paste0("M39", cp[1]), sprintf("la lista de totales saca la unidad de la fórmula con U+%s, %s (mutante de la r5)", toupper(cp[2]), cp[3]),
+            PAT_M32, sprintf('"$", intToUtf8(0x%s), "kilos.\\n", sep = "")', cp[2]), "S1-Sol fórmula", vieja = PAT_S1F_VIEJA)
+  juzgar_s1(paste0("M41", cp[1]), sprintf("la lista de totales deja el punto fuera de la fórmula tras U+%s, %s", toupper(cp[2]), cp[3]),
+            PAT_M32, sprintf('"\\\\ \\\\text{kilos}$", intToUtf8(0x%s), ".\\n", sep = "")', cp[2]), "S1-Sol signo", vieja = PAT_S1S_VIEJA)
+}
 ## L-6 (firmada el 2026-11-02): ED es una variable con el escape de U+00A0 y el .Rmd no lleva el carácter literal
 ## (la herramienta de edición convierte el escape en literal sin avisar). M29 escribe el literal en la definición de ED.
 lit_ok <- function(lin) !any(grepl("\u00a0", lin, fixed = TRUE)) && length(grep('^ED <- "\\\\u00a0"', lin)) == 1L
 ok(lit_ok(l), "L-6: el .Rmd no lleva el carácter U+00A0 literal y define ED con su escape")
 l_m29 <- sub('ED <- "\\u00a0"', paste0('ED <- "', "\u00a0", '"'), l, fixed = TRUE)
 ok(!identical(l_m29, l) && !lit_ok(l_m29), "M29 (ED con el carácter literal): la guarda L-6 lo detecta")
+## Tanda S2a (H1 y H4 de la FASE 2C r5): ni el .Rmd ni este verificador llevan U+00A0, U+2009, U+202F ni U+2060
+## literales; los mutantes de S1-Sol los construyen con intToUtf8().
+ESP_LIT <- paste0("[", intToUtf8(c(0xa0, 0x2009, 0x202f, 0x2060)), "]")
+yo_ver <- if (length(arg_file)) normalizePath(sub("^--file=", "", arg_file[1])) else NA_character_
+ok(!any(grepl(ESP_LIT, l, perl = TRUE)) && !is.na(yo_ver) && !any(grepl(ESP_LIT, readLines(yo_ver, encoding = "UTF-8"), perl = TRUE)),
+   "L-6 (S2a): ni el .Rmd ni el verificador llevan U+00A0, U+2009, U+202F ni U+2060 literales")
 ## M28 (decisión (a)): el mismo verificador, en otro proceso, sin la normalización del espacio duro. Tiene que dar un
 ## solo pendiente, el canal de largo de la rama PROMEDIO, con el margen en palabras de 6,7 % (la cifra sin normalizar).
 if (NORMALIZAR_ED) {

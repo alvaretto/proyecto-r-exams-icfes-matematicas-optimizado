@@ -1,0 +1,33 @@
+13c13
+<   OK: S7: en la canónica, el lado del distractor de G sale de sus cifras (x = 40, D = 20): «encima» 
+---
+>   OK: canal 2 (H5 r5): en las 291 no canónicas de E1 y de los estratos, la cifra falsa de G cae del lado de D sorteado para ella (debajo en 156, encima en 135); fuera de su lado: 0 
+222c222,223
+<   OK: M33 (el feedback de la clave deja el punto fuera de la fórmula (revierte V1')) cazado por su sonda «L-6: el signo que sigue a la unidad de una fórmula va dentro de la fórmula» en la semilla 1
+---
+>   OK: M33 (el feedback de la clave deja el punto fuera de la fórmula (revierte V1')) cazado por su sonda «L-6: el signo que sigue a una fórmula, con unidad o sin ella, va dentro de la fórmula» en la semilla 1
+>   OK: M37 (la explicación de ERR-RESTA deja el punto fuera de su fórmula sin unidad (revierte H2)) cazado por su sonda «L-6: el signo que sigue a una fórmula, con unidad o sin ella, va dentro de la fórmula» en la semilla 1
+224a226
+>   OK: M40 (quita el filtro cand_g[lado_ok, ]): la guarda real del canal 2 lo detecta en 32 de 100 versiones de E1 (0 con error) — cazado_por_su_sonda 
+232c234
+<   OK: S1-Sol fórmula: en las 100 versiones de E1, ninguna fórmula cierra antes de su unidad (0); unidad dentro de la fórmula: 1158 
+---
+>   OK: S1-Sol fórmula: en las 100 versiones de E1, ninguna fórmula cierra antes de su unidad, con ningún separador (0); unidad dentro de la fórmula: 1158 (control exacto: 1158) 
+234c236,237
+<   OK: S1-Sol signo: en las 100 versiones de E1, ninguna fórmula que cierra en su unidad deja fuera el signo que la sigue (0); unidad con el signo dentro en 100 de 100 versiones (730 en total) 
+---
+>   OK: S1-Sol signo: en las 100 versiones de E1, ninguna fórmula, con unidad o sin ella, deja fuera el signo que la sigue (0); unidad con el signo dentro en 100 de 100 versiones (730 en total; control exacto: 730) 
+>   OK: S1-Sol signo, fórmula sin unidad: el signo dentro («\text{.}$») sale 42 veces, en las 42 versiones de E1 con ERR-RESTA como distractor de G y solo en ellas (control exacto: 42) 
+235a239,248
+>   OK: M34 (la explicación de ERR-PARCIAL, rama CURSOS, saca la unidad de su fórmula «… que compensan»; quita un solo sitio): S1 0, S1-Sol fórmula 0, S1-Sol signo 0; controles: unidad dentro 1151 (falla), unidad con el signo dentro 730, signo dentro sin unida
+>   OK: M35 (la explicación de ERR-PROM con el molde P_ven pierde la coma de su fórmula; quita un solo sitio): S1 0, S1-Sol fórmula 0, S1-Sol signo 0; controles: unidad dentro 1158, unidad con el signo dentro 721 (falla), signo dentro sin unidad 42 — sonda esp
+>   OK: M36 (la explicación de ERR-RESTA pierde el punto de su fórmula sin unidad; quita el único sitio): S1 0, S1-Sol fórmula 0, S1-Sol signo 0; controles: unidad dentro 1158, unidad con el signo dentro 730, signo dentro sin unidad 0 (falla) — sonda esperada 
+>   OK: M38 (la lista de totales pierde la unidad y deja el punto fuera de la fórmula, «= 200$.»): S1 0, S1-Sol fórmula 0, S1-Sol signo 200; la clase anterior: 0; controles: unidad dentro 958 (falla), unidad con el signo dentro 530 (falla), signo dentro sin un
+>   OK: M39a (la lista de totales saca la unidad de la fórmula con U+2009, espacio fino (mutante de la r5)): S1 0, S1-Sol fórmula 200, S1-Sol signo 0; la clase anterior: 0; controles: unidad dentro 958 (falla), unidad con el signo dentro 530 (falla), signo den
+>   OK: M41a (la lista de totales deja el punto fuera de la fórmula tras U+2009, espacio fino): S1 0, S1-Sol fórmula 0, S1-Sol signo 200; la clase anterior: 0; controles: unidad dentro 1158, unidad con el signo dentro 530 (falla), signo dentro sin unidad 42 — 
+>   OK: M39b (la lista de totales saca la unidad de la fórmula con U+202F, espacio duro estrecho (mutante de la r5)): S1 0, S1-Sol fórmula 200, S1-Sol signo 0; la clase anterior: 0; controles: unidad dentro 958 (falla), unidad con el signo dentro 530 (falla), 
+>   OK: M41b (la lista de totales deja el punto fuera de la fórmula tras U+202F, espacio duro estrecho): S1 0, S1-Sol fórmula 0, S1-Sol signo 200; la clase anterior: 0; controles: unidad dentro 1158, unidad con el signo dentro 530 (falla), signo dentro sin uni
+>   OK: M39c (la lista de totales saca la unidad de la fórmula con U+2060, unión de palabras (mutante de la r5)): S1 0, S1-Sol fórmula 200, S1-Sol signo 0; la clase anterior: 0; controles: unidad dentro 958 (falla), unidad con el signo dentro 530 (falla), sign
+>   OK: M41c (la lista de totales deja el punto fuera de la fórmula tras U+2060, unión de palabras): S1 0, S1-Sol fórmula 0, S1-Sol signo 200; la clase anterior: 0; controles: unidad dentro 1158, unidad con el signo dentro 530 (falla), signo dentro sin unidad 
+237a251
+>   OK: L-6 (S2a): ni el .Rmd ni el verificador llevan U+00A0, U+2009, U+202F ni U+2060 literales 

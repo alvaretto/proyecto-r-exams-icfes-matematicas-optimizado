@@ -1,0 +1,3 @@
+final: preguntas 101 · formulas 1307 · signo_tras_cierre 0 · unidad_tras_cierre 0 · unidad_dentro 1160 · signo_dentro_con_unidad 733 · signo_dentro_sin_unidad 40 · math_mathml 0 · esp_especiales 0 · signos tras el cierre {}
+ant: preguntas 101 · formulas 1307 · signo_tras_cierre 40 · unidad_tras_cierre 0 · unidad_dentro 1160 · signo_dentro_con_unidad 733 · signo_dentro_sin_unidad 0 · math_mathml 0 · esp_especiales 0 · signos tras el cierre {'.': 40}
+v1: preguntas 101 · formulas 1307 · signo_tras_cierre 773 · unidad_tras_cierre 0 · unidad_dentro 1160 · signo_dentro_con_unidad 0 · signo_dentro_sin_unidad 0 · math_mathml 0 · esp_especiales 0 · signos tras el cierre {'.': 640, ':': 121, ',': 12}

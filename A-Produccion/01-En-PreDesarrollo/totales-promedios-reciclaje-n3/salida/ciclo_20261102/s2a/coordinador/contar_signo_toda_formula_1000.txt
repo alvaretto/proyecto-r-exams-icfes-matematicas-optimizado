@@ -1,0 +1,2 @@
+viejo_6c9d7705.Rmd · semillas 1000: signo fuera tras el cierre de una fórmula 425 (en 425 semillas) · signo dentro de una fórmula sin unidad 0
+nuevo_63e2713e.Rmd · semillas 1000: signo fuera tras el cierre de una fórmula 0 (en 0 semillas) · signo dentro de una fórmula sin unidad 425

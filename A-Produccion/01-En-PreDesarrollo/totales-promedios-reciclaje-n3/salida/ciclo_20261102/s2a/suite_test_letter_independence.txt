@@ -1,0 +1,4 @@
+letter_independence: 
+Regla #19: Letter-independence en Solution (Error 19): ......
+
+══ DONE ════════════════════════════════════════════════════════════════════════

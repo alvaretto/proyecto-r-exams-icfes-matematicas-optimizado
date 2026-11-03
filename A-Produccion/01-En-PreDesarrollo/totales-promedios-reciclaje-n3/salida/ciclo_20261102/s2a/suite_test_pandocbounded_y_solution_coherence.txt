@@ -1,0 +1,6 @@
+pandocbounded_y_solution_coherence: 
+Regresión Error 16: Markdown sin width attribute: .....
+Regresión Error 17: exshuffle:TRUE + Solution con letra explícita: ....
+Regresión: pandocbounded en .tex generados recientemente: .
+
+══ DONE ════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,28 @@
+exit=0 · 95 s · 2026-11-03T08:09:22-05:00
+pdf: ej1.pdf ej2.pdf ej3.pdf 
+tex: ej1.pdf ej1.tex ej2.pdf ej2.tex ej3.pdf ej3.tex exercise1.tex 
+nops: ej1.pdf ej2.pdf ej.rds 
+html: ej1.html ej2.html ej3.html 
+docx: ej1.docx ej2.docx ej3.docx 
+moodle_100: ej.xml 
+pdf/ej1.pdf: Pages:           3
+pdf/ej2.pdf: Pages:           3
+pdf/ej3.pdf: Pages:           3
+nops/ej1.pdf: Pages:           4
+nops/ej2.pdf: Pages:           4
+pandocbounded en .tex: 3 apariciones; líneas que lo usan fuera de la definición: 0
+LTcaptype en .tex: s2a/render_63e2713e/tex/ej3.tex:0 s2a/render_63e2713e/tex/ej2.tex:0 s2a/render_63e2713e/tex/ej1.tex:0 s2a/render_63e2713e/tex/exercise1.tex:1  · guarda en el .Rmd: 1
+Moodle oficial: preguntas 101 · <math 0
+nuevo_oficial: preguntas 101 · formulas 1307 · signo_tras_cierre 0 · unidad_tras_cierre 0 · unidad_dentro 1160 · signo_dentro_con_unidad 733 · signo_dentro_sin_unidad 40 · math_mathml 0 · esp_especiales 0 · signos tras el cierre {}
+nuevo_medicion: preguntas 101 · formulas 1307 · signo_tras_cierre 0 · unidad_tras_cierre 0 · unidad_dentro 1160 · signo_dentro_con_unidad 733 · signo_dentro_sin_unidad 40 · math_mathml 0 · esp_especiales 0 · signos tras el cierre {}
+ant_6c9d7705_oficial: preguntas 101 · formulas 1307 · signo_tras_cierre 0 · unidad_tras_cierre 0 · unidad_dentro 1160 · signo_dentro_con_unidad 733 · signo_dentro_sin_unidad 0 · math_mathml 0 · esp_especiales 0 · signos tras el cierre {}
+V1p_2a5e59a1: preguntas 101 · formulas 1307 · signo_tras_cierre 0 · unidad_tras_cierre 0 · unidad_dentro 1160 · signo_dentro_con_unidad 733 · signo_dentro_sin_unidad 0 · math_mathml 0 · esp_especiales 0 · signos tras el cierre {}
+V1_5cf5b12f: preguntas 101 · formulas 1307 · signo_tras_cierre 0 · unidad_tras_cierre 0 · unidad_dentro 1160 · signo_dentro_con_unidad 0 · signo_dentro_sin_unidad 0 · math_mathml 0 · esp_especiales 0 · signos tras el cierre {}
+base_4cffbe8b: preguntas 101 · formulas 1307 · signo_tras_cierre 0 · unidad_tras_cierre 0 · unidad_dentro 0 · signo_dentro_con_unidad 0 · signo_dentro_sin_unidad 0 · math_mathml 0 · esp_especiales 0 · signos tras el cierre {}
+e293d5c8: preguntas 101 · formulas 1307 · signo_tras_cierre 0 · unidad_tras_cierre 0 · unidad_dentro 0 · signo_dentro_con_unidad 0 · signo_dentro_sin_unidad 0 · math_mathml 0 · esp_especiales 0 · signos tras el cierre {}
+--- PDF por coordenadas (100 ejercicios)
+nuevo: medicion: renglones físicos que empiezan por un signo 0 (palabras con signo inicial: 142) | que empiezan por la unidad 151, tras una fórmula 0 | ejemplos signo [] | ejemplos unidad [(1, 'y cuánto recogió, en promedio,', 'curso:'), (4, 'o promedios si fueran totales.', 'cursos,')] 
+V1p_2a5e59a1: render_2a5e59a1: renglones físicos que empiezan por un signo 0 (palabras con signo inicial: 142) | que empiezan por la unidad 151, tras una fórmula 0 | ejemplos signo [] | ejemplos unidad [(1, 'y cuánto recogió, en promedio,', 'curso:'), (4, 'o promedios si fueran totales.', 'cursos,')] 
+V1_5cf5b12f: render_5cf5b12f: renglones físicos que empiezan por un signo 0 (palabras con signo inicial: 142) | que empiezan por la unidad 151, tras una fórmula 0 | ejemplos signo [] | ejemplos unidad [(1, 'y cuánto recogió, en promedio,', 'curso:'), (4, 'o promedios si fueran totales.', 'cursos,')] 
+s2a/render_63e2713e/medicion/pdf_tex/exercise002.tex:1
+s2a/render_63e2713e/medicion/pdf_tex/exercise003.tex:0

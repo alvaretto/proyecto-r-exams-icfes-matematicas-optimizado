@@ -9,7 +9,10 @@ Defecto 2 (corregido): el detector de signos huérfanos solo miraba [.,:;] al pr
 Métricas nuevas: «renglón que empieza con un espacio tras una fórmula» (el primer carácter del texto que sigue a la
   fórmula es un espacio visible al principio del renglón siguiente; un espacio normal colapsa y no cuenta) y
   «fórmula partida por dentro» (<math> con más de una caja).
-Todas las clases de caracteres van con escapes (\\u00a0…), sin caracteres literales.
+Tanda S2a (H4 de la FASE 2C r5): en el JS, los U+00A0 y los signos no ASCII de las clases van con su escape
+  (\\u00a0, \\u00bb, \\u201d, \\u2026). Hasta la S2a el JS llevaba 10 U+00A0 literales, aunque esta
+  línea decía que no. Un assert comprueba que ni el JS ni este archivo llevan U+00A0, U+2009, U+202F o U+2060
+  literales. Los comentarios del JS conservan sus tildes.
 Uso: python3 -I cap_s1b2.py v1=<dir_html>,v2=<dir_html>,... <anchos: 360,320> <salida.json> <dir_capturas|-> <perfil>
      <dir_html>/sNNN/ej1.html, semillas 1..100. El perfil de Chromium va FUERA del repo."""
 import asyncio, json, os, sys, subprocess, time, base64, urllib.request
@@ -22,7 +25,7 @@ assert "/RepositorioMatematicasICFES_R_Exams/" not in os.path.abspath(PROF) + "/
 if SHOTS != "-":
     os.makedirs(SHOTS, exist_ok=True)
 JS = r"""(() => {
-const SIG=/^[.,:;!?)\]»”…]/;
+const SIG=/^[.,:;!?)\]\u00bb\u201d\u2026]/;
 const o={iw:innerWidth, docSW:document.documentElement.scrollWidth, bodySW:document.body.scrollWidth, bodyCW:document.body.clientWidth, H:document.documentElement.scrollHeight};
 const isSc=el=>{const x=getComputedStyle(el).overflowX;return x==='auto'||x==='scroll'};
 const inSc=el=>{let p=el.parentElement;while(p&&p!==document.body){if(isSc(p))return true;p=p.parentElement}return false};
@@ -34,41 +37,46 @@ const isF=el=>el&&el.nodeType===1&&(el.tagName.toUpperCase()==='MATH'||!!el.quer
 const lastRect=el=>{const rs=[...el.getClientRects()].filter(x=>x.width>0);return rs[rs.length-1]||null};
 const otraLinea=(a,b)=>Math.abs((a.top+a.bottom)/2-(b.top+b.bottom)/2)>Math.max(a.height,b.height)*0.5;
 o.pairs=[];o.splits=[];o.punt=[];o.esp=[];
-const UN=/(\d)([  ])(kilos?|cursos?)/g, EL=/\b(El|La)([  ])(Bosque|Pradera)/g, MU=/^([  ]*)(kilos?|cursos?)/;
+const UN=/(\d)([ \u00a0])(kilos?|cursos?)/g, EL=/\b(El|La)([ \u00a0])(Bosque|Pradera)/g, MU=/^([ \u00a0]*)(kilos?|cursos?)/;
 const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;
 while(n=w.nextNode()){const s=n.nodeValue;if(!s)continue;const intd=!!n.parentElement.closest('td,th');const inmath=!!n.parentElement.closest('math');
  let m;UN.lastIndex=0;
- if(!inmath)while(m=UN.exec(s)){const a=chrect(n,m.index),b=chrect(n,m.index+2);const nb=m[2]===' ';
+ if(!inmath)while(m=UN.exec(s)){const a=chrect(n,m.index),b=chrect(n,m.index+2);const nb=m[2]==='\u00a0';
   if(a&&b){const sp=otraLinea(a,b);o.pairs.push({k:'cifra-unidad',nb,intd,sp});if(sp)o.splits.push({k:'cifra-unidad',nb,intd,t:s.slice(Math.max(0,m.index-25),m.index+14)})}}
  EL.lastIndex=0;
- if(!inmath)while(m=EL.exec(s)){const a=chrect(n,m.index+1),b=chrect(n,m.index+3);const nb=m[2]===' ';
+ if(!inmath)while(m=EL.exec(s)){const a=chrect(n,m.index+1),b=chrect(n,m.index+3);const nb=m[2]==='\u00a0';
   if(a&&b){const sp=otraLinea(a,b);o.pairs.push({k:'El-Bosque',nb,intd,sp});if(sp)o.splits.push({k:'El-Bosque',nb,intd,t:s.slice(Math.max(0,m.index-25),m.index+20)})}}
  if(inmath)continue;
  const ps=n.previousSibling;
  // fórmula seguida de su unidad, fuera de la fórmula (base, V2)
  const mm=MU.exec(s);
  if(mm&&isF(ps)){const b=chrect(n,mm[1].length);const mt=ps.tagName.toUpperCase()==='MATH'?ps:ps.querySelector('math');const mr=lastRect(mt);
-  if(b&&mr){const sp=otraLinea(mr,b);const nb=mm[1].indexOf(' ')>=0;o.pairs.push({k:'formula-unidad',nb,intd,sp});if(sp)o.splits.push({k:'formula-unidad',nb,intd,t:'MATH '+(mt.querySelector('annotation')||mt).textContent.slice(-25)+' '+mm[2]})}}
+  if(b&&mr){const sp=otraLinea(mr,b);const nb=mm[1].indexOf('\u00a0')>=0;o.pairs.push({k:'formula-unidad',nb,intd,sp});if(sp)o.splits.push({k:'formula-unidad',nb,intd,t:'MATH '+(mt.querySelector('annotation')||mt).textContent.slice(-25)+' '+mm[2]})}}
  // signo ante el que el texto no admite corte, tras un elemento
  if(SIG.test(s)&&!intd&&ps&&ps.nodeType===1){const pr=lastRect(ps);const b=chrect(n,0);
   if(pr&&b){const sp=otraLinea(pr,b);o.punt.push({sp,fm:isF(ps),prev:ps.tagName.toLowerCase(),t:s.slice(0,1)});
    if(sp)o.splits.push({k:'signo',fm:isF(ps),t:(ps.textContent||'').slice(-25)+'|'+s.slice(0,12)})}}
  // renglón que empieza con un espacio tras una fórmula
- if(/^[  ]/.test(s)&&!intd&&isF(ps)){const pr=lastRect(ps);const b=chrect(n,0);
-  if(pr){const sp=!!b&&otraLinea(pr,b);o.esp.push({sp,nb:s[0]===' '});if(sp)o.splits.push({k:'espacio-inicial',t:(ps.textContent||'').slice(-25)+'|'+s.slice(0,12)})}}
+ if(/^[ \u00a0]/.test(s)&&!intd&&isF(ps)){const pr=lastRect(ps);const b=chrect(n,0);
+  if(pr){const sp=!!b&&otraLinea(pr,b);o.esp.push({sp,nb:s[0]==='\u00a0'});if(sp)o.splits.push({k:'espacio-inicial',t:(ps.textContent||'').slice(-25)+'|'+s.slice(0,12)})}}
 }
 // unidad dentro de la fórmula (V1, V1'): <mtext> con la unidad, con o sin signo final
 for(const mt of document.querySelectorAll('math')){const tk=[...mt.querySelectorAll('mn,mi,mo,mtext')];
- tk.forEach((t,i)=>{if(t.tagName.toLowerCase()!=='mtext'||!/^[\s ]*(kilos?|cursos?)[.,:;!?)\]»”…]*[\s ]*$/.test(t.textContent))return;
+ tk.forEach((t,i)=>{if(t.tagName.toLowerCase()!=='mtext'||!/^[\s\u00a0]*(kilos?|cursos?)[.,:;!?)\]\u00bb\u201d\u2026]*[\s\u00a0]*$/.test(t.textContent))return;
   let p=null;for(let j=i-1;j>=0;j--){if(tk[j].textContent.trim()){p=tk[j];break}}
   const a=p&&p.getBoundingClientRect(),b=t.getBoundingClientRect();
   const sp=!!a&&otraLinea(a,b);const intd=!!mt.closest('td,th');
-  o.pairs.push({k:'formula-unidad-dentro',nb:false,intd,sp,rects:mt.getClientRects().length,sig:/[.,:;!?)\]»”…]/.test(t.textContent)});
+  o.pairs.push({k:'formula-unidad-dentro',nb:false,intd,sp,rects:mt.getClientRects().length,sig:/[.,:;!?)\]\u00bb\u201d\u2026]/.test(t.textContent)});
   if(sp)o.splits.push({k:'formula-unidad-dentro',t:(mt.textContent||'').slice(-24)})})}
 o.mathSplit=[...document.querySelectorAll('math')].filter(m=>[...m.getClientRects()].filter(x=>x.width>0).length>1).length;
 o.nowrap=[...document.querySelectorAll('span')].filter(x=>getComputedStyle(x).whiteSpace==='nowrap').length;
 o.mathCount=document.querySelectorAll('math').length;
 return JSON.stringify(o)})()"""
+# H4 de la FASE 2C r5 (tanda S2a): ningún espacio especial literal, ni en el JS ni en este archivo.
+for _c in (0xA0, 0x2009, 0x202F, 0x2060):
+    assert chr(_c) not in JS, f"U+{_c:04X} literal en el JS"
+    assert chr(_c) not in open(__file__, encoding="utf-8").read(), f"U+{_c:04X} literal en el fuente"
+
 
 
 class CDP:

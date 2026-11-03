@@ -3,7 +3,7 @@
   "ejercicio": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1",
   "tipo": "schoice",
   "timestamp_inicio": "2026-10-29T06:13:12.230996-05:00",
-  "timestamp_ultima_actualizacion": "2026-11-03T07:06:40.412209-05:00",
+  "timestamp_ultima_actualizacion": "2026-11-03T08:12:18.319267-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -27,24 +27,24 @@
     },
     "generacion_rmd": {
       "completado": true,
-      "timestamp": "2026-11-03T07:04:12.324962-05:00",
+      "timestamp": "2026-11-03T08:09:05.201905-05:00",
       "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd",
-      "nota": "Tanda S1b relanzada (2026-11-03). .Rmd md5 6c9d77058b32fdd8291a1ebaab581c8f (desde 5cf5b12f): V1′ en los 14 sitios donde una fórmula que cierra en «kilos» va seguida de un signo, guarda «L-6: el signo que sigue a la unidad…» y S7 (fuera lado_gdis de la canónica). Invariancia 1000/1000 (salida/ciclo_20261102/s1b/relanzada/invariancia_*.txt). verificar_espacio.R md5 bd6eda09…: exit 4, 37 canales, 0 fallos, 0 pendientes; M30-M33 cazados por su sonda (relanzada/verificar_espacio_s1b2.txt)"
+      "nota": "Tanda S2a (2026-11-03), FASE 2C r5. .Rmd md5 63e2713e6ac0bdbf250f4dc33901b2ec (desde 6c9d7705): H2 cerrado por decisión del profesor («Cerrarlo ahora (Recomendada)»): «= δ\\text{.}$ Esa resta…» en la explicación de ERR-RESTA, y la guarda «L-6: el signo que sigue a una fórmula, con unidad o sin ella, va dentro de la fórmula» cubre toda fórmula y todo separador que no sea letra ni cifra. Invariancia 1000/1000 (salida/ciclo_20261102/s2a/invariancia_s2a_1000.txt): .Random.seed, objetos, enunciado, opciones y tabla idénticos; Solution idéntica tras devolver el signo (difiere solo en las 425 versiones con ERR-RESTA); feedback idéntico byte a byte; 0 fórmulas seguidas de un signo fuera. verificar_espacio.R md5 bdd0daf06ba933a1eff873770a755d59: exit 4, 37 canales, 0 fallos, 0 pendientes; M33, M34-M41 cazados por su sonda; ninguna cifra firmada se mueve (s2a/verificar_espacio_s2a.txt y s2a/diff_verificador_s1b2_a_s2a.txt)"
     },
     "retroalimentacion": {
       "completado": true,
-      "timestamp": "2026-11-03T07:04:21.803994-05:00",
-      "nota": "Tanda S1b relanzada, .Rmd md5 6c9d77058b32fdd8291a1ebaab581c8f. La Solution y el feedback solo cambian la posición del signo que sigue a la unidad de una fórmula: idénticos a los de 5cf5b12f tras normalizarla en 1000/1000 semillas (relanzada/invariancia_v1_a_v1p.txt); las seis secciones metacognitivas, sin cambios. Regla #19: 0 coincidencias (relanzada/regla19_6c9d7705.txt). Sonda S1-Sol signo: 0 signos fuera; unidad con el signo dentro en 100/100 versiones"
+      "timestamp": "2026-11-03T08:09:11.166339-05:00",
+      "nota": "Tanda S2a, .Rmd md5 63e2713e6ac0bdbf250f4dc33901b2ec. La Solution solo cambia en la explicación de ERR-RESTA: el punto que sigue a su fórmula sin unidad entra en ella («= δ\\text{.}$»). Idéntica a la de 6c9d7705 tras devolver el signo a su sitio en 1000/1000 semillas, y byte a byte en las 575 sin ERR-RESTA; feedback idéntico byte a byte (salida/ciclo_20261102/s2a/invariancia_s2a_1000.txt). Las seis secciones metacognitivas, sin cambios. Regla #19: 0 coincidencias (s2a/regla19_63e2713e.txt). Sonda S1-Sol signo generalizada: 0 signos fuera de su fórmula, con unidad o sin ella; «\\text{.}$» en las 42 versiones de E1 con ERR-RESTA y solo en ellas"
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-11-03T07:06:32.232723-05:00",
-      "nota": "Tanda S1b relanzada, .Rmd md5 6c9d77058b32fdd8291a1ebaab581c8f. salida/ciclo_20261102/s1b/render_6c9d7705/: HTML 3, PDF 3 (3 páginas cada uno), DOCX 3, NOPS 2 (4 páginas) y Moodle n = 100 (100 preguntas, 0 <math>, 733 unidades con el signo dentro de \\(…\\), 0 signos tras el cierre). \\pandocbounded: 0 usos (solo la definición de la plantilla). \\LTcaptype con la guarda del contador none en el .Rmd. Las 3 páginas del PDF de la versión 1 se revisaron a ojo. Verificaciones: relanzada/render_6c9d7705_verificaciones.txt"
+      "timestamp": "2026-11-03T08:12:08.428098-05:00",
+      "nota": "Tanda S2a, .Rmd md5 63e2713e6ac0bdbf250f4dc33901b2ec. salida/ciclo_20261102/s2a/render_63e2713e/: PDF 3 (semillas 1, 2 y 7; 3 páginas cada uno), HTML 3, DOCX 3, NOPS 2 (semillas 1 y 7; 4 páginas) y Moodle n = 100 (101 preguntas con la categoría, 0 <math>; 0 signos tras el cierre de una fórmula, con unidad o sin ella; 1160 unidades dentro, 733 con el signo dentro y 40 «\\text{.}» de ERR-RESTA; control 6c9d7705: 40 signos fuera, s2a/moodle_s2a.txt). dir= y texdir= literales en el comando: el hook vio el PDF (2B, 3 páginas) y los .tex (2I). \\pandocbounded: 0 usos (3 apariciones, todas definición de la plantilla). \\LTcaptype en exercise1.tex con la guarda del contador none en el .Rmd. Las 3 páginas del PDF de la semilla 1 (ERR-RESTA, «39 − 32 = 7.» con el punto dentro) revisadas a ojo. Verificaciones: s2a/render_63e2713e_verificaciones.txt"
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-11-03T07:06:40.412209-05:00",
-      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1/20261103-070521-197492/informe.txt (copia en salida/ciclo_20261102/s1b/relanzada/arsenal_6c9d7705_informe.txt) · md5 6c9d77058b32fdd8291a1ebaab581c8f · 0 errores / 7 advertencias (heurísticas, las mismas de S1) · 2G 100/100 · 2H 0 anomalías · 2J, 2K, 2O OK · 2B y 2I sin PDF/.tex localizable por el hook (dir= en variable): comprobados a mano en el paso 5"
+      "timestamp": "2026-11-03T08:12:18.319267-05:00",
+      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1/20261103-081020-313328/informe.txt (copia en salida/ciclo_20261102/s2a/arsenal_63e2713e_informe.txt) · md5 63e2713e6ac0bdbf250f4dc33901b2ec · 0 errores / 6 advertencias (las heurísticas de S1 y S1b; la séptima de la S1b, «PDF no encontrado», desaparece porque dir= va literal) · 2A APROBADO · 2B preview de 3 páginas, leídas · 2G 100/100 · 2H 0 anomalías en 10 semillas · 2I sin patrones de Error 16/17 sobre los .tex del render · 2J, 2K, 2N, 2O OK"
     },
     "detractor_fase2c": {
       "completado": false,
@@ -405,6 +405,37 @@
         "arsenal_post_render": {
           "timestamp": "2026-11-02T20:27:51.688242-05:00",
           "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1/20261102-202646-266781/informe.txt · md5 5cf5b12f02e942091a3af899a81a2d6c · 0 errores / 7 advertencias (las mismas 7 heurísticas de S1: Tarea, tabla de metadatos, descripción de evaluación, análisis de distractores, patrón ICFES, letra_correcta y PDF de la 2B). 2G 100/100; 2H 0 anomalías; 2J, 2K, 2N y 2O en verde. La 2I no vio el .tex (texdir por file.path): revisado a mano, 0 usos de \\pandocbounded."
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-03T07:59:59.727034-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Ciclo 2026-11-02, tanda S2a: FASE 2C r5 (APROBAR_CON_CAMBIOS); H2 cerrado por decisión del profesor («Cerrarlo ahora»): el signo que sigue a toda fórmula va dentro de ella",
+      "reporte": "A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/salida/fase2c_r5_detractor.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-11-03T07:04:12.324962-05:00",
+          "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd",
+          "nota": "Tanda S1b relanzada (2026-11-03). .Rmd md5 6c9d77058b32fdd8291a1ebaab581c8f (desde 5cf5b12f): V1′ en los 14 sitios donde una fórmula que cierra en «kilos» va seguida de un signo, guarda «L-6: el signo que sigue a la unidad…» y S7 (fuera lado_gdis de la canónica). Invariancia 1000/1000 (salida/ciclo_20261102/s1b/relanzada/invariancia_*.txt). verificar_espacio.R md5 bd6eda09…: exit 4, 37 canales, 0 fallos, 0 pendientes; M30-M33 cazados por su sonda (relanzada/verificar_espacio_s1b2.txt)"
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-11-03T07:04:21.803994-05:00",
+          "nota": "Tanda S1b relanzada, .Rmd md5 6c9d77058b32fdd8291a1ebaab581c8f. La Solution y el feedback solo cambian la posición del signo que sigue a la unidad de una fórmula: idénticos a los de 5cf5b12f tras normalizarla en 1000/1000 semillas (relanzada/invariancia_v1_a_v1p.txt); las seis secciones metacognitivas, sin cambios. Regla #19: 0 coincidencias (relanzada/regla19_6c9d7705.txt). Sonda S1-Sol signo: 0 signos fuera; unidad con el signo dentro en 100/100 versiones"
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-11-03T07:06:32.232723-05:00",
+          "nota": "Tanda S1b relanzada, .Rmd md5 6c9d77058b32fdd8291a1ebaab581c8f. salida/ciclo_20261102/s1b/render_6c9d7705/: HTML 3, PDF 3 (3 páginas cada uno), DOCX 3, NOPS 2 (4 páginas) y Moodle n = 100 (100 preguntas, 0 <math>, 733 unidades con el signo dentro de \\(…\\), 0 signos tras el cierre). \\pandocbounded: 0 usos (solo la definición de la plantilla). \\LTcaptype con la guarda del contador none en el .Rmd. Las 3 páginas del PDF de la versión 1 se revisaron a ojo. Verificaciones: relanzada/render_6c9d7705_verificaciones.txt"
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-11-03T07:06:40.412209-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1/20261103-070521-197492/informe.txt (copia en salida/ciclo_20261102/s1b/relanzada/arsenal_6c9d7705_informe.txt) · md5 6c9d77058b32fdd8291a1ebaab581c8f · 0 errores / 7 advertencias (heurísticas, las mismas de S1) · 2G 100/100 · 2H 0 anomalías · 2J, 2K, 2O OK · 2B y 2I sin PDF/.tex localizable por el hook (dir= en variable): comprobados a mano en el paso 5"
         }
       }
     }

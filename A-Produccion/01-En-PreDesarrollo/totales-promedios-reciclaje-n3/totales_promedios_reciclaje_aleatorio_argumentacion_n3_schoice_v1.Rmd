@@ -28,6 +28,9 @@ ED <- "\u00a0"
 ## Tanda S1b relanzada (2026-11-03, decisión del profesor «V1' (Recomendada)»): el signo que sigue a la unidad entra
 ## también en la fórmula, «$... = T\\ \\text{kilos.}$»: con el signo fuera, Chromium partía el renglón entre la
 ## fórmula y el signo (6b de V1, N = 100: el punto solo en 34 semillas a 360 px y en 5 a 320 px).
+## Tanda S2a (2026-11-03, decisión del profesor «Cerrarlo ahora (Recomendada)»): el signo que sigue a una fórmula SIN
+## unidad también entra en ella, «$... = 5\\text{.}$». Es la explicación de ERR-RESTA, la única: con el punto fuera,
+## Chromium podía partir el renglón entre la fórmula y el punto (42 casos en 100 versiones; H2 de la FASE 2C r5).
 
 ## --- Utilidades (familia F5: muestreo seguro) --------------------------------
 pick  <- function(x) x[sample.int(length(x), 1L)]     # vectores, también de longitud 1
@@ -259,7 +262,7 @@ errores_conceptuales <- list(
        precondicion = function(p) p$delta != p$D,
        calcula = function(p) { if (p$delta == p$D) stop("calcula(ERR-RESTA): fuera de contexto"); p$delta },
        explica = function(p, af) paste0("La cifra ", af$x, " sale de restar los promedios: $",
-         max(p$aG, p$aP), " - ", min(p$aG, p$aP), " = ", p$delta, "$. Esa resta compara un curso típico de cada ",
+         max(p$aG, p$aP), " - ", min(p$aG, p$aP), " = ", p$delta, "\\text{.}$ Esa resta compara un curso típico de cada ",
          p$tipo, ", no las ", p$tipo, "s completas: como participaron ", p$nG, " y ", p$nP,
          ED, "cursos, la diferencia entre los totales es $", p$TG, " - ", p$TP, " = ", p$D, "\\ \\text{kilos.}$")),
   list(codigo = "ERR-PARCIAL", lado = "G", nombre = "Cuenta solo la ventaja de quien gana",
@@ -593,8 +596,10 @@ stopifnot("L-6: la unidad que cierra una fórmula va dentro de la fórmula" =
                        c(fb, vapply(c("gdis", "padv", "psin"), function(r)
                          errores_conceptuales[[afs[[r]]$codigo]]$explica(params, afs[[r]]), "")), perl = TRUE)))
 ## L-6 (tanda S1b relanzada, V1'): el signo que sigue a la unidad de una fórmula va dentro de ella, «\\text{kilos.}$».
-stopifnot("L-6: el signo que sigue a la unidad de una fórmula va dentro de la fórmula" =
-            !any(grepl("\\\\text\\{(kilos?|cursos?)\\}\\$[.,:;!?)\\]\u00bb\u201d\u2026]",
+## Tanda S2a (2026-11-03, decisión del profesor «Cerrarlo ahora»): también el de toda fórmula sin unidad, «= 5\\text{.}$»
+## (ERR-RESTA), y con cualquier carácter que no sea letra ni cifra entre el cierre de la fórmula y el signo.
+stopifnot("L-6: el signo que sigue a una fórmula, con unidad o sin ella, va dentro de la fórmula" =
+            !any(grepl("\\$[^A-Za-z0-9$\\n]{0,3}[.,:;!?)\\]\u00bb\u201d\u2026]",
                        c(fb, vapply(c("gdis", "padv", "psin"), function(r)
                          errores_conceptuales[[afs[[r]]$codigo]]$explica(params, afs[[r]]), "")), perl = TRUE)))
 

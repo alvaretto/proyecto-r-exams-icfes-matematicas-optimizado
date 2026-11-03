@@ -1,0 +1,2 @@
+medicion: renglones físicos que empiezan por un signo 0 (palabras con signo inicial: 142) | que empiezan por la unidad 151, tras una fórmula 0 | ejemplos signo [] | ejemplos unidad [(1, 'y cuánto recogió, en promedio,', 'curso:'), (4, 'o promedios si fueran totales.', 'cursos,')]
+render_2a5e59a1: renglones físicos que empiezan por un signo 0 (palabras con signo inicial: 142) | que empiezan por la unidad 151, tras una fórmula 0 | ejemplos signo [] | ejemplos unidad [(1, 'y cuánto recogió, en promedio,', 'curso:'), (4, 'o promedios si fueran totales.', 'cursos,')]

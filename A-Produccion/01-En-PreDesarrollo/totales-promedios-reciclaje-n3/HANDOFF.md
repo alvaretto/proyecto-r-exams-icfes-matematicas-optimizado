@@ -574,3 +574,47 @@ CRÍTICOS, ALTOS ni MEDIOS. Reporte íntegro: `salida/ciclo_20261102/s1b/6b/rela
   Ninguna prosa Markdown cambia.
 - Corrección al reporte de la tanda: `salida/` sí está ignorado (`.gitignore`, `**/salida/`). La evidencia se añade con
   `git add -f`, sin los `render_*`, las `shots/` ni perfiles de Chromium.
+
+## Ciclo 2026-11-02, tanda S2a (2026-11-03)
+
+- **Qué la abrió.** La FASE 2C r5 (veredicto del detractor r5: APROBAR_CON_CAMBIOS, sin ninguna CORRECCIÓN;
+  `salida/fase2c_r5_detractor.md`) dejó H1 (MEDIA) y H2 a H5 (BAJA). Sobre H2, el profesor respondió el 2026-11-03, literal:
+  «Cerrarlo ahora (Recomendada)». H1, H3, H4, H5 y la fe de erratas de H2 son endurecimientos del coordinador (H-5).
+- **Hecho.**
+  - Reapertura #9 desde `generacion_rmd`. El `.Rmd` pasa a **`63e2713e6ac0bdbf250f4dc33901b2ec`**: el punto que sigue a la
+    fórmula de ERR-RESTA entra en ella (`= δ\text{.}$ Esa resta…`), y la guarda de L-6 del signo cubre toda fórmula, con
+    unidad o sin ella, y todo separador que no sea letra ni cifra.
+  - Invariancia en 1000/1000 semillas: `.Random.seed`, enunciado, opciones y tabla idénticos; la Solution solo cambia en las
+    425 versiones con ERR-RESTA, y queda idéntica al devolver el signo; el feedback es idéntico byte a byte.
+  - `verificar_espacio.R` pasa a **`bdd0daf06ba933a1eff873770a755d59`**: controles exactos (1158, 730 y 42), separadores
+    ampliados, la sonda S1-Sol signo generalizada, la guarda real del canal 2 (H5) y los mutantes M34 a M41, todos cazados
+    por su sonda. Exit 4, 37 canales, 0 fallos y 0 pendientes. Ninguna cifra firmada se mueve.
+  - `cap_s1b2.py` (H4) sin U+00A0 literales y con su assert: md5 `1d0117ed…`.
+  - Pasos 3 a 6 sellados uno por uno (08:09:05, 08:09:11, 08:12:08 y 08:12:18): **6 de 11**. Render en
+    `salida/ciclo_20261102/s2a/render_63e2713e/`. Arsenal: 0 errores y 6 advertencias. Con `dir=` literal y `exams2pdf`
+    primero, el hook vio el PDF y los `.tex`.
+  - Detalle, cifras y la tabla candidata de L-6 (H3): `.claude/CLAUDE.md` local, § «Ciclo 2026-11-02 (SCHOICE), tanda S2a».
+- **Fe de erratas de la sección anterior.** «En HTML hubo 0 partidas en 100 semillas por ancho (42 casos)» exageraba lo
+  medido: los 42 casos eran 2 geometrías (una por ancho), no 84 ensayos, y no se midió la caja del Moodle del colegio. Queda
+  cerrado por construcción: 0 fórmulas seguidas de un signo fuera en 1000 semillas.
+- **Próximo paso.**
+  1. La 6b pareada contra `6c9d7705` (N = 100 a 360 y 320 px; en marcha al escribir esto; su resultado va abajo).
+  2. FASE 2C r6, con un detractor nuevo y sin `name:`. Lo que tiene que revisar está en el `.claude/CLAUDE.md` local.
+  3. Pasos 7 a 10 y WAIT_USER #3. En el WAIT_USER #3 se pide además la firma de la tabla candidata de L-6.
+- **6b pareada, recibida: APTO_VISUAL**, sin hallazgos (`salida/ciclo_20261102/s2a/6b/informe_6b_63e2713e_completo.md`).
+  N = 100 a 360 y 320 px: 0 signos tras una fórmula, con o sin unidad (en `6c9d7705` eran 42, sin partir); controles positivos
+  iguales a los de antes (132/259, 34/5, 341/347 y 74/55); PDF y Moodle en 0; 12 recortes leídos a ojo. Lo que sigue es la
+  FASE 2C r6.
+
+**Verificación del coordinador de la tanda S2a (2026-11-03, sesión `42032564`)**, independiente de sus scripts
+(`salida/ciclo_20261102/s2a/coordinador/`):
+- `verificar_espacio.R` (`bdd0daf0…`), repetido: exit 4 en 110 s, con las 297 líneas idénticas a `s2a/verificar_espacio_s2a.txt`
+  (sin la línea de cierre). Los 13 mutantes del 33 al 41 quedan cazados. No hay fallos ni pendientes, salvo el de M28.
+- Invariancia con un script propio, de `6c9d7705` (HEAD `e15e1e2e`) a `63e2713e`, en las semillas 1 a 1000:
+  - `.Random.seed`, los objetos, el enunciado, las opciones y el feedback son idénticos en las 1000;
+  - la Solution es idéntica byte a byte en 575 semillas y, al devolver el punto a su sitio, en las 1000.
+- Signo tras el cierre de CUALQUIER fórmula, en el texto emitido (`contar_signo_toda_formula.R`, semillas 1 a 1000):
+  - `6c9d7705`: 425, en 425 semillas, todas de ERR-RESTA;
+  - `63e2713e`: 0, con 425 signos dentro de una fórmula sin unidad.
+- La 6b dice «Veredicto: APTO_VISUAL», sin hallazgos. Diff del `.Rmd` revisado: 3 líneas de comentario, el sitio de ERR-RESTA y
+  la guarda del signo generalizada.

@@ -1,0 +1,58 @@
+== V1' 6c9d7705 · semillas 1..100 · errores 0 · 0.01 s por versión
+          s1_texto unidad_fuera_vieja unidad_fuera_ancha  signo_fuera_vieja 
+                 0                  0                  0                  0 
+ signo_fuera_ancha        dolar_signo             dentro       dentro_signo 
+                42                 42               1158                730 
+signo_dentro_sin_u       esp_especial 
+                 0                  0 
+versiones con al menos uno:
+          s1_texto unidad_fuera_vieja unidad_fuera_ancha  signo_fuera_vieja 
+                 0                  0                  0                  0 
+ signo_fuera_ancha        dolar_signo             dentro       dentro_signo 
+                42                 42                100                100 
+signo_dentro_sin_u       esp_especial 
+                 0                  0 
+distractor de G (gdis):
+gd
+   ERR-DATO ERR-PARCIAL   ERR-RESTA   ERR-TOTAL 
+         21          15          42          22 
+ERR-RESTA en gdis: 42 · semillas: 1 2 4 6 9 10 11 16 17 19 21 22 23 24 26 28 30 32 33 34 38 39 44 45 48 49 53 58 60 61 67 73 74 75 76 83 84 86 87 91 93 98
+rama x molde de padv:
+          mpadv
+rama       M_a M_b P_a P_b P_ven
+  CURSOS     0   0  14  21     9
+  PROMEDIO  23  33   0   0     0
+canónicas: 9 (semillas 7 27 42 47 54 63 66 68 72)
+ERR-PARCIAL en gdis por rama:
+
+  CURSOS PROMEDIO 
+       7        8 
+== V1 5cf5b12f · semillas 1..100 · errores 0 · 0.01 s por versión
+          s1_texto unidad_fuera_vieja unidad_fuera_ancha  signo_fuera_vieja 
+                 0                  0                  0                730 
+ signo_fuera_ancha        dolar_signo             dentro       dentro_signo 
+               772                772               1158                  0 
+signo_dentro_sin_u       esp_especial 
+                 0                  0 
+versiones con al menos uno:
+          s1_texto unidad_fuera_vieja unidad_fuera_ancha  signo_fuera_vieja 
+                 0                  0                  0                100 
+ signo_fuera_ancha        dolar_signo             dentro       dentro_signo 
+               100                100                100                  0 
+signo_dentro_sin_u       esp_especial 
+                 0                  0 
+distractor de G (gdis):
+gd
+   ERR-DATO ERR-PARCIAL   ERR-RESTA   ERR-TOTAL 
+         21          15          42          22 
+ERR-RESTA en gdis: 42 · semillas: 1 2 4 6 9 10 11 16 17 19 21 22 23 24 26 28 30 32 33 34 38 39 44 45 48 49 53 58 60 61 67 73 74 75 76 83 84 86 87 91 93 98
+rama x molde de padv:
+          mpadv
+rama       M_a M_b P_a P_b P_ven
+  CURSOS     0   0  14  21     9
+  PROMEDIO  23  33   0   0     0
+canónicas: 9 (semillas 7 27 42 47 54 63 66 68 72)
+ERR-PARCIAL en gdis por rama:
+
+  CURSOS PROMEDIO 
+       7        8 

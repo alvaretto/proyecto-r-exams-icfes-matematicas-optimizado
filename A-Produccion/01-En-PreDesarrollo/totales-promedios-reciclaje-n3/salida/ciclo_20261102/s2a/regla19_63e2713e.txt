@@ -1,0 +1,1 @@
+regla19 coincidencias: 0 (grep exit 0)

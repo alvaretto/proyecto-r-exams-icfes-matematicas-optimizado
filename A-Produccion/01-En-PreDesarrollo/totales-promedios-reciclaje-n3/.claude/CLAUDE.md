@@ -1516,3 +1516,130 @@ CRÍTICOS, ALTOS ni MEDIOS. Reporte íntegro: `salida/ciclo_20261102/s1b/6b/rela
   Ninguna prosa Markdown cambia.
 - Corrección al reporte de la tanda: `salida/` sí está ignorado (`.gitignore`, `**/salida/`). La evidencia se añade con
   `git add -f`, sin los `render_*`, las `shots/` ni perfiles de Chromium.
+
+### Ciclo 2026-11-02 (SCHOICE), tanda S2a
+
+> La hizo el `orquestador-schoice` el 2026-11-03, tras la FASE 2C r5 (veredicto del detractor r5: APROBAR_CON_CAMBIOS, sin
+> ninguna CORRECCIÓN; reporte íntegro en `salida/fase2c_r5_detractor.md`, con las 14 citas verificadas por el coordinador).
+> Reapertura #9 desde `generacion_rmd` (2026-11-03 07:59:59). El `.Rmd` pasa de `6c9d7705…` a
+> **`63e2713e6ac0bdbf250f4dc33901b2ec`**, y `verificar_espacio.R` de `bd6eda09…` a **`bdd0daf06ba933a1eff873770a755d59`**.
+> Evidencia: `salida/ciclo_20261102/s2a/`. La tanda se detuvo antes de la FASE 2C r6, que lanza el coordinador con un
+> detractor nuevo.
+
+**Decisión del profesor (2026-11-03) sobre H2.** Respuesta literal: «Cerrarlo ahora (Recomendada)». Regla #24 **H-5**.
+- El punto que sigue a la fórmula de la explicación de ERR-RESTA entra en la fórmula: `" = ", p$delta, "\\text{.}$ Esa resta…"`,
+  en lugar de `"$. Esa resta…"` (línea 262 de `6c9d7705`; 265 de `63e2713e`).
+- La sonda de signo y la guarda de L-6 pasan a cubrir TODA fórmula, con unidad o sin ella, cada una con su mutante.
+
+**Decisiones del coordinador** (endurecer, H-5): en H1, controles exactos con un mutante cada uno, separadores ampliados y el
+mutante de la r5 con U+2009, U+202F y U+2060; en H3, la tabla candidata de L-6 con la fila de V1 y la del signo, sin tocar la
+firmada; en H4, `cap_s1b2.py` sin literales, con su assert y su descripción; en H5, una guarda real del canal 2 con su
+mutante; y en H2, la fe de erratas del registro.
+
+**Cómo se atendió cada hallazgo de la r5**
+
+| Hallazgo | Qué se hizo | Cifras |
+|---|---|---|
+| H1 (MEDIA): los controles de S1-Sol no ven que su cuenta baje, y las sondas son una lista negra de separadores | Controles exactos: `n_dentro == 1158`, `sum(v_dentro_s) == 730` y uno nuevo, el signo dentro de una fórmula sin unidad (`\text{.}$`), que tiene que salir una vez en cada versión de E1 con ERR-RESTA como distractor de G y en ninguna otra. Entre el cierre de la fórmula y la unidad (S1-Sol fórmula), o entre el cierre y el signo (S1-Sol signo), las sondas admiten hasta tres caracteres cualesquiera que no sean letra, cifra, `$` ni salto de línea. Además, el texto emitido se calcula ahora con el `data_generation` del mismo texto que la Solution: antes, `s1_sol()` usaba siempre el del `.Rmd` sin mutar, así que un mutante del `data_generation` no llegaba a la Solution emitida | ERR-RESTA en E1: 42 de 100, lo que contó la r5. Falsos positivos de la clase ampliada: ninguno. En V1′ da 0 unidades fuera y 42 signos fuera, que son los de ERR-RESTA; en V1, 772 signos fuera, que son 730 + 42 (`s2a/antes_sondas_6c9d7705_y_v1.txt`). M34: 1158 → 1151; M35: 730 → 721; M36: 42 → 0; a cada uno lo caza solo su control. M39a, M39b y M39c (el mutante de la r5: la lista de totales saca la unidad de la fórmula con U+2009, U+202F o U+2060): 200 casos en S1-Sol fórmula y 0 con la clase anterior. M41a, M41b y M41c (el signo fuera tras esos mismos separadores): 200 en S1-Sol signo y 0 con la anterior |
+| H2 (BAJA): una fórmula sin unidad seguida de un signo | Cerrado por la decisión del profesor. La guarda pasa a «L-6: el signo que sigue a una fórmula, con unidad o sin ella, va dentro de la fórmula» (línea 601), con la clase ampliada. M37 (revierte H2) muere por ella en la semilla 1, y la guarda anterior no lo veía; M33, con el mensaje nuevo, también muere en la semilla 1. La sonda S1-Sol signo, generalizada: M38 (la lista de totales pierde la unidad y deja el punto fuera) da 200 casos, y 0 con la sonda anterior | En las semillas 1 a 1000, 0 fórmulas seguidas de un signo fuera de ellas, con unidad o sin ella; antes, 425. Hay 425 `\text{.}$`, uno por versión con ERR-RESTA |
+| H3 (BAJA): la guarda de V1 lleva el prefijo «L-6:», pero no está en ninguna tabla | Tabla candidata nueva (abajo), con la fila de V1 y la del signo, ya general. La tabla firmada no se toca | — |
+| H4 (BAJA): `cap_s1b2.py` decía no llevar literales y llevaba 10 U+00A0 | Los 10 U+00A0 del JS pasan a su escape de JavaScript, y también los `» ” …` de sus clases (3 de cada uno). Un assert comprueba que ni el JS ni el propio fuente llevan U+00A0, U+2009, U+202F o U+2060 literales. La descripción dice ahora lo que hace el código. Script: `s2a/editar_cap_s2a.py`; copia previa: `s2a/cap_s1b2_antes.py.txt` | md5 `e621bad3…` → `1d0117ed…`. Con los escapes deshechos, el JS es idéntico al de antes (`diff` vacío). Los controles de la 6b, abajo |
+| H5 (BAJA): el `ok()` de S7 era tautológico y el campo `lado` no tenía consumidor | Guarda real del canal 2 en E2, sobre E1 y los estratos: `x$canon || ((x$X < x$D) == (x$lado == "debajo"))`. `rasgos()` da `lado = NA` en la canónica, que no sortea lado. Fuera el `ok()` tautológico. M40 quita el filtro `cand_g <- cand_g[lado_ok, ]` | 291 no canónicas (156 debajo de D y 135 encima), 0 fuera de su lado. M40: 32 de las 100 versiones de E1 quedan fuera de su lado, sin ningún error: cazado por su sonda |
+
+**Fe de erratas (H2 de la r5).** El HANDOFF, en la sección «Tanda S1b», decía: «en HTML hubo 0 partidas en 100 semillas por
+ancho (42 casos)». Esos 42 casos no eran 84 ensayos. La fórmula abre su propio párrafo tras un prefijo fijo y solo varía el
+número de cifras de δ, así que en cada ancho comparten prácticamente la misma geometría: eran 2 observaciones (360 y 320 px
+de `exams2html`). Aunque hubieran sido independientes, con la tasa de V1 (34 de 730, un 4,7 % a 360 px) se esperaban 2,0
+casos partidos en 42, y ver 0 tenía una probabilidad del 13 %. Tampoco se midió en la caja del Moodle del colegio. Queda
+cerrado por construcción con este cambio: 0 fórmulas seguidas de un signo fuera en 1000 semillas.
+
+**Invariancia** (`s2a/invariancia_s2a_1000.txt`; de `6c9d7705` a `63e2713e`, semillas 1 a 1000, 19 s):
+- `.Random.seed`, los objetos (`opciones`, `sol`, `rama`, `es_canonica`, `tabla_md`, `tabla_df`, `enunciado`), el enunciado,
+  las opciones y la tabla: idénticos en las 1000.
+- La Solution es idéntica byte a byte en 575. Las 425 que difieren son las de ERR-RESTA, y tras devolver el signo a su sitio
+  quedan idénticas las 1000. El feedback es idéntico byte a byte en las 1000.
+- 0 fórmulas que cierran antes de su unidad y 0 seguidas de un signo fuera; 11 575 unidades dentro de la fórmula, 7 298 de
+  ellas con el signo dentro; 0 U+2009, U+202F o U+2060 en el texto emitido. Control: `6c9d7705` da 425 signos fuera.
+- Ni el `.Rmd` ni el verificador llevan U+00A0, U+2009, U+202F o U+2060 literales (`grep -P` y una guarda nueva del
+  verificador). Regla #25: sin glifos que rompan pdflatex. Regla #19: 0 coincidencias.
+
+**Verificador** (`s2a/verificar_espacio_s2a.txt`, 109 s): exit 4, con 37 canales en rojo cubiertos (13 de «O-1 corregido» y
+24 de la decisión 2 a), 0 fallos y 0 pendientes. M28 sale con exit 3 y su único pendiente. Ninguna cifra firmada se mueve.
+Frente a la salida de la S1b relanzada, solo cambian la línea de S7 (sustituida por la de H5), la de M33 (por el mensaje
+nuevo) y las de S1-Sol; se añaden las de M34 a M41 y la de los literales (`s2a/diff_verificador_s1b2_a_s2a.txt`).
+
+**Render y arsenal.** Los pasos 3 a 6 se sellaron uno por uno, cada uno después de su artefacto: `generacion_rmd` a las
+08:09:05, `retroalimentacion` a las 08:09:11, `renderizado_4_formatos` a las 08:12:08 y `arsenal_post_render` a las 08:12:18.
+Quedan 6 de 11.
+- Render oficial (`s2a/render_63e2713e/`): PDF 3 (semillas 1, 2 y 7), HTML 3, DOCX 3, NOPS 2 y Moodle n = 100.
+- `exams2pdf` va el primero del comando, con `dir=` y `texdir=` literales. Así el hook vio el PDF (2B, 3 páginas, leídas) y
+  los `.tex` (2I), y desaparece la séptima advertencia de la S1b, «PDF no encontrado».
+- Arsenal: 0 errores y 6 advertencias heurísticas; la 2G da 100/100 y la 2H, 0 anomalías. `\pandocbounded`: 0 usos.
+- Moodle (n = 100, `set.seed(1)`; `s2a/moodle_s2a.txt`): 0 signos tras el cierre de una fórmula, con unidad o sin ella, y 40
+  `\text{.}` de ERR-RESTA. Controles: `6c9d7705` da 40 signos fuera, y V1, 773 (733 + 40).
+- PDF (100 ejercicios, por coordenadas): 0 renglones que empiezan por un signo, como en V1′ y V1.
+- El HTML de medición es idéntico byte a byte al de `6c9d7705` en las 58 semillas sin ERR-RESTA.
+
+**Tabla candidata de L-6, pendiente de la firma del profesor** (H3 de la r5). Sustituye a la candidata de la tanda S1b, que
+solo tenía la fila del signo que sigue a la unidad. La tabla firmada de L-6 no se toca.
+
+| Exige | Guarda | Mutante |
+|---|---|---|
+| La unidad que cierra una fórmula («kilos», «curso(s)») va dentro de ella: `$… = T\ \text{kilos}$` (V1; tanda S1b, decisión «Arreglarlo ahora») | `stopifnot` «L-6: la unidad que cierra una fórmula va dentro de la fórmula» (línea 594 de `63e2713e`; feedback y análisis de los distractores) y sonda S1-Sol fórmula de `verificar_espacio.R` (opciones, Solution y feedback emitidos; cualquier separador que no sea letra ni cifra; control exacto: 1158 unidades dentro de la fórmula en E1) | M30 (el feedback de la clave cierra la fórmula antes de «kilos») y M31 (la Solution, en «kilos a favor de», con el espacio duro); M39a, M39b y M39c (la lista de totales, con U+2009, U+202F o U+2060); M34 (el control: quita un sitio, 1158 → 1151) |
+| El signo que sigue a una fórmula, con unidad o sin ella (`. , : ; ! ? ) ] » ”` y `…`), va dentro de ella: `$… = T\ \text{kilos.}$` y `$… = δ\text{.}$` (V1′, tanda S1b relanzada, decisión «V1′ (Recomendada)»; generalizada en la tanda S2a, decisión «Cerrarlo ahora (Recomendada)») | `stopifnot` «L-6: el signo que sigue a una fórmula, con unidad o sin ella, va dentro de la fórmula» (línea 601; feedback y análisis de los distractores; cualquier separador) y sonda S1-Sol signo (opciones, Solution y feedback emitidos; controles exactos: 730 unidades con el signo dentro y 42 signos dentro de una fórmula sin unidad, uno por versión de E1 con ERR-RESTA) | M33 y M37 (la guarda: el feedback de la clave y la explicación de ERR-RESTA dejan el punto fuera); M32, M38, M41a, M41b y M41c (la sonda: la lista de totales lo saca, sin unidad o tras U+2009, U+202F o U+2060); M35 y M36 (los controles: quitan un sitio, 730 → 721 y 42 → 0) |
+
+Queda declarado, sin guarda: la tabla del enunciado conserva el espacio normal en sus celdas de cifras (L-6 firmada). Por
+F-2, las dos filas rigen también la Parte 1 del CLOZE tras el re-empalme; esta tanda no tocó `cloze/`.
+
+**¿Ley local o regla?**
+- **Local:** la tabla candidata de arriba. Endurece, y la firma el profesor.
+- **Del repo, candidatas.** Tocan `.claude/` (regla #17), así que lo decide el profesor:
+  1. Un control positivo con umbral (`>= N`, `> 0`) no ve que su cuenta baja. Se cablea como conteo exacto con un mutante
+     que quite un solo sitio. Ya era candidata en la S1b, y la r5 lo volvió a encontrar.
+  2. Una clase de separadores escrita como lista negra no ve el separador siguiente: se escribe por complemento («todo lo
+     que no sea letra ni cifra»).
+  3. Un verificador que evalúa la Solution con el `data_generation` sin mutar no ve en el texto emitido los mutantes del
+     `data_generation`. Es una forma de «la mutación no llegó al entorno» (`INC-MUTANTE-SONDA`); apareció al construir M36.
+  4. En el paso 5, `exams2pdf` va el primero del comando, con `dir=` y `texdir=` literales: el hook toma el primer `dir=` que
+     encuentra.
+
+**Próximo paso:** la 6b pareada (abajo, cuando llegue) y la FASE 2C r6, con un detractor nuevo y sin `name:`. Qué tiene que
+mirar la r6:
+- el diff de `6c9d7705` a `63e2713e` (una cadena, el mensaje y el patrón de la guarda, y comentarios) y su invariancia;
+- `verificar_espacio.R` `bdd0daf0…`: los controles exactos, `textos_sol()` con el `data_generation` del texto mutado, los
+  mutantes M34 a M41 (que cada uno muera por su sonda y que los de control quiten un solo sitio), la guarda de H5 y M40, y si
+  la clase ampliada puede dar un falso positivo con un `$` de apertura;
+- `cap_s1b2.py` `1d0117ed…` y su equivalencia con el anterior;
+- la tabla candidata de L-6, contra el código;
+- y si queda otra fórmula de la Solution, la que sea, seguida de un signo fuera de ella en algún formato.
+
+**6b pareada de la tanda S2a, recibida** (`auditor-visual-html`, sin `name:`): **APTO_VISUAL**, sin ningún hallazgo. Reporte
+íntegro: `salida/ciclo_20261102/s2a/6b/informe_6b_63e2713e_completo.md`.
+- N = 100 semillas por versión y ancho, a 360 y 320 px: 1000 mediciones por CDP, con 0 errores y `innerWidth` comprobado.
+- Signo tras toda fórmula, con unidad o sin ella: en `63e2713e`, 0 (denominador 0) en los dos anchos; en `6c9d7705`, 42, con
+  0 partidos. Las demás métricas de la S1b dan 0, y las alturas son idénticas a las de `6c9d7705` (±0 px).
+- Controles positivos, iguales a los de antes en las 8 cifras: 4cffbe8b 132/259 (fórmula + unidad partidas), V1 34/5 (signo
+  huérfano) y e293d5c8 341/347 (cifra-unidad) y 74/55 (El/La). Prueban que `cap_s1b2.py` con escapes (H4) mide lo mismo.
+- PDF (100 ejercicios, por coordenadas): 0 renglones que empiezan por un signo, igual que V1′. Moodle: 0 signos tras el cierre
+  de una fórmula; controles: 40 en `6c9d7705` y 773 en V1.
+- Leyó a ojo 12 recortes, 6 pares de `63e2713e` y `6c9d7705`, de las semillas 1, 4 y 10 a 360 y a 320 px. El punto queda pegado
+  a la cifra y «Esa resta…» sigue en el mismo renglón. El orquestador miró además el de la semilla 1 a 320 px.
+- Límite declarado: en las 42 semillas con ERR-RESTA la fórmula acaba a mitad de renglón (x = 126 a 134 a 360 px; 209 a 217 a
+  320 px), así que el peor caso, la fórmula al final del renglón, no se da en esos dos anchos. El cierre de H2 no depende de
+  eso, porque es por construcción.
+- Desviación declarada: `cap_s1b2.py` corrió sin `-I`, desde un directorio fuera del repo, porque `websockets` está en el site
+  de usuario. Precisión del orquestador: el 40 de Moodle y el 42 de HTML son muestras distintas (el Moodle de 100 sale de un
+  solo `set.seed(1)`, no de las semillas 1 a 100); ninguna es parte de la otra.
+
+**Verificación del coordinador de la tanda S2a (2026-11-03, sesión `42032564`)**, independiente de sus scripts
+(`salida/ciclo_20261102/s2a/coordinador/`):
+- `verificar_espacio.R` (`bdd0daf0…`), repetido: exit 4 en 110 s, con las 297 líneas idénticas a `s2a/verificar_espacio_s2a.txt`
+  (sin la línea de cierre). Los 13 mutantes del 33 al 41 quedan cazados. No hay fallos ni pendientes, salvo el de M28.
+- Invariancia con un script propio, de `6c9d7705` (HEAD `e15e1e2e`) a `63e2713e`, en las semillas 1 a 1000:
+  - `.Random.seed`, los objetos, el enunciado, las opciones y el feedback son idénticos en las 1000;
+  - la Solution es idéntica byte a byte en 575 semillas y, al devolver el punto a su sitio, en las 1000.
+- Signo tras el cierre de CUALQUIER fórmula, en el texto emitido (`contar_signo_toda_formula.R`, semillas 1 a 1000):
+  - `6c9d7705`: 425, en 425 semillas, todas de ERR-RESTA;
+  - `63e2713e`: 0, con 425 signos dentro de una fórmula sin unidad.
+- La 6b dice «Veredicto: APTO_VISUAL», sin hallazgos. Diff del `.Rmd` revisado: 3 líneas de comentario, el sitio de ERR-RESTA y
+  la guarda del signo generalizada.

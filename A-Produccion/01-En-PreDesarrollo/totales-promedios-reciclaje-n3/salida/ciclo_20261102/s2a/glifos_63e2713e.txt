@@ -1,0 +1,2 @@
+OK: sin glifos que rompan pdflatex
+glifos exit=0

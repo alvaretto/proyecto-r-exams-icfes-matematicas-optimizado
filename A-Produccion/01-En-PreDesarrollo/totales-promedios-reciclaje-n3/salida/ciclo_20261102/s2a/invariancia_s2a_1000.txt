@@ -1,0 +1,16 @@
+viejo: A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/salida/ciclo_20261102/s2a/rmd_6c9d7705_antes.Rmd.txt
+nuevo: A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd
+semillas: 1000 · errores de ejecución: 0
+.Random.seed idéntico tras data_generation: 1000 / 1000
+objetos (opciones, sol, rama, es_canonica, tabla_md, tabla_df, enunciado) idénticos: 1000 / 1000
+texto emitido, enunciado idéntico byte a byte: 1000 / 1000 · opciones: 1000 / 1000 · tabla (tabla_md y tabla_df): 1000 / 1000
+Solution: byte a byte 575 / 1000 (difieren 425, todas con ERR-RESTA: 425; con otro distractor de G: 0) · tras devolver el signo a su sitio 1000 / 1000
+feedback: byte a byte 1000 / 1000 · tras devolver el signo a su sitio 1000 / 1000
+versiones con ERR-RESTA como distractor de G: 425
+nuevo: fórmula seguida de un signo fuera de ella, con o sin unidad: 0 (en 0 versiones)
+nuevo: fórmula que cierra antes de su unidad (clase ampliada): 0 (en 0 versiones)
+nuevo: signo dentro de una fórmula sin unidad («\text{.}$»): 425 (en 425 versiones)
+nuevo: unidad dentro de la fórmula 11575 (con el signo dentro 7298)
+nuevo: U+2009, U+202F o U+2060 en todo el texto emitido: 0
+control positivo, viejo: fórmula seguida de un signo fuera de ella: 425 (en 425 versiones)
+exit=0 · 19 s
