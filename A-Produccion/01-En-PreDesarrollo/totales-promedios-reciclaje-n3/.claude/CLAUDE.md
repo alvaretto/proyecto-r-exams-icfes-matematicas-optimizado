@@ -3042,3 +3042,200 @@ espacio duro.
     Solution es igual byte a byte en 100 de 100.
 - El diff frente a la copia de `32243d0a` son las tres líneas de cadena de la frase, sin literales U+00A0, U+2009, U+202F ni U+2060.
 - Sellos: en orden, cada uno en su llamada (19:44:54, 19:45:08, 19:45:17 y 19:45:31), después de sus artefactos.
+
+### FASE 2C r6 del CLOZE (2026-11-03): APROBAR_CON_CAMBIOS, sin CORRECCIÓN
+
+> `AgenteDetractor` nuevo, sin `name:`, sobre el md5 `e16842c1…` (commit `0a26d4fd`). Se lanzó a las 19:59 y entregó a las 20:25. El
+> reporte íntegro, sacado de su transcripción, está en `cloze/salida/fase2c_r6_detractor.md`. Citas: 6 de 6 (exit 0). El hook lo
+> bloqueó una vez, con 7 citas que no coincidían; el detractor las corrigió y quedó «ENTREGA VERIFICADA». La evidencia está en
+> `~/.cache/fase2c_r6_cloze/`, y sus scripts y salidas de texto, en `cloze/salida/fase2c_r6/`. **Sus cambios no tocan el `.Rmd`.**
+
+| ID | Severidad · tipo | Qué | Estado |
+|---|---|---|---|
+| H1 | BAJA · visual: declaración del residuo | La tabla del residuo de cortes de la tanda C1e no traía el inventario completo. Mide «habría ⏎ sumado», pero no su gemelo «habría ⏎ restado»; y el 0/43 de «no le ⏎ habría alcanzado» a 320 px no es una mejora, porque el corte se corrió a la palabra siguiente | Corregido abajo: inventario completo y fe de erratas |
+| H2 | BAJA · exactitud del informe de la 6b | El §F del informe dice que «si el promedio es mayor, sí;» queda entero en un renglón. Es falso en 100 de 100 páginas | Fe de erratas abajo |
+
+**Inventario completo del residuo de H2 de la r5 (decisión «Solo declararlo»).** N = 100 por versión y ancho, sobre los renglones que
+midió la 6b de la C1e. Lo midió el detractor (`fase2c_r6/inventario_cortes_r6.py`) y el coordinador lo reprodujo con código propio
+(`coordinador/recuento_cortes_r6_coordinador.*`).
+
+| Corte | `e16842c1` 360 px | `e16842c1` 320 px | `32243d0a` 360 px | `32243d0a` 320 px |
+|---|---|---|---|---|
+| «habría ⏎ ganado con» (criterio) | 100/100 | 0/100 | no existe | no existe |
+| «habría ⏎ perdido con» (criterio) | 0/100 | 0/100 | no existe | no existe |
+| «habría ⏎ sumado» | 0/100 | 0/100 | 0/100 | 100/100 |
+| «habría ⏎ restado» | 0/100 | 56/100 | 12/100 | 35/100 |
+| «no le habría ⏎ alcanzado» | 0/43 | 28/43 | 43/43 | 0/43 |
+| «habría ⏎ ganado.» | 0/57 | 0/57 | 0/57 | 57/57 |
+| «habría ⏎ perdido.» | 0/49 | 0/49 | 0/49 | 0/49 |
+| «habría ⏎ seguido ganando.» | 32/51 | 33/51 | 19/51 | 43/51 |
+| Páginas con algún corte en las dos frases resueltas | 32/100 | 68/100 | 71/100 | 100/100 |
+
+**Fe de erratas de § «tanda C1e».** Este archivo solo se amplía, así que la corrección va aquí.
+- «A 320 px mejora y a 360 px empeora» vale solo para el subconjunto de dos cortes de esa tabla. Con el inventario completo, en las dos
+  frases resueltas mejoran los dos anchos (de 71 a 32 páginas y de 100 a 68). Lo que empeora a 360 px es el corte fijo del criterio,
+  «habría ⏎ ganado con», en 100 de 100.
+- El §F de `c1e/6b_c1e/informe_6b_c1e_e16842c1.md` dice que «si el promedio es mayor, sí;» queda entero en un renglón a 360 px (s001) y a
+  320 px (s001, s005). Los renglones dicen otra cosa, en 100 de 100 páginas. A 360 px: «si el promedio ⏎ es mayor, sí; si es menor, no.».
+  A 320 px: «si ⏎ el promedio es mayor, sí; si es ⏎ menor, no.». Las métricas del informe no cambian.
+
+**Lecturas de la frase: quedan como residuo declarado.** La r6 reproduce las seis de `c1e/lectura_criterio_c1e.txt` (306, 306 mixtas, las
+cuatro celdas de «sí» y «no», 346 y 348, 460 con 149 y 292, 479 y 481) y las juzga contenidas por las frases vecinas. No encontró ninguna
+otra lectura razonable que cambie la verdad de la frase. Fuera del alcance y solo como registro: aplicar el criterio a la afirmación por
+promedio (BP) da el contrario en 413 de 505. **La regla de parada no hizo falta:** la r6 no objeta el texto. Según el detractor, no hace
+falta otra FASE 2C.
+
+**Comprobado por el detractor, sin hallazgo:**
+- la CORRECCIÓN de las 6 partes en 111 versiones emitidas (20 canónicas), con marcas leídas del `exsolution` y HP y HG identificadas por su
+  texto después de la mezcla: 0 fallos; 2 826 igualdades, ninguna falsa;
+- Moodle, 105 versiones, 0 fallos en marcas y valores;
+- la frase por enumeración exhaustiva del espacio paralelo (3529 y 1813 filas, más el base, 2149 y 976): 0 discrepancias y 0 empates;
+- el alcance, Crit-P6, H1-Sol, MC50 a MC57 y la invariancia;
+- los sellos de las tandas C1c, C1d y C1e, con la desviación de la C1c tal como está declarada.
+
+**Dato de calificación, sin hallazgo.** R/exams escribe `=` en cada verdadera de la Parte 6, pero Moodle 5.1 normaliza
+(`question/type/multianswer/questiontype.php`): con 2 verdaderas, marcar una da 0,5, y con 3, 0,333. El detractor leyó el código, sin
+probarlo en el servidor del colegio.
+
+**Oráculo r10 del paso 8: cambios a la lista de 10 puntos de la r5** (reporte de la r5, § «Paso 8»):
+1. Puntos 2 y 8: el literal es el de `e16842c1`. Las tres redacciones anteriores (`6f6f1b13`, `ef2c96dc` y `32243d0a`) pasan a literales prohibidos.
+2. Puntos 3, 5 y 6: cortar primero el tramo general en «Con un curso más, el grado», con mayúscula. El tramo lleva ahora «habría ganado»,
+   «habría perdido», «con un curso más,» y un «;»: contar sobre el párrafo entero daría conclusiones de más, y cortar por «;» parte el criterio.
+3. Punto nuevo: juzgar el criterio, no solo su presencia. En cada versión, para HP y para HG, «sí» coincide con promedio > *D*, con el
+   contrafactual y con la marca del `exsolution` emitido.
+4. Punto 10: dos mutantes más, uno que vuelva a la frase de `32243d0a` y otro que intercambie «sí» y «no». Los dos mueren por texto no juzgado.
+
+Sigue pendiente el endurecimiento de L-C8: volcar el pool sin las marcas de R/exams.
+
+### Ciclo 2026-11-02 del CLOZE, tanda C2 (2026-11-03): oráculo r10 y pasos 9 y 10 medidos; detenida antes del primer sello
+
+> La hizo el `orquestador-cloze` el 2026-11-03, por encargo del coordinador, sobre el `.Rmd` `e16842c1…` y el verificador `1cbc770f…`,
+> que no cambiaron. **No se selló ningún paso: el CLOZE sigue en 6/11.** La comprobación de citas exigida antes del sello 7 dio exit 1, y
+> el encargo manda detenerse si una comprobación falla o si un sello exigiría relajar una guarda. El paso 8, el 9 y el 10 tienen su
+> evidencia completa y en verde. Evidencia: `cloze/salida/coherencias_r10/` y `cloze/salida/ciclo_20261102/c2/`.
+
+#### Por qué no se selló nada
+
+- **La comprobación.** `python3 .claude/scripts/verificar_citas_detractor.py cloze/salida/fase2c_r6_detractor.md` da **exit 1** sobre el
+  árbol vigente (`c2/citas_r6_c2.txt`), con 6 citas y 1 problema: la cita de H1 `AUSENTE: habría ⏎ restado`, contra este mismo archivo.
+- **La causa, medida.** Esa cita era cierta cuando el detractor entregó y dejó de serlo porque se atendió su hallazgo: H1 pedía añadir a
+  la tabla el corte «habría ⏎ restado». Cronología: hook 20:25:22 «ENTREGA VERIFICADA» (6 citas, 0 fallos); reporte copiado 20:26:08;
+  inventario inscrito en este archivo 20:28:03. El texto no existe en `0a26d4fd`, el commit que auditó la r6.
+- **Foto de control** (`c2/citas_r6_foto_0a26d4fd_c2.txt`): el mismo reporte y el mismo script sobre los archivos citados tal como están
+  en `0a26d4fd`: exit 0, 6 citas, 0 problemas. Control positivo: con otro texto que sí está en esa foto, la cita `AUSENTE` dispara, exit 1.
+- **Por qué eso no bastó para sellar.** La foto es otra comprobación, no la exigida. Usarla para sellar sería relajar una guarda por
+  cuenta propia (regla #24 H-5, y las dos condiciones de parada del encargo). Lo decide quien encargó la tanda. Como los sellos van en
+  orden, sin el 7 tampoco se sellan el 8, el 9 ni el 10.
+
+#### Paso 8: oráculo r10 (`AgenteValidadorVisual`, sin `name:`, 26 min): OK, 0 fallos
+
+- **Juicio ciego (endurecimiento de L-C8, cumplido).** El orquestador volcó el banco sin marcas, sin retroalimentación y sin frecuencias
+  (`pool_parte2_ciego.R`) y lo pasó en el encargo. El validador escribió `juicio_parte2_ciego.tsv` a las 20:33:31, por Bash, antes de
+  abrir nada del subárbol; las marcas (`pool_parte2_marcas.txt`) son de las 20:35:08. Coincide con las marcas y con la r9 en los 8 textos.
+  El oráculo lee el juicio del TSV, no de un literal propio. Límite declarado por el validador: el encargo describía el banco como de 8 textos.
+- **Cifras.** 14 920 comprobaciones en 100 versiones (148 a 151 por versión; la r9, 12 720), 16 862 con 13 canónicas más de cuota; 6 219
+  entre formatos (la r9, 5 529); 40 con el pandoc de RStudio (3.10, forzado y comprobado); 300 bloques de distractores. **Fallos: 0.** Dos
+  verificaciones del DOCX quedan declaradas, como en la r9: deja los `##ANSWERi##` a la vista y no es formato de entrega.
+- **Mutaciones de control: 108** (54 de coherencias y 54 de formatos), **todas cazadas por su propia sonda**, entre ellas MC50, MC51, MC54,
+  solo la conclusión de HP, solo la de HG, la frase de `32243d0a`, «sí» y «no» intercambiados, la redacción vieja de H3, una unidad fuera de
+  una fórmula de la Parte 1 y una cláusula no juzgada en el tramo con cifras. Ningún control de la r9 se retiró. Los literales `exp1`,
+  `fila_p1`, `ganol1`, `caso1` y `umbral` pasaron a un lector de `$…$`.
+- **Estrato de la canónica:** 9 en 1:100, NO CONCLUYENTE; con 13 de 101:500 llega a 22, 0 fallos.
+- **Revisión del orquestador, independiente del reporte:** md5 del `.Rmd`, del oráculo (`c92db5cf…`) y del verificador; orden del juicio
+  por mtime; los conteos, leídos de cada salida; 100 HTML, 100 PDF, 100 XML. El validador dejó sin ejecutar `extraer_texto.R` y
+  `meta_literal.R`: los corrió el orquestador (exit 0). Hunspell es_CO sobre el texto visible: las mismas 5 palabras que en la r9 (personera,
+  ERR, PROM, metacognitiva, distractores), con control positivo. `corregir_ortografia_espanol.R`: limpio.
+- **BAJA, sin defecto:** en la retroalimentación general de Moodle, las fórmulas de las Partes 3 a 6 llevan la unidad fuera con U+00A0, que L-6
+  no obliga; por eso el oráculo solo la distingue de una unidad fuera en la Parte 1 versión por versión, y en el XML del aula comprueba la forma
+  y el cálculo. En el PDF, los pares cifra-unidad no se distinguen de una unidad fuera de fórmula.
+
+#### Paso 9 (`c2/`, md5 `e16842c1…` en la cabecera de cada salida)
+
+- `diversidad_sustantiva_c2.txt`: 6 de 6 gaps, 100 versiones, errores 0, exit 0. p1 95, p2 3 (`WARN_DIV_BAJA`), p3 75, p4 74, p5 52, p6 36.
+  p2 es fija-justificada: clave conceptual, 3 paráfrasis (F-4).
+- `diagnosticidad_c2.txt`: `PASS`, exit 0, igual que la r9.
+- `diagnosticidad_por_rama_c2.txt` (derivado por `c2/derivar_c2.py`): N = 100 por estrato, idéntico a `diagnosticidad_por_rama_r8.txt` salvo
+  las dos líneas de cabecera (`c2/diff_por_rama_r8_c2.txt`, 0 líneas).
+- E5 de `c1e/verificar_espacio_cloze_c1e.txt`: 300 de 300 versiones únicas.
+
+#### Paso 10 (`c2/`)
+
+- `validar_literalidad_exextra.py --item`: exit 0 (`literalidad_repo_c2.txt`). `literalidad_exextra_c2.txt`: 0 fallos, con los cuatro catálogos
+  y DOK 2, Nivel 3, Bloom Evaluar: `DOK ≥ 3 ⇒ Nivel ≥ 3` y `Bloom = Evaluar ⇒ Nivel ≥ 3` se cumplen.
+- `v1_v4_c2.txt` (nuevo, texto emitido): V1 a V4 en 100 de 100, con 6 controles positivos, cada uno dispara. `schoice|schoice|num|num|num|mchoice`,
+  6 partes, 3|1|1|1|1|1, tolerancia 0.
+- `v5_v11_c2.txt`: 0 fallos. V5 y V7 son N/A, medidos igual (390 gaps, 0 con imagen); V6, V8, V9, V10 y V11 en verde; 4 líneas de V11 «a un paso», declaradas.
+
+#### ¿Ley local o regla?
+
+- **Local, endurece y se registra (L-C8):** la condición 2 cubre ahora también el tramo con cifras del párrafo «Parte 6.» y la Parte 1 (por el
+  lector de `$…$`); el juicio de la Parte 2 se escribe antes de abrir el subárbol, y el oráculo lo lee del TSV.
+- **Del repo, candidata (toca `.claude/scripts/verificar_citas_detractor.py` y la regla #9; lo decide el profesor):** una cita `AUSENTE` no
+  sobrevive a la corrección que pide. El script lee el archivo vigente, así que atender el hallazgo produce un falso rojo que ya no se distingue
+  de una cita falsa. Opciones: comprobar las citas antes de inscribir la corrección, anclar la comprobación al commit auditado (`--en <commit>`), o
+  evitar `AUSENTE` en archivos de registro. Caso único, sin defecto; detuvo los sellos de esta tanda.
+
+### Decisión del profesor sobre el sello del paso 7 (2026-11-03, tanda C2)
+
+> **Firmada por el profesor el 2026-11-03** y transmitida por el coordinador. Respuesta literal: «Sellar con nota (Recomendada)». Regla
+> #24 **H-5**: sellar con una comprobación en rojo es relajar una guarda, así que queda por escrito quién decidió, cuándo y por qué.
+
+1. **El paso 7 se sella con la FASE 2C r6 y el exit 1 explicado.** `verificar_citas_detractor.py` da hoy exit 1 sobre
+   `cloze/salida/fase2c_r6_detractor.md`, con 6 citas y 1 problema: la cita de H1 `AUSENTE: habría ⏎ restado` dejó de ser cierta porque el
+   coordinador escribió esa fila en este archivo a las 20:28 para atender el hallazgo. El encargo de la tanda C2 pedía exit 0 y la tanda
+   se detuvo sin sellar, como debía.
+   - Al entregar dio exit 0: el hook registró «ENTREGA VERIFICADA» a las 20:25:22 y el coordinador lo repitió a las 20:26, al guardar el reporte.
+   - Contra `0a26d4fd`, el commit auditado, da exit 0, con 6 citas y 0 problemas. Lo comprobaron por separado la tanda
+     (`c2/citas_r6_foto_0a26d4fd_c2.txt`) y el coordinador, con un árbol extraído con `git archive`.
+   - Precedente: la auditoría del sellado del SCHOICE dejó constancia de citas que fallan después de corregir sus hallazgos.
+2. **Alternativa que no se eligió:** otra FASE 2C sobre el mismo md5, sin nada nuevo que auditar en el ejercicio.
+
+**Candidata del repo, para decidir aparte** (toca `.claude/`, regla #17): una cita `AUSENTE` no sobrevive a la corrección que pide. Opciones:
+comprobar las citas antes de inscribir la corrección, anclar la comprobación al commit auditado o evitar `AUSENTE` en archivos de registro.
+
+**Verificación del coordinador de la tanda C2 (2026-11-03, sesión `358ab328`)**, independiente de sus scripts:
+- Oráculo r10, repetido (`cloze/salida/ciclo_20261102/coordinador/oraculo_r10_coordinador.txt`): 186 líneas idénticas a
+  `coherencias_r10/verificar_coherencias.txt`, que solo tiene además su línea de cierre. La repetición reescribió
+  `coherencias_r10/resultados_verificacion.rds`, que no se versiona.
+- El comentario de cabecera de `coherencias_r10/verificar_coherencias.R` sigue diciendo «ronda 9, md5 f98f9dda»: se heredó de la r9. El script
+  no está atado a ese md5 y su salida imprime `e16842c1`. Queda declarado y sin cambiar, para no mover el md5 del script (`c92db5cf…`).
+- Literalidad de `exextra`, corrida también por el coordinador antes de la tanda: 0 fallos.
+- X6 (−25,0 pp) y X10 (−33,3 pp) en la canónica, leídos en la salida del verificador de la C1e (líneas 162 y 166).
+- Cierres de `c2/`, leídos: diversidad con md5 `e16842c1` en la cabecera, diagnosticidad PASS, V1 a V4 y V5 a V11 con 0 fallos, ortografía limpia.
+
+### Aprobación del CLOZE y leyes firmadas (2026-11-03, WAIT_USER #3 de la tanda C2)
+
+> **Firmada por el profesor el 2026-11-03.** Respuestas literales: aprobación «[a] Aprobar (Recomendada)»; leyes «Firmar las dos
+> (Recomendada)»; commit «Sí, con suite completa (Recomendada)». Regla #24 **H-5**.
+
+**CLOZE aprobado para el aula: md5 `e16842c1157b3bffe35b8f21682ed6ad`, 11/11.** Sustituye a `f98f9dda`. Se aprueba con los residuos declarados
+en el HANDOFF y en las secciones de este registro. Uso: Moodle, con `exportar_moodle_cloze.R`. El DOCX no es apto para estudiantes; para
+papel, el SCHOICE. **No está en producción:** falta la evidencia de aula, y la promoción viene después.
+
+**L-C9 · Re-empalme de la Parte 1 y lectura del texto (firmada).** La Parte 1 solo se re-empalma por script, desde el md5 aprobado del SCHOICE
+y comprobando antes el bloque viejo línea a línea. Toda medida u oráculo del CLOZE que lea texto de la Parte 1 lo normaliza como se ve
+(U+00A0 como espacio), y las guardas de L-6 lo leen crudo.
+
+| Exige | Guarda | Mutante |
+|---|---|---|
+| El re-empalme, solo por script y atado al md5 | los `stopifnot` de `cloze/empalmar_bloque_p1.R` (md5 del SCHOICE, bloque viejo línea a línea, cada renombre una vez, sin otros usos) | E1 en el verificador |
+| Las medidas de la Parte 1 leen el texto como se ve | `norm_ed()` en E4 y `or_p1(nf = norm_ed)` en E2 | MC43 y MC49 |
+
+**L-C10 · Comparaciones de la Solution (firmada).** La Solution no imprime una comparación con cifras de la versión que, leída suelta, pueda ser
+falsa: cada comparación va resuelta con los datos y lleva la conclusión que se sigue. El criterio general va sin cifras, con este literal: «Por
+eso, para saber si el grado que perdió habría ganado con un curso más, o si el que ganó habría perdido con uno menos, basta comparar el promedio
+de cada uno con la diferencia entre los totales: si el promedio es mayor, sí; si es menor, no.»
+
+| Exige | Guarda | Mutante |
+|---|---|---|
+| La comparación sale de los datos y coincide con los veredictos de HP y HG | `stopifnot` «H1 r4» | MC52 |
+| Cada comparación con cifras es verdadera, y su conclusión se sigue | sonda H1-Sol, con control exacto de 200 | MC50, MC51, MC53, MC54 y MC55 |
+| El criterio literal, sin cifras | sonda Crit-P6, con control exacto de 100 | MC56 y MC57 |
+| El oráculo juzga el criterio contra la tabla, el contrafactual y el `exsolution` emitido | `coherencias_r10/verificar_coherencias.R` | sus mutaciones de control |
+
+**Candidatas del repo, sin decidir** (tocan `.claude/`, regla #17):
+1. Una cita `AUSENTE` no sobrevive a la corrección que pide (`verificar_citas_detractor.py`, regla #9).
+2. En una sonda de varias componentes, cada una necesita un mutante que la mueva sola; si el texto no puede aislarla, se muta una copia del entorno.
+3. Un mutante medido sobre una muestra distinta de la firmada necesita su línea base en esa misma muestra.
+4. `workflow-state.sh complete` debería avisar de un sello fuera de orden.
+5. `orquestador-cloze.md` escribe `tests/run_one_suite.R <suite>`, y el script recibe la ruta del test.

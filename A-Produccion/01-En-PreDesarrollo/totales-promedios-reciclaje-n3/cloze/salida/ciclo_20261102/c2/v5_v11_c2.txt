@@ -1,0 +1,24 @@
+md5 del .Rmd: e16842c1157b3bffe35b8f21682ed6ad
+V5: 101 XML, 390 gaps MULTICHOICE/MULTIRESPONSE (control positivo: > 0), 0 con <img o @@PLUGINFILE@@
+OK    V5: ningún gap contiene imágenes (N/A por construcción: sin gráficas-opción)
+OK    V5 (b): 100 HTML, 0 ##ANSWERi## sin resolver
+OK    fuga por nombre de archivo (§P6): 0 referencias diagrama_*.png en el XML (N/A: sin imágenes)
+OK    V6: M6 «Respuestas» de la Parte 6 agrupa por veredicto lo recalculado (setequal por contenido) y M4 marcas = veredicto, N = 100, 0 fallos
+OK    V6: la comprobación existe en verificar_coherencias.R y compara conjuntos, no órdenes
+OK    V7: N/A; unicidad de la clave de la Parte 2 comprobada por S2 (una sola correcta por juicio propio)
+OK    V8/V9: ciclo_20261102/c2/diversidad_sustantiva_c2.txt con el md5 vigente y «6 gap(s) medidos de 6 declarados»
+OK    V8/V9: ciclo_20261102/c2/diagnosticidad_c2.txt con el md5 vigente y «PASS: ninguna sonda superficial supera el 70 %»
+OK    V8/V9: ciclo_20261102/c2/diagnosticidad_por_rama_c2.txt con el md5 vigente y «N = 100 por estrato»
+OK    verificador de la C1e: md5 vigente, exit 4, 0 fallos, 0 pendientes
+OK    V10: guarda stopifnot en data_generation
+OK    V10: MC6 cazado por su sonda
+OK    V10: marcas del XML de Moodle = veredicto recalculado desde la tabla mostrada (100/100 y 30/30)
+OK    V11 por valor: ninguna respuesta de las Partes 3 a 5 es un número que la Parte 1 muest
+OK    V11 por valor: las Partes 2 a 6 no imprimen ninguna cifra de las opciones de la Parte 
+OK    V11 por valor: los textos de las Partes 2 a 6 no llevan cifras
+OK    V11 por contenido: las Partes 2 a 6 no nombran sedes ni filas de la Parte 1
+OK    V11 por independencia
+V11 a un paso: residuo declarado (líneas «RESIDUO DECLARADO: V11 a un paso» del verificador de la C1e): 4
+
+TOTAL fallos: 0
+exit=0

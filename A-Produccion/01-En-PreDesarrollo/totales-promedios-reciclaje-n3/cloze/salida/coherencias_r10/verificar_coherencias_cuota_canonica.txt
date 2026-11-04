@@ -1,0 +1,187 @@
+md5 del .Rmd: e16842c1157b3bffe35b8f21682ed6ad 
+xexams: 113 versiones en 36 s
+
+Versiones verificadas: 113 · con algún fallo: 0 · fallos totales: 0
+Comprobaciones por versión: mínimo 148 · máximo 151 · total 16862
+
+Comprobaciones por coherencia (S = Semántica, V = Visual-Texto, M = Matemática, K = Código, G = General):
+                      Semántica Visual-Texto Matemática Código General
+mín. por versión             34           35         45      9       2
+máx. por versión             34           35         48      9       2
+total (100 versiones)      3842         3955       5223   1017     226
+fallos                        0            0          0      0       0
+
+Cobertura de la muestra (semillas 1 216 ):
+  Parte 1 × otro colegio:
+          OtroColegio
+Parte1     CURSOS PROMEDIO
+  CURSOS       29       28
+  PROMEDIO     30       26
+  Material:
+
+  cartón    papel plástico 
+      28       55       30 
+  Fila (en la tabla 1) de la sede que gana:   Campestre=7 Central=7 El Bosque=3 La Pradera=9 Mañana=7 Norte=6 Primaria=31 Rural=12 Secundaria=5 Sur=6 Tarde=7 Urbana=13 
+  Ecuaciones aritméticas comprobadas:  2875 
+  Lectura alterna de la cifra como «total» (residuo declarado de O-1): versiones con ≥ 1 afirmación verdadera bajo esa lectura: 22 de 113; con exactamente una: 22
+  Opciones de la Parte 2 sin operación calculable con la tabla (la mayoría de los cursos): 67 apariciones en 67 versiones
+
+==== Comprobaciones globales de la Parte 2 ( 113 versiones juntas) ====
+  [OK   ] S2 las opciones emitidas son EXACTAMENTE los ocho textos que juzgué (ni uno más, ni uno menos)
+  [OK   ] S2 los textos que R/exams marca como clave son exactamente los tres que juzgué correctos
+  [OK   ] S2 los textos que R/exams deja como distractor son exactamente los cinco que juzgué incorrectos
+  [OK   ] S2 mi juicio da 3 correctas y 5 incorrectas
+  Frecuencia de cada texto en las 113 versiones (como clave / como distractor):
+    d_dos    (incorrecta) clave   0 · distractor  70 · Lo que recogió ese grado dividido en partes iguales entre sus cursos y luego entre dos.
+    k1       (correcta) clave  41 · distractor   0 · Lo que recogió ese grado dividido en partes iguales entre sus cursos.
+    d_cuad   (incorrecta) clave   0 · distractor  70 · Lo que recogió ese grado dividido entre el número de sus cursos al cuadrado.
+    k2       (correcta) clave  37 · distractor   0 · Lo que recogió ese grado dividido entre el número de sus cursos.
+    d_prom   (incorrecta) clave   0 · distractor  76 · Lo que recogió ese grado dividido entre el promedio de sus cursos.
+    d_ambos  (incorrecta) clave   0 · distractor  56 · Lo que recogió ese grado dividido entre la cantidad de cursos de ambos grados.
+    k3       (correcta) clave  35 · distractor   0 · Lo que recogió ese grado dividido entre la cantidad de cursos de ese mismo grado.
+    d_moda   (incorrecta) clave   0 · distractor  67 · Lo que recogió la mayoría de los cursos de ese mismo grado.
+  Posición de la clave de la Parte 2 tras el exshuffle (1 a 4): 1=30 2=24 3=24 4=35 
+  [OK   ] S2 en ninguna versión coinciden dos claves o dos distractores iguales
+  [OK   ] G semilla 7 sigue siendo el caso «canonica» (Parte 1 | otro colegio)
+  [OK   ] G semilla 3 sigue siendo el caso «CxC» (Parte 1 | otro colegio)
+  [OK   ] G semilla 2 sigue siendo el caso «CxP» (Parte 1 | otro colegio)
+  [OK   ] G semilla 1 sigue siendo el caso «PxC» (Parte 1 | otro colegio)
+  [OK   ] G semilla 4 sigue siendo el caso «PxP» (Parte 1 | otro colegio)
+
+==== Fichas de las 5 versiones renderizadas (semillas de render_cloze.R) ====
+
+[canonica · semilla 7] Parte 1 (CURSOS): Primaria 5 × 40 = 200 | Secundaria 4 × 45 = 180 → gana Primaria por 20 
+   Otro colegio (CURSOS): Séptimo 6 × 39 = 234 | Noveno 4 × 48 = 192 → gana Séptimo por 42 · Parte 2: clave k2 
+   fallos: 0 
+
+[CxC · semilla 3] Parte 1 (CURSOS): Central 4 × 45 = 180 | Campestre 6 × 32 = 192 → gana Campestre por 12 
+   Otro colegio (CURSOS): Sexto 5 × 44 = 220 | Séptimo 7 × 33 = 231 → gana Séptimo por 11 · Parte 2: clave k3 
+   fallos: 0 
+
+[CxP · semilla 2] Parte 1 (CURSOS): Mañana 4 × 39 = 156 | Tarde 6 × 32 = 192 → gana Tarde por 36 
+   Otro colegio (PROMEDIO): Sexto 6 × 35 = 210 | Séptimo 5 × 45 = 225 → gana Séptimo por 15 · Parte 2: clave k1 
+   fallos: 0 
+
+[PxC · semilla 1] Parte 1 (PROMEDIO): Primaria 5 × 42 = 210 | Secundaria 6 × 27 = 162 → gana Primaria por 48 
+   Otro colegio (CURSOS): Sexto 7 × 53 = 371 | Séptimo 8 × 51 = 408 → gana Séptimo por 37 · Parte 2: clave k3 
+   fallos: 0 
+
+[PxP · semilla 4] Parte 1 (PROMEDIO): Urbana 7 × 51 = 357 | Rural 8 × 39 = 312 → gana Urbana por 45 
+   Otro colegio (PROMEDIO): Sexto 7 × 57 = 399 | Octavo 8 × 46 = 368 → gana Sexto por 31 · Parte 2: clave k1 
+   fallos: 0 
+
+==== Mutaciones de control (cada una debe producir ≥ 1 fallo, y entre ellos el de su sonda propia) ====
+  Parte 5 + 1                                                                                              CAZADA · sonda propia: sí (1 fallos)
+        ↳ M3 Parte 5 = diferencia de los dos totales de la tabla — exsolution 43 | recalculado 42
+  Parte 3 y 4 intercambiadas                                                                               CAZADA · sonda propia: sí (2 fallos)
+        ↳ M3 Parte 3 = n × a del grado preguntado, leído de la tabla — exsolution 234 | recalculado 192
+  una marca de la Parte 1 movida                                                                           CAZADA · sonda propia: sí (1 fallos)
+        ↳ M1 la marca exsolution de la Parte 1 coincide con el veredicto recalculado — marcas: TRUE FALSE FALSE FALSE | recalculado: FALSE FALSE FALSE TRUE
+  una marca de la Parte 6 invertida                                                                        CAZADA · sonda propia: sí (1 fallos)
+        ↳ M4 las marcas de la Parte 6 coinciden con el veredicto recalculado — marcas: TRUE FALSE FALSE TRUE | recalculado: FALSE FALSE FALSE TRUE
+  marca de la Parte 2 movida                                                                               CAZADA · sonda propia: sí (2 fallos)
+        ↳ M2 la marca de la Parte 2 coincide con mi juicio semántico — marcas: TRUE FALSE FALSE FALSE | mi juicio: incorrecta incorrecta incorrecta correcta
+  cifra de una celda de la tabla 2 alterada                                                                CAZADA · sonda propia: sí (23 fallos)
+        ↳ M3 Parte 4 = n × a del grado preguntado, leído de la tabla — exsolution 234 | recalculado 3861
+  nombre de grado de la Parte 3 cambiado                                                                   CAZADA · sonda propia: sí (6 fallos)
+        ↳ S3 las Partes 3 y 4 piden los dos grados de la tabla, uno cada una — quinto quinto
+  ##ANSWER3## movido tras la Parte 4                                                                       CAZADA · sonda propia: sí (3 fallos)
+        ↳ V3 Parte 3: su ##ANSWER3## va justo después de su pregunta
+  retroalimentación de la Parte 5 con otra diferencia                                                     CAZADA · sonda propia: sí (2 fallos)
+        ↳ M5 retroalimentación de la Parte 5 nombra al ganador y calcula la diferencia — Ganó el grado séptimo: $234 - 192 = 99$ kilos más que el grado noveno.
+  una letra en la Solution (regla #19)                                                                     CAZADA · sonda propia: sí (1 fallos)
+        ↳ K2 (regla #19) ni la Solution ni la retroalimentación citan letras ni posiciones de opciones — La opción B es la correcta.
+  encabezado de la Parte 2 del tipo retirado («Comparaciones que no deciden…»)                         CAZADA · sonda propia: sí (5 fallos)
+        ↳ G3 la Solution lleva un único encabezado «Parte 2 · …», el de las lecturas del promedio que no sirven — **Parte 2 · Comparaciones que no deciden qué g
+  opción de la Parte 2 del tipo retirado                                                                  CAZADA · sonda propia: sí (4 fallos)
+        ↳ S2 las cuatro opciones de la Parte 2 salen del banco de ocho textos que juzgué (ninguna de otro tipo) — La diferencia entre el promedio por curso de u
+  afirmación de la Parte 1 con otra cifra                                                                 CAZADA · sonda propia: sí (5 fallos)
+        ↳ M1 la Parte 1 tiene exactamente una afirmación verdadera — FALSE FALSE FALSE FALSE
+  Parte 2: una opción incorrecta sustituida por OTRA CLAVE del banco (dos correctas)                      CAZADA · sonda propia: sí (5 fallos)
+        ↳ S2 exactamente una opción correcta (mi juicio) — correcta incorrecta incorrecta correcta
+  Parte 2: una opción incorrecta sustituida por una CUARTA PARÁFRASIS CORRECTA escrita por mí (dos correctas) CAZADA · sonda propia: sí (5 fallos)
+        ↳ S2 exactamente una opción correcta (mi juicio) — correcta incorrecta incorrecta correcta
+  Parte 2: retroalimentación de dos opciones incorrectas intercambiada                                    CAZADA · sonda propia: sí (6 fallos)
+        ↳ S7 Parte 2 opción 1 (incorrecta): «Falso.» y su explicación propia (da menos que el promedio) — Falso. Dividir otra vez entre dos da la mitad del prom
+  Parte 2: encabezado de la Solution duplicado                                                             CAZADA · sonda propia: sí (4 fallos)
+        ↳ G3 la Solution lleva un único encabezado «Parte 2 · …», el de las lecturas del promedio que no sirven — **Parte 2 · Lecturas del promedio que no sirve
+  Parte 2: explicación con la operación cambiada («la mitad» → «el doble del promedio»)            CAZADA · sonda propia: sí (2 fallos)
+        ↳ M2 Parte 2 opción 2: todo lo que su explicación dice que da la operación es cierto con las dos filas de la tabla (da el doble del promedio) — operació
+  Parte 2: explicación con la operación cambiada («menos que» → «más que el promedio»)            CAZADA · sonda propia: sí (2 fallos)
+        ↳ M2 Parte 2 opción 1: todo lo que su explicación dice que da la operación es cierto con las dos filas de la tabla (da más que el promedio) — operación 
+  Parte 2: explicación con la operación cambiada («la cantidad de cursos» → «el promedio»)         CAZADA · sonda propia: sí (2 fallos)
+        ↳ M2 Parte 2 opción 3: todo lo que su explicación dice que da la operación es cierto con las dos filas de la tabla (da el promedio; no el promedio) — op
+  Parte 2: explicación con una afirmación añadida que el oráculo no sabe recalcular («y da el triple del promedio») CAZADA · sonda propia: sí (1 fallos)
+        ↳ M2 Parte 2 opción 2: toda cláusula «da …» de su explicación es una afirmación que sé recalcular con la tabla — da el triple del promedio
+  Parte 2: texto del tipo retirado añadido a la Solution                                                  CAZADA · sonda propia: sí (2 fallos)
+        ↳ S6 ni el enunciado, ni las opciones, ni la Solution, ni la retroalimentación conservan texto del tipo retirado de la Parte 2 («comparar») — Gana el gr
+  Parte 2: texto del tipo retirado en el enunciado                                                         CAZADA · sonda propia: sí (3 fallos)
+        ↳ S2 la pregunta de la Parte 2 es la vigente («¿Qué indica, en la tabla del otro colegio, el promedio de … recogido por curso de un grado?») — ¿Qué se c
+  Parte 2: pregunta con otro material                                                                      CAZADA · sonda propia: sí (2 fallos)
+        ↳ V1 la pregunta de la Parte 2 cita el material de la tabla del otro colegio — cartón | papel
+  Parte 2: «Respuestas» apunta a un distractor                                                           CAZADA · sonda propia: sí (1 fallos)
+        ↳ M6 «Respuestas» de la Parte 2 cita la opción correcta
+  Parte 2: «Procedimiento» con el párrafo del tipo retirado                                             CAZADA · sonda propia: sí (3 fallos)
+        ↳ S6 la Parte 2 de la sección «Procedimiento» define el promedio por curso y no promete lo que recogió cada curso — Parte 2. Gana el grado que recogió m
+  Parte 2: dos opciones iguales                                                                            CAZADA · sonda propia: sí (5 fallos)
+        ↳ S2 opciones únicas
+  Parte 2: dos marcas verdaderas en el exsolution                                                          CAZADA · sonda propia: sí (3 fallos)
+        ↳ M2 la marca de la Parte 2 coincide con mi juicio semántico — marcas: TRUE FALSE FALSE TRUE | mi juicio: incorrecta incorrecta incorrecta correcta
+  Parte 2: cifra impresa en una opción                                                                    CAZADA · sonda propia: sí (5 fallos)
+        ↳ V11 el texto de las Partes 2 a 6 no imprime cifras (solo su tabla)
+  Parte 2: retroalimentación de la clave con «Falso.»                                                   CAZADA · sonda propia: sí (1 fallos)
+        ↳ S7 Parte 2 opción 4 (correcta): «Verdadero.» y define el promedio (total entre cursos, reparto por igual) — Falso. El promedio por curso es el total d
+  Parte 2: retroalimentación de un distractor con «Verdadero.»                                          CAZADA · sonda propia: sí (2 fallos)
+        ↳ S7 Parte 2 opción 1 (incorrecta): «Falso.» y su explicación propia (da menos que el promedio) — Verdadero. Dividir entre los cursos de los dos grados 
+  Parte 2: opción del banco anterior (ronda 3)                                                            CAZADA · sonda propia: sí (4 fallos)
+        ↳ S2 las cuatro opciones de la Parte 2 salen del banco de ocho textos que juzgué (ninguna de otro tipo) — Lo que recogió el mejor de sus cursos dentro d
+  Parte 2: una viñeta de la Solution con la explicación de otra opción                                  CAZADA · sonda propia: sí (1 fallos)
+        ↳ S6 la Solution de la Parte 2 enumera las tres incorrectas de esta versión, con la explicación de su retroalimentación — - «Lo que recogió ese grado di
+  Procedimiento: la frase de las dos afirmaciones de cada sede con otra diferencia                         CAZADA · sonda propia: sí (2 fallos)
+        ↳ M6 «Procedimiento» Parte 1: la frase de las dos afirmaciones de cada sede nombra a la sede que perdió, a la que ganó y la diferencia de la tabla 1 — L
+  Procedimiento: la frase de las dos afirmaciones con las sedes intercambiadas                             CAZADA · sonda propia: sí (1 fallos)
+        ↳ M6 «Procedimiento» Parte 1: la frase de las dos afirmaciones de cada sede nombra a la sede que perdió, a la que ganó y la diferencia de la tabla 1 — L
+  Parte 6 · Afirmaciones falsas: una cifra de la explicación cambiada                                    CAZADA · sonda propia: sí (2 fallos)
+        ↳ S6 la Solution de la Parte 6 enumera las afirmaciones falsas de esta versión, con la explicación de su retroalimentación — - «Si el grado que perdió h
+  Parte 6 · Afirmaciones falsas: una viñeta omitida                                                      CAZADA · sonda propia: sí (1 fallos)
+        ↳ S6 la Solution de la Parte 6 enumera las afirmaciones falsas de esta versión, con la explicación de su retroalimentación — - «Ganó el concurso el grad
+  otro material en la Solution (papel → cartón)                                                         CAZADA · sonda propia: sí (1 fallos)
+        ↳ V12 el texto de la versión (enunciado, opciones, Solution y retroalimentación) nombra solo su material, no los otros dos — cartón
+  orden de los encabezados de la Solution alterado                                                         CAZADA · sonda propia: sí (1 fallos)
+        ↳ G la Solution tiene los doce encabezados esperados, en este orden — **Respuestas** | **Procedimiento correcto** | **Análisis de los distractores** | *
+  Parte 2: una viñeta de la Solution omitida                                                              CAZADA · sonda propia: sí (1 fallos)
+        ↳ S6 la Solution de la Parte 2 enumera las tres incorrectas de esta versión, con la explicación de su retroalimentación — - «Lo que recogió ese grado di
+  MC50: «más» → «menos» en la comparación de HP (rama verdadera)                                   CAZADA · sonda propia: sí (2 fallos)
+        ↳ P6 cada «más»/«menos» es verdadero con sus dos cifras — 48 menos 42 | 39 menos 42
+  MC51: vuelve a la redacción de 27f789dc («si y solo si…») en lugar del criterio vigente             CAZADA · sonda propia: sí (4 fallos)
+        ↳ P6 el párrafo lleva una sola vez el corte «Con un curso más, el grado » (con mayúscula, no el «con un curso más,» del criterio) — Parte 6. Cada hipóte
+  MC54: la comparación de HP cita el promedio del grado que ganó                                         CAZADA · sonda propia: sí (3 fallos)
+        ↳ P6 «un curso más»: el grado que perdió según la tabla, su promedio y D = |T1 - T2| — noveno 39 42 | tabla: Noveno 48 42
+  solo la conclusión de HP cambia («habría ganado» → «no le habría alcanzado para ganar»)         CAZADA · sonda propia: sí (2 fallos)
+        ↳ P6 la conclusión de «un curso más» es verdadera con el contrafactual (n_P + 1)·a_P frente a T_G y coherente con su «más/menos» — no le habría alcanzad
+  solo la conclusión de HG cambia («habría perdido» → «habría seguido ganando»)                   CAZADA · sonda propia: sí (2 fallos)
+        ↳ P6 la conclusión de «un curso menos» es verdadera con el contrafactual (n_G - 1)·a_G frente a T_P y coherente con su «más/menos» — habría seguido gana
+  criterio con la frase de 32243d0a                                                                        CAZADA · sonda propia: sí (3 fallos)
+        ↳ P6 el tramo general es el criterio literal vigente (sin cifras) — Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo p
+  criterio con «sí» y «no» intercambiados                                                             CAZADA · sonda propia: sí (1 fallos)
+        ↳ P6 el tramo general es el criterio literal vigente (sin cifras) — Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo p
+  redacción vieja de H3 («solo si … fuera mayor»)                                                     CAZADA · sonda propia: sí (4 fallos)
+        ↳ P6 el párrafo lleva una sola vez el corte «Con un curso más, el grado » (con mayúscula, no el «con un curso más,» del criterio) — Parte 6. Cada hipóte
+  texto no juzgado en el tramo con cifras (una cláusula añadida a la conclusión)                        CAZADA · sonda propia: sí (1 fallos)
+        ↳ P6 el tramo con cifras tiene la forma juzgada: dos comparaciones con cifras y dos conclusiones (texto no juzgado = fallo) — Con un curso más, el grado
+  L-6: una espacio normal entre la cifra y «kilos» en el párrafo de la Parte 6                          CAZADA · sonda propia: sí (2 fallos)
+        ↳ P6 L-6 en el párrafo (crudo): cada cifra va unida a «kilos» con U+00A0 (4 pares) y las dos últimas palabras también — Parte 6. Cada hipótesis cambia u
+  L-6: la unidad fuera de una fórmula de la Parte 1 (Procedimiento)                                       CAZADA · sonda propia: sí (2 fallos)
+        ↳ L6b (Parte 1) la unidad y el signo que cierran una fórmula van dentro de ella: ninguna unidad ni signo fuera — $5 \times 40 = 200$ ⏎ sigue: «~kilos.»
+  L-6: el signo fuera de la fórmula en la retroalimentación de la Parte 1                                CAZADA · sonda propia: sí (2 fallos)
+        ↳ L6b (Parte 1) la unidad y el signo que cierran una fórmula van dentro de ella: ninguna unidad ni signo fuera — $200 - 180 = 20\ \text{kilos}$ ⏎ sigue:
+  L-6: el espacio normal entre la cifra y «kilos» en una opción de la Parte 1                           CAZADA · sonda propia: sí (1 fallos)
+        ↳ L6a ninguna cifra ni fórmula separada de «kilos»/«cursos» por un espacio normal (fuera de las tablas) — La sede primaria ganó el concurso porque recog
+  L-6: «El Bosque» con espacio normal en una opción de la Parte 1                                       CAZADA · sonda propia: sí (1 fallos)
+        ↳ L6a los nombres de dos palabras («El Bosque», «La Pradera») no llevan espacio normal fuera de las tablas — El Bosque
+
+Mutaciones: 54 de 54 cazadas · 54 de 54 por su sonda propia
+Control sin mutar (debe dar 0 fallos): sin_mutar_semilla_base = 0 · sin_mutar_con_d_prom = 0 
+
+TOTAL: fallos por versión = 0 · fallos globales = 0 · mutaciones sin cazar o sin su sonda = 0
+exit=0

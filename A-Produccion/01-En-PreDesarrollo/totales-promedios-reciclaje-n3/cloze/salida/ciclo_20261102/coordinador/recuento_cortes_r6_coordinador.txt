@@ -1,0 +1,37 @@
+== ('n', 360) páginas 100 · con «habría ⏎ X» en las frases resueltas: 32
+    gen habría ⏎ ganado 100/100
+    gen habría ⏎ perdido 0/100
+    res habría ⏎ alcanzado 0/43
+    res habría ⏎ ganado. 0/57
+    res habría ⏎ perdido. 0/49
+    res habría ⏎ restado 0/100
+    res habría ⏎ seguido 32/51
+    res habría ⏎ sumado 0/100
+== ('n', 320) páginas 100 · con «habría ⏎ X» en las frases resueltas: 68
+    gen habría ⏎ ganado 0/100
+    gen habría ⏎ perdido 0/100
+    res habría ⏎ alcanzado 28/43
+    res habría ⏎ ganado. 0/57
+    res habría ⏎ perdido. 0/49
+    res habría ⏎ restado 56/100
+    res habría ⏎ seguido 33/51
+    res habría ⏎ sumado 0/100
+== ('r', 360) páginas 100 · con «habría ⏎ X» en las frases resueltas: 71
+    res habría ⏎ alcanzado 43/43
+    res habría ⏎ ganado. 0/57
+    res habría ⏎ perdido. 0/49
+    res habría ⏎ restado 12/100
+    res habría ⏎ seguido 19/51
+    res habría ⏎ sumado 0/100
+== ('r', 320) páginas 100 · con «habría ⏎ X» en las frases resueltas: 100
+    res habría ⏎ alcanzado 0/43
+    res habría ⏎ ganado. 57/57
+    res habría ⏎ perdido. 0/49
+    res habría ⏎ restado 35/100
+    res habría ⏎ seguido 43/51
+    res habría ⏎ sumado 100/100
+--- semilla 1, renglones del criterio
+('n', 360) ['mismo promedio suma ese promedio al', 'comparar el promedio de cada uno con la', 'diferencia entre los totales: si el promedio', 'es mayor, sí; si es menor, no. Con un curso']
+('n', 320) ['con el mismo promedio suma ese', 'promedio al total, y un curso menos', 'comparar el promedio de cada uno', 'el promedio es mayor, sí; si es', 'menor, no. Con un curso más, el']
+('r', 360) ['mismo promedio suma ese promedio al', 'comparar el promedio de ese grado con la', 'diferencia entre los totales: si el promedio', 'es mayor, el ganador cambia; si es menor,']
+('r', 320) ['con el mismo promedio suma ese', 'promedio al total, y un curso menos', 'comparar el promedio de ese grado', 'el promedio es mayor, el ganador', 'cambia; si es menor, no. Con un']

@@ -1,0 +1,12 @@
+Bloques de distractores analizados: 300 en 100 versiones
+             Rama
+Error         CURSOS PROMEDIO
+  ERR-CURSOS       0       56
+  ERR-DATO        21        0
+  ERR-INVENTA     44       56
+  ERR-PARCIAL      7        8
+  ERR-PROM        44        0
+  ERR-RESTA        7       35
+  ERR-TOTAL        9       13
+
+Fallos: 0 

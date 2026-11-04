@@ -1,0 +1,9 @@
+texto	juicio	por_que	operacion
+Lo que recogió ese grado dividido en partes iguales entre sus cursos y luego entre dos.	incorrecta	el promedio es total/cursos; dividir otra vez entre dos da la mitad del promedio	T/n/2 = a/2
+Lo que recogió ese grado dividido en partes iguales entre sus cursos.	correcta	es la definición de promedio por curso	T/n = a
+Lo que recogió ese grado dividido entre el número de sus cursos al cuadrado.	incorrecta	divide entre n^2, no entre n	T/n^2
+Lo que recogió ese grado dividido entre el número de sus cursos.	correcta	es la definición de promedio por curso	T/n = a
+Lo que recogió ese grado dividido entre el promedio de sus cursos.	incorrecta	T/a da el número de cursos, no el promedio	T/a = n
+Lo que recogió ese grado dividido entre la cantidad de cursos de ambos grados.	incorrecta	divide entre N (ambos grados), no entre n	T/N
+Lo que recogió ese grado dividido entre la cantidad de cursos de ese mismo grado.	correcta	es la definición de promedio por curso	T/n = a
+Lo que recogió la mayoría de los cursos de ese mismo grado.	incorrecta	describe la moda/valor típico, no el promedio	sin operación

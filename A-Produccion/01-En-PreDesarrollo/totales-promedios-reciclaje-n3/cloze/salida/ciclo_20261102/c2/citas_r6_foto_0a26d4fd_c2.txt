@@ -1,0 +1,4 @@
+Foto de control, NO sustituye a la comprobación prescrita: mismo reporte y mismo script sobre los archivos citados tal como están en 0a26d4fd (el commit que audita la r6).
+Copia del reporte con la raíz del repo cambiada por la foto: /home/bootcamp/.cache/c2_cloze/foto_citas_0a26d4fd
+CITAS OK: 6 cita(s), 0 problema(s), 0 aviso(s)
+exit=0

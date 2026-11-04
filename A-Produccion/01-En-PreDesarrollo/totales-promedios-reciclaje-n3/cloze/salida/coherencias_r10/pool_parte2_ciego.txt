@@ -1,0 +1,13 @@
+md5 del .Rmd: e16842c1157b3bffe35b8f21682ed6ad
+Semillas 1:100 · 400 opciones emitidas · 8 textos distintos
+Preguntas (con el material generalizado):
+  ¿Qué indica, en la tabla del otro colegio, el promedio de <material> recogido por curso de un grado?
+Textos, en orden alfabético, sin marca:
+  Lo que recogió ese grado dividido en partes iguales entre sus cursos y luego entre dos.
+  Lo que recogió ese grado dividido en partes iguales entre sus cursos.
+  Lo que recogió ese grado dividido entre el número de sus cursos al cuadrado.
+  Lo que recogió ese grado dividido entre el número de sus cursos.
+  Lo que recogió ese grado dividido entre el promedio de sus cursos.
+  Lo que recogió ese grado dividido entre la cantidad de cursos de ambos grados.
+  Lo que recogió ese grado dividido entre la cantidad de cursos de ese mismo grado.
+  Lo que recogió la mayoría de los cursos de ese mismo grado.

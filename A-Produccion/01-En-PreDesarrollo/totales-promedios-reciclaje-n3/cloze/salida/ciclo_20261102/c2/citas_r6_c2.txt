@@ -1,0 +1,3 @@
+FALLA H1 | /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/.claude/CLAUDE.md: se afirma AUSENTE «habría ⏎ restado», pero sí está en el archivo
+CITAS FALLA: 6 cita(s), 1 problema(s), 0 aviso(s)
+exit=1

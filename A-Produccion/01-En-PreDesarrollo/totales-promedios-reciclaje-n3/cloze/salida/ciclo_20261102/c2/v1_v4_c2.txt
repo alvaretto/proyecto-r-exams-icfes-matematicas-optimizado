@@ -1,0 +1,17 @@
+md5 del .Rmd: e16842c1157b3bffe35b8f21682ed6ad · N = 100 (semillas 1:100)
+Versiones que cumplen, de 100:
+ V1  V2  V3  V4 
+100 100 100 100 
+exclozetype emitido: schoice|schoice|num|num|num|mchoice 
+partes: 6 · expoints: 3|1|1|1|1|1 · tolerancias (semilla 1): 0 0 0 0 0 0 
+
+Controles positivos (TRUE = la sonda dispara):
+  V1 sin ##ANSWER4##                                      TRUE
+  V2 ##ANSWER3## tras la Parte 4 (V1 sigue en verde)      TRUE
+  V3 schoice con cuatro marcas                            TRUE
+  V3 mchoice sin marcas                                   TRUE
+  V3 num con tolerancia negativa                          TRUE
+  V4 cinco encabezados de parte                           TRUE
+
+TOTAL fallos: 0
+exit=0 · 37 s

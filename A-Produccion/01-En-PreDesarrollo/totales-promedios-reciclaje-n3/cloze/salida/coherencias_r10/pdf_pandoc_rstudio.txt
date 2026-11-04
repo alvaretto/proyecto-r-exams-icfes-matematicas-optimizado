@@ -1,0 +1,11 @@
+md5 del .Rmd: e16842c1157b3bffe35b8f21682ed6ad 
+$version
+[1] ‘3.10’
+
+$dir
+[1] "/usr/lib/rstudio/resources/app/bin/quarto/bin/tools/x86_64"
+
+pandoc forzado: /usr/lib/rstudio/resources/app/bin/quarto/bin/tools/x86_64/pandoc · versión 3.10 
+PDF con el pandoc de RStudio: comprobaciones 40 · fallidas 0 
+tex (RStudio): \LTcaptype{none}: 2 · guarda c@none: TRUE · longtable: 2
+exit=0

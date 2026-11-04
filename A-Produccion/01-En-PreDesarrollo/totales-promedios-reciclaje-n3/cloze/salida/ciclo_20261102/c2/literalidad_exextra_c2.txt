@@ -1,0 +1,52 @@
+md5 del .Rmd: e16842c1157b3bffe35b8f21682ed6ad
+catálogo niveles-mat.json 426ea08a3746c669a1467df579284ca7
+catálogo evidencias-mat.json 427d2e29c9a5a99da619ee2526fbd785
+catálogo estandares-mat-ebc.json 4862e82c3cd19b31af4b2f2784bb4aef
+catálogo estructura-prueba-mat.json 330f5f841063af8db7486777ee407f9d
+
+[OK   ] Competencia: 'Argumentación'
+   = ficha (ITEM_OFICIAL.md): True · NFC: True
+   literal en evidencias-mat.json /evidencias_oficiales/Arg_E1/competencia
+   literal en evidencias-mat.json /evidencias_oficiales/Arg_E2/competencia
+   literal en evidencias-mat.json /evidencias_oficiales/Arg_E3/competencia
+
+[OK   ] Componente: 'Aleatorio'
+   = ficha (ITEM_OFICIAL.md): True · NFC: True
+   literal en estructura-prueba-mat.json /contenidos/equivalencia_componente/Estadística
+
+[OK   ] Afirmacion: 'Valida procedimientos y estrategias matemáticas utilizadas para dar solución a problemas.'
+   = ficha (ITEM_OFICIAL.md): True · NFC: True
+   literal en evidencias-mat.json /afirmaciones_oficiales/Argumentación/texto_oficial
+
+[OK   ] Evidencia: 'Plantea afirmaciones que sustentan o refutan una interpretación dada a la información disponible en el marco de la solución de un problema.'
+   = ficha (ITEM_OFICIAL.md): True · NFC: True
+   literal en evidencias-mat.json /evidencias_oficiales/Arg_E1/texto_oficial
+
+[OK   ] Descriptor (texto tras ' — '): 'Justifica afirmaciones utilizando planteamientos y operaciones aritméticas o haciendo uso directo de un concepto, es decir, a partir de un único argumento.'
+   = ficha (ITEM_OFICIAL.md): True · NFC: True
+   literal en niveles-mat.json /niveles_oficiales/N3[9]
+   literal en niveles-mat.json /mapeo_codigos_proyecto_a_oficial/D3.10/texto_oficial
+
+[OK   ] Estandar (texto antes de ' ('): 'Predigo y justifico razonamientos y conclusiones usando información estadística.'
+   = ficha (ITEM_OFICIAL.md): True · NFC: True
+   literal en estandares-mat-ebc.json /estandares_oficiales_por_pensamiento_grado/Aleatorio_6-7[7]
+
+[OK   ] Descriptor = ficha «Descriptor» carácter a carácter: 'D3.10 — Justifica afirmaciones utilizando planteamientos y operaciones aritméticas o haciendo uso directo de un concepto, es decir, a partir de un único argumento.'
+
+[OK   ] Estandar = ficha «Estándar asociado» carácter a carácter: 'Predigo y justifico razonamientos y conclusiones usando información estadística. (6°-7°, Pensamiento aleatorio)'
+
+[OK   ] Nivel = ficha «Nivel» carácter a carácter: '3'
+
+[OK   ] GradoSugerido = ficha «Grado sugerido» carácter a carácter: '6°-7°'
+
+[OK   ] Contenido = ficha «Contenido» carácter a carácter: 'Estadística'
+
+[OK   ] TemaEspecifico = ficha «Tema Específico» carácter a carácter: 'Promedio y total de datos'
+
+D3.10 en niveles-mat.json: ['/niveles_oficiales/N3[9]', '/mapeo_codigos_proyecto_a_oficial/D3.10/texto_oficial']
+Estándar en estandares-mat-ebc.json: ['/estandares_oficiales_por_pensamiento_grado/Aleatorio_6-7[7]']
+
+DOK = 2 · Nivel = 3 · Bloom = Evaluar: DOK >= 3 => Nivel >= 3: True · Bloom = Evaluar => Nivel >= 3: True
+
+TOTAL fallos: 0
+exit=0

@@ -3,7 +3,7 @@
   "ejercicio": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1",
   "tipo": "cloze",
   "timestamp_inicio": "2026-10-30T21:25:33.191024-05:00",
-  "timestamp_ultima_actualizacion": "2026-11-03T19:45:31.757188-05:00",
+  "timestamp_ultima_actualizacion": "2026-11-03T21:17:42.384307-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -47,26 +47,31 @@
       "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261103-193955-465618/informe.txt · md5 e16842c1157b3bffe35b8f21682ed6ad · 0 errores / 6 advertencias (las heurísticas conocidas de 2E y 2F, las mismas de la C1d). 2A APROBADO; 2B 5 páginas, las 5 leídas; 2G 100/100; 2H 10 semillas, 0 anomalías; 2I, 2J, 2K, 2L, 2N y 2O en verde. 2M: auditoría 6b pareada lanzada aparte (auditor-visual-html, sin name)."
     },
     "detractor_fase2c": {
-      "completado": false,
-      "timestamp": null,
-      "veredicto": null
+      "completado": true,
+      "timestamp": "2026-11-03T21:12:14.244771-05:00",
+      "veredicto": null,
+      "nota": "FASE 2C r6 (detractor nuevo, sin name), salida/fase2c_r6_detractor.md (md5 54e99e9f…), sobre e16842c1157b3bffe35b8f21682ed6ad: APROBAR_CON_CAMBIOS, sin CORRECCIÓN. H1 y H2 atendidos en el registro, sin tocar el .Rmd; los cambios al oráculo van en coherencias_r10. Citas: hook ENTREGA VERIFICADA 20:25:22 (6, 0 fallos) y exit 0 del coordinador a las 20:26; árbol vigente exit 1 por la cita AUSENTE de H1, que la inscripción de la corrección (20:28:03) volvió presente; foto 0a26d4fd exit 0 (c2/citas_r6_foto_0a26d4fd_c2.txt). Admitido por: el profesor, 2026-11-03, «Sellar con nota (Recomendada)»."
     },
     "coherencias_5": {
-      "completado": false,
-      "timestamp": null
+      "completado": true,
+      "timestamp": "2026-11-03T21:12:25.718151-05:00",
+      "nota": "Oráculo r10 (salida/coherencias_r10/, verificar_coherencias.R c92db5cf…) sobre e16842c1157b3bffe35b8f21682ed6ad: OK. 14920 comprobaciones en N = 100 (16862 con 13 canónicas), 6219 entre formatos y 40 con el pandoc de RStudio, 0 fallos; 108 mutaciones cazadas por su sonda; juicio ciego 8 de 8. L-C8: S2 por versión y global, texto no juzgado cazado. Repetido por el coordinador: 186 líneas idénticas."
     },
     "validar_diversidad": {
-      "completado": false,
-      "timestamp": null,
-      "versiones_unicas": null
+      "completado": true,
+      "timestamp": "2026-11-03T21:12:31.935201-05:00",
+      "versiones_unicas": null,
+      "nota": "salida/ciclo_20261102/c2/, md5 e16842c1157b3bffe35b8f21682ed6ad: diversidad 6/6 gaps, N = 100, exit 0 (WARN_DIV_BAJA p2, fija-justificada); diagnosticidad PASS, exit 0; por rama N = 100, idéntica a r8; E5 300 de 300 únicas (c1e)."
     },
     "validar_icfes": {
-      "completado": false,
-      "timestamp": null
+      "completado": true,
+      "timestamp": "2026-11-03T21:12:41.137895-05:00",
+      "nota": "salida/ciclo_20261102/c2/, md5 e16842c1157b3bffe35b8f21682ed6ad: literalidad_repo exit 0, literalidad_exextra 0 fallos, DOK 2, Nivel 3, Bloom Evaluar; v1_v4 100/100 con 6 controles; v5_v11 0 fallos (V5 y V7 N/A)."
     },
     "aprobacion_usuario": {
-      "completado": false,
-      "timestamp": null
+      "completado": true,
+      "timestamp": "2026-11-03T21:17:42.384307-05:00",
+      "nota": "WAIT_USER #3 de la tanda C2 (2026-11-03): el profesor respondió «[a] Aprobar (Recomendada)» y aprueba para el aula la versión md5 e16842c1157b3bffe35b8f21682ed6ad (commit 0a26d4fd), que sustituye a f98f9dda. Pasos 1-10 sellados, cada uno tras su artefacto. FASE 2C r6 APROBAR_CON_CAMBIOS sin CORRECCIÓN (cambios documentales; sello 7 con el exit 1 explicado, decisión «Sellar con nota (Recomendada)»); paso 8 coherencias_r10 con 0 fallos y 108 mutaciones cazadas; 300 de 300 únicas; verificador 1cbc770f en exit 4 (368 cifras firmadas, 0 fallos, 0 pendientes). Residuos declarados: HANDOFF y registro local. L-C9 y L-C10 firmadas. No está en producción: falta la evidencia de aula."
     }
   },
   "reaperturas": [

@@ -1,0 +1,11 @@
+md5 del .Rmd: e16842c1157b3bffe35b8f21682ed6ad 
+coincide   mi juicio=incorrecta marca R/exams=incorrecta r9=incorrecta clave   0 · distractor  59  | Lo que recogió ese grado dividido en partes iguales entre sus cursos y luego entre dos.
+coincide   mi juicio=correcta   marca R/exams=correcta   r9=correcta   clave  35 · distractor   0  | Lo que recogió ese grado dividido en partes iguales entre sus cursos.
+coincide   mi juicio=incorrecta marca R/exams=incorrecta r9=incorrecta clave   0 · distractor  62  | Lo que recogió ese grado dividido entre el número de sus cursos al cuadrado.
+coincide   mi juicio=correcta   marca R/exams=correcta   r9=correcta   clave  33 · distractor   0  | Lo que recogió ese grado dividido entre el número de sus cursos.
+coincide   mi juicio=incorrecta marca R/exams=incorrecta r9=incorrecta clave   0 · distractor  67  | Lo que recogió ese grado dividido entre el promedio de sus cursos.
+coincide   mi juicio=incorrecta marca R/exams=incorrecta r9=incorrecta clave   0 · distractor  52  | Lo que recogió ese grado dividido entre la cantidad de cursos de ambos grados.
+coincide   mi juicio=correcta   marca R/exams=correcta   r9=correcta   clave  32 · distractor   0  | Lo que recogió ese grado dividido entre la cantidad de cursos de ese mismo grado.
+coincide   mi juicio=incorrecta marca R/exams=incorrecta r9=incorrecta clave   0 · distractor  60  | Lo que recogió la mayoría de los cursos de ese mismo grado.
+Textos emitidos que no están en mi TSV: 0 
+Discrepancias: 0 

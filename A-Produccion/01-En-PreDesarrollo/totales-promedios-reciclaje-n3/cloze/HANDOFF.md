@@ -812,3 +812,50 @@ ninguna ley y, por decisión del profesor, no lleva espacio duro.
    CLOZE, tanda C1e».
 2. Según su veredicto: si no abre una CORRECCIÓN, tanda C2, con el paso 8 (oráculo r10 nuevo, con los diez puntos de la r5 y el criterio
    literal de esta tanda) y los pasos 9 y 10.
+
+## FASE 2C r6 (2026-11-03): APROBAR_CON_CAMBIOS, sin CORRECCIÓN (registro completo en `../.claude/CLAUDE.md`)
+
+- Sobre el md5 `e16842c1…` (`0a26d4fd`). Reporte: `salida/fase2c_r6_detractor.md`, citas 6 de 6. Sus dos BAJAS son documentales y el `.Rmd` no cambia.
+- **El residuo de H2 de la r5 se declara con el inventario completo** de `../.claude/CLAUDE.md`, § «FASE 2C r6 del CLOZE», que sustituye a la
+  tabla de la tanda C1e. En `e16842c1`: «habría ⏎ ganado con» 100/100 a 360 px; «habría ⏎ restado» 56/100 a 320 px; «no le habría ⏎ alcanzado»
+  28/43 a 320 px; «habría ⏎ seguido ganando.» 32/51 y 33/51; páginas con algún corte en las frases resueltas, 32/100 y 68/100.
+- Las seis lecturas de `salida/ciclo_20261102/c1e/lectura_criterio_c1e.txt` quedan como residuo declarado.
+- **Próximo paso: tanda C2:** oráculo r10, sellos 7 a 10 y WAIT_USER #3.
+
+## Tanda C2 del ciclo 2026-11-02 (2026-11-03): oráculo r10 y pasos 9 y 10 medidos, **sin sellar: 6/11** (registro completo en `../.claude/CLAUDE.md`)
+
+> **Este bloque manda sobre los anteriores y sobre el «Estado» de arriba.** `.Rmd` `e16842c1…` y verificador `1cbc770f…`, sin cambios. Evidencia:
+> `salida/coherencias_r10/` y `salida/ciclo_20261102/c2/`. `salida/` está en `.gitignore`: esa evidencia entra con `git add -f`, como la anterior.
+
+- **Por qué no hay sellos.** `verificar_citas_detractor.py salida/fase2c_r6_detractor.md` da exit 1 sobre el árbol vigente: la cita de H1
+  `AUSENTE: habría ⏎ restado` dejó de ser cierta a las 20:28:03, cuando se inscribió en `../.claude/CLAUDE.md` la corrección que esa misma cita
+  pedía. En `0a26d4fd` da exit 0 (`c2/citas_r6_foto_0a26d4fd_c2.txt`), y el hook registró «ENTREGA VERIFICADA» a las 20:25:22. El encargo pedía
+  exit 0 y detenerse si no: decide quien lo encargó.
+- **Paso 8, en verde:** oráculo r10 (`verificar_coherencias.R`, `c92db5cf…`): 14 920 comprobaciones, 6 219 entre formatos, 0 fallos, 108 mutaciones
+  cazadas por su sonda. Juicio ciego: 8 de 8.
+- **Paso 9, en verde:** diversidad 6 de 6 gaps, exit 0; diagnosticidad `PASS`, exit 0; por rama, idéntica a la r8; E5, 300 de 300.
+- **Paso 10, en verde:** literalidad exit 0 y 0 fallos; V1 a V4, 100 de 100 con 6 controles; V5 a V11, 0 fallos.
+- **Corrige la lista «Residuos declarados»:** en la canónica, X6 y X10 ya no pasan de +8 pp (−25,0 y −33,3 pp, exactas); siguen X9 +25,0 y X11
+  +12,5. «H3 de la FASE 2C r3, diferido» está cerrado desde la C1. Los BAJA 1 y 2 de la decisión 2 a y los cortes cifra-unidad de la Solution de
+  la Parte 1 los cerró L-6 (0 cortes en la 6b de la C1e). El BAJA 4 («ganará»/«ganó») sigue.
+
+### Próximo paso (tanda C2)
+
+1. **Decisión del coordinador o del profesor:** si el sello 7 se admite con el exit 1 explicado, o de otra forma.
+2. Si se admite, cuatro `complete`, en orden y cada uno en su propia llamada, desde la raíz del repo, con `CZ=A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/cloze`:
+
+```bash
+.claude/scripts/workflow-state.sh complete $CZ detractor_fase2c --nota "FASE 2C r6 (detractor nuevo, sin name), salida/fase2c_r6_detractor.md (md5 54e99e9f…), sobre e16842c1157b3bffe35b8f21682ed6ad: APROBAR_CON_CAMBIOS, sin CORRECCIÓN. H1 y H2 atendidos en el registro, sin tocar el .Rmd; los cambios al oráculo van en coherencias_r10. Citas: hook ENTREGA VERIFICADA 20:25:22 (6, 0 fallos); árbol vigente exit 1 por la cita AUSENTE de H1, que la inscripción de la corrección (20:28:03) volvió presente; foto 0a26d4fd exit 0 (c2/citas_r6_foto_0a26d4fd_c2.txt). Admitido por: <quién y cuándo>."
+.claude/scripts/workflow-state.sh complete $CZ coherencias_5 --nota "Oráculo r10 (salida/coherencias_r10/, verificar_coherencias.R c92db5cf…) sobre e16842c1157b3bffe35b8f21682ed6ad: OK. 14920 comprobaciones en N = 100 (16862 con 13 canónicas), 6219 entre formatos y 40 con el pandoc de RStudio, 0 fallos; 108 mutaciones cazadas por su sonda; juicio ciego 8 de 8. L-C8: S2 por versión y global, texto no juzgado cazado."
+.claude/scripts/workflow-state.sh complete $CZ validar_diversidad --nota "salida/ciclo_20261102/c2/, md5 e16842c1157b3bffe35b8f21682ed6ad: diversidad 6/6 gaps, N = 100, exit 0 (WARN_DIV_BAJA p2, fija-justificada); diagnosticidad PASS, exit 0; por rama N = 100, idéntica a r8; E5 300 de 300 únicas (c1e)."
+.claude/scripts/workflow-state.sh complete $CZ validar_icfes --nota "salida/ciclo_20261102/c2/, md5 e16842c1157b3bffe35b8f21682ed6ad: literalidad_repo exit 0, literalidad_exextra 0 fallos, DOK 2, Nivel 3, Bloom Evaluar; v1_v4 100/100 con 6 controles; v5_v11 0 fallos (V5 y V7 N/A)."
+```
+
+3. Después, WAIT_USER #3. El paquete está en el reporte de la tanda C2. El paso 11 lo decide el profesor.
+
+## Aprobación (2026-11-03): 11/11, md5 `e16842c1157b3bffe35b8f21682ed6ad`
+
+- El profesor respondió «[a] Aprobar (Recomendada)» y firmó L-C9 y L-C10 («Firmar las dos (Recomendada)»). Sustituye a `f98f9dda`.
+- Uso: Moodle, con `exportar_moodle_cloze.R`. El DOCX no es apto para estudiantes; para papel, el SCHOICE.
+- **No está en producción:** falta la evidencia de aula. Registro completo en `../.claude/CLAUDE.md`, § «Aprobación del CLOZE y leyes firmadas».
+- Pendiente del SCHOICE para su próximo ciclo: cablear L-8.

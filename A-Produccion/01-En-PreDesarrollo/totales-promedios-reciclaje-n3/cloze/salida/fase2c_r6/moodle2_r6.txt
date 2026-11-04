@@ -1,0 +1,8 @@
+m100.xml preguntas 100 {'frase_en_retro': 100}
+  por n.º de verdaderas (prefijo de las verdaderas, de las falsas): {(1, ('=',), ('%-33.33333%',)): 20, (2, ('=',), ('%-50%',)): 60, (3, ('=',), ('%-50%',)): 20}
+  nota con una sola verdadera marcada: {(1, 'una sola verdadera marcada, nota del gap', 1.0): 20, (2, 'una sola verdadera marcada, nota del gap', 1.0): 60, (3, 'una sola verdadera marcada, nota del gap', 1.0): 20}
+  ej (2 verdaderas): =Si el grado que ganó hubiera participado con tantos cursos como el que perdió, conservando su promedio por curso, habría perdido el concurso.~%-50%Si el grado que perdió hubiera participado con un curso más, conservando su promedio por curso, habría ganado el concurso.~=Ganó el concurso el grado séptimo.~%-50%Si al grado que ganó le hubiera faltado un curso, conservando su promedio por curso, habría perdido el concu
+cloze.xml preguntas 5 {'frase_en_retro': 5}
+  por n.º de verdaderas (prefijo de las verdaderas, de las falsas): {(1, ('=',), ('%-33.33333%',)): 1, (2, ('=',), ('%-50%',)): 4}
+  nota con una sola verdadera marcada: {(1, 'una sola verdadera marcada, nota del gap', 1.0): 1, (2, 'una sola verdadera marcada, nota del gap', 1.0): 4}
+  ej (2 verdaderas): =Si el grado que perdió hubiera participado con un curso más, conservando su promedio por curso, habría ganado el concurso.~=Si al grado que ganó le hubiera faltado un curso, conservando su promedio por curso, habría perdido el concurso.~%-50%Si el grado que ganó hubiera tenido el mismo promedio por curso que el que perdió, conservando su cantidad de cursos, habría perdido el concurso.~%-50%Ganó el concurso el grado 

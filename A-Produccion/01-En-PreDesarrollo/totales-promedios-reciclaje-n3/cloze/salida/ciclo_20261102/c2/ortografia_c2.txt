@@ -1,0 +1,3 @@
+
+✓ No se encontraron errores ortográficos en: A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/cloze/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd 
+ortografia exit=0

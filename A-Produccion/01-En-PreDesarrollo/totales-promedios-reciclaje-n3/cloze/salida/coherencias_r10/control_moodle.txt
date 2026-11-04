@@ -1,0 +1,45 @@
+md5 del .Rmd: e16842c1157b3bffe35b8f21682ed6ad 
+$n
+[1] 1
+
+$gaps
+   desplegable       vertical multirespuesta       numerico 
+             0              2              1              3 
+
+Control sin mutar (debe dar 0 fallos): 0 de 29 comprobaciones
+Gap de la Parte 2 de la canónica: {1:MULTICHOICE_V:=Lo que recogió ese grado dividido entre el número de sus cursos.~Lo que recogió ese grado dividido entre el número de sus cursos al cuadrado.~Lo que recogió ese grado dividido entre la cantidad de cursos de ambos grados.~Lo que recogió ese grado dividido en partes iguales entre sus cursos y luego entre dos.} 
+
+  Parte 3 numérica +1                                                                               CAZADA · sonda propia: sí (1 fallos)
+  peso del gap 1: 3 → 2                                                                            CAZADA · sonda propia: sí (1 fallos)
+  tolerancia de la Parte 3: 0 → 1                                                                  CAZADA · sonda propia: sí (1 fallos)
+  defaultgrade 8 → 6                                                                               CAZADA · sonda propia: sí (1 fallos)
+  celda «5 cursos» → «6 cursos» (tabla 1)                                                      CAZADA · sonda propia: sí (1 fallos)
+  Parte 1: la marca «=» pasa a otra opción                                                        CAZADA · sonda propia: sí (1 fallos)
+  Parte 2: la marca «=» pasa a otra opción                                                        CAZADA · sonda propia: sí (2 fallos)
+  Parte 2: una opción incorrecta sustituida por una cuarta paráfrasis correcta mía (dos correctas) CAZADA · sonda propia: sí (2 fallos)
+  Parte 2: pregunta con otro material (papel → cartón)                                            CAZADA · sonda propia: sí (1 fallos)
+  Parte 2: pregunta del tipo retirado                                                                CAZADA · sonda propia: sí (2 fallos)
+  Parte 6: una marca invertida                                                                       CAZADA · sonda propia: sí (1 fallos)
+  un marcador ##ANSWER1## sin resolver                                                               CAZADA · sonda propia: sí (1 fallos)
+  gap de la Parte 3 desplazado (pregunta 4 antes de la 3)                                            CAZADA · sonda propia: sí (6 fallos)
+  generalfeedback: encabezado de la Parte 2 duplicado                                                CAZADA · sonda propia: sí (1 fallos)
+  generalfeedback: encabezado del tipo retirado                                                      CAZADA · sonda propia: sí (4 fallos)
+  generalfeedback: viñeta con la operación cambiada («la mitad» → «el doble del promedio»)   CAZADA · sonda propia: sí (2 fallos)
+  generalfeedback: viñeta con la operación cambiada («menos que» → «más que el promedio»)   CAZADA · sonda propia: sí (2 fallos)
+  generalfeedback: viñeta con una afirmación añadida que el oráculo no sabe recalcular («y da el triple del promedio») CAZADA · sonda propia: sí (1 fallos)
+  generalfeedback: viñeta con la explicación de otra opción                                       CAZADA · sonda propia: sí (1 fallos)
+  generalfeedback: «Respuestas» de la Parte 2 cita un distractor                                   CAZADA · sonda propia: sí (1 fallos)
+  generalfeedback: «Procedimiento» del tipo retirado                                               CAZADA · sonda propia: sí (2 fallos)
+  generalfeedback: texto del tipo retirado añadido                                                  CAZADA · sonda propia: sí (1 fallos)
+  una imagen dentro de la pregunta (Incidente G)                                                     CAZADA · sonda propia: sí (1 fallos)
+  una etiqueta <b> dentro de un gap (Incidente G)                                                    CAZADA · sonda propia: sí (0 fallos; etiquetas en gaps según el script de Python: 2)
+  L-6: el punto sale de la fórmula de un total de la Parte 1 («kilos.» → «kilos» + «.»)     CAZADA · sonda propia: sí (1 fallos)
+  una fórmula con la aritmética mala (200 - 180 = 20 → = 21)                                     CAZADA · sonda propia: sí (1 fallos)
+  una fórmula como $…$ (MathJax no la compone)                                                    CAZADA · sonda propia: sí (1 fallos)
+  el nombre de la pregunta lleva la ruta absoluta                                                    CAZADA · sonda propia: sí (1 fallos)
+Aviso:
+In verificar_moodle(f, "CTRL", function(k) 0L) :
+  NAs introducidos por coerción
+
+Mutaciones de Moodle: 28 de 28 cazadas · 28 de 28 por su sonda propia
+exit=0

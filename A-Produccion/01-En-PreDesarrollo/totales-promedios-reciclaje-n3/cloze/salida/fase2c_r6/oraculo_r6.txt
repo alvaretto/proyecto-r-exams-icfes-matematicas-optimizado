@@ -1,0 +1,4 @@
+E1, texto emitido: {'canonicas': 20, 'arit': 1827, 'arit_fb': 999, 'ramas_más_más': 41, 'dis_ERR-RESTA': 42, 'dis_ERR-CURSOS': 56, 'dis_ERR-INVENTA': 111, 'versiones': 111, 'dis_ERR-PROM': 55, 'dis_ERR-TOTAL': 22, 'ramas_más_menos': 21, 'dis_ERR-DATO': 32, 'dis_ERR-PARCIAL': 15, 'ramas_menos_más': 13, 'ramas_menos_menos': 36}
+FALLOS emitido: {}
+
+1000 semillas (chunks crudos): sin forma 0 {'literal': 1000, 'hp_tabla': 1000, 'hg_tabla': 1000, 'hp_marca': 1000, 'hg_marca': 1000, 'emp': 0, 'hp_resuelta': 1000, 'hg_resuelta': 1000, 'a_hp': 306, 'a_hg': 306, 'b_mixtas': 306, 'b_vv': 344, 'b_ff': 350, 'c_hp_si': 476, 'c_hg_si': 518, 'd_hp': 346, 'd_hg': 348, 'e_tabla': 460, 'e_hp_contra': 346, 'e_hg_contra': 652, 'f_hp': 479, 'f_hg': 481, 'bp': 505, 'e_hp_v': 149, 'e_hg_v': 292, 'bc': 495, 'bc_inv1': 222, 'bc_inv1_contra': 183, 'bc_k2': 230, 'bc_k2_contra': 201, 'bc_inv2': 43, 'bc_inv2_contra': 37}
