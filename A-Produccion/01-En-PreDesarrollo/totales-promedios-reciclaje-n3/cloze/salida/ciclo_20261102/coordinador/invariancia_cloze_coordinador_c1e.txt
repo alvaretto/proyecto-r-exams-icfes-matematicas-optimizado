@@ -1,0 +1,23 @@
+md5: totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd 63e2713e6ac0bdbf250f4dc33901b2ec · cloze_27f789dc.Rmd 27f789dc6327f7d6bda72cded61502cd · totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd e16842c1157b3bffe35b8f21682ed6ad · cloze_32243d0a.Rmd 32243d0a6e6c499a4c6b1213a49e95cd 
+(A) semillas 1 a 1000 · errores de ejecución: 0
+(A) E1, Parte 1 del CLOZE nuevo = SCHOICE (7 objetos): 1000 / 1000
+(A) .Random.seed final idéntico al CLOZE de la C1: 1000 / 1000
+(A) los 180 objetos comunes, idénticos: 1000 / 1000
+(A) objetos nuevos = {hg_supera, hp_supera} y ninguno quitado: 1000 / 1000 (nombres que difieren: hg_supera, hp_supera)
+(A) hp_supera == v_hp y hg_supera == v_hg: 1000 / 1000 · hp_supera verdadero en 476, hg_supera en 518
+
+(B) texto emitido, semillas 1 a 100 (xexams)
+(B) question idéntico: 100 · questionlist: 100 · solutionlist: 100 · metainfo (sin file): 100
+(B) Solution idéntica fuera del párrafo «Parte 6.»: 100 / 100
+(B) criterio general sin cifras presente: 100 / 100 · párrafo con la forma esperada: 100 / 100
+(B) cifras = las del párrafo viejo (aP, aG y D): 100 / 100 · grados iguales: 100 / 100
+(B) comparaciones verdaderas leídas sueltas: 200 / 200 · conclusiones que se siguen: 200 / 200
+(B) un ejemplo por combinación (HP · HG):
+  [más más] semilla 1: Con un curso más, el grado sexto habría sumado a su total 53 kilos, más que la diferencia de 37 kilos: habría ganado. Con un curso menos, el grado séptimo habría restado a su total 51 kilos, más que la diferencia de 37 kilos: habría perdido.
+  [más menos] semilla 5: Con un curso más, el grado sexto habría sumado a su total 39 kilos, más que la diferencia de 27 kilos: habría ganado. Con un curso menos, el grado séptimo habría restado a su total 24 kilos, menos que la diferencia de 27 kilos: habría seguido ganando.
+  [menos más] semilla 10: Con un curso más, el grado séptimo habría sumado a su total 27 kilos, menos que la diferencia de 33 kilos: no le habría alcanzado para ganar. Con un curso menos, el grado sexto habría restado a su total 42 kilos, más que la diferencia de 33 kilos: habría perdido.
+  [menos menos] semilla 11: Con un curso más, el grado séptimo habría sumado a su total 37 kilos, menos que la diferencia de 42 kilos: no le habría alcanzado para ganar. Con un curso menos, el grado octavo habría restado a su total 33 kilos, menos que la diferencia de 42 kilos: habría seguido ganando.
+
+(C) contra 32243d0a: data_generation idéntico byte a byte: TRUE
+(C) question: 100 · questionlist: 100 · solutionlist: 100 · metainfo (sin file): 100, de 100
+(C) la frase nueva sale una vez: 100 / 100 · Solution byte a byte igual a 32243d0a al deshacer la frase: 100 / 100

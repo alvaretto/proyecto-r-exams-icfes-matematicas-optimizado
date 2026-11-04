@@ -1,0 +1,63 @@
+--- A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/cloze/salida/ciclo_20261102/c1d/verificar_espacio_cloze_04349f26.R.txt	2026-11-03 19:02:48.270261857 -0500
++++ A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/cloze/verificar_espacio_cloze.R	2026-11-03 19:03:53.863340403 -0500
+@@ -58,6 +58,9 @@
+ ##       Tanda C1c (2026-11-03): H1 de la FASE 2C r5, la sonda Crit-P6 sobre el criterio general del párrafo «Parte 6.» (el
+ ##       literal una vez por versión y ninguna cifra en el tramo general; control exacto): MC56 y MC57. H3 de la r5: mut_h1()
+ ##       con la convención _y_otra y _y_control, y MC55, mutante del entorno que prueba sola la componente «marca».
++##       Tanda C1d (2026-11-03): el criterio general cambia otra vez por decisión del profesor («Cambiar la frase (Recomendada)»).
++##       Solo cambian los literales que dependen de la frase: P6_CRITERIO, P6_NUEVO (MC51), MC56 (vuelve a la frase de ef2c96dc) y
++##       el ancla de MC57. Ninguna sonda, ningún umbral ni ninguna firma.
+ ## Salida: exit 1 = algo falla; 3 = pendiente de firma (una cifra firmada superada o un canal cruzado > +8 pp
+ ##   fuera de lo firmado); 4 = EN ROJO bajo override firmado («O-1 corregido» extendido por F-2 y X9 en la
+ ##   canónica por L-C3, X6, X9, X10 y X11; la canónica de la Parte 1 regla por regla por la decisión 2 a; todo dentro
+@@ -771,8 +774,8 @@
+ ##   falta  el párrafo no contiene el criterio literal exactamente una vez;
+ ##   cifra  el tramo general del párrafo (sin «Parte 6.», hasta «Con un curso más, el grado») lleva alguna cifra.
+ ## Control EXACTO: el literal aparece una vez por versión, nv apariciones en total. Mutantes: MC56 (vuelve a la frase de
+-## 6f6f1b13) y MC57 (una cifra en el tramo general, con el literal intacto).
+-P6_CRITERIO <- "Por eso, con un curso más o uno menos, basta comparar ese promedio con la diferencia entre los totales: si el promedio es mayor, el ganador cambia; si es menor, no."
++## ef2c96dc) y MC57 (una cifra en el tramo general, con el literal intacto).
++P6_CRITERIO <- "Por eso, si el grado que perdió tiene un curso más o el que ganó tiene uno menos, basta comparar el promedio de ese grado con la diferencia entre los totales: si el promedio es mayor, el ganador cambia; si es menor, no."
+ COMP_CRIT <- c("falta", "cifra")
+ crit_p6 <- function(sol_txt, envs = ENVS_NAT, lit = P6_CRITERIO) {
+   ex <- parse(text = sol_txt, encoding = "UTF-8")
+@@ -1560,8 +1563,9 @@
+ ## MC50 mueve falsa y concl; MC54, cifra y falsa; MC51, falsa, marca y el control; MC53, solo esp. La componente «marca» no cae
+ ## sola con ningún mutante de texto: la prueba MC55, sobre una copia de los entornos.
+ P6_NUEVO <- r"---(cat("Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo promedio suma ese ",
+-    "promedio al total, y un curso menos lo resta. Por eso, con un curso más o uno menos, basta comparar ese promedio ",
+-    "con la diferencia entre los totales: si el promedio es mayor, el ganador cambia; si es menor, no. ",
++    "promedio al total, y un curso menos lo resta. Por eso, si el grado que perdió tiene un curso más o el que ganó ",
++    "tiene uno menos, basta comparar el promedio de ese grado con la diferencia entre los totales: si el promedio es ",
++    "mayor, el ganador cambia; si es menor, no. ",
+     "Con un curso más, el grado ", per_par,
+     " habría sumado a su total ", dp$aP, ED, "kilos, ", if (hp_supera) "más" else "menos", " que la diferencia de ",
+     dp$D, ED, "kilos: ", if (hp_supera) "habría ganado" else "no le habría alcanzado para ganar",
+@@ -1610,7 +1614,7 @@
+ } else juzga_h1("MC55", h1_p6(SOL_C, envs = E55), "marca", "la marca de HP, volteada en una copia de los entornos", "cazado_por_su_sonda")
+ ## MC56 y MC57 (C1c, H1 de la r5): Crit-P6, sobre el chunk «solucion» (en memoria, patrón único). Cada uno declara su componente,
+ ## y el veredicto exige además que H1-Sol y su control no se muevan: MC56 toca solo el criterio, no las comparaciones con cifras.
+-P6_CRIT_VIEJO <- "Por eso basta comparar ese promedio con la diferencia entre los totales: si es mayor, el ganador cambia; si es menor, no."
++P6_CRIT_VIEJO <- "Por eso, con un curso más o uno menos, basta comparar ese promedio con la diferencia entre los totales: si el promedio es mayor, el ganador cambia; si es menor, no."
+ mut_crit <- function(id, de, a, comp, desc, lit_mut = NULL) {
+   et <- paste("C1c · Crit-P6:", comp); n <- lengths(regmatches(SOL_C, gregexpr(de, SOL_C, fixed = TRUE)))
+   if (n != 1L) { falla(id, " MAL CONSTRUIDO: el patrón aparece ", n, " veces en el chunk solucion"); filas_mut[[id]] <<- c(id, et, "-", "mal_construido", NA); return(invisible()) }
+@@ -1626,12 +1630,13 @@
+   ok(ver == "cazado_por_su_sonda", sprintf("%s (%s): %s — %s", id, desc, d, ver))
+   filas_mut[[id]] <<- c(id, et, d, ver, NA)
+ }
+-mut_crit("MC56", r"---(Por eso, con un curso más o uno menos, basta comparar ese promedio ",
++mut_crit("MC56", r"---(Por eso, si el grado que perdió tiene un curso más o el que ganó ",
++    "tiene uno menos, basta comparar el promedio de ese grado con la diferencia entre los totales: si el promedio es ",
++    "mayor, el ganador cambia; si es menor, no. ",)---",
++  r"---(Por eso, con un curso más o uno menos, basta comparar ese promedio ",
+     "con la diferencia entre los totales: si el promedio es mayor, el ganador cambia; si es menor, no. ",)---",
+-  r"---(Por eso basta comparar ese promedio ",
+-    "con la diferencia entre los totales: si es mayor, el ganador cambia; si es menor, no. ",)---",
+-  "falta", "vuelve a la frase de 6f6f1b13, sin tocar las comparaciones", lit_mut = P6_CRIT_VIEJO)
+-mut_crit("MC57", '"promedio al total, y un curso menos lo resta. Por eso, con un curso más', '"promedio al total, y un curso menos lo resta (", dp$D, "). Por eso, con un curso más',
++  "falta", "vuelve a la frase de ef2c96dc, sin tocar las comparaciones", lit_mut = P6_CRIT_VIEJO)
++mut_crit("MC57", '"promedio al total, y un curso menos lo resta. Por eso, si el grado', '"promedio al total, y un curso menos lo resta (", dp$D, "). Por eso, si el grado',
+          "cifra", "una cifra de la versión en el tramo general, con el literal intacto")
+ cat("  Decisión 2 a: las nueve reglas y sondas al 100 % (+75,0 pp) no pueden subir; ningún mutante puede sacarlas de «cubierto» y se declara.\n")
+ TM <- do.call(rbind, filas_mut); colnames(TM) <- c("id", "sonda_esperada", "sonda_real", "veredicto", "semilla")

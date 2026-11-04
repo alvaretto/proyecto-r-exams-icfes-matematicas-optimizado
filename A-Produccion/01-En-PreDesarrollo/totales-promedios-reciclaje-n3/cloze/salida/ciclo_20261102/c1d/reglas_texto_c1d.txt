@@ -1,0 +1,13 @@
+md5 32243d0a6e6c499a4c6b1213a49e95cd
+literales U+00A0/U+2009/U+202F/U+2060 en el .Rmd (grep -nP): 0
+literales en el verificador: 0
+control positivo de esa sonda (una línea con U+00A0): 1
+regla #19 (letra en la Solution): 0
+control positivo de la sonda #19: 1
+frase nueva en el chunk solucion (primera línea fuente): 1 línea (exigida 1)
+frase vieja en el .Rmd: 0 (exigida 0)
+--- regla #25:
+OK: sin glifos que rompan pdflatex
+--- ortografía:
+
+✓ No se encontraron errores ortográficos en: A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/cloze/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd 

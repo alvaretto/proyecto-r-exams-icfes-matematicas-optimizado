@@ -1,0 +1,42 @@
+md5 del .Rmd: 32243d0a6e6c499a4c6b1213a49e95cd 
+Semillas 1 a 1000 (113 canónicas). Afirmación de ventaja: BP 505 · BC 495
+
+(1) BC dentro del alcance literal («el que perdió con un curso más o el que ganó con uno menos»): 0 versiones · el criterio da el veredicto contrario en 0
+    Comprobación: rama CURSOS con k = 1: 111 versiones; afirmación de ventaja BP en 111; HP y HG verdaderas en 111
+
+(2) BC fuera del alcance: 495
+    k >= 2: 273 · el criterio, aplicado igual, da el contrario en 238
+    k = 1, sentido previsto: 0 · da el veredicto real en 0 · da el contrario en 0
+    k = 1, sentido inverso: 222 · da el veredicto real en 39 · da el contrario en 183
+    Sin acotar (frase de 6f6f1b13), aplicado a toda BC: contrario en 421 de 495
+    Control: las seis cifras de la C1c (495, 421, 273, 238, 222 y 183), reproducidas
+
+(3) HP, dentro del alcance: el criterio coincide con el veredicto calculado desde la tabla en 1000 de 1000 y con la marca en 1000 de 1000
+    HG, dentro del alcance: el criterio coincide con el veredicto calculado desde la tabla en 1000 de 1000 y con la marca en 1000 de 1000
+    Empates (promedio = diferencia, que «si es mayor» y «si es menor» no cubrirían): HP 0 · HG 0
+    Control positivo: con el promedio del otro grado, HP se aparta del veredicto real en 306 de 1000
+
+(4) Control contra la r5, semillas 1 a 205: 102 BC, y el criterio sin acotar da el contrario en 80 (la r5 publicó 102 y 80).
+
+(5) Lecturas de la frase nueva, medidas y no corregidas (frase literal del profesor)
+  a. «ese grado» = el último nombrado («el que ganó»), también para HP: el veredicto de HP sale contrario en 306 de 1000. Las frases resueltas que siguen citan el promedio de cada grado.
+  b. «tiene un curso más» leído como comparación entre los dos grados: la tabla lo cumple en 460 de 1000 versiones (todas de la rama PROMEDIO).
+     De ellas, 222 tienen una BC en sentido inverso; quien además le aplique el criterio a esa BC obtiene el contrario en 183 de 1000. Son las mismas 222 y 183 de (2), fuera del alcance en la lectura buscada.
+
+Rama × k (todas las versiones):
+          k (3 = 3 o más)
+rama         1   2   3
+  CURSOS   111 243 114
+  PROMEDIO 460  71   1
+
+Rama × tipo de afirmación de ventaja × marca:
+                   marca FALSE TRUE
+rama     id                        
+CURSOS   BC_gano             0  122
+         BC_perdio           0  108
+         BP_gano           114    0
+         BP_perdio         124    0
+PROMEDIO BC_gano           131    0
+         BC_perdio         134    0
+         BP_gano             0  145
+         BP_perdio           0  122

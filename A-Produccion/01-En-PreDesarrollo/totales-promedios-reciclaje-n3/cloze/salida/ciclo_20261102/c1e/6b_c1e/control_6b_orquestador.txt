@@ -1,0 +1,4 @@
+n 360: páginas 100 · renglones media 16.40 · suma H 819684 · última 1 palabra 0 · última 1 unidad 40 · cifra/kilos 0/400 · desborde 0 · partidas 0 · A 0/57 · B 32/51 · A o B 32 · C 0/43 · D 0/100 · G 100/100 · H 0/100
+n 320: páginas 100 · renglones media 19.28 · suma H 932064 · última 1 palabra 0 · última 1 unidad 79 · cifra/kilos 0/400 · desborde 0 · partidas 0 · A 0/57 · B 33/51 · A o B 33 · C 0/43 · D 0/100 · G 0/100 · H 0/100
+r 360: páginas 100 · renglones media 15.62 · suma H 818280 · última 1 palabra 0 · última 1 unidad 19 · cifra/kilos 0/400 · desborde 0 · partidas 0 · A 0/57 · B 19/51 · A o B 19 · C 0/43 · D 0/100 · G 0/0 · H 0/0
+r 320: páginas 100 · renglones media 18.59 · suma H 930822 · última 1 palabra 0 · última 1 unidad 54 · cifra/kilos 0/400 · desborde 0 · partidas 0 · A 57/57 · B 43/51 · A o B 84 · C 43/43 · D 100/100 · G 0/0 · H 0/0

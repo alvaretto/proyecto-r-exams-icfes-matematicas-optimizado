@@ -3,7 +3,7 @@
   "ejercicio": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1",
   "tipo": "cloze",
   "timestamp_inicio": "2026-10-30T21:25:33.191024-05:00",
-  "timestamp_ultima_actualizacion": "2026-11-03T18:33:01.054202-05:00",
+  "timestamp_ultima_actualizacion": "2026-11-03T19:45:31.757188-05:00",
   "pasos": {
     "analisis_icfes": {
       "completado": true,
@@ -27,24 +27,24 @@
     },
     "generacion_rmd": {
       "completado": true,
-      "timestamp": "2026-11-03T18:32:18.418009-05:00",
+      "timestamp": "2026-11-03T19:44:54.163141-05:00",
       "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd",
-      "nota": "Tanda C1c del ciclo 2026-11-02 del CLOZE (2026-11-03). md5 6f6f1b1311b0d681bd974c719ecd75d5 -> ef2c96dc1c2b667fa904ea231329b4dc. H1 de la FASE 2C r5, decisión del profesor del 2026-11-03 «Corregir ahora (Recomendada)»: una sola frase de la Solution. Script salida/ciclo_20261102/c1c/editar_rmd_c1c.py (patrón exigido 1 vez; diff_rmd_6f6f1b13_c1c.patch). Invariancia c1c/invariancia_c1c.txt, semillas 1 a 1000 (113 canónicas): deshacer la frase da 6f6f1b13 byte a byte; .Random.seed 0 diferencias; objetos 0 diferencias y 0 nuevos; E1 contra el SCHOICE 63e2713e 0; xexams 1 a 100, 0 diferencias. Verificador 04349f26559ac32cc7f8f0a439c470b6 (c1c/verificar_espacio_cloze_c1c.txt, 479 s): exit 4, 368 cifras dentro de lo firmado, 0 fallos, 0 pendientes; 0 líneas distintas de la C1b fuera de las añadidas (c1c/comparar_c1b_c1c.txt)."
+      "nota": "Tanda C1e del ciclo 2026-11-02 del CLOZE (2026-11-03). md5 32243d0a6e6c499a4c6b1213a49e95cd -> e16842c1157b3bffe35b8f21682ed6ad. Redacción del criterio, decisión del profesor del 2026-11-03 «Reformular (Recomendada)»: una sola frase de la Solution. Script salida/ciclo_20261102/c1e/editar_rmd_c1e.py (patrón exigido 1 vez; diff_rmd_32243d0a_c1e.patch). Invariancia c1e/invariancia_c1e.txt, semillas 1 a 1000 (113 canónicas): deshacer la frase da 32243d0a byte a byte; .Random.seed 0 diferencias; objetos 0 diferencias y 0 nuevos; E1 contra el SCHOICE 63e2713e 0; xexams 1 a 100, 0 diferencias. Verificador 1cbc770f15fbf9140cb0ef294c7a0aae (c1e/verificar_espacio_cloze_c1e.txt, 484 s): exit 4, 368 cifras dentro de lo firmado, 0 fallos y 0 pendientes; comparar_c1d_c1e.txt, 0 diferencias fuera de las 4 líneas apartadas."
     },
     "retroalimentacion": {
       "completado": true,
-      "timestamp": "2026-11-03T18:33:01.054202-05:00",
-      "nota": "Tanda C1c (md5 ef2c96dc1c2b667fa904ea231329b4dc). Solution: criterio general del párrafo «Parte 6.» con su alcance y su sujeto («Por eso, con un curso más o uno menos, basta comparar ese promedio con la diferencia entre los totales: si el promedio es mayor, el ganador cambia; si es menor, no.»); H1 de la FASE 2C r5. Solution emitida idéntica salvo la frase, y el resto del párrafo idéntico byte a byte, en 1000/1000. Sonda nueva Crit-P6 (100 versiones, texto crudo): literal una vez por versión, 0 cifras en el tramo general, control exacto 100; H1-Sol sin cambios (200 comparaciones, 0 falsas). Reglas #19 y #25, ortografía y literales: limpias (c1c/reglas_texto_c1c.txt). La frase, una vez por versión en HTML, PDF, DOCX y Moodle (c1c/formatos_parrafo_c1c.txt). Sellado DESPUÉS de los pasos 5 y 6: la comprobación previa exigía «frase nueva 1» también en cloze.xml, que trae las 5 versiones (5 = una por versión), y bloqueó este sello; se corrigió la comprobación, no el artefacto. Los artefactos son anteriores a todos los sellos (invariancia 18:25:58, verificador 18:30:36)."
+      "timestamp": "2026-11-03T19:45:08.326940-05:00",
+      "nota": "Tanda C1e (md5 e16842c1157b3bffe35b8f21682ed6ad). Solution: criterio general del párrafo «Parte 6.» nombrando las dos hipótesis («Por eso, para saber si el grado que perdió habría ganado con un curso más, o si el que ganó habría perdido con uno menos, basta comparar el promedio de cada uno con la diferencia entre los totales: si el promedio es mayor, sí; si es menor, no.»), literal del profesor. Solution emitida idéntica salvo la frase, y el resto del párrafo idéntico byte a byte, en 1000/1000. Crit-P6 (100 versiones, texto crudo): literal una vez por versión, 0 cifras en el tramo general, control exacto 100; H1-Sol sin cambios (200 comparaciones, 0 falsas). Lecturas (c1e/lectura_criterio_c1e.txt, semillas 1 a 1000): HP y HG, 1000 de 1000 contra la tabla y contra la marca, 0 empates; 0 BC dentro del alcance; registro de fuera 222 y 183, 273 y 238; controles 306 y 102/80. Frase en los cuatro formatos (c1e/formatos_parrafo_c1e.txt). Reglas #19 y #25 y ortografía limpias (c1e/reglas_texto_c1e.txt); suites letter_independence y glifos_latex, exit 0."
     },
     "renderizado_4_formatos": {
       "completado": true,
-      "timestamp": "2026-11-03T18:32:18.605354-05:00",
-      "nota": "Tanda C1c, md5 ef2c96dc1c2b667fa904ea231329b4dc. salida/ciclo_20261102/c1c/render_ef2c96dc/ (render.log): exams2pdf primero con dir= y texdir= literales y ruta absoluta del .Rmd; PDF 5, HTML 5 (0 ##ANSWER), DOCX 1, Moodle n = 5 (15 gaps de elección, 0 con imagen). NOPS: N/A, exams2nops rechaza extype cloze («cloze exercises»). .tex: 6, 0 usos de pandocbounded fuera de providecommand, LTcaptype{none} 2 con la guarda. PDF revisado: las 5 páginas de la vista previa del hook leídas una a una, dentro del margen, con el párrafo «Parte 6.» en la página 2 y coherente con las marcas."
+      "timestamp": "2026-11-03T19:45:17.255576-05:00",
+      "nota": "Tanda C1e, md5 e16842c1157b3bffe35b8f21682ed6ad. salida/ciclo_20261102/c1e/render_e16842c1/ (render.log): exams2pdf primero con dir= y texdir= literales y ruta absoluta del .Rmd; PDF 5, HTML 5 (0 ##ANSWER), DOCX 1, Moodle n = 5 (15 gaps de elección, 0 con imagen). NOPS: N/A, exams2nops rechaza extype cloze («cloze exercises»). .tex: 6, 0 usos de pandocbounded fuera de providecommand, LTcaptype{none} 2 con la guarda. PDF revisado: las 5 páginas de la vista previa del hook leídas una a una, dentro del margen, con el párrafo «Parte 6.» en la página 2 y coherente con las marcas."
     },
     "arsenal_post_render": {
       "completado": true,
-      "timestamp": "2026-11-03T18:32:18.779810-05:00",
-      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261103-182447-345966/informe.txt · md5 ef2c96dc1c2b667fa904ea231329b4dc · 0 errores / 6 advertencias (las heurísticas conocidas de 2E y 2F, las mismas de la C1b). 2A APROBADO; 2B 5 páginas, las 5 leídas; 2G 100/100; 2H 10 semillas, 0 anomalías; 2I, 2J, 2K, 2L, 2N y 2O en verde. 2M: auditoría 6b pareada lanzada aparte (auditor-visual-html, sin name)."
+      "timestamp": "2026-11-03T19:45:31.757188-05:00",
+      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261103-193955-465618/informe.txt · md5 e16842c1157b3bffe35b8f21682ed6ad · 0 errores / 6 advertencias (las heurísticas conocidas de 2E y 2F, las mismas de la C1d). 2A APROBADO; 2B 5 páginas, las 5 leídas; 2G 100/100; 2H 10 semillas, 0 anomalías; 2I, 2J, 2K, 2L, 2N y 2O en verde. 2M: auditoría 6b pareada lanzada aparte (auditor-visual-html, sin name)."
     },
     "detractor_fase2c": {
       "completado": false,
@@ -314,6 +314,68 @@
         "arsenal_post_render": {
           "timestamp": "2026-11-03T16:42:23.489372-05:00",
           "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261103-163617-186493/informe.txt · md5 6f6f1b1311b0d681bd974c719ecd75d5 · 0 errores / 6 advertencias (las heuristicas conocidas de 2E y 2F, las mismas de la C1). 2A APROBADO; 2B 5 paginas (la 2, con el parrafo Parte 6 de la Solution, leida); 2G 100/100; 2H 10 semillas, 0 anomalias; 2I, 2J, 2K, 2L, 2N y 2O en verde. 2M: auditoria 6b pareada lanzada aparte (auditor-visual-html, sin name)."
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-03T19:02:57.470432-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Ciclo 2026-11-02 del CLOZE, tanda C1d: alcance del criterio de la Parte 6 (lectura residual, 183 de 1000), decisión del profesor del 2026-11-03 «Cambiar la frase (Recomendada)»",
+      "reporte": "salida/ciclo_20261102/c1c/lectura_criterio_c1c.txt",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-11-03T18:32:18.418009-05:00",
+          "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd",
+          "nota": "Tanda C1c del ciclo 2026-11-02 del CLOZE (2026-11-03). md5 6f6f1b1311b0d681bd974c719ecd75d5 -> ef2c96dc1c2b667fa904ea231329b4dc. H1 de la FASE 2C r5, decisión del profesor del 2026-11-03 «Corregir ahora (Recomendada)»: una sola frase de la Solution. Script salida/ciclo_20261102/c1c/editar_rmd_c1c.py (patrón exigido 1 vez; diff_rmd_6f6f1b13_c1c.patch). Invariancia c1c/invariancia_c1c.txt, semillas 1 a 1000 (113 canónicas): deshacer la frase da 6f6f1b13 byte a byte; .Random.seed 0 diferencias; objetos 0 diferencias y 0 nuevos; E1 contra el SCHOICE 63e2713e 0; xexams 1 a 100, 0 diferencias. Verificador 04349f26559ac32cc7f8f0a439c470b6 (c1c/verificar_espacio_cloze_c1c.txt, 479 s): exit 4, 368 cifras dentro de lo firmado, 0 fallos, 0 pendientes; 0 líneas distintas de la C1b fuera de las añadidas (c1c/comparar_c1b_c1c.txt)."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-11-03T18:33:01.054202-05:00",
+          "nota": "Tanda C1c (md5 ef2c96dc1c2b667fa904ea231329b4dc). Solution: criterio general del párrafo «Parte 6.» con su alcance y su sujeto («Por eso, con un curso más o uno menos, basta comparar ese promedio con la diferencia entre los totales: si el promedio es mayor, el ganador cambia; si es menor, no.»); H1 de la FASE 2C r5. Solution emitida idéntica salvo la frase, y el resto del párrafo idéntico byte a byte, en 1000/1000. Sonda nueva Crit-P6 (100 versiones, texto crudo): literal una vez por versión, 0 cifras en el tramo general, control exacto 100; H1-Sol sin cambios (200 comparaciones, 0 falsas). Reglas #19 y #25, ortografía y literales: limpias (c1c/reglas_texto_c1c.txt). La frase, una vez por versión en HTML, PDF, DOCX y Moodle (c1c/formatos_parrafo_c1c.txt). Sellado DESPUÉS de los pasos 5 y 6: la comprobación previa exigía «frase nueva 1» también en cloze.xml, que trae las 5 versiones (5 = una por versión), y bloqueó este sello; se corrigió la comprobación, no el artefacto. Los artefactos son anteriores a todos los sellos (invariancia 18:25:58, verificador 18:30:36)."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-11-03T18:32:18.605354-05:00",
+          "nota": "Tanda C1c, md5 ef2c96dc1c2b667fa904ea231329b4dc. salida/ciclo_20261102/c1c/render_ef2c96dc/ (render.log): exams2pdf primero con dir= y texdir= literales y ruta absoluta del .Rmd; PDF 5, HTML 5 (0 ##ANSWER), DOCX 1, Moodle n = 5 (15 gaps de elección, 0 con imagen). NOPS: N/A, exams2nops rechaza extype cloze («cloze exercises»). .tex: 6, 0 usos de pandocbounded fuera de providecommand, LTcaptype{none} 2 con la guarda. PDF revisado: las 5 páginas de la vista previa del hook leídas una a una, dentro del margen, con el párrafo «Parte 6.» en la página 2 y coherente con las marcas."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-11-03T18:32:18.779810-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261103-182447-345966/informe.txt · md5 ef2c96dc1c2b667fa904ea231329b4dc · 0 errores / 6 advertencias (las heurísticas conocidas de 2E y 2F, las mismas de la C1b). 2A APROBADO; 2B 5 páginas, las 5 leídas; 2G 100/100; 2H 10 semillas, 0 anomalías; 2I, 2J, 2K, 2L, 2N y 2O en verde. 2M: auditoría 6b pareada lanzada aparte (auditor-visual-html, sin name)."
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-03T19:35:22.645604-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Ciclo 2026-11-02 del CLOZE, tanda C1e: redacción del criterio de la Parte 6 (lecturas de la frase de 32243d0a), decisión del profesor del 2026-11-03 «Reformular (Recomendada)»",
+      "reporte": "salida/ciclo_20261102/c1d/lectura_criterio_c1d.txt",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-11-03T19:13:14.561048-05:00",
+          "archivo": "totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd",
+          "nota": "Tanda C1d del ciclo 2026-11-02 del CLOZE (2026-11-03). md5 ef2c96dc1c2b667fa904ea231329b4dc -> 32243d0a6e6c499a4c6b1213a49e95cd. Lectura residual del criterio, decisión del profesor del 2026-11-03 «Cambiar la frase (Recomendada)»: una sola frase de la Solution. Script salida/ciclo_20261102/c1d/editar_rmd_c1d.py (patrón exigido 1 vez; diff_rmd_ef2c96dc_c1d.patch). Invariancia c1d/invariancia_c1d.txt, semillas 1 a 1000 (113 canónicas): deshacer la frase da ef2c96dc byte a byte; .Random.seed 0 diferencias; objetos 0 diferencias y 0 nuevos; E1 contra el SCHOICE 63e2713e 0; xexams 1 a 100, 0 diferencias. Verificador 5df824570b49c2aff49412b4807cb917 (c1d/verificar_espacio_cloze_c1d.txt, 480 s): exit 4, 368 cifras dentro de lo firmado, 0 fallos, 0 pendientes; 0 líneas distintas de la C1c fuera de las 4 apartadas (c1d/comparar_c1c_c1d.txt)."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-11-03T19:13:25.374488-05:00",
+          "nota": "Tanda C1d (md5 32243d0a6e6c499a4c6b1213a49e95cd). Solution: criterio general del párrafo «Parte 6.» con el grado al que se aplica («Por eso, si el grado que perdió tiene un curso más o el que ganó tiene uno menos, basta comparar el promedio de ese grado con la diferencia entre los totales: si el promedio es mayor, el ganador cambia; si es menor, no.»), literal del profesor. Solution emitida idéntica salvo la frase, y el resto del párrafo idéntico byte a byte, en 1000/1000. Crit-P6 (100 versiones, texto crudo): literal una vez por versión, 0 cifras en el tramo general, control exacto 100; H1-Sol sin cambios (200 comparaciones, 0 falsas). Lectura residual (c1d/lectura_criterio_c1d.txt, semillas 1 a 1000): 0 BC dentro del alcance literal y 0 con el veredicto contrario; HP y HG, 1000 de 1000 contra la tabla y contra la marca; 0 empates; control r5 102 y 80. Reglas #19 y #25, ortografía y literales: limpias (c1d/reglas_texto_c1d.txt). La frase, una vez por versión en HTML, PDF, DOCX y Moodle (c1d/formatos_parrafo_c1d.txt)."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-11-03T19:13:35.764981-05:00",
+          "nota": "Tanda C1d, md5 32243d0a6e6c499a4c6b1213a49e95cd. salida/ciclo_20261102/c1d/render_32243d0a/ (render.log): exams2pdf primero con dir= y texdir= literales y ruta absoluta del .Rmd; PDF 5, HTML 5 (0 ##ANSWER), DOCX 1, Moodle n = 5 (15 gaps de elección, 0 con imagen). NOPS: N/A, exams2nops rechaza extype cloze («cloze exercises»). .tex: 6, 0 usos de pandocbounded fuera de providecommand, LTcaptype{none} 2 con la guarda. PDF revisado: las 5 páginas de la vista previa del hook leídas una a una, dentro del margen, con el párrafo «Parte 6.» en la página 2 y coherente con las marcas."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-11-03T19:13:48.276249-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1/20261103-190927-414932/informe.txt · md5 32243d0a6e6c499a4c6b1213a49e95cd · 0 errores / 6 advertencias (las heurísticas conocidas de 2E y 2F, las mismas de la C1c). 2A APROBADO; 2B 5 páginas, las 5 leídas; 2G 100/100; 2H 10 semillas, 0 anomalías; 2I, 2J, 2K, 2L, 2N y 2O en verde. 2M: auditoría 6b pareada lanzada aparte (auditor-visual-html, sin name)."
         }
       }
     }

@@ -1,0 +1,10 @@
+c1c: 1448 líneas (1444 comparables) · c1d: 1448 líneas (1444 comparables)
+apartadas en c1d: 4
+    Versión verificada: totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd · md5 32243d0a6e6c499a4c6b1213a49e95cd
+      OK: MC56 (vuelve a la frase de ef2c96dc, sin tocar las comparaciones): falta +100; control: 0 apariciones del literal (sin mutar 100); H1-Sol no se mueve — cazado_por_su_sonda
+    === RESULTADO: EN ROJO BAJO OVERRIDE FIRMADO (368 cifras dentro de lo firmado: «O-1 corregido», X6, X9, X10 y X11 en la canónica, la canónica de la Parte 1 por la decisión 2 a H2 por «H2 a», y la Parte 2 y la regla por palabra de la Parte 6 firmada r
+    exit=4 segundos=480 fin=19:12:48
+líneas «ROJO, cubierto por»: c1c 368 · c1d 368 · idénticas una a una: True
+diferencias fuera de lo apartado: 0
+=== RESULTADO: EN ROJO BAJO OVERRIDE FIRMADO (368 cifras dentro de lo firmado: «O-1 corregido», X6, X9, X10 y X11 en la canónica, la canónica de la Parte 1 por la decisión 2 a H2 por «H2 a», y la Parte 2 y la regla por palabra de la Parte 6 firmada regla por regla por la decisión «Va», y la firma de la S2d extendida a la Parte 1; 0 fallos, 0 pendientes) ===
+exit=4 segundos=480 fin=19:12:48

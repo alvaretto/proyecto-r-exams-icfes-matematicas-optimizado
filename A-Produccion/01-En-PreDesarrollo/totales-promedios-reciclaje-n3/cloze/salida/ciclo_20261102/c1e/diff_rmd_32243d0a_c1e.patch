@@ -1,0 +1,15 @@
+--- A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/cloze/salida/ciclo_20261102/c1e/cloze_32243d0a.Rmd.txt	2026-11-03 19:32:39.483999113 -0500
++++ A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/cloze/totales_promedios_reciclaje_aleatorio_argumentacion_n3_cloze_v1.Rmd	2026-11-03 19:35:22.682300351 -0500
+@@ -1064,9 +1064,9 @@
+ ## (hp_supera y hg_supera, del data_generation) y lleva la conclusión que se sigue; el criterio general va sin cifras.
+ ## Las dos últimas palabras llevan el espacio duro: el párrafo no termina con una palabra sola en su último renglón.
+ cat("Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo promedio suma ese ",
+-    "promedio al total, y un curso menos lo resta. Por eso, si el grado que perdió tiene un curso más o el que ganó ",
+-    "tiene uno menos, basta comparar el promedio de ese grado con la diferencia entre los totales: si el promedio es ",
+-    "mayor, el ganador cambia; si es menor, no. ",
++    "promedio al total, y un curso menos lo resta. Por eso, para saber si el grado que perdió habría ganado con un ",
++    "curso más, o si el que ganó habría perdido con uno menos, basta comparar el promedio de cada uno con la ",
++    "diferencia entre los totales: si el promedio es mayor, sí; si es menor, no. ",
+     "Con un curso más, el grado ", per_par,
+     " habría sumado a su total ", dp$aP, ED, "kilos, ", if (hp_supera) "más" else "menos", " que la diferencia de ",
+     dp$D, ED, "kilos: ", if (hp_supera) "habría ganado" else "no le habría alcanzado para ganar",

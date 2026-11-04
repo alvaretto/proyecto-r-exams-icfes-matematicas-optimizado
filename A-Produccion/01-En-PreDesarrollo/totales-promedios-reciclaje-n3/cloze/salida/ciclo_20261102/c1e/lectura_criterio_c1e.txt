@@ -1,0 +1,56 @@
+md5 del .Rmd: e16842c1157b3bffe35b8f21682ed6ad 
+Semillas 1 a 1000 (113 canónicas). Afirmación de ventaja: BP 505 · BC 495
+La frase literal, una vez por párrafo emitido: 1000 de 1000
+
+(1) BC que dirían lo mismo que HP o HG (dentro del alcance literal, las dos hipótesis que nombra la frase): 0 versiones · el criterio da el veredicto contrario en 0
+    Comprobación: rama CURSOS con k = 1: 111 versiones; afirmación de ventaja BP en 111; HP y HG verdaderas en 111
+    BP cambia el promedio, no los cursos: tampoco la nombra la frase (505 versiones)
+
+(2) BC fuera del alcance, como registro: 495
+    k >= 2: 273 · el criterio, aplicado igual, da el contrario en 238
+    k = 1, sentido previsto: 0 · da el veredicto real en 0 · da el contrario en 0
+    k = 1, sentido inverso: 222 · da el veredicto real en 39 · da el contrario en 183
+    Sin acotar (frase de 6f6f1b13), aplicado a toda BC: contrario en 421 de 495
+    Control: las seis cifras de la C1c y la C1d (495, 421, 273, 238, 222 y 183), reproducidas
+
+(3) HP: el criterio coincide con el veredicto calculado desde la tabla en 1000 de 1000 y con la marca en 1000 de 1000
+    HG: el criterio coincide con el veredicto calculado desde la tabla en 1000 de 1000 y con la marca en 1000 de 1000
+    Empates (promedio = diferencia, que «si es mayor» y «si es menor» no cubrirían): HP 0 · HG 0
+    Control positivo: con el promedio del otro grado, HP se aparta del veredicto real en 306 de 1000
+
+(4) Control contra la r5, semillas 1 a 205: 102 BC, y el criterio sin acotar da el contrario en 80 (la r5 publicó 102 y 80).
+
+(5) Lecturas de la frase nueva, medidas y no corregidas (frase literal del profesor)
+  a. «de cada uno» cruzado, cada hipótesis con el promedio del otro grado: HP sale contraria en 306 de 1000 y HG en 306 de 1000.
+  b. Un solo veredicto para las dos preguntas: HP y HG tienen veredictos distintos en 306 de 1000 (ahí ningún «sí» o «no» común es verdadero para las dos). Dos verdaderas: 344 · dos falsas: 350.
+     Las dos frases resueltas responden por separado: conclusión de HP y de HG, una de cada una, en 1000 de 1000.
+  c. «sí» y «no» como respuesta a cada pregunta:
+     HP, «sí» (promedio mayor que la diferencia): 476 versiones · veredicto de la tabla: «habría ganado» en 476 · marca: «verdadera» en 476 · frase resuelta «habría ganado» en 476
+     HP, «no» (promedio menor que la diferencia): 524 versiones · veredicto de la tabla: «no le habría alcanzado para ganar» en 524 · marca: «falsa» en 524 · frase resuelta «no le habría alcanzado para ganar» en 524
+     HG, «sí» (promedio mayor que la diferencia): 518 versiones · veredicto de la tabla: «habría perdido» en 518 · marca: «verdadera» en 518 · frase resuelta «habría perdido» en 518
+     HG, «no» (promedio menor que la diferencia): 482 versiones · veredicto de la tabla: «habría seguido ganando» en 482 · marca: «falsa» en 482 · frase resuelta «habría seguido ganando» en 482
+     En las dos preguntas «sí» es que el ganador cambia: HP sí y P supera a G en 476 de 476; HG sí y G queda por debajo de P en 518 de 518.
+  d. «si el promedio es mayor» como «el de mayor promedio» (los dos promedios entre sí): HP sale contraria en 346 de 1000 y HG en 348 de 1000.
+  e. «con un curso más» como comparación con el otro grado de la tabla: el que perdió ya tiene un curso más que el que ganó (y el que ganó, uno menos) en 460 de 1000 (todas de la rama PROMEDIO).
+     Quien lea ahí «ya lo tenía y perdió», responde «no»; el veredicto de la hipótesis es verdadero en HP 149 y en HG 292 de esas 460. Con la frase anterior era «tiene un curso más»; ahora es condicional. De esas 460, 222 traen una BC en sentido inverso (fuera del alcance).
+     «Un curso más que el otro grado» y «uno menos que el otro grado», calculado para toda versión (no un curso añadido): HP sale contraria en 346 de 1000 y HG en 652 de 1000.
+  f. «la diferencia entre los totales» como la que queda después del cambio (D - promedio): HP sale contraria en 479 de 1000 y HG en 481 de 1000. Las dos frases resueltas citan la diferencia de la tabla, dos veces, en 1000 de 1000.
+
+Rama × k (todas las versiones):
+          k (3 = 3 o más)
+rama         1   2   3
+  CURSOS   111 243 114
+  PROMEDIO 460  71   1
+
+Rama × tipo de afirmación de ventaja × marca:
+                   marca FALSE TRUE
+rama     id                        
+CURSOS   BC_gano             0  122
+         BC_perdio           0  108
+         BP_gano           114    0
+         BP_perdio         124    0
+PROMEDIO BC_gano           131    0
+         BC_perdio         134    0
+         BP_gano             0  145
+         BP_perdio           0  122
+exit=0 fin=19:38:35

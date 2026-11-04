@@ -712,3 +712,103 @@ r6 y al profesor. Por la regla de parada, si solo es un BAJA de redacción, qued
 1. FASE 2C r6 con un detractor NUEVO, sin `name:`. Qué debe auditar: `../.claude/CLAUDE.md` § «Ciclo 2026-11-02 del CLOZE, tanda C1c».
 2. Según su veredicto: si no abre una CORRECCIÓN, tanda C2, con el paso 8 (oráculo r10 nuevo, con los diez puntos de la r5 y el criterio
    literal de esta tanda) y los pasos 9 y 10.
+
+## Tanda C1d del ciclo 2026-11-02 (2026-11-03): alcance del criterio de la Parte 6, 6/11 (registro completo en `../.claude/CLAUDE.md`)
+
+> **Este bloque manda sobre los de las tandas C1, C1b y C1c y sobre el «Estado» de arriba.** Reapertura #8 desde `generacion_rmd` (19:02:57).
+> `.Rmd`: `ef2c96dc…` → **`32243d0a6e6c499a4c6b1213a49e95cd`**. Verificador: `04349f26…` → **`5df824570b49c2aff49412b4807cb917`**.
+> Sin aprobar. Se detuvo antes de la FASE 2C r6. Evidencia: `salida/ciclo_20261102/c1d/`.
+
+- **Qué cambió (decisión del profesor del 2026-11-03, «Cambiar la frase (Recomendada)»).** Una sola frase de la Solution: «Por eso, si
+  el grado que perdió tiene un curso más o el que ganó tiene uno menos, basta comparar el promedio de ese grado con la diferencia entre
+  los totales: si el promedio es mayor, el ganador cambia; si es menor, no.» Nada más cambia en el `.Rmd`.
+- **Lectura residual, medida** (`lectura_criterio_c1d.txt`, semillas 1 a 1000): 0 afirmaciones de ventaja por cursos dentro del alcance
+  literal, y 0 con el veredicto contrario. Las 222 con *k* = 1 (183 con el contrario) y las 273 con *k* ≥ 2 (238) quedan fuera. HP y HG:
+  1000 de 1000 contra la tabla y contra la marca, 0 empates. Control: 102 y 80 de la r5, y las seis cifras de la C1c.
+- **Dos lecturas abiertas, medidas y no corregidas (van a la r6):** «ese grado» como «el que ganó» (HP sale contrario en 306 de 1000) y
+  «tiene un curso más» como comparación entre los dos grados (la tabla lo cumple en 460 de 1000). La lectura buscada es verdadera en
+  1000 de 1000. Por la regla de parada, si son BAJA de redacción quedan como residuo declarado.
+- **Invariancia** (`invariancia_c1d.txt`): deshacer la frase da `ef2c96dc` byte a byte. Semillas 1 a 1000: `.Random.seed`, objetos y E1,
+  0 diferencias, y ningún objeto nuevo; Solution idéntica salvo la frase. Texto emitido por `xexams`, semillas 1 a 100: 0 diferencias.
+- **Verificador:** exit 4, 368 cifras dentro de lo firmado, 0 fallos y 0 pendientes; de 1448 líneas solo cambian 4 respecto de la C1c
+  (`comparar_c1c_c1d.txt`). Solo cambiaron literales: `P6_CRITERIO`, `P6_NUEVO`, MC56 (vuelve a `ef2c96dc`, H1-Sol no se mueve) y el ancla
+  de MC57. Los 58 mutantes, con el mismo veredicto.
+- **Sellos, uno por uno y en orden:** paso 3 a las 19:13:14,561; 4 a las 19:13:25,374; 5 a las 19:13:35,765; 6 a las 19:13:48,276. Cada uno
+  en su propia llamada, con su artefacto comprobado antes. Render en `salida/ciclo_20261102/c1d/render_32243d0a/`; arsenal 0 errores y 6
+  advertencias, 2G 100/100, 2H 0 anomalías. PDF: las 5 páginas leídas.
+- **6b pareada** (`auditor-visual-html`, sin `name:`, N = 100 por versión, a 360 y 320 px, 400 páginas): APTO_CON_OBSERVACIONES. Informe en
+  `salida/ciclo_20261102/c1d/6b_c1d/informe_6b_c1d_32243d0a.md`. Una sola palabra en el último renglón, 0/100; 0 cortes entre cifra y
+  «kilos»; 0 desbordes; la Parte 1, idéntica y con 0 cortes de L-6. El párrafo gana 1,00 renglones a 360 px y 1,97 a 320 px.
+
+**Residuo de H2, con las cifras del md5 final** (`6b_c1d/contar_h2_c1d.txt`; sustituye a las de `ef2c96dc`):
+
+| Corte | 360 px | 320 px | Antes, 360 px | Antes, 320 px |
+|---|---|---|---|---|
+| «habría ⏎ ganado.» | 0/57 | 57/57 | 0/57 | 0/57 |
+| «habría ⏎ seguido ganando.» | 19/51 | 43/51 | 19/51 | 19/51 |
+| Páginas con alguno de los dos | 19/100 | 84/100 | 19/100 | 19/100 |
+| «no le ⏎ habría alcanzado» | 0/43 | 43/43 | 0/43 | 0/43 |
+| «habría ⏎ sumado» | 0/100 | 100/100 | 100/100 | 0/100 |
+
+Control positivo: la referencia `ef2c96dc` reproduce exactamente las cifras de la C1c, y sus renglones son los mismos en las 200 páginas. A
+320 px son las cifras de `6f6f1b13` que el profesor tenía delante cuando decidió H2: la mejora de la C1c fue coincidencia de longitud. El
+corte se desplaza, no viola ninguna ley y, por decisión del profesor, no lleva espacio duro.
+
+### Próximo paso (tanda C1d)
+
+1. FASE 2C r6 con un detractor NUEVO, sin `name:`, sobre el md5 `32243d0a…`. Qué debe auditar: `../.claude/CLAUDE.md` § «Ciclo 2026-11-02 del
+   CLOZE, tanda C1d».
+2. Según su veredicto: si no abre una CORRECCIÓN, tanda C2, con el paso 8 (oráculo r10 nuevo, con los diez puntos de la r5 y el criterio
+   literal de esta tanda) y los pasos 9 y 10.
+
+## Tanda C1e del ciclo 2026-11-02 (2026-11-03): redacción del criterio de la Parte 6, 6/11 (registro completo en `../.claude/CLAUDE.md`)
+
+> **Este bloque manda sobre los de las tandas C1, C1b, C1c y C1d y sobre el «Estado» de arriba.** Reapertura #9 desde `generacion_rmd` (19:35:22).
+> `.Rmd`: `32243d0a…` → **`e16842c1157b3bffe35b8f21682ed6ad`**. Verificador: `5df82457…` → **`1cbc770f15fbf9140cb0ef294c7a0aae`**.
+> Sin aprobar y sin commit. Se detuvo antes de la FASE 2C r6. Evidencia: `salida/ciclo_20261102/c1e/`.
+
+- **Qué cambió (decisión del profesor del 2026-11-03, «Reformular (Recomendada)»).** Una sola frase de la Solution: «Por eso, para saber si
+  el grado que perdió habría ganado con un curso más, o si el que ganó habría perdido con uno menos, basta comparar el promedio de cada uno
+  con la diferencia entre los totales: si el promedio es mayor, sí; si es menor, no.» Nada más cambia en el `.Rmd`.
+- **Lecturas, medidas** (`lectura_criterio_c1e.txt`, semillas 1 a 1000): el alcance literal son HP y HG, y en las dos el criterio coincide con
+  la tabla y con la marca en 1000 de 1000, con 0 empates. 0 afirmaciones de ventaja por cursos dentro del alcance. Fuera, como registro: las
+  222 con *k* = 1 (183 con el contrario) y las 273 con *k* ≥ 2 (238). Controles: 306, 102 y 80, y las seis cifras de la C1c.
+- **Otras lecturas, medidas y no corregidas (van a la r6):** «de cada uno» cruzado, HP y HG contrarias en 306 de 1000; un solo veredicto para
+  las dos preguntas, 306 de 1000 sin veredicto común; «sí» y «no» por pregunta, las cuatro celdas coinciden (476, 524, 518 y 482);
+  «si el promedio es mayor» como «el de mayor promedio», 346 y 348; «con un curso más» como comparación entre los grados, la tabla lo cumple
+  en 460 de 1000; «la diferencia» como la que queda tras el cambio, 479 y 481. Por la regla de parada, si son BAJA de redacción quedan como
+  residuo declarado.
+- **Invariancia** (`invariancia_c1e.txt`): deshacer la frase da `32243d0a` byte a byte. Semillas 1 a 1000: `.Random.seed`, objetos y E1,
+  0 diferencias, y ningún objeto nuevo; Solution idéntica salvo la frase. Texto emitido por `xexams`, semillas 1 a 100: 0 diferencias.
+- **Verificador:** exit 4, 368 cifras dentro de lo firmado, 0 fallos y 0 pendientes; de 1448 líneas solo cambian 4 respecto de la C1d
+  (`comparar_c1d_c1e.txt`). Solo cambiaron literales: `P6_CRITERIO`, `P6_NUEVO`, MC56 (vuelve a `32243d0a`, H1-Sol no se mueve) y el ancla
+  de MC57. Los 58 mutantes, con el mismo veredicto.
+- **Sellos, uno por uno y en orden:** paso 3 a las 19:44:54,163; 4 a las 19:45:08,327; 5 a las 19:45:17,256; 6 a las 19:45:31,757. Cada uno
+  en su propia llamada, con su artefacto comprobado antes. Render en `salida/ciclo_20261102/c1e/render_e16842c1/`; arsenal 0 errores y 6
+  advertencias, 2G 100/100, 2H 0 anomalías. PDF: las 5 páginas leídas.
+- **6b pareada** (`auditor-visual-html`, sin `name:`, N = 100 por versión, a 360 y 320 px, 400 páginas): APTO_CON_OBSERVACIONES. Informe en
+  `salida/ciclo_20261102/c1e/6b_c1e/informe_6b_c1e_e16842c1.md`. Una sola palabra en el último renglón, 0/100; 0 cortes entre cifra y
+  «kilos»; 0 desbordes; la Parte 1, idéntica y con 0 cortes de L-6. El párrafo gana 0,78 renglones a 360 px y 0,69 a 320 px. BAJO: el último
+  renglón con una sola unidad sube a 40/100 y 79/100 (dos palabras unidas por el espacio duro, no huérfanos).
+
+**Residuo de H2, con las cifras del md5 final** (`6b_c1e/contar_h2_c1e.txt` y `contar_cortes_frase_c1e.txt`; sustituye a las de `32243d0a`):
+
+| Corte | 360 px | 320 px | Antes, 360 px | Antes, 320 px |
+|---|---|---|---|---|
+| «habría ⏎ ganado.» | 0/57 | 0/57 | 0/57 | 57/57 |
+| «habría ⏎ seguido ganando.» | 32/51 | 33/51 | 19/51 | 43/51 |
+| Páginas con alguno de los dos | 32/100 | 33/100 | 19/100 | 84/100 |
+| «no le ⏎ habría alcanzado» | 0/43 | 0/43 | 0/43 | 43/43 |
+| «habría ⏎ sumado» | 0/100 | 0/100 | 0/100 | 100/100 |
+| «habría ⏎ ganado con» (solo en la frase nueva) | 100/100 | 0/100 | no existe | no existe |
+| «habría ⏎ perdido con» (solo en la frase nueva) | 0/100 | 0/100 | no existe | no existe |
+
+Control positivo: la referencia `32243d0a` reproduce exactamente las cifras de la C1d. El corte se desplaza con cada redacción, no viola
+ninguna ley y, por decisión del profesor, no lleva espacio duro.
+
+### Próximo paso (tanda C1e)
+
+1. FASE 2C r6 con un detractor NUEVO, sin `name:`, sobre el md5 `e16842c1…`. Qué debe auditar: `../.claude/CLAUDE.md` § «Ciclo 2026-11-02 del
+   CLOZE, tanda C1e».
+2. Según su veredicto: si no abre una CORRECCIÓN, tanda C2, con el paso 8 (oráculo r10 nuevo, con los diez puntos de la r5 y el criterio
+   literal de esta tanda) y los pasos 9 y 10.

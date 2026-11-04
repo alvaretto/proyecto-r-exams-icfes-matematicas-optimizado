@@ -1,0 +1,13 @@
+CLOZE nuevo e16842c1157b3bffe35b8f21682ed6ad · CLOZE viejo 32243d0a6e6c499a4c6b1213a49e95cd · SCHOICE 63e2713e6ac0bdbf250f4dc33901b2ec 
+(a) deshacer la frase en el .Rmd nuevo da 32243d0a byte a byte: TRUE
+    chunk data_generation idéntico: TRUE
+Semillas 1 a 1000 (113 canónicas); errores de ejecución: 0
+(b) .Random.seed final distinto de 32243d0a: 0 de 1000 · objetos distintos: 0 · versiones con objetos nuevos o que faltan: 0 · objetos por versión (incluidos los ocultos): de 157 a 182
+(c) E1 (Parte 1 = SCHOICE 63e2713e, objetos y .Random.seed al final del bloque): 0 diferencias
+(d) Solution emitida distinta de 32243d0a fuera de la frase: 0 de 1000 · párrafo «Parte 6.» distinto fuera de la frase: 0 de 1000 · control (cada frase solo en su versión) fallido: 0 de 1000
+    Párrafo nuevo, ejemplos (~ = U+00A0):
+    semilla 1: Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo promedio suma ese promedio al total, y un curso menos lo resta. Por eso, para saber si el grado que perdió habría ganado con un curso más, o si el que ganó habría perdido con uno menos, basta comparar el promedio de cada uno con la diferencia entre los totales: si el promedio es mayor, sí; si es menor, no. Con un curso más, el grado sexto habría sumado a su total 53~kilos, más que la diferencia de 37~kilos: habría ganado. Con un curso menos, el grado séptimo habría restado a su total 51~kilos, más que la diferencia de 37~kilos: habría~perdido.
+    semilla 10: Parte 6. Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo promedio suma ese promedio al total, y un curso menos lo resta. Por eso, para saber si el grado que perdió habría ganado con un curso más, o si el que ganó habría perdido con uno menos, basta comparar el promedio de cada uno con la diferencia entre los totales: si el promedio es mayor, sí; si es menor, no. Con un curso más, el grado séptimo habría sumado a su total 27~kilos, menos que la diferencia de 33~kilos: no le habría alcanzado para ganar. Con un curso menos, el grado sexto habría restado a su total 42~kilos, más que la diferencia de 33~kilos: habría~perdido.
+[1] TRUE
+(e) Texto emitido (xexams, después de exshuffle), semillas 1 a 100: 0 diferencias en enunciado, questionlist, solutionlist, metainformación salvo file, o solution fuera de la frase · la frase, una vez en cada versión: 100 de 100
+exit=0 segundos=129 fin=19:40:45

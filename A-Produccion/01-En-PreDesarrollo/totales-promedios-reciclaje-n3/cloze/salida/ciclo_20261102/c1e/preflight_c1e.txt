@@ -1,0 +1,8 @@
+Pre-flight de la tanda C1e (2026-11-03, 19:32:39)
+OK 1 .claude/CLAUDE.md índice ICFES · OK 2 workflow-state.sh · OK 3 hooks ejecutables y bash -n · 4 exams 2.4.2 · OK 5 ruta bajo 01-En-PreDesarrollo
+OK 6-16,25 reglas y scripts · OK 12 FASES 2J 2K 2L 2N 2O · OK 14 CLOZE canónico por metadato · OK 19 cascada F6
+20 set.seed en el .Rmd: 0 · reloj: 0
+OK 23 padre es ejercicio: sí
+23 leídos: A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/.claude/CLAUDE.md (CLOZE hermano, F-1 a F-4, L-C1 a L-C8, tanda C1d, verificación del coordinador y decisión del profesor sobre la redacción del criterio), A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/cloze/HANDOFF.md (desde la C1c), c1d/lectura_criterio_c1d.R y .txt; .claude/ del destino: no existe (convención del CLOZE hermano)
+Entrada: legible
+Partida: .Rmd 32243d0a6e6c499a4c6b1213a49e95cd · verificador 5df824570b49c2aff49412b4807cb917 · HEAD 5a87fa72

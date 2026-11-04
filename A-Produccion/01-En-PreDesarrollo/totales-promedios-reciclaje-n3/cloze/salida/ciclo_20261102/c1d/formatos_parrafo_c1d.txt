@@ -1,0 +1,12 @@
+HTML   cloze1.html            frase nueva 1 · frase vieja 0
+HTML   cloze2.html            frase nueva 1 · frase vieja 0
+HTML   cloze3.html            frase nueva 1 · frase vieja 0
+HTML   cloze4.html            frase nueva 1 · frase vieja 0
+HTML   cloze5.html            frase nueva 1 · frase vieja 0
+PDF    cloze1.pdf             frase nueva 1 · frase vieja 0
+PDF    cloze2.pdf             frase nueva 1 · frase vieja 0
+PDF    cloze3.pdf             frase nueva 1 · frase vieja 0
+PDF    cloze4.pdf             frase nueva 1 · frase vieja 0
+PDF    cloze5.pdf             frase nueva 1 · frase vieja 0
+DOCX   cloze1.docx            frase nueva 1 · frase vieja 0
+Moodle cloze.xml              frase nueva 5 · frase vieja 0

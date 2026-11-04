@@ -1,0 +1,5 @@
+versión ancho | páginas | con la frase literal | G habría/ganado | H habría/perdido | I con un/curso | J de cada/uno | K mayor,/sí; | L menor,/no.
+n 360 | 100 | 100 | 100 | 0 | 0 | 0 | 0 | 0
+n 320 | 100 | 100 | 0 | 0 | 0 | 0 | 0 | 0
+r 360 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0
+r 320 | 100 | 0 | 0 | 0 | 0 | 0 | 0 | 0

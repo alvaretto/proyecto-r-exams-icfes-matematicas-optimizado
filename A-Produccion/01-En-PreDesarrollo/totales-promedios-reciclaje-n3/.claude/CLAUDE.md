@@ -2631,3 +2631,414 @@ define cada corte sobre los renglones del instrumento, y se validó antes de med
    - Toca el `.Rmd`: tanda C1d, con pasos 3 a 6 y 6b. La FASE 2C r6 se lanza después, sobre el md5 de la C1d. La regla de parada no
      cambia.
 2. **Commit y push de la C1c**, antes de la C1d.
+
+### Ciclo 2026-11-02 del CLOZE, tanda C1d (2026-11-03): alcance del criterio de la Parte 6; pasos 3 a 6 sellados
+
+> La hizo el `orquestador-cloze` el 2026-11-03, por encargo del coordinador. Reapertura #8 desde `generacion_rmd` (19:02:57), con
+> el reporte `cloze/salida/ciclo_20261102/c1c/lectura_criterio_c1c.txt`. `.Rmd`: `ef2c96dc…` → **`32243d0a6e6c499a4c6b1213a49e95cd`**,
+> sin aprobar. `cloze/verificar_espacio_cloze.R`: `04349f26…` → **`5df824570b49c2aff49412b4807cb917`**. Se detuvo antes de la FASE 2C
+> r6, que lanza el coordinador con un detractor nuevo. Evidencia: `cloze/salida/ciclo_20261102/c1d/`. Estado: 6/11.
+
+#### Decisiones que rigen la tanda (literales; regla #24 H-5)
+
+- **Lectura residual del criterio:** «Cambiar la frase (Recomendada)», con la frase de abajo, literal, y sin cambiar nada más del `.Rmd`.
+- **Siguen en pie:** H2 de la r5, «Solo declararlo (Recomendada)», sin espacio duro tras «habría»; y la regla de parada de la r6: si la
+  r6 solo trae BAJAs de redacción de este párrafo, quedan como residuo declarado. Una CORRECCIÓN se corrige siempre.
+
+#### La frase
+
+- Antes: «Por eso, con un curso más o uno menos, basta comparar ese promedio con la diferencia entre los totales: si el promedio es
+  mayor, el ganador cambia; si es menor, no.»
+- Ahora: «Por eso, si el grado que perdió tiene un curso más o el que ganó tiene uno menos, basta comparar el promedio de ese grado
+  con la diferencia entre los totales: si el promedio es mayor, el ganador cambia; si es menor, no.»
+- Diff: `c1d/diff_rmd_ef2c96dc_c1d.patch`, con el script `c1d/editar_rmd_c1d.py` (patrón exigido una vez). Dos líneas de cadena del
+  `cat()` pasan a tres. Las dos frases resueltas, el espacio duro final y el `data_generation` no cambian.
+- Reglas #19 y #25, ortografía y literales U+00A0, U+2009, U+202F y U+2060: limpias, con control positivo en las sondas de `grep`
+  (`c1d/reglas_texto_c1d.txt`). Suites `test_letter_independence.R` y `test_glifos_latex.R`: en `c1d/suite_*.txt`.
+
+#### Lectura residual, medida con la frase nueva (`c1d/lectura_criterio_c1d.R` → `.txt`, 20 s)
+
+Semillas 1 a 1000 (113 canónicas), con el alcance literal «el que perdió con un curso más o el que ganó con uno menos».
+
+| Afirmación de ventaja por cursos (BC) | Versiones | El criterio da el veredicto contrario |
+|---|---|---|
+| Dentro del alcance literal | **0** | **0** |
+| Fuera: *k* = 1, en sentido inverso (rama PROMEDIO; el que perdió pierde un curso o el que ganó gana uno) | 222 | 183 |
+| Fuera: *k* ≥ 2 | 273 | 238 |
+| Toda BC, con la frase de `6f6f1b13`, sin acotar (referencia) | 495 | 421 |
+
+- **Por qué dentro hay 0.** Es un hecho del generador, y el script lo comprueba: rama CURSOS con *k* = 1, 111 versiones, con la
+  afirmación de ventaja BP en las 111 y HP y HG verdaderas en las 111. Una BC ahí sería la misma afirmación que HP o HG, y L-C1 exige
+  una falsa.
+- **HP y HG, que sí están dentro:** el criterio coincide con el veredicto calculado desde la tabla en 1000 de 1000 y con la marca
+  (`sol_p6`) en 1000 de 1000, en las dos. Empates (promedio = diferencia, que «si es mayor» y «si es menor» no cubrirían): 0 y 0.
+  Control positivo de esa sonda: con el promedio del otro grado, HP se aparta en 306 de 1000.
+- **Controles:** las seis cifras de la C1c (495, 421, 273, 238, 222 y 183) se reproducen; y en las semillas 1 a 205, 102 BC y 80 con el
+  veredicto contrario, las cifras de la r5.
+- **Los 183 no desaparecen del ítem: salen del alcance.** Quien aplique el criterio a una BC en sentido inverso, contra lo que dice
+  la frase, sigue obteniendo el contrario. Lo que cambia es que la frase ya no se lo autoriza.
+
+#### Dos lecturas de la frase nueva, medidas y no corregidas (van a la r6 y al profesor)
+
+No las pedía el encargo. La frase es literal del profesor, así que no se tocó. La lectura buscada es verdadera en 1000 de 1000.
+
+| Lectura | Medida (semillas 1 a 1000) | Qué la contiene |
+|---|---|---|
+| a. «ese grado» tomado como el último nombrado, «el que ganó», también cuando el que cambia es el que perdió | El veredicto de HP sale contrario en 306 de 1000 | La frase resuelta que sigue cita, en cada versión, el promedio del grado que perdió |
+| b. «tiene un curso más» leído como comparación entre los dos grados de la tabla, no como un curso añadido | La tabla lo cumple en 460 de 1000 (todas de la rama PROMEDIO con *k* = 1). De ellas, 222 traen una BC; quien además le aplique el criterio a esa BC obtiene el contrario en 183. Son las mismas 222 y 183 de arriba | Las dos frases anteriores: «Cada hipótesis cambia un solo dato de la tabla. Un curso más con el mismo promedio suma ese promedio al total» |
+
+Por la regla de parada, si la r6 las clasifica como BAJA de redacción quedan como residuo declarado.
+
+#### Invariancia (`c1d/invariancia_c1d.R` → `.txt`, 122 s)
+
+- Deshacer la frase en el `.Rmd` nuevo da `ef2c96dc` byte a byte, así que el `data_generation`, la Question y la metainformación son
+  idénticos.
+- Semillas 1 a 1000 (113 canónicas, 0 errores): `.Random.seed` final, 0 diferencias; todos los objetos, incluidos los ocultos, 0
+  diferencias; ningún objeto nuevo.
+- E1: la Parte 1 = SCHOICE `63e2713e`, 0 diferencias.
+- Solution emitida idéntica salvo la frase, y el resto del párrafo idéntico byte a byte, en 1000 de 1000. Control: cada frase aparece
+  solo en su versión, 0 fallos.
+- Texto emitido por R/exams (`xexams`, después de `exshuffle`), semillas 1 a 100: enunciado, `questionlist`, `solutionlist`,
+  metainformación salvo `file`, y `solution` salvo la frase: 0 diferencias. Con eso, las opciones, las marcas y el feedback de las
+  seis partes salen iguales.
+- Salida real de los cuatro formatos (`c1d/formatos_parrafo_c1d.txt`): la frase, una vez por versión en HTML, PDF, DOCX y Moodle, y la
+  de `ef2c96dc`, 0.
+
+#### Verificador (`5df82457…`; `c1d/verificar_espacio_cloze_c1d.txt`, 480 s)
+
+**Exit 4: EN ROJO BAJO OVERRIDE FIRMADO, 368 cifras dentro de lo firmado, 0 fallos y 0 pendientes.** Frente a la C1c, las 368 líneas
+firmadas son idénticas una a una, y de las 1448 líneas solo cambian 4: la cabecera con el md5, la descripción de MC56, el resultado y
+la de cierre (`c1d/comparar_c1c_c1d.py` → `.txt`). Las dos líneas «PENDIENTE DE FIRMA» de la salida son las de MC17 y MC37, mutantes
+que deben abrir un pendiente.
+
+- **Solo cambian los literales que dependen de la frase** (`c1d/editar_verificador_c1d.py`; `c1d/diff_verificador_04349f26_c1d.patch`):
+  `P6_CRITERIO`, `P6_NUEVO` (MC51, leído del `.Rmd`, no transcrito), `P6_CRIT_VIEJO` y el patrón de MC56, y el ancla de MC57. Ninguna
+  sonda, ningún umbral ni ninguna firma.
+- Los 58 mutantes salen con el mismo veredicto que en la C1c, con la misma cifra: 54 `cazado_por_su_sonda`, 3 `cazado_por_su_sonda_y_otra`
+  (MC39, MC50 y MC54) y 1 `cazado_por_su_sonda_y_otra_y_control` (MC51). MC30 sigue retirado.
+- **MC56** vuelve a la frase de `ef2c96dc`: falta +100, control a 0, y H1-Sol no se mueve. **MC57**: cifra +100, control en 100, H1-Sol
+  no se mueve. **MC55**: marca +100, control en 200.
+- Prueba rápida antes de la corrida completa: `c1d/prueba_c1d.R` → `.txt`, 0 fallos.
+
+#### Sellos, uno por uno y en orden
+
+Cada `complete` en su propia llamada, después de comprobar su artefacto:
+
+| Paso | Hora | Artefacto comprobado antes de sellar |
+|---|---|---|
+| 3 `generacion_rmd` | 19:13:14,561 | md5 del `.Rmd` y del verificador, invariancia (exit 0), verificador (exit 4, 480 s), comparación (0 diferencias) |
+| 4 `retroalimentacion` | 19:13:25,374 | La frase en los cuatro formatos (HTML 5, PDF 5, DOCX 1, Moodle 5 en un archivo de 5 versiones), Crit-P6, H1-Sol, reglas #19 y #25, lectura residual |
+| 5 `renderizado_4_formatos` | 19:13:35,765 | `render_32243d0a/render.log`: PDF 5, HTML 5 (0 `##ANSWER`), DOCX 1, Moodle n = 5 (15 gaps de elección, 0 con imagen); NOPS N/A por `cloze exercises`; `.tex` 6, 0 usos de `pandocbounded`, `LTcaptype{none}` 2 con la guarda. PDF: las 5 páginas de la vista previa leídas una a una, dentro del margen |
+| 6 `arsenal_post_render` | 19:13:48,276 | Informe del hook `20261103-190927-414932`: 0 errores, las 6 advertencias heurísticas de siempre, 2G 100/100, 2H 10 semillas y 0 anomalías; 2I, 2J, 2K, 2L, 2N y 2O en verde |
+
+Los artefactos son anteriores a los sellos: invariancia 19:08:26, render y hook 19:09:27, verificador 19:12:48. El sello 3 se dejó para
+después del verificador, para que una cifra firmada movida no dejara un paso sellado.
+
+#### 6b pareada de la tanda C1d (`auditor-visual-html`, sin `name:`): APTO_CON_OBSERVACIONES
+
+N = 100 semillas por versión (`32243d0a` frente a `ef2c96dc`), a 360 y 320 px: 400 páginas por CDP, con `innerWidth` comprobado y la
+red bloqueada, 0 errores. Instrumento `cloze/salida/fase2c_r5/6b/cap7_r5.py`, sin modificar. Perfil de Chromium fuera del repo
+(`~/.cache/c1d_6b/`). Informe: `c1d/6b_c1d/informe_6b_c1d_32243d0a.md`, con `metricas.json`, `contar_h2_c1d.txt` y 10 recortes leídos a
+resolución completa (8 del NUEVO, con las cuatro conclusiones, y 2 de la REFERENCIA).
+
+| Párrafo «Parte 6.» | NUEVO 360 | REF 360 | NUEVO 320 | REF 320 |
+|---|---|---|---|---|
+| Último renglón con una sola palabra | 0/100 | 0/100 | 0/100 | 0/100 |
+| Último renglón con una sola unidad | 19/100 | 19/100 | 54/100 | 24/100 |
+| Renglones (media) | 15,62 | 14,62 | 18,59 | 16,62 |
+| Cortes entre cifra y «kilos» · desborde · palabras partidas | 0/400 · 0 · 0 | 0/400 · 0 · 0 | 0/400 · 0 · 0 | 0/400 · 0 · 0 |
+
+- La Parte 1 sale idéntica en las dos versiones, con 0 cortes en todas las métricas de L-6 (fórmula con la unidad dentro 0/1158;
+  cifra-unidad 0/2003, tabla 0/400; El/La 0/475, tabla 0/24). Las Partes 2 a 6 conservan el residuo heredado, igual en las dos: 263/1249
+  a 360 px y 209/1249 a 320 px.
+- Desbordes, tablas fuera de su caja, fórmulas partidas y fugas de markup: 0. Altura media de página: +18,0 px a 360 px (+0,22 %) y
+  +35,5 px a 320 px (+0,38 %). El párrafo gana 1,00 y 1,97 renglones.
+- En el NUEVO, «si el promedio es mayor,» queda partida en 100 de 100 en los dos anchos; «el grado que perdió» y «el que ganó» quedan
+  enteros a 360 px y partidos a 320 px. Son cortes normales, y la frase no depende de la semilla.
+- **Control positivo:** la REFERENCIA reproduce exactamente las cifras de la C1c, en los dos anchos. Además, el orquestador comparó los
+  renglones del párrafo de esta REFERENCIA con los del NUEVO de la C1c, que es el mismo md5: 0 páginas distintas de 200.
+- **Comprobado por el orquestador** (`c1d/6b_c1d/control_6b_orquestador.txt`): las frecuencias de H2 y las métricas del párrafo, repetidas
+  sobre `out.json` con un script propio, salen iguales. Leyó además dos recortes.
+- **Fe de erratas:** el informe de la C1c decía «400 páginas por versión (800 en total)», y el encargo de esta 6b repitió el 800. Son
+  2 versiones × 100 semillas × 2 anchos = 400 páginas en total; lo dice `cap.log` y lo detectó el auditor.
+
+#### Residuo de H2, con las cifras del md5 final (`c1d/6b_c1d/contar_h2_c1d.txt`, N = 100)
+
+Sustituye a las cifras de `ef2c96dc`. El auditor lo clasificó MEDIO, como diferencia pareada, porque no tenía el criterio. **No es un
+bloqueo:** no viola ninguna ley, y por la decisión del profesor sobre H2 se declara, sin espacio duro.
+
+| Corte | `32243d0a` 360 px | `32243d0a` 320 px | `ef2c96dc` 360 px | `ef2c96dc` 320 px |
+|---|---|---|---|---|
+| «habría ⏎ ganado.» | 0/57 | **57/57** | 0/57 | 0/57 |
+| «habría ⏎ seguido ganando.» | 19/51 | **43/51** | 19/51 | 19/51 |
+| Páginas con alguno de los dos | 19/100 | **84/100** | 19/100 | 19/100 |
+| «no le ⏎ habría alcanzado» | 0/43 | **43/43** | 0/43 | 0/43 |
+| «habría ⏎ sumado» | **0/100** | **100/100** | 100/100 | 0/100 |
+
+- A 320 px son exactamente las cifras de `6f6f1b13` que el profesor tenía delante cuando decidió H2. La mejora de la C1c a 320 px fue
+  coincidencia de longitud: el corte se desplaza con cada redacción, y esta lo devuelve adonde estaba.
+- A 360 px, «habría ⏎ sumado» pasa de 100 a 0 de 100 y lo demás no cambia.
+
+#### Qué debe auditar la FASE 2C r6 (detractor nuevo, sin `name:`)
+
+- La frase nueva y sus lecturas (regla #13 v1.1): el alcance, «ese grado» y «tiene un curso más», con las medidas de arriba; y si la
+  frase, leída con las dos anteriores del párrafo, sigue siendo verdadera en las 1000.
+- La lectura residual: el alcance literal, la definición de «dentro» (`dif == 1`), los 0 y 0, y HP y HG en 1000 de 1000.
+- La sonda Crit-P6: que lea el texto crudo emitido, cómo define el tramo general y su control exacto, ahora con la frase nueva.
+- MC55, MC56 y MC57: que MC56 vuelva a la frase de `ef2c96dc` y que ni él ni MC57 muevan H1-Sol; y que caiga solo `marca` en MC55.
+- La convención de `mut_h1()` y los cuatro esperados declarados.
+- La invariancia (1000 semillas y 100 emitidas), y la 6b con su control positivo y `contar_h2.py`.
+- Los sellos: el orden, las horas y que cada artefacto sea anterior a su sello.
+- Siguen de antes: L-8 sin cablear en el verificador del SCHOICE, y F-3 declarado a +25,5 pp. H3 de la r4 (el oráculo r10 del paso 8)
+  va en la C2, con los diez puntos de la r5 y con el criterio literal de esta tanda, que ya no es el de la C1c.
+
+#### ¿Ley local o regla?
+
+- **Local, candidata (L-C10, que viene de la C1b y se amplió en la C1c; endurece y la firma el profesor):** el criterio general literal
+  pasa a ser el de esta tanda, y Crit-P6 lo lleva cableado. Guardas: el `stopifnot` «H1 r4» (MC52), H1-Sol (MC50, MC51, MC53, MC54 y
+  MC55) y Crit-P6 (MC56 y MC57).
+- **Del repo, candidatas que vienen de la C1c, sin cambios (tocan `.claude/`, regla #17; las decide el profesor):** en una sonda de
+  varias componentes, cada componente necesita un mutante que la mueva sola; y que `workflow-state.sh complete` avise de un sello fuera
+  de orden.
+- **Nota de procedimiento, sin ley:** al derivar un script por reemplazo de cadenas, sustituir la etiqueta (`c1c` → `c1d`) antes que
+  los md5. El md5 `ef2c96dc1c2b…` contiene «c1c», y `generar_invariancia_c1d.py` lo dejó falso en su primera versión; se vio antes de
+  correrlo, y el `stopifnot` del md5 lo habría abortado.
+- **Nota de medición, sin ley:** una cifra de corte de renglón vale para un md5. Si cambia la longitud de un párrafo, se vuelve a medir,
+  también lo que estaba mejor.
+
+### Decisión del profesor sobre la redacción del criterio (2026-11-03, tras la tanda C1d y antes de la FASE 2C r6)
+
+> **Firmada por el profesor el 2026-11-03** y transmitida por el coordinador. Respuesta literal: «Reformular (Recomendada)». Antes
+> había escrito: «Cambia la frase por la alternativa antes de la r6», cuando la frase de `32243d0a` ya estaba aplicada; el
+> coordinador le dijo cuál había quedado y en qué difería de la que traía la tanda. Regla #24 **H-5**: queda por escrito quién
+> decidió, cuándo y con qué cifras.
+
+1. **El criterio general pasa a decir:** «Por eso, para saber si el grado que perdió habría ganado con un curso más, o si el que
+   ganó habría perdido con uno menos, basta comparar el promedio de cada uno con la diferencia entre los totales: si el promedio es
+   mayor, sí; si es menor, no.»
+   - **Por qué.** La frase de `32243d0a`, también propuesta por el coordinador, cerró los 183 de 1000, pero abrió dos lecturas, medidas
+     por la tanda C1d (`c1d/lectura_criterio_c1d.txt`, punto 5). «tiene un curso más» suena a dato de la tabla, y la tabla lo cumple
+     en 460 de 1000 versiones: el grado que perdió de verdad tiene un curso más que el ganador. Y «ese grado» tomado como «el que
+     ganó» da el veredicto de HP contrario en 306 de 1000. No son CORRECCIÓN: las dos frases siguientes las aclaran.
+   - **Qué cambia.** Usa el condicional de la Parte 6, que no se lee como dato de la tabla, y «de cada uno» quita la duda de «ese
+     grado». Nombra las dos hipótesis, así que su alcance son HP y HG.
+   - **Alternativas que no se eligieron:** dejar la frase de `32243d0a` y la que traía la tanda («suma un curso … pierde uno … ese
+     promedio»).
+   - Toca el `.Rmd`: tanda C1e, igual que la C1d. La FASE 2C r6 se lanza después, sobre su md5. La regla de parada no cambia.
+
+**Verificación del coordinador de la tanda C1d del CLOZE (2026-11-03, sesión `358ab328`)**, independiente de sus scripts
+(`cloze/salida/ciclo_20261102/coordinador/`). `32243d0a` no llega a la r6: esta verificación queda como registro de la tanda.
+- `verificar_espacio_cloze.R` (`5df82457…`), repetido: exit 4, con las mismas líneas que
+  `cloze/salida/ciclo_20261102/c1d/verificar_espacio_cloze_c1d.txt`, salvo su línea de cierre.
+- Invariancia con un script propio (`invariancia_cloze_coordinador_c1d.R`): frente a `27f789dc`, 1000 de 1000 en E1, `.Random.seed` y
+  los 180 objetos comunes, y 100 de 100 en el texto emitido, con 200 de 200 comparaciones verdaderas. Frente a `ef2c96dc`, el
+  `data_generation` es idéntico byte a byte, y al deshacer la frase la Solution es igual en 100 de 100.
+- Sellos: en orden, cada uno en su llamada (19:13:14, 19:13:25, 19:13:35 y 19:13:48), después de sus artefactos.
+
+### Ciclo 2026-11-02 del CLOZE, tanda C1e (2026-11-03): redacción del criterio de la Parte 6; pasos 3 a 6 sellados
+
+> La hizo el `orquestador-cloze` el 2026-11-03, por encargo del coordinador. Reapertura #9 desde `generacion_rmd` (19:35:22), con
+> el reporte `cloze/salida/ciclo_20261102/c1d/lectura_criterio_c1d.txt`. `.Rmd`: `32243d0a…` → **`e16842c1157b3bffe35b8f21682ed6ad`**,
+> sin aprobar. `cloze/verificar_espacio_cloze.R`: `5df82457…` → **`1cbc770f15fbf9140cb0ef294c7a0aae`**. Se detuvo antes de la FASE 2C
+> r6, que lanza el coordinador con un detractor nuevo. Evidencia: `cloze/salida/ciclo_20261102/c1e/`. Estado: 6/11. Ni `32243d0a` ni
+> `e16842c1` tienen commit: `32243d0a` está copiado en `c1e/cloze_32243d0a.Rmd.txt`, y su verificador, en
+> `c1e/verificar_espacio_cloze_5df82457.R.txt`.
+
+#### Decisiones que rigen la tanda (literales; regla #24 H-5)
+
+- **Redacción del criterio:** «Reformular (Recomendada)», con la frase de abajo, literal, y sin cambiar nada más del `.Rmd`.
+- **Siguen en pie:** H2 de la r5, «Solo declararlo (Recomendada)», sin espacio duro tras «habría»; y la regla de parada de la r6: si la
+  r6 solo trae BAJAs de redacción de este párrafo, quedan como residuo declarado. Una CORRECCIÓN se corrige siempre.
+
+#### La frase
+
+- Antes: «Por eso, si el grado que perdió tiene un curso más o el que ganó tiene uno menos, basta comparar el promedio de ese grado con
+  la diferencia entre los totales: si el promedio es mayor, el ganador cambia; si es menor, no.»
+- Ahora: «Por eso, para saber si el grado que perdió habría ganado con un curso más, o si el que ganó habría perdido con uno menos,
+  basta comparar el promedio de cada uno con la diferencia entre los totales: si el promedio es mayor, sí; si es menor, no.»
+- Diff: `c1e/diff_rmd_32243d0a_c1e.patch`, con el script `c1e/editar_rmd_c1e.py` (patrón exigido una vez, y comprueba que las tres
+  cadenas del `cat()` dan la frase literal). Tres líneas de cadena cambian por tres. Las dos frases resueltas, el espacio duro final y
+  el `data_generation` no cambian.
+- Reglas #19 y #25, ortografía y literales U+00A0, U+2009, U+202F y U+2060: limpias, con control positivo en las sondas de `grep`
+  (`c1e/reglas_texto_c1e.txt`). Suites `test_letter_independence.R` y `test_glifos_latex.R`: exit 0 (`c1e/suite_*.txt`).
+
+#### Lecturas, medidas con la frase nueva (`c1e/lectura_criterio_c1e.R` → `.txt`, 21 s)
+
+Semillas 1 a 1000 (113 canónicas). La frase literal sale una vez por párrafo emitido en 1000 de 1000.
+
+**Alcance literal: las dos hipótesis que la frase nombra, HP y HG.**
+
+| Hipótesis | Criterio = veredicto calculado desde la tabla | Criterio = marca (`sol_p6`) | Empates |
+|---|---|---|---|
+| HP, el que perdió con un curso más | 1000 de 1000 | 1000 de 1000 | 0 |
+| HG, el que ganó con uno menos | 1000 de 1000 | 1000 de 1000 | 0 |
+
+Control positivo de esa sonda: con el promedio del otro grado, HP se aparta en 306 de 1000.
+
+**Ninguna afirmación de ventaja por cursos (BC) entra en el alcance.** Solo entraría si dijera lo mismo que HP o HG (`dif == 1`), y eso
+ocurre en 0 versiones, con 0 veredictos contrarios. Es un hecho del generador, y el script lo comprueba: rama CURSOS con *k* = 1, 111
+versiones, con la afirmación de ventaja BP en las 111 y HP y HG verdaderas en las 111. BP (505 versiones) cambia el promedio, no los
+cursos: la frase tampoco la nombra. Cifras de fuera, como registro:
+
+| BC fuera del alcance | Versiones | Si se le aplicara el criterio, da el contrario en |
+|---|---|---|
+| *k* = 1, en sentido inverso (rama PROMEDIO) | 222 | 183 |
+| *k* ≥ 2 | 273 | 238 |
+| Toda BC | 495 | 421 |
+
+Controles: las seis cifras de la C1c y la C1d se reproducen; y en las semillas 1 a 205, 102 BC y 80 con el veredicto contrario, las
+cifras de la r5.
+
+#### Otras lecturas de la frase nueva, medidas y no corregidas (van a la r6 y al profesor)
+
+No las pide la frase; las pidió el encargo. La frase es literal del profesor, así que no se tocó. La lectura buscada es verdadera en
+1000 de 1000.
+
+| Lectura | Medida (semillas 1 a 1000) | Qué la contiene |
+|---|---|---|
+| a. «de cada uno» cruzado: cada hipótesis con el promedio del otro grado | HP sale contraria en 306 y HG en 306 | Las frases resueltas citan el promedio de cada grado (H1-Sol, componente `cifra`, 0 de 100) |
+| b. «de cada uno» más «si el promedio» en singular: un solo veredicto para las dos preguntas | HP y HG tienen veredictos distintos en 306 de 1000 (son las mismas 306 de la lectura a: los dos promedios quedan a lados opuestos de la diferencia). Dos verdaderas: 344. Dos falsas: 350 | Las dos frases resueltas responden por separado, en 1000 de 1000 |
+| c. «sí» y «no» como respuesta a cada pregunta | Las cuatro celdas coinciden con la tabla, la marca y la frase resuelta: HP «sí» 476 de 476 (habría ganado) y «no» 524 de 524 (no le habría alcanzado para ganar); HG «sí» 518 de 518 (habría perdido) y «no» 482 de 482 (habría seguido ganando). En las dos preguntas, «sí» es que el ganador cambia | No hace falta contención: es verdadera |
+| d. «si el promedio es mayor» como «el de mayor promedio», comparando los dos promedios entre sí | HP sale contraria en 346 y HG en 348 | «con la diferencia entre los totales:» justo antes, y «más» o «menos» «que la diferencia de» en las dos frases resueltas |
+| e. «con un curso más» y «con uno menos» como comparación con el otro grado de la tabla | La tabla muestra al que perdió con un curso más en 460 de 1000 (todas de la rama PROMEDIO con *k* = 1); ahí el veredicto de la hipótesis es verdadero en HP 149 y en HG 292. Calculada para toda versión, «uno más que el otro» y «uno menos que el otro» dan HP 346 y HG 652, una lectura forzada que se deja como registro | El condicional «habría ganado con un curso más» no se lee como dato de la tabla, que era el problema de «tiene un curso más»; y las dos frases anteriores («Un curso más con el mismo promedio suma ese promedio al total») |
+| f. «la diferencia entre los totales» como la que queda después del cambio (D − promedio) | HP sale contraria en 479 y HG en 481 | Las dos frases resueltas citan la diferencia de la tabla, dos veces por versión, en 1000 de 1000 |
+
+Sin medición posible: «con uno menos» leído con otro referente que «curso». La frase lo apoya en el paralelo con «con un curso más».
+Por la regla de parada, si la r6 clasifica estas lecturas como BAJA de redacción, quedan como residuo declarado.
+
+#### Invariancia (`c1e/invariancia_c1e.R` → `.txt`, 129 s; derivado por script de `invariancia_c1d.R`)
+
+- Deshacer la frase en el `.Rmd` nuevo da `32243d0a` byte a byte, así que el `data_generation`, la Question y la metainformación son
+  idénticos.
+- Semillas 1 a 1000 (113 canónicas, 0 errores): `.Random.seed` final, 0 diferencias; todos los objetos, incluidos los ocultos, 0
+  diferencias; ningún objeto nuevo.
+- E1: la Parte 1 = SCHOICE `63e2713e`, 0 diferencias.
+- Solution emitida idéntica salvo la frase, y el resto del párrafo idéntico byte a byte, en 1000 de 1000. Control: cada frase aparece
+  solo en su versión, 0 fallos.
+- Texto emitido por R/exams (`xexams`, después de `exshuffle`), semillas 1 a 100: enunciado, `questionlist`, `solutionlist`,
+  metainformación salvo `file`, y `solution` salvo la frase: 0 diferencias. Con eso, el enunciado, las opciones, las marcas y el
+  feedback de las seis partes salen iguales.
+- Salida real de los cuatro formatos (`c1e/formatos_parrafo_c1e.txt`): la frase, una vez por versión en HTML, PDF, DOCX y Moodle, y la
+  de `32243d0a`, 0.
+
+#### Verificador (`1cbc770f…`; `c1e/verificar_espacio_cloze_c1e.txt`, 484 s)
+
+**Exit 4: EN ROJO BAJO OVERRIDE FIRMADO, 368 cifras dentro de lo firmado, 0 fallos y 0 pendientes.** Frente a la C1d, las 368 líneas
+firmadas son idénticas una a una, y de las 1448 líneas solo cambian 4: la cabecera con el md5, la descripción de MC56, el resultado y
+la de cierre (`c1e/comparar_c1d_c1e.py` → `.txt`). Las dos líneas «PENDIENTE DE FIRMA» de la salida son las de MC17 y MC37, mutantes
+que deben abrir un pendiente.
+
+- **Solo cambian los literales que dependen de la frase** (`c1e/editar_verificador_c1e.py`; `c1e/diff_verificador_5df82457_c1e.patch`):
+  `P6_CRITERIO`, `P6_NUEVO` (MC51, leído del `.Rmd`, no transcrito), `P6_CRIT_VIEJO` y el patrón de MC56, y el ancla de MC57. Ninguna
+  sonda, ningún umbral ni ninguna firma.
+- Los 58 mutantes salen con el mismo veredicto que en la C1d, con la misma cifra: 54 `cazado_por_su_sonda`, 3 `cazado_por_su_sonda_y_otra`
+  (MC39, MC50 y MC54) y 1 `cazado_por_su_sonda_y_otra_y_control` (MC51). MC30 sigue retirado.
+- **MC56** vuelve a la frase de `32243d0a`: falta +100, control a 0, y H1-Sol no se mueve. **MC57**: cifra +100, control en 100, H1-Sol
+  no se mueve. **MC55**: marca +100, control en 200.
+- **Las sondas no chocan con la frase nueva.** Lleva «con un curso más,» en minúscula: `crit_p6()` corta el tramo general en «Con un
+  curso más, el grado», con mayúscula. Lleva «habría ganado» y «habría perdido» en el tramo general: `h1_p6()` solo mira las cláusulas
+  con dos cifras (`RE_CMP`), así que esas conclusiones no cuentan. Crit-P6, control exacto 100; H1-Sol, control exacto 200.
+- Prueba rápida antes de la corrida completa: `c1e/prueba_c1e.R` → `.txt`, 0 fallos, y frente a la C1d solo cambian dos líneas.
+
+#### Sellos, uno por uno y en orden
+
+Cada `complete` en su propia llamada, después de comprobar su artefacto:
+
+| Paso | Hora | Artefacto comprobado antes de sellar |
+|---|---|---|
+| 3 `generacion_rmd` | 19:44:54,163 | md5 del `.Rmd` y del verificador, invariancia (exit 0), verificador (exit 4, 484 s), comparación (0 diferencias) |
+| 4 `retroalimentacion` | 19:45:08,327 | La frase en los cuatro formatos (HTML 5, PDF 5, DOCX 1, Moodle 5 en un archivo de 5 versiones), Crit-P6, H1-Sol, reglas #19 y #25, ortografía, lecturas, suites |
+| 5 `renderizado_4_formatos` | 19:45:17,256 | `render_e16842c1/render.log`: PDF 5, HTML 5 (0 `##ANSWER`), DOCX 1, Moodle n = 5 (15 gaps de elección, 0 con imagen); NOPS N/A por `cloze exercises`; `.tex` 6, 0 usos de `pandocbounded`, `LTcaptype{none}` 2 con la guarda. PDF: las 5 páginas de la vista previa leídas una a una, dentro del margen |
+| 6 `arsenal_post_render` | 19:45:31,757 | Informe del hook `20261103-193955-465618` (copia en `c1e/informe_hook_e16842c1.txt`), con el md5 en `ORIGEN.txt`: 0 errores, las 6 advertencias heurísticas de siempre, 2G 100/100, 2H 10 semillas y 0 anomalías; 2I, 2J, 2K, 2L, 2N y 2O en verde |
+
+Los artefactos son anteriores a los sellos: render y hook 19:39:55, invariancia 19:40:45, verificador 19:44:12. El sello 3 se dejó para
+después del verificador, para que una cifra firmada movida no dejara un paso sellado. La 6b no sella ningún paso.
+
+#### 6b pareada de la tanda C1e (`auditor-visual-html`, sin `name:`): APTO_CON_OBSERVACIONES
+
+N = 100 semillas por versión (`e16842c1` frente a `32243d0a`), a 360 y 320 px: 400 páginas por CDP, con `innerWidth` comprobado, 0 errores.
+Instrumento `cloze/salida/fase2c_r5/6b/cap7_r5.py`, sin modificar (md5 `fff70a89…`). Perfil de Chromium fuera del repo (`~/.cache/c1e_6b/`).
+Informe: `c1e/6b_c1e/informe_6b_c1e_e16842c1.md`, con `metricas.json`, `contar_h2_c1e.txt`, `contar_cortes_frase_c1e.txt` y 10 recortes
+leídos a resolución completa (8 del NUEVO, con las cuatro conclusiones, y 2 de la REFERENCIA).
+
+| Párrafo «Parte 6.» | NUEVO 360 | REF 360 | NUEVO 320 | REF 320 |
+|---|---|---|---|---|
+| Último renglón con una sola palabra | 0/100 | 0/100 | 0/100 | 0/100 |
+| Último renglón con una sola unidad | 40/100 | 19/100 | 79/100 | 54/100 |
+| Renglones (media) | 16,40 | 15,62 | 19,28 | 18,59 |
+| Cortes entre cifra y «kilos» · desborde · palabras partidas | 0/400 · 0 · 0 | 0/400 · 0 · 0 | 0/400 · 0 · 0 | 0/400 · 0 · 0 |
+
+- La Parte 1 sale idéntica en las dos versiones, con 0 cortes en todas las métricas de L-6 (fórmula con la unidad dentro 0/1158; signo
+  0/100; espacio inicial 0/1005; cifra-unidad 0/2003, tabla 0/400; El/La 0/475, tabla 0/24). Las Partes 2 a 6 conservan el residuo
+  heredado, igual en las dos: 263/1249 a 360 px y 209/1249 a 320 px.
+- Desbordes, tablas fuera de su caja, fórmulas partidas y fugas de markup: 0. Altura: +1404 px en 100 páginas a 360 px (+0,17 %) y
+  +1242 px a 320 px (+0,13 %). El párrafo gana 0,78 y 0,69 renglones.
+- La frase literal aparece en la unión de los renglones en 100 de 100 en los dos anchos, y 0 en la REFERENCIA. Cortes «con un ⏎ curso»,
+  «de cada ⏎ uno», «mayor, ⏎ sí;» y «menor, ⏎ no.»: 0 en los dos anchos.
+- **Control positivo:** la REFERENCIA reproduce exactamente las cifras de la C1d, en los dos anchos, línea a línea.
+- **Comprobado por el orquestador** (`c1e/6b_c1e/control_6b_orquestador.py` → `.txt`): con código propio, sin `contar_h2.py` ni `agg.py`,
+  las frecuencias de H2 y las métricas del párrafo salen iguales. Leyó además dos recortes.
+- BAJO: el último renglón con una sola unidad sube de 19 a 40 de 100 a 360 px y de 54 a 79 de 100 a 320 px. Son finales de dos palabras
+  unidas por el espacio duro («habría perdido.»), no huérfanos: una sola palabra, 0/100.
+
+#### Residuo de H2, con las cifras del md5 final (`c1e/6b_c1e/contar_h2_c1e.txt` y `contar_cortes_frase_c1e.txt`, N = 100)
+
+Sustituye a las cifras de `32243d0a`. **No es un bloqueo:** no viola ninguna ley, y por la decisión del profesor sobre H2 se declara, sin
+espacio duro.
+
+| Corte | `e16842c1` 360 px | `e16842c1` 320 px | `32243d0a` 360 px | `32243d0a` 320 px |
+|---|---|---|---|---|
+| «habría ⏎ ganado.» | 0/57 | **0/57** | 0/57 | 57/57 |
+| «habría ⏎ seguido ganando.» | **32/51** | **33/51** | 19/51 | 43/51 |
+| Páginas con alguno de los dos | **32/100** | **33/100** | 19/100 | 84/100 |
+| «no le ⏎ habría alcanzado» | 0/43 | **0/43** | 0/43 | 43/43 |
+| «habría ⏎ sumado» | 0/100 | **0/100** | 0/100 | 100/100 |
+| «habría ⏎ ganado con» (solo en la frase nueva) | **100/100** | 0/100 | no existe | no existe |
+| «habría ⏎ perdido con» (solo en la frase nueva) | 0/100 | 0/100 | no existe | no existe |
+
+- A 320 px mejora y a 360 px empeora. Otra vez es coincidencia de longitud: el corte se desplaza con cada redacción.
+- La frase nueva añade dos «habría» más al párrafo. `contar_h2.py` cuenta frases fijas, así que no las ve: las cuenta
+  `contar_cortes_frase_c1e.py`. «habría ⏎ ganado con» sale en todas las páginas a 360 px porque el tramo general no depende de la semilla.
+
+#### Qué debe auditar la FASE 2C r6 (detractor nuevo, sin `name:`)
+
+- La frase nueva y sus lecturas (regla #13 v1.1): el alcance, «de cada uno», «sí» y «no», «si el promedio es mayor», «con un curso más» y
+  «la diferencia entre los totales», con las medidas de arriba; si queda otra lectura razonable fuera de esa tabla; y si la frase, leída
+  con las dos anteriores del párrafo y las dos resueltas, sigue siendo verdadera en las 1000.
+- El alcance: las dos hipótesis, la definición de «dentro» (`dif == 1`), los 0 y 0, y HP y HG en 1000 de 1000.
+- La sonda Crit-P6: que lea el texto crudo emitido, cómo define el tramo general y su control exacto, ahora con «con un curso más,» en
+  minúscula dentro del tramo; y que H1-Sol no cuente las conclusiones nuevas del tramo general.
+- MC55, MC56 y MC57: que MC56 vuelva a la frase de `32243d0a` y que ni él ni MC57 muevan H1-Sol; y que caiga solo `marca` en MC55.
+- La convención de `mut_h1()` y los cuatro esperados declarados.
+- La invariancia (1000 semillas y 100 emitidas), y la 6b con su control positivo, `contar_h2.py` y `contar_cortes_frase_c1e.py`.
+- Los sellos: el orden, las horas y que cada artefacto sea anterior a su sello.
+- Siguen de antes: L-8 sin cablear en el verificador del SCHOICE, y F-3 declarado a +25,5 pp. H3 de la r4 (el oráculo r10 del paso 8)
+  va en la C2, con los diez puntos de la r5 y con el criterio literal de esta tanda, que ya no es el de la C1d.
+
+#### ¿Ley local o regla?
+
+- **Local, candidata (L-C10, que viene de la C1b y se amplió en la C1c y la C1d; endurece y la firma el profesor):** el criterio general
+  literal pasa a ser el de esta tanda, y Crit-P6 lo lleva cableado. Guardas: el `stopifnot` «H1 r4» (MC52), H1-Sol (MC50, MC51, MC53, MC54
+  y MC55) y Crit-P6 (MC56 y MC57).
+- **Del repo, candidatas que vienen de la C1c, sin cambios (tocan `.claude/`, regla #17; las decide el profesor):** en una sonda de
+  varias componentes, cada componente necesita un mutante que la mueva sola; y que `workflow-state.sh complete` avise de un sello fuera
+  de orden.
+- **Del repo, candidata menor nueva:** `orquestador-cloze.md` escribe `Rscript tests/run_one_suite.R <suite>`, y el script recibe la ruta
+  del archivo de test. Con el nombre de la suite falla con `path does not exist`.
+- **Nota de medición, sin ley:** un contador de cortes por frases fijas no ve la misma palabra en una frase nueva. Al cambiar una
+  redacción se revisa el inventario de cortes, no solo sus cifras.
+
+**Verificación del coordinador de la tanda C1e del CLOZE (2026-11-03, sesión `358ab328`)**, independiente de sus scripts
+(`cloze/salida/ciclo_20261102/coordinador/`):
+- `verificar_espacio_cloze.R` (`1cbc770f…`), repetido: exit 4, con las mismas líneas que
+  `cloze/salida/ciclo_20261102/c1e/verificar_espacio_cloze_c1e.txt`, salvo su línea de cierre. Hay 368 cifras dentro de lo firmado, 0
+  fallos y 0 pendientes.
+- Invariancia con un script propio (`invariancia_cloze_coordinador_c1e.R`):
+  - Frente a `27f789dc`, semillas 1 a 1000: E1, el `.Random.seed` final y los 180 objetos comunes, idénticos en las 1000. Los únicos
+    objetos nuevos siguen siendo `hp_supera` y `hg_supera`, que coinciden con `v_hp` y `v_hg`.
+  - Frente a `27f789dc`, texto emitido, semillas 1 a 100: todo idéntico fuera del párrafo; dentro, cifras y grados iguales a los del
+    párrafo viejo; 200 de 200 comparaciones verdaderas y 200 de 200 conclusiones que se siguen de ellas.
+  - Frente a `32243d0a`: el `data_generation` es idéntico byte a byte. La frase nueva sale una vez por versión, y al deshacerla la
+    Solution es igual byte a byte en 100 de 100.
+- El diff frente a la copia de `32243d0a` son las tres líneas de cadena de la frase, sin literales U+00A0, U+2009, U+202F ni U+2060.
+- Sellos: en orden, cada uno en su llamada (19:44:54, 19:45:08, 19:45:17 y 19:45:31), después de sus artefactos.

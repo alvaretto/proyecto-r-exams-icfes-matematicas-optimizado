@@ -1,0 +1,30 @@
+Pre-flight de la tanda C1d (2026-11-03, 19:02:48)
+OK   1 .claude/CLAUDE.md índice ICFES
+OK   2 workflow-state.sh help + --tipo cloze
+OK   3 hook pre-write-rmd-gate ejecutable y bash -n
+OK   3 hook post-exams2-validation ejecutable y bash -n
+4 exams 2.4.2
+OK   5 ruta_destino bajo 01-En-PreDesarrollo
+OK   6-16,25 existe .claude/rules/codigo-rmd.md
+OK   6-16,25 existe .claude/rules/markdown-imagenes-pdf.md
+OK   6-16,25 existe tests/testthat/test_pandocbounded_y_solution_coherence.R
+OK   6-16,25 existe .claude/rules/solution-letter-independence.md
+OK   6-16,25 existe tests/testthat/test_letter_independence.R
+OK   6-16,25 existe .claude/rules/markdown-tablas-pandoc.md
+OK   6-16,25 existe .claude/skills/generar-cloze/SKILL.md
+OK   6-16,25 existe .claude/rules/graficos-como-opciones.md
+OK   6-16,25 existe .claude/rules/diversidad-sustantiva.md
+OK   6-16,25 existe .claude/scripts/validar_diversidad_sustantiva.R
+OK   6-16,25 existe .claude/scripts/validar_diagnosticidad.R
+OK   12 FASE 2J en el hook
+OK   12 FASE 2K en el hook
+OK   12 FASE 2L en el hook
+OK   12 FASE 2N en el hook
+OK   12 FASE 2O en el hook
+OK   14 CLOZE canónicos por metadato: 36
+OK   19 snippets F6 cascada
+20 set.seed en el .Rmd: 0 · reloj: 0
+OK   23 padre es ejercicio
+23 leídos: A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/.claude/CLAUDE.md (CLOZE hermano, F-1 a F-4, L-C1 a L-C8, tanda C1c, su verificación del coordinador y la decisión del profesor sobre la lectura residual), A-Produccion/01-En-PreDesarrollo/totales-promedios-reciclaje-n3/cloze/HANDOFF.md (desde la C1c), c1c/lectura_criterio_c1c.R y .txt; .claude/ del destino: no existe (convención del CLOZE hermano)
+OK   entrada legible
+Partida: .Rmd ef2c96dc1c2b667fa904ea231329b4dc · verificador 04349f26559ac32cc7f8f0a439c470b6 · HEAD 5a87fa72
