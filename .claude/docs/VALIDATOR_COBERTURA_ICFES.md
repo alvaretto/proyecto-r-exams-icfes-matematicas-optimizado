@@ -25,7 +25,7 @@ El agente `validator` del Context Engineering global tiene la función de "crear
 La lista vive en `tests/run_all_tests.R`; la columna «Qué valida» copia su campo `nombre`.
 
 <!-- SUITES:INICIO — generado por tests/sincronizar_doc_suites.R; no editar a mano -->
-Cifras (derivadas del runner): 47 suites, 458 bloques `test_that` y 8 suites sin `watch`.
+Cifras (derivadas del runner): 48 suites, 468 bloques `test_that` y 8 suites sin `watch`.
 
 | # | Archivo | Qué valida |
 |---|---------|-----------|
@@ -70,14 +70,15 @@ Cifras (derivadas del runner): 47 suites, 458 bloques `test_that` y 8 suites sin
 | 39 | `test_workflow_state_flujo_b.R` | workflow-state: flujo\_b no se sella con la sola decision (regla #16) |
 | 40 | `test_workflow_state_reopen.R` | workflow-state: reopen des-sella desde un paso y registra el motivo (regla #16) |
 | 41 | `test_workflow_state_status_sello.R` | workflow-state: status avisa de la firma del auto-sello del hook v6.2 (pasos 5 y 6 sin nota) |
-| 42 | `test_presupuesto_contexto_reglas.R` | Presupuesto de contexto de .claude/rules/ (compactas + texto integro) |
-| 43 | `test_barras_campeonato_clave.R` | barras-campeonato-baloncesto-n3: clave y figuras leidas del dibujo (+7 mutantes) y cotejo con la ficha MAT-2026-1-015 |
-| 44 | `test_barras_campeonato_cloze.R` | barras-campeonato-baloncesto-n3 CLOZE: 6 claves leidas del dibujo y del texto (+5 mutantes, Semilleros) |
-| 45 | `test_post_exams2_informe.R` | Hook post-render: el informe llega al modelo en JSON, avisa si no halla el .Rmd y 2I-2L con ruta relativa (v6.2) |
-| 46 | `test_post_exams2_cwd.R` | Hook post-render v6.3: el ejercicio sale del .Rmd y no del cwd; no escribe en el repo ni sella (8 casos + mutantes) |
-| 47 | `test_doc_suites_sincronizada.R` | Documento de cobertura sincronizado: tabla de suites generada desde el runner, fases y version del hook |
+| 42 | `test_workflow_state_orden.R` | workflow-state: complete avisa del sello fuera de orden (regla #16) |
+| 43 | `test_presupuesto_contexto_reglas.R` | Presupuesto de contexto de .claude/rules/ (compactas + texto integro) |
+| 44 | `test_barras_campeonato_clave.R` | barras-campeonato-baloncesto-n3: clave y figuras leidas del dibujo (+7 mutantes) y cotejo con la ficha MAT-2026-1-015 |
+| 45 | `test_barras_campeonato_cloze.R` | barras-campeonato-baloncesto-n3 CLOZE: 6 claves leidas del dibujo y del texto (+5 mutantes, Semilleros) |
+| 46 | `test_post_exams2_informe.R` | Hook post-render: el informe llega al modelo en JSON, avisa si no halla el .Rmd y 2I-2L con ruta relativa (v6.2) |
+| 47 | `test_post_exams2_cwd.R` | Hook post-render v6.3: el ejercicio sale del .Rmd y no del cwd; no escribe en el repo ni sella (8 casos + mutantes) |
+| 48 | `test_doc_suites_sincronizada.R` | Documento de cobertura sincronizado: tabla de suites generada desde el runner, fases y version del hook |
 
-En modo rápido (`R_TESTS_QUICK=1`, el del pre-push) corren siempre las 8 suites sin `watch` (1, 2, 5, 7, 9, 10, 13 y 42). Las otras 39 corren solo si cambió algún archivo que vigilan.
+En modo rápido (`R_TESTS_QUICK=1`, el del pre-push) corren siempre las 8 suites sin `watch` (1, 2, 5, 7, 9, 10, 13 y 43). Las otras 40 corren solo si cambió algún archivo que vigilan.
 <!-- SUITES:FIN -->
 
 ---

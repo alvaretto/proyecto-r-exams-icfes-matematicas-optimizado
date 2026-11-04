@@ -374,6 +374,12 @@ suites <- list(
     watch = c("workflow-state", "post-exams2-validation", "test_workflow_state_status_sello")
   ),
   list(
+    nombre = "workflow-state: complete avisa del sello fuera de orden (regla #16)",
+    archivo = "tests/testthat/test_workflow_state_orden.R",
+    critico = TRUE,
+    watch = c("workflow-state", "test_workflow_state_orden")
+  ),
+  list(
     nombre = "Presupuesto de contexto de .claude/rules/ (compactas + texto integro)",
     archivo = "tests/testthat/test_presupuesto_contexto_reglas.R",
     critico = TRUE

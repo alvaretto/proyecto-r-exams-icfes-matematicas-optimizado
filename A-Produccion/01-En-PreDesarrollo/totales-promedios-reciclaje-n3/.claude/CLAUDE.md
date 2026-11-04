@@ -3239,3 +3239,7 @@ de cada uno con la diferencia entre los totales: si el promedio es mayor, sí; s
 3. Un mutante medido sobre una muestra distinta de la firmada necesita su línea base en esa misma muestra.
 4. `workflow-state.sh complete` debería avisar de un sello fuera de orden.
 5. `orquestador-cloze.md` escribe `tests/run_one_suite.R <suite>`, y el script recibe la ruta del test.
+
+**Las cinco quedaron resueltas el 2026-11-03** por orden del profesor («Resuelve. Documenta. Commit. Push»), en la
+v3.38.0 del índice del repo. Detalle: `.claude/docs/CHANGELOG_CLAUDE_MD.md`. El reporte de la r6 ya se puede comprobar
+con `verificar_citas_detractor.py <reporte> --commit 0a26d4fd`.

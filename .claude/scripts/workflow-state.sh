@@ -252,13 +252,14 @@ while i < len(args):
 print(json.dumps(pairs))
 " "${extras[@]+"${extras[@]}"}")
 
-    python3 - "$sf" "$paso" "$ts" "$extras_json" <<'PYEOF'
+    python3 - "$sf" "$paso" "$ts" "$extras_json" "${PASOS_ORDEN[@]}" <<'PYEOF'
 import json, sys
 
 sf         = sys.argv[1]
 paso       = sys.argv[2]
 ts         = sys.argv[3]
 extras_raw = sys.argv[4]
+ORDEN      = sys.argv[5:]  # orden canónico del workflow (PASOS_ORDEN)
 
 extras = json.loads(extras_raw)  # lista de pares [key, val_str]
 LENGUAJES = ("tikz", "python", "r")
@@ -323,6 +324,15 @@ for key, val in parsed:
     info[key] = val
 
 guardar()
+
+# Aviso de orden (2026-11-03): `complete` llegó a aceptar en silencio los pasos 5
+# y 6 con el 4 pendiente. Se avisa en stderr, con los pendientes en el orden del workflow, pero
+# el sello se registra igual y el exit sigue en 0: solo informa (regla #16).
+if paso in ORDEN:
+    pendientes = [p for p in ORDEN[:ORDEN.index(paso)]
+                  if state["pasos"].get(p, {}).get("completado") is not True]
+    if pendientes:
+        print(f"⚠ Sello fuera de orden: '{paso}' se selló con pasos anteriores pendientes: {', '.join(pendientes)}. Regla #16: en orden y cada uno tras su artefacto.", file=sys.stderr)
 
 print(f"✅ Paso '{paso}' marcado como completado.")
 PYEOF
@@ -732,6 +742,8 @@ COMANDOS:
   complete <dir> <paso> [--key value ...]
       Marca un paso como completado con timestamp automático.
       Se pueden agregar datos extra con --key value.
+      Avisa (⚠, por stderr) cuando se sella un paso con pasos anteriores pendientes (regla #16):
+      solo informa, el sello se registra igual y el exit sigue en 0.
       Ejemplo: workflow-state.sh complete ./mi-ejercicio flujo_b --requerido false
       Ejemplo: workflow-state.sh complete ./mi-ejercicio validar_diversidad --versiones_unicas 287
 

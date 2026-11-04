@@ -405,3 +405,26 @@ test_that("verificar_lanzamiento_asincrono() caza cada defensa revertida", {
       info = paste0("El mutante de `", k, "` rompió otras defensas: no aísla lo que prueba"))
   }
 })
+
+
+# =============================================================================
+# Contrato de mutación y sintaxis de run_one_suite.R (2026-11-03)
+# =============================================================================
+# Origen: el ciclo del CLOZE de totales-promedios-reciclaje-n3. Tres mutantes salían
+# `cazado_por_su_sonda` con dos componentes caídas, uno comparaba cifras de muestras distintas, y
+# los dos orquestadores documentaban `run_one_suite.R <suite>`, cuando el script recibe la ruta.
+test_that("los dos orquestadores llevan las obligaciones 7 y 8, las citas contra el commit y la sintaxis correcta", {
+  defensas <- c(
+    "Cada componente de una sonda tiene un mutante que la mueve sola",
+    "Un mutante medido en otra muestra lleva su línea base en esa muestra",
+    "cazado_por_su_sonda | cazado_por_su_sonda_y_otra | cazado_por_otra",
+    "--commit <sha>",
+    "tests/run_one_suite.R tests/testthat/<suite>.R"
+  )
+  for (f in c("orquestador-schoice.md", "orquestador-cloze.md")) {
+    t <- gsub("\\s+", " ", paste(readLines(file.path(AGENTS_DIR, f), encoding = "UTF-8"), collapse = "\n"))
+    for (d in defensas) expect_true(grepl(d, t, fixed = TRUE), info = paste0(f, ": falta «", d, "»"))
+    expect_false(grepl("tests/run_one_suite.R <suite>", t, fixed = TRUE),
+      info = paste0(f, ": run_one_suite.R recibe la ruta del test, no su nombre"))
+  }
+})

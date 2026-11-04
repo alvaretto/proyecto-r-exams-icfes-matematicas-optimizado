@@ -8,10 +8,12 @@
 
 **Reabrir un ejercicio sellado** (2026-10-22): `reopen` des-sella `--desde` y los pasos posteriores que estuvieran completados, y deja en `reaperturas` el motivo, el reporte y lo que tenían; el motivo es obligatorio y no se reabre `analisis_icfes` ni `flujo_b` (eso es rehacer el ejercicio). Nunca des-sellar editando el JSON. Test: `test_workflow_state_reopen.R`.
 
+**Sello fuera de orden** (2026-11-03): `complete` avisa por stderr si quedan pasos anteriores pendientes. Solo avisa: el sello se registra y el exit sigue en 0. Test: `test_workflow_state_orden.R`.
+
 **11 pasos:** 1 `analisis_icfes` · 2 `flujo_b` · 3 `generacion_rmd` · 4 `retroalimentacion` · 5 `renderizado_4_formatos` · 6 `arsenal_post_render` · 7 `detractor_fase2c` · 8 `coherencias_5` · 9 `validar_diversidad` · 10 `validar_icfes` · 11 `aprobacion_usuario`. Los 4-11 no tienen gate mecánico pero son obligatorios; se sellan sólo al ejecutarse (auditar por artefacto, no por flag).
 
 **`flujo_b.requerido = null`:** PREGUNTAR al usuario si requiere gráficos; nunca asumirlo.
 
 **Sellado del Flujo B:** `--requerido true` sólo registra la decisión (paso pendiente, gate cerrado); se sella con `complete <dir> flujo_b --lenguaje tikz|python|r` tras la elección del usuario. Nunca editar `completado` a mano. Test: `test_workflow_state_flujo_b.R`.
 
-**Versión**: 1.2 (2026-10-22: `reopen`) · compacta desde 2026-09-29.
+**Versión**: 1.3 (2026-11-03: aviso de sello fuera de orden) · compacta desde 2026-09-29.

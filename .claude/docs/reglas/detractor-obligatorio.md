@@ -696,7 +696,7 @@ Con el detractor obligatorio:
 
 ---
 
-**Versión**: 1.7
+**Versión**: 1.8
 **Fecha**: 2026-11-02
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: NINGUNA
@@ -704,6 +704,23 @@ Con el detractor obligatorio:
 **Agente asociado**: `.claude/agents/agente-detractor.md`
 **Detractor heterogéneo**: `.claude/scripts/detractor-hetero.sh` · `/detractor-hetero`
 **Verificador de citas**: `.claude/scripts/verificar_citas_detractor.py` (hook `SubagentStop` en `.claude/settings.json`)
+
+### Cambios v1.8 (2026-11-03) — las citas se pueden anclar al commit auditado
+
+Una cita `AUSENTE` («ese texto no está en el archivo») deja de ser cierta justo cuando se atiende el
+hallazgo, y una cita con número de línea se mueve si el archivo se amplía. Lo destapó la FASE 2C r6 del
+CLOZE de `totales-promedios-reciclaje-n3`: la entrega dio exit 0 (hook «ENTREGA VERIFICADA» y repetición
+del coordinador); después, el coordinador escribió en el registro la fila que H1 señalaba, y al sellar
+el paso 7 el árbol vigente dio exit 1. El script no podía decir «esto era cierto en lo que se auditó», y
+el sello necesitó la firma del profesor.
+
+- `verificar_citas_detractor.py reporte.md --commit <sha>` lee los archivos citados de ese commit. Los
+  que están fuera del repo se leen del disco, con un aviso.
+- **Cuándo se usa:** para comprobar un reporte después de atender sus hallazgos, con el commit que el
+  detractor auditó. Antes de actuar sobre un reporte, la comprobación sigue siendo contra el árbol de ese
+  momento.
+- **No relaja nada:** una cita falsa en el commit auditado sigue fallando, y el control positivo de
+  `test_citas_detractor.R` comprueba que `AUSENTE` sigue disparando.
 
 ### Cambios v1.7 (2026-11-02) — el lanzamiento sin `name:` es asíncrono
 

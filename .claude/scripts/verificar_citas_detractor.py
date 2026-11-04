@@ -23,8 +23,13 @@ Reglas que se comprueban:
   - Si el reporte tiene hallazgos, el bloque es obligatorio. Sin hallazgos: «NINGUNA».
 
 Uso:
-  verificar_citas_detractor.py reporte.md [--repo RAIZ]   # exit 0 si todo verifica, 1 si no
+  verificar_citas_detractor.py reporte.md [--repo RAIZ] [--commit SHA]  # exit 0 si verifica, 1 si no
   verificar_citas_detractor.py --hook                     # hook SubagentStop (JSON por stdin)
+
+Con --commit las citas se contrastan con los archivos de ESE commit (git show) y no con el árbol
+de trabajo: si el hallazgo ya se atendió, el texto citado puede no estar en el archivo actual y
+la cita sigue siendo cierta sobre la versión auditada. Sirve para re-verificar un reporte viejo
+sin que los arreglos posteriores lo hagan fallar.
 
 En modo --hook: si el último mensaje del subagente trae VEREDICTO_DETRACTOR y alguna cita no
 verifica, responde {"decision": "block", "reason": …}: el subagente NO termina y recibe la
@@ -90,8 +95,27 @@ def resolver(ruta, repo):
     return repo / p
 
 
-def verificar(reporte, repo):
-    """Devuelve (fallos, avisos, n_citas). fallos y avisos son listas de textos."""
+def ruta_en_repo(archivo, repo):
+    """Devuelve archivo relativo a repo, o None si queda fuera.
+
+    Prueba primero con las rutas tal cual y luego con las resueltas (.resolve()),
+    porque el repo puede estar detrás de un symlink y la cita usar la ruta real.
+    """
+    for a, r in ((archivo, repo), (archivo.resolve(), repo.resolve())):
+        try:
+            return a.relative_to(r)
+        except ValueError:
+            continue
+    return None
+
+
+def verificar(reporte, repo, commit=None):
+    """Devuelve (fallos, avisos, n_citas). fallos y avisos son listas de textos.
+
+    Con commit, cada archivo citado dentro de repo se lee de ese commit (git show)
+    y no del disco; si git show falla, la cita falla. Un archivo citado fuera de
+    repo se lee del disco, como siempre, con un aviso. Sin commit, nada cambia.
+    """
     fallos, avisos = [], []
     ids_hallazgos = set(FILA_TABLA.findall(reporte)) | set(ETIQUETA.findall(reporte))
     ids_hallazgos.discard('ID')
@@ -127,16 +151,46 @@ def verificar(reporte, repo):
         mr = re.match(r'^(.*?)(?::(\d+)(?:-(\d+))?)?$', ubic)
         ruta, ini, fin = mr.group(1), mr.group(2), mr.group(3)
         archivo = resolver(ruta, repo)
-        if not archivo.is_file():
-            fallos.append(f'{etiqueta}: el archivo no existe ({archivo})')
-            continue
-        if archivo not in cache:
-            try:
-                cache[archivo] = archivo.read_text(encoding='utf-8', errors='replace').splitlines()
-            except Exception as e:
-                fallos.append(f'{etiqueta}: no se pudo leer ({e})')
+        if commit is None:
+            if not archivo.is_file():
+                fallos.append(f'{etiqueta}: el archivo no existe ({archivo})')
                 continue
-        texto = cache[archivo]
+            if archivo not in cache:
+                try:
+                    cache[archivo] = archivo.read_text(encoding='utf-8', errors='replace').splitlines()
+                except Exception as e:
+                    fallos.append(f'{etiqueta}: no se pudo leer ({e})')
+                    continue
+            texto = cache[archivo]
+        else:
+            rel = ruta_en_repo(archivo, repo)
+            if rel is None:
+                # Fuera del repo no hay ruta relativa para git show: se lee del disco, como hoy.
+                if not archivo.is_file():
+                    fallos.append(f'{etiqueta}: el archivo no existe ({archivo})')
+                    continue
+                avisos.append(f'{etiqueta}: fuera del repo, se leyó del disco y no del commit')
+                if archivo not in cache:
+                    try:
+                        cache[archivo] = archivo.read_text(encoding='utf-8', errors='replace').splitlines()
+                    except Exception as e:
+                        fallos.append(f'{etiqueta}: no se pudo leer ({e})')
+                        continue
+                texto = cache[archivo]
+            else:
+                clave = (commit, str(rel))
+                if clave not in cache:
+                    try:
+                        r = subprocess.run(['git', '-C', str(repo), 'show', f'{commit}:{rel}'],
+                                           capture_output=True, timeout=10)
+                    except Exception as e:
+                        fallos.append(f'{etiqueta}: no se pudo leer ({e})')
+                        continue
+                    if r.returncode != 0:
+                        fallos.append(f'{etiqueta}: el archivo no existe en el commit {commit[:8]}')
+                        continue
+                    cache[clave] = r.stdout.decode('utf-8', errors='replace').splitlines()
+                texto = cache[clave]
         ausente = re.match(r'^AUSENTE:\s*(.+)$', frag, re.I)
         if ausente:
             buscado = normalizar(limpiar_fragmento(ausente.group(1)))
@@ -301,13 +355,30 @@ def main():
     repo = raiz_repo(os.getcwd())
     if '--repo' in args:
         repo = pathlib.Path(args[args.index('--repo') + 1])
+    commit = None
+    if '--commit' in args:
+        i = args.index('--commit')
+        if i + 1 >= len(args):
+            print('ERROR: --commit necesita un valor (sha del commit auditado)')
+            return 2
+        commit = args[i + 1]
+        try:
+            r = subprocess.run(['git', '-C', str(repo), 'rev-parse', '--verify', '--quiet',
+                                f'{commit}^{{commit}}'], capture_output=True, timeout=10)
+        except Exception:
+            r = None
+        if r is None or r.returncode != 0:
+            print(f'ERROR: commit desconocido: {commit}')
+            return 2
     reporte = sys.stdin.read() if args[0] == '-' else pathlib.Path(args[0]).read_text(encoding='utf-8')
-    fallos, avisos, n = verificar(reporte, repo)
+    fallos, avisos, n = verificar(reporte, repo, commit)
     for a in avisos:
         print('AVISO ' + a)
     for f in fallos:
         print('FALLA ' + f)
-    print(f'CITAS {"OK" if not fallos else "FALLA"}: {n} cita(s), {len(fallos)} problema(s), {len(avisos)} aviso(s)')
+    extra = f' (contra el commit {commit[:8]})' if commit else ''
+    print(f'CITAS {"OK" if not fallos else "FALLA"}: {n} cita(s), {len(fallos)} problema(s), '
+          f'{len(avisos)} aviso(s){extra}')
     return 1 if fallos else 0
 
 

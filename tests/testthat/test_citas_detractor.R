@@ -232,3 +232,85 @@ test_that("detractor-hetero.sh solo acepta reportes cuyas citas verifican", {
   expect_match(hetero, "entregado\\(\\) \\{ con_marcador \"\\$1\" && citas_ok \"\\$1\"; \\}")
   expect_match(hetero, "verificar_citas_detractor.py", fixed = TRUE)
 })
+
+# =============================================================================
+context("verificar_citas_detractor.py --commit (contrastar contra un commit)")
+
+test_that("--commit contrasta las citas con los archivos del commit y no con el arbol", {
+  # Repo de git temporal con dos commits: A sin el texto, B con el texto.
+  dir_tmp <- tempfile("citas-git-")
+  dir.create(dir_tmp)
+  repo_t <- file.path(dir_tmp, "repo")
+  dir.create(repo_t)
+  git <- function(...) {
+    out <- suppressWarnings(system2("git", c("-C", shQuote(repo_t), ...), stdout = TRUE, stderr = TRUE))
+    if (!is.null(attr(out, "status")) && attr(out, "status") != 0)
+      stop("git fallo: ", paste(out, collapse = "\n"))
+    invisible(out)
+  }
+  git("init", "-q")
+  git("config", "user.name", "Test-Citas")
+  git("config", "user.email", "test-citas@example.com")
+  archivo <- file.path(repo_t, "archivo.txt")
+  lineas_a <- c("primera línea del archivo con texto inicial",
+                "segunda línea del archivo con contenido medio",
+                "tercera línea del archivo con texto final")
+  writeLines(lineas_a, archivo)
+  git("add", "archivo.txt")
+  git("commit", "-q", "-m", "commit-A")
+  sha <- function() trimws(system2("git", c("-C", shQuote(repo_t), "rev-parse", "HEAD"), stdout = TRUE))
+  sha_a <- sha()
+  reporte_t <- file.path(dir_tmp, "reporte.md")
+  writeLines(c("CITAS_DETRACTOR",
+               "H1 | archivo.txt:2 | segunda línea del archivo con contenido medio",
+               "H2 | archivo.txt | AUSENTE: texto que no está",
+               "FIN_CITAS_DETRACTOR",
+               "VEREDICTO_DETRACTOR: ..."), reporte_t)
+  con_commit <- function(sha) correr(c(shQuote(reporte_t), "--repo", shQuote(repo_t), "--commit", sha))
+
+  # El árbol cambia sin commit: líneas nuevas al principio y el texto «AUSENTE» dentro.
+  writeLines(c("línea cero añadida al principio del archivo",
+               "otra línea nueva antes del contenido original",
+               "texto que no está",
+               lineas_a), archivo)
+
+  # Sin --commit: las citas se contrastan con el árbol vigente y fallan.
+  r <- correr(c(shQuote(reporte_t), "--repo", shQuote(repo_t)))
+  expect_equal(r$status, 1L, info = r$texto)
+  expect_match(r$texto, "pero sí está en el archivo", info = r$texto)
+
+  # Contra el commit A (la versión auditada): las citas siguen siendo ciertas.
+  r <- con_commit(sha_a)
+  expect_equal(r$status, 0L, info = r$texto)
+  expect_match(r$texto, "contra el commit", info = r$texto)
+
+  # Control positivo: con el commit B (ya con el texto), la cita AUSENTE vuelve a fallar.
+  git("add", "archivo.txt")
+  git("commit", "-q", "-m", "commit-B")
+  sha_b <- sha()
+  r <- con_commit(sha_b)
+  expect_equal(r$status, 1L, info = r$texto)
+  expect_match(r$texto, "pero sí está en el archivo", info = r$texto)
+
+  # Un archivo citado que no existe en el commit: falla con su motivo.
+  reporte_f <- file.path(dir_tmp, "reporte_faltante.md")
+  writeLines(c("CITAS_DETRACTOR",
+               "H1 | inexistente.txt:1 | un fragmento suficientemente largo para citar",
+               "FIN_CITAS_DETRACTOR",
+               "VEREDICTO_DETRACTOR: ..."), reporte_f)
+  r <- correr(c(shQuote(reporte_f), "--repo", shQuote(repo_t), "--commit", sha_a))
+  expect_equal(r$status, 1L, info = r$texto)
+  expect_match(r$texto, "no existe en el commit", info = r$texto)
+
+  # Un sha inválido: exit 2.
+  r <- con_commit("no-existe-123")
+  expect_equal(r$status, 2L, info = r$texto)
+})
+
+test_that("la regla #9 y el script documentan --commit (v1.8)", {
+  regla <- paste(readLines(file.path(repo_root, ".claude", "rules", "detractor-obligatorio.md"),
+                           encoding = "UTF-8"), collapse = " ")
+  expect_true(grepl("--commit <sha>", regla, fixed = TRUE), info = "la regla compacta no menciona --commit")
+  expect_true(grepl("Con --commit", paste(readLines(SCRIPT, encoding = "UTF-8"), collapse = " "), fixed = TRUE),
+              info = "la cabecera del script no explica --commit")
+})

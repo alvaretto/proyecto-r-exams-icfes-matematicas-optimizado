@@ -105,6 +105,8 @@ La otra mitad de lo mismo, porque yo lanzo detractores y auditores:
    archivo. Si `~/.claude/hooks/logs/citas-detractor.log` registra «TOPE ALCANZADO», el reporte
    **no está entregado**. Antes de actuar sobre un hallazgo de código, verifico sus citas:
    `python3 .claude/scripts/verificar_citas_detractor.py <reporte.md>` (exit 0 = todas verifican).
+   Si el hallazgo ya se atendió, comparo con el commit que se auditó: `… <reporte.md> --commit <sha>`.
+   Una cita `AUSENTE` deja de ser cierta justo cuando se corrige lo que señala (regla #9 v1.8).
 6. **Cada pasada de FASE 2C la hace un detractor NUEVO.** El que auditó la versión anterior no
    cuenta como FASE 2C de la corregida (regla #9). Ver § "Reapertura de un ejercicio aprobado".
 7. **Lanzar no es recibir (2026-11-02).** Como el lanzamiento es asíncrono, **NUNCA** cierro mi
@@ -300,7 +302,7 @@ el gate resulta insatisfacible —vacía la búsqueda en una fracción alta de v
    pendiente.
 3. **La suite completa (`R_TESTS_FULL=1`, unos 23 min) no cabe en mi presupuesto y no la corro.** Con
    un tope de 590 s se cortó (exit 124) y solo dejó un «NO VERIFICABLE». Corro las suites que cubren lo
-   que cambié con `Rscript tests/run_one_suite.R <suite>` y dejo la completa a quien me invocó, que la
+   que cambié con `Rscript tests/run_one_suite.R tests/testthat/<suite>.R` y dejo la completa a quien me invocó, que la
    necesita antes del push o de promover (regla #8).
 
 ## Pre-flight checks (turno 1-2)
@@ -1392,7 +1394,7 @@ rechazo lo produjo `I-3_formula`. La línea que lo habría detectado —
 documenta el mismo fallo en su `HANDOFF.md` ("tres rondas de rechazo […] las dos mutaciones no
 mutaban el artefacto"): es un modo de fallo **reincidente**, no mala suerte.
 
-Por tanto, TODO mutante que yo genere cumple estas seis obligaciones:
+Por tanto, TODO mutante que yo genere cumple estas ocho obligaciones:
 
 1. **Declara su sonda esperada.** Cada mutante nombra explícitamente el código de error que debe
    cazarlo (`sonda_esperada <- "I-1"`). Sin esa declaración el mutante no es válido.
@@ -1436,6 +1438,17 @@ Por tanto, TODO mutante que yo genere cumple estas seis obligaciones:
    (`|| caso_tolerado`), un mutante que quite el fix que vuelve raro ese caso debe morir por la
    guarda. Si la excepción se define por el síntoma y no por la causa, la guarda no protege nada: el
    mutante sobrevivió 600 semillas hasta que la excepción se redefinió (Incidente Y).
+7. **Cada componente de una sonda tiene un mutante que la mueve sola** (2026-11-03). Si una sonda
+   cuenta varias cosas (comparación falsa, cifra, conclusión, marca…), el veredicto distingue:
+   `cazado_por_su_sonda` solo si no se movió nada más, y `cazado_por_su_sonda_y_otra` si cayó también
+   otra componente. Si el texto no puede aislar una componente, muto una copia del entorno y no el
+   texto. Origen: H3 de la FASE 2C r5 de `totales-promedios-reciclaje-n3`: tres mutantes salían
+   `cazado_por_su_sonda` con dos componentes caídas, y solo una componente estaba probada sola.
+8. **Un mutante medido en otra muestra lleva su línea base en esa muestra** (2026-11-03). Si la cifra
+   firmada se mide sobre una muestra y el mutante sobre otra, corro también el código sin mutar sobre
+   la muestra del mutante, y lo que ya sale en rojo sin mutar no cuenta. Origen: H2 de la FASE 2C r4
+   del mismo ejercicio: el mutante comparaba una cifra firmada sobre 100 Partes 1 con una medida
+   sobre una sola, que ya daba 100 pendientes sin mutar.
 
 **Muestra del verificador propio (regla #23, 2026-10-19).** Si el ejercicio tiene ramas, el
 verificador muestrea **por cuotas**: recorre semillas, con tope, hasta tener N = 100 versiones de
@@ -1451,8 +1464,10 @@ reporte final como `sin_prueba_de_deteccion`. No la presento como "verificada" n
 que declare ocho en verde sin distinguir "pasó" de "no se midió".
 
 **Reporte:** el bloque `mutantes` del contrato de salida lleva, por mutante, `sonda_esperada`,
-`sonda_real` y `veredicto` ∈ {`cazado_por_su_sonda`, `cazado_por_otra`, `no_detectado`,
-`mal_construido`}. Sólo `cazado_por_su_sonda` cuenta como prueba superada.
+`sonda_real` y `veredicto` ∈ {`cazado_por_su_sonda`, `cazado_por_su_sonda_y_otra`, `cazado_por_otra`,
+`no_detectado`, `mal_construido`}, con `_y_control` si además cae un control exacto. Solo los dos
+primeros cuentan como prueba superada, y solo `cazado_por_su_sonda` prueba la componente sola
+(obligación 7).
 
 ## Exigencia ICFES Matemáticas — fuentes oficiales vigentes (agosto 2026)
 
@@ -1798,7 +1813,7 @@ Cuando termine, devuelvo un mensaje JSON de una sola línea + reporte humano:
   "validaciones_cloze": {"V1": true, "V2": true, "V3": true, "V4": true, "V5": "true | N/A", "V6": "true | N/A", "V7": "true | N/A", "V8": true, "V9": "true | warn | N/A", "V10": "true | N/A", "V11": true},
   "diversidad_por_gap": {"cobertura": "<medidos>/<declarados>", "gaps": [{"gap": "p1", "unicos": 8, "evaluados": 20, "declaracion": "variable | fija-justificada", "justificacion": "<frase o null>"}], "sin_medir": ["<gaps o vacío>"]},
   "turnos_por_fase": {"preflight_0_1": 0, "paso_3_4": 0, "paso_5_6": 0, "paso_7": 0, "pasos_8_10": 0, "total": 0},
-  "mutantes": [{"id": "A", "sonda_esperada": "<código>", "sonda_real": "<código>", "veredicto": "cazado_por_su_sonda | cazado_por_otra | no_detectado | mal_construido"}],
+  "mutantes": [{"id": "A", "sonda_esperada": "<código>", "sonda_real": "<código>", "veredicto": "cazado_por_su_sonda | cazado_por_su_sonda_y_otra | cazado_por_otra | no_detectado | mal_construido"}],
   "graficas_opcion": "ninguna | en_enunciado_rotuladas (Incidente G)",
   "fuga_nombre_moodle": "N/A | verificado sobre el XML: solo diagrama_a..d.png",
   "nops": "N/A (esperado: exams2nops rechaza extype cloze por diseño)",

@@ -102,6 +102,8 @@ La otra mitad de lo mismo, porque yo lanzo detractores y auditores:
    archivo. Si `~/.claude/hooks/logs/citas-detractor.log` registra «TOPE ALCANZADO», el reporte
    **no está entregado**. Antes de actuar sobre un hallazgo de código, verifico sus citas:
    `python3 .claude/scripts/verificar_citas_detractor.py <reporte.md>` (exit 0 = todas verifican).
+   Si el hallazgo ya se atendió, comparo con el commit que se auditó: `… <reporte.md> --commit <sha>`.
+   Una cita `AUSENTE` deja de ser cierta justo cuando se corrige lo que señala (regla #9 v1.8).
 6. **Cada pasada de FASE 2C la hace un detractor NUEVO.** El que auditó la versión anterior no
    cuenta como FASE 2C de la corregida (regla #9). Ver § "Reapertura de un ejercicio aprobado".
 7. **Lanzar no es recibir (2026-11-02).** Como el lanzamiento es asíncrono, **NUNCA** cierro mi
@@ -267,7 +269,7 @@ insatisfacible —vacía la búsqueda en una fracción alta de versiones—, lo 
    pendiente.
 3. **La suite completa (`R_TESTS_FULL=1`, unos 23 min) no cabe en mi presupuesto y no la corro.** Con
    un tope de 590 s se cortó (exit 124) y solo dejó un «NO VERIFICABLE». Corro las suites que cubren lo
-   que cambié con `Rscript tests/run_one_suite.R <suite>` y dejo la completa a quien me invocó, que la
+   que cambié con `Rscript tests/run_one_suite.R tests/testthat/<suite>.R` y dejo la completa a quien me invocó, que la
    necesita antes del push o de promover (regla #8).
 
 ## Pre-flight checks (turno 1-2)
@@ -714,6 +716,17 @@ artefacto"): es reincidente.
    guarda. Si la excepción se define por el síntoma y no por la causa, la guarda no protege nada: el
    mutante sobrevivió 600 semillas hasta que la excepción se redefinió (`INC-FUGA-ENTRE-PARTES`, en
    el gemelo CLOZE).
+7. **Cada componente de una sonda tiene un mutante que la mueve sola** (2026-11-03). Si una sonda
+   cuenta varias cosas (comparación falsa, cifra, conclusión, marca…), el veredicto distingue:
+   `cazado_por_su_sonda` solo si no se movió nada más, y `cazado_por_su_sonda_y_otra` si cayó también
+   otra componente. Si el texto no puede aislar una componente, muto una copia del entorno y no el
+   texto. Origen: H3 de la FASE 2C r5 de `totales-promedios-reciclaje-n3`: tres mutantes salían
+   `cazado_por_su_sonda` con dos componentes caídas, y solo una componente estaba probada sola.
+8. **Un mutante medido en otra muestra lleva su línea base en esa muestra** (2026-11-03). Si la cifra
+   firmada se mide sobre una muestra y el mutante sobre otra, corro también el código sin mutar sobre
+   la muestra del mutante, y lo que ya sale en rojo sin mutar no cuenta. Origen: H2 de la FASE 2C r4
+   del mismo ejercicio: el mutante comparaba una cifra firmada sobre 100 Partes 1 con una medida
+   sobre una sola, que ya daba 100 pendientes sin mutar.
 
 **Muestra del verificador propio (regla #23, 2026-10-19).** Si el ejercicio tiene ramas, el
 verificador muestrea **por cuotas**: recorre semillas, con tope, hasta tener N = 100 versiones de
@@ -725,6 +738,10 @@ el código del chunk `data_generation` (`parse(text = …)`), sin tocar el `.Rmd
 
 **Cobertura mínima**: una invariante sin mutante que la cace por su propia sonda se reporta como
 `sin_prueba_de_deteccion`, nunca dentro de un "0 errores".
+
+**Veredictos**: `cazado_por_su_sonda`, `cazado_por_su_sonda_y_otra`, `cazado_por_otra`, `no_detectado` y
+`mal_construido`, con `_y_control` si además cae un control exacto. Solo los dos primeros cuentan como
+prueba superada, y solo `cazado_por_su_sonda` prueba la componente sola (obligación 7).
 
 **Referencia**: gemelo de `INC-MUTANTE-SONDA` en `.claude/agents/orquestador-cloze.md` (allí es la
 letra S, redactado dentro de § "Contrato de mutación"), donde está la versión extendida con los
@@ -1330,7 +1347,7 @@ Cuando termine, devuelvo un mensaje JSON de una sola línea + reporte humano:
   "tipo": "schoice",
   "diagnosticidad": {"H1": "<tasa + margen mediano>", "H2": "<tasa>", "H3": "<tasa>", "nota_de_orden": "<literal o null>"},
   "turnos_por_fase": {"preflight_0_1": 0, "paso_3_4": 0, "paso_5_6": 0, "paso_7": 0, "pasos_8_10": 0, "total": 0},
-  "mutantes": [{"id": "A", "sonda_esperada": "<código>", "sonda_real": "<código>", "veredicto": "cazado_por_su_sonda | cazado_por_otra | no_detectado | mal_construido"}],
+  "mutantes": [{"id": "A", "sonda_esperada": "<código>", "sonda_real": "<código>", "veredicto": "cazado_por_su_sonda | cazado_por_su_sonda_y_otra | cazado_por_otra | no_detectado | mal_construido"}],
   "graficas_opcion": "ninguna | un_png_por_opcion (regla graficos-como-opciones)",
   "formato_equilibrado": "N/A | <n> de 4 opciones comparten el formato de la correcta (mínimo 2)",
   "fuga_nombre_moodle": "N/A | verificado sobre el XML: solo diagrama_a..d.png",

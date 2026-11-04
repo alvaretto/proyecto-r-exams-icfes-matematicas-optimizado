@@ -217,6 +217,19 @@ reabrir», re-sellado posterior, acumulación y coherencia con el schema).
 
 ---
 
+## Sello fuera de orden (`complete`, desde 2026-11-03)
+
+`complete` avisa por stderr si quedan pasos anteriores pendientes, con esta forma:
+
+```
+⚠ Sello fuera de orden: '<paso>' se selló con pasos anteriores pendientes: <p1>, <p2>. Regla #16: en orden y cada uno tras su artefacto.
+```
+
+Solo avisa: el sello se registra y el exit sigue en 0. Origen: en la tanda C1c del CLOZE de
+`totales-promedios-reciclaje-n3`, los pasos 5 y 6 se sellaron con el 4 pendiente y nadie lo advirtió hasta
+leer las horas. No detecta sellos en lote; eso sigue auditándose por artefacto. Test:
+`test_workflow_state_orden.R`, con su mutante.
+
 ## Flujo Completo con Gate
 
 ```
@@ -254,7 +267,7 @@ Esta regla (16) refuerza y depende de:
 
 ---
 
-**Versión**: 1.2
+**Versión**: 1.3
 **Fecha**: 2026-10-22 (v1.2 — comando `reopen` y lista `reaperturas` en el schema; v1.1 2026-10-02 — `flujo_b` solo se sella con `--lenguaje`; v1.0 2026-03-21)
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: Ver sección "Lo que PERMITE"

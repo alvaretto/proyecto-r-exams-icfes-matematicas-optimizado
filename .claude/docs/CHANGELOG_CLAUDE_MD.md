@@ -8,6 +8,23 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.38.0 (2026-11-03)
+
+Cinco candidatas del repo, surgidas del ciclo del CLOZE de `totales-promedios-reciclaje-n3` y resueltas por
+orden del profesor («Resuelve. Documenta. Commit. Push»):
+
+1. **Regla #9 v1.8:** `verificar_citas_detractor.py --commit <sha>` contrasta las citas con el commit auditado.
+   Una cita `AUSENTE` no sobrevivía a la corrección que pide: dio exit 0 al entregar, exit 1 al sellar, y el
+   sello necesitó la firma del profesor. Test: bloque nuevo en `test_citas_detractor.R`, con control positivo.
+2. **Contrato de mutación, obligación 7:** cada componente de una sonda tiene un mutante que la mueve sola, y el
+   veredicto distingue `cazado_por_su_sonda` de `cazado_por_su_sonda_y_otra`.
+3. **Contrato de mutación, obligación 8:** un mutante medido en otra muestra lleva su línea base en esa muestra.
+4. **Regla #16 v1.3:** `workflow-state.sh complete` avisa de un sello fuera de orden, sin bloquearlo. Suite nueva:
+   `test_workflow_state_orden.R`.
+5. **Orquestadores:** `tests/run_one_suite.R` recibe la ruta del test, no su nombre. Estaba mal en los dos.
+
+Las obligaciones y la sintaxis tienen su guarda en `test_contrato_entrega_orquestadores.R`.
+
 ### Cambios v3.37.0 (2026-11-02)
 
 - **Regla #7: la literalidad de `exextra` tiene validador.** Cambian la versión compacta y la íntegra, § 2b.

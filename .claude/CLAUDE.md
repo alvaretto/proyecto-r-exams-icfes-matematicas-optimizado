@@ -57,6 +57,9 @@ Consolidado: `.claude/docs/REGLAS_CRITICAS.md` (leer bajo demanda). Cada ruta `.
    es el acuse, no una entrega ni una no-entrega; quien lanza espera el reporte antes de cerrar el
    suyo, y lo que llegue tarde se recupera por el Paso 0. Un orquestador que transmite el veredicto
    no copia el marcador literal, porque el hook de citas lo evaluaría a él.
+   **Desde la v1.8 (2026-11-03): citas contra el commit auditado.** `verificar_citas_detractor.py --commit <sha>`:
+   una cita `AUSENTE` deja de ser cierta justo cuando se atiende el hallazgo, así que un reporte ya atendido se
+   comprueba contra el commit que se auditó.
 10. **Validación _neg_ opciones repetidas** → .claude/rules/validacion-neg-opciones-repetidas.md
 11. **Contextos narrativos creativos** (no mecánicos) → .claude/rules/contextos-narrativos-creativos.md
 12. **Validación semántica automática** (Nivel 4: descripción ↔ datos) → .claude/rules/ejercicios-metacognitivos.md (sección Validación Semántica)
@@ -189,8 +192,8 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.37.0 (regla #7: la literalidad de `exextra` la verifica `validar_literalidad_exextra.py` en el paso 10 de los dos orquestadores; los validadores de la familia A escriben el md5 del `.Rmd` que miden; antes: v3.36.1, el hook de citas ve el `SubagentHandback`)
-**Fecha**: 2026-11-02
+**Versión**: 3.38.0 (regla #9 v1.8: citas contra el commit auditado; regla #16 v1.3: `complete` avisa de un sello fuera de orden; contrato de mutación con 8 obligaciones; antes: v3.37.0, regla #7: la literalidad de `exextra` la verifica `validar_literalidad_exextra.py` en el paso 10 de los dos orquestadores; los validadores de la familia A escriben el md5 del `.Rmd` que miden; antes: v3.36.1, el hook de citas ve el `SubagentHandback`)
+**Fecha**: 2026-11-03
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)
 **Copia íntegra del índice anterior (v3.24.0) y script de reversión**: `.claude/backups/2026-09-07-recorte-contexto/`

@@ -1,7 +1,7 @@
 # HANDOFF — repositorio (infraestructura `.claude/`, tests y documentación)
 
 > Archivo de retorno para el trabajo que no pertenece a un ejercicio; cada ejercicio lleva su propio
-> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-10-30 (v3.33.0: suite completa 46/46 sobre `e9c85009` y push).
+> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-11-03 (v3.38.0: candidatas del CLOZE de `totales-promedios-reciclaje-n3`, cerradas).
 > Si este archivo y el código discrepan, manda el código: verificar antes de actuar.
 
 ## Estado al cierre del 2026-10-28
@@ -304,6 +304,10 @@ Rscript tests/testthat/test_post_exams2_cwd.R      # el ejercicio sale del .Rmd;
       helper, sin espacio duro.
     - El arreglo va en un ciclo propio: cambiar `ntok()`, volver a medir la vara de §P7-A sobre el corpus de 426 ítems,
       que no está en este repo, y repetir el control de no-relleno de §P7-C antes de promoverlo.
+
+12. **Candidatas del CLOZE de `totales-promedios-reciclaje-n3`: cerradas el 2026-11-03** (v3.38.0). `--commit` en el
+    verificador de citas, aviso de sello fuera de orden, obligaciones 7 y 8 del contrato de mutación y sintaxis
+    de `run_one_suite.R`. Las cinco están en `.claude/docs/CHANGELOG_CLAUDE_MD.md`.
 
 ## Respaldos del día (fuera de git, regla #17)
 
