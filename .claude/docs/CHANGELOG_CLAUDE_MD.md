@@ -8,6 +8,31 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.39.0 (2026-11-04)
+
+Novedades de R/exams verificadas contra fuentes primarias, y automatización de lo que sirve aquí.
+Detalle y cifras: `.claude/docs/REXAMS_VERSIONES.md`.
+
+1. **`validar_stresstest.R`** (paso 9 de los dos orquestadores, regla #23 familia A): compila el
+   ejercicio completo a N = 100, con límite por semilla y corte duro, y detecta cuelgues, errores en
+   Question o Solution, fugas de `NA` al texto y semillas que no reproducen. Usa `seed =`: lo validado
+   es lo que exporta `exams2moodle(seed = )`. No envuelve `stresstest_exercise()`, que aborta en 20 de
+   373 ejercicios. Barrido antes de cablearlo: dos falsos positivos corregidos (`Inf` en un bloque
+   verbatim, anclajes con `Sys.time`). Suite `test_validar_stresstest.R`, con mutantes.
+2. **`comparar_version_exams.R`**: qué cambia en contenido y en 5 formatos con otra versión, en una
+   biblioteca aparte. Distingue `CAMBIA` de `NO_DETERMINISTA`. Suite `test_comparar_version_exams.R`.
+3. **`vigia_rexams.R`**: versiones instalada, lock, CRAN y desarrollo, y el NEWS posterior, por tema.
+   Si una fuente falla dice `VIGIA_NO_VERIFICABLE`, nunca «al día». Suite `test_vigia_rexams.R`.
+4. **`webquiz_autocontenido.R`**: `exams2webquiz()` carga MathJax de un CDN y sin red muestra TeX crudo.
+   Incrusta MathJax con hash fijado y lo comprueba en Chromium sin red. Suite
+   `test_webquiz_autocontenido.R`.
+5. **`Auxiliares/exams2nops-escaner/nops_control_calidad.R`**: triaje de escaneos antes de `nops_eval()`,
+   probado con hojas reales marcadas. Suite `test_nops_control_calidad.R`. Guía del escáner con el paso
+   de `nops_fix()`; su `.html` no se regeneró.
+6. **Reglas**: #21 F1 (`maxit`, medición con el validador; guarda en `test_data_generation_no_hang.R`);
+   #23 (validador en la familia A y en `test_muestra_estandar.R`); #20 (`exams` 2.4-4 y plantillas
+   propias; el índice decía pandoc ≥ 3.7 y son ≥ 3.8.1); #4 v6.2 (alcance medido por versión).
+
 ### Cambios v3.38.0 (2026-11-03)
 
 Cinco candidatas del repo, surgidas del ciclo del CLOZE de `totales-promedios-reciclaje-n3` y resueltas por

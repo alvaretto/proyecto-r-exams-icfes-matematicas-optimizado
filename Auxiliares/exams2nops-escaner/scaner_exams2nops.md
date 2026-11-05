@@ -441,8 +441,8 @@ HOJAS FÍSICAS → PREPARACIÓN → CONFIGURACIÓN ESCÁNER
 ESCANEO POR LOTES → VERIFICACIÓN → PROCESAMIENTO R
       ↓              ↓                ↓
    20-50 hojas    Contar hojas    nops_scan()
-   Monitorear     Verificar       nops_eval()
-   Guardar        calidad         Resultados
+   Monitorear     Verificar       nops_control_calidad.R + nops_fix()
+   Guardar        calidad         nops_eval() → Resultados
 ```
 
 ### **⏱️ 10. TIEMPOS ESTIMADOS**
@@ -635,7 +635,52 @@ nops_scan(dir = ".",
 list.files(pattern = "nops_scan_.*\\.zip")
 ```
 
-### **5. EVALUACIÓN AUTOMÁTICA**
+### **5. CONTROL DE CALIDAD ANTES DE EVALUAR**
+
+`nops_eval()` evalúa con lo que haya en `Daten.txt`: un registro mal leído o una doble marca llegan
+a la nota sin aviso. Por eso, entre `nops_scan()` y `nops_eval()`:
+
+**a) Triaje, sin abrir ninguna hoja.** Dice cuántas hojas tienen problemas, cuáles y qué orden de
+`nops_fix()` corrige cada caso. No modifica el ZIP.
+
+```bash
+cd ~/escaneos_examen_2025-01-15/
+Rscript ~/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/Auxiliares/exams2nops-escaner/nops_control_calidad.R \
+        --lista estudiantes.csv
+```
+
+| Resultado | Qué significa |
+|---|---|
+| `NOPS_LISTO_PARA_EVALUAR` (salida 0) | Ninguna hoja con problemas: seguir con `nops_eval()` |
+| `NOPS_REVISAR n hallazgos en m hojas` (salida 1) | Corregir con las órdenes que imprime y repetir el triaje |
+| `NOPS_NO_VERIFICABLE` (salida 2) | No encontró el ZIP o el ZIP no trae `Daten.txt`. No es un visto bueno |
+
+Detecta hojas ilegibles, identificadores y registros inválidos, la misma hoja escaneada dos veces,
+dos hojas con el mismo estudiante, registros fuera de la lista, doble marca y preguntas sin marcar.
+Sin `--lista` no comprueba que el registro pertenezca al curso. Para exámenes de selección múltiple
+con varias respuestas válidas, añadir `--tipo mchoice`.
+
+**b) Corrección con `nops_fix()`.** Las órdenes que propone el triaje son de este tipo:
+
+```r
+library(exams)
+z <- "nops_scan_20250115120000.zip"
+nops_fix(z, exam = c(2, 7))              # registro o identificador mal leídos
+nops_fix(z, check = "schoice")           # más de una casilla marcada
+nops_fix(z, check = "missing")           # preguntas sin marcar
+nops_fix(z, display = "interactive", language = "es")  # hojas que no se pudieron leer
+```
+
+R muestra el recorte de la hoja y pide el valor correcto. Con ENTER se conserva el valor leído: una
+pregunta sin marcar puede ser una respuesta real del estudiante. `nops_fix()` escribe en el mismo
+ZIP, así que conviene guardar una copia antes. `check` y `display = "interactive"` requieren
+`exams` ≥ 2.4-2.
+
+Probado de punta a punta el 2026-11-04 con hojas de `exams2nops()` marcadas y leídas con
+`nops_scan()`: encontró las 5 anomalías sembradas en 4 hojas y ninguna más
+(`tests/testthat/test_nops_control_calidad.R`).
+
+### **6. EVALUACIÓN AUTOMÁTICA**
 ```r
 # Crear archivo CSV con datos de estudiantes
 estudiantes <- data.frame(

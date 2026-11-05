@@ -44,6 +44,20 @@ stopifnot(max(valores) - min(valores) == objetivo)
 **Si el bucle es inevitable:** SIEMPRE contador + `max_intentos` + `stopifnot`/fallback (como el `while` de validez de datos).
 
 **Verificación:** stress test con `setTimeLimit` por semilla (≥200). Test: `tests/testthat/test_data_generation_no_hang.R`.
+**`num_to_schoice()` es el mismo bucle, dentro de `exams` (2026-11-04).** Reintenta hasta hallar
+distractores válidos, y su `maxit` por defecto es `Inf` (`getOption("num_to_schoice_maxit", Inf)`,
+`exams` ≥ 2.4-2). Con un `range` o un `delta` imposibles no termina. Quien la use le pasa
+`maxit = -10000L` (negativo: al agotarse aborta con error; positivo: devuelve `NULL` con un aviso) o
+fija la opción en el mismo archivo. Hoy solo la usan las plantillas oficiales, inmutables. Guarda:
+bloque (C) de `test_data_generation_no_hang.R`.
+
+**Medición por semilla: `validar_stresstest.R` (2026-11-04).** El detector estático del test solo
+mira `repeat`, y su guarda en tiempo de ejecución cubre un ejercicio. `validar_stresstest.R` compila
+el ejercicio completo con límite de tiempo por semilla, así que ve también el `while` sin cota: en
+su primer barrido encontró uno en producción, `2023-Matematicas-11-2-09-Op-M.Rmd`, que cuelga en 22 de
+100 semillas. `setTimeLimit` no interrumpe `system()` ni Python; el validador los corta con un
+proceso vigilado. Detalle: `.claude/docs/REXAMS_VERSIONES.md`.
+
 **Ver:** Error 22 (`patrones-errores-conocidos.md`), `feedback_repeat_sin_cota_cuelgue.md`.
 
 ---
@@ -328,8 +342,8 @@ Por la auto-contención de los `.Rmd` (R-exams copia el ejercicio a un edir temp
 
 ---
 
-**Versión:** 1.4
-**Fecha:** 2026-10-29 (v1.4 — separación opcional de cabeceras en `tabla_responsiva()`, desactivada por
+**Versión:** 1.5
+**Fecha:** 2026-11-04 (v1.5 — Familia 1: `num_to_schoice()` con `maxit` y medición con `validar_stresstest.R`; v1.4 2026-10-29 — separación opcional de cabeceras en `tabla_responsiva()`, desactivada por
 defecto porque en otro ejercicio desborda la tabla; ver § «Separación de cabeceras en HTML y Moodle»);
 2026-10-22 (v1.3 — la Familia 2 no advertía que en el PDF de R/exams una tabla pipe no
 parte el texto de sus celdas: guarda de ancho calibrada en `tabla_responsiva()` y helper

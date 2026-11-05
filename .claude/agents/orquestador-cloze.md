@@ -623,6 +623,14 @@ Rscript .claude/scripts/validar_diversidad_sustantiva.R <ruta_al_.Rmd> --n 100
 
 Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BLOQUEANTE**. No avanzar a aprobación. Aleatorizar los parámetros fijos y regenerar los gráficos dinámicamente.
 
+**Compilación completa multi-semilla (paso 9, obligatorio)**: la FASE 2G solo ejecuta `data_generation` y la 2H compila 10 PDF. Un fallo en un chunk o en un `r ...` en línea de Question o Solution, una fuga de `NA` al texto o un `while` sin cota en pocas semillas no lo ve ninguna de las dos:
+
+```bash
+Rscript .claude/scripts/validar_stresstest.R <ruta_al_.Rmd>
+```
+
+Exit 1 (`ERR_STRESS_TIMEOUT`, `ERR_STRESS_ERROR`, `ERR_STRESS_TEXTO`) → **DEFECTO BLOQUEANTE**. Exit 2 (`WARN_STRESS_INDET`) no es un aprobado: repetir con `--total` mayor y declarar la cifra. `WARN_STRESS_NO_DETERMINISTA` (la misma semilla no da el mismo texto) se declara en la nota del sello, porque lo validado deja de ser lo que se exporta. Las semillas corren en un solo proceso, como `exams2moodle(n = 100)`: un fallo que no se reproduce con una versión suelta puede ser estado arrastrado en Python, y es real para las exportaciones.
+
 **Referencia**: `.claude/rules/diversidad-sustantiva.md` (regla #22), `feedback_diversidad_cosmetica.md`, `feedback_detractor_alucina_codigo.md`.
 
 ### Incidente I · `INC-ETIQUETA-SOLAPE` — Etiquetas solapadas en diagramas dinámicos: caso extremo de parámetros (Error 23, 2026-06-28)
@@ -1091,7 +1099,7 @@ ya corrieron. No los doy por hechos leyendo `ejercicio_state.json`.
 | 6b | auditoria_visual_html | **Auditoría visual masiva** de ~24 versiones HTML (móvil 360px + desktop 1024px): fugas de markup, math sin renderizar, ##ANSWERi## sin resolver, partes/gaps faltantes, desbordes/responsividad, anomalías cross-versión | Task `subagent_type="auditor-visual-html"` | sonnet |
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente (cada parte muestra su gap) | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
-| 9 | validar_diversidad | 250+ versiones únicas (combinación de TODAS las partes) via `validar_multisemilla.R` **+ diversidad SUSTANTIVA POR GAP** via `validar_diversidad_sustantiva.R --n 100` (regla #22, V8 — `ERR_DIV_COSMETICA` bloqueante; `WARN_DIV_GAP_FIJO` y la `NOTA DE COBERTURA` exigen declaración explícita, no se ignoran) **+ DIAGNOSTICIDAD de los distractores** via `validar_diagnosticidad.R --n 100` (V9 — `ERR_DIAG_SUPERFICIAL` bloqueante; la `NOTA DE ORDEN` se transcribe, no se ignora) | Bash | — |
+| 9 | validar_diversidad | 250+ versiones únicas (combinación de TODAS las partes) via `validar_multisemilla.R` **+ compilación completa** via `validar_stresstest.R` **+ diversidad SUSTANTIVA POR GAP** via `validar_diversidad_sustantiva.R --n 100` (regla #22, V8 — `ERR_DIV_COSMETICA` bloqueante; `WARN_DIV_GAP_FIJO` y la `NOTA DE COBERTURA` exigen declaración explícita, no se ignoran) **+ DIAGNOSTICIDAD de los distractores** via `validar_diagnosticidad.R --n 100` (V9 — `ERR_DIAG_SUPERFICIAL` bloqueante; la `NOTA DE ORDEN` se transcribe, no se ignora) | Bash | — |
 | 10 | validar_icfes | Estructura R-exams + V1-V11 CLOZE + 6 dimensiones + DOK/Bloom/SOLO **+ literalidad contra el catálogo canónico y coherencia Nivel↔DOK** (§ Exigencia ICFES) | Bash | — |
 | 11 | aprobacion_usuario | **WAIT_USER #3** Preview + checklist + decisión | (humano) | — |
 | 12 | sello | `workflow-state.sh complete <dir> aprobacion_usuario` | Bash | — |

@@ -47,6 +47,37 @@ if (is.na(RMD_ABS)) {
 }
 
 # -----------------------------------------------------------------------------
+# (C) num_to_schoice() sin maxit: el mismo cuelgue, dentro de exams
+# -----------------------------------------------------------------------------
+# `num_to_schoice()` reintenta hasta hallar distractores válidos, y su maxit por
+# defecto es Inf (getOption("num_to_schoice_maxit", Inf), exams >= 2.4-2). Con un
+# `range` o un `delta` imposibles no termina. Hoy ningún ejercicio activo la usa
+# (solo las plantillas oficiales, inmutables): esta guarda es para el primero que lo
+# haga. Se acepta `maxit =` en la llamada o la opción en el mismo archivo.
+detectar_num_to_schoice_sin_maxit <- function(txt) {
+  if (length(txt) == 1L) txt <- strsplit(txt, "\n", fixed = TRUE)[[1]]
+  txt <- sub("(^|[[:space:]])#.*$", "", txt)
+  if (any(grepl("num_to_schoice_maxit", txt, fixed = TRUE))) return(integer(0))
+  todo <- paste(txt, collapse = "\n")
+  inicios <- gregexpr("\\b(num_to_schoice|num2schoice)\\(", todo, perl = TRUE)[[1]]
+  if (inicios[1] < 0L) return(integer(0))
+  malos <- integer(0)
+  for (i in inicios) {
+    j <- i + attr(regexpr("^[^(]*\\(", substring(todo, i)), "match.length")
+    prof <- 1L
+    while (prof > 0L && j <= nchar(todo)) {
+      c <- substr(todo, j, j)
+      prof <- prof + (c == "(") - (c == ")")
+      j <- j + 1L
+    }
+    if (!grepl("\\bmaxit[[:space:]]*=", substr(todo, i, j))) {
+      malos <- c(malos, 1L + lengths(regmatches(substr(todo, 1L, i), gregexpr("\n", substr(todo, 1L, i), fixed = TRUE))))
+    }
+  }
+  malos
+}
+
+# -----------------------------------------------------------------------------
 # (A) Detector estático: ¿hay un `repeat {` sin cota de iteraciones?
 # -----------------------------------------------------------------------------
 # Heurística conservadora: localiza cada bloque que abre con `repeat {` y revisa
@@ -134,4 +165,25 @@ test_that("data_generation de rango_colesterol cloze no se cuelga (N semillas, t
                   paste(cuelgues, collapse = ", "),
                   ". Regresión del Error 22 (bucle repeat sin cota en Parte 6).")
   )
+})
+
+test_that("(C) detector de num_to_schoice sin maxit: casos y mutantes", {
+  expect_equal(detectar_num_to_schoice_sin_maxit("sc <- num_to_schoice(sol, wrong = err)"), 1L)
+  expect_equal(detectar_num_to_schoice_sin_maxit("a <- 1\nb <- 2\nsc <- num2schoice(sol)"), 3L)
+  expect_equal(detectar_num_to_schoice_sin_maxit("sc <- num_to_schoice(sol, maxit = -10000L)"), integer(0))
+  expect_equal(detectar_num_to_schoice_sin_maxit("sc <- num_to_schoice(sol,\n  wrong = f(err),\n  maxit = -1000L)"), integer(0))
+  expect_equal(detectar_num_to_schoice_sin_maxit("options(num_to_schoice_maxit = -10000L)\nsc <- num_to_schoice(sol)"), integer(0))
+  expect_equal(detectar_num_to_schoice_sin_maxit("# sc <- num_to_schoice(sol)"), integer(0))
+  expect_equal(detectar_num_to_schoice_sin_maxit("x <- 1"), integer(0))
+  # La segunda llamada no se salva por el maxit de la primera.
+  expect_equal(detectar_num_to_schoice_sin_maxit("a <- num_to_schoice(s, maxit = 5)\nb <- num_to_schoice(s)"), 2L)
+})
+
+test_that("(C) ningún ejercicio activo usa num_to_schoice sin maxit", {
+  rmds <- list.files(file.path(repo_root, "A-Produccion", c("01-En-PreDesarrollo", "02-En-Desarrollo")),
+                     pattern = "\\.Rmd$", recursive = TRUE, full.names = TRUE)
+  skip_if(length(rmds) == 0L, "sin ejercicios en este árbol")
+  hallados <- Filter(function(f) length(detectar_num_to_schoice_sin_maxit(
+    readLines(f, warn = FALSE, encoding = "UTF-8"))) > 0L, rmds)
+  expect_equal(length(hallados), 0L, info = paste(hallados, collapse = ", "))
 })

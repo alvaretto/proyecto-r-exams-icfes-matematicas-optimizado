@@ -166,8 +166,23 @@ No hay excepciones. Si un `.Rmd` no usa tablas Markdown, el guard no es requerid
 
 ---
 
-**Versión:** 1.1
-**Fecha:** 2026-07-28 (v1.1 — corrección factual de versión pandoc: ≥3.8.1 en vez de ≥3.7, tabla de comportamiento por versión, fuentes verificadas con changelog e issues oficiales; v1.0 2026-06-03)
+## Desde `exams` 2.4-4 (2026-11-04)
+
+El NEWS de `exams` 2.4-4 (2026-07-31) dice: «All LaTeX templates gained a new counter `{none}` and
+corresponding `\LTcaptype{none}`». El código lo confirma en `inst/tex/plain.tex`,
+`inst/pandoc/plain.tex` y en la plantilla que genera `exams2nops()`. **El guard no se retira**:
+
+- Las plantillas propias del repo no lo traen: `grep -c 'none' A-Produccion/perifericos/*.tex` da 0
+  en `pcielo.tex`, `pcielo_nosol.tex`, `solpcielo.tex` y `solpcielo_cloze.tex`, y hay 114 copias de
+  cada una repartidas por los ejercicios. Son las que usan los Semilleros.
+- La versión instalada puede ser anterior a 2.4-4.
+- El guard usa `\@ifundefined`, así que no choca con la definición del paquete. Los 39 `.Rmd` que lo
+  traen lo llevan con esa forma; ninguno trae un `\newcounter{none}` sin guarda.
+
+---
+
+**Versión:** 1.2
+**Fecha:** 2026-11-04 (v1.2 — `exams` 2.4-4 define el contador en sus plantillas, y el guard se conserva por las plantillas propias; v1.1 2026-07-28 — corrección factual de versión pandoc: ≥3.8.1 en vez de ≥3.7, tabla de comportamiento por versión, fuentes verificadas con changelog e issues oficiales; v1.0 2026-06-03)
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** NINGUNA
 **Aplica a:** todo `.Rmd` con tablas Markdown que renderice en PDF/NOPS.

@@ -51,6 +51,7 @@ Son baratas porque solo evalúan el chunk `data_generation`, sin `pdflatex` ni p
 | `validar_diagnosticidad.R` | 30 | **100** |
 | `validar_diversidad_sustantiva.R` | 40 | **100** |
 | `validar_multisemilla.R` | 20 | **100** |
+| `validar_stresstest.R` (2026-11-04: compila el ejercicio entero, sin LaTeX) | nace en 100 | **100** |
 | Verificadores propios del ejercicio (`auditoria_propia.R`, `verificar_render.R`, smokes) | ad-hoc (250–400) | **100** |
 
 Invocarlas **sin** `--n` ya produce el estándar. Pasar `--n 100` explícitamente es redundante pero
@@ -144,7 +145,7 @@ de producir el ejercicio» (250 de 300).
 
 ### Capa 1 — Defaults en el código ejecutable
 
-Los tres validadores de la Familia A tienen `100` como valor por defecto. Un agente que invoque sin
+Los validadores de la Familia A tienen `100` como valor por defecto. Un agente que invoque sin
 `--n` obtiene el estándar sin saber que existe esta regla.
 
 ⚠️ `validar_multisemilla.R` es un **symlink**: el archivo real es
@@ -192,8 +193,8 @@ nombrando el archivo y la línea.
 
 ---
 
-**Versión:** 1.0
-**Fecha:** 2026-08-13
+**Versión:** 1.1
+**Fecha:** 2026-11-04 (v1.1 — `validar_stresstest.R` en la familia A: un knit cuesta segundos, no un PDF; v1.0 2026-08-13)
 **Estado:** ACTIVO Y OBLIGATORIO
 **Excepciones:** las tres declaradas en «Cuándo se permite un N distinto de 100», todas con
 obligación de declarar la cifra en el reporte.

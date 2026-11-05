@@ -22,8 +22,10 @@ repo_root <- local({
 
 N_ESTANDAR <- 100L
 # Familia A: miden sobre data_generation, NO renderizan -> N=100 obligatorio.
+# validar_stresstest.R compila el ejercicio completo, pero sin LaTeX: una unidad cuesta
+# segundos, no un PDF, y por eso va aquí y no en la familia B.
 FAMILIA_A <- c("validar_diagnosticidad.R", "validar_diversidad_sustantiva.R",
-               "validar_multisemilla.R")
+               "validar_multisemilla.R", "validar_stresstest.R")
 # Familia B: renderizan de verdad (1 PDF / 1 captura por unidad). Su N se
 # declara en el reporte; esta suite NO lo fija.
 FAMILIA_B <- c("stress_test_visual.R", "auditor-visual-html")
@@ -69,7 +71,9 @@ detectar_defaults <- function(base_dir) {
          re = "^n <- 100L"),
     # OJO: el de .claude/scripts es un SYMLINK (invariante I-10); el real vive aqui.
     list(f = file.path(base_dir, "SOURCES/scripts_validacion/validar_multisemilla.R"),
-         re = "n_semillas <- 100")
+         re = "n_semillas <- 100"),
+    list(f = file.path(base_dir, ".claude/scripts/validar_stresstest.R"),
+         re = "argumento\\(args, \"--n\", 100L\\)")
   )
   malos <- character(0)
   for (ch in chequeos) {

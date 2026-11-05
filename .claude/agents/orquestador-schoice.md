@@ -493,6 +493,14 @@ Rscript .claude/scripts/validar_diversidad_sustantiva.R <ruta_al_.Rmd> --n 100
 
 Si la salida contiene `ERR_DIV_COSMETICA` o el exit status es 1 → **DEFECTO BLOQUEANTE**. No avanzar a aprobación. Aleatorizar los parámetros fijos y regenerar los gráficos dinámicamente.
 
+**Compilación completa multi-semilla (paso 9, obligatorio)**: la FASE 2G solo ejecuta `data_generation` y la 2H compila 10 PDF. Un fallo en un chunk o en un `r ...` en línea de Question o Solution, una fuga de `NA` al texto o un `while` sin cota en pocas semillas no lo ve ninguna de las dos:
+
+```bash
+Rscript .claude/scripts/validar_stresstest.R <ruta_al_.Rmd>
+```
+
+Exit 1 (`ERR_STRESS_TIMEOUT`, `ERR_STRESS_ERROR`, `ERR_STRESS_TEXTO`) → **DEFECTO BLOQUEANTE**. Exit 2 (`WARN_STRESS_INDET`) no es un aprobado: repetir con `--total` mayor y declarar la cifra. `WARN_STRESS_NO_DETERMINISTA` (la misma semilla no da el mismo texto) se declara en la nota del sello, porque lo validado deja de ser lo que se exporta. Las semillas corren en un solo proceso, como `exams2moodle(n = 100)`: un fallo que no se reproduce con una versión suelta puede ser estado arrastrado en Python, y es real para las exportaciones.
+
 **6. Diagnosticidad de los distractores (paso 9, obligatorio)**: un ítem puede tener 4 opciones únicas, clave correcta y datos que cambian en cada versión, y aun así resolverse **sin leer el contenido** porque la correcta es siempre la única mucho más larga. Es una de las heurísticas de examen más conocidas y ninguna otra validación la mide.
 
 ```bash
@@ -1020,7 +1028,7 @@ ya corrieron. No los doy por hechos leyendo `ejercicio_state.json`.
 | 6b | auditoria_visual_html | **Auditoría visual masiva** de ~24 versiones HTML (móvil 360px + desktop 1024px): fugas de markup, math sin renderizar, opciones duplicadas, desbordes/responsividad, anomalías cross-versión | Task `subagent_type="auditor-visual-html"` | sonnet |
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
-| 9 | validar_diversidad | 250+ versiones únicas via `validar_multisemilla.R` **+ diversidad SUSTANTIVA** via `validar_diversidad_sustantiva.R --n 100` (regla #22 — `ERR_DIV_COSMETICA` es bloqueante) **+ DIAGNOSTICIDAD** via `validar_diagnosticidad.R --n 100` (`ERR_DIAG_SUPERFICIAL` bloqueante) | Bash | — |
+| 9 | validar_diversidad | 250+ versiones únicas via `validar_multisemilla.R` **+ compilación completa** via `validar_stresstest.R` **+ diversidad SUSTANTIVA** via `validar_diversidad_sustantiva.R --n 100` (regla #22 — `ERR_DIV_COSMETICA` es bloqueante) **+ DIAGNOSTICIDAD** via `validar_diagnosticidad.R --n 100` (`ERR_DIAG_SUPERFICIAL` bloqueante) | Bash | — |
 | 10 | validar_icfes | Estructura R-exams + 6 dimensiones + DOK/Bloom/SOLO **+ literalidad contra el catálogo canónico y coherencia Nivel↔DOK** (§ Exigencia ICFES) | Bash | — |
 | 11 | aprobacion_usuario | **WAIT_USER #3** Preview + checklist + decisión | (humano) | — |
 | 12 | sello | `workflow-state.sh complete <dir> aprobacion_usuario` | Bash | — |

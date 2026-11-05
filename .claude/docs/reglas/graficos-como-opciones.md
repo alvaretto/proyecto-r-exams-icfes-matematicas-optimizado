@@ -398,10 +398,27 @@ Ver Error 20 en `patrones-errores-conocidos.md` para el patrón GRAF-BAR-01.
 
 ---
 
-**Versión**: 6.1
-**Fecha**: 2026-10-04
+**Versión**: 6.2
+**Fecha**: 2026-11-04
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: Ver regla general en `codigo-rmd.md` para otros tipos de ejercicios
+
+### Cambios v6.2 (2026-11-04)
+- **Alcance medido por versión de `exams`**: `exams` 2.4-3 reescribe la referencia aunque la imagen no esté sola en su línea. Con `rep(archivo, 3)`, 7 variantes y pandoc 3.11, las imágenes distintas fueron:
+
+| Patrón de la imagen | `exams2pdf`, 2.4-2 | `exams2pdf`, 2.4-5 | `exams2pandoc`, las dos |
+|---|---|---|---|
+| Sola en su línea, con `{width}` | 3 de 3 | 3 de 3 | 3 de 3 |
+| Sin `{width}` | 1 de 3 | 3 de 3 | 3 de 3 |
+| Seguida de `&#8203;` | 1 de 3 | 3 de 3 | 3 de 3 |
+| Con texto en la misma línea | 1 de 3 | 3 de 3 | 3 de 3 |
+| Con alt y `&#8203;` | 1 de 3 | 3 de 3 | 3 de 3 |
+| En la Solution, con `&#8203;` | 1 de 3 | 3 de 3 | 3 de 3 |
+| Dos del mismo nombre en una línea | 1 de 6 | **1 de 6** | 3 de 3 |
+
+- **`exams2nops` hereda** la corrección, porque pasa por `exams2pdf`. **`exams2pandoc` no tenía el defecto** en estos casos: la versión anterior de esta regla lo incluía sin medirlo.
+- **En el corpus real el efecto es nulo**: de los ejercicios del censo (figura sin `fig_id` en `03-En-Produccion`, o tabla sin guard), los 39 que compilan con las dos versiones dan el mismo número de imágenes distintas. El legado ya usaba el patrón que funcionaba.
+- **El sufijo sigue siendo obligatorio**: la versión instalada puede ser anterior a 2.4-3, y evita el caso que 2.4-5 no resuelve. El censo está en `.claude/docs/REXAMS_VERSIONES.md`.
 
 ### Cambios v6.1 (2026-10-04)
 - **Sufijo por versión obligatorio**: `diagrama_<letra>_<id>.png` (y `grafica_enunciado_<id>.png`, `grafica_solucion_<id>.png`), con `<id>` hexadecimal sorteado al final de `data_generation` (`fig_id <- paste(sample(c(0:9, letters[1:6]), 8, replace = TRUE), collapse = "")`), **el mismo** para todas las figuras de la versión. Neutral (no distingue opciones), así que §P6 se conserva.

@@ -198,7 +198,37 @@ suites <- list(
     nombre = "data_generation sin cuelgue (Error 22, bucle repeat sin cota)",
     archivo = "tests/testthat/test_data_generation_no_hang.R",
     critico = TRUE,
-    watch = c("Rango-Colesterol-Pacientes-Cloze", "test_data_generation_no_hang")
+    watch = c("Rango-Colesterol-Pacientes-Cloze", "test_data_generation_no_hang", "\\.Rmd$")
+  ),
+  list(
+    nombre = "Compilación completa multi-semilla: cuelgues, errores y fugas en el texto (regla #21 F1)",
+    archivo = "tests/testthat/test_validar_stresstest.R",
+    critico = TRUE,
+    watch = c("validar_stresstest", "test_validar_stresstest", "orquestador-schoice", "orquestador-cloze")
+  ),
+  list(
+    nombre = "Comparador de versiones de R/exams: contenido y formatos antes de actualizar",
+    archivo = "tests/testthat/test_comparar_version_exams.R",
+    critico = TRUE,
+    watch = c("comparar_version_exams", "validar_stresstest", "test_comparar_version_exams")
+  ),
+  list(
+    nombre = "Vigía de versiones de R/exams con fuentes primarias",
+    archivo = "tests/testthat/test_vigia_rexams.R",
+    critico = TRUE,
+    watch = c("vigia_rexams", "test_vigia_rexams")
+  ),
+  list(
+    nombre = "Webquiz autocontenido: fórmulas compuestas en un navegador sin red",
+    archivo = "tests/testthat/test_webquiz_autocontenido.R",
+    critico = TRUE,
+    watch = c("webquiz_autocontenido", "test_webquiz_autocontenido")
+  ),
+  list(
+    nombre = "Control de calidad de escaneos NOPS antes de nops_eval",
+    archivo = "tests/testthat/test_nops_control_calidad.R",
+    critico = TRUE,
+    watch = c("nops_control_calidad", "test_nops_control_calidad")
   ),
   list(
     nombre = "CLOZE gráficas-opción fuera del gap (V5, Incidente G)",
