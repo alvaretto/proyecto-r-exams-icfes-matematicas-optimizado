@@ -6,11 +6,15 @@
 # aislada en otra biblioteca, con las mismas semillas, y compara el contenido. No
 # toca la biblioteca del usuario. Responde antes de actualizar, no después.
 #
-# Capa 1 (contenido): `validar_stresstest.R --json` con cada versión. Si la huella
-# difiere, la base se repite: si la base no coincide consigo misma, el ejercicio es
-# NO_DETERMINISTA y la diferencia no se le atribuye a la versión.
+# Capa 1 (contenido): `validar_stresstest.R --json` con cada versión.
 # Capa 2 (formatos, opcional): renderiza HTML, PDF, DOCX, NOPS y Moodle con cada
 # versión y compara si compilan y su texto, porque la capa 1 no pasa por LaTeX.
+#
+# En las dos capas, lo que no coincide se repite en los dos lados antes de clasificarlo.
+# Si una versión no coincide consigo misma, el ejercicio es NO_DETERMINISTA y la
+# diferencia no se le atribuye a la versión. Si la falla o la diferencia no reaparece,
+# es NO_SE_REPITE: queda en el informe y no cuenta como regresión. Cada render deja su
+# log junto al .rds, con la salida de LaTeX.
 #
 # Uso:
 #   Rscript .claude/scripts/comparar_version_exams.R --lib DIR
@@ -74,16 +78,21 @@ huellas_de <- function(j) {
   vapply(j$semillas, function(s) if (is.null(s$huella)) NA_character_ else s$huella, character(1))
 }
 
-clasificar_par <- function(base, cand, base2 = NULL) {
+clasificar_par <- function(base, cand, base2 = NULL, cand2 = NULL) {
+  # base2 y cand2 son las repeticiones. Sin ellas, cada anomalía conserva su clase.
   h_b <- huellas_de(base)
   h_c <- huellas_de(cand)
+  h_b2 <- huellas_de(base2)
+  h_c2 <- huellas_de(cand2)
   falla <- function(h) is.null(h) || anyNA(h)
   if (falla(h_b) && falla(h_c)) return("FALLA_EN_AMBAS")
-  if (falla(h_c)) return("FALLA_SOLO_CANDIDATA")
-  if (falla(h_b)) return("FALLA_SOLO_BASE")
+  if (falla(h_c)) return(if (falla(h_c2)) "FALLA_SOLO_CANDIDATA" else "NO_SE_REPITE")
+  if (falla(h_b)) return(if (falla(h_b2)) "FALLA_SOLO_BASE" else "NO_SE_REPITE")
   if (identical(h_b, h_c)) return("IDENTICO")
-  h_b2 <- huellas_de(base2)
   if (!is.null(h_b2) && !identical(h_b, h_b2)) return("NO_DETERMINISTA")
+  if (!is.null(h_c2) && !identical(h_c, h_c2)) {
+    return(if (identical(h_b, h_c2)) "NO_SE_REPITE" else "NO_DETERMINISTA")
+  }
   "CAMBIA"
 }
 
@@ -91,15 +100,19 @@ veredicto_contenido <- function(clases) {
   if (any(clases %in% c("CAMBIA", "FALLA_SOLO_CANDIDATA"))) 1L else 0L
 }
 
-clasificar_formato <- function(base, cand, base2 = NULL) {
+clasificar_formato <- function(base, cand, base2 = NULL, cand2 = NULL) {
   # Cada argumento: list(ok, huella) o NULL si el formato no aplica (CLOZE en NOPS).
-  # base2 es la base repetida: si no coincide consigo misma, la versión no es la causa.
+  # base2 y cand2 son las repeticiones: un fallo de LaTeX puede ocurrir una sola vez, y
+  # un `tryCatch` del ejercicio alrededor de include_tikz() lo vuelve texto distinto.
   if (is.null(base) && is.null(cand)) return("NO_APLICA")
   if (!isTRUE(base$ok) && !isTRUE(cand$ok)) return("FALLA_EN_AMBAS")
-  if (!isTRUE(cand$ok)) return("FALLA_SOLO_CANDIDATA")
-  if (!isTRUE(base$ok)) return("FALLA_SOLO_BASE")
+  if (!isTRUE(cand$ok)) return(if (isTRUE(cand2$ok)) "NO_SE_REPITE" else "FALLA_SOLO_CANDIDATA")
+  if (!isTRUE(base$ok)) return(if (isTRUE(base2$ok)) "NO_SE_REPITE" else "FALLA_SOLO_BASE")
   if (identical(base$huella, cand$huella)) return("IDENTICO")
   if (!is.null(base2) && !identical(base$huella, base2$huella)) return("NO_DETERMINISTA")
+  if (!is.null(cand2) && !identical(cand$huella, cand2$huella)) {
+    return(if (identical(base$huella, cand2$huella)) "NO_SE_REPITE" else "NO_DETERMINISTA")
+  }
   "TEXTO_DISTINTO"
 }
 
@@ -144,6 +157,7 @@ huella_archivo_texto <- function(ruta) {
 modo_hijo_formatos <- function(rmd, lib, salida) {
   if (nzchar(lib)) .libPaths(c(lib, .libPaths()))
   suppressPackageStartupMessages(library(exams))
+  options(tinytex.verbose = TRUE)  # sin esto, el log no dice por qué falló LaTeX
   f <- basename(rmd)
   e <- dirname(rmd)
   meta <- paste(readLines(rmd, warn = FALSE, encoding = "UTF-8"), collapse = "\n")
@@ -176,7 +190,8 @@ modo_hijo_formatos <- function(rmd, lib, salida) {
 
 correr_formatos <- function(script, rmd, lib, salida) {
   args <- c(shQuote(script), "--hijo-formatos", shQuote(rmd), shQuote(lib), shQuote(salida))
-  system2("timeout", c("-k", "5", "600", shQuote(rscript()), args), stdout = FALSE, stderr = FALSE)
+  bitacora <- sub("\\.rds$", ".log", salida)
+  system2("timeout", c("-k", "5", "600", shQuote(rscript()), args), stdout = bitacora, stderr = bitacora)
   if (file.exists(salida)) readRDS(salida) else NULL
 }
 
@@ -238,18 +253,19 @@ if (!interactive() && sys.nframe() == 0L) {
     p <- function(etq) file.path(salida, sprintf("%05d_%s.json", i, etq))
     b <- correr_validador(validador, rmd, p("base"), n, "")
     c <- correr_validador(validador, rmd, p("cand"), n, lib)
-    b2 <- NULL
-    if (!identical(huellas_de(b), huellas_de(c)) && !is.null(huellas_de(c))) {
+    b2 <- c2 <- NULL
+    if (!clasificar_par(b, c) %in% c("IDENTICO", "FALLA_EN_AMBAS")) {
       b2 <- correr_validador(validador, rmd, p("base2"), n, "")
+      c2 <- correr_validador(validador, rmd, p("cand2"), n, lib)
     }
-    list(rmd = rmd, clase = clasificar_par(b, c, b2))
+    list(rmd = rmd, clase = clasificar_par(b, c, b2, c2))
   }
   res <- parallel::mclapply(seq_along(rutas), uno, mc.cores = jobs, mc.preschedule = FALSE)
   res <- res[vapply(res, is.list, logical(1))]
   clases <- vapply(res, function(x) x$clase, character(1))
   cat("\nContenido (knit + lectura):\n")
   print(table(clases))
-  for (cl in c("CAMBIA", "FALLA_SOLO_CANDIDATA", "FALLA_SOLO_BASE", "NO_DETERMINISTA")) {
+  for (cl in c("CAMBIA", "FALLA_SOLO_CANDIDATA", "FALLA_SOLO_BASE", "NO_SE_REPITE", "NO_DETERMINISTA")) {
     for (x in utils::head(res[clases == cl], 12L)) cat(sprintf("  %s: %s\n", cl, x$rmd))
   }
   for (x in res[clases == "FALLA_EN_AMBAS"]) cat(sprintf("  FALLA_EN_AMBAS: %s\n", x$rmd))
@@ -261,12 +277,16 @@ if (!interactive() && sys.nframe() == 0L) {
     rutas_f <- elegir_muestra(rutas, k_formatos, semilla + 1L)
     formato_uno <- function(i) {
       rmd <- rutas_f[i]
-      a <- correr_formatos(ruta_script(), rmd, "", file.path(salida, sprintf("f%05d_base.rds", i)))
-      b <- correr_formatos(ruta_script(), rmd, lib, file.path(salida, sprintf("f%05d_cand.rds", i)))
+      rds <- function(etq) file.path(salida, sprintf("f%05d_%s.rds", i, etq))
+      a <- correr_formatos(ruta_script(), rmd, "", rds("base"))
+      b <- correr_formatos(ruta_script(), rmd, lib, rds("cand"))
       r <- vapply(FORMATOS, function(f) clasificar_formato(a$formatos[[f]], b$formatos[[f]]), character(1))
-      if (any(r == "TEXTO_DISTINTO")) {
-        a2 <- correr_formatos(ruta_script(), rmd, "", file.path(salida, sprintf("f%05d_base2.rds", i)))
-        r <- vapply(FORMATOS, function(f) clasificar_formato(a$formatos[[f]], b$formatos[[f]], a2$formatos[[f]]), character(1))
+      if (!all(r %in% c("IDENTICO", "NO_APLICA", "FALLA_EN_AMBAS"))) {
+        a2 <- correr_formatos(ruta_script(), rmd, "", rds("base2"))
+        b2 <- correr_formatos(ruta_script(), rmd, lib, rds("cand2"))
+        r <- vapply(FORMATOS, function(f) {
+          clasificar_formato(a$formatos[[f]], b$formatos[[f]], a2$formatos[[f]], b2$formatos[[f]])
+        }, character(1))
       }
       as.list(r)
     }
@@ -276,7 +296,7 @@ if (!interactive() && sys.nframe() == 0L) {
     for (f in FORMATOS) {
       t <- table(tabla[, f])
       cat(sprintf("  %-7s %s\n", f, paste(names(t), t, sep = "=", collapse = " ")))
-      for (clase in c("FALLA_SOLO_CANDIDATA", "TEXTO_DISTINTO", "FALLA_SOLO_BASE")) {
+      for (clase in c("FALLA_SOLO_CANDIDATA", "TEXTO_DISTINTO", "FALLA_SOLO_BASE", "NO_SE_REPITE")) {
         for (j in which(tabla[, f] == clase)) cat(sprintf("    %s: %s\n", clase, rutas_f[j]))
       }
     }

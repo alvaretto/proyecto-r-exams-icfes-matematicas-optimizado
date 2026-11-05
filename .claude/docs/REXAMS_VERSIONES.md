@@ -116,8 +116,9 @@ normalizador corregido no queda ninguno de esos.
 - `tex2image()`, `include_tikz()` y `exams2pdf()` tienen el mismo código en las dos versiones.
   `make_exams_write_pdf()`, por donde pasa el caso del PDF, sí cambia.
 
-La causa del fallo de LaTeX no quedó identificada: el hijo del comparador no guarda el log, y el
-registro del sistema no muestra falta de memoria ni errores del kernel.
+La causa del fallo de LaTeX no quedó identificada: el hijo del comparador no guardaba el log, y el
+registro del sistema no muestra falta de memoria ni errores del kernel. Desde entonces el comparador
+repite antes de clasificar y conserva el log.
 
 ### Tablas en PDF
 
@@ -205,8 +206,6 @@ procesos a la vez el tope de 1500 s no alcanza. Repetidos con `--total 2000` dan
 3. **Exportar con `seed`** en los Semilleros, tras actualizar.
 4. **Qué hacer con los defectos de la tabla.** Los de producción requieren una versión nueva, porque
    esa carpeta es inmutable.
-5. **Repetir antes de clasificar en el comparador.** Hoy repite la base solo ante `TEXTO_DISTINTO`, y
-   no guarda el log de LaTeX: una falla suelta sale como `FALLA_SOLO_CANDIDATA`.
 
 ## Repetir la medición
 
@@ -219,9 +218,10 @@ Rscript .claude/scripts/comparar_version_exams.R --lib /tmp/cand --todos --n 3 -
 Un `.Rprofile` que antepone `~/R/library` hace inútil `R_LIBS`: por eso `--lib`. No editar los
 validadores mientras corre una comparación: un cambio a mitad fabrica diferencias.
 
-Una `FALLA_SOLO_CANDIDATA` o un `TEXTO_DISTINTO` se repiten antes de creerlos: el comparador repite la
-base solo ante `TEXTO_DISTINTO`, nunca ante una falla, y no repite la candidata. Un `tryCatch` del
-ejercicio alrededor de `include_tikz()` convierte un fallo de LaTeX en texto distinto.
+El comparador repite los dos lados ante cualquier falla o diferencia antes de clasificarla. Lo que no
+reaparece sale como `NO_SE_REPITE`, no cuenta como regresión y deja su log de LaTeX en
+`f<NNNNN>_<lado>.log`, junto al `.rds`. Un `tryCatch` del ejercicio alrededor de `include_tikz()`
+convierte un fallo de LaTeX en texto distinto.
 
 
 ## Herramientas

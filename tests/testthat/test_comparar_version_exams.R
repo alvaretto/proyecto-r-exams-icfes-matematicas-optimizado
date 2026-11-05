@@ -167,3 +167,77 @@ test_that("candidata inocua: sin regresiones y con versión declarada", {
   v <- as.character(utils::packageVersion("exams"))
   expect_true(any(grepl(sprintf("exams base %s · candidata %s", v, v), s, fixed = TRUE)))
 })
+
+# --- Lo que no se repite no es regresión ------------------------------------------
+# El diferencial de 2.4-2 a 2.4-5 (2026-11-05) dio dos FALLA_SOLO_CANDIDATA y un
+# TEXTO_DISTINTO que eran fallos sueltos de LaTeX: no reaparecieron en tres pasadas, y
+# el comparador solo repetía la base ante un texto distinto. Una falla o una diferencia
+# cuenta si se repite; si no, queda en el informe como NO_SE_REPITE.
+
+test_that("clasificar_par: una anomalía se confirma repitiendo los dos lados", {
+  fallo <- j(NA_character_)
+  expect_equal(E$clasificar_par(j("a"), fallo, j("a"), j("a")), "NO_SE_REPITE")
+  expect_equal(E$clasificar_par(j("a"), fallo, j("a"), fallo), "FALLA_SOLO_CANDIDATA")
+  expect_equal(E$clasificar_par(j("a"), fallo, j("a"), NULL), "FALLA_SOLO_CANDIDATA")
+  expect_equal(E$clasificar_par(fallo, j("a"), j("a"), j("a")), "NO_SE_REPITE")
+  expect_equal(E$clasificar_par(fallo, j("a"), fallo, j("a")), "FALLA_SOLO_BASE")
+  expect_equal(E$clasificar_par(j("a"), j("b"), j("a"), j("a")), "NO_SE_REPITE")
+  expect_equal(E$clasificar_par(j("a"), j("b"), j("a"), j("b")), "CAMBIA")
+  expect_equal(E$clasificar_par(j("a"), j("b"), j("a"), j("c")), "NO_DETERMINISTA")
+  expect_equal(E$clasificar_par(j("a"), j("b"), j("x"), j("b")), "NO_DETERMINISTA")
+  expect_equal(E$clasificar_par(fallo, fallo, j("a"), j("a")), "FALLA_EN_AMBAS")
+})
+
+test_that("clasificar_formato: una anomalía se confirma repitiendo los dos lados", {
+  ok <- function(h) list(ok = TRUE, huella = h)
+  no <- list(ok = FALSE, huella = NA_character_, error = "LaTeX")
+  expect_equal(E$clasificar_formato(ok("a"), no, ok("a"), ok("a")), "NO_SE_REPITE")
+  expect_equal(E$clasificar_formato(ok("a"), no, ok("a"), no), "FALLA_SOLO_CANDIDATA")
+  expect_equal(E$clasificar_formato(ok("a"), no, ok("a"), NULL), "FALLA_SOLO_CANDIDATA")
+  expect_equal(E$clasificar_formato(no, ok("a"), ok("a"), ok("a")), "NO_SE_REPITE")
+  expect_equal(E$clasificar_formato(no, ok("a"), no, ok("a")), "FALLA_SOLO_BASE")
+  # El caso real de Moodle: base y su repetición iguales; la candidata difirió una vez.
+  expect_equal(E$clasificar_formato(ok("a"), ok("b"), ok("a"), ok("a")), "NO_SE_REPITE")
+  expect_equal(E$clasificar_formato(ok("a"), ok("b"), ok("a"), ok("b")), "TEXTO_DISTINTO")
+  expect_equal(E$clasificar_formato(ok("a"), ok("b"), ok("a"), ok("c")), "NO_DETERMINISTA")
+  expect_equal(E$clasificar_formato(ok("a"), ok("b"), ok("x"), ok("b")), "NO_DETERMINISTA")
+})
+
+test_that("NO_SE_REPITE no pide revisión; una anomalía confirmada sí", {
+  expect_equal(E$veredicto_contenido(c("IDENTICO", "NO_SE_REPITE")), 0L)
+  expect_equal(E$veredicto_formatos(c("IDENTICO", "NO_SE_REPITE")), 0L)
+  expect_equal(E$veredicto_contenido(c("NO_SE_REPITE", "FALLA_SOLO_CANDIDATA")), 1L)
+  expect_equal(E$veredicto_formatos(c("NO_SE_REPITE", "TEXTO_DISTINTO")), 1L)
+})
+
+test_that("de punta a punta: un fallo suelto se repite, se informa y deja su log", {
+  skip_if_not_installed("jsonlite")
+  corpus <- tempfile("corpus_suelto_")
+  dir.create(corpus)
+  estado <- tempfile("ya_fallo_")
+  escribir(corpus, "suelto", c(
+    "hijo_formatos <- '--hijo-formatos' %in% commandArgs()",
+    sprintf("estado <- '%s'", estado),
+    "if (marcador && hijo_formatos && !file.exists(estado)) {",
+    "  file.create(estado)",
+    "  stop('fallo suelto')",
+    "}",
+    "x <- 1"))
+  lib <- tempfile("lib_cand_")
+  dir.create(lib)
+  file.create(file.path(lib, "MARCADOR"))
+  salida <- tempfile("salida_suelto_")
+  s <- suppressWarnings(system2(RSCRIPT, c(shQuote(SCRIPT), "--lib", shQuote(lib), "--raiz", shQuote(corpus),
+                                           "--todos", "--n", 2, "--jobs", 1, "--formatos", 1,
+                                           "--salida", shQuote(salida)), stdout = TRUE, stderr = TRUE))
+  texto <- paste(s, collapse = "\n")
+  expect_true(file.exists(estado))  # sin esto, el fallo no ocurrió y la prueba no prueba nada
+  expect_true(grepl("NO_SE_REPITE: .*suelto\\.Rmd", texto))
+  expect_false(grepl("FALLA_SOLO_CANDIDATA", texto, fixed = TRUE))
+  expect_null(attr(s, "status"))
+  expect_true(any(s == "COMPARAR_SIN_REGRESIONES"))
+  for (etq in c("base", "cand", "base2", "cand2")) {
+    expect_true(file.exists(file.path(salida, sprintf("f00001_%s.log", etq))), info = etq)
+  }
+  expect_true(any(grepl("fallo suelto", readRDS(file.path(salida, "f00001_cand.rds"))$formatos$html$error, fixed = TRUE)))
+})

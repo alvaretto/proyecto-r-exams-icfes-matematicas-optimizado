@@ -8,6 +8,19 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.39.2 (2026-11-05)
+
+`comparar_version_exams.R` repite antes de clasificar. El diferencial de 2.4-2 a 2.4-5 dio dos
+`FALLA_SOLO_CANDIDATA` y un `TEXTO_DISTINTO` que eran fallos sueltos de LaTeX, y hubo que repetirlos a
+mano: el comparador solo repetía la base, y solo ante un texto distinto.
+
+1. **Clase nueva `NO_SE_REPITE`.** Toda falla o diferencia se repite en los dos lados. Si no reaparece,
+   queda en el informe y no cuenta como regresión; si reaparece, conserva su clase. Vale para las dos
+   capas, contenido y formatos.
+2. **Log por render.** `f<NNNNN>_<lado>.log`, junto al `.rds`, con la salida de LaTeX.
+3. **Pruebas.** `test_comparar_version_exams.R` gana cuatro bloques, entre ellos uno de punta a punta
+   con un fallo que ocurre una sola vez. Fallaban con el código anterior.
+
 ### Cambios v3.39.1 (2026-11-05)
 
 Documentación central y referencias cruzadas al día con las novedades de R/exams. Sin cambios de
