@@ -1,10 +1,10 @@
 # HANDOFF — repositorio (infraestructura `.claude/`, tests y documentación)
 
 > Archivo de retorno para el trabajo que no pertenece a un ejercicio; cada ejercicio lleva su propio
-> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-11-05 (v3.39.0: novedades de R/exams, mediciones cerradas, **sin commit**).
+> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-11-05 (v3.39.0: novedades de R/exams, mediciones cerradas, en `849efaa4`).
 > Si este archivo y el código discrepan, manda el código: verificar antes de actuar.
 
-## 2026-11-04 y 05: novedades de R/exams (v3.39.0), SIN COMMIT
+## 2026-11-04 y 05: novedades de R/exams (v3.39.0), commit `849efaa4`
 
 - **Qué es:** el profesor pasó un resumen de «novedades 2027» de R/exams. Se verificó contra fuentes
   primarias y se automatizó lo útil. Hallazgos y cifras: `.claude/docs/REXAMS_VERSIONES.md`.
@@ -12,16 +12,16 @@
   suite completa, 53 de 53. El diferencial terminó en `COMPARAR_REVISAR`, con tres casos que no se
   sostienen al repetirlos: el documento los explica. Crudos en `~/.cache/rexams-versiones/`;
   `comp245b.log` quedó cortado por un apagado y no se usa. No queda nada corriendo.
-- **Al retomar:** faltan el commit selectivo, con lista explícita, y las cinco decisiones del profesor
-  que cierran el documento.
+- **Al retomar:** faltan las cinco decisiones del profesor que cierran el documento. Commit y push
+  hechos el 2026-11-05, con los 34 archivos de la lista.
 - **Archivos de esta línea:** `.claude/scripts/{validar_stresstest,comparar_version_exams,vigia_rexams,webquiz_autocontenido}.R`,
   `Auxiliares/exams2nops-escaner/nops_control_calidad.R` y `scaner_exams2nops.md`, cinco
   `tests/testthat/test_{validar_stresstest,comparar_version_exams,vigia_rexams,webquiz_autocontenido,nops_control_calidad}.R`,
   `tests/testthat/fixtures/vigia_rexams/`, `tests/testthat/test_{data_generation_no_hang,muestra_estandar}.R`,
   `tests/run_all_tests.R`, los dos `.claude/agents/orquestador-*.md`, las reglas #4, #20, #21 y #23
   (compacta e íntegra), `.claude/docs/{REXAMS_VERSIONES,VALIDATOR_COBERTURA_ICFES,CHANGELOG_CLAUDE_MD,HANDOFF_REPO}.md`
-  y `.claude/CLAUDE.md`. El árbol trae además cambios ajenos: commit con lista explícita.
-- **Rige desde el commit:** los orquestadores cargan su definición de `HEAD`.
+  y `.claude/CLAUDE.md`. El árbol trae además cambios ajenos, fuera de ese commit.
+- **Rige en sesión nueva:** los orquestadores cargan su definición de `HEAD`.
 - **No se hizo, a propósito:** actualizar `exams` en la biblioteca del usuario, tocar `03-En-Produccion`,
   ni parchear `pcielo*.tex` o `solpcielo*.tex`. Son las decisiones pendientes del documento.
 
