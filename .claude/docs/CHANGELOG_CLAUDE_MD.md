@@ -33,9 +33,12 @@ código ni de validadores.
 5. **Guía del escáner.** `scaner_exams2nops.html` regenerado: seguía sin la sección de control de
    calidad.
 
-Quedan fuera a propósito: `CLAUDE.md` raíz, que aún nombra la ruta vieja de los ejemplos funcionales
-en sus reglas absolutas; `post-exams2-validation.sh` y `test_markdown_tablas_none_guard.R`, que aún
-dicen pandoc ≥ 3.7; los ADR 002-007, sin commit; y los documentos históricos y auxiliares, que
+Con el visto bueno del profesor, por ser archivos protegidos, también `CLAUDE.md` raíz (ruta de la
+regla absoluta #2) y la FASE 2K de `post-exams2-validation.sh`, que además decía que el fallo era
+invisible en terminal. Solo cambian textos: la detección es la misma.
+
+Quedan fuera a propósito: `test_markdown_tablas_none_guard.R`, que aún dice pandoc ≥ 3.7 en sus
+comentarios; los ADR 002-007, sin commit; y los documentos históricos y auxiliares, que
 conservan sus rutas: `Auxiliares/`, `.agent.md`, `docs/guias/`, resúmenes fechados, `.claude/deprecated/`
 y los «archivos afectados» de los errores antiguos.
 

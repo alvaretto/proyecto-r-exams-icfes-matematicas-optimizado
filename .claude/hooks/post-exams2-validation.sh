@@ -785,8 +785,8 @@ echo ""
 # =============================================================================
 # FASE 2K: GUARD CONTADOR 'none' PARA TABLAS (Error 21, regla #20)
 # =============================================================================
-# pandoc >=3.7 (RStudio bundlea 3.8.3) envuelve longtable con \def\LTcaptype{none}.
-# La plantilla LaTeX de R-exams no define el contador 'none' -> exams2pdf/nops
+# pandoc >=3.8.1 (3.10 en RStudio, 3.11 en terminal) envuelve longtable con \def\LTcaptype{none}.
+# Las plantillas de exams < 2.4-4 y las propias no definen el contador 'none' -> exams2pdf/nops
 # fallan con "No counter 'none' defined". Todo .Rmd con tabla markdown DEBE incluir
 # el guard \newcounter{none} al inicio de Question.
 
@@ -800,8 +800,8 @@ if [ -f "$RMD_ABS" ]; then
   if [ -n "$TIENE_TABLA" ] && [ -z "$TIENE_GUARD" ]; then
     ERRORES_TOTALES=$((ERRORES_TOTALES + 1))
     echo "  ❌ ERR_TABLA_NONE: .Rmd con tabla markdown SIN guard del contador 'none'"
-    echo "     pandoc >=3.7 (RStudio usa 3.8.3) -> exams2pdf/nops fallan con"
-    echo "     'No counter \"none\" defined' (invisible con el pandoc 3.6 de terminal)."
+    echo "     pandoc >=3.8.1 -> exams2pdf/nops fallan con 'No counter \"none\" defined'"
+    echo "     con las plantillas propias y con exams < 2.4-4."
     echo ""
     echo "     Fix obligatorio (regla #20): al INICIO de la seccion Question, un"
     echo "     bloque raw LaTeX (se ignora en HTML/DOCX):"

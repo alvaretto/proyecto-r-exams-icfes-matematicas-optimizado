@@ -15,9 +15,9 @@
 - **Al retomar:** faltan las cinco decisiones del profesor que cierran el documento. Commit y push
   hechos el 2026-11-05, con los 34 archivos de la lista.
 - **Referencias cruzadas (v3.39.1):** documentos centrales, skills del paso 9 y guía del escáner al
-  día. Quedan fuera a propósito: `CLAUDE.md` raíz, que aún nombra `A-Produccion/Ejemplos-Funcionales-Rmd/`
-  en sus reglas absolutas; el hook post-render y `test_markdown_tablas_none_guard.R`, que aún dicen
-  pandoc ≥ 3.7; los ADR 002-007, que siguen sin commit; y los documentos históricos y auxiliares, que
+  día, junto con `CLAUDE.md` raíz y la FASE 2K del hook, con visto bueno del profesor. Quedan fuera a
+  propósito: `test_markdown_tablas_none_guard.R`, que aún dice pandoc ≥ 3.7 en sus comentarios; los ADR
+  002-007, que siguen sin commit; y los documentos históricos y auxiliares, que
   conservan sus rutas (`Auxiliares/`, `.agent.md`, `docs/guias/`, resúmenes fechados).
 - **Archivos de esta línea:** `.claude/scripts/{validar_stresstest,comparar_version_exams,vigia_rexams,webquiz_autocontenido}.R`,
   `Auxiliares/exams2nops-escaner/nops_control_calidad.R` y `scaner_exams2nops.md`, cinco

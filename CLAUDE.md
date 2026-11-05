@@ -18,8 +18,8 @@
 
 1. **NO sobrescribir** `.claude/CLAUDE.md`, `.claude/rules/`, ni los hooks
    `.claude/hooks/{pre-write-rmd-gate,post-exams2-validation,pre-commit-ortografia}.sh`.
-2. **NO modificar** archivos en `A-Produccion/03-En-Produccion/` ni en
-   `A-Produccion/Ejemplos-Funcionales-Rmd/` (inmutables).
+2. **NO modificar** archivos en `A-Produccion/03-En-Produccion/`, incluidos los de
+   `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/` (inmutables).
 3. **Antes de crear o editar** cualquier `.Rmd` en `A-Produccion/01-En-PreDesarrollo/`
    o `02-En-Desarrollo/`: respetar el gate `pre-write-rmd-gate.sh` (regla #16,
    `workflow-state-enforcement.md`). Requiere `ejercicio_state.json` con pasos previos
