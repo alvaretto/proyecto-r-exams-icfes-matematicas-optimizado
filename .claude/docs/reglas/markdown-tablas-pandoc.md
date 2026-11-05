@@ -179,6 +179,10 @@ corresponding `\LTcaptype{none}`». El código lo confirma en `inst/tex/plain.te
 - El guard usa `\@ifundefined`, así que no choca con la definición del paquete. Los 39 `.Rmd` que lo
   traen lo llevan con esa forma; ninguno trae un `\newcounter{none}` sin guarda.
 
+Medido el 2026-11-05: pandoc 3.11 en terminal y 3.10 en RStudio, así que el fallo ya no es exclusivo de
+RStudio. Censo por versión y las dos líneas para las plantillas propias: `.claude/docs/REXAMS_VERSIONES.md`,
+sección «Tablas en PDF».
+
 ---
 
 **Versión:** 1.2

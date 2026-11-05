@@ -1,10 +1,10 @@
 # HANDOFF — repositorio (infraestructura `.claude/`, tests y documentación)
 
 > Archivo de retorno para el trabajo que no pertenece a un ejercicio; cada ejercicio lleva su propio
-> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-11-05 (v3.39.0: novedades de R/exams, mediciones cerradas, en `849efaa4`).
+> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-11-05 (v3.39.1: documentación y referencias cruzadas de las novedades de R/exams; mediciones en `849efaa4`).
 > Si este archivo y el código discrepan, manda el código: verificar antes de actuar.
 
-## 2026-11-04 y 05: novedades de R/exams (v3.39.0), commit `849efaa4`
+## 2026-11-04 y 05: novedades de R/exams (v3.39.0 y v3.39.1), commit `849efaa4`
 
 - **Qué es:** el profesor pasó un resumen de «novedades 2027» de R/exams. Se verificó contra fuentes
   primarias y se automatizó lo útil. Hallazgos y cifras: `.claude/docs/REXAMS_VERSIONES.md`.
@@ -14,6 +14,11 @@
   `comp245b.log` quedó cortado por un apagado y no se usa. No queda nada corriendo.
 - **Al retomar:** faltan las cinco decisiones del profesor que cierran el documento. Commit y push
   hechos el 2026-11-05, con los 34 archivos de la lista.
+- **Referencias cruzadas (v3.39.1):** documentos centrales, skills del paso 9 y guía del escáner al
+  día. Quedan fuera a propósito: `CLAUDE.md` raíz, que aún nombra `A-Produccion/Ejemplos-Funcionales-Rmd/`
+  en sus reglas absolutas; el hook post-render y `test_markdown_tablas_none_guard.R`, que aún dicen
+  pandoc ≥ 3.7; los ADR 002-007, que siguen sin commit; y los documentos históricos y auxiliares, que
+  conservan sus rutas (`Auxiliares/`, `.agent.md`, `docs/guias/`, resúmenes fechados).
 - **Archivos de esta línea:** `.claude/scripts/{validar_stresstest,comparar_version_exams,vigia_rexams,webquiz_autocontenido}.R`,
   `Auxiliares/exams2nops-escaner/nops_control_calidad.R` y `scaner_exams2nops.md`, cinco
   `tests/testthat/test_{validar_stresstest,comparar_version_exams,vigia_rexams,webquiz_autocontenido,nops_control_calidad}.R`,

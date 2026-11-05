@@ -73,7 +73,7 @@ Después de la generación del archivo .Rmd, se activa OBLIGATORIAMENTE el
 
 ## ⛔ Reglas de Oro (NO NEGOCIABLES)
 
-1. **SIEMPRE** consultar `/A-Produccion/Ejemplos-Funcionales-Rmd/` para patrones similares
+1. **SIEMPRE** consultar `/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/` para patrones similares
 2. **SIEMPRE** consultar ejemplos funcionales cuando se detecten errores
 3. **NUNCA** terminar con errores sin resolver
 4. **Ejemplos funcionales** = Fuente de verdad ABSOLUTA
@@ -82,5 +82,5 @@ Después de la generación del archivo .Rmd, se activa OBLIGATORIAMENTE el
 ## Referencias
 
 - `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
-- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (fuente de verdad)
+- `/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/` (fuente de verdad)
 

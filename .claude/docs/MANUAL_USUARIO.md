@@ -2,8 +2,8 @@
 
 > Manual operativo del repositorio ICFES R/exams. Si vas a generar, revisar o promover un ejercicio, este es el archivo a leer primero.
 
-**Versión del manual:** 1.1 (2026-10-28: cifras de reglas, agentes, invariantes y hooks; comandos que faltaban en la sección 6)
-**Fecha:** 2026-10-28
+**Versión del manual:** 1.2 (2026-11-05: compilación completa y versiones de R/exams; antes: v1.1, 2026-10-28: cifras de reglas, agentes, invariantes y hooks; comandos que faltaban en la sección 6)
+**Fecha:** 2026-11-05
 **Para Claude Code 2026 con Ruflo (claude-flow v3) instalado en convivencia (ADR-001)**
 
 ---
@@ -171,6 +171,28 @@ Si el render falla y no sabes por qué:
 
 Consulta automáticamente `patrones-errores-conocidos.md` y propone fix.
 
+### 3.6 Compilación completa multi-semilla
+
+El stress visual compila pocas versiones a PDF. Para ver cuelgues, errores y fugas de `NA` con N = 100,
+sin LaTeX:
+
+```bash
+Rscript .claude/scripts/validar_stresstest.R A-Produccion/01-En-PreDesarrollo/<dir>/<archivo>.Rmd
+```
+
+Exit 0 aprueba, exit 1 bloquea y exit 2 (`WARN_STRESS_INDET`) no pudo medir: repetir con `--total` mayor.
+Es parte del paso 9.
+
+### 3.7 Versiones de R/exams
+
+```bash
+Rscript .claude/scripts/vigia_rexams.R        # ¿hay versión nueva?
+Rscript .claude/scripts/comparar_version_exams.R --lib <biblioteca> --todos --n 3 --jobs 8 --formatos 60
+```
+
+Procedimiento y resultados: `.claude/docs/REXAMS_VERSIONES.md`. Cuestionario sin internet:
+`.claude/scripts/webquiz_autocontenido.R`. Escaneos NOPS: `Auxiliares/exams2nops-escaner/nops_control_calidad.R`.
+
 ---
 
 ## 4. Promover un ejercicio a producción
@@ -302,6 +324,9 @@ Lista completa: `.claude/CLAUDE.md`.
 | El gate bloquea sin razón aparente | `workflow-state.sh status <dir>` | regla #16 |
 | El detractor reporta crítica | Aplicar fix → re-renderizar | regla #9 |
 | El test de diversidad da 2/200 | Ver Error #8 (RNG) | `codigo-rmd.md` #10 |
+| `No counter 'none' defined` en PDF o NOPS | Añadir el guard al `.Rmd` | regla #20, Error 21 |
+| Un Semillero falla con tablas | Plantilla propia sin `{none}` | `REXAMS_VERSIONES.md`, «Tablas en PDF» |
+| Un ejercicio se cuelga en algunas semillas | `validar_stresstest.R` | regla #21 F1, Error 22 |
 | `claude mcp list` reporta `✗ Failed` | `claude mcp remove <nombre>` o investigar | Error #13 |
 | Hooks ICFES no se disparan | Verificar I-3 con test | regla #17 |
 | `CLAUDE.md` raíz cambió de identidad | Verificar I-1 | regla #17 |

@@ -44,7 +44,7 @@ Reportar cobertura actual al usuario
 - Reglas (`.claude/rules/`)
 - Skills (`.claude/skills/`)
 - Tests existentes (`tests/`)
-- Ejemplos funcionales (`A-Produccion/Ejemplos-Funcionales-Rmd/`)
+- Ejemplos funcionales (`A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/`)
 
 ### FASE 2: Después de Cambios en Código
 

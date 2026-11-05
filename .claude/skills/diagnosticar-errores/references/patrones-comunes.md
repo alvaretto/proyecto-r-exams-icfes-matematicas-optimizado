@@ -25,7 +25,7 @@ if (knitr::is_latex_output()) {
 include_tikz(tikz_code, name = "grafico", markup = "markdown", format = typ, width = "8cm")
 ```
 
-**Ejemplo funcional:** `/A-Produccion/Ejemplos-Funcionales-Rmd/grafico_lineas_poblacion.Rmd`
+**Ejemplo funcional:** `/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/grafico_lineas_poblacion.Rmd`
 
 ## Patron 2: Caracteres Especiales Rompen LaTeX
 

@@ -18,7 +18,7 @@ Dominio: [flutter | supabase | r-exams | otro]
 
 - Context7 para documentacion tecnica
 - WebSearch para evidencia cientifica
-- Archivos locales de referencia (`.claude/rules/`, `A-Produccion/Ejemplos-Funcionales-Rmd/`)
+- Archivos locales de referencia (`.claude/rules/`, `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/`)
 
 ## Paso 4: Generar Objeciones
 

@@ -89,7 +89,7 @@
 │     └─ Agregando metadatos ICFES                       │
 │                                                          │
 │  ✅ Archivo generado:                                   │
-│     A-Produccion/En-Desarrollo/                         │
+│     A-Produccion/02-En-Desarrollo/                         │
 │     Triangulos_Geometrico_Formulacion_n3_v1.Rmd         │
 └──────────────────────────────────────────────────────────┘
 ```

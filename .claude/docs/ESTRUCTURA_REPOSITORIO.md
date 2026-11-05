@@ -108,10 +108,10 @@ En-Desarrollo/
 **Uso**:
 ```bash
 # CORRECTO: Copiar patrón
-cp A-Produccion/Ejemplos-Funcionales-Rmd/patron.Rmd En-Desarrollo/nuevo.Rmd
+cp A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/patron.Rmd A-Produccion/02-En-Desarrollo/nuevo.Rmd
 
 # INCORRECTO: Editar directamente
-# ❌ NO HACER: Edit(A-Produccion/Ejemplos-Funcionales-Rmd/patron.Rmd)
+# ❌ NO HACER: Edit(A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/patron.Rmd)
 ```
 
 **Contenido típico**:
@@ -233,10 +233,17 @@ scripts/
 ├── validar_coherencia_matematica.R  # FASE 2A automática (Niveles 1-5)
 ├── validar_multisemilla.R           # Stress-test multi-semilla (Nivel 5)
 ├── corregir_ortografia_espanol.R    # Validación de tildes
+├── validar_stresstest.R             # Compilación completa con N = 100 (paso 9, regla #23)
+├── comparar_version_exams.R         # Qué cambia con otra versión de exams
+├── vigia_rexams.R                   # Versiones y NEWS desde fuentes primarias
+├── webquiz_autocontenido.R          # Cuestionario HTML sin internet
 └── [otros scripts de utilidad]
 ```
 
 **Tests asociados**: `tests/testthat/test_validacion_matematica.R`, etc.
+
+**Versiones de R/exams**: `.claude/docs/REXAMS_VERSIONES.md`. El control de calidad de escaneos NOPS vive en
+`Auxiliares/exams2nops-escaner/nops_control_calidad.R`.
 
 ---
 
@@ -384,7 +391,7 @@ outputs/
 |-------------|--------------------|
 | Ejercicio validado en producción | `A-Produccion/03-En-Produccion/[categoría]/` |
 | Ejercicio en desarrollo | `A-Produccion/02-En-Desarrollo/` |
-| Patrón de solución validado | `A-Produccion/Ejemplos-Funcionales-Rmd/` |
+| Patrón de solución validado | `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/` |
 | Regla obligatoria | `.claude/rules/` |
 | Documentación técnica | `.claude/docs/` |
 | Comando manual | `.claude/commands/` |
@@ -463,7 +470,7 @@ A-Produccion/03-En-Produccion/02-Funciones/
 
 **NO modificar directamente**:
 
-1. `A-Produccion/Ejemplos-Funcionales-Rmd/` - Solo copiar patrones
+1. `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/` - Solo copiar patrones
 2. `.claude/rules/` - Solo con aprobación y tests pasando
 3. `.claude/hooks/` - Solo con validación de regresión
 4. `tests/testthat/` - Solo con cobertura 100% mantenida
@@ -536,12 +543,13 @@ Estado del sistema:          ACTIVO Y PERMANENTE
 
 ---
 
-**Versión**: 1.5
-**Fecha**: 2026-02-27
-**Módulo de**: @.claude/CLAUDE.md (v3.6.0)
+**Versión**: 1.6
+**Fecha**: 2026-11-05
+**Módulo de**: @.claude/CLAUDE.md (v3.39.1)
 
 ### Historial de Cambios
 
+- **v1.6** (2026-11-05): Scripts de versiones de R/exams y ruta real de `Ejemplos-Funcionales-Rmd`
 - **v1.5** (2026-02-27): Actualizar conteos produccion (78 .Rmd), 12 suites/110+ tests, 23 skills, promover diagrama_venn a 08-Probabilidad
 - **v1.4** (2026-02-14): Actualizar rules/ (14 archivos), docs/ (+MODELO_ROUTING.md), skills/ (22 con modelo), stats actualizados
 - **v1.3** (2026-02-14): Actualizar a 10 suites, 82+ tests. Agregar test_correctitud_respuesta.R y validar_multisemilla.R

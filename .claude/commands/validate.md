@@ -18,7 +18,7 @@ Cada fase depende de la anterior. Si una fase falla, corregir antes de continuar
 Rscript -e '
 library(lintr)
 # Solo archivos R en Produccion y scripts de validación
-lint_dir("../A-Produccion/Ejemplos-Funcionales-Rmd/", pattern = "\\.Rmd$")
+lint_dir("../A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/", pattern = "\\.Rmd$")
 ' 2>&1 | head -50
 ```
 

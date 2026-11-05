@@ -63,7 +63,7 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 
 **Siguiente paso:** Usar `/generar-schoice` o `/generar-cloze` según el tipo de ejercicio
 
-**Documentación completa:** `.claude/skills/analizar-icfes/skill.md`
+**Documentación completa:** `.claude/skills/analizar-icfes/SKILL.md`
 
 ---
 
@@ -80,9 +80,9 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 /generar-schoice
 ```
 
-**Salida:** Archivo `.Rmd` en `/A-Produccion/En-Desarrollo/`
+**Salida:** Archivo `.Rmd` en `/A-Produccion/02-En-Desarrollo/`
 
-**Documentación completa:** `.claude/skills/generar-schoice/skill.md`
+**Documentación completa:** `.claude/skills/generar-schoice/SKILL.md`
 
 #### `/generar-cloze`
 
@@ -95,9 +95,9 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 /generar-cloze
 ```
 
-**Salida:** Archivo `.Rmd` en `/A-Produccion/En-Desarrollo/`
+**Salida:** Archivo `.Rmd` en `/A-Produccion/02-En-Desarrollo/`
 
-**Documentación completa:** `.claude/skills/generar-cloze/skill.md`
+**Documentación completa:** `.claude/skills/generar-cloze/SKILL.md`
 
 ---
 
@@ -121,7 +121,7 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 /corregir-error-imagen [archivo.Rmd]
 ```
 
-**Documentación completa:** `.claude/skills/corregir-error-imagen/skill.md`
+**Documentación completa:** `.claude/skills/corregir-error-imagen/SKILL.md`
 
 ---
 
@@ -143,7 +143,7 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 /promover-ejercicio [nombre.Rmd]
 ```
 
-**Documentación completa:** `.claude/skills/promover-ejercicio/skill.md`
+**Documentación completa:** `.claude/skills/promover-ejercicio/SKILL.md`
 
 ---
 
@@ -208,16 +208,16 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 
 ```bash
 # Ver ejercicios en producción
-ls A-Produccion/En-Produccion/**/*.Rmd
+ls A-Produccion/03-En-Produccion/**/*.Rmd
 
 # Ver ejercicios en pre-desarrollo (también funcionales)
-ls A-Produccion/En-PreDesarrollo/**/*.Rmd
+ls A-Produccion/01-En-PreDesarrollo/**/*.Rmd
 
 # Ver templates
-ls A-Produccion/Templates/*.Rmd
+ls A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/*.Rmd
 
 # Ver ejemplos funcionales
-ls A-Produccion/Ejemplos-Funcionales-Rmd/
+ls A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
 ```
 
 ---

@@ -119,10 +119,10 @@ Se activa **SUBFASE 3A: Corrección Basada en Ejemplos**:
 
 ```bash
 # OBLIGATORIO: Consultar ejemplos funcionales
-ls /A-Produccion/Ejemplos-Funcionales-Rmd/
+ls /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
 
 # Buscar patrones similares
-grep -l "generar_datos" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+grep -l "generar_datos" /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 ```
 
 **Después de corregir** → Ejecutar **SUBFASE 3B: Revalidación Obligatoria**
@@ -135,7 +135,7 @@ grep -l "generar_datos" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 2. **Sincronización**: Variables en TikZ y Python DEBEN derivarse de variables R
    usando paste0() o r.variable.
 
-3. **Consultar ejemplos**: SIEMPRE consultar `/A-Produccion/Ejemplos-Funcionales-Rmd/`
+3. **Consultar ejemplos**: SIEMPRE consultar `/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/`
    antes de aplicar cualquier corrección.
 
 4. **Ciclo obligatorio**: Después de corregir → VOLVER A FASE 1 (Revalidación)
@@ -159,7 +159,7 @@ grep -l "generar_datos" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 ║ [Lista de errores con líneas]                              ║
 ║                                                            ║
 ║ 📚 Ejemplo funcional consultado:                           ║
-║ /A-Produccion/Ejemplos-Funcionales-Rmd/[archivo]           ║
+║ /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/[archivo]           ║
 ║                                                            ║
 ║ Correcciones aplicadas: [N]                                ║
 ║                                                            ║
@@ -171,8 +171,8 @@ grep -l "generar_datos" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 
 ## Referencias
 
-- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD)
+- `/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD)
 - `.claude/docs/patrones-errores-conocidos.md#error-2`
 - `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
-- `.claude/skills/validar-coherencia/skill.md`
+- `.claude/skills/validar-coherencia/SKILL.md`
 

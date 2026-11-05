@@ -119,8 +119,8 @@ Incorrecto: Generar código desde cero sin consultar ejemplos.
 Correcto:
 
 ```bash
-ls /A-Produccion/Ejemplos-Funcionales-Rmd/
-grep -l "Geométrico" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+ls /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
+grep -l "Geométrico" /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 # Leer ejemplo similar completo
 # Copiar estructura y adaptar
 ```

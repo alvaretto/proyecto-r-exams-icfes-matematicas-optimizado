@@ -120,6 +120,6 @@ Agregar entrada con:
 ## Referencias
 
 - `.claude/docs/TRES_NIVELES_VALIDACION.md`
-- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (fuente de verdad)
+- `/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/` (fuente de verdad)
 - `.claude/rules/ciclo-validacion.md`
 

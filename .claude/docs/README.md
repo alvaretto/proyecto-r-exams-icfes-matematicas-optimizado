@@ -20,6 +20,9 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 
 ## Estructura
 
+> Árbol histórico, sin mantener: parte de sus archivos ya no existe. La estructura vigente está en
+> `.claude/docs/ESTRUCTURA_REPOSITORIO.md`, y el mapa de documentos, en `.claude/CLAUDE.md`.
+
 ```
 .claude/
 ├── docs/                           # 📚 Documentación técnica
@@ -147,7 +150,7 @@ Antes de aprobar cada version:
 ⚡ FASE 3: DECISION Y ACCION
     ├── ❌ SIN ERRORES → Continuar workflow
     └── ✓ CON ERRORES:
-        ├── 📚 SUBFASE 3A: Consultar /A-Produccion/Ejemplos-Funcionales-Rmd/
+        ├── 📚 SUBFASE 3A: Consultar /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
         ├── 🔄 SUBFASE 3B: VOLVER A FASE 1 (ciclo obligatorio)
         └── 📊 SUBFASE 3C: Documentar en patrones-errores-conocidos.md
 ```
@@ -261,7 +264,7 @@ Los skills son procedimientos automatizados que Claude puede ejecutar para tarea
 3. Prueba compilación PDF y HTML
 4. Valida resultados
 
-**Documentación completa:** `.claude/skills/corregir-error-imagen/skill.md`
+**Documentación completa:** `.claude/skills/corregir-error-imagen/SKILL.md`
 
 ### Skill: validar-diversidad
 
@@ -272,13 +275,13 @@ Los skills son procedimientos automatizados que Claude puede ejecutar para tarea
 /validar-diversidad
 ```
 
-**Documentación completa:** `.claude/skills/validar-diversidad/skill.md`
+**Documentación completa:** `.claude/skills/validar-diversidad/SKILL.md`
 
 ### Skill: validar-icfes
 
 **Función:** Verifica que los metadatos ICFES estén completos y correctos.
 
-**Documentación completa:** `.claude/skills/validar-icfes/skill.md`
+**Documentación completa:** `.claude/skills/validar-icfes/SKILL.md`
 
 ## Flujo de Trabajo: Ciclo de Validación y Corrección Automática
 
@@ -308,7 +311,7 @@ exams2nops("archivo.Rmd", n = 1)
 #### 📚 SUBFASE 3A: Corrección Basada en Ejemplos
 ```bash
 # SIEMPRE consultar ejemplos funcionales ANTES de corregir
-ls /A-Produccion/Ejemplos-Funcionales-Rmd/
+ls /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
 # Identificar patrones de solución en archivos similares
 # Aplicar correcciones basadas en ejemplos validados
 ```

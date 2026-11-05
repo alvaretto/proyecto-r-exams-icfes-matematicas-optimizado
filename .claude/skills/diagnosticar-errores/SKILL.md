@@ -103,8 +103,8 @@ Orden de prioridad:
 OBLIGATORIO consultar ejemplos funcionales ANTES de corregir:
 
 ```bash
-ls /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
-grep -l "[patron_similar]" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+ls /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+grep -l "[patron_similar]" /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 ```
 
 Copiar patron exacto del ejemplo funcional. NO improvisar.
@@ -132,7 +132,7 @@ Agregar a .claude/docs/patrones-errores-conocidos.md
 
 - Recibir lista completa de errores de FASE 1/FASE 2
 - Tener archivo .Rmd accesible
-- Acceso a /A-Produccion/Ejemplos-Funcionales-Rmd/
+- Acceso a /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
 
 ### Durante diagnostico
 
@@ -156,7 +156,7 @@ Regla Absoluta: LOOP hasta exito total.
 - [Patrones comunes](references/patrones-comunes.md) - Soluciones verificadas
 - Ciclo Validacion: .claude/rules/ciclo-validacion.md
 - Patrones Errores: .claude/docs/patrones-errores-conocidos.md
-- Ejemplos Funcionales: /A-Produccion/Ejemplos-Funcionales-Rmd/
+- Ejemplos Funcionales: /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
 
 ## Integracion con otros skills
 

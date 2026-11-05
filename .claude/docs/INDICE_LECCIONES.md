@@ -2,7 +2,7 @@
 
 > **Propósito:** mapa unificado de TODAS las fuentes de lecciones, errores y decisiones del proyecto ICFES R/exams. Si tienes una pregunta del tipo "¿esto ya pasó? ¿hay un fix conocido?", **empieza por aquí**.
 
-**Última actualización:** 2026-09-13 (Errores 35-37 agregados en §2.7 — ciclo `teorema-coseno-datos-suficientes-n3`: segunda clave por criterio ambiguo, invariante sin guardia ejecutable, cobertura nominal y sonda sin control positivo)
+**Última actualización:** 2026-11-05 (reglas hasta la #25 y versiones de R/exams; antes: 2026-09-13, Errores 35-37 agregados en §2.7 — ciclo `teorema-coseno-datos-suficientes-n3`: segunda clave por criterio ambiguo, invariante sin guardia ejecutable, cobertura nominal y sonda sin control positivo)
 **Mantenedor:** Álvaro Ángel Molina
 
 ---
@@ -28,11 +28,12 @@
 | Errores de diseño de opciones gráficas | `.claude/docs/patrones-errores-conocidos.md` (Errores 18 y 20) + `.claude/rules/graficos-como-opciones.md` §Formato Equilibrado | Catálogo + Normativo |
 | Errores de legibilidad geométrica y fuga de información en diagramas dinámicos | `.claude/docs/patrones-errores-conocidos.md` (Errores 23-26) + `.claude/rules/graficos-como-opciones.md` §Canal de fuga + `.claude/rules/diversidad-sustantiva.md` §P4/P5/P6 + regla local `A-Produccion/01-En-PreDesarrollo/desplazamiento-avion-aeropuerto/.claude/rules/diagramas-vectoriales.md` | Catálogo + Normativo |
 | Errores de diseño de ítem: segunda clave por criterio ambiguo, invariante sin guardia ejecutable, cobertura nominal | `.claude/docs/patrones-errores-conocidos.md` (Errores 35-37) + `.claude/rules/diversidad-sustantiva.md` §P7-F + `.claude/rules/hermes-imagenes-icfes.md` H-4 + `.claude/rules/detractor-obligatorio.md` §Alcance de la auditoría + regla local `A-Produccion/01-En-PreDesarrollo/teorema-coseno-datos-suficientes-n3/.claude/CLAUDE.md` (I-1..I-15) | Catálogo + Normativo |
-| Reglas absolutas (20) | `.claude/CLAUDE.md` + `.claude/rules/*.md` | Normativo |
+| Versiones de R/exams, qué cambia al actualizar y defectos del barrido | `.claude/docs/REXAMS_VERSIONES.md` | Referencia |
+| Reglas absolutas (25) | `.claude/CLAUDE.md` + `.claude/rules/*.md` | Normativo |
 | Decisiones arquitectónicas | `.claude/docs/ADR/*.md` | Inmutable |
 | Casos resueltos individuales | `.claude/docs/casos-resueltos/*.md` | Histórico |
 | Lecciones de usuario / preferencias | `~/.claude/projects/.../memory/MEMORY.md` | Personal |
-| Cambios por versión | `.claude/CLAUDE.md` (sección Cambios) + `.claude/docs/CHANGELOG.md` | Cronológico |
+| Cambios por versión | `.claude/docs/CHANGELOG_CLAUDE_MD.md` (desde v2.6) + `.claude/docs/CHANGELOG.md` (v2.2 a v2.5) | Cronológico |
 | Plantilla para nueva lección | `.claude/docs/templates/retrospectiva-sesion.md` | Template |
 
 ---
@@ -106,7 +107,7 @@
 
 ---
 
-## 3. Reglas críticas (20, todas obligatorias)
+## 3. Reglas críticas (25, todas obligatorias)
 
 | # | Regla | Archivo | Categoría |
 |---|---|---|---|
@@ -128,6 +129,13 @@
 | 16 | Workflow State Enforcement (gate) | `workflow-state-enforcement.md` | Workflow |
 | 17 | Infraestructura `.claude/` protegida | `infraestructura-protegida.md` | Ingeniería |
 | **18** | **Markdown-imágenes para PDF (anti `\pandocbounded`)** | **`markdown-imagenes-pdf.md`** | **Ingeniería** |
+| 19 | Solution letter-independence | `solution-letter-independence.md` | Calidad |
+| 20 | Tablas Markdown: guard del contador `none` | `markdown-tablas-pandoc.md` | Ingeniería |
+| 21 | Familias de Soluciones Reutilizables | `familias-soluciones-rmd.md` | Ingeniería |
+| 22 | Diversidad Sustantiva | `diversidad-sustantiva.md` | Validación |
+| 23 | Muestra estándar de validación: N = 100 | `muestra-estandar-validacion.md` | Validación |
+| 24 | Hermes: triaje y fidelidad de figuras | `hermes-imagenes-icfes.md` | Visual |
+| 25 | Glifos Unicode que rompen pdflatex | `glifos-latex-prohibidos.md` | Ingeniería |
 
 ---
 
@@ -174,6 +182,9 @@ Ver `.claude/CLAUDE.md` sección "Cambios v3.X" o `.claude/docs/CHANGELOG.md`. R
 | 3.9.0 | 2026-05-03 | Convivencia Ruflo + regla #17 + orquestador-schoice |
 | **3.10.0** | **2026-05-03** | **Errores 16-17 + regla #18 anti-`\pandocbounded` + FASE 2I + test_pandocbounded_y_solution_coherence.R** |
 | **3.13.0** | **2026-05-14** | **Errores 18 y 20 + Formato Equilibrado en opciones gráficas (v5.0 de graficos-como-opciones.md) + GRAF-BAR-01** |
+| 3.39.0 | 2026-11-04 | Novedades de R/exams verificadas: `validar_stresstest.R` en el paso 9, comparador, vigía, webquiz y control NOPS |
+
+Las versiones intermedias están en `.claude/docs/CHANGELOG_CLAUDE_MD.md`.
 
 ---
 

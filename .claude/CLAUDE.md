@@ -73,7 +73,7 @@ Consolidado: `.claude/docs/REGLAS_CRITICAS.md` (leer bajo demanda). Cada ruta `.
 19. **Solution letter-independence** (NUNCA `r letra_correcta` ni "Opción [A-D]" en Solution) → .claude/rules/solution-letter-independence.md
     Defensa permanente contra Error 19. La sección Solution debe identificar opciones por contenido/código de error, NUNCA por letra/posición, porque Moodle (y otros LMS) pueden re-shufflear las opciones de forma independiente al `exshuffle` de R-exams, rompiendo coherencia letra ↔ contenido para el estudiante. Capas: hook FASE 2J + test_letter_independence.R + detractor.
 20. **Markdown-tablas-pandoc (guard contador `none`)** → .claude/rules/markdown-tablas-pandoc.md
-    Defensa permanente contra Error 21. Todo `.Rmd` con tabla Markdown (`kable(format="markdown")` o `cat("| ...")`) DEBE incluir, al inicio de `Question`, el bloque raw LaTeX `` ```{=latex}\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother``` ``. pandoc ≥3.8.1 (RStudio bundlea 3.8.3, distinto del de terminal) envuelve `longtable` con `\def\LTcaptype{none}`, contador que las plantillas de R/exams anteriores a 2.4-4 y las propias `pcielo`/`solpcielo` no definen → `exams2pdf/exams2nops` fallan con `No counter 'none' defined`. Gemelo del Error 16. Capas: generación (skills + orquestador) + hook FASE 2K (`ERR_TABLA_NONE`) + test_markdown_tablas_none_guard.R + validación con pandoc de RStudio.
+    Defensa permanente contra Error 21. Todo `.Rmd` con tabla Markdown (`kable(format="markdown")` o `cat("| ...")`) DEBE incluir, al inicio de `Question`, el bloque raw LaTeX `` ```{=latex}\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother``` ``. pandoc ≥3.8.1 (3.10 en RStudio y 3.11 en la terminal de este equipo) envuelve `longtable` con `\def\LTcaptype{none}`, contador que las plantillas de R/exams anteriores a 2.4-4 y las propias `pcielo`/`solpcielo` no definen → `exams2pdf/exams2nops` fallan con `No counter 'none' defined`. Gemelo del Error 16. Capas: generación (skills + orquestador) + hook FASE 2K (`ERR_TABLA_NONE`) + test_markdown_tablas_none_guard.R + validación con pandoc de RStudio.
 21. **Familias de Soluciones Reutilizables** → .claude/rules/familias-soluciones-rmd.md
     Índice operativo de patrones probados + librería de helpers `.claude/scripts/snippets_familias_rmd.R`. Aplicar las familias relevantes en toda generación/corrección: **F1** generación sin cuelgue (`pick_int`/`construir_valores_con_rango`, nunca `repeat` sin cota — Error 22); **F2** tablas responsivas cross-formato (`tabla_responsiva`, fenced div `::: {style=overflow-x:auto}` que sobrevive DOCX como `<w:tbl>` y PDF como longtable); **F3** ecuaciones display responsivas (`eq_display`); **F4** coherencia de marcas en CLOZE (sol alineado por construcción + verificación marca-vs-verdad); **F5** trampa `sample(escalar)` (`pick_int`/`safe_sample`); **F6** opciones gráficas de diagramas vectoriales cardinales (`dibujar_diagrama_cardinal`/`orientaciones_cardinales`/`seleccionar_combinacion_con_cascada`/`renombrar_opciones_neutral`: orientación sorteada por versión, cascada de umbrales de legibilidad en vez de umbral único con `stopifnot`, renombrado neutral POST-mezcla y distractores que conserven la magnitud de la correcta — Errores 23-26). Test: test_data_generation_no_hang.R.
 22. **Diversidad Sustantiva** (respuesta correcta debe variar entre versiones, no solo el envoltorio narrativo) → .claude/rules/diversidad-sustantiva.md
@@ -120,8 +120,8 @@ Referencia completa: `.claude/docs/ESTRUCTURA_REPOSITORIO.md`
 A-Produccion/
 ├── 01-En-PreDesarrollo/         # Experimentación
 ├── 02-En-Desarrollo/            # En proceso
-├── 03-En-Produccion/            # Validados (por categoría ICFES)
-└── Ejemplos-Funcionales-Rmd/    # FUENTE DE VERDAD
+└── 03-En-Produccion/            # Validados (por categoría ICFES)
+    └── Ejemplos-Funcionales-Rmd/  # FUENTE DE VERDAD
 
 .claude/
 ├── rules/                       # Reglas obligatorias
@@ -196,8 +196,8 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.39.0 (novedades de R/exams verificadas: `validar_stresstest.R` en el paso 9, comparador de versiones, vigía, webquiz autocontenido y control de calidad NOPS; detalle en `.claude/docs/REXAMS_VERSIONES.md`; antes: v3.38.0, regla #9 v1.8: citas contra el commit auditado; regla #16 v1.3: `complete` avisa de un sello fuera de orden; contrato de mutación con 8 obligaciones; antes: v3.37.0, regla #7: la literalidad de `exextra` la verifica `validar_literalidad_exextra.py` en el paso 10 de los dos orquestadores; los validadores de la familia A escriben el md5 del `.Rmd` que miden; antes: v3.36.1, el hook de citas ve el `SubagentHandback`)
-**Fecha**: 2026-11-04
+**Versión**: 3.39.1 (documentación central y referencias cruzadas al día con las novedades de R/exams; antes: v3.39.0, novedades de R/exams verificadas: `validar_stresstest.R` en el paso 9, comparador de versiones, vigía, webquiz autocontenido y control de calidad NOPS; detalle en `.claude/docs/REXAMS_VERSIONES.md`; antes: v3.38.0, regla #9 v1.8: citas contra el commit auditado; regla #16 v1.3: `complete` avisa de un sello fuera de orden; contrato de mutación con 8 obligaciones; antes: v3.37.0, regla #7: la literalidad de `exextra` la verifica `validar_literalidad_exextra.py` en el paso 10 de los dos orquestadores; los validadores de la familia A escriben el md5 del `.Rmd` que miden; antes: v3.36.1, el hook de citas ve el `SubagentHandback`)
+**Fecha**: 2026-11-05
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)
 **Copia íntegra del índice anterior (v3.24.0) y script de reversión**: `.claude/backups/2026-09-07-recorte-contexto/`

@@ -449,13 +449,13 @@ rango obsoleto):
 
 ### Incidente E · `INC-TABLA-NONE` — Tablas Markdown rompen en RStudio pandoc 3.8.3: guard contador `none` (Error 21)
 
-**Síntoma**: `exams2pdf()` o `exams2nops()` lanzados desde RStudio (o cualquier entorno con pandoc ≥ 3.7 bundleado) fallan con:
+**Síntoma**: `exams2pdf()` o `exams2nops()` lanzados desde RStudio (o cualquier entorno con pandoc ≥ 3.8.1 bundleado) fallan con:
 ```
 ! LaTeX Error: No counter 'none' defined.
 ```
 aunque la misma corrida en terminal con pandoc 3.6 haya dado OK. El ejercicio tiene tablas Markdown (`kable(format="markdown")` o bloques `| col | col |`).
 
-**Causa**: pandoc ≥ 3.7 introduce `\def\LTcaptype{none}` en la salida longtable para tablas Markdown que carecen de caption; eso invoca internamente `\refstepcounter{none}`, que requiere un contador LaTeX `none` no definido en la plantilla de R-exams. Es el gemelo del Error 16 (`\pandocbounded`): un cambio de comportamiento de pandoc que es invisible en HTML/DOCX y solo explota en el pipeline PDF/NOPS. El entorno del desarrollador (pandoc 3.6 en terminal) puede enmascarar el bug hasta que el usuario final lo detecta en RStudio con pandoc 3.8.3.
+**Causa**: pandoc ≥ 3.8.1 introduce `\def\LTcaptype{none}` en la salida longtable para tablas Markdown que carecen de caption; eso invoca internamente `\refstepcounter{none}`, que requiere un contador LaTeX `none` no definido en la plantilla de R-exams. Es el gemelo del Error 16 (`\pandocbounded`): un cambio de comportamiento de pandoc que es invisible en HTML/DOCX y solo explota en el pipeline PDF/NOPS. El entorno del desarrollador (pandoc 3.6 en terminal) puede enmascarar el bug hasta que el usuario final lo detecta en RStudio con pandoc 3.8.3.
 
 **Fix obligatorio**: en el paso 3 (generacion_rmd), si el `.Rmd` usa tablas Markdown, insertar al inicio de la sección `Question` el siguiente bloque raw LaTeX (fence de 3 backticks con `{=latex}`):
 
@@ -1000,7 +1000,7 @@ Mi FASE 2G de multi-semilla NO es suficiente: debo simular el entorno real del u
    - Renderizar ≥10 semillas y, para cada distractor Sí/No del pool seleccionado, verificar que la justificación textual sea **internamente coherente con la conclusión declarada** (no apoye la conclusión opuesta).
    - Si se detecta incoherencia interna en cualquier semilla → ABORTAR y aplicar Patrón A antes de continuar.
 6. **Si escribí un `verificar_render.R` con pruebas de mutación** (Incidente P): compruebo que cada mutante declara su `sonda_esperada`, que la fase falla si el rechazo vino de otra sonda, y que la guarda de "mutante mal construido" se evalúa sobre el ENTORNO, no sobre el texto del `.Rmd`. Un `APROBADO (0 errores)` cuyos mutantes murieron por la sonda equivocada NO es evidencia.
-7. **Si el `.Rmd` usa tablas Markdown** (Incidente E, regla #20): inspecciono el `.tex` generado y, si contiene `\LTcaptype{none}`, verifico que el `.Rmd` trae la guardia `@ifundefined{c@none}`. Lo tenía documentado como incidente pero fuera de esta lista, y es un fallo que **solo aparece en el entorno del usuario** (RStudio bundlea pandoc ≥3.7; la terminal, 3.6): si no lo compruebo aquí, no lo compruebo en ninguna parte.
+7. **Si el `.Rmd` usa tablas Markdown** (Incidente E, regla #20): inspecciono el `.tex` generado y, si contiene `\LTcaptype{none}`, verifico que el `.Rmd` trae la guardia `@ifundefined{c@none}`. Lo tenía documentado como incidente pero fuera de esta lista, y es un fallo que **solo aparece en el entorno del usuario** (RStudio bundlea pandoc ≥3.8.1; la terminal, 3.6): si no lo compruebo aquí, no lo compruebo en ninguna parte.
 8. **Si el `.Rmd` reutiliza un pool de otro ejercicio** (Incidente O): `Rscript .claude/scripts/validar_glifos_latex.R <archivo.Rmd>` → sin `ERR_GLIFO_LATEX`, y ningún `WARN_GLIFO_LATEX` en un campo que este ítem SÍ emite. Un campo que en el origen era dato muerto nunca se probó contra LaTeX. Uso el detector y no una lista propia porque una lista a mano se desactualiza: la anterior marcaba `×`, que la regla #25 midió como seguro.
 9. **Si el ítem tiene opciones gráficas** (pre-flight 21 apartado (c), regla #22 §P6 / Error 25): exporto a Moodle y compruebo que ningún PNG conserva un nombre de rol — `grep -ohE 'diagrama_[^."/]+\.png' moodle_output/*.xml | sort -u | grep -vE '^diagrama_[a-z](_[0-9a-f]+)?\.png$'` debe salir vacío: solo quedan `diagrama_a`.. `_d`, con su sufijo hexadecimal por versión (regla #4 v6.1). HTML y PDF **no** sirven para esto: embeben la imagen y no exponen el nombre.
 10. Solo después de estas verificaciones, marco renderizado_4_formatos como completado.

@@ -11,12 +11,12 @@ Esta guía explica el flujo completo para publicar un nuevo ejercicio matemátic
 
 1. **Ubicación del archivo**:
    ```
-   A-Produccion/En-Desarrollo/[nombre_ejercicio]/[nombre_ejercicio]_[componente]_[competencia]_n[nivel]_v1.Rmd
+   A-Produccion/02-En-Desarrollo/[nombre_ejercicio]/[nombre_ejercicio]_[componente]_[competencia]_n[nivel]_v1.Rmd
    ```
 
 2. **Ejemplo**:
    ```
-   A-Produccion/En-Desarrollo/consumo_telefonico_adicional/consumo_telefonico_adicional_n2_v1.Rmd
+   A-Produccion/02-En-Desarrollo/consumo_telefonico_adicional/consumo_telefonico_adicional_n2_v1.Rmd
    ```
 
 3. **Seguir la estructura obligatoria** definida en las reglas generales del proyecto
@@ -102,7 +102,7 @@ docs/
 
 ```bash
 # Desde el directorio del proyecto
-cd A-Produccion/En-Desarrollo/[nombre_ejercicio]/
+cd A-Produccion/02-En-Desarrollo/[nombre_ejercicio]/
 
 # Copiar archivo .Rmd fuente a docs/recursos/
 cp [nombre_ejercicio]_n*_v1.Rmd ../../../docs/recursos/
@@ -163,7 +163,7 @@ Editar `docs/index.html` y agregar:
         </a>
     </li>
     <li>
-        <a href="https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado/blob/main/A-Produccion/En-Desarrollo/[ejercicio]/[ejercicio]_n*_v1.Rmd" target="_blank">
+        <a href="https://github.com/alvaretto/proyecto-r-exams-icfes-matematicas-optimizado/blob/main/A-Produccion/02-En-Desarrollo/[ejercicio]/[ejercicio]_n*_v1.Rmd" target="_blank">
             💻 Código Fuente (.Rmd) en GitHub
         </a>
     </li>

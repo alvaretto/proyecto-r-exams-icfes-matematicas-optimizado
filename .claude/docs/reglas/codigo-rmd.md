@@ -8,7 +8,7 @@
 Antes de editar cualquier archivo .Rmd, verifica OBLIGATORIAMENTE:
 
 - ✓ Entendiste completamente el error a corregir
-- ✓ Verificaste solución en ejemplos funcionales (`/A-Produccion/Ejemplos-Funcionales-Rmd/`)
+- ✓ Verificaste solución en ejemplos funcionales (`/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/`)
 - ✓ NO harás cambios innecesarios o experimentales
 - ✓ Validarás en los 4 formatos después del cambio
 
@@ -71,7 +71,7 @@ Antes de editar cualquier archivo .Rmd, verifica OBLIGATORIAMENTE:
    - HTML, PDF, DOCX, NOPS son OBLIGATORIOS
 
 5. **NO modificar ejemplos funcionales**
-   - Los archivos en `/A-Produccion/Ejemplos-Funcionales-Rmd/` son INMUTABLES
+   - Los archivos en `/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/` son INMUTABLES
    - Solo copiar patrones, nunca editar directamente
 
 6. **NO usar `exshuffle: FALSE`** (regla general)

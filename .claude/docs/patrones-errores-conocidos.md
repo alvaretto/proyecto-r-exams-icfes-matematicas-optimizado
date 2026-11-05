@@ -268,7 +268,7 @@ Este patrón NO aplica para:
 
 **Skill asociado:**
 
-- `.claude/skills/corregir-error-imagen/skill.md`
+- `.claude/skills/corregir-error-imagen/SKILL.md`
 
 ### 📅 Historial
 
@@ -910,7 +910,7 @@ exams2pdf("archivo.Rmd", n = 1)
 
 **Ejemplo funcional:**
 
-- `A-Produccion/Ejemplos-Funcionales-Rmd/estadistica_diagramas_caja_interpretacion_representacion_Nivel2_v2.Rmd`
+- `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/estadistica_diagramas_caja_interpretacion_representacion_Nivel2_v2.Rmd`
 
 **Ejemplo corregido:**
 
@@ -1813,6 +1813,10 @@ La auto-memoria de Claude Code (los archivos `~/.claude/projects/*/memory/*.md`)
 
 ## Error 16: `\pandocbounded` undefined al renderizar PDF con imágenes Markdown sin atributo `width`
 
+> **Actualización.** Con `exams` ≥ 2.4-1 el macro está definido como no-op en las plantillas del paquete, así
+> que este error ya solo aparece con plantilla propia. La regla #18 sigue vigente porque sin `{width}` no se
+> controla el tamaño. Plantillas propias: `.claude/docs/REXAMS_VERSIONES.md`, sección «Tablas en PDF».
+
 ### ❌ Mensaje de Error
 
 ```
@@ -2305,7 +2309,11 @@ stopifnot(!all(vals_distractor == as.numeric(frecuencias)))
 
 ---
 
-## Error 21: `No counter 'none' defined` — tablas Markdown con pandoc ≥3.7 (RStudio)
+## Error 21: `No counter 'none' defined` — tablas Markdown con pandoc ≥3.8.1 (RStudio)
+
+> **Actualización (2026-11-05).** Ya no es exclusivo de RStudio: en este equipo pandoc es 3.11 en terminal y
+> 3.10 en RStudio. Desde `exams` 2.4-4 las plantillas del paquete definen `{none}`, pero `pcielo*.tex` y
+> `solpcielo*.tex` no, así que el guard sigue siendo obligatorio.
 
 ### ❌ Mensaje de Error
 
@@ -2375,6 +2383,7 @@ stopifnot(as.character(rmarkdown::pandoc_version()) >= "3.7")
 - Regla #18 / Error 16 (`\pandocbounded`): mismo patrón de diferencia de pandoc en entorno destino
 - Hook FASE 2K (`ERR_TABLA_NONE`) + `tests/testthat/test_markdown_tablas_none_guard.R`
 - Memoria: `feedback_pandoc_ltcaptype_none.md`
+- Versiones de `exams` y plantillas propias: `.claude/docs/REXAMS_VERSIONES.md`, sección «Tablas en PDF»
 
 ---
 
@@ -2453,7 +2462,7 @@ stopifnot(rango_extra == rango_objetivo,
 2. ¿La condición puede ser **imposible** para algún dato válido (objetivo fuera del rango alcanzable)?
 3. Reemplazar por construcción determinista del valor objetivo, o agregar **contador + `max_intentos`** con `stopifnot`/fallback.
 4. Cuidar la trampa `sample(escalar, k)` (usar `pick_int`/`rep`).
-5. Validar con stress test de timeout por semilla (≥ 200 semillas).
+5. Validar con `.claude/scripts/validar_stresstest.R`: límite de tiempo por semilla y N = 100 (regla #23).
 
 ### 📅 Historial
 
@@ -2464,6 +2473,7 @@ stopifnot(rango_extra == rango_objetivo,
 ### 📚 Referencias
 
 - Test de regresión: `tests/testthat/test_data_generation_no_hang.R` (detector estático `repeat` sin cota + guard runtime con timeout)
+- Medición por semilla: `.claude/scripts/validar_stresstest.R` (paso 9). También ve el `while`: `2023-Matematicas-11-2-09-Op-M.Rmd`, en producción, cuelga en 22 de 100 semillas (`.claude/docs/REXAMS_VERSIONES.md`)
 - `codigo-rmd.md` regla #9 (guardia `is.na()` en `while` con `calcula()`) — patrón hermano de robustez en bucles
 - Memoria: `feedback_repeat_sin_cota_cuelgue.md`
 

@@ -219,7 +219,7 @@ Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd --modo exhaustivo
 
 - **Patrones de error:** `.claude/docs/patrones-errores-conocidos.md`
 - **Sistema general:** `.claude/docs/README.md`
-- **Resumen TikZ:** `.claude/docs/RESUMEN_CORRECCION_TIKZ.md`
+- **Versiones de R/exams:** `.claude/docs/REXAMS_VERSIONES.md` (plantillas propias, tablas en PDF y qué cambia al actualizar)
 
 ### Skills Disponibles
 
@@ -245,13 +245,13 @@ Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd --modo exhaustivo
 ### Ejemplos Funcionales
 ```bash
 # Ver ejercicios en producción
-ls A-Produccion/En-Produccion/**/*.Rmd
+ls A-Produccion/03-En-Produccion/**/*.Rmd
 
 # Ver ejercicios en pre-desarrollo (también funcionales)
-ls A-Produccion/En-PreDesarrollo/**/*.Rmd
+ls A-Produccion/01-En-PreDesarrollo/**/*.Rmd
 
-# Ver templates
-ls A-Produccion/Templates/*.Rmd
+# Ver plantillas
+ls A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/
 ```
 
 ---

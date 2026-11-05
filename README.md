@@ -133,7 +133,7 @@ A-Produccion/
 
 > **Regla de Oro**: "Si no está en los ejemplos funcionales, no improvises."
 >
-> Antes de escribir cualquier código nuevo, es **OBLIGATORIO** consultar los ejercicios en `/A-Produccion/Ejemplos-Funcionales-Rmd/` para seguir los patrones validados.
+> Antes de escribir cualquier código nuevo, es **OBLIGATORIO** consultar los ejercicios en `/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/` para seguir los patrones validados.
 
 ---
 
@@ -148,7 +148,7 @@ La carpeta **`Ejemplos-Funcionales-Rmd`** ha sido **reubicada** para mejorar la 
 | Aspecto | Detalle |
 |---------|---------|
 | **Ubicación Anterior** | `/Auxiliares/Ejemplos-Funcionales-Rmd/` |
-| **Ubicación Nueva** | `/A-Produccion/Ejemplos-Funcionales-Rmd/` |
+| **Ubicación Nueva** | `/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/` |
 | **Fecha del Cambio** | Diciembre 2025 |
 | **Razón del Cambio** | Destacar archivos de producción y mejorar organización |
 
@@ -174,7 +174,7 @@ Todas las referencias en el código, documentación y configuraciones han sido a
 Si tienes scripts o configuraciones personales que referencian la ubicación antigua, actualízalas a:
 
 ```
-/A-Produccion/Ejemplos-Funcionales-Rmd/
+/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
 ```
 
 ---
@@ -282,9 +282,9 @@ El proyecto incluye configuración completa en `.claude/` para automatizar el wo
 
 ```
 .claude/
-├── CLAUDE.md              # Memory file principal del proyecto (v3.17.1, 2026-06-27)
+├── CLAUDE.md              # Memory file principal del proyecto (v3.39.1, 2026-11-05)
 ├── detractor-config.yaml  # 🆕 Configuración del skill detractor
-├── rules/                 # Reglas modulares (22 reglas obligatorias — ver tabla completa más abajo)
+├── rules/                 # Reglas modulares (25 reglas obligatorias — ver tabla completa más abajo)
 │   ├── ciclo-validacion.md           # Ciclo de Validación Automática (v4.0 con FASE 2C)
 │   ├── detractor-obligatorio.md      # 🆕 Revisión adversarial obligatoria (7 dominios)
 │   ├── ejercicios-metacognitivos.md  # 🆕 Progressive Disclosure obligatorio
@@ -358,7 +358,22 @@ El proyecto incluye configuración completa en `.claude/` para automatizar el wo
 
 ---
 
-## 📋 **Índice de Reglas Críticas (22 reglas obligatorias)**
+## 🔎 **Versiones de R/exams**
+
+Qué trae cada versión, qué cambia al actualizar y qué defectos destapó la medición:
+[`.claude/docs/REXAMS_VERSIONES.md`](.claude/docs/REXAMS_VERSIONES.md).
+
+| Herramienta | Para qué |
+|---|---|
+| [`vigia_rexams.R`](.claude/scripts/vigia_rexams.R) | Versiones instalada, fijada, de CRAN y de desarrollo |
+| [`comparar_version_exams.R`](.claude/scripts/comparar_version_exams.R) | Qué cambia en los ejercicios con otra versión, en una biblioteca aparte |
+| [`validar_stresstest.R`](.claude/scripts/validar_stresstest.R) | Compilación completa con N = 100 (paso 9) |
+| [`webquiz_autocontenido.R`](.claude/scripts/webquiz_autocontenido.R) | Cuestionario HTML que funciona sin internet |
+| [`nops_control_calidad.R`](Auxiliares/exams2nops-escaner/nops_control_calidad.R) | Revisión de escaneos antes de `nops_eval()` |
+
+---
+
+## 📋 **Índice de Reglas Críticas (25 reglas obligatorias)**
 
 Lista completa sincronizada con `.claude/CLAUDE.md` (sección "Reglas Críticas"). Todas son
 obligatorias y sin excepciones salvo lo indicado en cada archivo.
@@ -381,12 +396,15 @@ obligatorias y sin excepciones salvo lo indicado en cada archivo.
 | 14 | Routing de modelos obligatorio (Opus/Sonnet/Haiku por complejidad) | [`modelo-routing-obligatorio.md`](.claude/rules/modelo-routing-obligatorio.md) |
 | 15 | Stress Test Visual (FASE 2H: renderizado masivo + análisis de anomalías) | [`stress-test-visual/SKILL.md`](.claude/skills/stress-test-visual/SKILL.md) |
 | 16 | Workflow State Enforcement (gate mecánico PreToolUse + estado persistente) | [`workflow-state-enforcement.md`](.claude/rules/workflow-state-enforcement.md) |
-| 17 | Infraestructura `.claude/` protegida (invariantes I-1 a I-9) | [`infraestructura-protegida.md`](.claude/rules/infraestructura-protegida.md) |
+| 17 | Infraestructura `.claude/` protegida (invariantes I-1 a I-10) | [`infraestructura-protegida.md`](.claude/rules/infraestructura-protegida.md) |
 | 18 | Markdown-imágenes-PDF (anti `\pandocbounded`) | [`markdown-imagenes-pdf.md`](.claude/rules/markdown-imagenes-pdf.md) |
 | 19 | Solution letter-independence (nunca letra/posición en Solution) | [`solution-letter-independence.md`](.claude/rules/solution-letter-independence.md) |
 | 20 | Markdown-tablas-pandoc (guard del contador `none`) | [`markdown-tablas-pandoc.md`](.claude/rules/markdown-tablas-pandoc.md) |
 | 21 | Familias de Soluciones Reutilizables | [`familias-soluciones-rmd.md`](.claude/rules/familias-soluciones-rmd.md) |
 | 22 | Diversidad Sustantiva (la respuesta correcta debe variar entre versiones, no solo el envoltorio narrativo) | [`diversidad-sustantiva.md`](.claude/rules/diversidad-sustantiva.md) |
+| 23 | Muestra estándar de validación: N = 100 | [`muestra-estandar-validacion.md`](.claude/rules/muestra-estandar-validacion.md) |
+| 24 | Hermes: triaje y fidelidad de figuras de cuadernillo | [`hermes-imagenes-icfes.md`](.claude/rules/hermes-imagenes-icfes.md) |
+| 25 | Glifos Unicode que rompen pdflatex | [`glifos-latex-prohibidos.md`](.claude/rules/glifos-latex-prohibidos.md) |
 
 > **Invariante I-9** (regla #17, añadida 2026-07-28): los `tools:` de un agente en
 > `.claude/agents/*.md` deben declararse en **PascalCase** (`Read`, `Write`, `Bash`...); en
@@ -466,7 +484,7 @@ Ver `SOURCES/README.md` para:
 Cualquier contribución debe adherirse estrictamente a las metodologías y protocolos definidos en el proyecto.
 
 ### **Regla de Oro Anti-Errores**
-**"Si no está en los ejemplos funcionales, no improvises."** Antes de escribir cualquier código, es **obligatorio** consultar los ejercicios en `/A-Produccion/Ejemplos-Funcionales-Rmd/`.
+**"Si no está en los ejemplos funcionales, no improvises."** Antes de escribir cualquier código, es **obligatorio** consultar los ejercicios en `/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/`.
 
 ### **Criterios de Calidad**
 -   **Fidelidad Visual (≥98%, en las tres versiones TikZ/Python/R)**: Precisión geométrica, cromática, de posicionamiento y completitud; el usuario decide la versión final (regla #3).
@@ -502,10 +520,13 @@ Resumen de los hitos principales registrados en el changelog de [`.claude/CLAUDE
 | v3.11.0 | 2026-05-12 | Regla #19 *solution-letter-independence* (la Solution nunca referencia letra/posición de opción) |
 | v3.12.0 / v3.15.0 | 2026-05-14 / 2026-06-03 | Orquestador CLOZE end-to-end (11 pasos, gemelo del orquestador SCHOICE) |
 | v3.13.0 | 2026-05-14 | Formato Equilibrado en gráficos-opción (al menos 2 opciones comparten el formato de la correcta) |
-| v3.14.0 | 2026-06-03 | Regla #20: guard del contador `none` para tablas Markdown en PDF/NOPS (pandoc ≥3.7) |
+| v3.14.0 | 2026-06-03 | Regla #20: guard del contador `none` para tablas Markdown en PDF/NOPS (pandoc ≥3.8.1) |
 | v3.16.0 | 2026-06-15 | CLOZE: las gráficas-opción van en el enunciado, nunca dentro de un gap (Moodle no las renderiza) |
 | v3.17.0 | 2026-06-16 | Validador con soporte real de ejercicios `_neg_` Variante B (texto sinónimo) |
 | v3.17.1 | 2026-06-27 | Fix de `WAIT_USER` en orquestadores ejecutados como subagente |
+| v3.39.0 | 2026-11-04 | Novedades de R/exams verificadas: compilación completa en el paso 9, comparador de versiones, vigía, webquiz sin internet y control de calidad NOPS |
+
+Historial completo: [`.claude/docs/CHANGELOG_CLAUDE_MD.md`](.claude/docs/CHANGELOG_CLAUDE_MD.md).
 
 Adicionalmente, las reglas #21 (Familias de Soluciones Reutilizables) y #22 (Diversidad
 Sustantiva) se incorporaron al índice de reglas críticas sin entrada de changelog versionada

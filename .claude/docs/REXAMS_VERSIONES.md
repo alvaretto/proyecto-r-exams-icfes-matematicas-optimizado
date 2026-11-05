@@ -14,7 +14,7 @@ Salida de `Rscript .claude/scripts/vigia_rexams.R`, cotejada a mano con el NEWS 
 | `exams` | 2.4-2 (2025-04-29) | 2.4-3 | la del día, sin fijar | 2.4-5 (2026-10-08) | 2.4-5 |
 | `exams2forms` | 0.2-0 (2025-05-02) | 0.2-0 | no se instala | 0.2-2 (2026-07-31) | 0.2-3 |
 
-Pandoc del equipo: 3.11. No hay ninguna versión anunciada para 2027: la rama principal de
+Pandoc del equipo: 3.11 en terminal y 3.10 en RStudio. No hay ninguna versión anunciada para 2027: la rama principal de
 [`exams` en Codeberg](https://codeberg.org/zeileis/exams) coincide con CRAN, y ni su NEWS ni el
 [blog oficial](https://www.r-exams.org/general/) publican una hoja de ruta.
 
@@ -199,7 +199,8 @@ procesos a la vez el tope de 1500 s no alcanza. Repetidos con `--total 2000` dan
 1. **Añadir las dos líneas a las plantillas** (`A-Produccion/perifericos/*.tex`): no depende de
    actualizar. `solpcielo.tex` tiene cambios sin commit, y hay 114 copias de cada plantilla.
 2. **Actualizar a `exams` 2.4-5 y `exams2forms` 0.2-2** y regenerar `renv.lock`, que fija 2.4-3,
-   justo la versión con el bug de `answerlist(markup=)`. Va con el ADR-003. El diferencial está
+   justo la versión con el bug de `answerlist(markup=)`. Va con el ADR-003
+   (`.claude/docs/ADR/003-entorno-fijado-pc-render.md`, aún sin commit). El diferencial está
    cerrado: ninguna regresión se sostiene, con el límite de los ejercicios no deterministas.
 3. **Exportar con `seed`** en los Semilleros, tras actualizar.
 4. **Qué hacer con los defectos de la tabla.** Los de producción requieren una versión nueva, porque
@@ -266,3 +267,18 @@ Rscript .claude/scripts/webquiz_autocontenido.R ejercicio.Rmd --n 1 --revision  
 Medido en 24 ejercicios activos (tablas, PNG como opciones, TikZ, CLOZE): 24 correctos, sin TeX crudo ni recursos externos, y legibles a 360 px en los dos revisados. La vista `--revision` (`auto = TRUE`) trae las respuestas marcadas: nunca se entrega. Límites: las
 fórmulas dentro de un desplegable no se pueden componer, y las respuestas siguen en el HTML, solo
 ofuscadas, así que sirve para practicar y no para calificar. No se probó en un celular físico.
+
+## Referencias cruzadas
+
+| Tema | Dónde |
+|---|---|
+| Índice del sistema | `.claude/CLAUDE.md`, «Referencias Rápidas» |
+| Paso 9, compilación completa | `.claude/agents/orquestador-schoice.md`, `.claude/agents/orquestador-cloze.md`, `.claude/skills/revisar-schoice/SKILL.md`, `.claude/skills/revisar-cloze/SKILL.md` |
+| Muestra N = 100 | Regla #23: `.claude/rules/muestra-estandar-validacion.md` |
+| `while` y `repeat` sin cota | Regla #21 F1 y Error 22: `.claude/rules/familias-soluciones-rmd.md`, `.claude/docs/patrones-errores-conocidos.md` |
+| Figuras en multicopia | Regla #4: `.claude/rules/graficos-como-opciones.md` |
+| `\pandocbounded` y plantillas propias | Regla #18 y Error 16: `.claude/rules/markdown-imagenes-pdf.md` |
+| Tablas y contador `{none}` | Regla #20 y Error 21: `.claude/rules/markdown-tablas-pandoc.md` |
+| Suites de estas herramientas | `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`, sección «Suites de Test» |
+| Escaneos NOPS | `Auxiliares/exams2nops-escaner/scaner_exams2nops.md` |
+| Entorno fijado y `renv.lock` | ADR-003, aún sin commit |

@@ -245,7 +245,7 @@ Read("preview.png")
 #### 📚 SUBFASE 3A: Corrección Basada en Ejemplos
 ```bash
 # SIEMPRE consultar ejemplos funcionales ANTES de corregir
-ls /A-Produccion/Ejemplos-Funcionales-Rmd/
+ls /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
 # Identificar patrones de solución en archivos similares
 # Aplicar correcciones basadas en ejemplos validados
 ```

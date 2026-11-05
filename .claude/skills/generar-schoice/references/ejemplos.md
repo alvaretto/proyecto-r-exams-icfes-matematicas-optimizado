@@ -117,7 +117,7 @@ incremento_ventas_aleatorio_interpretacion_representacion_n3_v1.Rmd
 Los ejemplos funcionales completos están en:
 
 ```
-/A-Produccion/Ejemplos-Funcionales-Rmd/
+/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
 ```
 
 SIEMPRE consultar estos archivos antes de generar código nuevo.

@@ -193,6 +193,9 @@ nombrando el archivo y la línea.
 
 ---
 
+**Ver también:** `.claude/docs/REXAMS_VERSIONES.md`, por qué `validar_stresstest.R` no envuelve
+`stresstest_exercise()`.
+
 **Versión:** 1.1
 **Fecha:** 2026-11-04 (v1.1 — `validar_stresstest.R` en la familia A: un knit cuesta segundos, no un PDF; v1.0 2026-08-13)
 **Estado:** ACTIVO Y OBLIGATORIO

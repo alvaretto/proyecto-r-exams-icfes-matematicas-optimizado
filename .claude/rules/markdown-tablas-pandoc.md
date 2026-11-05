@@ -10,7 +10,7 @@
 ```
 ````
 
-Por qué: pandoc ≥ 3.8.1 (RStudio bundlea 3.8.3; la terminal usa 3.6) envuelve `longtable` en `\def\LTcaptype{none}` y la plantilla de R/exams no define ese contador → `No counter 'none' defined`. La guardia `\@ifundefined` evita "already defined" en `exams2nops()` multi-ítem; `{=latex}` no ensucia HTML/DOCX.
+Por qué: pandoc ≥ 3.8.1 (en este equipo, 3.10 en RStudio y 3.11 en la terminal) envuelve `longtable` en `\def\LTcaptype{none}` y la plantilla de R/exams no define ese contador → `No counter 'none' defined`. La guardia `\@ifundefined` evita "already defined" en `exams2nops()` multi-ítem; `{=latex}` no ensucia HTML/DOCX.
 
 **Desde `exams` 2.4-4** las plantillas del paquete definen `{none}` y `\LTcaptype`. El guard sigue siendo obligatorio: `pcielo*.tex` y `solpcielo*.tex` no lo definen, la versión instalada puede ser anterior y `\@ifundefined` no choca con la definición nueva.
 

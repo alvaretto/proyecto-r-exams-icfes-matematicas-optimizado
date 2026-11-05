@@ -22,6 +22,10 @@ Este documento describe el ecosistema completo de testing del repositorio, dise�
 | **Correctitud de Respuesta (Nivel 5)** | 100% | ✅ Completo |
 | **COBERTURA TOTAL** | **100%** | ✅ **OBJETIVO ALCANZADO** |
 
+Esta tabla resume componentes, no suites. Las suites vigentes y sus cifras están en
+`.claude/docs/VALIDATOR_COBERTURA_ICFES.md`, sección «Suites de Test». Las herramientas de versiones de
+R/exams, en `.claude/docs/REXAMS_VERSIONES.md`.
+
 ---
 
 ## 🏗️ Arquitectura del Sistema de Testing

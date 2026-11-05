@@ -18,3 +18,6 @@ correspondiente test en `tests/testthat/` [2].
 2. Ejecuta el comando local: `Rscript -e 'testthat::test_file("ruta/del/test.R")'`.
 3. Informa al usuario si el ejercicio cumple con el criterio de aleatorización 
 completa definido en la filosofía del sistema [3, 4].
+
+4. Esto no prueba que el ejercicio compile en todas las semillas: el paso 9 exige además
+`Rscript .claude/scripts/validar_stresstest.R <ruta_al_.Rmd>` (regla #23).

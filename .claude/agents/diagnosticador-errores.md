@@ -29,7 +29,7 @@ Este agente se activa cuando hay errores detectados en FASE 2, ejecutando:
 ### Paso 1: Consultar Automáticamente Ejemplos Funcionales
 ```bash
 # OBLIGATORIO: Siempre consultar ANTES de cualquier corrección
-ls /A-Produccion/Ejemplos-Funcionales-Rmd/
+ls /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
 
 # Buscar archivos similares al ejercicio actual
 # Priorizar ejemplos del mismo componente/competencia
@@ -68,8 +68,8 @@ ls /A-Produccion/Ejemplos-Funcionales-Rmd/
 ### Paso 3: Identificar Patrones de Solución
 ```bash
 # Buscar en ejemplos funcionales
-grep -l "include_tikz" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
-grep -l "py_run_string" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+grep -l "include_tikz" /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+grep -l "py_run_string" /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 
 # Consultar patrones documentados
 cat .claude/docs/patrones-errores-conocidos.md | grep -A 20 "ERR_XX"
@@ -111,7 +111,7 @@ cat .claude/docs/patrones-errores-conocidos.md | grep -A 20 "ERR_XX"
 ║ Descripción: [Descripción breve]                           ║
 ║                                                            ║
 ║ 📚 EJEMPLO FUNCIONAL CONSULTADO:                           ║
-║ Ruta: /A-Produccion/Ejemplos-Funcionales-Rmd/[archivo]     ║
+║ Ruta: /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/[archivo]     ║
 ║ Patrón encontrado: [Estructura funcional identificada]     ║
 ║                                                            ║
 ║ Solución basada en ejemplo:                                ║
@@ -123,8 +123,8 @@ cat .claude/docs/patrones-errores-conocidos.md | grep -A 20 "ERR_XX"
 
 ## Referencias
 
-- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD)
+- `/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/` (FUENTE DE VERDAD)
 - `.claude/docs/patrones-errores-conocidos.md`
 - `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
-- `.claude/skills/diagnosticar-errores/skill.md`
+- `.claude/skills/diagnosticar-errores/SKILL.md`
 

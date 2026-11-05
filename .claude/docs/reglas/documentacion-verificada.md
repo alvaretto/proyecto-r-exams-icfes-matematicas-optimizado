@@ -72,7 +72,7 @@ Estructura OBLIGATORIA:
 [Pasos específicos para aplicar solución]
 
 ### 📚 Ejemplo Funcional Utilizado
-[Referencia a archivo en /A-Produccion/Ejemplos-Funcionales-Rmd/]
+[Referencia a archivo en /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/]
 
 ### 📅 Historial
 [Tabla con fecha, archivo, resultado]

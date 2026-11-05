@@ -308,9 +308,9 @@ exextra[Nivel]: [Resultado de Dimensión 1]
 - @.claude/rules/codigo-rmd.md - Metadatos requeridos en archivos .Rmd
 
 ### Skills relacionados
-- @.claude/skills/analizar-icfes/skill.md - Skill que usa esta plantilla
-- @.claude/skills/generar-schoice/skill.md - Siguiente paso Flujo A (SCHOICE)
-- @.claude/skills/generar-cloze/skill.md - Siguiente paso Flujo A (CLOZE)
+- @.claude/skills/analizar-icfes/SKILL.md - Skill que usa esta plantilla
+- @.claude/skills/generar-schoice/SKILL.md - Siguiente paso Flujo A (SCHOICE)
+- @.claude/skills/generar-cloze/SKILL.md - Siguiente paso Flujo A (CLOZE)
 
 ### Documentación oficial ICFES
 - Marco de Referencia ICFES 2025 - Matemáticas

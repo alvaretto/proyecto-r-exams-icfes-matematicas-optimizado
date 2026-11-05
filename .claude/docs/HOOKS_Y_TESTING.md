@@ -131,6 +131,10 @@ la 2H solo corren si no hubo errores antes. Desde la v6.3 el stress test deja su
 (`reporte.json`, `resumen.txt` y `pngs/`) en `<corrida>/stress_test_output/`, no en la carpeta de la
 sesión ni en la del ejercicio.
 
+`validar_stresstest.R` no es una fase del hook, aunque se llame parecido a la 2H: corre en el paso 9
+de los orquestadores y de `/revisar-*`, sin LaTeX y con N = 100. Ver la regla #23 y
+`.claude/docs/REXAMS_VERSIONES.md`.
+
 **Cómo llega el informe al modelo (v6.2)**: el hook escribe en stdout un JSON con
 `additionalContext` (el informe, hasta 9 000 caracteres). Si hay errores añade
 `decision: "block"` y `reason`, que Claude Code muestra como «hook blocking error», y

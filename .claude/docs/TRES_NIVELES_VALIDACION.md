@@ -35,7 +35,7 @@
     │
     └── ✓ CON ERRORES:
             │
-            ├── 📚 SUBFASE 3A: Consultar /A-Produccion/Ejemplos-Funcionales-Rmd/
+            ├── 📚 SUBFASE 3A: Consultar /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
             │       → Identificar patrones de solución
             │       → Aplicar correcciones basadas en ejemplos validados
             │
@@ -376,7 +376,7 @@ Validar que el ejercicio funciona en condiciones reales con estudiantes.
 
 5. MEJORA CONTINUA
    ├── Documentar lecciones aprendidas en patrones-errores-conocidos.md
-   ├── Actualizar ejemplos funcionales en /A-Produccion/Ejemplos-Funcionales-Rmd/
+   ├── Actualizar ejemplos funcionales en /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
    └── Mejorar proceso de validacion (fuente de verdad)
 ```
 
@@ -445,14 +445,14 @@ NIVEL 3: TERRENO (post-producción)
 ## 🔗 Recursos Relacionados
 
 - **Patrón de Error TikZ:** `.claude/docs/patrones-errores-conocidos.md#error-1`
-- **Skill Corrección:** `.claude/skills/corregir-error-imagen/skill.md`
+- **Skill Corrección:** `.claude/skills/corregir-error-imagen/SKILL.md`
 - **Troubleshooting:** `.claude/docs/TROUBLESHOOTING.md`
-- **Resumen TikZ:** `.claude/docs/RESUMEN_CORRECCION_TIKZ.md`
+- **Versiones de R/exams, plantillas propias y exportar con `seed`:** `.claude/docs/REXAMS_VERSIONES.md`
 
 ---
 
-**Última actualización:** 2026-02-14
-**Versión:** 1.2
+**Última actualización:** 2026-11-05
+**Versión:** 1.3
 **Estado:** ✅ Documentado y validado
 
 ### Cambios v1.2 (2026-02-14)

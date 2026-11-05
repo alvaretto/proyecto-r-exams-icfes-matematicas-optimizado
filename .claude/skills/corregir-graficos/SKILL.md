@@ -51,14 +51,14 @@ Error grafico detectado?
 ### PASO 0: Consultar ejemplos funcionales (OBLIGATORIO)
 
 ```bash
-ls /A-Produccion/Ejemplos-Funcionales-Rmd/
+ls /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
 
-grep -l "include_tikz" /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+grep -l "include_tikz" /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 
 # NO buscar "is_latex_output" como ejemplo a copiar: el patrón que lo usa para
 # renderizado condicional fue RETIRADO el 2026-08-15 (pierde la figura en el PDF).
 # Buscar en cambio el sustituto vigente:
-grep -l 'markup = "markdown"' /A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+grep -l 'markup = "markdown"' /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 ```
 
 ### PASO 1: Identificar tipo de error
@@ -112,7 +112,7 @@ OBLIGATORIO: Volver automaticamente a FASE 1
 ## Referencias
 
 - [Tipos de errores graficos](references/tipos-errores-graficos.md) - ERR_G1-G4
-- Fuente de verdad: `/A-Produccion/Ejemplos-Funcionales-Rmd/`
+- Fuente de verdad: `/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/`
 - Documentacion: `.claude/docs/patrones-errores-conocidos.md`
 - Skill relacionado: corregir-error-imagen (ERR_G1 especifico)
 

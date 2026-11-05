@@ -53,7 +53,7 @@ knitr::opts_chunk$set(
 **Referencias:**
 
 - `Lab-Manjaro/36/volumen_cilindro_hueco_py_v1.Rmd:50-53`
-- `A-Produccion/En-Produccion/Ejemplos-Funcionales-Rmd/estadistica_diagramas_caja_interpretacion_representacion_Nivel2_v2_py.Rmd`
+- `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/estadistica_diagramas_caja_interpretacion_representacion_Nivel2_v2_py.Rmd`
 
 ---
 
@@ -153,7 +153,7 @@ if(es_moodle) {
 }
 ```
 
-**Referencia:** `A-Produccion/En-Desarrollo/volumen_cilindro_geometrico_metrico_interpretacion_python_n2_v1.Rmd:337-345`
+**Referencia:** `A-Produccion/02-En-Desarrollo/volumen_cilindro_geometrico_metrico_interpretacion_python_n2_v1.Rmd:337-345`
 
 ---
 
@@ -188,7 +188,7 @@ resultado <- py$variable_python
 lista_resultados <- py$lista_python
 ```
 
-**Referencia:** `A-Produccion/En-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/Python/Contraseñas/Contrasennia_Cloze_All.Rmd:59`
+**Referencia:** `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/Python/Contraseñas/Contrasennia_Cloze_All.Rmd:59`
 
 ---
 
@@ -210,7 +210,7 @@ cat("![](imagen.png){width=45%}\n\n")
 include_graphics("imagen.png")  # Falla en R/exams
 ```
 
-**Referencia:** `A-Produccion/En-Produccion/Ejemplos-Funcionales-Rmd/estadistica_diagramas_caja_interpretacion_representacion_Nivel2_v2_py.Rmd:550`
+**Referencia:** `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/estadistica_diagramas_caja_interpretacion_representacion_Nivel2_v2_py.Rmd:550`
 
 ### Guardado de Imágenes
 
@@ -309,7 +309,7 @@ py_run_string(codigo_cilindro)
 cat("![](cilindro.png){width=45%}\n\n")
 ```
 
-**Referencia:** `A-Produccion/En-Desarrollo/volumen_cilindro_geometrico_metrico_interpretacion_python_n2_v1.Rmd`
+**Referencia:** `A-Produccion/02-En-Desarrollo/volumen_cilindro_geometrico_metrico_interpretacion_python_n2_v1.Rmd`
 
 ---
 
@@ -380,15 +380,15 @@ plt.savefig('imagen.png', bbox_inches='tight')
    - Uso avanzado de matplotlib con perspectiva 3D
 
 2. **Diagramas de Caja:**
-   - `A-Produccion/En-Produccion/Ejemplos-Funcionales-Rmd/estadistica_diagramas_caja_interpretacion_representacion_Nivel2_v2_py.Rmd`
+   - `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/estadistica_diagramas_caja_interpretacion_representacion_Nivel2_v2_py.Rmd`
    - Generación dinámica de múltiples gráficas
 
 3. **Adopción de Mascotas:**
-   - `A-Produccion/En-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/Python/AdopcionMascotas/`
+   - `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/Python/AdopcionMascotas/`
    - Gráficas de barras y circulares
 
 4. **Generador de Contraseñas:**
-   - `A-Produccion/En-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/Python/Contraseñas/Contrasennia_Cloze_All.Rmd`
+   - `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/Plantillas/Python/Contraseñas/Contrasennia_Cloze_All.Rmd`
    - Integración R ↔ Python avanzada
 
 ---

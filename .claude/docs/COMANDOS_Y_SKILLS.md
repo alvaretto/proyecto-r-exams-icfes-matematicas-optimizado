@@ -298,7 +298,7 @@ exclozetype: num|schoice|mchoice|string
 ```
 
 **Requisitos previos**:
-- Ejercicio en `A-Produccion/En-Desarrollo/`
+- Ejercicio en `A-Produccion/02-En-Desarrollo/`
 - Ciclo de Validación completo (FASE 1+2+3 exitosas)
 - Tests pasando 100%
 - Usuario aprobó explícitamente
@@ -532,7 +532,7 @@ Claude DEBE entonces:
    - R ggplot2 dimensiones incorrectas
 2. Consulta ejemplos funcionales:
    ```
-   /A-Produccion/Ejemplos-Funcionales-Rmd/
+   /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
    ```
 3. Aplica patrón de solución validado
 4. Re-renderiza
@@ -778,6 +778,21 @@ allowed-tools:
 
 ---
 
+## Scripts sin comando propio
+
+Se ejecutan con `Rscript`. Contrato, salidas y medición: `.claude/docs/REXAMS_VERSIONES.md`, sección
+«Herramientas».
+
+| Script | Cuándo |
+|---|---|
+| `.claude/scripts/validar_stresstest.R` | Paso 9: compilación completa con N = 100 |
+| `.claude/scripts/vigia_rexams.R` | Saber si hay versión nueva de `exams` o `exams2forms` |
+| `.claude/scripts/comparar_version_exams.R` | Antes de actualizar `exams`, en una biblioteca aparte |
+| `.claude/scripts/webquiz_autocontenido.R` | Cuestionario HTML para usar sin internet |
+| `Auxiliares/exams2nops-escaner/nops_control_calidad.R` | Revisar escaneos antes de `nops_eval()` |
+
+---
+
 ## 📚 Documentación Relacionada
 
 - **Reglas críticas**: @.claude/docs/REGLAS_CRITICAS.md
@@ -786,12 +801,17 @@ allowed-tools:
 - **Ciclo validación**: @.claude/rules/ciclo-validacion.md
 - **Workflow completo**: @.claude/docs/WORKFLOW_PASO_A_PASO.md
 - **Routing de modelos**: @.claude/docs/MODELO_ROUTING.md 🆕
+- **Versiones de R/exams**: @.claude/docs/REXAMS_VERSIONES.md
 
 ---
 
-**Versión**: 1.5
-**Fecha**: 2026-03-25
-**Módulo de**: @.claude/CLAUDE.md (v3.6.0)
+**Versión**: 1.6
+**Fecha**: 2026-11-05
+**Módulo de**: @.claude/CLAUDE.md (v3.39.1)
+
+### Cambios v1.6 (2026-11-05)
+
+- Sección «Scripts sin comando propio», con `validar_stresstest.R` en el paso 9
 
 ### Cambios v1.5 (2026-03-25)
 

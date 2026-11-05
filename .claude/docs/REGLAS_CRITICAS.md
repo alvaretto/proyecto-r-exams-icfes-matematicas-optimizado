@@ -4,6 +4,9 @@
 
 **Todas estas reglas son OBLIGATORIAS y NO tienen excepciones.**
 
+> Este consolidado cubre 14 reglas, con una numeración anterior. La lista vigente, de 25 reglas, está en
+> `.claude/CLAUDE.md`, y cada norma, en `.claude/rules/`.
+
 ### Las 14 Reglas Fundamentales
 
 1. **Ejercicios metacognitivos** con Progressive Disclosure

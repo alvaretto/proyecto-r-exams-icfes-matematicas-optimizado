@@ -211,6 +211,16 @@ Ejecutar `/validar-diversidad`. Requiere 250+ versiones únicas de 300 intentos.
 
 **Atención CLOZE**: La diversidad se mide sobre la COMBINACIÓN de todas las partes, no sobre cada parte individual.
 
+**Compilación completa multi-semilla (obligatoria, regla #23)**: compila el ejercicio con N = 100 y ve
+cuelgues, errores y fugas de `NA` que la FASE 2G no alcanza.
+
+```bash
+Rscript .claude/scripts/validar_stresstest.R <ruta_al_.Rmd>
+```
+
+Exit 1 (`ERR_STRESS_*`) bloquea el sello. Exit 2 (`WARN_STRESS_INDET`) no es un aprobado: repetir con
+`--total` mayor.
+
 ```bash
 .claude/scripts/workflow-state.sh complete <dir> validar_diversidad --versiones_unicas [N]
 ```

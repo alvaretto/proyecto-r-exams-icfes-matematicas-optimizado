@@ -304,13 +304,13 @@ El comando de generación:
 ### 3.4 Ubicación del Archivo Generado
 
 ```
-A-Produccion/En-Desarrollo/
+A-Produccion/02-En-Desarrollo/
 └── [ejercicio]_[componente]_[competencia]_n[nivel]_v1.Rmd
 ```
 
 **Ejemplo:**
 ```
-A-Produccion/En-Desarrollo/
+A-Produccion/02-En-Desarrollo/
 └── Triangulos_Geometrico_Formulacion_n3_v1.Rmd
 ```
 
@@ -326,7 +326,7 @@ A-Produccion/En-Desarrollo/
 
 ```bash
 # Desde VSCode
-code A-Produccion/En-Desarrollo/[nombre_archivo].Rmd
+code A-Produccion/02-En-Desarrollo/[nombre_archivo].Rmd
 
 # O desde RStudio
 # File > Open File > Navegar a la ubicación
@@ -407,7 +407,7 @@ code A-Produccion/En-Desarrollo/[nombre_archivo].Rmd
 
 ```bash
 # Para errores de sintaxis Python
-# Consultar: A-Produccion/Ejemplos-Funcionales-Rmd/
+# Consultar: A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
 
 # Para errores de TikZ
 /corregir-error-imagen [archivo.Rmd]
@@ -428,12 +428,12 @@ code A-Produccion/En-Desarrollo/[nombre_archivo].Rmd
 
 **Comando:**
 ```bash
-/validar-diversidad A-Produccion/En-Desarrollo/[archivo].Rmd
+/validar-diversidad A-Produccion/02-En-Desarrollo/[archivo].Rmd
 ```
 
 **Ejemplo:**
 ```bash
-/validar-diversidad A-Produccion/En-Desarrollo/Triangulos_Geometrico_Formulacion_n3_v1.Rmd
+/validar-diversidad A-Produccion/02-En-Desarrollo/Triangulos_Geometrico_Formulacion_n3_v1.Rmd
 ```
 
 ### 5.2 Salida Esperada
@@ -493,6 +493,18 @@ VALIDACIÓN DE DIVERSIDAD - 250+ VERSIONES ÚNICAS
 
 ⏱️ **2-3 minutos** (si pasa) o **10-15 minutos** (si requiere correcciones)
 
+### 5.5 Compilación Completa Multi-Semilla
+
+La diversidad no prueba que el ejercicio compile en todas las semillas. Este paso, obligatorio antes de
+aprobar, ve cuelgues, errores en Question o Solution y fugas de `NA` al texto (regla #23, N = 100):
+
+```bash
+Rscript .claude/scripts/validar_stresstest.R A-Produccion/02-En-Desarrollo/[archivo].Rmd
+```
+
+Exit 1 (`ERR_STRESS_*`) bloquea. Exit 2 (`WARN_STRESS_INDET`) no es un aprobado: repetir con `--total`
+mayor. Detalle: `.claude/docs/REXAMS_VERSIONES.md`.
+
 ---
 
 ## 🔨 PASO 6: Compilar y Probar
@@ -511,7 +523,7 @@ VALIDACIÓN DE DIVERSIDAD - 250+ VERSIONES ÚNICAS
 library(exams)
 
 # Compilar a PDF
-exams2pdf("A-Produccion/En-Desarrollo/[archivo].Rmd",
+exams2pdf("A-Produccion/02-En-Desarrollo/[archivo].Rmd",
           n = 3,  # Generar 3 versiones
           name = "prueba",
           dir = "output_pdf")
@@ -530,7 +542,7 @@ exams2pdf("A-Produccion/En-Desarrollo/[archivo].Rmd",
 **Código en consola de R:**
 ```r
 # Compilar a HTML
-exams2html("A-Produccion/En-Desarrollo/[archivo].Rmd",
+exams2html("A-Produccion/02-En-Desarrollo/[archivo].Rmd",
            n = 3,
            name = "prueba",
            dir = "output_html")
@@ -548,7 +560,7 @@ exams2html("A-Produccion/En-Desarrollo/[archivo].Rmd",
 **Código en consola de R:**
 ```r
 # Compilar a Moodle XML
-exams2moodle("A-Produccion/En-Desarrollo/[archivo].Rmd",
+exams2moodle("A-Produccion/02-En-Desarrollo/[archivo].Rmd",
              n = 5,
              name = "prueba_moodle")
 ```
@@ -557,7 +569,7 @@ exams2moodle("A-Produccion/En-Desarrollo/[archivo].Rmd",
 
 **Error común: Imagen faltante**
 ```bash
-/corregir-error-imagen A-Produccion/En-Desarrollo/[archivo].Rmd
+/corregir-error-imagen A-Produccion/02-En-Desarrollo/[archivo].Rmd
 ```
 
 **Error común: LaTeX**
@@ -790,12 +802,12 @@ Por favor, mejora la fidelidad visual del código TikZ.
 
 ### Skills Principales
 
-- `/analizar-icfes` - `.claude/skills/analizar-icfes/skill.md`
-- `/generar-schoice` - `.claude/skills/generar-schoice/skill.md`
-- `/generar-cloze` - `.claude/skills/generar-cloze/skill.md`
-- `/validar-diversidad` - `.claude/skills/validar-diversidad/skill.md`
-- `/corregir-error-imagen` - `.claude/skills/corregir-error-imagen/skill.md`
-- `/promover-ejercicio` - `.claude/skills/promover-ejercicio/skill.md`
+- `/analizar-icfes` - `.claude/skills/analizar-icfes/SKILL.md`
+- `/generar-schoice` - `.claude/skills/generar-schoice/SKILL.md`
+- `/generar-cloze` - `.claude/skills/generar-cloze/SKILL.md`
+- `/validar-diversidad` - `.claude/skills/validar-diversidad/SKILL.md`
+- `/corregir-error-imagen` - `.claude/skills/corregir-error-imagen/SKILL.md`
+- `/promover-ejercicio` - `.claude/skills/promover-ejercicio/SKILL.md`
 
 ### Guías y Metodologías
 
@@ -899,7 +911,7 @@ Nivel 3 (Terreno - OBLIGATORIO):
    - `.claude/docs/patrones-errores-conocidos.md`
 
 2. **Revisar ejemplos funcionales**:
-   - `A-Produccion/Ejemplos-Funcionales-Rmd/`
+   - `A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/`
 
 3. **Buscar en casos resueltos**:
    - `.claude/docs/casos-resueltos/`

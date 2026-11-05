@@ -55,7 +55,7 @@ Inspección sistemática de coherencia en TODOS los aspectos:
 #### 📚 SUBFASE 3A: Corrección Basada en Ejemplos
 ```
 OBLIGATORIO: Consultar automáticamente ejemplos funcionales
-Ruta: /A-Produccion/Ejemplos-Funcionales-Rmd/
+Ruta: /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
 
 → Identificar patrones de solución en archivos similares
 → Extraer estructuras funcionales
@@ -121,7 +121,7 @@ Recibir archivo .Rmd
     │
     └── ✓ CON ERRORES:
             │
-            ├── 📚 SUBFASE 3A: Consultar /A-Produccion/Ejemplos-Funcionales-Rmd/
+            ├── 📚 SUBFASE 3A: Consultar /A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
             │       → Aplicar correcciones
             │
             ├── 🔄 SUBFASE 3B: VOLVER A FASE 1
@@ -144,5 +144,5 @@ Recibir archivo .Rmd
 - `.claude/Mermaid_Chart.txt` (diagrama de flujo oficial)
 - `.claude/docs/TRES_NIVELES_VALIDACION.md`
 - `.claude/docs/patrones-errores-conocidos.md`
-- `/A-Produccion/Ejemplos-Funcionales-Rmd/` (fuente de verdad)
+- `/A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/` (fuente de verdad)
 

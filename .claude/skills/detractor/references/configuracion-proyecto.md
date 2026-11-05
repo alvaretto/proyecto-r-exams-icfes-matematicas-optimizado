@@ -30,7 +30,7 @@ ignorar:
 fuentes_locales:
   - .claude/rules/
   - .claude/docs/
-  - A-Produccion/Ejemplos-Funcionales-Rmd/
+  - A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
   - docs/arquitectura.md
 
 # Bloqueos automaticos

@@ -539,13 +539,13 @@ menciona la palabra. Es una omisión documental, así que la única fuente citab
 
 ### Incidente F · `INC-TABLA-NONE` — Guard del contador `none` para tablas (regla #20, Error 21)
 
-**Síntoma**: `exams2pdf()` o `exams2nops()` lanzados desde RStudio (pandoc ≥ 3.7 bundleado) fallan con:
+**Síntoma**: `exams2pdf()` o `exams2nops()` lanzados desde RStudio (pandoc ≥ 3.8.1 bundleado) fallan con:
 ```
 ! LaTeX Error: No counter 'none' defined.
 ```
 aunque la misma corrida en terminal con pandoc 3.6 dé OK. El CLOZE tiene tablas Markdown (`kable(format="markdown")` o bloques `| col | col |`).
 
-**Causa**: pandoc ≥ 3.7 emite `\def\LTcaptype{none}` en la salida longtable para tablas Markdown sin caption; eso invoca `\refstepcounter{none}`, que requiere un contador LaTeX `none` no definido en la plantilla de R-exams. Es el gemelo del Error 16 (`\pandocbounded`): cambio de comportamiento de pandoc invisible en HTML/DOCX que sólo explota en PDF/NOPS.
+**Causa**: pandoc ≥ 3.8.1 emite `\def\LTcaptype{none}` en la salida longtable para tablas Markdown sin caption; eso invoca `\refstepcounter{none}`, que requiere un contador LaTeX `none` no definido en la plantilla de R-exams. Es el gemelo del Error 16 (`\pandocbounded`): cambio de comportamiento de pandoc invisible en HTML/DOCX que sólo explota en PDF/NOPS.
 
 **Fix obligatorio**: si el CLOZE usa tablas Markdown, inserto al inicio de la sección `Question` (**una sola vez**, antes de la primera tabla — cubre todas las partes del Progressive Disclosure) el bloque raw LaTeX:
 
@@ -1792,7 +1792,7 @@ Sin esta tabla el coste real del pipeline no es medible y no puedo justificar a�
 - ❌ NO duplicar el Answerlist con chunks R `cat()`: R-exams ya renderiza las opciones vía el Answerlist.
 - ❌ NO emitir `r letra_correcta_pN`, `r letras_pN[...]`, ni literal "Opción [A-D]" dentro de la sección `Solution` (regla #19, aplica a TODAS las sub-partes schoice). Identificar la opción correcta por contenido (`descripcion_corta`) o código (`error$codigo`).
 - ❌ NO emitir imágenes Markdown sin atributo `{width=...}` (regla #18 `markdown-imagenes-pdf.md`). Causaría `\pandocbounded undefined` al compilar PDF.
-- ❌ NO omitir la guardia `\@ifundefined{c@none}{\newcounter{none}}{}` al inicio de Question cuando el CLOZE usa tablas Markdown (regla #20). Causaría `No counter 'none' defined` en pandoc ≥ 3.7.
+- ❌ NO omitir la guardia `\@ifundefined{c@none}{\newcounter{none}}{}` al inicio de Question cuando el CLOZE usa tablas Markdown (regla #20). Causaría `No counter 'none' defined` en pandoc ≥ 3.8.1.
 - ❌ NO colocar gráficas (`![](*.png)`) como opciones del gap CLOZE en el Answerlist (Incidente G, regla `graficos-como-opciones.md`). Un gap CLOZE no renderiza `<img>` en Moodle → las gráficas desaparecen. Las gráficas-opción van ROTULADAS (I, II, III…) en el ENUNCIADO de la parte; las opciones del gap son TEXTO ("Gráfica I"…). Distinto del SCHOICE puro, donde sí funcionan.
 - ❌ NO tratar el `exams2nops()` N/A como error bloqueante (Incidente E): es comportamiento esperado en **todo** CLOZE, con cualquier combinación de gaps. Tampoco al revés: NO dar por hecho que un CLOZE 100 % `schoice`/`mchoice` deba renderizar NOPS. Lo único exigible es que el mensaje de rechazo contenga `cloze exercises`.
 - ❌ NO marcar `renderizado_4_formatos` como completado sin verificar que el `.tex` generado NO contiene `\pandocbounded` ni `\LTcaptype{none}` sin guardia, que el PDF abre sin errores, y que V1-V11 pasan (validación realista, no solo "exit 0").

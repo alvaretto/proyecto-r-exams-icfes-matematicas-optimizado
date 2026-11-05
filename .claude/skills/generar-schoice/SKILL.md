@@ -94,7 +94,7 @@ Solo considerar archivos que tengan `ejercicio_state.json` con `aprobacion_usuar
 
 **Prioridad 2 — Ejemplos Funcionales canónicos** (fuente de verdad inmutable):
 ```bash
-ls A-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
+ls A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 ls A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/*.Rmd
 ```
 
@@ -319,7 +319,7 @@ Aplica a todo ejercicio SCHOICE que incluya una tabla Markdown generada con `kni
 
 ### Problema
 
-pandoc ≥ 3.7 envuelve las tablas longtable con `\def\LTcaptype{none}`, lo que requiere un contador LaTeX `none` que NO está definido en la plantilla de R-exams. Resultado: `exams2pdf()` y `exams2nops()` fallan con:
+pandoc ≥ 3.8.1 envuelve las tablas longtable con `\def\LTcaptype{none}`, lo que requiere un contador LaTeX `none` que NO está definido en la plantilla de R-exams. Resultado: `exams2pdf()` y `exams2nops()` fallan con:
 
 ```
 ! LaTeX Error: No counter 'none' defined.

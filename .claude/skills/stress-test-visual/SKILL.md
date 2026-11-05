@@ -24,6 +24,10 @@ allowed-tools:
 
 Renderizar un ejercicio .Rmd N veces con diferentes semillas, analizar los resultados como lo haría un profesor revisando un examen, y reportar anomalías que otros niveles de validación no detectan.
 
+> **No confundir con `validar_stresstest.R`.** Este skill compila PDF reales (familia B de la regla #23).
+> `validar_stresstest.R` compila sin LaTeX con N = 100 (familia A, paso 9) y ve cuelgues, errores y fugas
+> de `NA`. Uno no sustituye al otro.
+
 ## Cuándo se ejecuta
 
 1. **Hook automático (FASE 2H)**: Después de cada renderizado exitoso, si las fases 2A-2G pasan

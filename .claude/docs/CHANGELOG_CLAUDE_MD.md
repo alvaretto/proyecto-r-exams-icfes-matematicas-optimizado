@@ -8,6 +8,37 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.39.1 (2026-11-05)
+
+Documentación central y referencias cruzadas al día con las novedades de R/exams. Sin cambios de
+código ni de validadores.
+
+1. **Paso 9 en las skills.** `/revisar-schoice` y `/revisar-cloze` corren `validar_stresstest.R`,
+   igual que los orquestadores: antes sellaban `validar_diversidad` sin esa compilación. También lo
+   citan `/validar-diversidad` y los dos comandos de orquestador, y `/stress-test-visual` aclara que
+   son dos cosas distintas (familias B y A de la regla #23).
+2. **Herramientas citadas donde se buscan.** `README.md`, `MANUAL_USUARIO.md` (v1.2),
+   `COMANDOS_Y_SKILLS.md` (v1.6), `ESTRUCTURA_REPOSITORIO.md` (v1.6), `HOOKS_Y_TESTING.md`,
+   `ECOSISTEMA_TESTING.md`, `TROUBLESHOOTING.md`, `TRES_NIVELES_VALIDACION.md`,
+   `WORKFLOW_PASO_A_PASO.md` e `INDICE_LECCIONES.md`. Los Errores 16, 21 y 22 y las reglas #18, #20 y
+   #23 enlazan con `REXAMS_VERSIONES.md`, que cierra con su tabla de referencias cruzadas.
+3. **Rutas rotas.** `skill.md` a `SKILL.md`, que en Linux no abría; `A-Produccion/En-Desarrollo` y
+   vecinas a sus carpetas numeradas; `A-Produccion/Ejemplos-Funcionales-Rmd/` a su lugar real, dentro
+   de `03-En-Produccion/`; y dos citas a `RESUMEN_CORRECCION_TIKZ.md`, que nunca llegó a git. Incluye
+   lo que dirige el trabajo: cuatro agentes activos, `validate.md`, `detractor-config.yaml`, skills y
+   sus referencias, reglas íntegras y guías de `.claude/docs` y `docs/`.
+4. **Cifras viejas.** Pandoc ≥ 3.8.1 donde decía ≥ 3.7; 3.11 en terminal y 3.10 en RStudio, medidos
+   hoy, donde decía 3.6 y 3.8.3; 25 reglas donde el README decía 22 y el índice de lecciones 20, con
+   las filas que faltaban; invariantes I-1 a I-10.
+5. **Guía del escáner.** `scaner_exams2nops.html` regenerado: seguía sin la sección de control de
+   calidad.
+
+Quedan fuera a propósito: `CLAUDE.md` raíz, que aún nombra la ruta vieja de los ejemplos funcionales
+en sus reglas absolutas; `post-exams2-validation.sh` y `test_markdown_tablas_none_guard.R`, que aún
+dicen pandoc ≥ 3.7; los ADR 002-007, sin commit; y los documentos históricos y auxiliares, que
+conservan sus rutas: `Auxiliares/`, `.agent.md`, `docs/guias/`, resúmenes fechados, `.claude/deprecated/`
+y los «archivos afectados» de los errores antiguos.
+
 ### Cambios v3.39.0 (2026-11-04)
 
 Novedades de R/exams verificadas contra fuentes primarias, y automatización de lo que sirve aquí.

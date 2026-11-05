@@ -299,7 +299,7 @@ Question
 
 ### Por qué
 
-pandoc ≥ 3.7 envuelve las tablas en entorno `longtable` y emite `\def\LTcaptype{none}` en el preámbulo del chunk, lo que requiere que exista un contador `none` en LaTeX. La plantilla de R-exams no define ese contador, por lo que `exams2pdf()` y `exams2nops()` fallan con:
+pandoc ≥ 3.8.1 envuelve las tablas en entorno `longtable` y emite `\def\LTcaptype{none}` en el preámbulo del chunk, lo que requiere que exista un contador `none` en LaTeX. La plantilla de R-exams no define ese contador, por lo que `exams2pdf()` y `exams2nops()` fallan con:
 
 ```
 ! LaTeX Error: No counter 'none' defined.

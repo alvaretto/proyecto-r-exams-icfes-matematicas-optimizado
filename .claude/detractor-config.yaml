@@ -104,7 +104,7 @@ fuentes_locales:
   - .claude/docs/
 
   # Ejemplos funcionales = FUENTE DE VERDAD ABSOLUTA (Nivel 1)
-  - A-Produccion/Ejemplos-Funcionales-Rmd/
+  - A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
 
   # Skills como referencia (Nivel 2)
   - .claude/skills/
