@@ -204,7 +204,7 @@ suites <- list(
     nombre = "Compilación completa multi-semilla: cuelgues, errores y fugas en el texto (regla #21 F1)",
     archivo = "tests/testthat/test_validar_stresstest.R",
     critico = TRUE,
-    watch = c("validar_stresstest", "test_validar_stresstest", "orquestador-schoice", "orquestador-cloze")
+    watch = c("validar_stresstest", "test_validar_stresstest", "orquestador-schoice", "orquestador-cloze", ".Rprofile")
   ),
   list(
     nombre = "Comparador de versiones de R/exams: contenido y formatos antes de actualizar",

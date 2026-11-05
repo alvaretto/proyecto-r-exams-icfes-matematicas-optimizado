@@ -5,8 +5,8 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "00-teorema_pitagoras_entrenamiento_completo_cloze_geometrico_metrico_formulacion_ejecucion_n2_cloze_v1.Rmd"
-copias <- 300
+archivo_examen <- "barras_campeonato_baloncesto_aleatorio_interpretacion_representacion_n3_cloze_v1.Rmd"
+copias <- 100  # Máximo 100: son las versiones que valida validar_stresstest.R
 numpreg <- 1
 semilla_base <- sample(100:1e8, 1)
 # NO establecer semilla fija - cada versión usará semilla diferente
@@ -97,9 +97,10 @@ nombre_arch <- paste0(nombre_sin_extension, "_")
 # Generación para Moodle, solo configura manualmente 'copias'
 # no importa 'numpreg'
 
-# NO usar set.seed aquí - exams2moodle manejará las semillas internamente
+# La semilla s es la versión s de validar_stresstest.R: se exporta lo validado, hasta 100 (exams >= 2.4-3)
 exams2moodle(archivo_examen,
              n = copias,
+             seed = matrix(seq_len(copias), ncol = 1),
              svg = TRUE,
              name = nombre_arch,
              encoding = "UTF-8",

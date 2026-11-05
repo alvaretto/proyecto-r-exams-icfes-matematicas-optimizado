@@ -24,11 +24,11 @@ library(tools)
 # ===============================================================================
 
 # Archivo de examen híbrido (cloze + schoice)
-archivo_examen <- "01-teorema_pitagoras_entrenamiento_completo_cloze_geometrico_metrico_formulacion_ejecucion_n2_cloze_v1.Rmd"
+archivo_examen <- "barras_campeonato_baloncesto_aleatorio_interpretacion_representacion_n3_cloze_v1.Rmd"
 
 # Configuración de generación
 config <- list(
-  archivos =500,                  # Número de versiones a generar
+  archivos =10,                  # Número de versiones a generar
   semilla_base = sample(100:1e8, 1), # Semilla base para generar semillas únicas
   dir_salida = "salida_hibrida",    # Directorio de salida
   dir_ejercicios = ".",             # Directorio de ejercicios
@@ -182,11 +182,12 @@ generar_moodle <- function() {
   cat("🎲 Semilla base:", config$semilla_base, "\n")
 
   tryCatch({
-    # NO usar set.seed aquí - exams2moodle manejará las semillas internamente
+    # La semilla s es la versión s de validar_stresstest.R: se exporta lo validado, hasta 100 (exams >= 2.4-3)
     cat("⏳ Iniciando generación Moodle XML...\n")
 
     resultado <- exams2moodle(archivo_examen,
                              n = config$archivos,
+                             seed = matrix(seq_len(config$archivos), ncol = 1),
                              name = paste0(nombre_base, "_moodle"),
                              dir = file.path(config$dir_salida, "moodle"),
                              edir = config$dir_ejercicios,

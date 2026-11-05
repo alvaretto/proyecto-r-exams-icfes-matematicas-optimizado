@@ -2312,8 +2312,8 @@ stopifnot(!all(vals_distractor == as.numeric(frecuencias)))
 ## Error 21: `No counter 'none' defined` — tablas Markdown con pandoc ≥3.8.1 (RStudio)
 
 > **Actualización (2026-11-05).** Ya no es exclusivo de RStudio: en este equipo pandoc es 3.11 en terminal y
-> 3.10 en RStudio. Desde `exams` 2.4-4 las plantillas del paquete definen `{none}`, pero `pcielo*.tex` y
-> `solpcielo*.tex` no, así que el guard sigue siendo obligatorio.
+> 3.10 en RStudio. Desde `exams` 2.4-4 las plantillas del paquete definen `{none}`, y desde el 2026-11-05 también las
+> cuatro de `perifericos/`, pero las copias locales de cada ejercicio no: el guard sigue siendo obligatorio.
 
 ### ❌ Mensaje de Error
 
@@ -3808,3 +3808,84 @@ acertaba el 51 % (+19,7 pp). La única topología viable entre los 1 176 tríos 
 | Fecha | Cambio |
 |---|---|
 | 2026-10-04 | Detectado por el AgenteDetractor (FASE 2C) al incorporar E8; rótulo decidido por el profesor; guarda añadida tras la re-auditoría. |
+
+---
+
+## Error 41: Con el backend Qt de matplotlib, R escribe `12,5` desde la primera figura
+
+### ❌ Mensaje de Error
+
+Puede no haber ninguno. Si el número llega a código Python armado con `paste0()`:
+
+```
+ValueError: x and y must have same first dimension, but have shapes (4,) and (3,)
+ValueError: setting an array element with a sequence. The requested array has an inhomogeneous shape after 1 dimensions.
+TypeError: float() argument must be a string or a real number, not 'tuple'
+```
+
+Si llega al texto, no hay error: una misma exportación con `n > 1` mezcla `1,47 m²` y `1.52 m²`.
+
+### 🔍 Causa Raíz
+
+Con pantalla disponible, matplotlib elige el backend `qtagg`. Al crear la primera figura, Qt fija `LC_NUMERIC` en el
+locale del sistema para todo el proceso, y R usa ese locale en `as.character()`, `paste0()` y `format()`. `OutDec`
+sigue en `.`, así que revisarlo no lo delata:
+
+```
+tras import pyplot   LC_NUMERIC=C            as.character(12.5) = 12.5
+tras crear figura    LC_NUMERIC=es_CO.UTF-8  as.character(12.5) = 12,5
+```
+
+Con `[25, 12,5, 50]`, Python ve cuatro números. Una versión suelta puede pasar, porque su número se escribe antes de
+la primera figura: por eso el fallo aparece con `n > 1`, y se documentó primero como «Python arrastra estado».
+
+### ✅ Solución
+
+Fijar el backend en el entorno, sin tocar los ejercicios:
+
+```r
+# .Rprofile del repo: sesiones que arrancan en la raíz
+Sys.setenv(MPLBACKEND = "Agg")
+```
+
+```
+# ~/.Renviron: sesiones en la carpeta de un ejercicio y RStudio
+MPLBACKEND="Agg"
+```
+
+Antes, con el entorno por defecto: `backend qtagg`, `LC_NUMERIC=es_CO.UTF-8`, `12,5`. Después: `backend Agg`,
+`LC_NUMERIC=C`, `12.5`, desde la raíz y desde la carpeta de un ejercicio. Un ejercicio nuevo sigue llevando
+`matplotlib.use('Agg')`: `~/.Renviron` no viaja a otro equipo.
+
+### 🧪 Validación
+
+| Ejercicio | Sin `Agg` | Con `Agg` |
+|---|---|---|
+| `vuelo_acrobatico_mejorado_A/B/C.Rmd`, N = 100 | Fallan 60, 87 y 86 semillas | 100 de 100 |
+| `conversion_unidades_area_…_n2_v1.Rmd` (2), N = 100 | `WARN_STRESS_NO_DETERMINISTA` | `PASS` |
+| `Ejemplo_02.Rmd`, N = 100 | Texto distinto en 1 de 5 semillas | `PASS` |
+| `vuelo_acrobatico_mejorado_A.Rmd`, `exams2pdf` y `exams2html` con `n = 3` | `ValueError` en PDF | Compilan |
+
+En los 41 ejercicios activos con pyplot y sin `Agg`, 33 dan el mismo texto con `Agg` y sin él, y 2 varían por azar
+propio. Las claves de los 3 casos silenciosos no cambian.
+
+### 📋 Checklist
+
+- [ ] `Sys.getenv("MPLBACKEND")` da `Agg` en la raíz del repo y en la carpeta del ejercicio.
+- [ ] Un número que varía entre versiones de un ejercicio con figura de Python se compara entre semillas.
+- [ ] El código Python no se arma con `paste0()` de números con decimales si se puede pasar el dato.
+
+### 📁 Ejemplo funcional
+
+`A-Produccion/03-En-Produccion/02-Funciones/Pensamiento-Variacional-Espacial/11-Variacion-Lineal-Y-Exponencial_Razon-De-Cambio/Variacion-Lineal-Vuelo-Acrobatico/vuelo_acrobatico_mejorado_A.Rmd`
+
+### 📅 Historial
+
+| Fecha | Cambio |
+|---|---|
+| 2026-11-05 | Hallado al diagnosticar `vuelo_acrobatico_mejorado`. `MPLBACKEND=Agg` en `.Rprofile` y `~/.Renviron`; guarda en `test_validar_stresstest.R`, comprobada con mutante |
+
+### 📚 Referencias
+
+- `.claude/docs/REXAMS_VERSIONES.md`, sección «Decimales y backend de matplotlib»
+- `.claude/docs/MEJORES_PRACTICAS_PYTHON_RETICULATE.md`

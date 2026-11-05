@@ -1,7 +1,7 @@
 # HANDOFF — repositorio (infraestructura `.claude/`, tests y documentación)
 
 > Archivo de retorno para el trabajo que no pertenece a un ejercicio; cada ejercicio lleva su propio
-> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-11-05 (v3.39.1: documentación y referencias cruzadas de las novedades de R/exams; mediciones en `849efaa4`).
+> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-11-05 (v3.40.0: `exams` 2.4-5 instalada, decisiones del profesor y Error 41).
 > Si este archivo y el código discrepan, manda el código: verificar antes de actuar.
 
 ## 2026-11-04 y 05: novedades de R/exams (v3.39.0 y v3.39.1), commit `849efaa4`
@@ -12,8 +12,12 @@
   suite completa, 53 de 53. El diferencial terminó en `COMPARAR_REVISAR`, con tres casos que no se
   sostienen al repetirlos: el documento los explica. Crudos en `~/.cache/rexams-versiones/`;
   `comp245b.log` quedó cortado por un apagado y no se usa. No queda nada corriendo.
-- **Al retomar:** faltan las cinco decisiones del profesor que cierran el documento. Commit y push
-  hechos el 2026-11-05, con los 34 archivos de la lista.
+- **Decisiones ejecutadas el 2026-11-05 (v3.40.0):** `exams` 2.4-5 instalada, suite 53 de 53; `renv.lock`
+  regenerado, sin activar `renv`; plantillas y Semilleros de `perifericos/`; comparador; y `MPLBACKEND=Agg`
+  en `.Rprofile` y `~/.Renviron` (Error 41). El commit lleva también, por decisión del profesor, sus cambios
+  previos en `solpcielo.tex` y los tres Semilleros, y `solpcielo_cloze.tex`, que no estaba en git.
+- **Al retomar:** falta la versión nueva de `Op-M`, con prototipo en
+  `~/.cache/rexams-versiones/defectos/op-m/`. Es trabajo de ejercicio: pasa por el flujo de 11 pasos.
 - **Referencias cruzadas (v3.39.1):** documentos centrales, skills del paso 9 y guía del escáner al
   día, junto con `CLAUDE.md` raíz y la FASE 2K del hook, con visto bueno del profesor. Quedan fuera a
   propósito: `test_markdown_tablas_none_guard.R`, que aún dice pandoc ≥ 3.7 en sus comentarios; los ADR

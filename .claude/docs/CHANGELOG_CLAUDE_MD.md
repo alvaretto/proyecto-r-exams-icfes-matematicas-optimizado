@@ -8,6 +8,24 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.40.0 (2026-11-05)
+
+Las decisiones del profesor sobre R/exams, y un hallazgo que cambió la cuarta.
+
+1. **`exams` 2.4-5 y `exams2forms` 0.2-2 instaladas.** Suite completa con la versión nueva: 53 de 53, con los
+   mismos `skip`. `renv.lock` regenerado: las mismas 119 entradas, R 4.6.1 y 30 paquetes con su versión real.
+   `renv` sigue sin activar, y el ADR-003 sigue propuesto. La 2.4-2 queda en `~/.cache/rexams-versiones/lib242`.
+2. **Plantillas.** Las cuatro de `A-Produccion/perifericos/` definen `\pandocbounded` y `{none}`, medido en 40
+   combinaciones. Las copias de cada ejercicio no cambiaron: la regla #20 ya lo distingue.
+3. **`seed` en los Semilleros.** Los tres de `perifericos/` exportan las versiones que valida el paso 9.
+   `SemilleroMoodle_v2.R` baja de 300 a 100 copias: las semillas 101 a 300 no estaban validadas.
+4. **Error 41: backend Qt de matplotlib.** Qt fija `LC_NUMERIC` en `es_CO` al crear la primera figura, y R escribe
+   `12,5`. Era la causa de `vuelo_acrobatico_mejorado_A/B/C`, que `REXAMS_VERSIONES.md` atribuía a estado de
+   Python, y de `conversion_unidades_area`, anotado como no determinista. `MPLBACKEND=Agg` en `.Rprofile` y
+   `~/.Renviron` lo resuelve sin tocar `03-En-Produccion`: los 6 afectados pasan N = 100. Guarda en
+   `test_validar_stresstest.R`, comprobada con mutante, con `.Rprofile` en su `watch`.
+5. **`Op-M`.** Causa exacta y prototipo fuera del repo con 100 de 100. Falta su flujo de 11 pasos.
+
 ### Cambios v3.39.2 (2026-11-05)
 
 `comparar_version_exams.R` repite antes de clasificar. El diferencial de 2.4-2 a 2.4-5 dio dos

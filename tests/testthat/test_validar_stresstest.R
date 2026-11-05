@@ -348,3 +348,24 @@ test_that("la semilla s es la versión s de una exportación con seed: lo valida
   expect_false(identical(mutadas, huellas_del_lote(rmd, 4L)))
 })
 
+
+# --- El backend de matplotlib no cambia los decimales de R (Error 41) -----------------
+# Con el backend Qt, la primera figura fija LC_NUMERIC en el locale del sistema para todo
+# el proceso: R pasa a escribir 12,5, y una exportación con n > 1 mezcla punto y coma sin
+# error. Se prueba con un entorno hostil: .Rprofile debe imponerse a un MPLBACKEND=qtagg.
+
+test_that("Error 41: .Rprofile fija Agg y la primera figura no cambia los decimales", {
+  rprofile <- readLines(file.path(RAIZ, ".Rprofile"), warn = FALSE)
+  expect_true(any(grepl('^Sys\\.setenv\\(MPLBACKEND = "Agg"\\)', rprofile)))
+  skip_if_not_installed("reticulate")
+  guion <- tempfile(fileext = ".R")
+  writeLines(c(
+    "library(reticulate)",
+    "py_run_string('import matplotlib.pyplot as plt\\nfig = plt.figure()\\nplt.close()')",
+    "cat('DECIMAL', as.character(12.5), Sys.getlocale('LC_NUMERIC'), '\\n')"), guion)
+  viejo <- setwd(RAIZ)
+  on.exit(setwd(viejo))
+  s <- suppressWarnings(system2(RSCRIPT, shQuote(guion), stdout = TRUE, stderr = TRUE, env = "MPLBACKEND=qtagg"))
+  if (!any(grepl("^DECIMAL", s))) skip("matplotlib no disponible en este entorno")
+  expect_true(any(grepl("^DECIMAL 12\\.5 C", s)), info = paste(utils::tail(s, 3), collapse = " | "))
+})

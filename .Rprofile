@@ -36,6 +36,11 @@ Sys.setenv(RETICULATE_PYTHON = "/usr/bin/python3")
 Sys.setenv(RETICULATE_PYTHON_FALLBACK = "/usr/bin/python3")
 Sys.setenv(RETICULATE_USE_MANAGED_VENV = "no")
 
+# matplotlib sin Qt: al crear la primera figura, Qt fija LC_NUMERIC en el locale del sistema para todo
+# el proceso, y R pasa a escribir 12,5 en vez de 12.5. Una exportación con n > 1 mezcla los dos, y el
+# código Python armado con paste0() se rompe. Ver el Error 41 de patrones-errores-conocidos.md.
+Sys.setenv(MPLBACKEND = "Agg")
+
 # Cargar reticulate y forzar configuración
 if (require("reticulate", quietly = TRUE)) {
   # Usar required = TRUE para forzar el uso de este Python

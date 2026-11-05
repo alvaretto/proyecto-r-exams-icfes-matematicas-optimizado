@@ -327,6 +327,7 @@ Lista completa: `.claude/CLAUDE.md`.
 | `No counter 'none' defined` en PDF o NOPS | Añadir el guard al `.Rmd` | regla #20, Error 21 |
 | Un Semillero falla con tablas | Plantilla propia sin `{none}` | `REXAMS_VERSIONES.md`, «Tablas en PDF» |
 | Un ejercicio se cuelga en algunas semillas | `validar_stresstest.R` | regla #21 F1, Error 22 |
+| Unas versiones salen con `12,5` y otras con `12.5` | Comprobar que `MPLBACKEND` sea `Agg` | Error 41 |
 | `claude mcp list` reporta `✗ Failed` | `claude mcp remove <nombre>` o investigar | Error #13 |
 | Hooks ICFES no se disparan | Verificar I-3 con test | regla #17 |
 | `CLAUDE.md` raíz cambió de identidad | Verificar I-1 | regla #17 |

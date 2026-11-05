@@ -33,8 +33,8 @@ El bug es de pipeline: HTML/DOCX no pasan por LaTeX, así que no fallan; PDF/NOP
 
 ## Actualización 2026-08-15 — R/exams ≥ 2.4-1 ya DEFINE el macro
 
-> Las plantillas propias (`pcielo*.tex`, `solpcielo*.tex`) no lo definen: ver
-> `.claude/docs/REXAMS_VERSIONES.md`, sección «Tablas en PDF».
+> Las copias locales de `pcielo*.tex` y `solpcielo*.tex` no lo definen; las cuatro de `perifericos/` sí, desde el
+> 2026-11-05. Ver `.claude/docs/REXAMS_VERSIONES.md`, sección «Tablas en PDF».
 
 **El modo de fallo original ya no se reproduce con la versión instalada.** Desde **exams 2.4-1**
 todas las plantillas LaTeX del paquete traen la definición no-op:

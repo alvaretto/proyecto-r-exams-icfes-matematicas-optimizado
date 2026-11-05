@@ -172,9 +172,9 @@ El NEWS de `exams` 2.4-4 (2026-07-31) dice: «All LaTeX templates gained a new c
 corresponding `\LTcaptype{none}`». El código lo confirma en `inst/tex/plain.tex`,
 `inst/pandoc/plain.tex` y en la plantilla que genera `exams2nops()`. **El guard no se retira**:
 
-- Las plantillas propias del repo no lo traen: `grep -c 'none' A-Produccion/perifericos/*.tex` da 0
-  en `pcielo.tex`, `pcielo_nosol.tex`, `solpcielo.tex` y `solpcielo_cloze.tex`, y hay 114 copias de
-  cada una repartidas por los ejercicios. Son las que usan los Semilleros.
+- Las copias locales de las plantillas propias no lo traen. Las cuatro de `A-Produccion/perifericos/` lo
+  definen desde el 2026-11-05, pero cada Semillero usa la copia de su carpeta: 113 de `solpcielo.tex` y de
+  `pcielo.tex`, y 84 de `pcielo_nosol.tex`, repartidas por los ejercicios.
 - La versión instalada puede ser anterior a 2.4-4.
 - El guard usa `\@ifundefined`, así que no choca con la definición del paquete. Los 39 `.Rmd` que lo
   traen lo llevan con esa forma; ninguno trae un `\newcounter{none}` sin guarda.

@@ -67,7 +67,7 @@ knitr::opts_chunk$set(
 # Chunk R para generar gráfica
 codigo_python <- paste0("
 import matplotlib
-matplotlib.use('Agg')  # Backend sin interfaz gráfica
+matplotlib.use('Agg')  # Sin Qt: con Qt, R escribe 12,5 desde la primera figura (Error 41)
 import matplotlib.pyplot as plt
 import numpy as np
 

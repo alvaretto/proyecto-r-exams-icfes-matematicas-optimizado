@@ -2,7 +2,7 @@
 
 > **Propósito:** mapa unificado de TODAS las fuentes de lecciones, errores y decisiones del proyecto ICFES R/exams. Si tienes una pregunta del tipo "¿esto ya pasó? ¿hay un fix conocido?", **empieza por aquí**.
 
-**Última actualización:** 2026-11-05 (reglas hasta la #25 y versiones de R/exams; antes: 2026-09-13, Errores 35-37 agregados en §2.7 — ciclo `teorema-coseno-datos-suficientes-n3`: segunda clave por criterio ambiguo, invariante sin guardia ejecutable, cobertura nominal y sonda sin control positivo)
+**Última actualización:** 2026-11-05 (Error 41, reglas hasta la #25 y versiones de R/exams; antes: 2026-09-13, Errores 35-37 agregados en §2.7 — ciclo `teorema-coseno-datos-suficientes-n3`: segunda clave por criterio ambiguo, invariante sin guardia ejecutable, cobertura nominal y sonda sin control positivo)
 **Mantenedor:** Álvaro Ángel Molina
 
 ---
@@ -47,6 +47,7 @@
 | 1 | "File 'imagen.png' not found" en exams2pdf | `include_tikz()` genera PNG en `/tmp/` no accesible | `include_tikz(..., markup="markdown")` en 1 sola llamada — **NO** `if(knitr::is_latex_output())` (RETIRADO 2026-08-15, ver `codigo-rmd.md` #1) | `patrones-errores-conocidos.md` §Error 1 |
 | 2 | "argumento no numérico" en `abs()` | Variable string pasada a función matemática | Verificar tipos en `data_generation` con `is.numeric()` | §Error 2 |
 | 3 | Imágenes Python no visibles en PDF | `reticulate` + matplotlib sin `plt.savefig()` explícito | Guardar PNG con ruta absoluta + `cat("![](ruta)")` | §Error 3 |
+| 41 | Una exportación con `n > 1` mezcla `12,5` y `12.5`, o el Python armado con `paste0()` falla | El backend Qt de matplotlib fija `LC_NUMERIC` en el locale del sistema al crear la primera figura | `MPLBACKEND=Agg` en `.Rprofile` y `~/.Renviron` | `patrones-errores-conocidos.md` |
 
 ### 2.2 Gráficos como opciones
 

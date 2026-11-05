@@ -5,9 +5,10 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "dispersion_alcance_proyectil_aleatorio_interpretacion_representacion_n2_v1_opc_B.Rmd"
+## Versión CLOZE (6 partes). El SCHOICE hermano tiene su propio Semillero en ../
+archivo_examen <- "barras_campeonato_baloncesto_aleatorio_interpretacion_representacion_n3_cloze_v1.Rmd"
 copias <- 1  # Número de versiones a generar
-numpreg <- 3
+numpreg <- 10
 semilla_base <- sample(100:1e8, 1)
 # NO establecer semilla fija - cada versión usará semilla diferente
 dir_salida <- "salida"
@@ -67,7 +68,7 @@ exams2pdf(rep(archivo_examen, numpreg),
           n = copias,
           name = nombre_arch,
           encoding = "UTF-8",
-          template = "solpcielo",
+          template = "solpcielo_cloze",   # instrucción «Cómo marcar»: opciones en línea, separadas por /
           dir = dir_salida,
           edir = dir_ejercicios,
           verbose = TRUE)
@@ -102,9 +103,10 @@ exams2pandoc(rep(archivo_examen, numpreg),
 # Generación para Moodle, solo configura manualmente 'copias'
 # no importa 'numpreg'
 
-# set.seed(semilla)
+# La semilla s es la versión s de validar_stresstest.R: se exporta lo validado, hasta 100 (exams >= 2.4-3)
 exams2moodle(archivo_examen,
              n = copias,
+             seed = matrix(seq_len(copias), ncol = 1),
              svg = TRUE,
              name = nombre_arch,
              encoding = "UTF-8",
@@ -119,25 +121,26 @@ exams2moodle(archivo_examen,
 ################################################################################
 # Generación para NOPS (exámenes escaneables)
 
-# NO establecer semilla fija - cada versión usará semilla diferente
-exams2nops(rep(archivo_examen, numpreg),
-           n = copias,
-           name = paste0(nombre_sin_extension, "_nops_"),
-           encoding = "UTF-8",
-           dir = dir_salida,
-           edir = dir_ejercicios,
-           language = "es",                      # Idioma español
-           title = "Evaluación de Matemáticas",  # Título del examen
-           institution = "I. E. Pedacito de Cielo", # Nombre de la institución
-           logo = NULL,                         # Sin logo (opcional)
-           date = Sys.Date(),                   # Fecha actual
-           replacement = FALSE,                 # Sin preguntas de reemplazo
-           blank = 0,                           # Sin páginas adicionales
-           duplex = TRUE,                       # Impresión a doble cara
-           pages = NULL,                        # Número de páginas automático
-           points = NULL,                       # Puntos por pregunta automático
-           showpoints = FALSE,                  # No mostrar puntos en el examen
-           verbose = TRUE)
+# NOPS NO admite ejercicios cloze: R/exams se detiene con «the following exercises
+# are cloze exercises». Para hoja escaneable usar el SCHOICE hermano (../).
+# exams2nops(rep(archivo_examen, numpreg),
+#            n = copias,
+#            name = paste0(nombre_sin_extension, "_nops_"),
+#            encoding = "UTF-8",
+#            dir = dir_salida,
+#            edir = dir_ejercicios,
+#            language = "es",                      # Idioma español
+#            title = "Evaluación de Matemáticas",  # Título del examen
+#            institution = "I. E. Pedacito de Cielo", # Nombre de la institución
+#            logo = NULL,                         # Sin logo (opcional)
+#            date = Sys.Date(),                   # Fecha actual
+#            replacement = FALSE,                 # Sin preguntas de reemplazo
+#            blank = 0,                           # Sin páginas adicionales
+#            duplex = TRUE,                       # Impresión a doble cara
+#            pages = NULL,                        # Número de páginas automático
+#            points = NULL,                       # Puntos por pregunta automático
+#            showpoints = FALSE,                  # No mostrar puntos en el examen
+#            verbose = TRUE)
 
 ################################################################################
 # Generación para exams2forms (formularios HTML interactivos)

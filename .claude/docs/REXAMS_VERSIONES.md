@@ -11,8 +11,12 @@ Salida de `Rscript .claude/scripts/vigia_rexams.R`, cotejada a mano con el NEWS 
 
 | Paquete | Instalada | `renv.lock` | CI | CRAN | Desarrollo |
 |---|---|---|---|---|---|
-| `exams` | 2.4-2 (2025-04-29) | 2.4-3 | la del día, sin fijar | 2.4-5 (2026-10-08) | 2.4-5 |
-| `exams2forms` | 0.2-0 (2025-05-02) | 0.2-0 | no se instala | 0.2-2 (2026-07-31) | 0.2-3 |
+| `exams` | 2.4-5 (2026-10-08) | 2.4-5 | la del día, sin fijar | 2.4-5 (2026-10-08) | 2.4-5 |
+| `exams2forms` | 0.2-2 (2026-07-31) | 0.2-2 | no se instala | 0.2-2 (2026-07-31) | 0.2-3 |
+
+Actualizado el 2026-11-05, con la suite completa en 53 de 53 sobre 2.4-5. Para revertir, la 2.4-2 y la
+0.2-0 quedan en `~/.cache/rexams-versiones/lib242`. `renv.lock` describe lo instalado (R 4.6.1 y 119
+paquetes), pero `renv` sigue sin activar: eso es el ADR-003, aún propuesto.
 
 Pandoc del equipo: 3.11 en terminal y 3.10 en RStudio. No hay ninguna versión anunciada para 2027: la rama principal de
 [`exams` en Codeberg](https://codeberg.org/zeileis/exams) coincide con CRAN, y ni su NEWS ni el
@@ -41,7 +45,7 @@ estaban en la versión instalada, y la quinta no está respaldada tal como se af
 | exams 2.4-3 | `answerlist()` toma el `markup` del ejercicio, no `"latex"` | Cambia 1 `.Rmd`, para bien: `construccion_segmentos_circulos.Rmd` metía LaTeX crudo en Markdown |
 | exams 2.4-3 | `add_cloze()`, `format_metainfo()`, `match_exams_markup()` y `answerlist(write = FALSE)` | Sin uso en el repo |
 | exams 2.4-3 | Orden nuevo de argumentos en `exams2nops()` | Sin efecto: de las 112 llamadas activas, ninguna pasa más de dos argumentos por posición |
-| exams 2.4-3 | **`answerlist(markup=)` se ignora: bug, corregido en 2.4-4** | `renv.lock` fija justo 2.4-3: no restaurar esa versión |
+| exams 2.4-3 | **`answerlist(markup=)` se ignora: bug, corregido en 2.4-4** | `renv.lock` la fijó hasta el 2026-11-05: no volver a esa versión |
 | exams 2.4-4 | Contador `{none}` en las plantillas del paquete | Ver «Tablas en PDF» |
 | exams 2.4-5 | Repositorio en Codeberg; `exams2ilias()` sin mantenimiento; CLOZE `string` con regex y `\|` | Sin uso en el repo |
 | exams2forms 0.2-1 | `converter` deja de existir en `exams2forms()` | Sin uso en el repo |
@@ -132,15 +136,24 @@ Con pandoc 3.11, un `.Rmd` con tabla Markdown y sin el guard de la regla #20 no 
 | Fallan en las dos | 6: 3 de `vuelo_acrobatico_mejorado` y 3 por LaTeX |
 | No concluyente | 1: `mediana_salas_cine`, intermitente por `set.seed(Sys.time)` |
 
-**Actualizar `exams` no arregla los Semilleros.** Usan plantillas propias que no definen `{none}` ni
-`\pandocbounded`: con `solpcielo.tex`, esos ejercicios fallan también con 2.4-5. Estas dos líneas
-antes de `\begin{document}` los hacen compilar con las dos versiones, también junto al guard de los
-`.Rmd` (probado en una copia con 4 ejercicios):
+**Actualizar `exams` no arregla los Semilleros.** Usan plantillas propias que no definían `{none}` ni
+`\pandocbounded`: con `solpcielo.tex`, esos ejercicios fallan también con 2.4-5. Desde el 2026-11-05, las
+cuatro plantillas de `A-Produccion/perifericos/` llevan estas dos líneas antes de `\begin{document}`:
 
 ```latex
 \providecommand{\pandocbounded}[1]{#1}
 \makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
 ```
+
+Medido en 40 combinaciones de plantilla, versión, formato y ejercicio. Con `solpcielo` y
+`solpcielo_cloze`, un ejercicio sin guard pasa de fallar con las dos versiones a compilar con las dos, y uno
+con guard da el mismo texto. En DOCX, donde pandoc lee `pcielo.tex`, el texto no cambia. `pcielo` y
+`pcielo_nosol` no compilan a PDF, con las dos líneas o sin ellas: los Semilleros solo usan `pcielo.tex`, y
+solo para DOCX.
+
+**Las copias no cambiaron.** Cada Semillero usa la plantilla de su carpeta, no la de `perifericos/`: hay 113
+copias de `solpcielo.tex`, con 9 contenidos distintos, 113 de `pcielo.tex` y 84 de `pcielo_nosol.tex`. Las de
+`03-En-Produccion` son inmutables.
 
 ### Figuras en multicopia
 
@@ -168,6 +181,29 @@ exams2moodle(archivo_examen, n = 100, seed = matrix(1:100, ncol = 1), ...)  # ex
 
 No aplica a los ejercicios no deterministas: su azar no depende de esa semilla.
 
+Los tres Semilleros de `perifericos/` exportan así desde el 2026-11-05, y `SemilleroMoodle_v2.R` bajó de 300 a
+100 copias, porque `validar_stresstest.R` valida las semillas 1 a 100. Medido con un SCHOICE y un CLOZE: con
+`seed`, dos corridas dan el mismo XML; sin `seed`, difieren. Los Semilleros ya copiados a cada ejercicio no
+cambiaron.
+
+### Decimales y backend de matplotlib
+
+Con el backend `qtagg`, Qt fija `LC_NUMERIC` en el locale del sistema para todo el proceso al crear la
+primera figura, y R pasa a escribir `12,5`. `OutDec` no cambia, así que revisarlo no lo delata. Una exportación
+con `n > 1` mezcla punto y coma, sin error y sin un orden fijo entre ejercicios. Error 41.
+
+| Medición: 41 ejercicios activos con pyplot y sin `Agg`, 5 semillas | Ejercicios |
+|---|---|
+| Mismo texto con `Agg` y sin él | 33 |
+| Fallan sin `Agg` y pasan con `Agg` | 3: `vuelo_acrobatico_mejorado_A/B/C` |
+| Cambian el texto sin error, con la misma clave | 3: `conversion_unidades_area` (2 archivos) y `Ejemplo_02.Rmd` |
+| Varían por azar propio | 2: `exportaciones_graficos_tebailandia` y su copia |
+
+`MPLBACKEND=Agg` lo evita sin tocar los ejercicios: `.Rprofile` lo fija en las sesiones de la raíz del repo, y
+`~/.Renviron`, en las de la carpeta de cada ejercicio y en RStudio. Con el entorno real, los 6 afectados pasan
+N = 100. Otro equipo necesita su propio `~/.Renviron`. Los 43 ejercicios expuestos de `Lab-Manjaro` no se
+midieron.
+
 ## Defectos que destapó el barrido
 
 Barrido de `validar_stresstest.R` con N = 100 sobre los 161 ejercicios activos: 83 de
@@ -177,12 +213,13 @@ declarados.
 
 | Zona | Ejercicio | Defecto |
 |---|---|---|
-| Producción | `2023-Matematicas-11-2-09-Op-M.Rmd` | `while` sin cota: cuelga en 22 de 100 semillas (Error 22) |
-| Producción | `vuelo_acrobatico_mejorado_A/B/C.Rmd` | Python arrastra estado entre versiones: cada una pasa suelta, pero falla con `n > 1` (60, 87 y 86 de 100 semillas) |
+| Producción | `2023-Matematicas-11-2-09-Op-M.Rmd` | `while` imposible: con duración 6, ningún valor de 1 a 12 dista más de 6, y cuelga en 22 de 100 semillas (Error 22). Además, `tipo_error` sale de un contador en archivo que nunca sube: siempre es `tiempo`, con la misma clave (regla #22, P4-bis) |
+| Producción | `vuelo_acrobatico_mejorado_A/B/C.Rmd` | **Resuelto en el entorno.** Fallaban con `n > 1` (60, 87 y 86 de 100 semillas) porque el decimal `12,5` llegaba al código Python. Error 41 |
 | Producción | `mediana_salas_cine_formulacion_ejecucion_n2_v1.Rmd` | `set.seed(Sys.time)`: su `test_that` falla de forma intermitente (4 de 100) |
 | Producción | `probabilidad_intervalos_curva_…_tikz_cloze_v1_2.Rmd` | Su propio `stop()` corta la semilla 83: «Las opciones generadas no son suficientemente diferentes» |
 | Producción | `11_C01_G09_2020_Tipo1.Rmd` y su copia | Aviso: dos distractores idénticos en la semilla 12 (`duplicated items in question list`); la clave no cambia |
-| Producción | `fracciones_reparto_premio_v1..v4`, `exportaciones_graficos_tebailandia` y copias, `conversion_unidades_area` | No deterministas: `set.seed(NULL)` o `random` de Python sin sembrar |
+| Producción | `fracciones_reparto_premio_v1..v4`, `exportaciones_graficos_tebailandia` y copias | No deterministas: `set.seed(NULL)` o `random` de Python sin sembrar |
+| Producción | `conversion_unidades_area_…_n2_v1.Rmd` (2 archivos) y `Ejemplo_02.Rmd` | **Resuelto en el entorno.** No eran azar: mezclaban punto y coma decimal. Error 41 |
 | En desarrollo | `01-probabilidad_condicional_diagrama_arbol_…_n3_v1.Rmd` | Tres líneas `NA` en el texto visible, en las 100 semillas |
 | En desarrollo | `01-consumo_familiar_generico_…_n2_v1.Rmd` | `test_that` interno falla en 4 de 100 semillas |
 | En desarrollo | `Avert.Rmd` | `sample()` mayor que la población en la semilla 31 |
@@ -195,17 +232,22 @@ En `01-En-PreDesarrollo`, sin `Lab-Manjaro`, los 47 ejercicios no dan ningún er
 procesos a la vez el tope de 1500 s no alcanza. Repetidos con `--total 2000` dan 100 de 100 en 627 y
 663 s, por debajo de los 1200 s que usa por defecto el paso 9.
 
-## Decisiones pendientes
+## Decisiones del 2026-11-05
 
-1. **Añadir las dos líneas a las plantillas** (`A-Produccion/perifericos/*.tex`): no depende de
-   actualizar. `solpcielo.tex` tiene cambios sin commit, y hay 114 copias de cada plantilla.
-2. **Actualizar a `exams` 2.4-5 y `exams2forms` 0.2-2** y regenerar `renv.lock`, que fija 2.4-3,
-   justo la versión con el bug de `answerlist(markup=)`. Va con el ADR-003
-   (`.claude/docs/ADR/003-entorno-fijado-pc-render.md`, aún sin commit). El diferencial está
-   cerrado: ninguna regresión se sostiene, con el límite de los ejercicios no deterministas.
-3. **Exportar con `seed`** en los Semilleros, tras actualizar.
-4. **Qué hacer con los defectos de la tabla.** Los de producción requieren una versión nueva, porque
-   esa carpeta es inmutable.
+1. **Plantillas:** hecho en `A-Produccion/perifericos/`. Las copias de cada ejercicio no cambiaron.
+2. **`exams` 2.4-5 y `exams2forms` 0.2-2:** instaladas, con `renv.lock` regenerado. El ADR-003
+   (`.claude/docs/ADR/003-entorno-fijado-pc-render.md`, aún sin commit) sigue propuesto.
+3. **Exportar con `seed`:** hecho en los tres Semilleros de `perifericos/`.
+4. **Defectos:** `vuelo_acrobatico_mejorado_A/B/C` se resolvió con `MPLBACKEND=Agg`, sin versión nueva.
+   `2023-Matematicas-11-2-09-Op-M.Rmd` la exige: el prototipo da 100 de 100 con el tipo de error sorteado
+   (`~/.cache/rexams-versiones/defectos/op-m/`), y falta su flujo de 11 pasos.
+5. **Comparador:** repite antes de clasificar y guarda el log de LaTeX.
+
+## Pendiente
+
+- Versión nueva de `Op-M` y los demás defectos de la tabla. Los de producción requieren versión nueva, porque
+  esa carpeta es inmutable.
+- Llevar las plantillas y los Semilleros nuevos a las copias de los ejercicios activos, si hace falta.
 
 ## Repetir la medición
 
@@ -278,6 +320,7 @@ ofuscadas, así que sirve para practicar y no para calificar. No se probó en un
 | `while` y `repeat` sin cota | Regla #21 F1 y Error 22: `.claude/rules/familias-soluciones-rmd.md`, `.claude/docs/patrones-errores-conocidos.md` |
 | Figuras en multicopia | Regla #4: `.claude/rules/graficos-como-opciones.md` |
 | `\pandocbounded` y plantillas propias | Regla #18 y Error 16: `.claude/rules/markdown-imagenes-pdf.md` |
+| Decimales con Python | Error 41: `.claude/docs/patrones-errores-conocidos.md`; `.Rprofile` |
 | Tablas y contador `{none}` | Regla #20 y Error 21: `.claude/rules/markdown-tablas-pandoc.md` |
 | Suites de estas herramientas | `.claude/docs/VALIDATOR_COBERTURA_ICFES.md`, sección «Suites de Test» |
 | Escaneos NOPS | `Auxiliares/exams2nops-escaner/scaner_exams2nops.md` |
