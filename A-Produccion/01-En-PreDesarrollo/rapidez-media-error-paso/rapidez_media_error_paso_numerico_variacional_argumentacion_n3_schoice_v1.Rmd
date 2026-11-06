@@ -1,0 +1,578 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## =============================================================================
+## EPA-2023-MAT-11-2-09 — Evaluar para Avanzar 2023, Matemáticas 11-2, pregunta 09.
+## Fuente verbatim: ITEM_OFICIAL.md. Invariantes L-1..L-9 y autorización O-2: .claude/CLAUDE.md local.
+##
+## Diseño (la tensión del HANDOFF: variar la clave sin perder la trampa ni delatarla):
+##   - El procedimiento tiene tres pasos: distancia, tiempo y cociente. En cada versión uno,
+##     y solo uno, está mal. El impreso lo tiene en el cociente; las demás versiones rotan.
+##   - L-1: en NINGUNA versión el error es de aritmética. Las cuentas de los tres pasos dan
+##     bien: lo que falla es el significado (qué se resta, qué unidad lleva cada cifra).
+##     Esa es la trampa del impreso, y por eso revisar solo las cuentas nunca basta.
+##   - Las concepciones erróneas son las mismas en todas las versiones. Lo que rota es si el
+##     procedimiento las comete (y la clave las corrige) o si se ofrecen como objeción falsa
+##     contra un paso que está bien. Las de signo solo son objeción falsa: el procedimiento
+##     nunca muestra un negativo (L-8). EV-D-PROM y EV-T-CUENTA tampoco se cometen: existen
+##     para que la clave no sea la única cifra nueva y creíble (L-9).
+##   - Fuera de la canónica, las 4 opciones comparten molde, «es A y no B» (el de la opción A
+##     del impreso), para que ninguna forma delate la clave. Cada paso aparece al menos una vez
+##     y uno se repite; el repetido es el de la clave con P = 1/2, que es el valor que deja a
+##     las 4 opciones equiprobables.
+##
+## Notación: d1 y d2, distancias al punto de partida en las horas t1 y t2. D = d2 - d1,
+## dur = t2 - t1, v = D / dur (los valores correctos). Dm, Tm y Vm: lo que MUESTRA el
+## procedimiento. Roles: dist (paso 1), tiem (paso 2), coc (paso 3).
+## =============================================================================
+library(exams)
+
+## --- Espacio duro: nunca como carácter literal en el fuente ------------------
+ED <- "\u00a0"
+
+## --- Utilidades (familia F5: muestreo seguro) --------------------------------
+pick  <- function(x) x[sample.int(length(x), 1L)]     # vectores, también de longitud 1
+pick1 <- function(x) x[[sample.int(length(x), 1L)]]   # listas
+cap1  <- function(s) paste0(toupper(substr(s, 1L, 1L)), substring(s, 2L))
+
+## --- Fórmulas: la unidad y el signo que las cierra van DENTRO de la fórmula, para que
+## ningún navegador parta el renglón entre la cifra y su unidad ni antes del punto ------
+km   <- function(x) paste0(x, "\\ \\text{km}")
+hs   <- function(x) paste0(x, "\\ \\text{h}")
+kmh  <- function(x) paste0(x, "\\ \\text{km/h}")
+hkm  <- function(x) paste0(x, "\\ \\text{h/km}")
+M    <- function(x, signo = "") paste0("$", x, if (nzchar(signo)) paste0("\\text{", signo, "}"), "$")
+frac_kh <- function(a, b) paste0(km(a), "/", hs(b))   # a km / b h
+frac_hk <- function(a, b) paste0(hs(a), "/", km(b))   # a h / b km
+resta <- function(u, a, b, c) paste0(u(a), " - ", u(b), " = ", u(c))
+suma  <- function(u, a, b, c) paste0(u(a), " + ", u(b), " = ", u(c))
+
+## Texto tal como lo lee el estudiante: solo para guardas, nunca se emite.
+visible <- function(s) {
+  s <- gsub("\\\\text\\{([^}]*)\\}", "\\1", s)
+  s <- gsub("\\\\ ", " ", s)
+  s <- gsub("$", "", s, fixed = TRUE)
+  s <- gsub("-", "\u2212", s, fixed = TRUE)
+  gsub(ED, " ", s, fixed = TRUE)
+}
+
+## --- La instancia canónica reproduce el impreso (L-3) -------------------------
+P_CANON <- 0.05
+stopifnot("L-3: la canónica no pasa de 0,10, el tope de los ejercicios hermanos" = P_CANON <= 0.10)
+es_canonica <- sample(c(TRUE, FALSE), 1L, prob = c(P_CANON, 1 - P_CANON))
+
+## --- Datos ---------------------------------------------------------------------
+## Familia F1: el espacio se enumera y se elige una fila; no hay bucle que resamplee.
+## Las condiciones de divisibilidad se exigen en TODAS las versiones, aunque solo una rama
+## las necesite: si solo las cumpliera esa rama, la divisibilidad delataría la clave.
+##   - D múltiplo de t2: el error T-FINAL llega a una rapidez entera.
+##   - d1 múltiplo de dur: los errores D-SUMA y D-FINAL llegan a una rapidez entera.
+##   - dur distinto de t1 y d1 distinto de D: la primera lectura no coincide con la clave.
+espacio <- expand.grid(t1 = c(2:5, 6:10), dur = 2:5, v = seq(30L, 90L, by = 5L), KEEP.OUT.ATTRS = FALSE)
+espacio$t2 <- espacio$t1 + espacio$dur
+espacio$D  <- espacio$v * espacio$dur
+espacio <- espacio[((espacio$t1 >= 6L & espacio$t2 <= 11L) | (espacio$t1 <= 5L & espacio$t2 <= 9L)) &
+                     espacio$dur != espacio$t1 & espacio$D %% espacio$t2 == 0L & espacio$D <= 360L, ]
+stopifnot(nrow(espacio) >= 40L)
+
+if (es_canonica) {
+  t1 <- 8L; t2 <- 10L; d1 <- 20L; d2 <- 100L
+} else {
+  fila <- espacio[sample.int(nrow(espacio), 1L), ]
+  t1 <- fila$t1; t2 <- fila$t2
+  ## La salida fue a lo sumo 2 h antes de la primera lectura: d1 <= 2 v.
+  mult <- c(10L, 15L, 20L, 10L)[fila$dur - 1L]   # múltiplos de 5 y de dur, para dur = 2, 3, 4 y 5
+  cand <- seq(mult, 2L * fila$v, by = mult)
+  cand <- cand[cand != fila$v & cand != fila$D]
+  stopifnot(length(cand) >= 1L)
+  d1 <- pick(cand)
+  d2 <- d1 + fila$D
+}
+dur <- t2 - t1
+D   <- d2 - d1
+v   <- D / dur
+stopifnot("L-2: rapidez entera y datos con sentido" =
+            v == round(v) && v >= 30 && v <= 90 && dur >= 2L && d1 > 0L && d2 > d1 && d1 != D && t1 != dur &&
+            D %% t2 == 0L && d1 %% dur == 0L)
+
+## --- Qué paso está mal y cómo ------------------------------------------------
+ROLES  <- c("dist", "tiem", "coc")
+N_PASO <- c(dist = 1L, tiem = 2L, coc = 3L)
+if (es_canonica) {
+  rol_clave <- "coc"; error_cometido <- "EV-C-UNIDAD"; rol_repetido <- "dist"
+} else {
+  rol_clave <- pick(ROLES)
+  ## L-8: las razones de signo no se sortean como error cometido. Siguen en el pool como razones
+  ## falsas, que es donde las puso el impreso.
+  error_cometido <- switch(rol_clave,
+                           dist = pick(c("EV-D-SUMA", "EV-D-FINAL")),
+                           tiem = "EV-T-FINAL",
+                           coc  = "EV-C-UNIDAD")
+  ## P = 1/2 para el paso de la clave: con cada paso presente y uno repetido, ese valor hace
+  ## que cada opción sea la clave con probabilidad 1/4. Sin él, el paso que no se repite delata
+  ## la clave, como en el impreso (mutante M12: +21,1 pp).
+  rol_repetido <- sample(ROLES, 1L, prob = ifelse(ROLES == rol_clave, 1 / 2, 1 / 4))
+}
+
+## Lo que muestra el procedimiento. L-1: las tres cuentas dan bien en todas las ramas.
+paso_dist <- switch(error_cometido,
+  "EV-D-SUMA"  = list(a = d2, b = d1, op = "+", c = d1 + d2),
+  "EV-D-FINAL" = list(a = d2, b = 0L, op = "-", c = d2),
+  list(a = d2, b = d1, op = "-", c = D))
+paso_tiem <- switch(error_cometido,
+  "EV-T-FINAL" = list(a = t2, b = 0L, op = "-", c = t2),
+  list(a = t2, b = t1, op = "-", c = dur))
+Dm <- paso_dist$c
+Tm <- paso_tiem$c
+Vm <- Dm / Tm
+## L-8 (decisión del profesor, O-1). Con un negativo a la vista, la clave era la opción que solo le quita el menos a lo
+## que muestra el paso: acertaba sin calcular. Va antes de las guardas de L-1, para que muera por aquí quien lo reintroduzca.
+stopifnot("L-8: el procedimiento nunca muestra un negativo" =
+            !endsWith(error_cometido, "SIGNO") && min(Dm, Tm, Vm) > 0 &&
+            min(paso_dist$a, paso_dist$b, paso_tiem$a, paso_tiem$b) >= 0L)
+expr_paso <- function(u, p) if (p$op == "+") suma(u, p$a, p$b, p$c) else resta(u, p$a, p$b, p$c)
+expr_coc  <- if (error_cometido == "EV-C-UNIDAD") {
+  paste0(frac_hk(D, dur), " = ", hkm(v))
+} else {
+  paste0(frac_kh(Dm, Tm), " = ", kmh(Vm))
+}
+stopifnot("L-1: ningún paso tiene un error de aritmética" =
+            (if (paso_dist$op == "+") paso_dist$a + paso_dist$b else paso_dist$a - paso_dist$b) == paso_dist$c &&
+            paso_tiem$a - paso_tiem$b == paso_tiem$c,
+          "L-1: exactamente un paso está mal" =
+            sum(Dm != D, Tm != dur, error_cometido == "EV-C-UNIDAD") == 1L,
+          "L-1: la rapidez que muestra el paso 3 es entera" = Vm == round(Vm))
+
+## --- Contexto narrativo (regla #11) --------------------------------------------
+vehiculos <- list(
+  list(un = "un auto",        el = "el auto",        al = "al auto",        dicho = "dicho auto"),
+  list(un = "un bus",         el = "el bus",         al = "al bus",         dicho = "dicho bus"),
+  list(un = "un camión",      el = "el camión",      al = "al camión",      dicho = "dicho camión"),
+  list(un = "un taxi",        el = "el taxi",        al = "al taxi",        dicho = "dicho taxi"),
+  list(un = "una moto",       el = "la moto",        al = "a la moto",      dicho = "dicha moto"),
+  list(un = "una camioneta",  el = "la camioneta",   al = "a la camioneta", dicho = "dicha camioneta"),
+  list(un = "una furgoneta",  el = "la furgoneta",   al = "a la furgoneta", dicho = "dicha furgoneta"))
+lugares <- list(
+  list(el = "el pueblo",    del = "del pueblo",     dicho = "dicho pueblo"),
+  list(el = "la terminal",  del = "de la terminal", dicho = "dicha terminal"),
+  list(el = "el peaje",     del = "del peaje",      dicho = "dicho peaje"),
+  list(el = "la finca",     del = "de la finca",    dicho = "dicha finca"),
+  list(el = "el puerto",    del = "del puerto",     dicho = "dicho puerto"),
+  list(el = "la vereda",    del = "de la vereda",   dicho = "dicha vereda"),
+  list(el = "el municipio", del = "del municipio",  dicho = "dicho municipio"))
+veh   <- if (es_canonica) vehiculos[[1L]] else pick1(vehiculos)
+lugar <- if (es_canonica) lugares[[1L]] else pick1(lugares)
+## Las dos horas caen en la misma franja del día: la franja sale de la primera, no de cada hora.
+franja <- if (t1 >= 6L) "a." else "p."
+hora <- function(t) paste0(t, ":00", ED, franja, ED, "m.")
+t1s <- hora(t1); t2s <- hora(t2)
+kmt <- function(x) paste0(x, ED, "km")
+## Cada plantilla es una función, con su tipo de estructura (mínimo 6 plantillas y 5 tipos).
+plantillas <- list(
+  impreso = function() paste0("Se sabe que ", veh$un, " que viaja con rapidez constante, a las ", t1s,
+    " ya se ha alejado ", kmt(d1), " ", lugar$del, " donde inició y a las ", t2s, " está a ", kmt(d2),
+    " de ", lugar$dicho, "."),
+  accion = function() paste0(cap1(veh$un), " avanza por la carretera con rapidez constante. A las ", t1s,
+    " ya se ha alejado ", kmt(d1), " ", lugar$del, " donde inició el viaje y a las ", t2s, " está a ", kmt(d2),
+    " de ", lugar$dicho, "."),
+  descubrimiento = function() paste0("Al revisar el registro de viaje de ", veh$un,
+    " que mantuvo una rapidez constante, Laura descubrió que a las ", t1s, " ya se había alejado ", kmt(d1),
+    " ", lugar$del, " donde inició y que a las ", t2s, " estaba a ", kmt(d2), " de ", lugar$dicho, "."),
+  problema = function() paste0("Una empresa de transporte necesita conocer qué tan rápido va ", veh$un,
+    " que viaja con rapidez constante. A las ", t1s, " ya se ha alejado ", kmt(d1), " ", lugar$del,
+    " donde inició y a las ", t2s, " está a ", kmt(d2), " de ", lugar$dicho, "."),
+  noticia = function() paste0("Según informó la concesión vial, a las ", t1s, " ", veh$un,
+    " que viajaba con rapidez constante ya se había alejado ", kmt(d1), " ", lugar$del,
+    " donde inició, y a las ", t2s, " se encontraba a ", kmt(d2), " de ", lugar$dicho, "."),
+  estudiante = function() paste0("Imagina que viajas en ", veh$un, " que mantiene una rapidez constante. A las ",
+    t1s, " ", veh$el, " ya se ha alejado ", kmt(d1), " ", lugar$del, " donde inició el recorrido y a las ", t2s,
+    " está a ", kmt(d2), " de ", lugar$dicho, "."),
+  institucion = function() paste0("La Secretaría de Movilidad hace seguimiento a ", veh$un,
+    " que viaja con rapidez constante: a las ", t1s, " ya se ha alejado ", kmt(d1), " ", lugar$del,
+    " donde inició y a las ", t2s, " está a ", kmt(d2), " de ", lugar$dicho, "."),
+  retorica = function() paste0("¿Qué tan rápido va ", veh$un, " que viaja con rapidez constante, si a las ", t1s,
+    " ya se ha alejado ", kmt(d1), " ", lugar$del, " donde inició y a las ", t2s, " está a ", kmt(d2),
+    " de ", lugar$dicho, "?"),
+  dialogo = function() paste0("«A las ", t1s, " ya nos habíamos alejado ", kmt(d1), " ", lugar$del,
+    " donde iniciamos, y a las ", t2s, " estábamos a ", kmt(d2), " de ", lugar$dicho,
+    "», contó quien conducía ", veh$un, " con rapidez constante."))
+plantilla <- if (es_canonica) "impreso" else pick(names(plantillas))
+enunciado <- paste0(plantillas[[plantilla]](), " Para calcular la rapidez media en km/h de ", veh$dicho,
+                    ", se realizaron los siguientes pasos:")
+## L-7: la primera hora ancla la primera distancia, nunca el verbo «inició». «Donde inició a las 6:00» se lee como la
+## hora de salida, y con esa lectura cambia la distancia recorrida (H1 de la FASE 2C r1).
+stopifnot("L-7: la primera hora va antes de la primera distancia" =
+            regexpr(t1s, enunciado, fixed = TRUE) < regexpr(kmt(d1), enunciado, fixed = TRUE) &&
+            !grepl("(inició|iniciamos) a la", enunciado))
+paso_1 <- paste0("**Paso 1.** Se calcula cuánta distancia se recorrió: ", M(expr_paso(km, paso_dist)))
+paso_2 <- paste0("**Paso 2.** Se calcula el tiempo que transcurrió: ", M(expr_paso(hs, paso_tiem)))
+paso_3 <- paste0("**Paso 3.** Se halla el cociente entre los valores obtenidos: ", M(expr_coc))
+pregunta <- "¿En qué paso se cometió un error y por qué?"
+
+## --- Pool de errores conceptuales (regla #1) -------------------------------------
+## Cada entrada es una concepción errónea: el procedimiento puede cometerla (si trae análisis)
+## y puede aparecer como razón falsa en una opción (si su precondición se cumple).
+## L-4: «la distancia recorrida es d2» se puede leer como el viaje completo desde el punto de partida.
+## Dos defensas, en este orden. Las razones FINAL no se ofrecen contra el paso que ya está mal. Y
+## ninguna razón se ofrece si, puesta en el procedimiento, da la rapidez correcta (repara(), abajo).
+p <- list(rol_clave = rol_clave, error_cometido = error_cometido, D = D, dur = dur, Dm = Dm, Tm = Tm)
+tramo_d <- M(resta(km, d2, d1, D), ".")
+tramo_t <- M(resta(hs, t2, t1, dur), ".")
+prom <- (d1 + d2) %/% 2L
+nuevo_error <- function(codigo, rol, nombre, descripcion_corta, descripcion_larga, causa_raiz,
+                        precondicion, calcula, ofrecible = TRUE, analisis = NA_character_) {
+  list(codigo = codigo, rol = rol, nombre = nombre, descripcion_corta = descripcion_corta,
+       descripcion_larga = descripcion_larga, causa_raiz = causa_raiz, precondicion = precondicion,
+       calcula = function(p) {
+         if (!isTRUE(precondicion(p)) && !identical(p$error_cometido, codigo)) stop("fuera de contexto: ", codigo)
+         calcula(p)
+       }, ofrecible = ofrecible, analisis = analisis)
+}
+errores_conceptuales <- list(
+  "EV-D-FINAL" = nuevo_error("EV-D-FINAL", "dist", "Confundir la posición final con la distancia recorrida",
+    "toma lo que separa al vehículo del punto de partida como si fuera lo recorrido en el tramo",
+    paste0(M(km(d2)), " es lo que separa ", veh$al, " ", lugar$del, " a las ", t2s,
+           ", no lo que avanzó entre las dos horas: a las ", t1s, " ya llevaba ", M(km(d1), "."),
+           " El tramo mide ", tramo_d),
+    "Leer una posición medida desde el punto de partida como si fuera el avance durante el intervalo.",
+    function(p) p$rol_clave != "dist", function(p) d2,
+    analisis = paste0("El paso 1 usa ", M(km(d2), ","), " que es toda la distancia desde ", lugar$el,
+      ", aunque a las ", t1s, " ", veh$el, " ya llevaba ", M(km(d1), "."),
+      " Como el paso 2 mide el tiempo entre las dos horas, la distancia también debe ser la de ese tramo: ", tramo_d)),
+  "EV-D-SUMA" = nuevo_error("EV-D-SUMA", "dist", "Sumar dos distancias medidas desde el mismo punto",
+    "suma las dos distancias como si fueran tramos separados",
+    paste0("Las dos cifras se miden desde ", lugar$el, ", así que la mayor ya incluye a la menor. La distancia ",
+           "recorrida entre las dos horas es su diferencia: ", tramo_d),
+    "Tratar dos posiciones medidas desde un mismo punto como si fueran dos tramos consecutivos.",
+    function(p) p$error_cometido != "EV-D-SUMA", function(p) d1 + d2,
+    analisis = paste0("El paso 1 suma las dos distancias, pero ambas se miden desde ", lugar$el,
+      ": la mayor ya incluye a la menor. Lo recorrido entre las dos horas es su diferencia: ", tramo_d)),
+  "EV-D-SIGNO" = nuevo_error("EV-D-SIGNO", "dist", "Restar al revés y aceptar una distancia negativa",
+    "resta la lectura final de la inicial",
+    paste0("Una distancia recorrida no puede ser negativa: a la lectura final se le resta la inicial, ", tramo_d,
+           if (es_canonica) paste0(" Además, la cuenta de ese argumento tampoco es correcta: ",
+                                   M(resta(km, d1, d2, -D), "."))),
+    "Restar en el orden en que aparecen las cifras, sin preguntarse qué representa el resultado.",
+    function(p) TRUE, function(p) -D),
+  "EV-D-INICIAL" = nuevo_error("EV-D-INICIAL", "dist", "Tomar la primera lectura como distancia recorrida",
+    "toma la primera distancia como si fuera lo recorrido en todo el tramo",
+    paste0(M(km(d1)), " es lo que ", veh$el, " llevaba recorrido a las ", t1s,
+           ", antes del tramo que interesa. Entre las dos horas recorrió ", tramo_d),
+    "Quedarse con el primer dato del enunciado sin relacionarlo con el intervalo.",
+    function(p) TRUE, function(p) d1),
+  ## L-9 (O-2): razón falsa, nunca error cometido, y por eso sin análisis.
+  "EV-D-PROM" = nuevo_error("EV-D-PROM", "dist", "Promediar las dos lecturas",
+    "promedia las dos lecturas como si ese valor fuera lo recorrido",
+    paste0(M(km(prom)), " es la posición a mitad de camino entre las dos lecturas, no lo que ", veh$el,
+           " avanzó entre ellas. Lo recorrido es la diferencia entre las lecturas, no su promedio: ", tramo_d),
+    "Promediar porque el ejercicio habla de rapidez media, sin preguntarse qué representa el resultado.",
+    function(p) (d1 + d2) %% 2L == 0L && !(prom %in% c(p$D, p$Dm, d1, d2)), function(p) prom),
+  "EV-T-FINAL" = nuevo_error("EV-T-FINAL", "tiem", "Tomar la hora final como tiempo transcurrido",
+    "lee una hora del reloj como si fuera una duración",
+    paste0(M(hs(t2)), " es una hora del reloj, no una duración. El tiempo entre las dos lecturas es ", tramo_t),
+    "Confundir un instante, que se lee en el reloj, con una duración, que se calcula.",
+    function(p) p$rol_clave != "tiem", function(p) t2,
+    analisis = paste0("El paso 2 cuenta el tiempo desde ", M(hs(0L), ","), " pero ", M(hs(t2)),
+      " es una hora del reloj y el tramo empezó a las ", t1s, " El tiempo transcurrido entre las dos lecturas es ",
+      tramo_t)),
+  "EV-T-SUMA" = nuevo_error("EV-T-SUMA", "tiem", "Sumar dos horas del reloj",
+    "suma las dos horas como si fueran duraciones",
+    paste0("Las dos cifras son horas del reloj, no duraciones, así que su suma no mide nada en este viaje. ",
+           "El tiempo transcurrido es su diferencia: ", tramo_t),
+    "Operar con las cifras del enunciado sin distinguir instantes de duraciones.",
+    function(p) TRUE, function(p) t1 + t2),
+  "EV-T-SIGNO" = nuevo_error("EV-T-SIGNO", "tiem", "Restar las horas al revés y aceptar un tiempo negativo",
+    "resta la hora final de la inicial",
+    paste0("Un tiempo transcurrido no puede ser negativo: a la hora final se le resta la inicial, ", tramo_t),
+    "Restar en el orden en que aparecen las cifras, sin preguntarse qué representa el resultado.",
+    function(p) TRUE, function(p) -dur),
+  "EV-T-INICIAL" = nuevo_error("EV-T-INICIAL", "tiem", "Tomar la primera hora como tiempo transcurrido",
+    "lee la hora inicial como si fuera una duración",
+    paste0(M(hs(t1)), " es la hora de la primera lectura, no una duración. El tiempo transcurrido es ", tramo_t),
+    "Quedarse con el primer dato del enunciado sin relacionarlo con el intervalo.",
+    function(p) TRUE, function(p) t1),
+  ## L-9 (O-2): razón falsa, nunca error cometido, y por eso sin análisis.
+  "EV-T-CUENTA" = nuevo_error("EV-T-CUENTA", "tiem", "Contar las horas del reloj incluyendo las dos puntas",
+    "cuenta las horas del reloj incluyendo la primera y la última",
+    paste0("Contando las dos puntas, de la hora inicial a la final hay ", M(paste0(dur + 1L)),
+           " marcas del reloj, pero entre ellas solo hay ", M(paste0(dur)),
+           " intervalos de una hora. El tiempo transcurrido son los intervalos, no las marcas: ", tramo_t),
+    "Contar las horas que se nombran en vez de los intervalos que transcurren entre ellas.",
+    function(p) !((p$dur + 1L) %in% c(t1, t2, p$Tm, p$dur)), function(p) p$dur + 1L),
+  "EV-C-INV" = nuevo_error("EV-C-INV", "coc", "Invertir el cociente",
+    "divide el tiempo entre la distancia",
+    "Ese cociente da horas por kilómetro, y la pregunta pide km/h: los kilómetros van en el numerador y las horas en el denominador.",
+    "Dividir sin mirar qué orden exige la unidad que pide el enunciado.",
+    function(p) TRUE, function(p) c(p$Tm, p$Dm)),
+  "EV-C-CIFRAS" = nuevo_error("EV-C-CIFRAS", "coc", "Intercambiar las cifras y dejar las unidades",
+    "deja los kilómetros sobre las horas, pero con las cifras cambiadas",
+    paste0("En el procedimiento, ", M(km(Dm)), " figura como distancia y ", M(hs(Tm)),
+           " como tiempo: esa escritura les cambia la magnitud a las dos cifras."),
+    "Arreglar la apariencia de la unidad sin revisar qué magnitud representa cada cifra.",
+    function(p) TRUE, function(p) c(p$Tm, p$Dm)),
+  "EV-C-UNIDAD" = nuevo_error("EV-C-UNIDAD", "coc", "Invertir las unidades del cociente",
+    "escribe las horas en el numerador y los kilómetros en el denominador",
+    "Esa escritura da horas por kilómetro, y la pregunta pide km/h: los kilómetros van en el numerador y las horas en el denominador.",
+    "Hacer bien la división sin revisar qué magnitud representa cada cifra.",
+    function(p) p$rol_clave != "coc", function(p) c(p$Dm, p$Tm),
+    analisis = paste0("La cuenta del paso 3 da bien: la división sí da ", M(paste0(v), "."),
+      " Lo que falla es el cociente: ", M(km(D)), " son la distancia y ", M(hs(dur)), " son el tiempo, pero el paso escribe ",
+      M(paste0(frac_hk(D, dur), " = ", hkm(v)), "."), " La pregunta pide la rapidez en km/h, y esa unidad indica el orden: ",
+      "kilómetros en el numerador y horas en el denominador, ", M(paste0(frac_kh(D, dur), " = ", kmh(v)), "."))))
+stopifnot("regla #1: pool de al menos 6 errores" = length(errores_conceptuales) >= 6L,
+          all(vapply(errores_conceptuales, function(e) is.function(e$precondicion) && is.function(e$calcula), TRUE)),
+          error_cometido %in% names(errores_conceptuales))
+
+## --- Las cuatro opciones -----------------------------------------------------
+## Rango de la clave entre las cuatro cifras afirmadas (L-5). Medido en la batería §P7: con
+## selección uniforme, «elige el mayor número afirmado» daba 44,7 % (+17,1 pp), y con pesos el
+## canal solo se movió a «elige el segundo» (+12,4 pp): la distancia correcta queda en medio de
+## las razones por pura aritmética. Por eso el rango se sortea PRIMERO, sobre todos los conjuntos
+## de razones válidos. La clave de tiempo es una cifra pequeña y solo alcanza los rangos bajos:
+## las metas compensan para acercar cada rango a P = 1/4 en el total. El rango 3 de las claves
+## grandes es poco factible: exige dos razones por encima de la clave.
+RANGO_META <- list(dist = c(3, 3, 2, 0), coc = c(2, 3, 2, 0), tiem = c(0, 0, 1, 3))
+sujeto <- c(dist = "la distancia recorrida", tiem = "el tiempo transcurrido", coc = "el cociente buscado")
+rechaza <- c(dist = km(Dm), tiem = hs(Tm),
+             coc = if (error_cometido == "EV-C-UNIDAD") frac_hk(D, dur) else frac_kh(Dm, Tm))
+opcion <- function(rol, codigo, valor, afirma, unidad = NA_character_) {
+  texto <- paste0("En el paso ", N_PASO[[rol]], ", ya que ", sujeto[[rol]], " es $", afirma, "$",
+                  paste0(" y no $", rechaza[[rol]], "$"))
+  list(rol = rol, codigo = codigo, valor = valor, unidad = unidad, texto = texto, afirma = afirma)
+}
+falsa <- function(codigo) {
+  e <- errores_conceptuales[[codigo]]
+  val <- e$calcula(p)
+  switch(e$rol,
+         dist = opcion("dist", codigo, val, km(val)),
+         tiem = opcion("tiem", codigo, val, hs(val)),
+         coc  = if (codigo == "EV-C-CIFRAS") opcion("coc", codigo, val, frac_kh(val[1L], val[2L]), "km/h")
+                else opcion("coc", codigo, val, frac_hk(val[1L], val[2L]), "h/km"))
+}
+if (es_canonica) {
+  ## Verbatim: cuatro moldes distintos y, en la última, la cuenta impresa -20 (L-3).
+  ops <- list(
+    list(rol = "dist", codigo = "EV-D-FINAL", valor = d2, unidad = NA_character_, afirma = km(d2),
+         texto = paste0("En el paso 1, ya que la distancia recorrida es ", M(km(d2)), " y no ", M(km(D)))),
+    list(rol = "tiem", codigo = "EV-T-SIGNO", valor = -dur, unidad = NA_character_, afirma = hs(-dur),
+         texto = paste0("En el paso 2, ya que el tiempo transcurrido es ", M(resta(hs, t1, t2, -dur)))),
+    list(rol = "coc", codigo = "CLAVE", valor = c(D, dur), unidad = "km/h", afirma = frac_kh(D, dur),
+         texto = paste0("En el paso 3, ya que el cociente es ", M(frac_kh(D, dur)))),
+    list(rol = "dist", codigo = "EV-D-SIGNO", valor = -d1, unidad = NA_character_, afirma = km(-d1),
+         texto = paste0("En el paso 1, ya que la distancia recorrida es ", M(resta(km, d1, d2, -d1)))))
+} else {
+  aplicables <- Filter(function(e) e$ofrecible && isTRUE(e$precondicion(p)), errores_conceptuales)
+  ## L-4: criterio único contra H2 y H6 de la FASE 2C r1. Una razón que, puesta en su paso, da la rapidez
+  ## correcta es una segunda clave (d2 = v t2: el «viaje completo» desde las 12). Con el procedimiento sin
+  ## negativos (L-8) ya no hay dos signos que se compensen. El cociente no entra: sus razones no dan una
+  ## rapidez en km/h igual a v, y la enumeración del verificador lo comprueba.
+  repara <- function(e) {
+    val <- e$calcula(p)[1L]
+    switch(e$rol, dist = val == v * Tm, tiem = Dm == v * val, coc = FALSE)
+  }
+  aplicables <- Filter(function(e) !repara(e), aplicables)
+  por_rol <- lapply(setNames(ROLES, ROLES), function(r)
+    names(aplicables)[vapply(aplicables, function(e) e$rol == r, TRUE)])
+  ## Cada paso aparece; el repetido lleva una opción más. El de la clave ya tiene la clave.
+  n_falsas <- c(dist = 1L, tiem = 1L, coc = 1L)
+  n_falsas[[rol_repetido]] <- n_falsas[[rol_repetido]] + 1L
+  n_falsas[[rol_clave]]    <- n_falsas[[rol_clave]] - 1L
+  stopifnot(sum(n_falsas) == 3L, all(vapply(ROLES, function(r) length(por_rol[[r]]) >= n_falsas[[r]], TRUE)))
+  ## Selección por versión (Incidente N), sobre el espacio enumerado (familia F1). A lo sumo una
+  ## razón de signo: con dos, descartar las negativas deja la clave entre dos opciones.
+  candidatos <- Reduce(function(acum, r) {
+    comb <- if (n_falsas[[r]] == 0L) list(character(0)) else utils::combn(por_rol[[r]], n_falsas[[r]], simplify = FALSE)
+    unlist(lapply(acum, function(a) lapply(comb, function(b) c(a, b))), recursive = FALSE)
+  }, ROLES, list(character(0)))
+  candidatos <- Filter(function(s) sum(grepl("SIGNO$", s)) <= 1L, candidatos)
+  ## L-9: si la versión admite una razón nueva, se ofrece al menos una. Sin esto, toda razón falsa de distancia o tiempo
+  ## podría ser un negativo, un dato repetido o una suma que supera el dato mayor, y la clave se hallaría sin calcular.
+  con_nueva <- Filter(function(s) any(s %in% c("EV-D-PROM", "EV-T-CUENTA")), candidatos)
+  if (length(con_nueva) >= 1L) candidatos <- con_nueva
+  stopifnot(length(candidatos) >= 1L)
+  primera_clave <- c(dist = D, tiem = dur, coc = D)[[rol_clave]]
+  rango <- vapply(candidatos, function(s)
+    1L + sum(vapply(s, function(cd) errores_conceptuales[[cd]]$calcula(p)[1L], 0) > primera_clave), 0L)
+  meta <- RANGO_META[[rol_clave]]
+  pesos <- meta[rango] / as.numeric(table(rango)[as.character(rango)])
+  if (sum(pesos) == 0) pesos <- rep(1, length(candidatos))   # ningún rango meta es factible aquí
+  elegidos <- candidatos[[sample.int(length(candidatos), 1L, prob = pesos)]]
+  stopifnot("L-9: si la versión admite una razón nueva, se ofrece al menos una" =
+              length(con_nueva) == 0L || any(elegidos %in% c("EV-D-PROM", "EV-T-CUENTA")))
+  clave <- switch(rol_clave,
+                  dist = opcion("dist", "CLAVE", D, km(D)),
+                  tiem = opcion("tiem", "CLAVE", dur, hs(dur)),
+                  coc  = opcion("coc", "CLAVE", c(D, dur), frac_kh(D, dur), "km/h"))
+  ops <- c(list(clave), lapply(elegidos, falsa))
+  ops <- ops[sample.int(4L)]
+}
+
+## --- Función de verdad pura de cada opción (regla #13 v1.1) -------------------------
+## Una razón es verdadera si el paso que señala está mal Y lo que afirma es el valor correcto.
+es_verdadera <- function(o) {
+  switch(o$rol,
+         dist = Dm != D && o$valor[1L] == D,
+         tiem = Tm != dur && o$valor[1L] == dur,
+         coc  = error_cometido == "EV-C-UNIDAD" && identical(o$unidad, "km/h") &&
+           o$valor[1L] == D && o$valor[2L] == dur)
+}
+verdaderas <- vapply(ops, es_verdadera, TRUE)
+opciones <- vapply(ops, function(o) o$texto, "")
+sol <- as.integer(verdaderas)
+roles_op <- vapply(ops, function(o) o$rol, "")
+stopifnot("regla #13: exactamente una razón es verdadera" = sum(verdaderas) == 1L,
+          "regla #13: la verdadera es la clave" = identical(ops[[which(verdaderas)]]$codigo, "CLAVE"),
+          "la clave señala el paso que está mal" = roles_op[which(verdaderas)] == rol_clave,
+          "ninguna razón afirma lo que rechaza" = all(vapply(ops, function(o) o$afirma != rechaza[[o$rol]], TRUE)),
+          "opciones únicas" = length(unique(opciones)) == 4L,
+          "los tres pasos aparecen" = setequal(roles_op, ROLES),
+          "un paso repetido" = sum(table(roles_op) == 2L) == 1L,
+          "el repetido es el sorteado" = sum(roles_op == rol_repetido) == 2L)
+if (!es_canonica) {
+  afirmados_neg <- vapply(ops, function(o) o$rol != "coc" && o$valor[1L] < 0, TRUE)
+  stopifnot("a lo sumo una razón afirma un valor negativo" = sum(afirmados_neg) <= 1L,
+            "L-4: ninguna razón FINAL contra el paso que ya está mal" =
+              !any(vapply(ops, function(o) o$codigo %in% c("EV-D-FINAL", "EV-T-FINAL") && o$rol == rol_clave, TRUE)),
+            "molde común" = length(unique(grepl(" y no ", opciones, fixed = TRUE))) == 1L)
+}
+
+## --- L-3: la canónica es el impreso, literal de ITEM_OFICIAL.md ------------------
+if (es_canonica) {
+  stopifnot(
+    "L-3: enunciado verbatim" = identical(visible(enunciado), paste0(
+      "Se sabe que un auto que viaja con rapidez constante, a las 8:00 a. m. ya se ha alejado 20 km del pueblo ",
+      "donde inició y a las 10:00 a. m. está a 100 km de dicho pueblo. Para calcular la rapidez media en km/h de ",
+      "dicho auto, se realizaron los siguientes pasos:")),
+    "L-3: Paso 1 verbatim" = identical(visible(paso_1),
+      "**Paso 1.** Se calcula cuánta distancia se recorrió: 100 km \u2212 20 km = 80 km"),
+    "L-3: Paso 2 verbatim" = identical(visible(paso_2),
+      "**Paso 2.** Se calcula el tiempo que transcurrió: 10 h \u2212 8 h = 2 h"),
+    "L-3: Paso 3 verbatim, con las unidades invertidas" = identical(visible(paso_3),
+      "**Paso 3.** Se halla el cociente entre los valores obtenidos: 80 h/2 km = 40 h/km"),
+    "L-3: pregunta verbatim" = identical(pregunta, "¿En qué paso se cometió un error y por qué?"),
+    "L-3: opciones verbatim, en el orden impreso" = identical(visible(opciones), c(
+      "En el paso 1, ya que la distancia recorrida es 100 km y no 80 km",
+      "En el paso 2, ya que el tiempo transcurrido es 8 h \u2212 10 h = \u22122 h",
+      "En el paso 3, ya que el cociente es 80 km/2 h",
+      "En el paso 1, ya que la distancia recorrida es 20 km \u2212 100 km = \u221220 km")),
+    "L-3: clave oficial C" = identical(sol, c(0L, 0L, 1L, 0L)))
+}
+
+## --- Textos de la Solution ---------------------------------------------------
+error_ok <- errores_conceptuales[[error_cometido]]
+clave_txt <- opciones[which(verdaderas)]
+consecuencia <- if (error_cometido == "EV-C-UNIDAD") "" else paste0(
+  " Por eso el paso 3, que hace bien su cociente con los valores que recibió, llega a ", M(kmh(Vm)),
+  " en lugar de ", M(kmh(v), "."))
+falsas <- ops[!verdaderas]
+falsas <- falsas[order(vapply(falsas, function(o) o$codigo, ""))]   # orden del pool, no el de las opciones
+diagnostico <- vapply(falsas, function(o) {
+  e <- errores_conceptuales[[o$codigo]]
+  intro <- if (o$rol == rol_clave) "Ese paso sí tiene un error, pero esta razón no lo corrige. " else
+    if (o$rol == "coc") "El paso 3 hace bien su cociente con los valores que recibió. " else ""
+  paste0("**", e$codigo, " — ", e$nombre, ".** El argumento «", o$texto, "» ", e$descripcion_corta, ". ",
+         intro, e$descripcion_larga, " *Causa de fondo:* ", cap1(e$causa_raiz))
+}, "")
+feedback <- vapply(seq_along(ops), function(i) {
+  o <- ops[[i]]
+  if (verdaderas[i]) paste0("Correcta. El paso ", N_PASO[[o$rol]], " tiene el error y esta razón lo corrige.")
+  else if (o$rol == rol_clave) paste0("Incorrecta. El paso ", N_PASO[[o$rol]], " sí tiene un error, pero ",
+                                      sujeto[[o$rol]], " no es ", M(o$afirma, "."))
+  else if (o$rol == "coc") paste0("Incorrecta. El paso 3 hace bien su cociente con los valores que recibió: escribir ",
+                                  M(o$afirma), " no corrige nada.")
+  else paste0("Incorrecta. El paso ", N_PASO[[o$rol]], " está bien hecho: ", sujeto[[o$rol]], " es ",
+              M(rechaza[[o$rol]]), " y no ", M(o$afirma, "."))
+}, "")
+stopifnot("regla #7: contracciones al y del" =
+            !any(grepl("\\b[Aa] el\\b|\\b[Dd]e el\\b", gsub(ED, " ", c(enunciado, error_ok$analisis, diagnostico, feedback),
+                                                               fixed = TRUE), perl = TRUE)),
+          "regla #7: sin doble punto tras a. m. o p. m." =
+            !any(grepl("m\\.\\.", c(enunciado, error_ok$analisis, consecuencia, diagnostico, feedback))))
+reflexiones <- c(
+  "Cuando revises un procedimiento, pregúntate qué mide cada número, no solo si la cuenta da bien.",
+  "Una cuenta correcta puede responder a una pregunta distinta: compara la unidad del resultado con la que pide el enunciado.",
+  "Antes de señalar un error, rehaz ese paso por tu cuenta y compara lo que obtienes con lo que dice el procedimiento.",
+  "Si un resultado parece extraño, vuelve atrás paso por paso: el error suele estar antes de donde se nota.",
+  "Señalar el paso correcto no basta: revisa también si la razón que das corrige de verdad el error.")
+reflexion <- pick(reflexiones)
+```
+
+Question
+========
+
+```{r enunciado, echo = FALSE, results = "asis"}
+cat(enunciado, "\n\n", sep = "")
+cat(paso_1, "\n\n", paso_2, "\n\n", paso_3, "\n\n", sep = "")
+cat(pregunta, "\n", sep = "")
+```
+
+```{r opciones, echo = FALSE, results = "asis"}
+answerlist(opciones, markup = "markdown")
+```
+
+Solution
+========
+
+```{r solucion, echo = FALSE, results = "asis"}
+## El encabezado va en negrita, y no con almohadillas, porque así no sale numerado en el PDF. Tras cada uno va el
+## cierre que LaTeX pone tras un título de sección, para que no quede solo al pie de la página. Es un bloque
+## {=latex}: pandoc lo descarta en HTML, Moodle y DOCX. Las comillas invertidas salen de intToUtf8(96), porque el
+## arsenal 2D corta el chunk en la primera que encuentra (L-6).
+valla <- strrep(intToUtf8(96L), 3L)
+encabezado <- function(t) cat("**", t, "**\n\n", valla, "{=latex}\n",
+  "\\nobreak\\makeatletter\\@afterindenttrue\\@afterheading\\makeatother\n", valla, "\n\n", sep = "")
+encabezado("Respuesta correcta")
+cat("La respuesta correcta es la que afirma: «", clave_txt, "».\n\n", sep = "")
+encabezado("Análisis del error")
+cat(error_ok$analisis, consecuencia, "\n\n", sep = "")
+cat("*Causa de fondo:* ", error_ok$causa_raiz, "\n\n", sep = "")
+encabezado("Procedimiento correcto")
+## Viñetas y no lista numerada: en el PDF una lista numerada sale (a), (b), (c), como las opciones.
+cat("- **Paso 1.** Distancia recorrida entre las dos horas: ", tramo_d, "\n", sep = "")
+cat("- **Paso 2.** Tiempo transcurrido: ", tramo_t, "\n", sep = "")
+cat("- **Paso 3.** Rapidez media, en km/h: ", M(paste0(frac_kh(D, dur), " = ", kmh(v)), "."), "\n\n", sep = "")
+encabezado("Propiedades del concepto")
+cat("- La rapidez media es la distancia recorrida dividida entre el tiempo transcurrido en ese mismo tramo.\n")
+cat("- La unidad indica el orden del cociente: km/h son kilómetros (numerador) por cada hora (denominador).\n")
+cat("- La distancia recorrida y el tiempo transcurrido son diferencias entre una lectura final y una inicial: ",
+    "ninguna de las dos es negativa.\n", sep = "")
+cat("- Cuando la rapidez es constante, la rapidez media coincide con la rapidez en cualquier tramo del viaje.\n\n")
+encabezado("Caso específico")
+cat(cap1(veh$el), " avanza ", M(km(D)), " en ", M(hs(dur), ":"), " son ", M(kmh(v), "."),
+    " La comprobación es directa: ", M(paste0(v, " \\times ", dur, " = ", D), "."), "\n\n", sep = "")
+encabezado("Análisis de las demás razones")
+cat(paste(diagnostico, collapse = "\n\n"), "\n\n", sep = "")
+encabezado("Reflexión metacognitiva")
+cat(reflexion, "\n\n", sep = "")
+encabezado("Estrategia para evitar el error")
+cat("- Antes de mirar las opciones, rehaz cada paso con los datos del enunciado.\n")
+cat("- En cada paso, pregúntate qué magnitud debe resultar y en qué unidad.\n")
+cat("- Mide la distancia y el tiempo en el mismo tramo: de la primera lectura a la segunda.\n")
+cat("- Al final, compara la unidad del resultado con la que pide la pregunta.\n\n")
+```
+
+```{r feedback, echo = FALSE, results = "asis"}
+answerlist(feedback, markup = "markdown")
+```
+
+Meta-information
+================
+exname: rapidez_media_error_paso_numerico_variacional_argumentacion_n3_schoice_v1
+extype: schoice
+exsolution: `r mchoice2string(as.logical(sol))`
+exshuffle: TRUE
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Competencia]: Argumentación
+exextra[Componente]: Numérico-variacional
+exextra[Afirmacion]: Valida procedimientos y estrategias matemáticas utilizadas para dar solución a problemas.
+exextra[Evidencia]: Argumenta a favor o en contra de un procedimiento para resolver un problema a la luz de criterios presentados o establecidos.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.10 — Justifica afirmaciones utilizando planteamientos y operaciones aritméticas o haciendo uso directo de un concepto, es decir, a partir de un único argumento.
+exextra[Contenido]: Álgebra y Cálculo
+exextra[TemaEspecifico]: Razones de cambio: rapidez media
+exextra[Estandar]: Resuelvo y formulo problemas que involucren magnitudes cuyos valores medios se suelen definir indirectamente como razones entre valores de otras magnitudes, como la velocidad media, la aceleración media y la densidad media. (10°-11°, Pensamiento métrico)
+exextra[DOK]: 2
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: analisis_error
+exextra[ItemOriginal]: EPA-2023-MAT-11-2-09
+exextra[GradoSugerido]: 10°-11°

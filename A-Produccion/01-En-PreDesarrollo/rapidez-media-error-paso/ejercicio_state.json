@@ -1,0 +1,141 @@
+{
+  "version": "2.0",
+  "ejercicio": "rapidez_media_error_paso_numerico_variacional_argumentacion_n3_schoice_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-11-05T11:08:40.489729-05:00",
+  "timestamp_ultima_actualizacion": "2026-11-05T19:11:00.026553-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-11-05T11:23:58.061765-05:00",
+      "resultado": null,
+      "competencia": "Argumentación",
+      "componente": "Numérico-variacional",
+      "evidencia": "Arg_E2",
+      "nivel": 3,
+      "descriptor": "D3.10",
+      "dok": 2,
+      "bloom": "Evaluar",
+      "solo": "Relacional",
+      "nota": "ClasificadorICFES (haiku) 2026-11-05 contrastado por el orquestador: Evidencia Arg_E2, Nivel 3, D3.10, Estándar Métrico_10-11, DOK 2, Bloom Evaluar, SOLO Relacional. Componente y contexto corregidos contra el Marco 2019: razones de cambio (velocidad) en Álgebra y cálculo = pensamientos numérico y variacional; transporte = contexto familiar o personal. Detalle en ITEM_OFICIAL.md"
+    },
+    "flujo_b": {
+      "requerido": false,
+      "completado": true,
+      "timestamp": "2026-11-05T11:23:58.119064-05:00",
+      "nota": "decisiones_humanas.flujo_b = n (decisión del profesor, HANDOFF 2026-11-05). H-1: mirado el recorte orig_pregunta_09.png, 982x434 px: solo texto, sin figura ni tabla"
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-11-05T17:20:04.830548-05:00",
+      "archivo": "rapidez_media_error_paso_numerico_variacional_argumentacion_n3_schoice_v1.Rmd",
+      "nota": "Corregido, no regenerado, md5 904af1ca1271d97c54123218c9db03c0: variante C de O-2 (EV-D-PROM, EV-T-CUENTA, obligación L-9) y H6 de la r3. verificar_espacio.R md5 35cf38e9, salida/verificar_r11.txt: exit 3, pendiente de firma; 9 564 estados, 131 586 conjuntos, 0 abortos, 123 filas iguales a opcion_c/c2.json"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-11-05T17:20:04.892846-05:00",
+      "nota": "Solution con las dos razones nuevas, sin analisis porque no se cometen; md5 904af1ca1271d97c54123218c9db03c0; la prosa de cada razón y del análisis la contrasta ORACULO_SOLUTION con el enunciado (H7, mutantes M26 a M29); dur de 2 a 5 por construcción"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-11-05T17:20:04.954998-05:00",
+      "nota": "HTML, PDF, DOCX, NOPS y Moodle con exit 0, md5 904af1ca1271d97c54123218c9db03c0; realista: 6 ejercicios en un PDF; 0 usos de pandocbounded; el .Rmd no usa tablas; glifos OK; regla 19 vacía"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-11-05T17:20:05.022264-05:00",
+      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/rapidez_media_error_paso_numerico_variacional_argumentacion_n3_schoice_v1/20261105-171836-1376667/informe.txt · md5 904af1ca1271d97c54123218c9db03c0 · 0 errores / 7 advertencias"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-11-05T18:36:10.324910-05:00",
+      "veredicto": null,
+      "nota": "FASE 2C r4, detractor nuevo, reporte salida/fase2c_r4_detractor.md, citas verificadas: 35, 0 fallos. Veredicto APROBAR_CON_CAMBIOS sobre md5 904af1ca1271d97c54123218c9db03c0: 0 defectos de CORRECCIÓN; 3 altas y 4 medias, ninguna pide cambiar el .Rmd. Atendidas en el verificador y la tabla (verificar_espacio.R md5 3a84582d, salida/verificar_r12.txt). Lo único abierto es la firma del paso 11, incluidas las 6 623 conjunciones que la tabla no agota"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-11-05T18:36:10.383525-05:00",
+      "nota": "AgenteValidadorVisual sobre md5 904af1ca1271d97c54123218c9db03c0, salida/paso8_coherencias.md: las 5 coherencias OK, 4 observaciones menores sin bloqueo. Auditoría 6b, salida/auditoria_visual_r4.md: APTO_VISUAL, N = 100 por programa a 360 y 320 px, 16 + 16 por imagen"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-11-05T18:36:10.441793-05:00",
+      "versiones_unicas": null,
+      "nota": "md5 904af1ca1271d97c54123218c9db03c0, salida/paso9_*: stresstest 100/100 PASS; diversidad 61 valores únicos de la clave en 100, PASS; diagnosticidad PASS (H1 larga 10 %, margen 25 %; corta 5 %, margen 6 %; H2/H3 ciegas; H3b 36 %); multisemilla 100/100; 282 versiones únicas en 300. Batería exacta: pendiente de firma, salida/tabla_firma_o2.md"
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-11-05T18:36:10.500685-05:00",
+      "nota": "md5 904af1ca1271d97c54123218c9db03c0: literalidad exextra exit 0, 0 fallos, salida/paso10_literalidad.txt; coherencia matemática APROBADO, salida/paso10_coherencia.txt; DOK 2, Bloom Evaluar, Nivel 3: coherentes"
+    },
+    "aprobacion_usuario": {
+      "completado": true,
+      "timestamp": "2026-11-05T19:11:00.026553-05:00",
+      "nota": "Aprobado por el profesor el 2026-11-05: «Firmo las 64 filas, acepto las 6 623 combinaciones como residuo declarado y apruebo.» .Rmd md5 904af1ca1271d97c54123218c9db03c0; verificador md5 c80508095d755e7668981768f50270e9, salida/verificar_r13.txt: exit 4, ROJO listado por O-2, 64 listadas, 0 pendientes, 0 no reproducen, nunca PASS. Firma en O-2 de .claude/CLAUDE.md. Falta evidencia de aula: Nivel 3 sin datos."
+    }
+  },
+  "reaperturas": [
+    {
+      "timestamp": "2026-11-05T13:58:07.896734-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Decisión del profesor del 2026-11-05 (override O-1): retirar EV-D-SIGNO y EV-T-SIGNO del procedimiento, con excepción a §P7-D. Además, FASE 2C r2: H1 a H6.",
+      "reporte": "A-Produccion/01-En-PreDesarrollo/rapidez-media-error-paso/salida/fase2c_r2_detractor.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-11-05T11:37:20.161022-05:00",
+          "archivo": "rapidez_media_error_paso_numerico_variacional_argumentacion_n3_schoice_v1.Rmd",
+          "nota": "Generado inline. Clave rotativa (6 errores cometidos en 3 pasos) con canónica verbatim P=0.05; un molde de opciones; rango de la clave sorteado sobre el espacio enumerado. verificar_espacio.R r3: oráculo 300+canónica sin problemas, 12/12 mutantes por su sonda, batería 51 reglas +5,7 pp"
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-11-05T11:37:20.218228-05:00",
+          "nota": "Solution inline: respuesta por contenido, análisis del error, procedimiento correcto, propiedades, caso específico, análisis por código, reflexión y estrategia; feedback por opción con Answerlist"
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-11-05T12:21:26.651410-05:00",
+          "nota": "HTML, PDF, DOCX, NOPS y Moodle con exit 0, md5 Rmd 2dfec0c9d8745af9c87bee94fd0126fc, tras corregir H1, H2, H3, H6 y H7 de la FASE 2C r1. Realista: 6 ejercicios en un PDF en salida/realista; \\pandocbounded solo como definición no-op, 0 usos; sin tablas Markdown"
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-11-05T12:21:26.708527-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/rapidez_media_error_paso_numerico_variacional_argumentacion_n3_schoice_v1/20261105-121631-887566/informe.txt · md5 2dfec0c9d8745af9c87bee94fd0126fc · 0 errores / 6 advertencias. 6b r2 en salida/auditoria_visual_r2.md: APTO_VISUAL, 0 desbordes en 24/24 a 360 px, 8 por imagen, 3 observaciones cosméticas"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-05T16:35:34.660535-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Decisión del profesor del 2026-11-05 tras la FASE 2C r3: «Autorizo C y mantengo el − 0» (O-2, L-9). Añadir EV-D-PROM y EV-T-CUENTA con su obligación, y atender H1 a H10 de la r3.",
+      "reporte": "A-Produccion/01-En-PreDesarrollo/rapidez-media-error-paso/salida/fase2c_r3_detractor.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-11-05T15:14:11.252141-05:00",
+          "archivo": "rapidez_media_error_paso_numerico_variacional_argumentacion_n3_schoice_v1.Rmd",
+          "nota": "Corregido, no regenerado, md5 25a924d4f407a4ea1f43644a564d5db3: variante D de O-1 (L-8), H1 y H3 de la FASE 2C r2. verificar_espacio.R md5 41198f5f, salida/verificar_r9.txt: exit 4, oráculo 300 + canónica sin problemas, 9 564 estados, 196 842 conjuntos, 26 de 26 mutantes por su sonda, 12 + 4 de O-1, las 9 cifras firmadas reproducidas"
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-11-05T15:14:11.310620-05:00",
+          "nota": "Solution y feedback corregidos, md5 25a924d4f407a4ea1f43644a564d5db3: quitado el doble punto de H1 con su guarda y M18; la prosa la contrasta ORACULO_SOLUTION con el texto del enunciado (H2, M19, M20); sin analisis de las ramas de signo, que ya no se cometen"
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-11-05T15:14:11.369520-05:00",
+          "nota": "HTML, PDF, DOCX, NOPS y Moodle con exit 0, md5 25a924d4f407a4ea1f43644a564d5db3; realista: 6 ejercicios en un PDF de 10 páginas; pandocbounded solo como definición, 0 usos; LTcaptype solo en la plantilla, el .Rmd no usa tablas; Read de todas las páginas del PDF de la Solution y de una de NOPS sobre este md5"
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-11-05T15:14:11.427904-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/rapidez_media_error_paso_numerico_variacional_argumentacion_n3_schoice_v1/20261105-140924-1059061/informe.txt · md5 25a924d4f407a4ea1f43644a564d5db3 · 0 errores / 7 advertencias. Auditoría 6b en salida/auditoria_visual_r3.md: APTO_CON_OBSERVACIONES, N = 100 por programa a 360 y 320 px; por imagen 8 y 4, razón declarada"
+        }
+      }
+    }
+  ]
+}

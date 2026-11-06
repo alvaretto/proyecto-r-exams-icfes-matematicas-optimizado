@@ -1,0 +1,135 @@
+=== VALIDACIÓN DE COHERENCIA MATEMÁTICA ===
+Archivo: /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/rapidez-media-error-paso/rapidez_media_error_paso_numerico_variacional_argumentacion_n3_schoice_v1.Rmd 
+Modo: NORMAL 
+
+Tipo detectado: SCHOICE 
+
+--- Ejecutando chunks R ---
+La Secretaría de Movilidad hace seguimiento a un auto que viaja con rapidez constante: a las 7:00 a. m. ya se ha alejado 135 km de la vereda donde inició y a las 10:00 a. m. está a 345 km de dicha vereda. Para calcular la rapidez media en km/h de dicho auto, se realizaron los siguientes pasos:
+
+**Paso 1.** Se calcula cuánta distancia se recorrió: $345\ \text{km} - 0\ \text{km} = 345\ \text{km}$
+
+**Paso 2.** Se calcula el tiempo que transcurrió: $10\ \text{h} - 7\ \text{h} = 3\ \text{h}$
+
+**Paso 3.** Se halla el cociente entre los valores obtenidos: $345\ \text{km}/3\ \text{h} = 115\ \text{km/h}$
+
+¿En qué paso se cometió un error y por qué?
+Answerlist
+----------
+* En el paso 2, ya que el tiempo transcurrido es $-3\ \text{h}$ y no $3\ \text{h}$
+* En el paso 1, ya que la distancia recorrida es $240\ \text{km}$ y no $345\ \text{km}$
+* En el paso 1, ya que la distancia recorrida es $210\ \text{km}$ y no $345\ \text{km}$
+* En el paso 3, ya que el cociente buscado es $3\ \text{h}/345\ \text{km}$ y no $345\ \text{km}/3\ \text{h}$
+**Respuesta correcta**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+La respuesta correcta es la que afirma: «En el paso 1, ya que la distancia recorrida es $210\ \text{km}$ y no $345\ \text{km}$».
+
+**Análisis del error**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+El paso 1 usa $345\ \text{km}\text{,}$ que es toda la distancia desde la vereda, aunque a las 7:00 a. m. el auto ya llevaba $135\ \text{km}\text{.}$ Como el paso 2 mide el tiempo entre las dos horas, la distancia también debe ser la de ese tramo: $345\ \text{km} - 135\ \text{km} = 210\ \text{km}\text{.}$ Por eso el paso 3, que hace bien su cociente con los valores que recibió, llega a $115\ \text{km/h}$ en lugar de $70\ \text{km/h}\text{.}$
+
+*Causa de fondo:* Leer una posición medida desde el punto de partida como si fuera el avance durante el intervalo.
+
+**Procedimiento correcto**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+- **Paso 1.** Distancia recorrida entre las dos horas: $345\ \text{km} - 135\ \text{km} = 210\ \text{km}\text{.}$
+- **Paso 2.** Tiempo transcurrido: $10\ \text{h} - 7\ \text{h} = 3\ \text{h}\text{.}$
+- **Paso 3.** Rapidez media, en km/h: $210\ \text{km}/3\ \text{h} = 70\ \text{km/h}\text{.}$
+
+**Propiedades del concepto**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+- La rapidez media es la distancia recorrida dividida entre el tiempo transcurrido en ese mismo tramo.
+- La unidad indica el orden del cociente: km/h son kilómetros (numerador) por cada hora (denominador).
+- La distancia recorrida y el tiempo transcurrido son diferencias entre una lectura final y una inicial: ninguna de las dos es negativa.
+- Cuando la rapidez es constante, la rapidez media coincide con la rapidez en cualquier tramo del viaje.
+
+**Caso específico**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+El auto avanza $210\ \text{km}$ en $3\ \text{h}\text{:}$ son $70\ \text{km/h}\text{.}$ La comprobación es directa: $70 \times 3 = 210\text{.}$
+
+**Análisis de las demás razones**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+**EV-C-INV — Invertir el cociente.** El argumento «En el paso 3, ya que el cociente buscado es $3\ \text{h}/345\ \text{km}$ y no $345\ \text{km}/3\ \text{h}$» divide el tiempo entre la distancia. El paso 3 hace bien su cociente con los valores que recibió. Ese cociente da horas por kilómetro, y la pregunta pide km/h: los kilómetros van en el numerador y las horas en el denominador. *Causa de fondo:* Dividir sin mirar qué orden exige la unidad que pide el enunciado.
+
+**EV-D-PROM — Promediar las dos lecturas.** El argumento «En el paso 1, ya que la distancia recorrida es $240\ \text{km}$ y no $345\ \text{km}$» promedia las dos lecturas como si ese valor fuera lo recorrido. Ese paso sí tiene un error, pero esta razón no lo corrige. $240\ \text{km}$ es la posición a mitad de camino entre las dos lecturas, no lo que el auto avanzó entre ellas. Lo recorrido es la diferencia entre las lecturas, no su promedio: $345\ \text{km} - 135\ \text{km} = 210\ \text{km}\text{.}$ *Causa de fondo:* Promediar porque el ejercicio habla de rapidez media, sin preguntarse qué representa el resultado.
+
+**EV-T-SIGNO — Restar las horas al revés y aceptar un tiempo negativo.** El argumento «En el paso 2, ya que el tiempo transcurrido es $-3\ \text{h}$ y no $3\ \text{h}$» resta la hora final de la inicial. Un tiempo transcurrido no puede ser negativo: a la hora final se le resta la inicial, $10\ \text{h} - 7\ \text{h} = 3\ \text{h}\text{.}$ *Causa de fondo:* Restar en el orden en que aparecen las cifras, sin preguntarse qué representa el resultado.
+
+**Reflexión metacognitiva**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+Cuando revises un procedimiento, pregúntate qué mide cada número, no solo si la cuenta da bien.
+
+**Estrategia para evitar el error**
+
+```{=latex}
+\nobreak\makeatletter\@afterindenttrue\@afterheading\makeatother
+```
+
+- Antes de mirar las opciones, rehaz cada paso con los datos del enunciado.
+- En cada paso, pregúntate qué magnitud debe resultar y en qué unidad.
+- Mide la distancia y el tiempo en el mismo tramo: de la primera lectura a la segunda.
+- Al final, compara la unidad del resultado con la que pide la pregunta.
+
+Answerlist
+----------
+* Incorrecta. El paso 2 está bien hecho: el tiempo transcurrido es $3\ \text{h}$ y no $-3\ \text{h}\text{.}$
+* Incorrecta. El paso 1 sí tiene un error, pero la distancia recorrida no es $240\ \text{km}\text{.}$
+* Correcta. El paso 1 tiene el error y esta razón lo corrige.
+* Incorrecta. El paso 3 hace bien su cociente con los valores que recibió: escribir $3\ \text{h}/345\ \text{km}$ no corrige nada.
+  Chunks ejecutados: OK
+
+--- Validando metadatos ---
+  Metadatos: OK
+
+--- Validando coherencia SCHOICE ---
+  Coherencia SCHOICE : OK
+
+--- Validando coherencia matemática general ---
+  Matemática general: OK
+
+--- Validando coherencia semántica (Nivel 4) ---
+  Capa A (precondicion declarada): OK
+  Capa B (keywords en descripciones): OK
+  Capa C (cross-validacion calcula vs correcto): OK
+
+--- Validando coherencia de código ---
+  Código: OK
+
+--- Validando correctitud de respuesta (Nivel 5) ---
+  5A (exsolution dinámico): OK
+  5B (cross-check respuesta marcada): OK
+  5C (unicidad de opciones): OK
+  5D (rangos matemáticos): OK
+  5E (distractor ≠ correcto): OK
+
+============================================
+  RESULTADO: APROBADO (0 errores)
+============================================

@@ -1,0 +1,4 @@
+md5 del .Rmd: 904af1ca1271d97c54123218c9db03c0 (/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/rapidez-media-error-paso/rapidez_media_error_paso_numerico_variacional_argumentacion_n3_schoice_v1.Rmd)
+Semillas: 100/100 · mediana 0.15 s · máximo 0.26 s · tipo schoice
+Posición de la clave: 25 / 31 / 26 / 18 
+PASS: compilación completa sin errores, cuelgues ni fugas de texto.

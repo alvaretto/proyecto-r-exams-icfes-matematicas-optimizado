@@ -1,0 +1,3 @@
+md5 del .Rmd: 904af1ca1271d97c54123218c9db03c0 (/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/rapidez-media-error-paso/rapidez_media_error_paso_numerico_variacional_argumentacion_n3_schoice_v1.Rmd)
+Diversidad sustantiva: 100/100 versiones evaluadas | respuesta correcta: 61 valor(es) unico(s) | errores=0 indeterminadas=0
+PASS: la respuesta correcta varia suficientemente (diversidad sustantiva confirmada).

@@ -1,0 +1,23 @@
+nuevo (250821, 4) 9.59017276763916
+N combos 1596
+--- TOP 1 literal
+ 56.19 +27.39  entre
+ 41.00 +12.20  igual_rech
+ 41.00 +12.20  U
+ 40.55 +11.75  no_en_enun
+ 34.72  +5.92  rech_en_enun
+ 33.10  +4.30  no_paso_con_final
+ 32.24  +3.44  no_en_pasos
+ 32.18  +3.38  mult10
+ 31.16  +2.36  mult5
+--- TOP 2 literales
+ 56.19 +27.39  no_p3 & entre
+ 56.19 +27.39  pos & entre
+ 56.19 +27.39  no_en_enun & entre
+ 56.19 +27.39  no_igual_rech & entre
+ 56.19 +27.39  no_U & entre
+ 56.19 +27.39  no_paso_con_final & entre
+ 56.19 +27.39  no_sobre_cota & entre
+ 56.19 +27.39  no_frac_hkm & entre
+ 56.19 +27.39  no_frac_menor1 & entre
+tiempo 18

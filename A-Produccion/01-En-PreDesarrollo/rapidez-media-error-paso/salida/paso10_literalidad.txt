@@ -1,0 +1,23 @@
+md5 del .Rmd: 904af1ca1271d97c54123218c9db03c0
+catálogo niveles-mat.json 426ea08a3746c669a1467df579284ca7
+catálogo evidencias-mat.json 427d2e29c9a5a99da619ee2526fbd785
+catálogo estandares-mat-ebc.json 4862e82c3cd19b31af4b2f2784bb4aef
+catálogo estructura-prueba-mat.json 330f5f841063af8db7486777ee407f9d
+
+[OK] Competencia: 'Argumentación'
+   literal en evidencias-mat.json /evidencias_oficiales/Arg_E1/competencia
+   literal en evidencias-mat.json /evidencias_oficiales/Arg_E2/competencia
+   literal en evidencias-mat.json /evidencias_oficiales/Arg_E3/competencia
+[OK] Componente: 'Numérico-variacional'
+   literal en estructura-prueba-mat.json /contenidos/equivalencia_componente/Álgebra y Cálculo
+[OK] Afirmacion: 'Valida procedimientos y estrategias matemáticas utilizadas para dar solución a problemas.'
+   literal en evidencias-mat.json /afirmaciones_oficiales/Argumentación/texto_oficial
+[OK] Evidencia: 'Argumenta a favor o en contra de un procedimiento para resolver un problema a la luz de criterios presentados o establecidos.'
+   literal en evidencias-mat.json /evidencias_oficiales/Arg_E2/texto_oficial
+[OK] Descriptor (texto tras ' — '): 'Justifica afirmaciones utilizando planteamientos y operaciones aritméticas o haciendo uso directo de un concepto, es decir, a partir de un único argumento.'
+   literal en niveles-mat.json /niveles_oficiales/N3[9]
+   literal en niveles-mat.json /mapeo_codigos_proyecto_a_oficial/D3.10/texto_oficial
+[OK] Estandar (texto antes de ' ('): 'Resuelvo y formulo problemas que involucren magnitudes cuyos valores medios se suelen definir indirectamente como razones entre valores de otras magnitudes, como la velocidad media, la aceleración media y la densidad media.'
+   literal en estandares-mat-ebc.json /estandares_oficiales_por_pensamiento_grado/Métrico_10-11[1]
+
+TOTAL fallos: 0

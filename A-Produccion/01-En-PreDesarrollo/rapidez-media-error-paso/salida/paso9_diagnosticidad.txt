@@ -1,0 +1,15 @@
+md5 del .Rmd: 904af1ca1271d97c54123218c9db03c0 (/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/rapidez-media-error-paso/rapidez_media_error_paso_numerico_variacional_argumentacion_n3_schoice_v1.Rmd)
+=== Diagnosticidad de distractores (gaps de seleccion unica) ===
+Archivo: rapidez_media_error_paso_numerico_variacional_argumentacion_n3_schoice_v1.Rmd | semillas: 100 | umbral: 70 % | margen H1: 15 %
+
+gap      vers          H1 mas-larga          H1 mas-corta    H2 prefijo
+                  tasa (margen med)     tasa (margen med)          tasa
+unico     100             10% (  25%)              5% (   6%)            0%
+               H2/H3 CIEGAS: las 4 opciones comparten primera palabra en el 100% de las versiones
+                  -> el 0% de H2 NO es ausencia de senal, es ausencia de medicion; H3 no acumula
+               H3b contenido: la clave dice lo mismo ("en el paso ya que el tiempo transcurrido es te...") en el 36% de 100 versiones
+
+NOTA DE ORDEN (informativa, no bloquea):
+  - unico: H2 y H3 no son aplicables (prefijo uniforme en el 100% de las versiones); la invariancia del tipo de clave la mide H3b
+
+PASS: ninguna sonda superficial supera el 70 %.

@@ -1,0 +1,23 @@
+nuevo (131586, 4) 5.3295063972473145
+N combos 1596
+--- TOP 1 literal
+ 43.75 +14.95  rech_en_enun
+ 42.52 +13.72  igual_rech
+ 42.52 +13.72  U
+ 39.42 +10.62  no_mayor_rech
+ 36.54  +7.74  mult10
+ 35.50  +6.70  entre
+ 33.95  +5.15  no_en_enun
+ 32.70  +3.90  no_en_pasos
+ 31.42  +2.62  no_frac_menor1
+--- TOP 2 literales
+ 56.08 +27.28  no_mayor_rech & no_frac_menor1
+ 54.70 +25.90  no_en_pasos & no_mayor_rech
+ 54.70 +25.90  no_en_pasos & menor_rech
+ 53.88 +25.08  no_mayor_rech & no_frac_hkm
+ 50.30 +21.50  no_en_enun & no_mayor_rech
+ 50.11 +21.31  no_en_pasos & rech_en_enun
+ 50.00 +21.20  no_p3 & rech_en_enun
+ 50.00 +21.20  igual_rech & no_frac_hkm
+ 50.00 +21.20  U & no_frac_hkm
+tiempo 10

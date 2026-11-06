@@ -1,0 +1,716 @@
+=== 1. ORÁCULO LITERAL (N = 100 por estrato + canónica) ===
+Versiones: 300 | con problema: 0
+Canónica: OK (clave = paso 3) 
+
+EV-C-UNIDAD  EV-D-FINAL   EV-D-SUMA  EV-T-FINAL 
+        100          50          50         100 
+Repetido = paso de la clave: 0.487 
+
+=== 1b. ENUMERACIÓN EXACTA DEL ESPACIO (regla #13) ===
+Estados: 9564 | razones candidatas revisadas: 76354 | conjuntos candidatos: 131586 | problemas: 0
+
+=== 2. BATERÍA §P7 (51 reglas, N = 100 por estrato) ===
+
+[no canónicas, N = 100 por rol] n = 300 | veredicto NO_CONCLUYENTE | máx 36.8 % (DIV-mult10) | techo nulo 28.8 % | exceso +7.9 pp
+                            regla       familia tasa aplicabilidad
+                       DIV-mult10 divisibilidad 36.8            83
+             MAG-segundo-afirmado      magnitud 34.3           100
+                   FMT-empieza-km       formato 32.9           100
+                        DIV-mult5 divisibilidad 31.8            96
+   EST-afirmado-menor-que-el-paso         signo 29.9            85
+ REL-afirmado-menor-que-rechazado         signo 29.6            83
+
+Rango de la clave entre las cifras afirmadas (1 = la mayor), total:
+rg
+    1     2     3     4 
+0.280 0.343 0.100 0.277 
+      rango
+rol       1    2    3    4
+  coc  0.41 0.54 0.05 0.00
+  dist 0.43 0.49 0.08 0.00
+  tiem 0.00 0.00 0.17 0.83
+
+[rol clave = dist] n = 100 | veredicto BLOQUEA | máx 76.0 % (POS-paso1) | techo nulo 31.6 % | exceso +44.4 pp
+                     regla       familia tasa aplicabilidad
+                 POS-paso1      posicion 76.0           100
+             LEX-distancia        lexico 76.0           100
+            FMT-empieza-km       formato 58.3           100
+                DIV-mult10 divisibilidad 57.7            86
+        EST-afirmado-nuevo        lexico 57.3           100
+ REL-comparte-menos-cifras      magnitud 53.5           100
+
+[rol clave = tiem] n = 100 | veredicto BLOQUEA | máx 83.0 % (MAG-menor-afirmado) | techo nulo 31.6 % | exceso +51.4 pp
+              regla  familia tasa aplicabilidad
+ MAG-menor-afirmado magnitud 83.0           100
+          MAG-corta magnitud 80.0           100
+          POS-paso2 posicion 75.5           100
+         LEX-tiempo   lexico 75.5           100
+ REL-repetido-menor magnitud 46.8            89
+      FMT-empieza-h  formato 46.3           100
+
+[rol clave = coc] n = 100 | veredicto BLOQUEA | máx 75.5 % (MAG-larga) | techo nulo 31.7 % | exceso +43.8 pp
+                   regla  familia tasa aplicabilidad
+               MAG-larga magnitud 75.5           100
+          MAG-mas-cifras magnitud 75.5           100
+               POS-paso3 posicion 75.5           100
+            FMT-fraccion  formato 75.5           100
+            LEX-cociente   lexico 75.5           100
+ REL-comparte-mas-cifras magnitud 75.5           100
+[error EV-C-UNIDAD] n = 100: se mide en la mezcla
+[error EV-D-FINAL] n = 50: se mide en la mezcla
+[error EV-D-SUMA] n = 50: se mide en la mezcla
+[error EV-T-FINAL] n = 100: se mide en la mezcla
+
+=== Canónica (enumeración exacta) y mezcla con P_CANON = 0.05 ===
+                            regla canon nocanon mezcla exceso_mezcla_pp
+             MAG-segundo-afirmado 100.0    34.3   37.6              8.8
+                       DIV-mult10  33.3    36.8   36.6              7.8
+                   FMT-empieza-km  33.3    32.9   32.9              4.1
+                        DIV-mult5  33.3    31.8   31.9              3.0
+                        MAG-corta 100.0    26.7   30.3              1.5
+ REL-afirmado-menor-que-rechazado  25.0    29.6   29.3              0.5
+                        POS-paso3 100.0    25.2   28.9              0.1
+                     FMT-fraccion 100.0    25.2   28.9              0.1
+                     LEX-cociente 100.0    25.2   28.9              0.1
+     EST-afirmado-no-en-enunciado  50.0    27.8   28.9              0.1
+Reglas que aíslan la clave en la canónica (puntuación 100 %): MAG-segundo-afirmado, MAG-corta, POS-paso3, FMT-fraccion, LEX-cociente, MAG-corta-margen15 
+Reglas de la mezcla por encima de +8 pp: MAG-segundo-afirmado 
+
+=== Canales declarados, FUERA de la batería congelada (H4 y H5 de la FASE 2C r1) ===
+X0 no repite un dato del enunciado (con horas)   muestra 1:  33.6 % (+4.8 pp) | muestra 2:  34.4 % (+5.6 pp) | aplica  66 % | canónica  50 %
+X1 sustituida da positiva, km/h y entera         muestra 1:  59.4 % (+30.6 pp) | muestra 2:  60.9 % (+32.0 pp) | aplica  96 % | canónica  50 %
+X1a sustituida da positiva y km/h (constructo)   muestra 1:  33.0 % (+4.2 pp) | muestra 2:  33.6 % (+4.8 pp) | aplica  70 % | canónica  50 %
+X1b sustituida da entera                         muestra 1:  44.9 % (+16.1 pp) | muestra 2:  46.7 % (+17.8 pp) | aplica  86 % | canónica  25 %
+
+=== 2b. H1 POR RAMA, TEXTO VISIBLE (N = 100 por rol; margen = sobre la rival más próxima) ===
+  rama   n mas_larga margen_med_l l_expl mas_corta margen_med_c c_expl
+ total 300        17          7.7      0        20          7.7      0
+  dist 100         0           NA      0         0           NA      0
+  tiem 100         0           NA      0        60          7.7      0
+   coc 100        51          7.7      0         0           NA      0
+l_expl y c_expl: % de versiones con la clave en el extremo Y margen >= 15 % (§P7-B).
+Versiones únicas (enunciado, pasos y opciones sin orden) en 300 semillas: 282 
+Claves distintas: 137 | canónicas en 300: 19 
+
+=== 2c. ENUMERACIÓN EXACTA: batería, canales, vigiladas y O-2 (regla #23, espacio finito; techo constante 28.8 %) ===
+Estados: 9564 | conjuntos de razones: 131586 | estados que abortan: 0 | 3.0 min
+Ramas de error (del switch del generador): dist=EV-D-SUMA+EV-D-FINAL | tiem=EV-T-FINAL | coc=EV-C-UNIDAD 
+Comprobaciones sobre TODOS los conjuntos de peso > 0 (fallos):
+                                 opciones repetidas 
+                                                  0 
+               razón falsa afirma el valor correcto 
+                                                  0 
+                razón afirma lo que rechaza su paso 
+                                                  0 
+                          más de una razón de signo 
+                                                  0 
+                     razón FINAL contra el paso mal 
+                                                  0 
+razón falsa que, sustituida, da la rapidez correcta 
+                                                  0 
+         la clave no da la rapidez correcta en km/h 
+                                                  0 
+Errores dentro de reglas o métricas: 0
+
+Las 10 primeras de las 51 reglas, no canónicas (exacta; exceso sobre 28.8 %; canónica; mezcla con P_CANON = 0.05 ):
+                            regla exacta exceso canonica mezcla05
+                       DIV-mult10  36.54   7.74       33    36.38
+                   FMT-empieza-km  33.97   5.17       33    33.94
+             MAG-segundo-afirmado  33.86   5.06      100    37.16
+                        DIV-mult5  31.12   2.32       33    31.23
+   EST-afirmado-menor-que-el-paso  29.90   1.10        0    28.41
+ REL-afirmado-menor-que-rechazado  29.46   0.66       25    29.24
+               REL-repetido-mayor  28.83   0.03        0    27.39
+                          DIV-par  28.71  -0.09       25    28.52
+     EST-afirmado-no-en-enunciado  28.14  -0.66       50    29.23
+               MAG-mayor-afirmado  28.04  -0.76        0    26.64
+
+Las 5 primeras de la mezcla:
+                regla mezcla05 exceso
+ MAG-segundo-afirmado    37.16   8.36
+           DIV-mult10    36.38   7.58
+       FMT-empieza-km    33.94   5.14
+            DIV-mult5    31.23   2.43
+            MAG-corta    30.38   1.58
+
+Canales de sustitución, no canónicas:
+       canal exacta exceso canonica
+          X0  33.95   5.15       50
+         X1a  33.87   5.07       50
+         X1b  44.31  15.51       25
+          X1  58.23  29.43       50
+      R30-90  59.39  30.59       50
+     R20-120  48.38  19.58       50
+     R10-150  41.12  12.32       50
+ R20-120+ent  65.47  36.67       50
+
+Vigiladas (no canónicas; exceso; canónica):
+           regla exacta exceso canonica
+               Q  25.00  -3.80    25.00
+ EST-sin-rotulos  33.33   4.53    25.00
+              RE  50.00  21.20    25.00
+ RE-con-fraccion  43.75  14.95    25.00
+               U  42.52  13.72   100.00
+              NM  39.42  10.62    33.33
+             X0+  37.07   8.27   100.00
+            EST+  34.16   5.36    25.00
+              E1  35.45   6.65   100.00
+              E2  46.31  17.51   100.00
+              E3  53.29  24.49   100.00
+              M0  75.00  46.20   100.00
+              M2  80.00  51.20   100.00
+              M3  90.68  61.88   100.00
+           entre  35.50   6.70    25.00
+         NM+frac  56.08  27.28    33.33
+        NM+pasos  54.70  25.90    25.00
+          NM+kmh  53.88  25.08    33.33
+           NM+X0  50.30  21.50    50.00
+      NM+X0+frac  64.45  35.65    50.00
+     NM+kmh+frac  64.26  35.46    33.33
+     NM+pos+frac  63.17  34.37   100.00
+           EST-1  44.55  15.75    25.00
+          EST+-1  46.26  17.46    25.00
+      EST+-1-par  49.87  21.07    25.00
+            E3-1  73.73  44.93   100.00
+        E3-1-par  78.05  49.25   100.00
+          M3-par  95.44  66.64   100.00
+     entre-media  47.97  19.17    25.00
+  E3-1-par-media  98.47  69.67   100.00
+
+Solo la clave sobrevive: R30-90 26.8 % | R20-120 12.0 % | Q (quita el menos) 25.00 %
+Por rama de error (% por rama; P de la rama entre paréntesis):
+                   DIV-mult10   X0  X1a  X1b   X1 R30-90 R20-120 solo R20-120
+EV-C-UNIDAD (33.3)       48.9 32.2 29.9 38.8 45.1   47.4    37.3          0.4
+EV-D-FINAL (16.7)        57.4 33.4 35.8 46.6 64.8   53.4    44.8          2.5
+EV-D-SUMA (16.7)         56.2 28.6 36.6 46.2 65.8   58.1    47.6          6.7
+EV-T-FINAL (33.3)         3.9 38.7 35.5 47.7 64.3   75.1    61.6         31.0
+                    Q RE M0
+EV-C-UNIDAD (33.3) 25 25 75
+EV-D-FINAL (16.7)  25 75 75
+EV-D-SUMA (16.7)   25 25 75
+EV-T-FINAL (33.3)  25 75 75
+
+(Solo informativo: techo nulo de la muestra de la batería, 28.8 %; la clasificación usa 28.8 %.)
+
+--- Comparación con el modelo (opcion_c/c2.json y busq_c2.txt), a la centésima ---
+         metrica                  ambito       modelo  verificador
+               Q                   total 2.500000e+01 2.500000e+01
+ EST sin rotulos                   total 3.332891e+01 3.332891e+01
+ EST con rotulos                   total 2.628967e+01 2.628967e+01
+              RE                   total 5.000000e+01 5.000000e+01
+               U                   total 4.252054e+01 4.252054e+01
+              NM                   total 3.941865e+01 3.941865e+01
+              X0                   total 3.394929e+01 3.394929e+01
+             X0+                   total 3.706629e+01 3.706629e+01
+            EST+                   total 3.416083e+01 3.416083e+01
+              E1                   total 3.544787e+01 3.544787e+01
+              E2                   total 4.631284e+01 4.631284e+01
+              E3                   total 5.329148e+01 5.329148e+01
+              M0                   total 7.500000e+01 7.500000e+01
+              M2                   total 8.000281e+01 8.000281e+01
+              M3                   total 9.068424e+01 9.068424e+01
+             X1a                   total 3.386967e+01 3.386967e+01
+             X1b                   total 4.431340e+01 4.431340e+01
+              X1                   total 5.822879e+01 5.822879e+01
+         R10-150                   total 4.112328e+01 4.112328e+01
+         R20-120                   total 4.838069e+01 4.838069e+01
+     R20-120+ent                   total 6.546814e+01 6.546814e+01
+          R30-90                   total 5.938616e+01 5.938616e+01
+     MAG-segundo                   total 3.385559e+01 3.385559e+01
+               n                 estados 9.564000e+03 9.564000e+03
+              ns               conjuntos 1.315860e+05 1.315860e+05
+              ab                 abortos 0.000000e+00 0.000000e+00
+           nueva    peso con razón nueva 9.191288e-01 9.191288e-01
+             dos dos claves o duplicadas 0.000000e+00 0.000000e+00
+          noreal           clave no da v 0.000000e+00 0.000000e+00
+ RE-con-fraccion     total (busq_c2.txt) 4.375000e+01 4.375000e+01
+           entre     total (busq_c2.txt) 3.550000e+01 3.549620e+01
+           dif   ok
+ -1.455547e-11 TRUE
+ -1.850964e-11 TRUE
+ -1.307754e-11 TRUE
+ -2.803091e-11 TRUE
+ -1.320899e-11 TRUE
+ -2.413714e-11 TRUE
+ -1.899281e-11 TRUE
+ -2.305711e-11 TRUE
+ -1.826095e-11 TRUE
+ -2.495426e-11 TRUE
+ -2.795275e-11 TRUE
+ -3.419132e-11 TRUE
+ -6.298251e-11 TRUE
+ -6.154721e-11 TRUE
+ -5.857714e-11 TRUE
+ -1.920597e-11 TRUE
+ -2.425082e-11 TRUE
+ -3.531397e-11 TRUE
+ -2.268763e-11 TRUE
+ -2.712142e-11 TRUE
+ -4.054357e-11 TRUE
+ -3.364420e-11 TRUE
+ -9.030998e-12 TRUE
+  0.000000e+00 TRUE
+  0.000000e+00 TRUE
+  0.000000e+00 TRUE
+ -4.596323e-13 TRUE
+  0.000000e+00 TRUE
+  0.000000e+00 TRUE
+ -6.394885e-14 TRUE
+ -3.795198e-03 TRUE
+Filas comparadas: 123 | diferencias: 0 | máxima |dif| por rama: 0.000000
+
+--- Reglas de H3 de la r4 contra H3_ESP (tabla del reporte), a la centésima: 45 cifras | diferencias: 0 ---
+          regla   ambito esperada verificador     dif   ok
+        NM+frac  nocanon    56.08     56.0807  0.0007 TRUE
+       NM+pasos  nocanon    54.70     54.7032  0.0032 TRUE
+         NM+kmh  nocanon    53.88     53.8838  0.0038 TRUE
+          NM+X0  nocanon    50.30     50.2978 -0.0022 TRUE
+     NM+X0+frac  nocanon    64.45     64.4519  0.0019 TRUE
+    NM+kmh+frac  nocanon    64.26     64.2574 -0.0026 TRUE
+    NM+pos+frac  nocanon    63.17     63.1664 -0.0036 TRUE
+          EST-1  nocanon    44.55     44.5522  0.0022 TRUE
+         EST+-1  nocanon    46.26     46.2643  0.0043 TRUE
+     EST+-1-par  nocanon    49.87     49.8679 -0.0021 TRUE
+           E3-1  nocanon    73.73     73.7322  0.0022 TRUE
+       E3-1-par  nocanon    78.05     78.0454 -0.0046 TRUE
+         M3-par  nocanon    95.44     95.4398 -0.0002 TRUE
+    entre-media  nocanon    47.97     47.9712  0.0012 TRUE
+ E3-1-par-media  nocanon    98.47     98.4662 -0.0038 TRUE
+        NM+frac   mezcla    54.94     54.9433  0.0033 TRUE
+       NM+pasos   mezcla    53.22     53.2180 -0.0020 TRUE
+         NM+kmh   mezcla    52.86     52.8563 -0.0037 TRUE
+          NM+X0   mezcla    50.28     50.2829  0.0029 TRUE
+     NM+X0+frac   mezcla    63.73     63.7293 -0.0007 TRUE
+    NM+kmh+frac   mezcla    62.71     62.7112  0.0012 TRUE
+    NM+pos+frac   mezcla    65.01     65.0080 -0.0020 TRUE
+          EST-1   mezcla    43.57     43.5746  0.0046 TRUE
+         EST+-1   mezcla    45.20     45.2011  0.0011 TRUE
+     EST+-1-par   mezcla    48.62     48.6245  0.0045 TRUE
+           E3-1   mezcla    75.05     75.0456 -0.0044 TRUE
+       E3-1-par   mezcla    79.14     79.1431  0.0031 TRUE
+         M3-par   mezcla    95.67     95.6678 -0.0022 TRUE
+    entre-media   mezcla    46.82     46.8227  0.0027 TRUE
+ E3-1-par-media   mezcla    98.54     98.5429  0.0029 TRUE
+        NM+frac canonica    33.33     33.3333  0.0033 TRUE
+       NM+pasos canonica    25.00     25.0000  0.0000 TRUE
+         NM+kmh canonica    33.33     33.3333  0.0033 TRUE
+          NM+X0 canonica    50.00     50.0000  0.0000 TRUE
+     NM+X0+frac canonica    50.00     50.0000  0.0000 TRUE
+    NM+kmh+frac canonica    33.33     33.3333  0.0033 TRUE
+    NM+pos+frac canonica   100.00    100.0000  0.0000 TRUE
+          EST-1 canonica    25.00     25.0000  0.0000 TRUE
+         EST+-1 canonica    25.00     25.0000  0.0000 TRUE
+     EST+-1-par canonica    25.00     25.0000  0.0000 TRUE
+           E3-1 canonica   100.00    100.0000  0.0000 TRUE
+       E3-1-par canonica   100.00    100.0000  0.0000 TRUE
+         M3-par canonica   100.00    100.0000  0.0000 TRUE
+    entre-media canonica    25.00     25.0000  0.0000 TRUE
+ E3-1-par-media canonica   100.00    100.0000  0.0000 TRUE
+
+--- O-2: cifra medida contra FIRMA_O2 (exceso en pp; FIRMADA = TRUE ) ---
+                regla     tipo  ambito medida exceso firmado veredicto
+                  X1b vigilada nocanon  44.31  15.51   15.51   listada
+                   X1 vigilada nocanon  58.23  29.43   29.43   listada
+               R30-90 vigilada nocanon  59.39  30.59   30.59   listada
+              R20-120 vigilada nocanon  48.38  19.58   19.58   listada
+              R10-150 vigilada nocanon  41.12  12.32   12.32   listada
+          R20-120+ent vigilada nocanon  65.47  36.67   36.67   listada
+                   RE vigilada nocanon  50.00  21.20   21.20   listada
+      RE-con-fraccion vigilada nocanon  43.75  14.95   14.95   listada
+                    U vigilada nocanon  42.52  13.72   13.72   listada
+                   NM vigilada nocanon  39.42  10.62   10.62   listada
+                  X0+ vigilada nocanon  37.07   8.27    8.27   listada
+                   E2 vigilada nocanon  46.31  17.51   17.51   listada
+                   E3 vigilada nocanon  53.29  24.49   24.49   listada
+                   M0 vigilada nocanon  75.00  46.20   46.20   listada
+                   M2 vigilada nocanon  80.00  51.20   51.20   listada
+                   M3 vigilada nocanon  90.68  61.88   61.88   listada
+              NM+frac vigilada nocanon  56.08  27.28   27.28   listada
+             NM+pasos vigilada nocanon  54.70  25.90   25.90   listada
+               NM+kmh vigilada nocanon  53.88  25.08   25.08   listada
+                NM+X0 vigilada nocanon  50.30  21.50   21.50   listada
+           NM+X0+frac vigilada nocanon  64.45  35.65   35.65   listada
+          NM+kmh+frac vigilada nocanon  64.26  35.46   35.46   listada
+          NM+pos+frac vigilada nocanon  63.17  34.37   34.37   listada
+                EST-1 vigilada nocanon  44.55  15.75   15.75   listada
+               EST+-1 vigilada nocanon  46.26  17.46   17.46   listada
+           EST+-1-par vigilada nocanon  49.87  21.07   21.07   listada
+                 E3-1 vigilada nocanon  73.73  44.93   44.93   listada
+             E3-1-par vigilada nocanon  78.05  49.25   49.25   listada
+               M3-par vigilada nocanon  95.44  66.64   66.64   listada
+          entre-media vigilada nocanon  47.97  19.17   19.17   listada
+       E3-1-par-media vigilada nocanon  98.47  69.67   69.67   listada
+ MAG-segundo-afirmado  bateria  mezcla  37.16   8.36    8.36   listada
+                  X1b vigilada  mezcla  43.35  14.55   14.55   listada
+                   X1 vigilada  mezcla  57.82  29.02   29.02   listada
+               R30-90 vigilada  mezcla  58.92  30.12   30.12   listada
+              R20-120 vigilada  mezcla  48.46  19.66   19.66   listada
+              R10-150 vigilada  mezcla  41.57  12.77   12.77   listada
+          R20-120+ent vigilada  mezcla  64.69  35.89   35.89   listada
+                   RE vigilada  mezcla  48.75  19.95   19.95   listada
+      RE-con-fraccion vigilada  mezcla  42.81  14.01   14.01   listada
+                    U vigilada  mezcla  45.39  16.59   16.59   listada
+                   NM vigilada  mezcla  39.11  10.31   10.31   listada
+                  X0+ vigilada  mezcla  40.21  11.41   11.41   listada
+                   E1 vigilada  mezcla  38.68   9.88    9.88   listada
+                   E2 vigilada  mezcla  49.00  20.20   20.20   listada
+                   E3 vigilada  mezcla  55.63  26.83   26.83   listada
+                   M0 vigilada  mezcla  76.25  47.45   47.45   listada
+                   M2 vigilada  mezcla  81.00  52.20   52.20   listada
+                   M3 vigilada  mezcla  91.15  62.35   62.35   listada
+              NM+frac vigilada  mezcla  54.94  26.14   26.14   listada
+             NM+pasos vigilada  mezcla  53.22  24.42   24.42   listada
+               NM+kmh vigilada  mezcla  52.86  24.06   24.06   listada
+                NM+X0 vigilada  mezcla  50.28  21.48   21.48   listada
+           NM+X0+frac vigilada  mezcla  63.73  34.93   34.93   listada
+          NM+kmh+frac vigilada  mezcla  62.71  33.91   33.91   listada
+          NM+pos+frac vigilada  mezcla  65.01  36.21   36.21   listada
+                EST-1 vigilada  mezcla  43.57  14.77   14.77   listada
+               EST+-1 vigilada  mezcla  45.20  16.40   16.40   listada
+           EST+-1-par vigilada  mezcla  48.62  19.82   19.82   listada
+                 E3-1 vigilada  mezcla  75.05  46.25   46.25   listada
+             E3-1-par vigilada  mezcla  79.14  50.34   50.34   listada
+               M3-par vigilada  mezcla  95.67  66.87   66.87   listada
+          entre-media vigilada  mezcla  46.82  18.02   18.02   listada
+       E3-1-par-media vigilada  mezcla  98.54  69.74   69.74   listada
+Filas de FIRMA_O2: 64 | combinaciones con exceso >= 8: 64
+  ROJO, listada en O-2: X1b, nocanon: exceso +15.51 pp
+  ROJO, listada en O-2: X1, nocanon: exceso +29.43 pp
+  ROJO, listada en O-2: R30-90, nocanon: exceso +30.59 pp
+  ROJO, listada en O-2: R20-120, nocanon: exceso +19.58 pp
+  ROJO, listada en O-2: R10-150, nocanon: exceso +12.32 pp
+  ROJO, listada en O-2: R20-120+ent, nocanon: exceso +36.67 pp
+  ROJO, listada en O-2: RE, nocanon: exceso +21.20 pp
+  ROJO, listada en O-2: RE-con-fraccion, nocanon: exceso +14.95 pp
+  ROJO, listada en O-2: U, nocanon: exceso +13.72 pp
+  ROJO, listada en O-2: NM, nocanon: exceso +10.62 pp
+  ROJO, listada en O-2: X0+, nocanon: exceso +8.27 pp
+  ROJO, listada en O-2: E2, nocanon: exceso +17.51 pp
+  ROJO, listada en O-2: E3, nocanon: exceso +24.49 pp
+  ROJO, listada en O-2: M0, nocanon: exceso +46.20 pp
+  ROJO, listada en O-2: M2, nocanon: exceso +51.20 pp
+  ROJO, listada en O-2: M3, nocanon: exceso +61.88 pp
+  ROJO, listada en O-2: NM+frac, nocanon: exceso +27.28 pp
+  ROJO, listada en O-2: NM+pasos, nocanon: exceso +25.90 pp
+  ROJO, listada en O-2: NM+kmh, nocanon: exceso +25.08 pp
+  ROJO, listada en O-2: NM+X0, nocanon: exceso +21.50 pp
+  ROJO, listada en O-2: NM+X0+frac, nocanon: exceso +35.65 pp
+  ROJO, listada en O-2: NM+kmh+frac, nocanon: exceso +35.46 pp
+  ROJO, listada en O-2: NM+pos+frac, nocanon: exceso +34.37 pp
+  ROJO, listada en O-2: EST-1, nocanon: exceso +15.75 pp
+  ROJO, listada en O-2: EST+-1, nocanon: exceso +17.46 pp
+  ROJO, listada en O-2: EST+-1-par, nocanon: exceso +21.07 pp
+  ROJO, listada en O-2: E3-1, nocanon: exceso +44.93 pp
+  ROJO, listada en O-2: E3-1-par, nocanon: exceso +49.25 pp
+  ROJO, listada en O-2: M3-par, nocanon: exceso +66.64 pp
+  ROJO, listada en O-2: entre-media, nocanon: exceso +19.17 pp
+  ROJO, listada en O-2: E3-1-par-media, nocanon: exceso +69.67 pp
+  ROJO, listada en O-2: MAG-segundo-afirmado, mezcla: exceso +8.36 pp
+  ROJO, listada en O-2: X1b, mezcla: exceso +14.55 pp
+  ROJO, listada en O-2: X1, mezcla: exceso +29.02 pp
+  ROJO, listada en O-2: R30-90, mezcla: exceso +30.12 pp
+  ROJO, listada en O-2: R20-120, mezcla: exceso +19.66 pp
+  ROJO, listada en O-2: R10-150, mezcla: exceso +12.77 pp
+  ROJO, listada en O-2: R20-120+ent, mezcla: exceso +35.89 pp
+  ROJO, listada en O-2: RE, mezcla: exceso +19.95 pp
+  ROJO, listada en O-2: RE-con-fraccion, mezcla: exceso +14.01 pp
+  ROJO, listada en O-2: U, mezcla: exceso +16.59 pp
+  ROJO, listada en O-2: NM, mezcla: exceso +10.31 pp
+  ROJO, listada en O-2: X0+, mezcla: exceso +11.41 pp
+  ROJO, listada en O-2: E1, mezcla: exceso +9.88 pp
+  ROJO, listada en O-2: E2, mezcla: exceso +20.20 pp
+  ROJO, listada en O-2: E3, mezcla: exceso +26.83 pp
+  ROJO, listada en O-2: M0, mezcla: exceso +47.45 pp
+  ROJO, listada en O-2: M2, mezcla: exceso +52.20 pp
+  ROJO, listada en O-2: M3, mezcla: exceso +62.35 pp
+  ROJO, listada en O-2: NM+frac, mezcla: exceso +26.14 pp
+  ROJO, listada en O-2: NM+pasos, mezcla: exceso +24.42 pp
+  ROJO, listada en O-2: NM+kmh, mezcla: exceso +24.06 pp
+  ROJO, listada en O-2: NM+X0, mezcla: exceso +21.48 pp
+  ROJO, listada en O-2: NM+X0+frac, mezcla: exceso +34.93 pp
+  ROJO, listada en O-2: NM+kmh+frac, mezcla: exceso +33.91 pp
+  ROJO, listada en O-2: NM+pos+frac, mezcla: exceso +36.21 pp
+  ROJO, listada en O-2: EST-1, mezcla: exceso +14.77 pp
+  ROJO, listada en O-2: EST+-1, mezcla: exceso +16.40 pp
+  ROJO, listada en O-2: EST+-1-par, mezcla: exceso +19.82 pp
+  ROJO, listada en O-2: E3-1, mezcla: exceso +46.25 pp
+  ROJO, listada en O-2: E3-1-par, mezcla: exceso +50.34 pp
+  ROJO, listada en O-2: M3-par, mezcla: exceso +66.87 pp
+  ROJO, listada en O-2: entre-media, mezcla: exceso +18.02 pp
+  ROJO, listada en O-2: E3-1-par-media, mezcla: exceso +69.74 pp
+CSV: /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/rapidez-media-error-paso/salida/firma_o2_medida.csv ( 64 filas )
+Máximo de la batería exacta: no canónicas 36.54 % (DIV-mult10, +7.74 pp) | mezcla 37.16 % (MAG-segundo-afirmado, +8.36 pp)
+
+--- Mutantes de O-2 sobre una copia (fila +0,02 pp = pendiente; regla nueva a +8,01 pp = pendiente; fila -0,02 pp = no_reproduce; solo esa fila cambia) ---
+S1     cazado_por_su_sonda  X1b                    nocanon  | esperada: pendiente | real: pendiente
+B1     cazado_por_su_sonda  X1b                    nocanon  | esperada: no_reproduce | real: no_reproduce
+S2     cazado_por_su_sonda  X1                     nocanon  | esperada: pendiente | real: pendiente
+B2     cazado_por_su_sonda  X1                     nocanon  | esperada: no_reproduce | real: no_reproduce
+S3     cazado_por_su_sonda  R30-90                 nocanon  | esperada: pendiente | real: pendiente
+B3     cazado_por_su_sonda  R30-90                 nocanon  | esperada: no_reproduce | real: no_reproduce
+S4     cazado_por_su_sonda  R20-120                nocanon  | esperada: pendiente | real: pendiente
+B4     cazado_por_su_sonda  R20-120                nocanon  | esperada: no_reproduce | real: no_reproduce
+S5     cazado_por_su_sonda  R10-150                nocanon  | esperada: pendiente | real: pendiente
+B5     cazado_por_su_sonda  R10-150                nocanon  | esperada: no_reproduce | real: no_reproduce
+S6     cazado_por_su_sonda  R20-120+ent            nocanon  | esperada: pendiente | real: pendiente
+B6     cazado_por_su_sonda  R20-120+ent            nocanon  | esperada: no_reproduce | real: no_reproduce
+S7     cazado_por_su_sonda  RE                     nocanon  | esperada: pendiente | real: pendiente
+B7     cazado_por_su_sonda  RE                     nocanon  | esperada: no_reproduce | real: no_reproduce
+S8     cazado_por_su_sonda  RE-con-fraccion        nocanon  | esperada: pendiente | real: pendiente
+B8     cazado_por_su_sonda  RE-con-fraccion        nocanon  | esperada: no_reproduce | real: no_reproduce
+S9     cazado_por_su_sonda  U                      nocanon  | esperada: pendiente | real: pendiente
+B9     cazado_por_su_sonda  U                      nocanon  | esperada: no_reproduce | real: no_reproduce
+S10    cazado_por_su_sonda  NM                     nocanon  | esperada: pendiente | real: pendiente
+B10    cazado_por_su_sonda  NM                     nocanon  | esperada: no_reproduce | real: no_reproduce
+S11    cazado_por_su_sonda  X0+                    nocanon  | esperada: pendiente | real: pendiente
+B11    cazado_por_su_sonda  X0+                    nocanon  | esperada: no_reproduce | real: no_reproduce
+S12    cazado_por_su_sonda  E2                     nocanon  | esperada: pendiente | real: pendiente
+B12    cazado_por_su_sonda  E2                     nocanon  | esperada: no_reproduce | real: no_reproduce
+S13    cazado_por_su_sonda  E3                     nocanon  | esperada: pendiente | real: pendiente
+B13    cazado_por_su_sonda  E3                     nocanon  | esperada: no_reproduce | real: no_reproduce
+S14    cazado_por_su_sonda  M0                     nocanon  | esperada: pendiente | real: pendiente
+B14    cazado_por_su_sonda  M0                     nocanon  | esperada: no_reproduce | real: no_reproduce
+S15    cazado_por_su_sonda  M2                     nocanon  | esperada: pendiente | real: pendiente
+B15    cazado_por_su_sonda  M2                     nocanon  | esperada: no_reproduce | real: no_reproduce
+S16    cazado_por_su_sonda  M3                     nocanon  | esperada: pendiente | real: pendiente
+B16    cazado_por_su_sonda  M3                     nocanon  | esperada: no_reproduce | real: no_reproduce
+S17    cazado_por_su_sonda  MAG-segundo-afirmado   mezcla   | esperada: pendiente | real: pendiente
+B17    cazado_por_su_sonda  MAG-segundo-afirmado   mezcla   | esperada: no_reproduce | real: no_reproduce
+S18    cazado_por_su_sonda  X1b                    mezcla   | esperada: pendiente | real: pendiente
+B18    cazado_por_su_sonda  X1b                    mezcla   | esperada: no_reproduce | real: no_reproduce
+S19    cazado_por_su_sonda  X1                     mezcla   | esperada: pendiente | real: pendiente
+B19    cazado_por_su_sonda  X1                     mezcla   | esperada: no_reproduce | real: no_reproduce
+S20    cazado_por_su_sonda  R30-90                 mezcla   | esperada: pendiente | real: pendiente
+B20    cazado_por_su_sonda  R30-90                 mezcla   | esperada: no_reproduce | real: no_reproduce
+S21    cazado_por_su_sonda  R20-120                mezcla   | esperada: pendiente | real: pendiente
+B21    cazado_por_su_sonda  R20-120                mezcla   | esperada: no_reproduce | real: no_reproduce
+S22    cazado_por_su_sonda  R10-150                mezcla   | esperada: pendiente | real: pendiente
+B22    cazado_por_su_sonda  R10-150                mezcla   | esperada: no_reproduce | real: no_reproduce
+S23    cazado_por_su_sonda  R20-120+ent            mezcla   | esperada: pendiente | real: pendiente
+B23    cazado_por_su_sonda  R20-120+ent            mezcla   | esperada: no_reproduce | real: no_reproduce
+S24    cazado_por_su_sonda  RE                     mezcla   | esperada: pendiente | real: pendiente
+B24    cazado_por_su_sonda  RE                     mezcla   | esperada: no_reproduce | real: no_reproduce
+S25    cazado_por_su_sonda  RE-con-fraccion        mezcla   | esperada: pendiente | real: pendiente
+B25    cazado_por_su_sonda  RE-con-fraccion        mezcla   | esperada: no_reproduce | real: no_reproduce
+S26    cazado_por_su_sonda  U                      mezcla   | esperada: pendiente | real: pendiente
+B26    cazado_por_su_sonda  U                      mezcla   | esperada: no_reproduce | real: no_reproduce
+S27    cazado_por_su_sonda  NM                     mezcla   | esperada: pendiente | real: pendiente
+B27    cazado_por_su_sonda  NM                     mezcla   | esperada: no_reproduce | real: no_reproduce
+S28    cazado_por_su_sonda  X0+                    mezcla   | esperada: pendiente | real: pendiente
+B28    cazado_por_su_sonda  X0+                    mezcla   | esperada: no_reproduce | real: no_reproduce
+S29    cazado_por_su_sonda  E1                     mezcla   | esperada: pendiente | real: pendiente
+B29    cazado_por_su_sonda  E1                     mezcla   | esperada: no_reproduce | real: no_reproduce
+S30    cazado_por_su_sonda  E2                     mezcla   | esperada: pendiente | real: pendiente
+B30    cazado_por_su_sonda  E2                     mezcla   | esperada: no_reproduce | real: no_reproduce
+S31    cazado_por_su_sonda  E3                     mezcla   | esperada: pendiente | real: pendiente
+B31    cazado_por_su_sonda  E3                     mezcla   | esperada: no_reproduce | real: no_reproduce
+S32    cazado_por_su_sonda  M0                     mezcla   | esperada: pendiente | real: pendiente
+B32    cazado_por_su_sonda  M0                     mezcla   | esperada: no_reproduce | real: no_reproduce
+S33    cazado_por_su_sonda  M2                     mezcla   | esperada: pendiente | real: pendiente
+B33    cazado_por_su_sonda  M2                     mezcla   | esperada: no_reproduce | real: no_reproduce
+S34    cazado_por_su_sonda  M3                     mezcla   | esperada: pendiente | real: pendiente
+B34    cazado_por_su_sonda  M3                     mezcla   | esperada: no_reproduce | real: no_reproduce
+S35    cazado_por_su_sonda  NM+frac                nocanon  | esperada: pendiente | real: pendiente
+B35    cazado_por_su_sonda  NM+frac                nocanon  | esperada: no_reproduce | real: no_reproduce
+S36    cazado_por_su_sonda  NM+pasos               nocanon  | esperada: pendiente | real: pendiente
+B36    cazado_por_su_sonda  NM+pasos               nocanon  | esperada: no_reproduce | real: no_reproduce
+S37    cazado_por_su_sonda  NM+kmh                 nocanon  | esperada: pendiente | real: pendiente
+B37    cazado_por_su_sonda  NM+kmh                 nocanon  | esperada: no_reproduce | real: no_reproduce
+S38    cazado_por_su_sonda  NM+X0                  nocanon  | esperada: pendiente | real: pendiente
+B38    cazado_por_su_sonda  NM+X0                  nocanon  | esperada: no_reproduce | real: no_reproduce
+S39    cazado_por_su_sonda  NM+X0+frac             nocanon  | esperada: pendiente | real: pendiente
+B39    cazado_por_su_sonda  NM+X0+frac             nocanon  | esperada: no_reproduce | real: no_reproduce
+S40    cazado_por_su_sonda  NM+kmh+frac            nocanon  | esperada: pendiente | real: pendiente
+B40    cazado_por_su_sonda  NM+kmh+frac            nocanon  | esperada: no_reproduce | real: no_reproduce
+S41    cazado_por_su_sonda  NM+pos+frac            nocanon  | esperada: pendiente | real: pendiente
+B41    cazado_por_su_sonda  NM+pos+frac            nocanon  | esperada: no_reproduce | real: no_reproduce
+S42    cazado_por_su_sonda  EST-1                  nocanon  | esperada: pendiente | real: pendiente
+B42    cazado_por_su_sonda  EST-1                  nocanon  | esperada: no_reproduce | real: no_reproduce
+S43    cazado_por_su_sonda  EST+-1                 nocanon  | esperada: pendiente | real: pendiente
+B43    cazado_por_su_sonda  EST+-1                 nocanon  | esperada: no_reproduce | real: no_reproduce
+S44    cazado_por_su_sonda  EST+-1-par             nocanon  | esperada: pendiente | real: pendiente
+B44    cazado_por_su_sonda  EST+-1-par             nocanon  | esperada: no_reproduce | real: no_reproduce
+S45    cazado_por_su_sonda  E3-1                   nocanon  | esperada: pendiente | real: pendiente
+B45    cazado_por_su_sonda  E3-1                   nocanon  | esperada: no_reproduce | real: no_reproduce
+S46    cazado_por_su_sonda  E3-1-par               nocanon  | esperada: pendiente | real: pendiente
+B46    cazado_por_su_sonda  E3-1-par               nocanon  | esperada: no_reproduce | real: no_reproduce
+S47    cazado_por_su_sonda  M3-par                 nocanon  | esperada: pendiente | real: pendiente
+B47    cazado_por_su_sonda  M3-par                 nocanon  | esperada: no_reproduce | real: no_reproduce
+S48    cazado_por_su_sonda  entre-media            nocanon  | esperada: pendiente | real: pendiente
+B48    cazado_por_su_sonda  entre-media            nocanon  | esperada: no_reproduce | real: no_reproduce
+S49    cazado_por_su_sonda  E3-1-par-media         nocanon  | esperada: pendiente | real: pendiente
+B49    cazado_por_su_sonda  E3-1-par-media         nocanon  | esperada: no_reproduce | real: no_reproduce
+S50    cazado_por_su_sonda  NM+frac                mezcla   | esperada: pendiente | real: pendiente
+B50    cazado_por_su_sonda  NM+frac                mezcla   | esperada: no_reproduce | real: no_reproduce
+S51    cazado_por_su_sonda  NM+pasos               mezcla   | esperada: pendiente | real: pendiente
+B51    cazado_por_su_sonda  NM+pasos               mezcla   | esperada: no_reproduce | real: no_reproduce
+S52    cazado_por_su_sonda  NM+kmh                 mezcla   | esperada: pendiente | real: pendiente
+B52    cazado_por_su_sonda  NM+kmh                 mezcla   | esperada: no_reproduce | real: no_reproduce
+S53    cazado_por_su_sonda  NM+X0                  mezcla   | esperada: pendiente | real: pendiente
+B53    cazado_por_su_sonda  NM+X0                  mezcla   | esperada: no_reproduce | real: no_reproduce
+S54    cazado_por_su_sonda  NM+X0+frac             mezcla   | esperada: pendiente | real: pendiente
+B54    cazado_por_su_sonda  NM+X0+frac             mezcla   | esperada: no_reproduce | real: no_reproduce
+S55    cazado_por_su_sonda  NM+kmh+frac            mezcla   | esperada: pendiente | real: pendiente
+B55    cazado_por_su_sonda  NM+kmh+frac            mezcla   | esperada: no_reproduce | real: no_reproduce
+S56    cazado_por_su_sonda  NM+pos+frac            mezcla   | esperada: pendiente | real: pendiente
+B56    cazado_por_su_sonda  NM+pos+frac            mezcla   | esperada: no_reproduce | real: no_reproduce
+S57    cazado_por_su_sonda  EST-1                  mezcla   | esperada: pendiente | real: pendiente
+B57    cazado_por_su_sonda  EST-1                  mezcla   | esperada: no_reproduce | real: no_reproduce
+S58    cazado_por_su_sonda  EST+-1                 mezcla   | esperada: pendiente | real: pendiente
+B58    cazado_por_su_sonda  EST+-1                 mezcla   | esperada: no_reproduce | real: no_reproduce
+S59    cazado_por_su_sonda  EST+-1-par             mezcla   | esperada: pendiente | real: pendiente
+B59    cazado_por_su_sonda  EST+-1-par             mezcla   | esperada: no_reproduce | real: no_reproduce
+S60    cazado_por_su_sonda  E3-1                   mezcla   | esperada: pendiente | real: pendiente
+B60    cazado_por_su_sonda  E3-1                   mezcla   | esperada: no_reproduce | real: no_reproduce
+S61    cazado_por_su_sonda  E3-1-par               mezcla   | esperada: pendiente | real: pendiente
+B61    cazado_por_su_sonda  E3-1-par               mezcla   | esperada: no_reproduce | real: no_reproduce
+S62    cazado_por_su_sonda  M3-par                 mezcla   | esperada: pendiente | real: pendiente
+B62    cazado_por_su_sonda  M3-par                 mezcla   | esperada: no_reproduce | real: no_reproduce
+S63    cazado_por_su_sonda  entre-media            mezcla   | esperada: pendiente | real: pendiente
+B63    cazado_por_su_sonda  entre-media            mezcla   | esperada: no_reproduce | real: no_reproduce
+S64    cazado_por_su_sonda  E3-1-par-media         mezcla   | esperada: pendiente | real: pendiente
+B64    cazado_por_su_sonda  E3-1-par-media         mezcla   | esperada: no_reproduce | real: no_reproduce
+N      cazado_por_su_sonda  FMT-empieza-km         nocanon  | esperada: pendiente | real: pendiente
+N      cazado_por_su_sonda  FMT-empieza-km         mezcla   | esperada: pendiente | real: pendiente
+N      cazado_por_su_sonda  Q                      nocanon  | esperada: pendiente | real: pendiente
+N      cazado_por_su_sonda  Q                      mezcla   | esperada: pendiente | real: pendiente
+Mutantes de O-2 en copia: 132 
+
+--- Mutantes del verificador (amarre del generador, error de regla, ancla de cand, exit) ---
+V1   cazado_por_su_sonda    | copia con «dist = "EV-D-SUMA",» rompe el amarre de ERRS (y el original lo cumple)
+V2   cazado_por_su_sonda    | una regla que lanza stop() cuenta como error (no puntúa 25 % en silencio)
+V3   cazado_por_su_sonda    | un cand del generador distinto del del verificador aborta el estado (ancla de d1)
+V4   cazado_por_su_sonda    | decidir_exit: «exacto» limpio y firmado no da 4; «todo» firmado da 4; sin firma da 3; con errores da 1
+V5   cazado_por_su_sonda    | copia del .Rmd con un byte cambiado, FIRMADA FALSE: md5 no coincide y el exit es 3 (el original coincide)
+V6   cazado_por_su_sonda    | copia del .Rmd con un byte cambiado, FIRMADA TRUE: md5 no coincide y el exit es 3, no 4
+
+=== 3. MUTANTES ===
+M1   cazado_por_su_sonda    semilla 1    | esperada: ORACULO_CLAVE
+     real: ORACULO_CLAVE: 0 opciones verdaderas; debe ser 1
+     La clave de distancia afirma un valor falso; `valor` sigue correcto, así que solo el oráculo de texto puede verla
+M2   cazado_por_su_sonda    semilla 2    | esperada: L-1: ningún paso tiene un error de aritmética
+     real: L-1: ningún paso tiene un error de aritmética
+     La cuenta del paso de tiempo da mal (la entrada SIGNO ya no existe: se usa la de EV-T-FINAL)
+M3b  cazado_por_su_sonda    semilla 35   | esperada: L-4: ninguna razón FINAL contra el paso que ya está mal
+     real: L-4: ninguna razón FINAL contra el paso que ya está mal
+     EV-D-FINAL solo contra EV-D-SUMA, sin apagar ninguna otra guarda: L-4 es la única defensa en ese estado (H9 de la r3)
+M4   cazado_por_su_sonda    semilla 1    | esperada: L-3: opciones verbatim
+     real: L-3: opciones verbatim, en el orden impreso
+     La canónica «corrige» el −20 impreso de la última opción (regla #24 H-2)
+M5   cazado_por_su_sonda    semilla 1    | esperada: L-3: Paso 3 verbatim
+     real: L-3: Paso 3 verbatim, con las unidades invertidas
+     La canónica normaliza la trampa del Paso 3
+M6   cazado_por_su_sonda    semilla 91   | esperada: a lo sumo una razón afirma un valor negativo
+     real: a lo sumo una razón afirma un valor negativo
+     Se quita el tope de razones de signo
+M7   cazado_por_su_sonda    semilla 51   | esperada: regla #13: exactamente una razón es verdadera
+     real: regla #13: exactamente una razón es verdadera
+     La razón EV-D-INICIAL afirma el valor correcto: segunda clave. Quita también el filtro repara(), que la bloquearía antes de esta guarda, y «ninguna razón afirma lo que rechaza», que con un paso 1 correcto la mata antes (como M3), y mide solo las guardas del chunk: sin eso, ORACULO_REPARA lo caza primero
+M8   cazado_por_su_sonda    semilla 1    | esperada: molde común
+     real: molde común
+     La clave lleva un molde distinto del de las demás
+M9   cazado_por_su_sonda    semilla 1    | esperada: L-1: exactamente un paso está mal
+     real: L-1: exactamente un paso está mal
+     Dos pasos mal a la vez: el de tiempo queda mal además del sorteado
+M11  cazado_por_su_sonda    | esperada: MAG-mayor-afirmado (+8 pp) | real: tasa 65.3 %, exceso +36.5 pp
+     Se fuerza la clave al rango 1: la batería debe verlo en su regla de magnitud
+M12  cazado_por_su_sonda    | esperada: REL-paso-unico (+8 pp) | real: tasa 50.0 %, exceso +21.1 pp
+     El paso de la clave nunca se repite, como en el impreso: la batería debe verlo en su regla relacional
+M13  cazado_por_su_sonda    semilla 1    | esperada: L-2: rapidez entera y datos con sentido
+     real: L-2: rapidez entera y datos con sentido
+     d1 deja de ser múltiplo de dur (H7 de la FASE 2C r1)
+M14  cazado_por_su_sonda    semilla 5    | esperada: L-7: la primera hora va antes de la primera distancia
+     real: L-7: la primera hora va antes de la primera distancia
+     La primera hora vuelve a pegarse a «inició» (H1)
+M15  cazado_por_su_sonda    semilla 246  | esperada: ORACULO_REPARA
+     real: ORACULO_REPARA: la razón del paso 2 da la rapidez correcta
+     Se ofrece una razón que repara el procedimiento (H2 y H6). Sin signos que se compensen solo queda d2 = v t1 o v t2 (d1 = 2 v, la salida 2 h antes): 11 de 2 000 semillas, 0,55 %. Tope por defecto (600) basta
+M16  cazado_por_su_sonda    semilla 12   | esperada: regla #7: contracciones al y del
+     real: regla #7: contracciones al y del
+     Vuelve «a el auto de el pueblo» (H3)
+M10  cazado_por_su_sonda    semilla 1    | esperada: ORACULO_RECHAZO
+     real: ORACULO_RECHAZO: «y no 285 km» no es lo que muestra el paso 1
+     La forma Y rechaza una cifra que el procedimiento no muestra
+M17a1 cazado_por_su_sonda    semilla 2    | esperada: L-8: el procedimiento nunca muestra un negativo
+     real: L-8: el procedimiento nunca muestra un negativo
+     L-8, primera componente, solo el sorteo: EV-T-SIGNO vuelve a sortearse como error cometido, sin entrada en el switch
+M17a2 cazado_por_su_sonda    semilla 2    | esperada: L-8: el procedimiento nunca muestra un negativo
+     real: L-8: el procedimiento nunca muestra un negativo
+     L-8, primera componente completa: el sorteo y la entrada EV-T-SIGNO en paso_tiem (H9 de la r3)
+M17b cazado_por_su_sonda    semilla 2    | esperada: L-8: el procedimiento nunca muestra un negativo
+     real: L-8: el procedimiento nunca muestra un negativo
+     L-8, otra componente (min(Dm, Tm, Vm) > 0): el paso de tiempo muestra un negativo sin que el error cometido se llame SIGNO
+M17c cazado_por_su_sonda    semilla 2    | esperada: ORACULO_L8
+     real: ORACULO_L8: un paso muestra un negativo
+     M17b sin la guarda L-8: solo el oráculo de texto puede ver el negativo
+M17d cazado_por_su_sonda    semilla 1    | esperada: L-8: el procedimiento nunca muestra un negativo
+     real: L-8: el procedimiento nunca muestra un negativo
+     L-8, operando negativo con resultado positivo: «d2 - 20 km - (-20 km) = d2 km» (H6 de la r3)
+M17e cazado_por_su_sonda    semilla 1    | esperada: ORACULO_L8
+     real: ORACULO_L8: un paso muestra un negativo
+     M17d sin la guarda: el oráculo debe ver el operando negativo (H6 de la r3)
+M18  cazado_por_su_sonda    semilla 2    | esperada: regla #7: sin doble punto
+     real: regla #7: sin doble punto tras a. m. o p. m.
+     Vuelve «a. m.. El tiempo» (H1 de la FASE 2C r2)
+M19  cazado_por_su_sonda    semilla 1    | esperada: ORACULO_SOLUTION
+     real: ORACULO_SOLUTION: FALTA: llega a 105 km/h en lugar de 70 km/h.
+     G (H2): la consecuencia de la Solution cita una rapidez falsa
+M20  cazado_por_su_sonda    semilla 1    | esperada: ORACULO_SOLUTION
+     real: ORACULO_SOLUTION: FB clave
+     H (H2): el veredicto de la opción correcta nombra otro paso
+M21  cazado_por_su_sonda    semilla 18   | esperada: ninguna razón afirma lo que rechaza
+     real: ninguna razón afirma lo que rechaza
+     A' (H3): EV-T-INICIAL afirma lo que rechaza el paso (equivalente del mutante A, cuya precondición ya no existe)
+M21b cazado_por_su_sonda    semilla 35   | esperada: ninguna razón afirma lo que rechaza
+     real: ninguna razón afirma lo que rechaza
+     EV-D-SUMA sin su precondición: se ofrece con EV-D-SUMA cometido y afirma lo que rechaza el paso 1 (H9 de la r3)
+M22  cazado_por_su_sonda    semilla 5    | esperada: ninguna razón afirma lo que rechaza
+     real: ninguna razón afirma lo que rechaza
+     B (H3): EV-C-UNIDAD se ofrece contra un paso 3 que ya la comete: la misma fracción a los dos lados de «y no»
+M23  cazado_por_su_sonda    semilla 0    | esperada: L-6: comilla invertida
+     real: L-6: comilla invertida en un chunk
+     H4: una comilla invertida en un comentario del chunk (la FASE 2D lo corta ahí)
+M24  cazado_por_su_sonda    semilla 1    | esperada: L-6: signo fuera de la fórmula
+     real: L-6: signo fuera de la fórmula
+     H4: el punto final queda fuera de la fórmula de tramo_d
+M25  cazado_por_su_sonda    semilla 2    | esperada: L-9
+     real: L-9: si la versión admite una razón nueva, se ofrece al menos una
+     Se quita la obligación de L-9: la guarda de data_generation debe verlo
+M25b cazado_por_su_sonda    semilla 1    | esperada: ORACULO_L9
+     real: ORACULO_L9: la versión admitía una razón nueva (EV-D-PROM o EV-T-CUENTA) y ninguna opción lo es
+     H6 de la r4 (mutante C): tras la guarda de L-9, con P = 1/2 EV-T-CUENTA pasa a EV-T-SUMA en elegidos; solo el oráculo, que mira e$ops, lo ve
+M26  cazado_por_su_sonda    semilla 2    | esperada: ORACULO_SOLUTION
+     real: ORACULO_SOLUTION: FRASE EV-D-PROM: falta «235 km es la posición a mitad de camino»
+     H7: la cifra del promedio de la Solution (y de la opción) se corre 5 km
+M27  cazado_por_su_sonda    semilla 1    | esperada: ORACULO_SOLUTION
+     real: ORACULO_SOLUTION: FRASE EV-T-CUENTA: falta «hay 5 marcas del reloj, pero entre ellas solo hay 4 intervalos»
+     H7: la Solution cuenta una marca de más en EV-T-CUENTA
+M28  cazado_por_su_sonda    semilla 21   | esperada: ORACULO_SOLUTION
+     real: ORACULO_SOLUTION: FRASE EV-D-INICIAL: falta «10 km es lo que»
+     H7: la cifra de EV-D-INICIAL es d2 en vez de d1
+M29  cazado_por_su_sonda    semilla 2    | esperada: ORACULO_SOLUTION
+     real: ORACULO_SOLUTION: ANALISIS del error: falta «10 h - 8 h = 2 h.»
+     H7: el análisis de EV-T-FINAL cita tramo_d (llama tiempo a una distancia)
+Mutantes: 36 | cazados por su sonda: 36 | fallan: 0 
+
+=== 3b. MUTANTES DE O-2 (generador mutado, enumeración exacta; cifra predicha por el modelo Python) ===
+O2-A  cazado_por_su_sonda    | estados 9564, abortos 0 (peso que sobrevive 1.0000), conjuntos 311091, errores de regla 0, 7.2 min
+      reproduce c1.json: SÍ | filas 26, diferencias 0, máx |dif| 0.000000
+      regla causal EST-sin-rotulos fuera de «listada»: SÍ
+           regla  ambito medida exceso firmado veredicto
+ EST-sin-rotulos nocanon  45.19  16.39      NA pendiente
+ EST-sin-rotulos  mezcla  44.18  15.38      NA pendiente
+      dejan de estar listadas (34): X0, X1b, X1, R30-90, R20-120, R10-150, R20-120+ent, EST-sin-rotulos, U, NM, X0+, EST+, E1, E2, E3, M2, M3, entre, NM+frac, NM+pasos, NM+kmh, NM+X0, NM+X0+frac, NM+kmh+frac, NM+pos+frac, EST-1, EST+-1, EST+-1-par, E3-1, E3-1-par, M3-par, entre-media, E3-1-par-media, MAG-segundo-afirmado
+      sin la obligación de L-9 (se quita la línea de con_nueva y se apaga su guarda): debe dar opcion_c/c1.json, EST sin rótulos +16,39
+O2-B  cazado_por_su_sonda    | estados 9564, abortos 0 (peso que sobrevive 1.0000), conjuntos 196842, errores de regla 0, 4.7 min
+      reproduce base.json: SÍ | filas 26, diferencias 0, máx |dif| 0.000000
+      regla causal E3 fuera de «listada»: SÍ
+ regla  ambito medida exceso firmado veredicto
+    E3 nocanon    100   71.2   24.49 pendiente
+    E3  mezcla    100   71.2   26.83 pendiente
+      dejan de estar listadas (35): EST-afirmado-nuevo, X0, X1b, X1, R30-90, R20-120, R10-150, R20-120+ent, EST-sin-rotulos, NM, X0+, EST+, E1, E2, E3, M2, M3, entre, NM+frac, NM+pasos, NM+kmh, NM+X0, NM+X0+frac, NM+kmh+frac, NM+pos+frac, EST-1, EST+-1, EST+-1-par, E3-1, E3-1-par, M3-par, entre-media, E3-1-par-media, MAG-segundo-afirmado, X1a
+      sin las dos razones nuevas (precondiciones de EV-D-PROM y EV-T-CUENTA en FALSE): debe dar opcion_c/base.json, E3 al 100 %
+Mutantes de O-2 sobre el generador: 2 | fallan: 0 
+
+RESULTADO: ROJO, listado por O-2 ( 0 ) | md5 del .Rmd: coincide con RMD_MD5 | O-2: 64 listadas, 0 pendientes, 0 no reproducen | FIRMADA = TRUE  | máximo de la batería exacta: no canónicas 36.54 % (DIV-mult10), mezcla 37.16 % (MAG-segundo-afirmado) | batería de muestra: NO_CONCLUYENTE (solo informativa) 
+exit=4

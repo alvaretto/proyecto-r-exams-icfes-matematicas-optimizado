@@ -1,0 +1,117 @@
+(131586, 4) 9.2
+N combos 29 rasgos prof 2 1464
+--- 29 rasgos, top 1 literal
+ 43.75 +14.95  rech_en_enun
+ 42.52 +13.72  igual_rech
+ 42.52 +13.72  U
+ 39.42 +10.62  no_mayor_rech
+ 36.54  +7.74  mult10
+ 35.50  +6.70  entre
+ 33.95  +5.15  no_en_enun
+ 32.70  +3.90  no_en_pasos
+ 31.42  +2.62  no_frac_menor1
+--- 29 rasgos, top 2 literales
+ 56.08 +27.28  no_mayor_rech & no_frac_menor1
+ 54.70 +25.90  no_en_pasos & no_mayor_rech
+ 54.70 +25.90  no_en_pasos & menor_rech
+ 53.88 +25.08  no_mayor_rech & no_frac_hkm
+ 50.30 +21.50  no_en_enun & no_mayor_rech
+ 50.11 +21.31  no_en_pasos & rech_en_enun
+ 50.00 +21.20  no_p3 & rech_en_enun
+ 50.00 +21.20  igual_rech & no_frac_hkm
+ 50.00 +21.20  U & no_frac_hkm
+t 16
+N combos prof 3, 46 rasgos 96568 t 668
+--- top prof 1 (todos los rasgos, sin marca)
+ 43.75 +14.95  mezcla  42.81 +14.01 canon  25.0  rech_en_enun
+ 42.52 +13.72  mezcla  45.39 +16.59 canon 100.0  igual_rech
+ 42.52 +13.72  mezcla  45.39 +16.59 canon 100.0  U
+ 39.42 +10.62  mezcla  39.11 +10.31 canon  33.3  no_mayor_rech
+ 36.54  +7.74  mezcla  36.38  +7.58 canon  33.3  mult10
+ 35.50  +6.70  mezcla  34.97  +6.17 canon  25.0  entre
+ 33.95  +5.15  mezcla  34.75  +5.95 canon  50.0  no_en_enun
+ 32.71  +3.91  mezcla  32.33  +3.53 canon  25.0  dif1_menor
+ 32.70  +3.90  mezcla  32.31  +3.51 canon  25.0  no_en_pasos
+ 31.65  +2.85  mezcla  31.32  +2.52 canon  25.0  cifra_nueva_paso
+ 31.42  +2.62  mezcla  31.10  +2.30 canon  25.0  no_frac_menor1
+ 31.26  +2.46  mezcla  30.95  +2.15 canon  25.0  no_paso_dif1_rech
+ 31.12  +2.32  mezcla  31.23  +2.43 canon  33.3  mult5
+ 30.82  +2.02  mezcla  30.53  +1.73 canon  25.0  no_frac_hkm
+--- top prof 1 con al menos un rasgo nuevo
+ 32.71  +3.91  mezcla  32.33  +3.53 canon  25.0  dif1_menor
+ 31.65  +2.85  mezcla  31.32  +2.52 canon  25.0  cifra_nueva_paso
+ 31.26  +2.46  mezcla  30.95  +2.15 canon  25.0  no_paso_dif1_rech
+ 29.77  +0.97  mezcla  29.53  +0.73 canon  25.0  no_dif1_con_visible
+ 28.90  +0.10  mezcla  28.71  -0.09 canon  25.0  no_dif1_rech
+ 28.75  -0.05  mezcla  28.57  -0.23 canon  25.0  no_media_vis
+ 28.17  -0.63  mezcla  28.01  -0.79 canon  25.0  no_media_lect
+ 27.57  -1.23  mezcla  26.19  -2.61 canon   0.0  no_en_pasos3
+ 27.34  -1.46  mezcla  27.22  -1.58 canon  25.0  dif1_mismo_paso
+ 27.03  -1.77  mezcla  26.93  -1.87 canon  25.0  no_paso_con_media
+ 26.91  -1.89  mezcla  26.81  -1.99 canon  25.0  paso_mitad_rech
+ 26.01  -2.79  mezcla  25.96  -2.84 canon  25.0  no_dif1_mayor
+ 25.51  -3.29  mezcla  25.49  -3.31 canon  25.0  no_mitad_rech
+ 25.00  -3.80  mezcla  25.00  -3.80 canon  25.0  par_suma
+--- top prof 2 (todos los rasgos, sin marca)
+ 56.08 +27.28  mezcla  54.94 +26.14 canon  33.3  no_mayor_rech & no_frac_menor1
+ 54.70 +25.90  mezcla  53.22 +24.42 canon  25.0  no_en_pasos & no_mayor_rech
+ 54.70 +25.90  mezcla  53.22 +24.42 canon  25.0  no_en_pasos & menor_rech
+ 53.88 +25.08  mezcla  52.86 +24.06 canon  33.3  no_mayor_rech & no_frac_hkm
+ 53.36 +24.56  mezcla  51.94 +23.14 canon  25.0  no_mayor_rech & cifra_nueva_paso
+ 53.36 +24.56  mezcla  51.94 +23.14 canon  25.0  menor_rech & cifra_nueva_paso
+ 50.79 +21.99  mezcla  48.25 +19.45 canon   0.0  no_mayor_rech & no_en_pasos3
+ 50.79 +21.99  mezcla  48.25 +19.45 canon   0.0  menor_rech & no_en_pasos3
+ 50.30 +21.50  mezcla  50.28 +21.48 canon  50.0  no_en_enun & no_mayor_rech
+ 50.11 +21.31  mezcla  48.85 +20.05 canon  25.0  no_en_pasos & rech_en_enun
+ 50.09 +21.29  mezcla  48.83 +20.03 canon  25.0  rech_en_enun & no_en_pasos3
+ 50.00 +21.20  mezcla  48.75 +19.95 canon  25.0  no_p3 & rech_en_enun
+ 50.00 +21.20  mezcla  48.75 +19.95 canon  25.0  rech_en_enun & cifra_nueva_paso
+ 50.00 +21.20  mezcla  52.50 +23.70 canon 100.0  igual_rech & no_frac_hkm
+--- top prof 2 con al menos un rasgo nuevo
+ 53.36 +24.56  mezcla  51.94 +23.14 canon  25.0  no_mayor_rech & cifra_nueva_paso
+ 53.36 +24.56  mezcla  51.94 +23.14 canon  25.0  menor_rech & cifra_nueva_paso
+ 50.79 +21.99  mezcla  48.25 +19.45 canon   0.0  no_mayor_rech & no_en_pasos3
+ 50.79 +21.99  mezcla  48.25 +19.45 canon   0.0  menor_rech & no_en_pasos3
+ 50.09 +21.29  mezcla  48.83 +20.03 canon  25.0  rech_en_enun & no_en_pasos3
+ 50.00 +21.20  mezcla  48.75 +19.95 canon  25.0  rech_en_enun & cifra_nueva_paso
+ 49.57 +20.77  mezcla  48.34 +19.54 canon  25.0  entre & no_media_vis
+ 49.12 +20.32  mezcla  47.92 +19.12 canon  25.0  rech_en_enun & no_dif1_mayor
+ 47.97 +19.17  mezcla  46.82 +18.02 canon  25.0  entre & no_media_lect
+ 47.17 +18.37  mezcla  46.06 +17.26 canon  25.0  no_en_pasos & no_media_vis
+ 47.07 +18.27  mezcla  45.97 +17.17 canon  25.0  no_media_vis & cifra_nueva_paso
+ 44.88 +16.08  mezcla  43.89 +15.09 canon  25.0  rech_en_enun & no_mitad_rech
+ 44.78 +15.98  mezcla  43.79 +14.99 canon  25.0  no_en_pasos & no_paso_dif1_rech
+ 44.04 +15.24  mezcla  43.09 +14.29 canon  25.0  rech_en_enun & no_media_lect
+--- top prof 3 (todos los rasgos, sin marca)
+ 64.73 +35.93  mezcla  62.74 +33.94 canon  25.0  no_en_pasos & no_mayor_rech & no_media_lect
+ 64.73 +35.93  mezcla  62.74 +33.94 canon  25.0  no_en_pasos & menor_rech & no_media_lect
+ 64.68 +35.88  mezcla  62.70 +33.90 canon  25.0  no_mayor_rech & no_media_lect & cifra_nueva_paso
+ 64.68 +35.88  mezcla  62.70 +33.90 canon  25.0  menor_rech & no_media_lect & cifra_nueva_paso
+ 64.45 +35.65  mezcla  63.73 +34.93 canon  50.0  no_en_enun & no_mayor_rech & no_frac_menor1
+ 64.34 +35.54  mezcla  62.79 +33.99 canon  33.3  no_mayor_rech & no_frac_menor1 & no_media_lect
+ 64.26 +35.46  mezcla  62.71 +33.91 canon  33.3  no_mayor_rech & no_frac_hkm & no_frac_menor1
+ 63.17 +34.37  mezcla  65.01 +36.21 canon 100.0  pos & no_mayor_rech & no_frac_menor1
+ 62.45 +33.65  mezcla  61.83 +33.03 canon  50.0  no_en_enun & no_mayor_rech & no_frac_hkm
+ 62.07 +33.27  mezcla  60.64 +31.84 canon  33.3  no_mayor_rech & no_frac_hkm & no_media_lect
+ 61.78 +32.98  mezcla  59.94 +31.14 canon  25.0  no_en_pasos & no_mayor_rech & no_media_vis
+ 61.78 +32.98  mezcla  59.94 +31.14 canon  25.0  no_en_pasos & menor_rech & no_media_vis
+ 61.74 +32.94  mezcla  59.90 +31.10 canon  25.0  no_mayor_rech & no_media_vis & cifra_nueva_paso
+ 61.74 +32.94  mezcla  59.90 +31.10 canon  25.0  menor_rech & no_media_vis & cifra_nueva_paso
+--- top prof 3 con al menos un rasgo nuevo
+ 64.73 +35.93  mezcla  62.74 +33.94 canon  25.0  no_en_pasos & no_mayor_rech & no_media_lect
+ 64.73 +35.93  mezcla  62.74 +33.94 canon  25.0  no_en_pasos & menor_rech & no_media_lect
+ 64.68 +35.88  mezcla  62.70 +33.90 canon  25.0  no_mayor_rech & no_media_lect & cifra_nueva_paso
+ 64.68 +35.88  mezcla  62.70 +33.90 canon  25.0  menor_rech & no_media_lect & cifra_nueva_paso
+ 64.34 +35.54  mezcla  62.79 +33.99 canon  33.3  no_mayor_rech & no_frac_menor1 & no_media_lect
+ 62.07 +33.27  mezcla  60.64 +31.84 canon  33.3  no_mayor_rech & no_frac_hkm & no_media_lect
+ 61.78 +32.98  mezcla  59.94 +31.14 canon  25.0  no_en_pasos & no_mayor_rech & no_media_vis
+ 61.78 +32.98  mezcla  59.94 +31.14 canon  25.0  no_en_pasos & menor_rech & no_media_vis
+ 61.74 +32.94  mezcla  59.90 +31.10 canon  25.0  no_mayor_rech & no_media_vis & cifra_nueva_paso
+ 61.74 +32.94  mezcla  59.90 +31.10 canon  25.0  menor_rech & no_media_vis & cifra_nueva_paso
+ 61.50 +32.70  mezcla  60.09 +31.29 canon  33.3  no_mayor_rech & no_frac_menor1 & no_paso_con_media
+ 60.65 +31.85  mezcla  59.28 +30.48 canon  33.3  no_mayor_rech & no_frac_menor1 & no_media_vis
+ 60.15 +31.35  mezcla  57.15 +28.35 canon   0.0  no_mayor_rech & no_media_lect & no_en_pasos3
+ 60.15 +31.35  mezcla  57.15 +28.35 canon   0.0  menor_rech & no_media_lect & no_en_pasos3
+conjunciones >= +8 6623 de 96568
+t 668
+python3 busca.py  645,76s user 1,24s system 96% cpu 11:08,26 total
