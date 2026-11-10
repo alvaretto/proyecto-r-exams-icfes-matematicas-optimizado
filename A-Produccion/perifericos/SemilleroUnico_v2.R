@@ -5,9 +5,9 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-## Versión CLOZE (6 partes). El SCHOICE hermano tiene su propio Semillero en ../
-archivo_examen <- "barras_campeonato_baloncesto_aleatorio_interpretacion_representacion_n3_cloze_v1.Rmd"
+archivo_examen <- "totales_promedios_reciclaje_aleatorio_argumentacion_n3_schoice_v1.Rmd"
 copias <- 1  # Número de versiones a generar
+stopifnot("copias: máximo 100 (decisión del profesor)" = copias <= 100)
 numpreg <- 10
 semilla_base <- sample(100:1e8, 1)
 # NO establecer semilla fija - cada versión usará semilla diferente
@@ -68,7 +68,7 @@ exams2pdf(rep(archivo_examen, numpreg),
           n = copias,
           name = nombre_arch,
           encoding = "UTF-8",
-          template = "solpcielo_cloze",   # instrucción «Cómo marcar»: opciones en línea, separadas por /
+          template = "solpcielo",
           dir = dir_salida,
           edir = dir_ejercicios,
           verbose = TRUE)
@@ -103,7 +103,8 @@ exams2pandoc(rep(archivo_examen, numpreg),
 # Generación para Moodle, solo configura manualmente 'copias'
 # no importa 'numpreg'
 
-# La semilla s es la versión s de validar_stresstest.R: se exporta lo validado, hasta 100 (exams >= 2.4-3)
+# set.seed(semilla)
+# seed: la versión s usa la semilla s, la misma que valida validar_stresstest.R en el paso 9; se exporta lo validado.
 exams2moodle(archivo_examen,
              n = copias,
              seed = matrix(seq_len(copias), ncol = 1),
@@ -121,26 +122,25 @@ exams2moodle(archivo_examen,
 ################################################################################
 # Generación para NOPS (exámenes escaneables)
 
-# NOPS NO admite ejercicios cloze: R/exams se detiene con «the following exercises
-# are cloze exercises». Para hoja escaneable usar el SCHOICE hermano (../).
-# exams2nops(rep(archivo_examen, numpreg),
-#            n = copias,
-#            name = paste0(nombre_sin_extension, "_nops_"),
-#            encoding = "UTF-8",
-#            dir = dir_salida,
-#            edir = dir_ejercicios,
-#            language = "es",                      # Idioma español
-#            title = "Evaluación de Matemáticas",  # Título del examen
-#            institution = "I. E. Pedacito de Cielo", # Nombre de la institución
-#            logo = NULL,                         # Sin logo (opcional)
-#            date = Sys.Date(),                   # Fecha actual
-#            replacement = FALSE,                 # Sin preguntas de reemplazo
-#            blank = 0,                           # Sin páginas adicionales
-#            duplex = TRUE,                       # Impresión a doble cara
-#            pages = NULL,                        # Número de páginas automático
-#            points = NULL,                       # Puntos por pregunta automático
-#            showpoints = FALSE,                  # No mostrar puntos en el examen
-#            verbose = TRUE)
+# NO establecer semilla fija - cada versión usará semilla diferente
+exams2nops(rep(archivo_examen, numpreg),
+           n = copias,
+           name = paste0(nombre_sin_extension, "_nops_"),
+           encoding = "UTF-8",
+           dir = dir_salida,
+           edir = dir_ejercicios,
+           language = "es",                      # Idioma español
+           title = "Evaluación de Matemáticas",  # Título del examen
+           institution = "I. E. Pedacito de Cielo", # Nombre de la institución
+           logo = NULL,                         # Sin logo (opcional)
+           date = Sys.Date(),                   # Fecha actual
+           replacement = FALSE,                 # Sin preguntas de reemplazo
+           blank = 0,                           # Sin páginas adicionales
+           duplex = TRUE,                       # Impresión a doble cara
+           pages = NULL,                        # Número de páginas automático
+           points = NULL,                       # Puntos por pregunta automático
+           showpoints = FALSE,                  # No mostrar puntos en el examen
+           verbose = TRUE)
 
 ################################################################################
 # Generación para exams2forms (formularios HTML interactivos)
@@ -149,20 +149,28 @@ exams2moodle(archivo_examen,
 
 library(exams2forms)
 
-# Generar archivos HTML standalone con exams2webquiz
-# Esta función genera automáticamente los archivos CSS y JS necesarios
-# Configuración: 1 pregunta por página, múltiples versiones
-exams2webquiz(archivo_examen,  # Una pregunta por archivo HTML
-              n = copias * numpreg,  # Total de versiones = copias × preguntas
-              dir = dir_salida,
-              name = paste0(nombre_sin_extension, "_interactivo"),
-              edir = dir_ejercicios,
-              encoding = "UTF-8",
-              title = "Evaluación Interactiva de Matemáticas ICFES",
-              solution = TRUE,        # Mostrar botón de solución
-              shuffle = TRUE,         # Mezclar opciones de respuesta
-              mathjax = TRUE,         # Habilitar MathJax para fórmulas
-              browse = TRUE)          # Abrir navegador automáticamente
+# Cuestionario para celulares sin internet (2026-11-09, decisión del profesor). exams2webquiz() solo carga
+# MathJax desde internet, y sin red las fórmulas salen en TeX crudo. .claude/scripts/webquiz_autocontenido.R lo
+# incrusta y comprueba en un navegador sin red que todo se compone (exit 0 = WEBQUIZ_OK). Conserva el botón de
+# solución; genera copias × numpreg versiones y, en RStudio, abre el cuestionario al terminar.
+raiz <- tryCatch(suppressWarnings(system2("git", c("rev-parse", "--show-toplevel"), stdout = TRUE, stderr = FALSE)),
+                 error = function(e) character(0))
+script_quiz <- file.path(raiz[1], ".claude", "scripts", "webquiz_autocontenido.R")
+nombre_quiz <- paste0(nombre_sin_extension, "_interactivo")
+if (length(raiz) == 1L && file.exists(script_quiz)) {
+  estado_quiz <- system2(file.path(R.home("bin"), "Rscript"),
+                         c("--no-init-file", shQuote(script_quiz), shQuote(archivo_examen), "--n", copias * numpreg,
+                           "--dir", shQuote(dir_salida), "--nombre", shQuote(nombre_quiz),
+                           "--titulo", shQuote("Evaluación Interactiva de Matemáticas ICFES")))
+  if (estado_quiz != 0L) {
+    warning("El cuestionario interactivo no pasó la comprobación sin internet (exit ", estado_quiz, "): no llevarlo al aula")
+  } else if (interactive()) {
+    html_quiz <- list.files(dir_salida, paste0("^", nombre_quiz, ".*\\.html$"), full.names = TRUE)
+    if (length(html_quiz)) utils::browseURL(html_quiz[1])
+  }
+} else {
+  warning("No se encontró .claude/scripts/webquiz_autocontenido.R: no se generó el cuestionario interactivo")
+}
 
 # # Opción 2: Generar archivos HTML en subdirectorio para embeber
 # # Útil para integrar en documentos Rmd/Quarto o sitios web

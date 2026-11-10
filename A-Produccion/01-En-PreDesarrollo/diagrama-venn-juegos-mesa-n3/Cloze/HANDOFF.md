@@ -3,7 +3,7 @@
 **Estado (2026-11-09): 11/11, aprobado para el aula.** En el WAIT_USER #3 de la tanda 5 el profesor respondió «a» a la pregunta que
 pedía aprobar el `.Rmd` con md5 `889d828e8129e11b0ec5dceda0cf108b`, que no cambió en esta tanda. El coordinador selló
 `aprobacion_usuario` con los cuatro md5 comprobados en disco; `detractor_fase2c` ya se había vuelto a sellar con la FASE 2C r4. No está
-en producción: falta la evidencia de aula. Sin commit ni push.
+en producción: falta la evidencia de aula. En git desde el commit `0ab5fc64` (2026-11-09).
 
 Las decisiones firmadas están en `../.claude/CLAUDE.md` § «CLOZE hermano»: C-1 a C-5, «1 b · semillero sí» (tras la tanda 3) y
 «H1 c · H2 100» (tras la tanda 4). Esta tanda no añadió ninguna; la aprobación («a») está en la misma sección.
@@ -103,6 +103,7 @@ Las decisiones firmadas están en `../.claude/CLAUDE.md` § «CLOZE hermano»: C
 - En exams 2.4.5, `exams2moodle()` y `exams2canvas()` no tienen el argumento `exshuffle` y abortan con él. Es un hecho medido, no un
   defecto: el semillero no se lo pasa.
 - Sin auditar: Canvas, el DOCX, la nota del MULTIRESPONSE en Moodle (H5 de la r3; probar en `lab`) y el flujo interactivo del semillero.
+- Regla #26 (2026-11-09): `generar_moodle()` del semillero exporta sin `seed`, así que no garantiza que las versiones exportadas sean las que validó el paso 9. Se ajusta en el próximo ciclo del ejercicio, porque cambia un archivo de esta aprobación.
 
 ## Fuera de alcance (visto, no tocado)
 
@@ -127,4 +128,4 @@ No entran los renders (`pdf/`, `html/`, `moodle/`, `docx/`, `tex/`, `pdf_hook/`,
 ## Próximo paso
 
 El aula: la promoción espera su evidencia (11/11 no es «terminado»). Pendiente: probar en `lab` cómo califica Moodle la Parte 6
-(MULTIRESPONSE, H5 de la r3). Sin commit ni push.
+(MULTIRESPONSE, H5 de la r3). En el próximo ciclo: `seed` en `generar_moodle()` (regla #26), que cambia un archivo de la aprobación.
