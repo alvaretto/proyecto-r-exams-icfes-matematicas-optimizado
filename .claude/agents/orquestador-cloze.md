@@ -601,6 +601,8 @@ Moodle renderiza las opciones de un gap CLOZE (*embedded answers*) como **menú 
 
 **Referencia**: `.claude/rules/graficos-como-opciones.md`, memoria `feedback_cloze_graficas_no_en_gap_moodle.md`, sesión 2026-06-15 (`grafica_funcion_lineal_metacognitivo_interpretacion_n3_cloze_v1`).
 
+**En papel (2026-11-09, regla #26 y Error 42):** la plantilla del CLOZE pide en «Cómo marcar» la letra por posición, y con la mezcla de R/exams el gap impreso sale, por ejemplo, «Diagrama I / Diagrama IV / Diagrama III / Diagrama II»: la letra de la clave no coincide con el número de su gráfica en 3 de cada 4 versiones. Si el ejercicio se imprime, el semillero pasa `exshuffle = FALSE` **solo** a `exams2pdf()`; el `.Rmd` sigue con `exshuffle: TRUE` y Moodle sigue barajando (`exams2moodle()` y `exams2canvas()` abortan con ese argumento en 2.4.5). Se vigila en la sección `uso` del verificador: el gap impreso en el orden I-IV y la clave registrada en la gráfica correcta, con mutantes. Medido en `diagrama-venn-juegos-mesa-n3/Cloze`: 100 de 100.
+
 ### Incidente H · `INC-DIV-COSMETICA` — Diversidad cosmética: respuesta correcta invariante (regla #22, 2026-06-27)
 
 **Síntoma**: el ejercicio reporta "288/300 versiones únicas" y pasa el detractor, pero los gaps correctos producen SIEMPRE las mismas respuestas numéricas o el mismo contenido gráfico en todas las semillas.

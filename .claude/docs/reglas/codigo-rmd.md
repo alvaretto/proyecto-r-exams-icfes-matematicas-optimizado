@@ -112,6 +112,8 @@ Antes de editar cualquier archivo .Rmd, verifica OBLIGATORIAMENTE:
 
    **⚠️ ACTUALIZACIÓN 2026-05-12 (regla #19):** los casos 2 y 3 de esta excepción quedan OBSOLETOS porque la regla #19 (`solution-letter-independence.md`) prohíbe terminantemente las referencias `r letra_correcta` y literal "Opción [A-D]" en la sección Solution. Por lo tanto, el único caso vivo de la excepción para `exshuffle: FALSE` es el caso 1 (SCHOICE con opciones gráficas individuales en PNGs). Para SCHOICE de texto, usar `exshuffle: TRUE` o `exshuffle: FALSE + sample() interno` indistintamente — ya no depende de Solution porque Solution es letter-independent.
 
+   **⚠️ ACTUALIZACIÓN 2026-11-09 (regla #26):** un CLOZE con gráficas rotuladas que se imprime sigue con `exshuffle: TRUE` en el `.Rmd`. El gap del PDF sale sin barajar porque el semillero pasa `exshuffle = FALSE` solo a `exams2pdf()`; `exams2moodle()` y `exams2canvas()` abortan con ese argumento en exams 2.4.5 (Error 42).
+
 ## ⚠️ 5 Coherencias OBLIGATORIAS
 
 Antes de aprobar cualquier ejercicio, verificar las 5 coherencias:
@@ -277,6 +279,10 @@ Antes de aprobar cualquier ejercicio, verificar las 5 coherencias:
     pregunta de su parte correspondiente. NO usar chunks R con `cat()` para
     duplicar el Answerlist — R-exams ya renderiza las opciones via el Answerlist
     del final.
+
+15. **NO tejer el `.Rmd` con el botón Knit de RStudio** (regla #26)
+    Le antepone un bloque YAML (`output: word_document, html_document, pdf_document`) que los `exams2*()` toleran,
+    pero cambia el md5 y anula una firma atada a él (Error 43). Para ver el ítem: el semillero o `exams2html()`.
 
 ## ✓ SIEMPRE hacer:
 

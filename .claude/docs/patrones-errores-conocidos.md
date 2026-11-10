@@ -3889,3 +3889,137 @@ propio. Las claves de los 3 casos silenciosos no cambian.
 
 - `.claude/docs/REXAMS_VERSIONES.md`, sección «Decimales y backend de matplotlib»
 - `.claude/docs/MEJORES_PRACTICAS_PYTHON_RETICULATE.md`
+
+---
+
+## Error 42: En un CLOZE impreso, el gap barajado de las gráficas rotuladas no coincide con la letra de «Cómo marcar»
+
+### ❌ Mensaje de Error
+
+Ninguno. En el PDF, el gap de la parte con gráficas rotuladas sale, por ejemplo, «Diagrama I / Diagrama IV / Diagrama III /
+Diagrama II». La portada pide marcar «(a) la primera, (b) la segunda…», así que quien busca el «Diagrama IV» en la letra (d)
+marca otra opción. La clave registrada es correcta: el defecto está en la lectura, no en el cálculo.
+
+### 🔍 Causa Raíz
+
+El Incidente G pone las gráficas rotuladas I-IV en el enunciado y deja en el gap su texto («Diagrama I»…). Un CLOZE lleva
+`exshuffle: TRUE` (regla 6 de `codigo-rmd.md`), y R/exams baraja ese texto en cada formato. `solpcielo_cloze.tex` explica
+las letras por posición, y con la mezcla la letra de la clave difiere del número de su gráfica en 3 de cada 4 versiones.
+
+### ✅ Solución
+
+Dejar de barajar solo la llamada que imprime, en el semillero:
+
+```r
+exams2pdf(rep(archivo_examen, config$preguntas_pdf), n = 1, ...,
+          template = "solpcielo_cloze_una_por_pagina", exshuffle = FALSE)
+```
+
+- No en el `.Rmd`: cambia el md5 de la aprobación y contradice la regla 6 de `codigo-rmd.md`.
+- No en `exams2moodle()` ni en `exams2canvas()`: en exams 2.4.5 no tienen el argumento y abortan.
+- No en `exams2html()`: lo acepta y deja de barajar sin avisar.
+
+La clave sigue sorteada, porque el `.Rmd` mezcla las gráficas antes de rotularlas.
+
+### 🧪 Validación
+
+| Prueba | Resultado |
+|---|---|
+| PDF sin el argumento | 1 de 4 preguntas con el gap en el orden I-IV |
+| PDF con el argumento | 4 de 4 y 9 de 9 |
+| `generar_pdf()` real, N = 100 | Gap en el orden I-IV en 100 de 100; clave registrada en el diagrama correcto en 100 de 100; clave en (a) 25, (b) 20, (c) 32 y (d) 23 |
+| HTML y Moodle | Siguen barajando |
+| Mutantes de la sección `uso` | U10 (sin el argumento), U11 (también en Moodle), U15 y U16 (también en HTML), cazados |
+
+### 📋 Checklist
+
+- [ ] El `.Rmd` del CLOZE sigue con `exshuffle: TRUE`.
+- [ ] Solo `exams2pdf()` del semillero lleva `exshuffle = FALSE`.
+- [ ] En el PDF real, el gap dice «Diagrama I / Diagrama II / Diagrama III / Diagrama IV» en cada pregunta.
+- [ ] La sección `uso` del verificador lo exige, con su mutante.
+
+### 📁 Ejemplo funcional
+
+`A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/Cloze/SemilleroCloze.R`, función `generar_pdf()`.
+
+### 📅 Historial
+
+| Fecha | Cambio |
+|---|---|
+| 2026-11-09 | Hallado por la FASE 2C r3 del CLOZE (H1). El profesor eligió la opción c («H1 c»); r7 y FASE 2C r4 sin rojos |
+
+### 📚 Referencias
+
+- `.claude/rules/material-aula.md` (regla #26)
+- `.claude/agents/orquestador-cloze.md`, Incidente G
+- `A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/Cloze/HANDOFF.md`
+
+---
+
+## Error 43: El botón Knit de RStudio le antepone YAML a un `.Rmd` de R/exams y anula una firma atada al md5
+
+### ❌ Mensaje de Error
+
+Ninguno en `exams2html()`, `exams2pdf()`, `exams2moodle()` ni `exams2nops()`: el bloque no los rompe. El verificador del
+ejercicio da exit 3 (`FIRMA_MD5`): el `.Rmd` ya no tiene el md5 firmado.
+
+### 🔍 Causa Raíz
+
+Knit genera `.html`, `.pdf` y `.docx` junto al `.Rmd` y, si este no trae YAML, le antepone uno:
+
+```yaml
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+```
+
+R/exams no lo necesita y lo tolera, pero el md5 del archivo cambia, y con él cae una firma regla por regla (§P7-E) o la
+aprobación de un ejercicio, que valen para un md5.
+
+### ✅ Solución
+
+No pulsar Knit sobre un `.Rmd` de R/exams: para ver el ítem, el semillero o `exams2html()`. Si el YAML ya está:
+
+1. pedir el visto bueno del profesor, porque el cambio es suyo;
+2. comprobar que ningún script dependa del desfase de líneas;
+3. quitarlo con guarda de md5:
+
+```bash
+command cp -p archivo.Rmd respaldo_con_yaml.Rmd
+tail -n +7 archivo.Rmd > sin_yaml.Rmd
+[ "$(md5sum < sin_yaml.Rmd | cut -d' ' -f1)" = "<md5 firmado>" ] && command cp -f sin_yaml.Rmd archivo.Rmd
+```
+
+### 🧪 Validación
+
+| Estado del `.Rmd` | md5 | Verificador del SCHOICE |
+|---|---|---|
+| Con el YAML del Knit (2026-11-06) | `2608498b…` | exit 3 en la carpeta; exit 4 solo en un espejo con el `.Rmd` firmado |
+| Sin el YAML (2026-11-09) | `f886dfaa…`, el firmado | exit 4, sin rojos y con 113 mutantes cazados |
+
+E1 del CLOZE hermano, que trasplanta la Parte 1 desde ese `.Rmd`, da verde con las dos formas.
+
+### 📋 Checklist
+
+- [ ] Antes de cerrar un ciclo, el md5 en disco es el que dice el reporte.
+- [ ] Ningún `.Rmd` firmado empieza con `---`.
+- [ ] Los `.html`, `.pdf`, `.docx` y PNG que deja el Knit en la carpeta no van al commit.
+
+### 📁 Ejemplo funcional
+
+`A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_schoice_v1.Rmd`
+
+### 📅 Historial
+
+| Fecha | Cambio |
+|---|---|
+| 2026-11-06 | Un Knit de RStudio añadió el YAML a las 20:26:11; lo detectó un subagente al empezar |
+| 2026-11-09 | Quitado con el visto bueno del profesor; el `.Rmd` vuelve a `f886dfaa…` |
+
+### 📚 Referencias
+
+- `.claude/rules/material-aula.md` (regla #26) y `.claude/rules/codigo-rmd.md` (regla 15)
+- `A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/HANDOFF.md`

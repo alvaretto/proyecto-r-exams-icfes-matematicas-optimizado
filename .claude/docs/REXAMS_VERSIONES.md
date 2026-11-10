@@ -186,6 +186,11 @@ Los tres Semilleros de `perifericos/` exportan así desde el 2026-11-05, y `Semi
 `seed`, dos corridas dan el mismo XML; sin `seed`, difieren. Los Semilleros ya copiados a cada ejercicio no
 cambiaron.
 
+El 2026-11-09 la copia en disco de `perifericos/`, que el profesor declaró oficial, no tenía esos cambios:
+`SemilleroMoodle_v2.R` y `SemilleroCloze.R` iban con 250 copias y sin `seed`. Se repusieron con su visto bueno, junto
+con el tope de 100 y el cuestionario sin internet (regla #26). Probados con 3 versiones y dos corridas de cada uno: el
+mismo XML.
+
 ### Decimales y backend de matplotlib
 
 Con el backend `qtagg`, Qt fija `LC_NUMERIC` en el locale del sistema para todo el proceso al crear la
@@ -234,10 +239,12 @@ procesos a la vez el tope de 1500 s no alcanza. Repetidos con `--total 2000` dan
 
 ## Decisiones del 2026-11-05
 
-1. **Plantillas:** hecho en `A-Produccion/perifericos/`. Las copias de cada ejercicio no cambiaron.
+1. **Plantillas:** hecho en `A-Produccion/perifericos/`. Las copias de cada ejercicio no cambiaron. La copia en disco
+   las había perdido; se repusieron el 2026-11-09.
 2. **`exams` 2.4-5 y `exams2forms` 0.2-2:** instaladas, con `renv.lock` regenerado. El ADR-003
    (`.claude/docs/ADR/003-entorno-fijado-pc-render.md`, aún sin commit) sigue propuesto.
-3. **Exportar con `seed`:** hecho en los tres Semilleros de `perifericos/`.
+3. **Exportar con `seed`:** hecho en los tres Semilleros de `perifericos/`. Repuesto en la copia en disco el 2026-11-09
+   (regla #26).
 4. **Defectos:** `vuelo_acrobatico_mejorado_A/B/C` se resolvió con `MPLBACKEND=Agg`, sin versión nueva.
    `2023-Matematicas-11-2-09-Op-M.Rmd` la exige: el prototipo da 100 de 100 con el tipo de error sorteado
    (`~/.cache/rexams-versiones/defectos/op-m/`), y falta su flujo de 11 pasos.
@@ -309,6 +316,14 @@ Rscript .claude/scripts/webquiz_autocontenido.R ejercicio.Rmd --n 1 --revision  
 Medido en 24 ejercicios activos (tablas, PNG como opciones, TikZ, CLOZE): 24 correctos, sin TeX crudo ni recursos externos, y legibles a 360 px en los dos revisados. La vista `--revision` (`auto = TRUE`) trae las respuestas marcadas: nunca se entrega. Límites: las
 fórmulas dentro de un desplegable no se pueden componer, y las respuestas siguen en el HTML, solo
 ofuscadas, así que sirve para practicar y no para calificar. No se probó en un celular físico.
+
+Desde el 2026-11-09, `SemilleroUnico_v2.R` de `perifericos/` lo usa en lugar de `exams2webquiz()` (regla #26).
+
+### `exshuffle` según la función (2.4.5)
+
+`exshuffle` es argumento formal de `exams2pdf()` y de `exams2html()`, que con `FALSE` dejan de barajar sin avisar.
+`exams2moodle()` y `exams2canvas()` no lo tienen y abortan con «el argumento no fue usado». Medido el 2026-11-09 con
+los mutantes U11 y U16 de `diagrama-venn-juegos-mesa-n3/Cloze/verificar_espacio_cloze.R`. Uso: regla #26 y Error 42.
 
 ## Referencias cruzadas
 

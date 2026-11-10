@@ -139,6 +139,11 @@ muestra para medir una propiedad: es el umbral de diversidad que el ejercicio de
 confundir «cuántas versiones genero para MEDIR» (100) con «cuántas versiones únicas debe ser capaz
 de producir el ejercicio» (250 de 300).
 
+**El máximo de versiones exportadas** (Moodle, Canvas o el HTML de un semillero) también es 100, por decisión del
+profesor del 2026-08-15 («Ya no se necesitan 300 preguntas. Son y serán máximo 100»), reafirmada el 2026-11-09 en el
+CLOZE de `diagrama-venn-juegos-mesa-n3` («H2 100»). Es una norma de exportación, no de medición: la fija la regla #26
+(`material-aula.md`), con `seed` en Moodle para exportar las semillas que valida el paso 9.
+
 ---
 
 ## Defensa Automática (3 capas)

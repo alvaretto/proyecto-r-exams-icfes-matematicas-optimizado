@@ -184,6 +184,7 @@ Ver `.claude/CLAUDE.md` sección "Cambios v3.X" o `.claude/docs/CHANGELOG.md`. R
 | **3.10.0** | **2026-05-03** | **Errores 16-17 + regla #18 anti-`\pandocbounded` + FASE 2I + test_pandocbounded_y_solution_coherence.R** |
 | **3.13.0** | **2026-05-14** | **Errores 18 y 20 + Formato Equilibrado en opciones gráficas (v5.0 de graficos-como-opciones.md) + GRAF-BAR-01** |
 | 3.39.0 | 2026-11-04 | Novedades de R/exams verificadas: `validar_stresstest.R` en el paso 9, comparador, vigía, webquiz y control NOPS |
+| 3.41.0 | 2026-11-09 | Regla #26: material del aula (oficio, NOPS, CLOZE en papel, exportaciones de 100, cuestionario sin internet); `perifericos/` en disco es la versión oficial; Errores 42 y 43 |
 
 Las versiones intermedias están en `.claude/docs/CHANGELOG_CLAUDE_MD.md`.
 

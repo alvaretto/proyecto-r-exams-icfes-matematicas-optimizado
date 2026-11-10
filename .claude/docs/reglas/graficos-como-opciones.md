@@ -384,6 +384,15 @@ Ver Error 20 en `patrones-errores-conocidos.md` para el patrón GRAF-BAR-01.
 
 ---
 
+## Impresión del material (regla #26)
+
+Si varias preguntas con opciones gráficas van en un mismo PDF, la plantilla local hace `\clearpage` al empezar cada pregunta:
+con la compartida, las que empiezan a media página parten sus figuras. El NOPS va con `twocolumn`, `samepage` y
+`\raggedbottom`, y `pdfjam` lo centra en oficio. Un CLOZE con gráficas rotuladas que se imprime pasa `exshuffle = FALSE`
+solo a `exams2pdf()` del semillero. Mediciones y procedimientos: `.claude/docs/reglas/material-aula.md`.
+
+---
+
 ## Resumen de la Regla
 
 | Aspecto | ❌ PROHIBIDO | ✅ CORRECTO |
@@ -398,10 +407,13 @@ Ver Error 20 en `patrones-errores-conocidos.md` para el patrón GRAF-BAR-01.
 
 ---
 
-**Versión**: 6.2
-**Fecha**: 2026-11-04
+**Versión**: 6.3
+**Fecha**: 2026-11-09
 **Estado**: ACTIVO Y OBLIGATORIO
 **Excepciones**: Ver regla general en `codigo-rmd.md` para otros tipos de ejercicios
+
+### Cambios v6.3 (2026-11-09)
+- La impresión del material (plantilla de una pregunta por página, NOPS en oficio y CLOZE en papel) remite a la regla #26.
 
 ### Cambios v6.2 (2026-11-04)
 - **Alcance medido por versión de `exams`**: `exams` 2.4-3 reescribe la referencia aunque la imagen no esté sola en su línea. Con `rep(archivo, 3)`, 7 variantes y pandoc 3.11, las imágenes distintas fueron:

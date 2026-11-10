@@ -1,8 +1,35 @@
 # HANDOFF — repositorio (infraestructura `.claude/`, tests y documentación)
 
 > Archivo de retorno para el trabajo que no pertenece a un ejercicio; cada ejercicio lleva su propio
-> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-11-05 (v3.40.0: `exams` 2.4-5 instalada, decisiones del profesor y Error 41).
+> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-11-09 (v3.41.0: regla #26 y `perifericos/` en disco como versión oficial).
 > Si este archivo y el código discrepan, manda el código: verificar antes de actuar.
+
+## 2026-11-09: regla #26 y versión oficial de `perifericos/` (v3.41.0)
+
+- **Qué es:** lo aprendido al llevar `diagrama-venn-juegos-mesa-n3` (SCHOICE y CLOZE, commit `0ab5fc64`) al aula, convertido
+  en la regla #26 (`.claude/rules/material-aula.md`), y una decisión del profesor sobre `perifericos/`.
+- **Decisión del profesor:** «La versión oficial siempre estará en …/A-Produccion/perifericos»: la copia en disco manda y git
+  la sigue. Seis archivos no coincidían con git, y el `SemilleroUnico_v2.R` de git era el semillero CLOZE de
+  `barras-campeonato-baloncesto`. Con «Agregar las 4», sus archivos conservan su contenido y recuperan cuatro cosas:
+  - la semilla de lo validado;
+  - el tope de 100;
+  - `\pandocbounded` y `none` en tres plantillas;
+  - el cuestionario sin internet.
+
+  Se probaron con el ítem del diagrama de Venn: los tres semilleros terminan con exit 0, y Moodle da el mismo XML en dos
+  corridas.
+- **Pendiente:**
+  - La regla #26 no tiene guarda global. Antes de crearla hay que barrer los semilleros copiados a los ejercicios: muchos
+    tienen 250 o 300 copias y usan `exams2webquiz()` solo.
+  - El semillero del CLOZE del diagrama de Venn exporta a Moodle sin `seed`. Se ajusta en su próximo ciclo, porque cambia
+    un archivo de su aprobación.
+- **Archivos de esta línea:**
+  - la regla nueva: `.claude/rules/material-aula.md` y `.claude/docs/reglas/material-aula.md`;
+  - las reglas #4 y #23 y `codigo-rmd.md`, en las dos capas;
+  - documentos: `patrones-errores-conocidos.md` (Errores 42 y 43), `REXAMS_VERSIONES.md`, `MANUAL_USUARIO.md`,
+    `INDICE_LECCIONES.md`, este archivo, el índice y su changelog;
+  - agente y skill: `orquestador-cloze.md` y `generar-cloze/references/anatomia-cloze.md`;
+  - los seis archivos de `A-Produccion/perifericos/`.
 
 ## 2026-11-04 y 05: novedades de R/exams (v3.39.0 y v3.39.1), commit `849efaa4`
 

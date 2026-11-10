@@ -87,6 +87,9 @@ Consolidado: `.claude/docs/REGLAS_CRITICAS.md` (leer bajo demanda). Cada ruta `.
 25. **Glifos Unicode que rompen pdflatex** → .claude/rules/glifos-latex-prohibidos.md
     Un `✓` (U+2713) **literal** en texto Markdown visible impide compilar el PDF, y el fallo es **invisible en HTML** porque no pasa por LaTeX: por eso sobrevivió meses en `03-En-Produccion/` sin que nada lo detectara — ningún validador del arsenal miraba los caracteres del fuente. **110 glifos medidos** con `exams2pdf()`, y tres resultados contradicen la intuición: las flechas `← ↑ →` **compilan** pero `↔ ⇒ ⇔ ↺` no (el bloque Unicode no es homogéneo); el modo math **no salva** (`$a ≤ b$` falla igual, hay que usar `$\le$`); y un glifo **sólo en comentario R** es inocuo. La severidad está **calibrada**, no elegida, midiendo causalmente los 63 `.Rmd` afectados (render del original vs. del mismo archivo con los glifos sustituidos): en **Markdown** acierta 16/16 → `ERR_GLIFO_LATEX` bloqueante; en **código R** sólo 1/24 → `WARN_GLIFO_LATEX`, porque bloquear ahí habría marcado 23 archivos que sí compilan (una cadena R puede no emitirse nunca). Tildes españolas y `× ÷ ° ² → — •` están medidos como seguros y NO se tocan. Capas: detector único `validar_glifos_latex.R` + hook FASE 2O + `test_glifos_latex.R` (suite 33) con allowlist de 29 legacy que **no admite altas**.
 
+26. **Material del aula** (papel oficio, NOPS, Moodle, celulares sin internet) → .claude/rules/material-aula.md
+    Lo que llega al aula se verifica en la salida real que usa el profesor. La versión oficial de plantillas y semilleros es `A-Produccion/perifericos/` **en disco** (decisión del profesor, 2026-11-09): git la sigue y las copias de cada ejercicio derivan de ella. Papel oficio de 216 × 330 mm; un PDF con varias preguntas de opciones gráficas usa una plantilla local con `\clearpage` por pregunta; el NOPS va con `twocolumn`, `samepage` y `\raggedbottom`, centrado en oficio con `pdfjam`. Un CLOZE con gráficas rotuladas que se imprime lleva `exshuffle = FALSE` solo en el `exams2pdf()` del semillero (medido: gap en el orden I-IV en 100 de 100; sin él, 1 de 4). Exportaciones: máximo 100, y Moodle con `seed`. Cuestionario interactivo: `webquiz_autocontenido.R`. Nada de Knit de RStudio sobre un `.Rmd` firmado. Sin guarda global: vigilan las secciones `uso` de cada ejercicio.
+
 ### 🛠️ Comandos y Skills
 Referencia completa: `.claude/docs/COMANDOS_Y_SKILLS.md`
 
@@ -181,7 +184,9 @@ A-Produccion/
 | Historial de cambios de este índice | `.claude/docs/CHANGELOG_CLAUDE_MD.md` |
 | Saber qué trae una versión de R/exams, o verificar un resumen de novedades | .claude/docs/REXAMS_VERSIONES.md + `vigia_rexams.R` |
 | Comprobar qué cambia antes de actualizar R/exams | `.claude/scripts/comparar_version_exams.R` |
-| Cuestionario HTML que funcione sin internet | `.claude/scripts/webquiz_autocontenido.R` |
+| Cuestionario HTML que funcione sin internet | `.claude/scripts/webquiz_autocontenido.R` (regla #26) |
+| Imprimir en oficio, NOPS centrado y CLOZE en papel | .claude/rules/material-aula.md (regla #26) |
+| Saber cuál es la versión oficial de plantillas y semilleros | `A-Produccion/perifericos/` en disco (regla #26) |
 | Revisar escaneos NOPS antes de `nops_eval()` | `Auxiliares/exams2nops-escaner/nops_control_calidad.R` |
 | Retomar trabajo de infraestructura del repo («Continúa con el repo») | `.claude/docs/HANDOFF_REPO.md` |
 
@@ -196,8 +201,8 @@ A-Produccion/
 
 ## 📌 Metainformación
 
-**Versión**: 3.40.0 (`exams` 2.4-5 instalada, plantillas y Semilleros de `perifericos/`, y Error 41: `MPLBACKEND=Agg`; antes: v3.39.2, `comparar_version_exams.R` repite antes de clasificar y guarda el log de LaTeX; antes: v3.39.1, documentación central y referencias cruzadas al día con las novedades de R/exams; antes: v3.39.0, novedades de R/exams verificadas: `validar_stresstest.R` en el paso 9, comparador de versiones, vigía, webquiz autocontenido y control de calidad NOPS; detalle en `.claude/docs/REXAMS_VERSIONES.md`; antes: v3.38.0, regla #9 v1.8: citas contra el commit auditado; regla #16 v1.3: `complete` avisa de un sello fuera de orden; contrato de mutación con 8 obligaciones; antes: v3.37.0, regla #7: la literalidad de `exextra` la verifica `validar_literalidad_exextra.py` en el paso 10 de los dos orquestadores; los validadores de la familia A escriben el md5 del `.Rmd` que miden; antes: v3.36.1, el hook de citas ve el `SubagentHandback`)
-**Fecha**: 2026-11-05
+**Versión**: 3.41.0 (regla #26, material del aula: `perifericos/` en disco es la versión oficial y recupera la semilla, el tope de 100, las definiciones y el cuestionario sin internet; Errores 42 y 43; antes: v3.40.0, `exams` 2.4-5 instalada, plantillas y Semilleros de `perifericos/`, y Error 41: `MPLBACKEND=Agg`; antes: v3.39.2, `comparar_version_exams.R` repite antes de clasificar y guarda el log de LaTeX; antes: v3.39.1, documentación central y referencias cruzadas al día con las novedades de R/exams; antes: v3.39.0, novedades de R/exams verificadas: `validar_stresstest.R` en el paso 9, comparador de versiones, vigía, webquiz autocontenido y control de calidad NOPS; detalle en `.claude/docs/REXAMS_VERSIONES.md`; antes: v3.38.0, regla #9 v1.8: citas contra el commit auditado; regla #16 v1.3: `complete` avisa de un sello fuera de orden; contrato de mutación con 8 obligaciones; antes: v3.37.0, regla #7: la literalidad de `exextra` la verifica `validar_literalidad_exextra.py` en el paso 10 de los dos orquestadores; los validadores de la familia A escriben el md5 del `.Rmd` que miden; antes: v3.36.1, el hook de citas ve el `SubagentHandback`)
+**Fecha**: 2026-11-09
 **Basado en**: Documentación oficial Claude Code (nov 2025)
 **Historial de cambios**: `.claude/docs/CHANGELOG_CLAUDE_MD.md` (v2.6 → actual; no se importa) · `.claude/docs/CHANGELOG.md` (v2.2 → v2.5)
 **Copia íntegra del índice anterior (v3.24.0) y script de reversión**: `.claude/backups/2026-09-07-recorte-contexto/`

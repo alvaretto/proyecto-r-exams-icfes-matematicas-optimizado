@@ -9,13 +9,14 @@
 2. Mezclar Python/R sin validar ambos.
 3. Menos de 200 versiones únicas (`exams2html(n = 200)`).
 4. Omitir alguno de los 4 formatos. 5. Modificar ejemplos funcionales.
-6. `exshuffle: FALSE` salvo SCHOICE con opciones gráficas PNG (regla #4); la Solution es letter-independent (regla #19).
+6. `exshuffle: FALSE` salvo SCHOICE con opciones gráficas PNG (regla #4); la Solution es letter-independent (regla #19). En un CLOZE impreso con gráficas rotuladas, el `FALSE` va en la llamada `exams2pdf()` del semillero, no en el `.Rmd` (regla #26).
 7. `_neg_` sin su test (regla #10).
 8. Errores conceptuales sin `precondicion`; `calcula()` debe `stop()` fuera de contexto.
 9. Comparar `calcula()` sin guardia `is.na()`.
 10. `set.seed()` en tests sin guardar/restaurar `.Random.seed`.
 13. Imagen Markdown sin `{width=...}` (regla #18).
 14. `##ANSWERi##` fuera de orden o faltantes en CLOZE: uno por tipo de `exclozetype`, justo tras su parte.
+15. Tejer el `.Rmd` con el botón Knit de RStudio: le antepone YAML y anula una firma atada al md5 (regla #26).
 
 ## 5 coherencias (antes de aprobar)
 Semántica · Visual-Texto · Matemática · Código · General (incluye `DOK ≥ 3 ⇒ Nivel ≥ 3`).

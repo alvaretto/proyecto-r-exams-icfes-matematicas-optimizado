@@ -22,4 +22,6 @@ El grep previo `diagrama_[a-z]+\.png` no ve los nombres con sufijo: su salida va
 Con varias copias: `exams2pdf(rep("archivo.Rmd", 3), ...)` y `pdfimages -list` deben dar imágenes distintas por pregunta.
 Ver `codigo-rmd.md` regla #6 y NOMENCLATURA en `.claude/docs/NOMENCLATURA_ARCHIVOS_RMD.md`. Ejemplo funcional: `Ejemplos-Funcionales-Rmd/estadistica_diagramas_caja_interpretacion_representacion_Nivel2_v2.Rmd`.
 
-**Versión**: 6.2 (2026-11-04: alcance medido por versión de `exams`) · compacta desde 2026-09-29.
+**Impresión:** varias preguntas en un PDF, NOPS en oficio y gráficas rotuladas de un CLOZE en papel siguen la regla #26 (`material-aula.md`).
+
+**Versión**: 6.3 (2026-11-09: la impresión remite a la regla #26) · compacta desde 2026-09-29.

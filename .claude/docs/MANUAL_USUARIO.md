@@ -192,6 +192,8 @@ Rscript .claude/scripts/comparar_version_exams.R --lib <biblioteca> --todos --n 
 
 Procedimiento y resultados: `.claude/docs/REXAMS_VERSIONES.md`. Cuestionario sin internet:
 `.claude/scripts/webquiz_autocontenido.R`. Escaneos NOPS: `Auxiliares/exams2nops-escaner/nops_control_calidad.R`.
+Imprimir en oficio, NOPS centrado y cuestionario para celulares sin internet: regla #26 (`.claude/rules/material-aula.md`).
+La versión oficial de plantillas y semilleros es la de `A-Produccion/perifericos/` en disco.
 
 ---
 

@@ -8,6 +8,42 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.41.0 (2026-11-09)
+
+Lo aprendido al llevar `diagrama-venn-juegos-mesa-n3` (SCHOICE y CLOZE, commit `0ab5fc64`) al aula, convertido en regla, y
+una decisión del profesor sobre `perifericos/`.
+
+1. **Regla #26 — Material del aula** (`.claude/rules/material-aula.md`; íntegro en `.claude/docs/reglas/material-aula.md`):
+   - papel oficio y plantilla local de una pregunta por página;
+   - NOPS a dos columnas y centrado en oficio con `pdfjam`;
+   - gap de un CLOZE impreso sin barajar (`exshuffle = FALSE` solo en `exams2pdf()`);
+   - exportaciones de máximo 100, con `seed` en Moodle;
+   - cuestionario con `webquiz_autocontenido.R`;
+   - semillero del ejercicio vigilado por su sección `uso`;
+   - nada de Knit de RStudio sobre un `.Rmd` firmado.
+
+   No tiene guarda global: la vigilan las secciones `uso` de cada ejercicio, y una guarda sobre los semilleros exige antes
+   un barrido.
+2. **`perifericos/` en disco es la versión oficial.** Lo decidió el profesor: «La versión oficial siempre estará en
+   …/A-Produccion/perifericos». Seis archivos de la copia de trabajo no coincidían con git, y el `SemilleroUnico_v2.R` de git
+   era el semillero CLOZE de `barras-campeonato-baloncesto`. Con su visto bueno («Agregar las 4»), sus archivos conservan su
+   contenido y recuperan cuatro cosas:
+   - la semilla de lo validado en Moodle;
+   - el tope de 100 (`SemilleroMoodle_v2.R` y `SemilleroCloze.R` tenían 250);
+   - `\pandocbounded` y el contador `none` en `pcielo.tex`, `pcielo_nosol.tex` y `solpcielo.tex`;
+   - el cuestionario sin internet en `SemilleroUnico_v2.R`.
+
+   Se probaron con el ítem del diagrama de Venn: los tres terminan con exit 0 y el cuestionario da `WEBQUIZ_OK`. Moodle da
+   el mismo XML en dos corridas de `SemilleroMoodle_v2.R` y en dos de `SemilleroCloze.R`.
+3. **Errores 42 y 43** en `patrones-errores-conocidos.md`:
+   - el gap de un CLOZE impreso, barajado, desalinea la letra de «Cómo marcar»;
+   - el Knit de RStudio anula una firma atada al md5.
+4. **Referencias cruzadas:**
+   - reglas #4 y #23 y `codigo-rmd.md`, en las dos capas;
+   - `REXAMS_VERSIONES.md` y `orquestador-cloze.md` (Incidente G);
+   - `anatomia-cloze.md`, referencia de `generar-cloze`;
+   - `MANUAL_USUARIO.md`, `INDICE_LECCIONES.md` y `HANDOFF_REPO.md`.
+
 ### Cambios v3.40.0 (2026-11-05)
 
 Las decisiones del profesor sobre R/exams, y un hallazgo que cambió la cuarta.
