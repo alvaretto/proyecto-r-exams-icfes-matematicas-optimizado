@@ -34,6 +34,14 @@
 #   «Diagrama I / Diagrama II / Diagrama III / Diagrama IV», y la letra que pide «Cómo marcar» coincide con el número
 #   del diagrama. HTML, Moodle y Canvas siguen barajando.
 # - config$archivos baja de 250 a 100: el máximo de 100 del profesor rige también las exportaciones.
+#
+# Cambio del 2026-11-10, por decisión del profesor (respuesta literal «1a»): el semillero genera también el cuestionario
+# interactivo para celulares sin internet (regla #26), que antes solo generaba el semillero del SCHOICE.
+# - generar_interactivo() llama a .claude/scripts/webquiz_autocontenido.R con config$preguntas_interactivo versiones
+#   (10, como el SCHOICE: con 10 pesa unos 6 MB) y lo da por bueno solo con exit 0 (WEBQUIZ_OK). Sale en
+#   salida_hibrida/interactivo/. No lleva exshuffle: en pantalla el estudiante elige el texto del diagrama, no una letra.
+# - Entra en la opción 4 del menú, en la nueva opción 6 (solo el cuestionario) y en la ejecución no interactiva.
+# - generar_html(), generar_moodle(), generar_canvas() y generar_pdf() no cambian.
 # Ejecutar con el directorio de trabajo en esta carpeta (Cloze/).
 # ===============================================================================
 
@@ -52,6 +60,7 @@ archivo_examen <- "diagrama_venn_juegos_mesa_aleatorio_interpretacion_representa
 config <- list(
   archivos = 100,                 # Versiones de HTML, Moodle y Canvas: máximo 100 (decisión del profesor, H2)
   preguntas_pdf = 10,             # Preguntas del PDF impreso, cada una desde arriba de una página (I-5)
+  preguntas_interactivo = 10,     # Versiones del cuestionario para celulares sin internet (decisión «1a», 2026-11-10)
   semilla_base = sample(100:1e8, 1), # Semilla base para generar semillas únicas
   dir_salida = "salida_hibrida",    # Directorio de salida
   dir_ejercicios = ".",             # Directorio de ejercicios
@@ -311,6 +320,40 @@ generar_pdf <- function() {
   })
 }
 
+# Función para generar el cuestionario interactivo para celulares sin internet (decisión «1a» del profesor, 2026-11-10).
+# exams2webquiz() carga MathJax desde internet, y sin red las fórmulas salen en TeX crudo. .claude/scripts/webquiz_autocontenido.R
+# lo incrusta y comprueba en un navegador sin red que todo se compone (exit 0 = WEBQUIZ_OK; regla #26). Vista del estudiante.
+generar_interactivo <- function() {
+  dir_quiz <- file.path(config$dir_salida, "interactivo")
+  nombre_quiz <- paste0(nombre_sin_extension, "_interactivo")
+  cat("📱 Generando cuestionario interactivo para celulares sin internet...\n")
+  cat("📁 Directorio de salida:", dir_quiz, "\n")
+  cat("🔢 Número de versiones:", config$preguntas_interactivo, "\n")
+
+  raiz <- tryCatch(suppressWarnings(system2("git", c("rev-parse", "--show-toplevel"), stdout = TRUE, stderr = FALSE)),
+                   error = function(e) character(0))
+  script_quiz <- file.path(raiz[1], ".claude", "scripts", "webquiz_autocontenido.R")
+  if (length(raiz) != 1L || !file.exists(script_quiz)) {
+    cat("❌ No se encontró .claude/scripts/webquiz_autocontenido.R: no se generó el cuestionario interactivo\n")
+    return(FALSE)
+  }
+
+  estado <- system2(file.path(R.home("bin"), "Rscript"),
+                    c("--no-init-file", shQuote(script_quiz), shQuote(archivo_examen),
+                      "--n", config$preguntas_interactivo, "--dir", shQuote(dir_quiz), "--nombre", shQuote(nombre_quiz),
+                      "--titulo", shQuote("Evaluación Interactiva de Matemáticas ICFES")))
+  if (!identical(as.integer(estado), 0L)) {
+    cat("❌ El cuestionario no pasó la comprobación sin internet (exit ", estado, "): no llevarlo al aula\n", sep = "")
+    return(FALSE)
+  }
+
+  html_quiz <- file.path(dir_quiz, paste0(nombre_quiz, ".html"))
+  cat("✅ Cuestionario interactivo generado (WEBQUIZ_OK):", html_quiz, "\n")
+  cat("   Para los celulares basta copiar ese único archivo: funciona sin internet.\n")
+  if (interactive() && file.exists(html_quiz)) utils::browseURL(html_quiz)
+  return(TRUE)
+}
+
 # ===============================================================================
 # FUNCIÓN PRINCIPAL DE GENERACIÓN
 # ===============================================================================
@@ -387,6 +430,16 @@ generar_todos_formatos <- function(formatos = c("html", "moodle")) {
     cat("⏱️  Tiempo PDF:", round(tiempo_transcurrido, 2), "segundos\n")
   }
 
+  if ("interactivo" %in% formatos) {
+    posicion <- which(formatos == "interactivo")
+    cat("\n[", posicion, "/", length(formatos), "] 📱 CUESTIONARIO INTERACTIVO\n")
+    cat(strrep("-", 30), "\n")
+    tiempo_formato <- Sys.time()
+    resultados$interactivo <- generar_interactivo()
+    tiempo_transcurrido <- difftime(Sys.time(), tiempo_formato, units = "secs")
+    cat("⏱️  Tiempo cuestionario:", round(tiempo_transcurrido, 2), "segundos\n")
+  }
+
   # Calcular tiempo total
   tiempo_total <- difftime(Sys.time(), tiempo_inicio, units = "secs")
 
@@ -443,7 +496,7 @@ crear_directorios <- function() {
   }
 
   # Crear subdirectorios para cada formato
-  formatos_dirs <- c("html", "moodle", "canvas", "pdf")
+  formatos_dirs <- c("html", "moodle", "canvas", "pdf", "interactivo")
   for (formato in formatos_dirs) {
     dir_formato <- file.path(config$dir_salida, formato)
     if (!dir.exists(dir_formato)) {
@@ -492,26 +545,28 @@ if (interactive()) {
   cat("1. Solo HTML (recomendado para pruebas)\n")
   cat("2. Solo Moodle (recomendado para producción directa)\n")
   cat("3. HTML + Moodle (recomendado para producción completa)\n")
-  cat("4. Todos los formatos (HTML, Moodle, Canvas, PDF)\n")
+  cat("4. Todos los formatos (HTML, Moodle, Canvas, PDF y cuestionario interactivo)\n")
   cat("5. Personalizado\n")
+  cat("6. Solo cuestionario interactivo (celulares sin internet)\n")
 
-  opcion <- readline("Seleccione una opción (1-5): ")
+  opcion <- readline("Seleccione una opción (1-6): ")
 
   formatos_seleccionados <- switch(opcion,
     "1" = c("html"),
     "2" = c("moodle"),
     "3" = c("html", "moodle"),
-    "4" = c("html", "moodle", "canvas", "pdf"),
+    "4" = c("html", "moodle", "canvas", "pdf", "interactivo"),
     "5" = {
-      cat("Formatos disponibles: html, moodle, canvas, pdf\n")
+      cat("Formatos disponibles: html, moodle, canvas, pdf, interactivo\n")
       formatos_input <- readline("Ingrese formatos separados por comas: ")
       trimws(strsplit(formatos_input, ",")[[1]])
     },
+    "6" = c("interactivo"),
     c("html", "moodle")  # Por defecto
   )
 } else {
   # Modo no interactivo: generar todos los formatos por defecto
-  formatos_seleccionados <- c("html", "moodle", "pdf")
+  formatos_seleccionados <- c("html", "moodle", "pdf", "interactivo")
 }
 
 cat("\n🚀 Formatos seleccionados:", paste(formatos_seleccionados, collapse = ", "), "\n")

@@ -1,0 +1,261 @@
+🎲 Semilla base establecida: 86259705 
+🔄 Cada versión usará una semilla única derivada de la base
+================================================================================ 
+🚀 INICIANDO GENERACIÓN DE EXÁMENES HÍBRIDOS
+================================================================================ 
+🔍 Validando archivo: diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1.Rmd 
+✅ Archivo validado correctamente
+   - Formato: Cloze híbrido
+   - Componente schoice: Detectado 
+[1] TRUE
+🧪 Ejecutando prueba rápida...
+✅ Prueba rápida exitosa
+
+📋 INFORMACIÓN DEL ARCHIVO:
+  Archivo: diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1.Rmd 
+  Tamaño: 49500 bytes
+  Modificado: 2026-11-10 05:02:16 
+  Líneas: 688 
+  Preguntas cloze detectadas: 6 
+  Aleatorización: Detectada 
+
+🚀 Formatos seleccionados: html, moodle, pdf, interactivo 
+🧹 Limpiando salidas anteriores...
+✅ Directorios limpiados
+
+ ================================================================================ 
+🎬 INICIANDO GENERACIÓN DE EXÁMENES HÍBRIDOS
+================================================================================ 
+
+🏭 INICIANDO GENERACIÓN MASIVA
+📄 Archivo: diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1.Rmd 
+🎯 Formatos seleccionados: html, moodle, pdf, interactivo 
+🔢 Versiones por formato: 100 
+🎲 Semilla: 86259705 
+📁 Directorio de salida: salida_hibrida 
+⏰ Hora de inicio: 2026-11-10 05:48:31 
+------------------------------------------------------------ 
+
+🔍 Verificando archivo de entrada...
+✅ Archivo encontrado: diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1.Rmd 
+📊 Tamaño del archivo: 48.34 KB
+
+📁 Creando directorios de salida...
+📂 Subdirectorio creado: salida_hibrida/html 
+📂 Subdirectorio creado: salida_hibrida/moodle 
+📂 Subdirectorio creado: salida_hibrida/canvas 
+📂 Subdirectorio creado: salida_hibrida/pdf 
+📂 Subdirectorio creado: salida_hibrida/interactivo 
+✅ Estructura de directorios lista
+
+🎯 INICIANDO GENERACIÓN POR FORMATOS
+================================================== 
+
+[ 1 / 4 ] 🌐 FORMATO HTML
+------------------------------ 
+🌐 Generando archivo HTML consolidado...
+📁 Directorio de salida: salida_hibrida/html 
+📄 Archivo base: diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1.Rmd 
+🔢 Número de preguntas: 100 
+🎲 Semilla base: 86259705 
+⏳ Iniciando generación HTML consolidado...
+Exams generation initialized.
+
+Output directory: /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/Cloze/salida_hibrida/html
+Exercise directory: /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/Cloze
+Supplement directory: /tmp/Rtmp7GnYC0/file180b513bab9ec
+Temporary directory: /tmp/Rtmp7GnYC0/file180b56276d3ef
+Exercises: diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1
+
+Generation of individual exams.
+) ... w ... done.
+✅ Archivo HTML consolidado generado exitosamente
+📊 Archivos generados: 1 
+   1 : diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1_hibrido_consolidado1.html 
+     Tamaño: 33367.39 KB
+⏱️  Tiempo HTML: 170.97 segundos
+
+[ 2 / 4 ] 🎓 FORMATO MOODLE
+------------------------------ 
+🎓 Generando archivos para Moodle...
+📁 Directorio de salida: salida_hibrida/moodle 
+📄 Archivo base: diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1.Rmd 
+🔢 Número de versiones: 100 
+🎲 Semilla base: 86259705 
+⏳ Iniciando generación Moodle XML...
+Exams generation initialized.
+
+Output directory: /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/Cloze/salida_hibrida/moodle
+Exercise directory: /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/Cloze
+Supplement directory: /tmp/Rtmp7GnYC0/file180b5373266d7
+Temporary directory: /tmp/Rtmp7GnYC0/file180b53fcce218
+Exercises: diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1
+
+Generation of individual exams.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+) ... w ... done.
+✅ Archivos Moodle generados exitosamente
+📊 Archivos generados: 1 
+   1 : diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1_hibrido_moodle.xml 
+⏱️  Tiempo Moodle: 158.16 segundos
+
+[ 3 / 4 ] 📄 FORMATO PDF
+------------------------------ 
+📄 Generando PDF en hoja oficio (216 x 330 mm)...
+📁 Directorio de salida: salida_hibrida/pdf 
+📄 Archivo base: diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1.Rmd 
+🔢 Número de preguntas: 10 
+🎲 Semilla base: 86259705 
+🔍 Verificando disponibilidad de LaTeX...
+✅ pdflatex disponible
+⏳ Iniciando generación PDF...
+Exams generation initialized.
+
+Output directory: /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/Cloze/salida_hibrida/pdf
+Exercise directory: /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/Cloze
+Supplement directory: /tmp/Rtmp7GnYC0/file180b550686943
+Temporary directory: /tmp/Rtmp7GnYC0/file180b553c130cf
+Exercises: diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1, diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1
+
+Generation of individual exams.
+Exam 1: diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1 (srt) diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1_1 (srt) diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1_2 (srt) diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1_3 (srt) diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1_4 (srt) diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1_5 (srt) diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1_6 (srt) diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1_7 (srt) diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1_8 (srt) diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1_9 (srt) ... w ... done.
+✅ Archivo PDF generado exitosamente
+📊 Archivos generados: 1 
+   1 : diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1_hibrido_pdf1.pdf 
+⏱️  Tiempo PDF: 17.47 segundos
+
+[ 4 / 4 ] 📱 CUESTIONARIO INTERACTIVO
+------------------------------ 
+📱 Generando cuestionario interactivo para celulares sin internet...
+📁 Directorio de salida: salida_hibrida/interactivo 
+🔢 Número de versiones: 10 
+HTML: /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/Cloze/salida_hibrida/interactivo/diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1_interactivo.html (5.9 MB)
+Sin red: 234 fórmulas compuestas, 0 en TeX crudo, 0 con error · 0 recursos externos
+WEBQUIZ_OK
+✅ Cuestionario interactivo generado (WEBQUIZ_OK): salida_hibrida/interactivo/diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1_interactivo.html 
+   Para los celulares basta copiar ese único archivo: funciona sin internet.
+⏱️  Tiempo cuestionario: 79.22 segundos
+
+ ================================================== 
+🎉 GENERACIÓN COMPLETADA
+⏰ Hora de finalización: 2026-11-10 05:55:37 
+⏱️  Tiempo total: 425.82 segundos
+
+📊 RESUMEN DE GENERACIÓN:
+✅ Formatos exitosos: 4 de 4 
+   HTML : ✅ EXITOSO 
+   MOODLE : ✅ EXITOSO 
+   PDF : ✅ EXITOSO 
+   INTERACTIVO : ✅ EXITOSO 
+
+📈 ESTADÍSTICAS FINALES:
+  Semilla utilizada: 86259705 
+  Archivos por formato: 100 
+  Formatos exitosos: 4 / 4 
+  Directorio de salida: salida_hibrida 
+  Total de archivos generados: 4 
+
+ ================================================================================ 
+🎉 ¡GENERACIÓN COMPLETADA EXITOSAMENTE!
+📁 Revise los archivos en: salida_hibrida 
+================================================================================ 
+💾 Información de sesión guardada en: info_sesion.rds
+exit=0

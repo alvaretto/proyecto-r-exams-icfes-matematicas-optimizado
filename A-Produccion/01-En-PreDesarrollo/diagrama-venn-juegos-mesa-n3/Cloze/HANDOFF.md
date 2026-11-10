@@ -8,6 +8,11 @@ en producción: falta la evidencia de aula. En git desde el commit `0ab5fc64` (2
 Las decisiones firmadas están en `../.claude/CLAUDE.md` § «CLOZE hermano»: C-1 a C-5, «1 b · semillero sí» (tras la tanda 3) y
 «H1 c · H2 100» (tras la tanda 4). Esta tanda no añadió ninguna; la aprobación («a») está en la misma sección.
 
+**2026-11-10, decisión «1a»:** el semillero genera también el cuestionario interactivo para celulares sin internet
+(`salida_hibrida/interactivo/`). Ese día el semillero se encontró reemplazado por la copia genérica de `perifericos/`: se recuperó el
+aprobado y se le agregó solo `generar_interactivo()`. El `.Rmd` no cambia. Detalle, verificación y residuos en `../.claude/CLAUDE.md`
+§ «Decisión del profesor del 2026-11-10»; evidencia en `salida/t6_1a/`.
+
 ## Archivos
 
 | Archivo | md5 | Qué es |
@@ -15,7 +20,7 @@ Las decisiones firmadas están en `../.claude/CLAUDE.md` § «CLOZE hermano»: C
 | `diagrama_venn_…_n3_cloze_v1.Rmd` | `889d828e…` | El CLOZE. Sin cambios desde la tanda 3 |
 | `verificar_espacio_cloze.R` | `bf11b0a4…` | 12 secciones. En la tanda 5 cambió solo `uso`: cuatro códigos y 17 mutantes. Exit 4 = rojo §P7 de la Parte 1 cubierto por la firma C-4; **no es PASS**. `RMD_MD5` = `889d828e…` |
 | `solpcielo_cloze_una_por_pagina.tex` | `290a3f79…` | Decisión 1 b. Sin cambios |
-| `SemilleroCloze.R` | `d01bbf0f…` | Tanda 5: `exshuffle = FALSE` solo en `exams2pdf()` y `archivos = 100` |
+| `SemilleroCloze.R` | `e33984c2…` | Tanda 5 (`d01bbf0f…`): `exshuffle = FALSE` solo en `exams2pdf()` y `archivos = 100`. Desde el 2026-11-10 («1a»), más `generar_interactivo()` |
 | `salida/verificar_r7.txt` y `.md5` | — | r7 en modo `todo` sobre esos cuatro md5: **exit 4**, 0 rojos, 0 pendientes, 12 secciones, de 17:38 a 17:54 |
 | `salida/fase2c_r4_detractor.md` | ``f88b5a4c…`` | FASE 2C r4 íntegra, con su bloque `CITAS_DETRACTOR` |
 | `salida/t5/` | — | Diffs frente a lo que auditó la r3, corrida aislada de `uso`, medición N = 100 del PDF y una página |
@@ -104,6 +109,8 @@ Las decisiones firmadas están en `../.claude/CLAUDE.md` § «CLOZE hermano»: C
   defecto: el semillero no se lo pasa.
 - Sin auditar: Canvas, el DOCX, la nota del MULTIRESPONSE en Moodle (H5 de la r3; probar en `lab`) y el flujo interactivo del semillero.
 - Regla #26 (2026-11-09): `generar_moodle()` del semillero exporta sin `seed`, así que no garantiza que las versiones exportadas sean las que validó el paso 9. Se ajusta en el próximo ciclo del ejercicio, porque cambia un archivo de esta aprobación.
+- Decisión «1a» (2026-11-10): ningún detractor revisó `generar_interactivo()`, `uso` no la vigila y los botones del cuestionario no se
+  probaron en un celular.
 
 ## Fuera de alcance (visto, no tocado)
 
@@ -119,6 +126,7 @@ literales que vigila la sección `uso` de `../verificar_espacio.R` (`solpcielo_u
 - **Verificación:** `salida/verificar_r7.txt` y `salida/verificar_r7.md5`.
 - **FASE 2C:** `salida/fase2c_r1_detractor.md`, `salida/fase2c_r2_detractor.md`, `salida/fase2c_r3_detractor.md`, `salida/fase2c_r4_detractor.md`.
 - **Tanda 5:** `salida/t5/` completa.
+- **Decisión «1a» (2026-11-10):** `salida/t6_1a/` completa.
 - **Pasos 8 a 10 sobre `889d828e`:** `salida/paso8_t4/reporte_paso8.md`, `salida/auditoria_6b_t4/reporte_6b.md`, los seis `.txt` de
   `salida/paso9_889d828e/` y `salida/literalidad_exextra_t4.txt`.
 

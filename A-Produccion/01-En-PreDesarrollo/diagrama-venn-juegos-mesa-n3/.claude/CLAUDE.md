@@ -273,3 +273,33 @@ Se mostraron al profesor junto con D1 a D5. Se reportan; no se resuelven en sile
 - **Residuos aceptados con la aprobación:** los de `Cloze/HANDOFF.md`, § «Residuos declarados». Ninguno es de CORRECCIÓN. Sigue sin
   auditar la nota del MULTIRESPONSE de la Parte 6 en Moodle (H5 de la r3), que se prueba en `lab`.
 - **No es producción:** la promoción espera la evidencia de aula.
+
+### Decisión del profesor del 2026-11-10: cuestionario interactivo en el semillero («1a»)
+
+> **Firmada por el profesor el 2026-11-10**, en sesión directa con el coordinador. Respuesta literal: **«1a · 2a»**. La pregunta 1
+> ofrecía (a) recuperar el semillero aprobado y agregarle el cuestionario interactivo, (b) solo recuperarlo o (c) dejarlo como estaba.
+> La 2a quitó del `.Rmd` del SCHOICE las 6 líneas de YAML del Knit de RStudio (Error 43); sin ellas vuelve a `f886dfaa…`.
+
+- **Contexto:** el 2026-11-10 a las 05:03, `Cloze/SemilleroCloze.R` estaba reemplazado por la copia genérica de `perifericos/` (md5
+  `aa2be328…`): sin la plantilla de 1 b, sin `exshuffle = FALSE`, y con un PDF de prueba en A4 (`pdf_basico.Rmd`) en lugar del
+  ejercicio. Ningún semillero del CLOZE generaba el cuestionario interactivo; solo el del SCHOICE.
+- **Cambio:** se recuperó el semillero aprobado (`d01bbf0f…`, commit `0ab5fc64`) y se le agregó `generar_interactivo()`, que llama a
+  `.claude/scripts/webquiz_autocontenido.R` con `config$preguntas_interactivo = 10` versiones y solo da por bueno el exit 0
+  (`WEBQUIZ_OK`). La función entra en la opción 4 del menú, en la opción 6 (nueva) y en la corrida no interactiva. No lleva `exshuffle`.
+  Semillero nuevo: `e33984c2fe3cf9fb57fdfdb9d79d7c57`.
+- **Lo que no cambia:** `generar_html()`, `generar_moodle()`, `generar_canvas()`, `generar_pdf()`, `archivo_examen` y las claves aprobadas
+  de `config` son idénticas a las de `d01bbf0f…` (comparadas por árbol sintáctico). El `.Rmd` sigue en `889d828e…`, el verificador en
+  `bf11b0a4…` y la plantilla de 1 b en `290a3f79…`.
+- **Verificado:**
+  - `uso` aislado: 0 rojos y los 17 mutantes cazados por su sonda. Da exit 3, como toda corrida de una sola sección.
+  - Semillero completo sin menú: exit 0 y 4 de 4 formatos.
+  - PDF de 216 × 330 mm con las 10 preguntas en el orden I-IV.
+  - Moodle con 100 preguntas y el gap de la Parte 1 en `MULTICHOICE_V`.
+  - Cuestionario `WEBQUIZ_OK`: 234 fórmulas, 0 en TeX crudo y 0 recursos externos; mirado a 360 px.
+  - Evidencia: `Cloze/salida/t6_1a/`.
+- **Sin auditar (residuo):**
+  - Ningún detractor revisó este cambio.
+  - `uso` no vigila `generar_interactivo()`: si alguien la quita, ninguna sonda se pone en rojo.
+  - Los botones del cuestionario no se probaron en un celular.
+- La aprobación del 2026-11-09 citaba el semillero `d01bbf0f…`. Con «1a» el profesor autorizó este cambio, que solo agrega el
+  cuestionario.
