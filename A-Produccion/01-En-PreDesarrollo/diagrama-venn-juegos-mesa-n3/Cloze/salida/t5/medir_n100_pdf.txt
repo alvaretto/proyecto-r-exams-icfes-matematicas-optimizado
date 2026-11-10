@@ -1,0 +1,10 @@
+17:35:49
+md5 .Rmd: 889d828e8129e11b0ec5dceda0cf108b · md5 semillero: d01bbf0f565ea6d651fba05fc795a268 
+generar_pdf(): TRUE · 1 PDF · 176 s · exshuffle recibido por exams2pdf(): FALSE
+gap de la Parte 1 en el orden I-IV: 100 de 100 (preguntas en el PDF: 100)
+hoja 216 x 330 mm · preguntas con figuras partidas: 0 · «Cómo marcar» en la portada: TRUE · páginas: 323
+clave registrada por exams2pdf() en el diagrama correcto: 100 de 100 
+posición de la clave (a)-(d): a=25 b=20 c=32 d=23 
+Parte 6, verdaderas por posición (%): 47 47 60 44 · patrones distintos: 14 
+exit=0
+17:38:47

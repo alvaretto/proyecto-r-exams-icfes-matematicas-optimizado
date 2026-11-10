@@ -1,0 +1,292 @@
+--- /tmp/claude-1000/-home-bootcamp-Proyectos-2026-RepositorioMatematicasICFES-R-Exams/3530c5eb-2f14-461c-b6c9-761d2d82ab0b/scratchpad/t5/verificar_espacio_cloze.r6.R	2026-11-09 17:33:32.769598731 -0500
++++ verificar_espacio_cloze.R	2026-11-09 17:37:06.043353750 -0500
+@@ -35,7 +35,9 @@
+ #   uso      : decisión del profesor tras la tanda 3 («semillero sí»). SemilleroCloze.R de esta carpeta: sus literales, la plantilla
+ #              local frente a ../solpcielo_cloze.tex (solo el comentario y \clearpage), y sus funciones generar_pdf, generar_html y
+ #              generar_moodle, extraídas de su texto y ejecutadas en una carpeta temporal: hoja, figuras de cada pregunta en una
+-#              página, «Cómo marcar», HTML sin ##ANSWER y gaps del XML. 9 mutantes.
++#              página, «Cómo marcar», HTML sin ##ANSWER y gaps del XML. Tanda 5 («H1 c · H2 100»): exshuffle = FALSE solo en
++#              exams2pdf() y archivos = 100 en el árbol sintáctico, el gap de la Parte 1 en el orden I-IV en el PDF real y la clave que
++#              registra exams2pdf() en el diagrama que reproduce las viñetas impresas. 17 mutantes.
+ #
+ # Uso: cd Cloze && Rscript --no-init-file verificar_espacio_cloze.R [todo|e1|texto|pesos|cruce|bateria|mutantes|v6|moodle|solucion|papel|pantalla|uso]
+ # Salida: 1 = alguna sonda en rojo; 3 = sin cubrir (FIRMADA FALSE, md5 del .Rmd distinto de RMD_MD5, firma que no cuadra,
+@@ -1508,7 +1510,8 @@
+ ## cada pregunta en una página, «Cómo marcar» en la portada, HTML sin ##ANSWER y, en el XML, los seis gaps en la forma que mide
+ ## la sección moodle (MULTICHOICE_V, cuatro NUMERICAL y MULTIRESPONSE). Los mutantes de la plantilla «en disco» cambian solo el
+ ## archivo que usa el render, no el texto que mira la capa (2): así cada componente tiene un mutante que la mueve sola.
+-## Códigos: USO_SEMILLERO, USO_PLANTILLA, USO_RENDER (falla cerrado), USO_TAMANO, USO_FIGURAS_PDF, USO_COMO_MARCAR, USO_HTML, USO_MOODLE.
++## Códigos: USO_SEMILLERO, USO_PLANTILLA, USO_RENDER (falla cerrado), USO_TAMANO, USO_FIGURAS_PDF, USO_COMO_MARCAR, USO_HTML, USO_MOODLE
++## y, desde la tanda 5, USO_EXSHUFFLE, USO_ARCHIVOS, USO_ORDEN_PDF y USO_CLAVE_PDF (falla cerrado).
+ USO_SEMILLERO <- file.path(aqui, "SemilleroCloze.R"); USO_PLANTILLA <- PAPEL_TPL_VARIAS; USO_TOPE <- 5L
+ USO_LITERALES <- c(sprintf('archivo_examen <- "%s"', basename(RMD)), 'template = "solpcielo_cloze_una_por_pagina"',
+                    "exams2pdf(rep(archivo_examen, config$preguntas_pdf),", "preguntas_pdf = ")
+@@ -1533,27 +1536,130 @@
+   q <- strsplit(paste(readLines(xml, encoding = "UTF-8", warn = FALSE), collapse = "\n"), "<question type=\"cloze\">", fixed = TRUE)[[1]][-1]
+   lapply(q, function(x) sub("^\\{[0-9]+:([A-Z_]+):$", "\\1", regmatches(x, gregexpr("\\{[0-9]+:(MULTICHOICE_V|MULTICHOICE|MULTIRESPONSE|NUMERICAL):", x))[[1]]))
+ }
++## Tanda 5 (decisión del profesor tras la tanda 4, respuesta literal «H1 c · H2 100»; ../.claude/CLAUDE.md, «CLOZE hermano»).
++## (4) Árbol sintáctico del semillero (los comentarios no cuentan; con o sin «exams::»): toda llamada a exams2pdf() lleva
++## exshuffle = FALSE, ninguna otra exams2*() lleva exshuffle (USO_EXSHUFFLE), y config$archivos vale 100 (USO_ARCHIVOS).
++## (5) PDF real de generar_pdf(): el gap de la Parte 1 de cada pregunta se imprime «Diagrama I / Diagrama II / Diagrama III /
++## Diagrama IV» (USO_ORDEN_PDF). (6) La clave que REGISTRA exams2pdf() (metainfo$solution del gap 1, capturada con trace() a la
++## salida de exams2pdf, sin tocar sus argumentos) señala el diagrama correcto: el texto impreso en esa posición del gap, su
++## rótulo en el LaTeX compilado, el archivo de ese rótulo y sus regiones (del entorno de la pregunta, capturado con trace() a la
++## salida de knitr::knit y emparejado por fig_id) deben ser las que dan las viñetas impresas leídas con leer_vinetas(). No usa
++## sol_p1 ni la Solution (USO_CLAVE_PDF, falla cerrado). La muestra es la de la capa (3): 3 preguntas en la semilla 1 (familia B
++## de la regla #23, declarada); la medición de N = 100 de la tanda 5 está en el HANDOFF.
++USO_ORDEN_GAP <- "Diagrama I / Diagrama II / Diagrama III / Diagrama IV"; USO_ARCHIVOS_N <- 100
++llamadas_exams <- function(x, acc = list()) {
++  if (is.call(x)) {
++    f <- x[[1L]]
++    nom <- if (is.name(f)) as.character(f) else if (is.call(f) && identical(f[[1L]], as.name("::")) && identical(f[[2L]], as.name("exams")))
++      as.character(f[[3L]]) else ""
++    if (startsWith(nom, "exams2")) acc[[length(acc) + 1L]] <- list(f = nom, args = as.list(x)[-1L])
++  }
++  if (is.call(x) || is.expression(x) || is.pairlist(x) || is.list(x)) {
++    el <- as.list(x)
++    for (i in seq_along(el)) if (!identical(el[[i]], quote(expr = ))) acc <- llamadas_exams(el[[i]], acc)
++  }
++  acc
++}
++sondas_llamadas_uso <- function(sem) {
++  ex <- tryCatch(parse(text = sem, keep.source = FALSE, encoding = "UTF-8"), error = function(e) NULL)
++  if (is.null(ex)) return(c("USO_EXSHUFFLE", "USO_ARCHIVOS"))
++  ll <- llamadas_exams(ex); f <- character(0)
++  es_pdf <- vapply(ll, function(l) identical(l$f, "exams2pdf"), TRUE)
++  sh <- lapply(ll, function(l) if ("exshuffle" %in% names(l$args)) l$args[["exshuffle"]] else NULL)
++  if (!any(es_pdf) || !all(vapply(sh[es_pdf], identical, TRUE, FALSE)) || !all(vapply(sh[!es_pdf], is.null, TRUE))) f <- c(f, "USO_EXSHUFFLE")
++  cfg <- Filter(function(x) is.call(x) && identical(x[[1L]], as.name("<-")) && identical(x[[2L]], as.name("config")), as.list(ex))
++  ar <- if (length(cfg) == 1L && is.call(cfg[[1L]][[3L]]) && identical(cfg[[1L]][[3L]][[1L]], as.name("list"))) as.list(cfg[[1L]][[3L]])[["archivos"]]
++  if (!(is.numeric(ar) && length(ar) == 1L && isTRUE(ar == USO_ARCHIVOS_N))) f <- c(f, "USO_ARCHIVOS")
++  f
++}
++USO_ESPIA <- c("fig_id", "archivos", "regiones_mezcladas", "sol_p1", "reg_clave", "textos_p1")   # sol_p1 y textos_p1: solo para `materia`
++poner_espia_pdf <- function() {
++  cap <- new.env(); cap$env <- list(); cap$res <- NULL; cap$llamado <- FALSE; cap$exshuffle <- NULL
++  suppressMessages({
++    trace("knit", where = asNamespace("knitr"), print = FALSE, exit = bquote(
++      assign("env", c(get("env", envir = .(cap)), list(mget(.(USO_ESPIA), envir = envir, ifnotfound = list(NULL)))), envir = .(cap))))
++    ## exams2pdf vive en el namespace y, exportada, en package:exams: se traza en los dos (el semillero la llama sin «exams::»).
++    ## No se traza xexams: su on.exit(setwd(...)) sin add = TRUE borra la salida de trace().
++    for (w in list(asNamespace("exams"), as.environment("package:exams")))
++      trace("exams2pdf", where = w, print = FALSE, exit = bquote({
++        assign("res", returnValue(), envir = .(cap)); assign("llamado", TRUE, envir = .(cap)); assign("exshuffle", exshuffle, envir = .(cap)) }))
++  })
++  cap
++}
++quitar_espia_pdf <- function() suppressMessages({
++  untrace("knit", where = asNamespace("knitr"))
++  for (w in list(asNamespace("exams"), as.environment("package:exams"))) untrace("exams2pdf", where = w)
++})
++gap1_pdf <- function(pdf) {
++  t <- gsub("\\s+", " ", paste(system2("pdftotext", c(shQuote(pdf), "-"), stdout = TRUE), collapse = " "))
++  regmatches(t, gregexpr("Diagrama (I|II|III|IV)( / Diagrama (I|II|III|IV)){3}", t))[[1L]]
++}
++## Viñetas de la Parte 1 en el LaTeX que compiló exams2pdf: el primer itemize, un \item por viñeta (pandoc lo deja en su línea).
++vinetas_latex <- function(L) {
++  i0 <- grep("^\\\\begin\\{itemize\\}", L)[1L]; i1 <- grep("^\\\\end\\{itemize\\}", L)[1L]
++  if (is.na(i0) || is.na(i1) || i1 <= i0 + 1L) return(character(0))
++  it <- trimws(strsplit(sub("^\\\\tightlist\\s*", "", paste(trimws(L[(i0 + 1L):(i1 - 1L)]), collapse = " ")), "\\\\item\\b", perl = TRUE)[[1L]])
++  paste0("- ", it[nzchar(it)])
++}
++sonda_clave_pdf <- function(cap, g, nq) {
++  falla <- function(j, por) structure("USO_CLAVE_PDF", detalle = sprintf("pregunta %s: %s", j, por))
++  res <- cap$res
++  if (!isTRUE(cap$llamado) || !is.list(res) || length(res) != 1L || length(res[[1L]]) != nq) return(falla("-", "sin la salida de exams2pdf()"))
++  if (length(g) != nq) return(falla("-", sprintf("%d gaps de la Parte 1 en el PDF", length(g))))
++  if (length(cap$env) != nq) return(falla("-", sprintf("%d entornos capturados", length(cap$env))))
++  letra <- character(0)
++  for (j in seq_len(nq)) {
++    q <- res[[1L]][[j]]; s1 <- q$metainfo$solution[[1L]]
++    if (!is.logical(s1) || length(s1) != 4L || sum(s1) != 1L) return(falla(j, "la clave registrada no es una de cuatro"))
++    k <- which(s1); X <- strsplit(g[j], " / ", fixed = TRUE)[[1L]][k]; letra <- c(letra, letters[k])
++    tx <- paste(q$question, collapse = "\n")
++    m <- regmatches(tx, gregexpr(paste0("\\\\textbf\\{Diagrama (I|II|III|IV)\\}\\\\\\\\\\s*\\\\includegraphics(\\[[^]]*\\])?",
++                                        "\\{[^}]*?diagrama_[a-d]_[0-9a-f]+\\.png\\}"), tx, perl = TRUE))[[1L]]
++    rot <- paste("Diagrama", sub("^\\\\textbf\\{Diagrama (I|II|III|IV)\\}.*$", "\\1", m))
++    arch <- sub("^.*(diagrama_[a-d]_[0-9a-f]+\\.png)\\}$", "\\1", m)
++    if (length(m) != 4L || anyDuplicated(rot) || !(X %in% rot)) return(falla(j, "rótulos de las figuras en el LaTeX"))
++    a <- arch[rot == X]; e <- Filter(function(z) identical(z$fig_id, sub("^diagrama_[a-d]_([0-9a-f]+)\\.png$", "\\1", a)), cap$env)
++    o1 <- leer_vinetas(vinetas_latex(q$question))
++    if (length(e) != 1L || is.null(o1) || !(a %in% e[[1L]]$archivos)) return(falla(j, "sin entorno o sin viñetas legibles"))
++    if (!identical(as.integer(e[[1L]]$regiones_mezcladas[[match(a, e[[1L]]$archivos)]]), unname(as.integer(o1$reg))))
++      return(falla(j, sprintf("la clave registrada, (%s) = %s, no reproduce las viñetas", letters[k], X)))
++  }
++  structure(character(0), claves = letra)
++}
++orden_gap1_xml <- function(xml) {
++  q <- strsplit(paste(readLines(xml, encoding = "UTF-8", warn = FALSE), collapse = "\n"), "<question type=\"cloze\">", fixed = TRUE)[[1]][-1]
++  vapply(q, function(x) { b <- regmatches(x, regexpr("\\{[0-9]+:MULTICHOICE_V:[^}]*\\}", x)); if (!length(b)) NA_character_ else
++    paste(sub("^(=|%-?[0-9.]+%)", "", strsplit(sub("^\\{[0-9]+:MULTICHOICE_V:(.*)\\}$", "\\1", b), "~", fixed = TRUE)[[1]]), collapse = " / ") },
++    "", USE.NAMES = FALSE)
++}
+ sondas_uso <- function(sem = readLines(USO_SEMILLERO, encoding = "UTF-8"), tpl = readLines(USO_PLANTILLA, encoding = "UTF-8"),
+                        base = readLines(PAPEL_TPL, encoding = "UTF-8"), render = TRUE, tpl_disco = tpl,
+                        formatos = c("pdf", "html", "moodle"), semilla = 1L, rmd = RMD) {
+   f <- character(0); det <- "sin render"
+   if (any(vapply(USO_LITERALES, function(l) sum(lengths(regmatches(sem, gregexpr(l, sem, fixed = TRUE)))) != 1L, TRUE)) ||
+       any(vapply(USO_PROHIBIDOS, function(l) any(grepl(l, sem, fixed = TRUE)), TRUE))) f <- c(f, "USO_SEMILLERO")
+-  f <- c(f, sonda_plantilla_uso(tpl, base))
++  f <- c(f, sonda_plantilla_uso(tpl, base), sondas_llamadas_uso(sem))
++  captura <- list(archivos = tryCatch(cargar_semillero(sem)$config$archivos, error = function(x) NA))   # para `materia`
+   if (render) {
+     d <- tempfile("uso_"); dir.create(d); od <- setwd(d); on.exit({ setwd(od); unlink(d, recursive = TRUE) })
+     file.copy(rmd, file.path(d, basename(RMD)))                     # el semillero lo busca por su nombre, en edir
+     writeLines(tpl_disco, file.path(d, basename(USO_PLANTILLA)), useBytes = TRUE)
+     es <- tryCatch(cargar_semillero(sem), error = function(x) conditionMessage(x))
+-    if (!is.environment(es)) return(structure(unique(c(f, "USO_RENDER")), detalle = paste("el semillero no carga:", es)))
++    if (!is.environment(es)) return(structure(unique(c(f, "USO_RENDER")), detalle = paste("el semillero no carga:", es), captura = captura))
+     es$config$dir_salida <- file.path(d, "salida_hibrida"); es$config$dir_ejercicios <- d
+     es$config$archivos <- 2L; es$config$preguntas_pdf <- 3L
+     for (g in c("html", "moodle", "pdf")) dir.create(file.path(es$config$dir_salida, g), recursive = TRUE, showWarnings = FALSE)
+-    corre_g <- function(g) { set.seed(semilla); r_ <- FALSE; utils::capture.output(r_ <- tryCatch(es[[paste0("generar_", g)]](), error = function(x) FALSE)); isTRUE(r_) }
++    logs <- list()
++    corre_g <- function(g) { set.seed(semilla); r_ <- FALSE
++      logs[[g]] <<- utils::capture.output(r_ <- tryCatch(es[[paste0("generar_", g)]](), error = function(x) FALSE)); isTRUE(r_) }
+     sale <- function(g, pat) list.files(file.path(es$config$dir_salida, g), pat, full.names = TRUE)
+     det <- character(0)
+     if ("pdf" %in% formatos) {
+-      pdf <- if (corre_g("pdf")) sale("pdf", "\\.pdf$") else character(0)
++      cap <- poner_espia_pdf(); hecho <- tryCatch(corre_g("pdf"), finally = quitar_espia_pdf())
++      captura$pdf <- list(exshuffle = cap$exshuffle, llamado = cap$llamado, entornos = cap$env,
++                          rotulos_latex = if (is.list(cap$res) && length(cap$res)) vapply(cap$res[[1L]], function(q)
++                            sum(grepl("\\textbf{Diagrama", q$question, fixed = TRUE)), 0L) else integer(0))
++      pdf <- if (hecho) sale("pdf", "\\.pdf$") else character(0)
+       if (length(pdf) != 1L) { f <- c(f, "USO_RENDER"); det <- c(det, "generar_pdf() sin PDF") } else {
+         m <- medir_pdf_varias(pdf, 3L)
+         if (any(abs(m$hoja - PAPEL_HOJA_MM) > 0.5)) f <- c(f, "USO_TAMANO")
+@@ -1561,24 +1667,39 @@
+         if (!m$marcar) f <- c(f, "USO_COMO_MARCAR")
+         det <- c(det, sprintf("PDF: hoja %s mm, páginas de las imágenes %s, «Cómo marcar» %s", paste(round(m$hoja), collapse = " x "),
+                               paste(m$paginas, collapse = " "), if (m$marcar) "sí" else "no"))
++        g1 <- gap1_pdf(pdf)
++        if (length(g1) != 3L || any(g1 != USO_ORDEN_GAP)) f <- c(f, "USO_ORDEN_PDF")
++        kc <- sonda_clave_pdf(cap, g1, 3L); f <- c(f, kc)
++        det <- c(det, sprintf("gap de la Parte 1 en el orden I-IV en %d de %d preguntas", sum(g1 == USO_ORDEN_GAP), length(g1)),
++                 if (length(kc)) attr(kc, "detalle") else
++                   sprintf("clave registrada por exams2pdf() %s, cada una en el diagrama que reproduce las viñetas impresas",
++                           paste0("(", attr(kc, "claves"), ")", collapse = " ")))
+       }
+     }
+     if ("html" %in% formatos) {
+-      html <- if (corre_g("html")) sale("html", "\\.html$") else character(0)
++      caph <- new.env(); caph$exshuffle <- "sin_llamar"; dondes <- list(asNamespace("exams"), as.environment("package:exams"))
++      suppressMessages(for (w in dondes) trace("exams2html", where = w, print = FALSE, exit = bquote(assign("exshuffle", exshuffle, envir = .(caph)))))
++      hecho_h <- tryCatch(corre_g("html"), finally = suppressMessages(for (w in dondes) untrace("exams2html", where = w)))
++      captura$html_exshuffle <- caph$exshuffle
++      html <- if (hecho_h) sale("html", "\\.html$") else character(0)
+       bien <- length(html) == 1L && !any(grepl("##ANSWER", readLines(html[1L], warn = FALSE), fixed = TRUE))
+       if (!bien) f <- c(f, "USO_HTML"); det <- c(det, sprintf("HTML: %d archivo(s)%s", length(html), if (bien) " sin ##ANSWER" else ""))
+     }
+     if ("moodle" %in% formatos) {
+       xml <- if (corre_g("moodle")) sale("moodle", "\\.xml$") else character(0)
++      captura$moodle_log <- logs$moodle
+       g <- if (length(xml) == 1L) gaps_xml(xml) else list()
++      if (length(xml) == 1L) captura$moodle_orden <- orden_gap1_xml(xml)
+       bien <- length(g) == 2L && all(vapply(g, identical, TRUE, USO_GAPS))
+       if (!bien) f <- c(f, "USO_MOODLE")
+       det <- c(det, sprintf("XML: %d pregunta(s) con gaps %s", length(g), paste(unique(vapply(g, paste, "", collapse = "|")), collapse = "; ")))
+     }
+     det <- paste(det, collapse = " · ")
+   }
+-  r <- unique(f); attr(r, "detalle") <- det; r
++  r <- unique(f); attr(r, "detalle") <- det; attr(r, "captura") <- captura; r
+ }
++## `materia` (obligación 3): la mutación llegó a lo que se ejecuta, comprobado sobre lo capturado y no sobre el texto. `otra`: la
++## segunda sonda que también debe caer (U10 tumba la estructura y el orden; U13 y U15 mueven cada una sola).
+ USO_MUTANTES <- list(
+   list(id = "U1_semillero_con_plantilla_plain", sonda = "USO_SEMILLERO",
+        sem = c('template = "solpcielo_cloze_una_por_pagina"', 'template = "plain"')),
+@@ -1597,38 +1718,76 @@
+   list(id = "U8_semillero_html_de_otro_archivo", sonda = "USO_HTML", formatos = "html",
+        sem = c("exams2html(rep(archivo_examen, config$archivos),", 'exams2html(rep("no_existe.Rmd", config$archivos),')),
+   list(id = "U9_semillero_moodle_sin_multichoice_v", sonda = "USO_MOODLE", formatos = "moodle",
+-       sem = c('cloze_schoice_display = "MULTICHOICE_V"', 'cloze_schoice_display = "MULTICHOICE"')))
++       sem = c('cloze_schoice_display = "MULTICHOICE_V"', 'cloze_schoice_display = "MULTICHOICE"')),
++  ## Tanda 5 («H1 c · H2 100»).
++  list(id = "U10_semillero_sin_exshuffle_en_el_pdf", sonda = "USO_ORDEN_PDF", otra = "USO_EXSHUFFLE", formatos = "pdf",
++       sem = c("exshuffle = FALSE,", ""), materia = function(k) isTRUE(k$pdf$llamado) && is.null(k$pdf$exshuffle)),
++  ## exams2moodle() de exams 2.4.5 no tiene el argumento exshuffle: con él aborta («argumento no fue usado»), así que U11 también
++  ## tumba USO_MOODLE (declarada en `otra`). U16 mueve sola la componente «ninguna otra exams2*() lleva exshuffle»: exams2html() sí
++  ## lo acepta y deja de barajar sin avisar.
++  list(id = "U11_semillero_moodle_tambien_sin_barajar", sonda = "USO_EXSHUFFLE", otra = "USO_MOODLE", formatos = "moodle",
++       sem = c('cloze = list(cloze_schoice_display = "MULTICHOICE_V"),', 'cloze = list(cloze_schoice_display = "MULTICHOICE_V"), exshuffle = FALSE,'),
++       materia = function(k) any(grepl("(exshuffle = FALSE)", k$moodle_log, fixed = TRUE))),
++  list(id = "U12_semillero_con_250_archivos", sonda = "USO_ARCHIVOS", sem = c("archivos = 100,", "archivos = 250,"),
++       materia = function(k) identical(k$archivos, 250)),
++  list(id = "U13_rmd_con_rotulos_permutados", sonda = "USO_ORDEN_PDF", formatos = "pdf",
++       rmd = list(c('ROMANOS <- c("I", "II", "III", "IV")', 'ROMANOS <- c("II", "I", "III", "IV")')),
++       materia = function(k) length(k$pdf$entornos) == 3L &&
++         all(vapply(k$pdf$entornos, function(e) identical(e$textos_p1, paste("Diagrama", c("II", "I", "III", "IV"))), TRUE))),
++  list(id = "U14_rmd_con_la_clave_desplazada", sonda = "USO_CLAVE_PDF", formatos = "pdf",
++       rmd = list(c("sol_p1 <- vapply(ops, function(o) o$es_clave, TRUE)", "sol_p1 <- vapply(ops, function(o) o$es_clave, TRUE)[c(4L, 1L, 2L, 3L)]"),
++                  c('identical(regiones_mezcladas[[which(sol_p1)]], reg_clave) && codigos_p1[which(sol_p1)] == "CLAVE")', "TRUE)")),
++       materia = function(k) length(k$pdf$entornos) == 3L && all(vapply(k$pdf$entornos, function(e)
++         !identical(which(e$sol_p1), which(vapply(e$regiones_mezcladas, identical, TRUE, e$reg_clave))), TRUE))),
++  list(id = "U15_semillero_sin_exshuffle_y_rmd_sin_barajar", sonda = "USO_EXSHUFFLE", formatos = "pdf",
++       sem = c("exshuffle = FALSE,", ""), rmd = list(c("exshuffle: TRUE", "exshuffle: FALSE")),
++       materia = function(k) isTRUE(k$pdf$llamado) && is.null(k$pdf$exshuffle)),
++  list(id = "U16_semillero_html_tambien_sin_barajar", sonda = "USO_EXSHUFFLE", formatos = "html",
++       sem = c("exams2html(rep(archivo_examen, config$archivos),", "exams2html(rep(archivo_examen, config$archivos), exshuffle = FALSE,"),
++       materia = function(k) identical(k$html_exshuffle, FALSE)),
++  ## Falla cerrado de USO_CLAVE_PDF: si no puede leer el rótulo de cada figura en el LaTeX, cae; no da la clave por buena.
++  list(id = "U17_rmd_con_rotulos_sin_negrita", sonda = "USO_CLAVE_PDF", formatos = "pdf",
++       rmd = list(c('"**", textos_p1[i], "**', 'textos_p1[i], "')),
++       materia = function(k) length(k$pdf$rotulos_latex) == 3L && all(k$pdf$rotulos_latex == 0L)))
+ sec_uso <- function() {
+-  cat("\n[uso] SemilleroCloze.R y", basename(USO_PLANTILLA), ": literales, plantilla, y generar_pdf/html/moodle del semillero en una carpeta temporal\n")
++  cat("\n[uso] SemilleroCloze.R y", basename(USO_PLANTILLA), ": literales, llamadas exams2*(), plantilla, y generar_pdf/html/moodle del semillero en una carpeta temporal\n")
+   t0 <- proc.time()[["elapsed"]]; r <- sondas_uso()
+   cat(sprintf("  semilla 1 · %s · %.0f s\n", attr(r, "detalle"), proc.time()[["elapsed"]] - t0))
+   if (length(r)) rojo("uso", paste(r, collapse = ", ")) else
+-    cat("  sin fallas: literales del semillero, plantilla igual a ../solpcielo_cloze.tex salvo el comentario y \\clearpage, PDF en oficio con las cuatro figuras de cada pregunta en una página y «Cómo marcar», HTML sin ##ANSWER y XML con los seis gaps medidos\n")
+-  ## Mutantes (contrato INC-MUTANTE-SONDA): patrón único (mutar), sonda declarada, semillas 1 a USO_TOPE hasta la primera muerte y
+-  ## línea base sin mutar en la semilla de la muerte (obligación 8; en la semilla 1 es la medición de arriba).
++    cat("  sin fallas: literales del semillero, exshuffle = FALSE solo en exams2pdf(), archivos = 100, plantilla igual a ../solpcielo_cloze.tex salvo el comentario y \\clearpage, PDF en oficio con las cuatro figuras de cada pregunta en una página, «Cómo marcar», el gap de la Parte 1 en el orden I-IV y la clave registrada en el diagrama correcto, HTML sin ##ANSWER y XML con los seis gaps medidos\n")
++  ## Mutantes (contrato INC-MUTANTE-SONDA): patrón único (mutar), sonda declarada, semillas 1 a USO_TOPE hasta la primera muerte,
++  ## línea base sin mutar en la semilla de la muerte (obligación 8; en la semilla 1 es la medición de arriba) y, desde la tanda 5,
++  ## `materia` sobre lo capturado (obligación 3) y `rmd`: copias mutadas del .Rmd en tempdir(), nunca el archivo real.
+   sem0 <- readLines(USO_SEMILLERO, encoding = "UTF-8"); tpl0 <- readLines(USO_PLANTILLA, encoding = "UTF-8")
+   res <- parallel::mclapply(USO_MUTANTES, function(M) {
+-    s <- sem0; t <- tpl0; dk <- tpl0
++    s <- sem0; t <- tpl0; dk <- tpl0; rl <- lineas; rm_ <- RMD
+     if (!is.null(M$sem)) s <- mutar(s, M$sem[1], M$sem[2])
+     if (!is.null(M$tpl)) t <- mutar(t, M$tpl[1], M$tpl[2])
+     if (!is.null(M$disco)) dk <- mutar(dk, M$disco[1], M$disco[2])
+-    mal <- c(attr(s, "mal"), attr(t, "mal"), attr(dk, "mal"))
++    for (cb in M$rmd) { rl <- mutar(rl, cb[1], cb[2]); if (!is.null(attr(rl, "mal"))) break }
++    mal <- c(attr(s, "mal"), attr(t, "mal"), attr(dk, "mal"), attr(rl, "mal"))
+     if (length(mal)) return(list(mal = mal[1]))
+-    if (is.null(M$formatos)) return(list(cod = as.character(sondas_uso(s, t, render = FALSE)), sem = NA_integer_, base = character(0)))
+-    for (sm in seq_len(USO_TOPE)) { cod <- as.character(sondas_uso(s, t, tpl_disco = dk, formatos = M$formatos, semilla = sm)); if (length(cod)) break }
++    if (!is.null(M$rmd)) { rm_ <- tempfile("uso_rmd_", fileext = ".Rmd"); writeLines(rl, rm_, useBytes = TRUE) }
++    if (is.null(M$formatos)) { z <- sondas_uso(s, t, render = FALSE)
++      return(list(cod = as.character(z), sem = NA_integer_, base = character(0), captura = attr(z, "captura"))) }
++    for (sm in seq_len(USO_TOPE)) { z <- sondas_uso(s, t, tpl_disco = dk, formatos = M$formatos, semilla = sm, rmd = rm_); cod <- as.character(z); if (length(cod)) break }
+     base <- if (sm == 1L) character(0) else as.character(sondas_uso(formatos = M$formatos, semilla = sm))
+-    list(cod = cod, sem = sm, base = base)
++    list(cod = cod, sem = sm, base = base, captura = attr(z, "captura"), detalle = attr(z, "detalle"))
+   }, mc.cores = min(8L, parallel::detectCores()))
+   for (i in seq_along(USO_MUTANTES)) {
+     M <- USO_MUTANTES[[i]]; x <- res[[i]]
+     v <- if (is.null(x) || inherits(x, "try-error")) "sin_resultado" else if (!is.null(x$mal)) "mal_construido" else
+-      if (length(r) || length(x$base)) "mal_construido" else veredicto(x$cod, M$sonda)
+-    cat(sprintf("  %-40s sonda esperada %-16s semilla %-3s %s · %s\n", M$id, M$sonda, if (is.null(x$sem) || is.na(x$sem)) "-" else x$sem, v,
+-                if (!is.null(x$mal)) x$mal else if (length(x$cod)) paste(x$cod, collapse = ",") else "-"))
+-    if (v != "cazado_por_su_sonda") rojo("uso", paste(M$id, v))
++      if (length(r) || length(x$base)) "mal_construido" else
++      if (!is.null(M$materia) && !isTRUE(tryCatch(M$materia(x$captura), error = function(e) FALSE))) "mal_construido" else veredicto(x$cod, M$sonda)
++    ok <- v == "cazado_por_su_sonda" ||
++      (v == "cazado_por_su_sonda_y_otra" && !is.null(M$otra) && all(startsWith(x$cod, M$sonda) | startsWith(x$cod, M$otra)))
++    cat(sprintf("  %-46s sonda esperada %-16s semilla %-3s %s%s · %s\n", M$id, M$sonda,
++                if (is.list(x) && !is.null(x$sem) && !is.na(x$sem)) x$sem else "-", v,
++                if (!is.null(M$otra)) sprintf(" (otra declarada: %s)", M$otra) else "",
++                if (is.list(x) && !is.null(x$mal)) x$mal else if (is.list(x) && length(x$cod)) paste(x$cod, collapse = ",") else "-"))
++    if (!ok) { rojo("uso", paste(M$id, v)); if (is.list(x) && !is.null(x$detalle)) cat("    detalle:", x$detalle, "\n") }
+   }
+ }
+-
+ ## --- salida ----------------------------------------------------------------------------------------------------------
+ SECCIONES <- c("e1", "texto", "pesos", "cruce", "bateria", "mutantes", "v6", "moodle", "solucion", "papel", "pantalla", "uso")
+ decidir_exit <- function(errores, pend, modo, corr, md5_ok = isTRUE(unname(tools::md5sum(RMD)) == RMD_MD5), firmada = FIRMADA) {

@@ -1,0 +1,549 @@
+md5 del .Rmd: f886dfaa45b80a5ee16f9820908049b5 
+exams 2.4.5 
+
+[espacio] enumeración exacta
+  versiones enumeradas: 11000000 
+    negativo      mayor99      iguales    reproduce      cuentas    totales_A 
+           0            0            0            0            0            0 
+    regiones      falla_A      falla_B centro_doble    resta_una 
+           0            0            0            0            0 
+  suma de regiones A < clave < B < D: 11000000 de 11000000 (estructural, §P7-F)
+  D con dos cifras en centro y tres dobles: 27.3 % · valor máximo en una zona: 53
+  versiones reales fuera de la rejilla (de 100 ): 0 
+  canónica dentro de la rejilla: TRUE 
+
+[cableado] N = 100 por rama, con los datos leídos del texto
+  semillas recorridas: 1952 · versiones: canon 100, resto 100 · clave por posición: 16 23 23 38 
+  sin fallas
+
+[figura] N = 100 por rama, render real, leyendo lo impreso con pdftotext -bbox
+  versiones: canon 100, resto 100 · figuras leídas: 800 · con falla: 0 · 45 s
+  sin fallas: números, rótulos, clave e I-1
+
+[tinta] render real, toda la caja de tinta
+  valores de 0 a 99 en las siete zonas: 0 con falla · holgura mínima número-trazo 4.99 unidades · peor borde izquierdo 0.43 · 36 s
+  MAPEO: cada posición del vector cae en su región
+  rótulos de los 8 contextos: holgura rótulo-trazo mínima 1.63; distancia mínima al eje del marco, sin recortar, 3.17 unidades (rojo por debajo de 2)
+  la copia del .Rmd coincide con tikz/venn_tikz.R y con geom_venn.json
+
+[solucion] N = 100 por rama: se ejecuta el chunk solucion y se contrasta cada párrafo
+  canon (n = 100), otro error emitido: VN-X-CENTRO-DOBLE 100
+  resto (n = 100), otro error emitido: VN-X-CENTRO-DOBLE 65, VN-X-RESTA-UNA 35
+  sin fallas: cada párrafo casa con su plantilla, coincide letra a letra y está en su sección, y varían el otro error y la reflexión
+
+[papel] N = 100 PDF reales: los 7 contextos, la canónica y los textos más largos
+  hoja 216 x 330 mm · cuatro figuras en una misma página: 100 de 100 · base de d) 289.8 a 290.5 mm (límite 310, holgura mínima 19.5) · 54 s
+
+[moodle] N = 100 por rama: XML real, cada PNG contra el dibujo calculado desde las viñetas del XML
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[[WWAARRNNIINNGG]]  DDeepprreeccaatteedd::  ----mmaatthhjjaaxx..  UUssee  ----mmaatthh--mmeetthhoodd==mmaatthhjjaaxx[[::UURRLL]]  iinnsstteeaadd..
+
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+  versiones: canon 100, resto 100 · con falla: 0 · 93 s
+  sin fallas: fraction solo en la clave, feedback de cada opción, imagen de la Solution y sin fugas
+
+[uso] SemilleroUnico_v2.R y solpcielo_una_por_pagina.tex: literales, plantilla, y un PDF y un NOPS reales de 5 preguntas
+Aviso: Package multicol Warning: May not work with the twocolumn option on input line 145.
+  figuras por página con figuras: PDF p2:4 p3:1 p5:4 p6:1 p8:4 p9:1 p11:4 p12:1 p14:4 p15:1 · NOPS p3:4 p4:4 p5:4 p6:4 p7:4 · 19 s
+  sin fallas: literales del semillero, plantilla igual a la del repo salvo \clearpage, y las cuatro figuras de cada pregunta en una página
+
+[mutantes]
+  M1_intercambia_regiones_en_la_figura     esperada CABLEADO_CLAVE           real CABLEADO_CLAVE                     semilla 1    cazado_por_su_sonda
+  M2_archivos_cruzados                     esperada CABLEADO_NOMBRES         real CABLEADO_NOMBRES+CABLEADO_CLAVE    semilla 1    cazado_por_su_sonda_y_otra
+  M3_vineta_con_otro_dato                  esperada ORACULO_TEXTO            real ORACULO_TEXTO+CABLEADO_CLAVE       semilla 1    cazado_por_su_sonda_y_otra
+  M4_sin_piso_en_las_dobles                esperada I-3: los tres mecanismos real I-3: los tres mecanismos           semilla 1    cazado_por_su_sonda
+  M17_resta_una_sin_precondicion           esperada regla #13: VN-X-RESTA-UNA real regla #13: VN-X-RESTA-UNA          semilla 7    cazado_por_su_sonda
+  M22_A_falla_otros_dos_datos              esperada regla #13: A falla exactamente real regla #13: A falla exactamente     semilla 1    cazado_por_su_sonda
+  M23_B_falla_otros_tres_datos             esperada regla #13: B falla exactamente real regla #13: B falla exactamente     semilla 1    cazado_por_su_sonda
+  M24_una_opcion_contiene_el_centro_doble  esperada regla #13: ninguna opción contiene real regla #13: ninguna opción contiene semilla 4    cazado_por_su_sonda
+  M18_digitos_mas_uno                      esperada FIG_NUMERO               real FIG_NUMERO+FIG_CLAVE               semilla 1    cazado_por_su_sonda_y_otra
+  M29_un_digito_de_D_mas_uno               esperada FIG_NUMERO               real FIG_NUMERO                         semilla 1    cazado_por_su_sonda
+  M19_rotulos_2_y_3_cruzados_en_dibujar_venn esperada FIG_ROTULO               real FIG_ROTULO                         semilla 1    cazado_por_su_sonda
+  M20_trazo_distinto_solo_en_la_clave      esperada I1_PIXELES               real I1_PIXELES                         semilla 1    cazado_por_su_sonda
+  M21_geometria_propia_en_la_clave         esperada CABLEADO_GEOM            real CABLEADO_GEOM                      semilla 1    cazado_por_su_sonda
+  M30_clave_marcada_en_otra_figura         esperada FIG_CLAVE                real FIG_CLAVE                          semilla 1    cazado_por_su_sonda
+  M31_un_total_impreso_de_mas              esperada FIG_PALABRAS             real FIG_PALABRAS                       semilla 1    cazado_por_su_sonda
+  M25_canonica_fuera_de_la_rejilla         esperada CANON_REJILLA            real CANON_REJILLA                      semilla NA   cazado_por_su_sonda
+  M27_rotulo_3_contra_el_marco             esperada BORDE_ROTULO             real BORDE_ROTULO                       semilla 1    cazado_por_su_sonda
+  M28_copia_del_marco_distinta             esperada COPIA_TIKZ               real COPIA_TIKZ+COPIA_JSON              semilla 1    cazado_por_su_sonda_y_otra
+  S1_cuenta_falsa                          esperada SOL_ARIT                 real SOL_ARIT                           semilla NA   cazado_por_su_sonda
+  S2_respuesta_describe_un_distractor      esperada SOL_RESPUESTA            real SOL_RESPUESTA+SOL_TEXTO            semilla 1    cazado_por_su_sonda_y_otra
+  S3_procedimiento_con_otra_cifra          esperada SOL_PROCEDIMIENTO        real SOL_PROCEDIMIENTO+SOL_TEXTO        semilla 1    cazado_por_su_sonda_y_otra
+  S4_caso_con_otra_cifra                   esperada SOL_CASO                 real SOL_CASO+SOL_TEXTO                 semilla 1    cazado_por_su_sonda_y_otra
+  S5_diagnostico_describe_la_clave         esperada SOL_OPCION               real SOL_OPCION+SOL_TEXTO               semilla 1    cazado_por_su_sonda_y_otra
+  S6_circulo_con_otra_suma                 esperada SOL_CIRCULO              real SOL_CIRCULO+SOL_TEXTO              semilla 1    cazado_por_su_sonda_y_otra
+  S7_otro_error_con_otra_cifra             esperada SOL_OTRO                 real SOL_OTRO+SOL_TEXTO                 semilla 3    cazado_por_su_sonda_y_otra
+  S8_feedback_cruzado                      esperada SOL_FEEDBACK             real SOL_FEEDBACK                       semilla 1    cazado_por_su_sonda
+  S9_codigo_interno_visible                esperada SOL_CODIGO               real SOL_CODIGO+SOL_TEXTO               semilla 1    cazado_por_su_sonda_y_otra
+  S10_parrafo_nuevo_con_cifras             esperada SOL_SIN_ORACULO          real SOL_SIN_ORACULO                    semilla 1    cazado_por_su_sonda
+  S11_parrafo_que_desaparece               esperada SOL_MUDO                 real SOL_MUDO+SOL_TEXTO                 semilla 1    cazado_por_su_sonda_y_otra
+  S12_imagen_de_un_distractor              esperada SOL_IMAGEN               real SOL_IMAGEN                         semilla 1    cazado_por_su_sonda
+  S13_afirmacion_sobre_otro_conjunto       esperada SOL_AFIRMACION           real SOL_AFIRMACION+SOL_TEXTO           semilla 1    cazado_por_su_sonda_y_otra
+  S14_vuelve_el_texto_de_H2                esperada SOL_SIN_ORACULO          real SOL_SIN_ORACULO+SOL_MUDO+SOL_TEXTO semilla 1    cazado_por_su_sonda_y_otra
+  S15_vuelve_el_texto_de_H3                esperada SOL_SIN_ORACULO          real SOL_SIN_ORACULO+SOL_MUDO+SOL_TEXTO semilla 1    cazado_por_su_sonda_y_otra
+  S16_vuelve_el_texto_de_H4                esperada SOL_SIN_ORACULO          real SOL_SIN_ORACULO+SOL_MUDO+SOL_TEXTO semilla 1    cazado_por_su_sonda_y_otra
+  M32_digitos_azules_solo_en_la_clave      esperada I1_COLOR                 real I1_COLOR                           semilla 1    cazado_por_su_sonda
+  M33_digitos_mayores_solo_en_la_clave     esperada I1_TAMANO                real I1_TAMANO+I1_ANCHO                 semilla 1    cazado_por_su_sonda_y_otra
+  X1_dobles_nombres_cruzados               esperada SOL_TEXTO                real SOL_TEXTO                          semilla 1    cazado_por_su_sonda
+  X2_solas_nombres_cruzados                esperada SOL_TEXTO                real SOL_TEXTO                          semilla 1    cazado_por_su_sonda
+  X3_caso_nombres_cruzados                 esperada SOL_TEXTO                real SOL_TEXTO                          semilla 1    cazado_por_su_sonda
+  X4_describe_otra_zona_doble              esperada SOL_TEXTO                real SOL_TEXTO                          semilla 1    cazado_por_su_sonda
+  X5_describe_otro_conjunto_solo           esperada SOL_TEXTO                real SOL_TEXTO                          semilla 1    cazado_por_su_sonda
+  X6_causa_A_falsa                         esperada SOL_TEXTO                real SOL_TEXTO                          semilla 1    cazado_por_su_sonda
+  X7_causa_otro_falsa                      esperada SOL_TEXTO                real SOL_TEXTO                          semilla 3    cazado_por_su_sonda
+  X8_reflexion_falsa_en_el_pool            esperada SOL_TEXTO                real SOL_SIN_ORACULO+SOL_MUDO+SOL_TEXTO semilla 1    cazado_por_su_sonda_y_otra
+  X9_trampa_otro_conjunto                  esperada SOL_TEXTO                real SOL_TEXTO                          semilla 1    cazado_por_su_sonda
+  X10_centro_otros_conjuntos               esperada SOL_TEXTO                real SOL_TEXTO                          semilla 1    cazado_por_su_sonda
+  X11_opA_zona_equivocada                  esperada SOL_TEXTO                real SOL_TEXTO                          semilla 1    cazado_por_su_sonda
+  X12_caso_pares_cruzados                  esperada SOL_TEXTO                real SOL_TEXTO                          semilla 1    cazado_por_su_sonda
+  S17_vuelve_el_texto_de_H15               esperada SOL_SIN_ORACULO          real SOL_SIN_ORACULO+SOL_MUDO+SOL_TEXTO semilla 3    cazado_por_su_sonda_y_otra
+  S18_vuelve_el_texto_de_H16               esperada SOL_SIN_ORACULO          real SOL_SIN_ORACULO+SOL_MUDO           semilla 1    cazado_por_su_sonda_y_otra
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+  L1_exsolution_invertida                  esperada MOODLE_FRACCION          real MOODLE_FRACCION                    semilla 1    cazado_por_su_sonda
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+  L2_chunk_feedback_invertido              esperada MOODLE_FEEDBACK          real MOODLE_FEEDBACK                    semilla 1    cazado_por_su_sonda
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+  L3_figura_distinta_de_la_calculada       esperada MOODLE_PAREJA            real MOODLE_PAREJA+MOODLE_SOL_IMG       semilla 1    cazado_por_su_sonda_y_otra
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+  L4_solution_con_un_distractor            esperada MOODLE_SOL_IMG           real MOODLE_SOL_IMG                     semilla 1    cazado_por_su_sonda
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+  L5_codigo_interno_visible                esperada MOODLE_FUGA              real MOODLE_FUGA                        semilla 1    cazado_por_su_sonda
+  M34_pregunta_negada                      esperada CABLEADO_PREGUNTA        real CABLEADO_PREGUNTA                  semilla 1    cazado_por_su_sonda
+  M35_contexto_con_una_restriccion         esperada CONTEXTOS_CONGELADOS     real CONTEXTOS_CONGELADOS               semilla NA   cazado_por_su_sonda
+  M36_exshuffle_activado                   esperada CABLEADO_METADATOS       real CABLEADO_METADATOS                 semilla NA   cazado_por_su_sonda
+  M37_digitos_grises_solo_en_la_clave      esperada I1_GRIS                  real I1_GRIS                            semilla 1    cazado_por_su_sonda
+  M38_otra_serie_solo_en_la_clave          esperada I1_FUENTE                real I1_FUENTE+I1_ANCHO                 semilla 1    cazado_por_su_sonda_y_otra
+  M39_estirada_solo_en_la_clave            esperada I1_ANCHO                 real I1_ANCHO                           semilla 1    cazado_por_su_sonda
+  M40_subrayada_solo_en_la_clave           esperada I1_MARCA                 real I1_MARCA                           semilla 1    cazado_por_su_sonda
+  M41_movida_solo_en_la_clave              esperada I1_POS                   real I1_POS                             semilla 1    cazado_por_su_sonda
+  M42_hijo_muerto                          esperada HIJO_MUERTO              real HIJO_MUERTO                        semilla NA   cazado_por_su_sonda
+  S19_diagnosticos_invertidos              esperada SOL_ORDEN                real SOL_ORDEN                          semilla 1    cazado_por_su_sonda
+  S20_reflexion_bajo_caso                  esperada SOL_ORDEN                real SOL_MUDO+SOL_ORDEN                 semilla 1    cazado_por_su_sonda_y_otra
+  S21_letra_en_el_bloque_latex             esperada SOL_LATEX                real SOL_LATEX                          semilla 1    cazado_por_su_sonda
+  S22_otro_error_sin_sortear               esperada SOL_SIN_VARIACION        real SOL_SIN_VARIACION                  semilla NA   cazado_por_su_sonda
+  S23_reflexion_sin_sortear                esperada SOL_SIN_VARIACION        real SOL_SIN_VARIACION                  semilla NA   cazado_por_su_sonda
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+  L6_pregunta_negada_en_el_xml             esperada MOODLE_PREGUNTA          real MOODLE_PREGUNTA                    semilla 1    cazado_por_su_sonda
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+  L7_extype_mchoice                        esperada MOODLE_TIPO              real MOODLE_TIPO                        semilla 1    cazado_por_su_sonda
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+  L8_una_figura_sin_important              esperada MOODLE_ESTILO            real MOODLE_ESTILO                      semilla 1    cazado_por_su_sonda
+  F0_control_todo_en_orden_cubre           esperada EXIT_CUBIERTO            real EXIT_CUBIERTO                      semilla NA   cazado_por_su_sonda
+  F1_regla_fuera_de_la_lista               esperada FIRMA_FUERA_DE_LISTA     real FIRMA_FUERA_DE_LISTA               semilla NA   cazado_por_su_sonda
+  F2_firmada_en_canonica_no_cubre_variantes esperada FIRMA_FUERA_DE_LISTA     real FIRMA_FUERA_DE_LISTA               semilla NA   cazado_por_su_sonda
+  F3_regla_sobre_su_cifra_variantes        esperada FIRMA_SOBRE_CIFRA        real FIRMA_SOBRE_CIFRA                  semilla NA   cazado_por_su_sonda
+  F4_regla_sobre_su_cifra_canonica         esperada FIRMA_SOBRE_CIFRA        real FIRMA_SOBRE_CIFRA                  semilla NA   cazado_por_su_sonda
+  F5_cifra_firmada_que_no_se_reproduce     esperada FIRMA_NO_REPRODUCE       real FIRMA_NO_REPRODUCE                 semilla NA   cazado_por_su_sonda
+  F6_regla_firmada_sin_medir               esperada FIRMA_NO_REPRODUCE       real FIRMA_NO_REPRODUCE                 semilla NA   cazado_por_su_sonda
+  F7_rmd_distinto                          esperada FIRMA_MD5                real FIRMA_MD5                          semilla NA   cazado_por_su_sonda
+  F8_firmada_en_false                      esperada FIRMA_SIN_FIRMAR         real FIRMA_SIN_FIRMAR                   semilla NA   cazado_por_su_sonda
+  F9_modo_parcial                          esperada FIRMA_MODO               real FIRMA_MODO                         semilla NA   cazado_por_su_sonda
+  F10_alcance_sin_evaluar                  esperada FIRMA_SIN_EVALUAR        real FIRMA_SIN_EVALUAR                  semilla NA   cazado_por_su_sonda
+  F11_una_sonda_en_rojo_gana_a_la_firma    esperada ROJO_GANA                real ROJO_GANA                          semilla NA   cazado_por_su_sonda
+  M43_arriba_1_5_solo_en_la_clave          esperada I1_POSY                  real I1_POSY                            semilla 1    cazado_por_su_sonda
+  M44_arriba_3_solo_en_la_clave            esperada I1_POSY                  real I1_POSY                            semilla 1    cazado_por_su_sonda
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+  L9_frase_tras_la_pregunta_en_el_xml      esperada MOODLE_PREGUNTA          real MOODLE_PREGUNTA                    semilla 1    cazado_por_su_sonda
+  E1_exacto_con_otro_md5                   esperada EXACTO_MD5               real EXACTO_MD5                         semilla NA   cazado_por_su_sonda
+  E2_python_sale_con_1                     esperada EXACTO_PYTHON            real EXACTO_PYTHON                      semilla NA   cazado_por_su_sonda
+  E3_regla_repetida_en_la_salida_de_python esperada EXACTO_REPETIDA          real EXACTO_REPETIDA                    semilla NA   cazado_por_su_sonda
+  E4_regla_no_firmada_retirada             esperada BATERIA_CONGELADA        real BATERIA_CONGELADA                  semilla NA   cazado_por_su_sonda
+  E5_regla_repetida_en_la_bateria          esperada BATERIA_CONGELADA        real BATERIA_CONGELADA                  semilla NA   cazado_por_su_sonda
+  E6_control_la_bateria_real_es_evaluable  esperada BATERIA_EVALUABLE        real BATERIA_EVALUABLE                  semilla NA   cazado_por_su_sonda
+  F12_seccion_sin_correr                   esperada SECCION_SIN_CORRER       real SECCION_SIN_CORRER                 semilla NA   cazado_por_su_sonda
+  F13_control_corre_registra_la_seccion    esperada CORRE_REGISTRA           real CORRE_REGISTRA                     semilla NA   cazado_por_su_sonda
+  U1_samepage_quitado_del_semillero        esperada USO_SEMILLERO            real USO_SEMILLERO                      semilla NA   cazado_por_su_sonda
+Aviso: Package multicol Warning: May not work with the twocolumn option on input line 145.
+  U2_plantilla_sin_clearpage               esperada USO_PLANTILLA            real USO_PLANTILLA+USO_FIGURAS_PDF      semilla NA   cazado_por_su_sonda_y_otra
+  U3_plantilla_que_cambia_otra_linea       esperada USO_PLANTILLA            real USO_PLANTILLA                      semilla NA   cazado_por_su_sonda
+  P1_ancho_6_5_cm                          esperada PAPEL_PARTE              real PAPEL_PARTE                        semilla 1    cazado_por_su_sonda
+  P2_ancho_6_cm                            esperada PAPEL_BASE               real PAPEL_BASE                         semilla 1    cazado_por_su_sonda
+  P3_hoja_de_356_mm                        esperada PAPEL_TAMANO             real PAPEL_TAMANO                       semilla 1    cazado_por_su_sonda
+  M9_distractor_fuera_de_rango             esperada I-3: enteros de 0 a 99   real I-3: enteros de 0 a 99             semilla 1    cazado_por_su_sonda
+  M10_A_pierde_un_total                    esperada I-4: solo la clave reproduce real I-4: solo la clave reproduce       semilla 1    cazado_por_su_sonda
+  M11_rotulos_cruzados                     esperada CABLEADO_ROTULOS         real CABLEADO_ROTULOS                   semilla 1    cazado_por_su_sonda
+  M12_figura_de_menos                      esperada CABLEADO_CONTEO          real CABLEADO_CONTEO                    semilla 1    cazado_por_su_sonda
+  M13_numero_casi_toca_un_trazo            esperada HOLGURA                  real HOLGURA                            semilla 1    cazado_por_su_sonda
+  M14_numero_en_otra_region_sin_tocar_trazos esperada REGION                   real REGION                             semilla 1    cazado_por_su_sonda
+  M15_un_total_fuera_de_los_circulos       esperada TINTA_EXTRA              real TINTA_EXTRA                        semilla 1    cazado_por_su_sonda
+  M16_falta_un_numero                      esperada AUSENTE_s3               real AUSENTE_s3                         semilla 1    cazado_por_su_sonda
+  M5_intercambia_anclas_en_dibujar_venn    esperada MAPEO                    real MAPEO                              semilla 1    cazado_por_su_sonda
+  M6_ancla_del_centro_fuera                esperada REGION                   real IZQ+REGION+HOLGURA                 semilla 1    cazado_por_su_sonda_y_otra
+  M7_letra_mayor                           esperada HOLGURA                  real TINTA_EXTRA+HOLGURA                semilla 1    cazado_por_su_sonda_y_otra
+  M8_numero_centrado                       esperada IZQ                      real IZQ                                semilla 1    cazado_por_su_sonda
+
+[bateria] §P7, congelada antes del primer resultado
+
+========================================
+BATERIA DE ELIMINACION — cierre por familias, veredicto por EXCESO
+========================================
+Versiones: 100 | Reglas: 34 | Cortes: ruido 2.0 % / canal 8.0 %
+
+-- Reglas (ordenadas por tasa) --
+  MAG-suma-segunda-menor       [magnitud     ] tasa 100.0 %  aplicable 100.0 %
+  EST-menos-cifras-del-enunciado [formato      ] tasa 65.3 %   aplicable 100.0 %  (lee el estimulo)
+  MAG-suma-no-extrema          [magnitud     ] tasa 50.0 %   aplicable 100.0 %
+  MAG-sin-el-mayor-numero      [magnitud     ] tasa 50.0 %   aplicable 100.0 %
+  REL-no-extrema-en-coincidencias [lexico       ] tasa 50.0 %   aplicable 100.0 %
+  EST-total-en-zona-de-un-conjunto [formato      ] tasa 50.0 %   aplicable 100.0 %  (lee el estimulo)
+  EST-primer-dato-en-la-zona-doble [formato      ] tasa 50.0 %   aplicable 100.0 %  (lee el estimulo)
+  MAG-menor-maximo             [magnitud     ] tasa 48.0 %   aplicable 100.0 %
+  POS-cuarta                   [posicion     ] tasa 38.0 %   aplicable 100.0 %
+  LEX-con-repetidos            [lexico       ] tasa 33.8 %   aplicable 70.0 %
+  DIV-suma-impar               [divisibilidad] tasa 29.0 %   aplicable 70.0 %
+  MAG-centro-menor             [magnitud     ] tasa 28.5 %   aplicable 100.0 %
+  DIV-centro-par               [divisibilidad] tasa 27.0 %   aplicable 48.0 %
+  DIV-suma-par                 [divisibilidad] tasa 26.3 %   aplicable 70.0 %
+  SIG-sin-cero                 [signo        ] tasa 24.2 %   aplicable 39.0 %
+  FOR-menos-dos-cifras         [formato      ] tasa 23.2 %   aplicable 100.0 %
+  FOR-cadena-corta             [formato      ] tasa 23.2 %   aplicable 100.0 %
+  DIV-centro-impar             [divisibilidad] tasa 23.0 %   aplicable 48.0 %
+  POS-segunda                  [posicion     ] tasa 23.0 %   aplicable 100.0 %
+  POS-tercera                  [posicion     ] tasa 23.0 %   aplicable 100.0 %
+  SIG-tiene-cero               [signo        ] tasa 21.6 %   aplicable 39.0 %
+  MAG-centro-mayor             [magnitud     ] tasa 21.5 %   aplicable 100.0 %
+  DIV-suma-mult5               [divisibilidad] tasa 20.2 %   aplicable 59.0 %
+  POS-primera                  [posicion     ] tasa 16.0 %   aplicable 100.0 %
+  LEX-sin-repetidos            [lexico       ] tasa 14.5 %   aplicable 70.0 %
+  FOR-mas-dos-cifras           [formato      ] tasa 0.3 %    aplicable 100.0 %
+  FOR-cadena-larga             [formato      ] tasa 0.3 %    aplicable 100.0 %
+  MAG-suma-max                 [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  MAG-suma-min                 [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  MAG-suma-segunda-mayor       [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  MAG-mayor-numero             [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  REL-mas-coincidencias        [lexico       ] tasa 0.0 %    aplicable 100.0 %
+  REL-menos-coincidencias      [lexico       ] tasa 0.0 %    aplicable 100.0 %
+  EST-mas-cifras-del-enunciado [formato      ] tasa 0.0 %    aplicable 100.0 %  (lee el estimulo)
+
+-- Calibracion contra el techo nulo --
+  Maximo observado : 100.0 %  (regla 'MAG-suma-segunda-menor')
+  Techo nulo       : 32.2 %  (media del maximo con la clave permutada, 400 replicas)
+  Techo nulo p95   : 37.0 %
+  Ruido (sd)       : 2.4 %   -> margen exigido 2.0 sd = +4.8 pp
+  EXCESO           : +67.8 pp   <-- ESTO decide el veredicto
+  Exceso ATOMICO   : +75.0 pp  (la regla top sobre su propio nulo exacto, 25.0 %;
+                     no depende del numero de reglas). Si esta cifra es grande y
+                     el EXCESO no, sospechar bateria RELLENADA con reglas que
+                     ningun estudiante usaria: suben el techo sin mover el maximo.
+  [informativo, NO decide] tasa absoluta 100.0 % frente al viejo umbral 70.0 %
+  La tasa absoluta crece con el NUMERO DE REGLAS: medido sobre 468 items
+  oficiales, la misma poblacion da 27,4 % con 19 reglas y 34,8 % con 25, y
+  su techo nulo se mueve con ella. El exceso es lo invariante.
+
+-- Cobertura por familias de dimension --
+  magnitud       CON SONDA                  tamano relativo: la mas larga/corta, la mayor/menor, la de mas cifras
+  divisibilidad  CON SONDA                  estructura aritmetica: par/impar, multiplo de 5/10, entero vs decimal
+  signo          CON SONDA                  signo y sentido: negativo/positivo, aumenta/disminuye, si/no
+  posicion       CON SONDA                  lugar: cuadrante, orden, celda de la grilla, primera/ultima
+  formato        CON SONDA                  molde: unidades, notacion, tipo de grafico, presencia de cifras
+  lexico         CON SONDA                  vocabulario: token exclusivo de la clave, registro, prefijo
+  estimulo       CON SONDA (4 reglas)       lo que muestra el enunciado: tabla, valor calculado (regla #22, P7-G)
+
+-- VEREDICTO --
+  BLOQUEA (exit 1)
+  'MAG-suma-segunda-menor' [magnitud] acierta el 100.0 %: +67.8 pp sobre el techo nulo,
+  con el corte de canal en +8.0 pp y 2.0 sd de ruido descontadas.
+  Hay un canal real de eliminacion: el item se resuelve sin razonar, y por
+  encima de lo que filtran los propios cuadernillos oficiales (+7,0 pp).
+
+
+  --- canónica, 24 órdenes ---
+
+========================================
+BATERIA DE ELIMINACION — cierre por familias, veredicto por EXCESO
+========================================
+Versiones: 24 | Reglas: 34 | Cortes: ruido 2.0 % / canal 8.0 %
+
+-- Reglas (ordenadas por tasa) --
+  MAG-suma-segunda-menor       [magnitud     ] tasa 100.0 %  aplicable 100.0 %
+  MAG-menor-maximo             [magnitud     ] tasa 100.0 %  aplicable 100.0 %
+  FOR-menos-dos-cifras         [formato      ] tasa 100.0 %  aplicable 100.0 %
+  FOR-cadena-corta             [formato      ] tasa 100.0 %  aplicable 100.0 %
+  LEX-con-repetidos            [lexico       ] tasa 100.0 %  aplicable 100.0 %
+  MAG-suma-no-extrema          [magnitud     ] tasa 50.0 %   aplicable 100.0 %
+  MAG-sin-el-mayor-numero      [magnitud     ] tasa 50.0 %   aplicable 100.0 %
+  MAG-centro-mayor             [magnitud     ] tasa 50.0 %   aplicable 100.0 %
+  DIV-suma-par                 [divisibilidad] tasa 50.0 %   aplicable 100.0 %
+  REL-no-extrema-en-coincidencias [lexico       ] tasa 50.0 %   aplicable 100.0 %
+  EST-total-en-zona-de-un-conjunto [formato      ] tasa 50.0 %   aplicable 100.0 %  (lee el estimulo)
+  EST-primer-dato-en-la-zona-doble [formato      ] tasa 50.0 %   aplicable 100.0 %  (lee el estimulo)
+  SIG-tiene-cero               [signo        ] tasa 33.3 %   aplicable 100.0 %
+  DIV-centro-par               [divisibilidad] tasa 25.0 %   aplicable 0.0 %
+  DIV-centro-impar             [divisibilidad] tasa 25.0 %   aplicable 0.0 %
+  POS-primera                  [posicion     ] tasa 25.0 %   aplicable 100.0 %
+  POS-segunda                  [posicion     ] tasa 25.0 %   aplicable 100.0 %
+  POS-tercera                  [posicion     ] tasa 25.0 %   aplicable 100.0 %
+  POS-cuarta                   [posicion     ] tasa 25.0 %   aplicable 100.0 %
+  MAG-suma-max                 [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  MAG-suma-min                 [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  MAG-suma-segunda-mayor       [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  MAG-mayor-numero             [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  MAG-centro-menor             [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  DIV-suma-impar               [divisibilidad] tasa 0.0 %    aplicable 100.0 %
+  DIV-suma-mult5               [divisibilidad] tasa 0.0 %    aplicable 100.0 %
+  SIG-sin-cero                 [signo        ] tasa 0.0 %    aplicable 100.0 %
+  FOR-mas-dos-cifras           [formato      ] tasa 0.0 %    aplicable 100.0 %
+  FOR-cadena-larga             [formato      ] tasa 0.0 %    aplicable 100.0 %
+  LEX-sin-repetidos            [lexico       ] tasa 0.0 %    aplicable 100.0 %
+  REL-mas-coincidencias        [lexico       ] tasa 0.0 %    aplicable 100.0 %
+  REL-menos-coincidencias      [lexico       ] tasa 0.0 %    aplicable 100.0 %
+  EST-mas-cifras-del-enunciado [formato      ] tasa 0.0 %    aplicable 100.0 %  (lee el estimulo)
+  EST-menos-cifras-del-enunciado [formato      ] tasa 0.0 %    aplicable 100.0 %  (lee el estimulo)
+
+-- Calibracion contra el techo nulo --
+  Maximo observado : 100.0 %  (regla 'MAG-suma-segunda-menor')
+  Techo nulo       : 38.5 %  (media del maximo con la clave permutada, 400 replicas)
+  Techo nulo p95   : 45.8 %
+  Ruido (sd)       : 5.2 %   -> margen exigido 2.0 sd = +10.3 pp
+  EXCESO           : +61.5 pp   <-- ESTO decide el veredicto
+  Exceso ATOMICO   : +75.0 pp  (la regla top sobre su propio nulo exacto, 25.0 %;
+                     no depende del numero de reglas). Si esta cifra es grande y
+                     el EXCESO no, sospechar bateria RELLENADA con reglas que
+                     ningun estudiante usaria: suben el techo sin mover el maximo.
+  [informativo, NO decide] tasa absoluta 100.0 % frente al viejo umbral 70.0 %
+  La tasa absoluta crece con el NUMERO DE REGLAS: medido sobre 468 items
+  oficiales, la misma poblacion da 27,4 % con 19 reglas y 34,8 % con 25, y
+  su techo nulo se mueve con ella. El exceso es lo invariante.
+
+-- Cobertura por familias de dimension --
+  magnitud       CON SONDA                  tamano relativo: la mas larga/corta, la mayor/menor, la de mas cifras
+  divisibilidad  CON SONDA                  estructura aritmetica: par/impar, multiplo de 5/10, entero vs decimal
+  signo          CON SONDA                  signo y sentido: negativo/positivo, aumenta/disminuye, si/no
+  posicion       CON SONDA                  lugar: cuadrante, orden, celda de la grilla, primera/ultima
+  formato        CON SONDA                  molde: unidades, notacion, tipo de grafico, presencia de cifras
+  lexico         CON SONDA                  vocabulario: token exclusivo de la clave, registro, prefijo
+  estimulo       CON SONDA (4 reglas)       lo que muestra el enunciado: tabla, valor calculado (regla #22, P7-G)
+
+-- VEREDICTO --
+  BLOQUEA (exit 1)
+  'MAG-suma-segunda-menor' [magnitud] acierta el 100.0 %: +61.5 pp sobre el techo nulo,
+  con el corte de canal en +8.0 pp y 2.0 sd de ruido descontadas.
+  Hay un canal real de eliminacion: el item se resuelve sin razonar, y por
+  encima de lo que filtran los propios cuadernillos oficiales (+7,0 pp).
+
+
+  FIRMA, variantes, 11 000 000 de versiones (techo nulo 32.2 %): 8 reglas firmadas, cifras exactas
+    MAG-suma-segunda-menor               firmada 100.000 %  medida 100.000 %  exceso +67.8 pp
+    EST-menos-cifras-del-enunciado       firmada  69.553 %  medida  69.553 %  exceso +37.4 pp
+    MAG-menor-maximo                     firmada  53.032 %  medida  53.032 %  exceso +20.8 pp
+    MAG-suma-no-extrema                  firmada  50.000 %  medida  50.000 %  exceso +17.8 pp
+    MAG-sin-el-mayor-numero              firmada  50.000 %  medida  50.000 %  exceso +17.8 pp
+    REL-no-extrema-en-coincidencias      firmada  50.000 %  medida  50.000 %  exceso +17.8 pp
+    EST-primer-dato-en-la-zona-doble     firmada  50.000 %  medida  50.000 %  exceso +17.8 pp
+    EST-total-en-zona-de-un-conjunto     firmada  49.456 %  medida  49.456 %  exceso +17.3 pp
+    reglas sobre +8 pp fuera de la lista: 0
+
+  FIRMA, canónica, 24 órdenes (techo nulo 38.5 %): 12 reglas firmadas, cifras exactas
+    MAG-suma-segunda-menor               firmada 100.000 %  medida 100.000 %  exceso +61.5 pp
+    MAG-menor-maximo                     firmada 100.000 %  medida 100.000 %  exceso +61.5 pp
+    FOR-menos-dos-cifras                 firmada 100.000 %  medida 100.000 %  exceso +61.5 pp
+    FOR-cadena-corta                     firmada 100.000 %  medida 100.000 %  exceso +61.5 pp
+    LEX-con-repetidos                    firmada 100.000 %  medida 100.000 %  exceso +61.5 pp
+    MAG-suma-no-extrema                  firmada  50.000 %  medida  50.000 %  exceso +11.5 pp
+    MAG-sin-el-mayor-numero              firmada  50.000 %  medida  50.000 %  exceso +11.5 pp
+    MAG-centro-mayor                     firmada  50.000 %  medida  50.000 %  exceso +11.5 pp
+    DIV-suma-par                         firmada  50.000 %  medida  50.000 %  exceso +11.5 pp
+    REL-no-extrema-en-coincidencias      firmada  50.000 %  medida  50.000 %  exceso +11.5 pp
+    EST-total-en-zona-de-un-conjunto     firmada  50.000 %  medida  50.000 %  exceso +11.5 pp
+    EST-primer-dato-en-la-zona-doble     firmada  50.000 %  medida  50.000 %  exceso +11.5 pp
+    reglas sobre +8 pp fuera de la lista: 0
+
+RESULTADO: sin rojos en las sondas de I-3, I-4 e I-5 
+BATERÍA §P7: ROJO CUBIERTO POR LA FIRMA del profesor, regla por regla (no es PASS) · pendientes: 0
+exit=4

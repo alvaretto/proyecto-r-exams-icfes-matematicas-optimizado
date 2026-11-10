@@ -1,0 +1,689 @@
+inicio 2026-11-09 17:38:15
+fin 2026-11-09 17:54:05
+md5 del .Rmd CLOZE: 889d828e8129e11b0ec5dceda0cf108b · exams 2.4.5 · modo todo 
+
+[e1] trasplante de la Parte 1 (C-2)
+  texto: el bloque P1 es el data_generation firmado con 3 renombres (317 líneas)
+  dibujo_opciones: idéntico al del SCHOICE
+  objetos y .Random.seed: 100 variantes + 20 canónicas (semillas 1..304): 0 con diferencias
+  [control] un sorteo de más  11 de 12 con diferencias (semilla 1: difiere archivos + .Random.seed distinto)
+  [control] sin renombrar sol  12 de 12 con diferencias (semilla 1: falta sol_p1)
+
+[texto] oráculo desde el texto, V11 y Parte 6 (cuotas: 100 variantes y 20 canónicas por rama de las Partes 3 y 4)
+         p13 s1 p23 s1 p13 s2 p23 s2 p13 s3 p23 s3
+variante    100    100    100    100    100    100
+canonica     20     20     20     20     20     20
+  semillas 1..3686, todas juzgadas · versiones con algún código: 0
+
+[pesos] exclozetype, expoints, extol, exshuffle y ##ANSWERi## en orden
+  .Rmd: OK 
+
+[cruce] canales de las Partes 2 a 6 hacia la Parte 1 (§P7-G): 100 variantes y 20 canónicas; tasa solo donde la regla aplica (azar = 25 %)
+  -- variantes (n = 100) --
+  X-mas-numeros-en-comun           aplica en   0 · tasa    -    · elige lo mismo que -                 en   0.0 % · no aplica o NO CONCLUYENTE (n < 20)
+  X-menos-numeros-en-comun         aplica en   0 · tasa    -    · elige lo mismo que -                 en   0.0 % · no aplica o NO CONCLUYENTE (n < 20)
+  X-suma-cercana-al-total          aplica en 100 · tasa   2.0 % · elige lo mismo que MAG-suma-max      en  41.0 % · independiente
+  X-suma-lejana-al-total           aplica en 100 · tasa   0.0 % · elige lo mismo que MAG-suma-min      en  94.0 % · independiente
+  X-centro-cercano-al-centro       aplica en 100 · tasa  21.5 % · elige lo mismo que MAG-centro-mayor  en 100.0 % · es la regla firmada MAG-centro-mayor
+  X-maximo-cercano-al-mayor-dato   aplica en 100 · tasa   0.0 % · elige lo mismo que MAG-mayor-numero  en 100.0 % · es la regla firmada MAG-mayor-numero
+  -- canónicas (n = 20) --
+  X-mas-numeros-en-comun           aplica en   0 · tasa    -    · elige lo mismo que -                 en   0.0 % · no aplica o NO CONCLUYENTE (n < 20)
+  X-menos-numeros-en-comun         aplica en   0 · tasa    -    · elige lo mismo que -                 en   0.0 % · no aplica o NO CONCLUYENTE (n < 20)
+  X-suma-cercana-al-total          aplica en  20 · tasa   0.0 % · elige lo mismo que MAG-suma-max      en 100.0 % · es la regla firmada MAG-suma-max
+  X-suma-lejana-al-total           aplica en  20 · tasa   0.0 % · elige lo mismo que MAG-suma-min      en 100.0 % · es la regla firmada MAG-suma-min
+  X-centro-cercano-al-centro       aplica en  20 · tasa  50.0 % · elige lo mismo que MAG-centro-mayor  en 100.0 % · es la regla firmada MAG-centro-mayor
+  X-maximo-cercano-al-mayor-dato   aplica en  20 · tasa   0.0 % · elige lo mismo que MAG-mayor-numero  en 100.0 % · es la regla firmada MAG-mayor-numero
+  canales cruzados independientes y medibles: X-suma-cercana-al-total, X-suma-lejana-al-total 
+  [control] sin la V11: X-mas-numeros-en-comun aplica en 46 de 100 (tasa 5.1 %)
+
+[bateria] §P7 de la Parte 1 sobre los objetos del CLOZE (C-4)
+
+========================================
+BATERIA DE ELIMINACION — cierre por familias, veredicto por EXCESO
+========================================
+Versiones: 100 | Reglas: 34 | Cortes: ruido 2.0 % / canal 8.0 %
+
+-- Reglas (ordenadas por tasa) --
+  MAG-suma-segunda-menor       [magnitud     ] tasa 100.0 %  aplicable 100.0 %
+  EST-menos-cifras-del-enunciado [formato      ] tasa 65.3 %   aplicable 100.0 %  (lee el estimulo)
+  MAG-suma-no-extrema          [magnitud     ] tasa 50.0 %   aplicable 100.0 %
+  MAG-sin-el-mayor-numero      [magnitud     ] tasa 50.0 %   aplicable 100.0 %
+  REL-no-extrema-en-coincidencias [lexico       ] tasa 50.0 %   aplicable 100.0 %
+  EST-total-en-zona-de-un-conjunto [formato      ] tasa 50.0 %   aplicable 100.0 %  (lee el estimulo)
+  EST-primer-dato-en-la-zona-doble [formato      ] tasa 50.0 %   aplicable 100.0 %  (lee el estimulo)
+  MAG-menor-maximo             [magnitud     ] tasa 48.0 %   aplicable 100.0 %
+  POS-cuarta                   [posicion     ] tasa 38.0 %   aplicable 100.0 %
+  LEX-con-repetidos            [lexico       ] tasa 33.8 %   aplicable 70.0 %
+  DIV-suma-impar               [divisibilidad] tasa 29.0 %   aplicable 70.0 %
+  MAG-centro-menor             [magnitud     ] tasa 28.5 %   aplicable 100.0 %
+  DIV-centro-par               [divisibilidad] tasa 27.0 %   aplicable 48.0 %
+  DIV-suma-par                 [divisibilidad] tasa 26.3 %   aplicable 70.0 %
+  SIG-sin-cero                 [signo        ] tasa 24.2 %   aplicable 39.0 %
+  FOR-menos-dos-cifras         [formato      ] tasa 23.2 %   aplicable 100.0 %
+  FOR-cadena-corta             [formato      ] tasa 23.2 %   aplicable 100.0 %
+  DIV-centro-impar             [divisibilidad] tasa 23.0 %   aplicable 48.0 %
+  POS-segunda                  [posicion     ] tasa 23.0 %   aplicable 100.0 %
+  POS-tercera                  [posicion     ] tasa 23.0 %   aplicable 100.0 %
+  SIG-tiene-cero               [signo        ] tasa 21.6 %   aplicable 39.0 %
+  MAG-centro-mayor             [magnitud     ] tasa 21.5 %   aplicable 100.0 %
+  DIV-suma-mult5               [divisibilidad] tasa 20.2 %   aplicable 59.0 %
+  POS-primera                  [posicion     ] tasa 16.0 %   aplicable 100.0 %
+  LEX-sin-repetidos            [lexico       ] tasa 14.5 %   aplicable 70.0 %
+  FOR-mas-dos-cifras           [formato      ] tasa 0.3 %    aplicable 100.0 %
+  FOR-cadena-larga             [formato      ] tasa 0.3 %    aplicable 100.0 %
+  MAG-suma-max                 [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  MAG-suma-min                 [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  MAG-suma-segunda-mayor       [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  MAG-mayor-numero             [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  REL-mas-coincidencias        [lexico       ] tasa 0.0 %    aplicable 100.0 %
+  REL-menos-coincidencias      [lexico       ] tasa 0.0 %    aplicable 100.0 %
+  EST-mas-cifras-del-enunciado [formato      ] tasa 0.0 %    aplicable 100.0 %  (lee el estimulo)
+
+-- Calibracion contra el techo nulo --
+  Maximo observado : 100.0 %  (regla 'MAG-suma-segunda-menor')
+  Techo nulo       : 32.2 %  (media del maximo con la clave permutada, 400 replicas)
+  Techo nulo p95   : 37.0 %
+  Ruido (sd)       : 2.4 %   -> margen exigido 2.0 sd = +4.8 pp
+  EXCESO           : +67.8 pp   <-- ESTO decide el veredicto
+  Exceso ATOMICO   : +75.0 pp  (la regla top sobre su propio nulo exacto, 25.0 %;
+                     no depende del numero de reglas). Si esta cifra es grande y
+                     el EXCESO no, sospechar bateria RELLENADA con reglas que
+                     ningun estudiante usaria: suben el techo sin mover el maximo.
+  [informativo, NO decide] tasa absoluta 100.0 % frente al viejo umbral 70.0 %
+  La tasa absoluta crece con el NUMERO DE REGLAS: medido sobre 468 items
+  oficiales, la misma poblacion da 27,4 % con 19 reglas y 34,8 % con 25, y
+  su techo nulo se mueve con ella. El exceso es lo invariante.
+
+-- Cobertura por familias de dimension --
+  magnitud       CON SONDA                  tamano relativo: la mas larga/corta, la mayor/menor, la de mas cifras
+  divisibilidad  CON SONDA                  estructura aritmetica: par/impar, multiplo de 5/10, entero vs decimal
+  signo          CON SONDA                  signo y sentido: negativo/positivo, aumenta/disminuye, si/no
+  posicion       CON SONDA                  lugar: cuadrante, orden, celda de la grilla, primera/ultima
+  formato        CON SONDA                  molde: unidades, notacion, tipo de grafico, presencia de cifras
+  lexico         CON SONDA                  vocabulario: token exclusivo de la clave, registro, prefijo
+  estimulo       CON SONDA (4 reglas)       lo que muestra el enunciado: tabla, valor calculado (regla #22, P7-G)
+
+-- VEREDICTO --
+  BLOQUEA (exit 1)
+  'MAG-suma-segunda-menor' [magnitud] acierta el 100.0 %: +67.8 pp sobre el techo nulo,
+  con el corte de canal en +8.0 pp y 2.0 sd de ruido descontadas.
+  Hay un canal real de eliminacion: el item se resuelve sin razonar, y por
+  encima de lo que filtran los propios cuadernillos oficiales (+7,0 pp).
+
+
+  --- canónica, 24 órdenes (semilla 7 ) ---
+
+========================================
+BATERIA DE ELIMINACION — cierre por familias, veredicto por EXCESO
+========================================
+Versiones: 24 | Reglas: 34 | Cortes: ruido 2.0 % / canal 8.0 %
+
+-- Reglas (ordenadas por tasa) --
+  MAG-suma-segunda-menor       [magnitud     ] tasa 100.0 %  aplicable 100.0 %
+  MAG-menor-maximo             [magnitud     ] tasa 100.0 %  aplicable 100.0 %
+  FOR-menos-dos-cifras         [formato      ] tasa 100.0 %  aplicable 100.0 %
+  FOR-cadena-corta             [formato      ] tasa 100.0 %  aplicable 100.0 %
+  LEX-con-repetidos            [lexico       ] tasa 100.0 %  aplicable 100.0 %
+  MAG-suma-no-extrema          [magnitud     ] tasa 50.0 %   aplicable 100.0 %
+  MAG-sin-el-mayor-numero      [magnitud     ] tasa 50.0 %   aplicable 100.0 %
+  MAG-centro-mayor             [magnitud     ] tasa 50.0 %   aplicable 100.0 %
+  DIV-suma-par                 [divisibilidad] tasa 50.0 %   aplicable 100.0 %
+  REL-no-extrema-en-coincidencias [lexico       ] tasa 50.0 %   aplicable 100.0 %
+  EST-total-en-zona-de-un-conjunto [formato      ] tasa 50.0 %   aplicable 100.0 %  (lee el estimulo)
+  EST-primer-dato-en-la-zona-doble [formato      ] tasa 50.0 %   aplicable 100.0 %  (lee el estimulo)
+  SIG-tiene-cero               [signo        ] tasa 33.3 %   aplicable 100.0 %
+  DIV-centro-par               [divisibilidad] tasa 25.0 %   aplicable 0.0 %
+  DIV-centro-impar             [divisibilidad] tasa 25.0 %   aplicable 0.0 %
+  POS-primera                  [posicion     ] tasa 25.0 %   aplicable 100.0 %
+  POS-segunda                  [posicion     ] tasa 25.0 %   aplicable 100.0 %
+  POS-tercera                  [posicion     ] tasa 25.0 %   aplicable 100.0 %
+  POS-cuarta                   [posicion     ] tasa 25.0 %   aplicable 100.0 %
+  MAG-suma-max                 [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  MAG-suma-min                 [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  MAG-suma-segunda-mayor       [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  MAG-mayor-numero             [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  MAG-centro-menor             [magnitud     ] tasa 0.0 %    aplicable 100.0 %
+  DIV-suma-impar               [divisibilidad] tasa 0.0 %    aplicable 100.0 %
+  DIV-suma-mult5               [divisibilidad] tasa 0.0 %    aplicable 100.0 %
+  SIG-sin-cero                 [signo        ] tasa 0.0 %    aplicable 100.0 %
+  FOR-mas-dos-cifras           [formato      ] tasa 0.0 %    aplicable 100.0 %
+  FOR-cadena-larga             [formato      ] tasa 0.0 %    aplicable 100.0 %
+  LEX-sin-repetidos            [lexico       ] tasa 0.0 %    aplicable 100.0 %
+  REL-mas-coincidencias        [lexico       ] tasa 0.0 %    aplicable 100.0 %
+  REL-menos-coincidencias      [lexico       ] tasa 0.0 %    aplicable 100.0 %
+  EST-mas-cifras-del-enunciado [formato      ] tasa 0.0 %    aplicable 100.0 %  (lee el estimulo)
+  EST-menos-cifras-del-enunciado [formato      ] tasa 0.0 %    aplicable 100.0 %  (lee el estimulo)
+
+-- Calibracion contra el techo nulo --
+  Maximo observado : 100.0 %  (regla 'MAG-suma-segunda-menor')
+  Techo nulo       : 38.5 %  (media del maximo con la clave permutada, 400 replicas)
+  Techo nulo p95   : 45.8 %
+  Ruido (sd)       : 5.2 %   -> margen exigido 2.0 sd = +10.3 pp
+  EXCESO           : +61.5 pp   <-- ESTO decide el veredicto
+  Exceso ATOMICO   : +75.0 pp  (la regla top sobre su propio nulo exacto, 25.0 %;
+                     no depende del numero de reglas). Si esta cifra es grande y
+                     el EXCESO no, sospechar bateria RELLENADA con reglas que
+                     ningun estudiante usaria: suben el techo sin mover el maximo.
+  [informativo, NO decide] tasa absoluta 100.0 % frente al viejo umbral 70.0 %
+  La tasa absoluta crece con el NUMERO DE REGLAS: medido sobre 468 items
+  oficiales, la misma poblacion da 27,4 % con 19 reglas y 34,8 % con 25, y
+  su techo nulo se mueve con ella. El exceso es lo invariante.
+
+-- Cobertura por familias de dimension --
+  magnitud       CON SONDA                  tamano relativo: la mas larga/corta, la mayor/menor, la de mas cifras
+  divisibilidad  CON SONDA                  estructura aritmetica: par/impar, multiplo de 5/10, entero vs decimal
+  signo          CON SONDA                  signo y sentido: negativo/positivo, aumenta/disminuye, si/no
+  posicion       CON SONDA                  lugar: cuadrante, orden, celda de la grilla, primera/ultima
+  formato        CON SONDA                  molde: unidades, notacion, tipo de grafico, presencia de cifras
+  lexico         CON SONDA                  vocabulario: token exclusivo de la clave, registro, prefijo
+  estimulo       CON SONDA (4 reglas)       lo que muestra el enunciado: tabla, valor calculado (regla #22, P7-G)
+
+-- VEREDICTO --
+  BLOQUEA (exit 1)
+  'MAG-suma-segunda-menor' [magnitud] acierta el 100.0 %: +61.5 pp sobre el techo nulo,
+  con el corte de canal en +8.0 pp y 2.0 sd de ruido descontadas.
+  Hay un canal real de eliminacion: el item se resuelve sin razonar, y por
+  encima de lo que filtran los propios cuadernillos oficiales (+7,0 pp).
+
+
+  FIRMA C-4, variantes, tasas exactas de exacto.py (techo 25.03 %): 9 reglas firmadas
+    MAG-suma-segunda-menor               firmada 100.000 %  medida 100.000 %  exceso +74.97 pp
+    EST-menos-cifras-del-enunciado       firmada  69.553 %  medida  69.553 %  exceso +44.52 pp
+    MAG-menor-maximo                     firmada  53.032 %  medida  53.032 %  exceso +28.00 pp
+    MAG-suma-no-extrema                  firmada  50.000 %  medida  50.000 %  exceso +24.97 pp
+    MAG-sin-el-mayor-numero              firmada  50.000 %  medida  50.000 %  exceso +24.97 pp
+    REL-no-extrema-en-coincidencias      firmada  50.000 %  medida  50.000 %  exceso +24.97 pp
+    EST-primer-dato-en-la-zona-doble     firmada  50.000 %  medida  50.000 %  exceso +24.97 pp
+    EST-total-en-zona-de-un-conjunto     firmada  49.456 %  medida  49.456 %  exceso +24.43 pp
+    LEX-con-repetidos                    firmada  33.418 %  medida  33.418 %  exceso +8.39 pp
+    reglas sobre +8 pp fuera de la lista: 0
+
+  FIRMA C-4, canónica, 24 órdenes del CLOZE (techo 38.53 %): 12 reglas firmadas
+    MAG-suma-segunda-menor               firmada 100.000 %  medida 100.000 %  exceso +61.47 pp
+    MAG-menor-maximo                     firmada 100.000 %  medida 100.000 %  exceso +61.47 pp
+    FOR-menos-dos-cifras                 firmada 100.000 %  medida 100.000 %  exceso +61.47 pp
+    FOR-cadena-corta                     firmada 100.000 %  medida 100.000 %  exceso +61.47 pp
+    LEX-con-repetidos                    firmada 100.000 %  medida 100.000 %  exceso +61.47 pp
+    MAG-suma-no-extrema                  firmada  50.000 %  medida  50.000 %  exceso +11.47 pp
+    MAG-sin-el-mayor-numero              firmada  50.000 %  medida  50.000 %  exceso +11.47 pp
+    MAG-centro-mayor                     firmada  50.000 %  medida  50.000 %  exceso +11.47 pp
+    DIV-suma-par                         firmada  50.000 %  medida  50.000 %  exceso +11.47 pp
+    REL-no-extrema-en-coincidencias      firmada  50.000 %  medida  50.000 %  exceso +11.47 pp
+    EST-total-en-zona-de-un-conjunto     firmada  50.000 %  medida  50.000 %  exceso +11.47 pp
+    EST-primer-dato-en-la-zona-doble     firmada  50.000 %  medida  50.000 %  exceso +11.47 pp
+    reglas sobre +8 pp fuera de la lista: 0
+  firma: dentro de lo firmado
+
+[mutantes] contrato INC-MUTANTE-SONDA (tope 600 semillas)
+  M1_e1_sorteo_de_mas                sonda esperada E1                     semilla 1    cazado_por_su_sonda · E1
+  M2_v11_resp_sin_filtro_ni_guarda   sonda esperada V11_RESP               semilla 1    cazado_por_su_sonda · V11_RESP
+  M3_v11_resp_sin_filtro             sonda esperada GUARDA_RMD: V11 por va semilla 1    cazado_por_su_sonda · GUARDA_RMD: V11 por valor: ninguna respuesta de las Partes 2 a 5 es un número impreso en l
+  M4_v11_datos_sin_filtro_ni_guarda  sonda esperada V11_DATOS              semilla 3    cazado_por_su_sonda · V11_DATOS
+  M5_p6_sin_ajustar_el_orden         sonda esperada P6_VERDAD              semilla 1    cazado_por_su_sonda · P6_VERDAD
+  M6_respuestas_p3_p4_cruzadas       sonda esperada RESPUESTA              semilla 1    cazado_por_su_sonda · RESPUESTA
+  M9_p6_unanime                      sonda esperada P6_UNANIME             semilla 6    cazado_por_su_sonda · P6_UNANIME
+  M10_respuesta_impresa              sonda esperada RESP_IMPRESA           semilla 2    cazado_por_su_sonda · RESP_IMPRESA
+  M11_p6_empate                      sonda esperada P6_EMPATE              semilla 3    cazado_por_su_sonda_y_otra · P6_VERDAD,P6_EMPATE
+  M7_rotulos_cruzados                sonda esperada P1_MARCA               semilla 1    cazado_por_su_sonda · P1_MARCA
+  M8_pesos                           sonda esperada PESOS                  semilla -    cazado_por_su_sonda · PESOS
+  M12_v11_contenido                  sonda esperada V11_CONTENIDO          semilla 1    cazado_por_su_sonda · V11_CONTENIDO
+  M12b_v11_contenido_guarda          sonda esperada GUARDA_RMD: V11 por co semilla 1    cazado_por_su_sonda · GUARDA_RMD: V11 por contenido: la otra encuesta no comparte conjuntos con la Parte 1
+  M13_pero_no_en_pregunta            sonda esperada PERO_NO                semilla 1    cazado_por_su_sonda · PERO_NO
+  M14_pero_no_en_parte6              sonda esperada PERO_NO                semilla 1    cazado_por_su_sonda · PERO_NO
+  M15_p6_cifras                      sonda esperada P6_CIFRAS              semilla 1    cazado_por_su_sonda · P6_CIFRAS
+  M16_p6_par_repetido                sonda esperada P6_COMPLEMENTARIO      semilla 1    cazado_por_su_sonda · P6_COMPLEMENTARIO
+  M11b_p6_empate_aislado             sonda esperada P6_EMPATE              semilla 1    cazado_por_su_sonda · P6_EMPATE
+  M17_p1_rotulo_repetido             sonda esperada P1_ROTULOS             semilla 1    cazado_por_su_sonda · P1_ROTULOS
+  M18_p1_falta_una_figura            sonda esperada P1_ROTULOS             semilla 1    cazado_por_su_sonda · P1_ROTULOS
+  M19_vinetas_ilegibles              sonda esperada VINETAS                semilla 1    cazado_por_su_sonda · VINETAS
+  M20_pregunta_ilegible              sonda esperada PREGUNTAS              semilla 1    cazado_por_su_sonda · PREGUNTAS
+  M21_encabezado_ilegible            sonda esperada ESTRUCTURA             semilla 1    cazado_por_su_sonda · ESTRUCTURA
+  M22_p6_ilegible                    sonda esperada P6_FORMA               semilla 1    cazado_por_su_sonda · P6_FORMA
+  M23_vocabulario_de_error           sonda esperada VOCAB_ERROR            semilla 1    cazado_por_su_sonda · VOCAB_ERROR
+  M23b_vocabulario_de_error_guarda   sonda esperada GUARDA_RMD: Partes 2 a semilla 1    cazado_por_su_sonda · GUARDA_RMD: Partes 2 a 6: sin la frase «pero no» ni vocabulario de error (C-2)
+  M23c_erroneo_guarda                sonda esperada GUARDA_RMD: Partes 2 a semilla 1    cazado_por_su_sonda · GUARDA_RMD: Partes 2 a 6: sin la frase «pero no» ni vocabulario de error (C-2)
+  M24_concordancia_restados          sonda esperada GUARDA_RMD: Concordanc semilla 9    cazado_por_su_sonda · GUARDA_RMD: Concordancia (regla #7): restados/restadas concuerda con el grupo de la otra e
+  F1_regla_fuera_de_la_lista         cazado_por_su_sonda
+  F2_sobre_su_cifra                  cazado_por_su_sonda
+  F3_firmada_sin_medir               cazado_por_su_sonda
+  F4_md5_distinto_da_3               cazado_por_su_sonda
+
+[v6] Incidente Q sobre el HTML real: exams2html, N = 100 (semillas 1..100), familia B de la regla #23
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+  100 versiones en 179 s · con algún código: 0 · gap 6 mostrado en otro orden que la prosa: 95 de 100 · gap 1 barajado: 96 de 100
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+  V6M1_grupos_cruzados               sonda esperada V6_P6          semilla 1   cazado_por_su_sonda · V6_P6
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+  V6M2_lista_en_orden_interno        sonda esperada V6_P6          semilla 1   cazado_por_su_sonda · V6_P6
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+  V6M3_p1_rotulo_correcto_otro       sonda esperada V6_P1          semilla 1   cazado_por_su_sonda · V6_P1
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+  V6M4_prosa_ilegible                sonda esperada V6_ESTRUCTURA  semilla 1   cazado_por_su_sonda · V6_ESTRUCTURA
+
+[moodle] exams2moodle propio desde el .Rmd vigente, N = 100 (semillas 1..100), familia B de la regla #23
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+  100 preguntas en 170 s · con algún código: 0 · imagen de la clave contra el entorno de su semilla: 100 de 100 (sorteos previos de exams: 0) · nombres no neutrales: 0 de 400
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+  MM1_numericos_p3_p4_cruzados       sonda esperada M_NUM  semilla 1   cazado_por_su_sonda · M_NUM
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+  MM2_marcas_p6_invertidas           sonda esperada M_P6   semilla 1   cazado_por_su_sonda · M_P6
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+  MM3_p1_prosa_otro_rotulo           sonda esperada M_P1   semilla 1   cazado_por_su_sonda · M_P1
+
+[solucion] I-4.7: chunks solucion y feedback en las cuotas de texto (100 variantes y 20 canónicas por rama de las Partes 3 y 4)
+         p13 s1 p23 s1 p13 s2 p23 s2 p13 s3 p23 s3
+variante    100    100    100    100    100    100
+canonica     20     20     20     20     20     20
+  semillas 1..3686 · 720 versiones juzgadas en 46 s · con algún código: 0 · otro error emitido: VN-X-CENTRO-DOBLE 436, VN-X-RESTA-UNA 284
+  sin fallas: cada párrafo casa con su plantilla, coincide letra a letra y está en su sección; la retroalimentación de los seis gaps es la reconstruida; varían el otro error y las dos reflexiones
+  S1_respuesta_con_otro_rotulo               sonda esperada SOL_RESPUESTA      capas plantilla                semilla 1       cazado_por_su_sonda · SOL_RESPUESTA
+  S2_imagen_de_un_distractor                 sonda esperada SOL_IMAGEN         capas plantilla                semilla 1       cazado_por_su_sonda · SOL_IMAGEN
+  S3_procedimiento_con_otra_cifra            sonda esperada SOL_PROCEDIMIENTO  capas plantilla                semilla 1       cazado_por_su_sonda · SOL_PROCEDIMIENTO
+  S4_caso_con_otra_cifra                     sonda esperada SOL_CASO           capas plantilla                semilla 1       cazado_por_su_sonda · SOL_CASO
+  S5_diagnosticos_con_rotulos_rotados        sonda esperada SOL_OPCION         capas plantilla                semilla 1       cazado_por_su_sonda · SOL_OPCION
+  S6_circulo_con_otra_suma                   sonda esperada SOL_CIRCULO        capas plantilla                semilla 1       cazado_por_su_sonda · SOL_CIRCULO
+  S7_otro_error_con_otra_cifra               sonda esperada SOL_OTRO           capas plantilla                semilla 3       cazado_por_su_sonda · SOL_OTRO
+  S8_feedback_p1_invertido                   sonda esperada SOL_FEEDBACK       capas todas                    semilla 1       cazado_por_su_sonda · SOL_FEEDBACK
+  S9_codigo_interno_visible                  sonda esperada SOL_CODIGO         capas plantilla                semilla 1       cazado_por_su_sonda · SOL_CODIGO
+  S10_parrafo_nuevo_con_cifras               sonda esperada SOL_SIN_ORACULO    capas plantilla                semilla 1       cazado_por_su_sonda · SOL_SIN_ORACULO
+  S11_parrafo_que_desaparece                 sonda esperada SOL_MUDO           capas plantilla                semilla 1       cazado_por_su_sonda · SOL_MUDO
+  S12_afirmacion_sobre_otro_conjunto         sonda esperada SOL_AFIRMACION     capas plantilla                semilla 1       cazado_por_su_sonda · SOL_AFIRMACION
+  S13_letra_en_el_bloque_latex               sonda esperada SOL_LATEX          capas plantilla                semilla 1       cazado_por_su_sonda · SOL_LATEX
+  S14_cuenta_falsa                           sonda esperada SOL_ARIT           capas todas                    semilla -       cazado_por_su_sonda · SOL_ARIT
+  S15_otra_encuesta_con_otra_cifra           sonda esperada SOL_OTRA_ENCUESTA  capas plantilla                semilla 1       cazado_por_su_sonda · SOL_OTRA_ENCUESTA
+  S16_parte6_grupos_cruzados                 sonda esperada SOL_P6             capas plantilla                semilla 1       cazado_por_su_sonda · SOL_P6
+  S17_concordancia_ellos                     sonda esperada SOL_CONCORDANCIA   capas plantilla                semilla 2       cazado_por_su_sonda · SOL_CONCORDANCIA
+  S18_trampa_con_otro_conjunto               sonda esperada SOL_TEXTO          capas todas                    semilla 1       cazado_por_su_sonda · SOL_TEXTO
+  S19_diagnosticos_en_otro_orden             sonda esperada SOL_ORDEN          capas todas                    semilla 1       cazado_por_su_sonda · SOL_ORDEN
+  S20_reflexion_cloze_sin_sortear            sonda esperada SOL_SIN_VARIACION  capas todas                    semilla 1..100  cazado_por_su_sonda · SOL_SIN_VARIACION
+  S21_ancho_sin_important_en_la_solucion     sonda esperada SOL_IMAGEN         capas plantilla                semilla 1       cazado_por_su_sonda · SOL_IMAGEN
+  S22_parte5_un_sumando_mas_uno              sonda esperada SOL_OTRA_ENCUESTA  capas plantilla                semilla 1       cazado_por_su_sonda · SOL_OTRA_ENCUESTA
+  S23_parte5_total_mas_uno                   sonda esperada SOL_OTRA_ENCUESTA  capas plantilla                semilla 1       cazado_por_su_sonda · SOL_OTRA_ENCUESTA
+  S24_parte5_una_zona_omitida                sonda esperada SOL_OTRA_ENCUESTA  capas plantilla                semilla 1       cazado_por_su_sonda · SOL_OTRA_ENCUESTA
+  S25_trampa_pero_no_otro_conjunto           sonda esperada SOL_AFIRMACION     capas plantilla                semilla 1       cazado_por_su_sonda · SOL_AFIRMACION
+  S26_restados_solo_en_la_solucion           sonda esperada SOL_CONCORDANCIA   capas plantilla                semilla 9       cazado_por_su_sonda · SOL_CONCORDANCIA
+  S27_ellos_solo_en_la_solucion              sonda esperada SOL_CONCORDANCIA   capas plantilla                semilla 2       cazado_por_su_sonda · SOL_CONCORDANCIA
+  S28_parrafo_estatico_en_la_solucion        sonda esperada SOL_ESTATICO       capas todas                    semilla -       cazado_por_su_sonda · SOL_ESTATICO
+  mutantes: 28 de 28 cazados solo por su sonda
+
+[papel] I-5: N = 100 PDF reales con solpcielo_cloze.tex: la canónica, un contexto de cada tipo y los textos de la Parte 1 más largos
+  hoja 216 x 330 mm · cuatro figuras en una misma página: 100 de 100 (página 2) · píxeles con tinta fuera de la caja: 0 · «Cómo marcar» en la portada: 100 de 100 · 60 s
+  PP1_hoja_de_356_mm                       sonda esperada PAPEL_TAMANO   semilla 1    cazado_por_su_sonda · PAPEL_TAMANO
+  PP2_salto_de_pagina_entre_las_filas      sonda esperada PAPEL_FIGURAS  semilla 1    cazado_por_su_sonda · PAPEL_FIGURAS
+  PP3_cifra_sin_cortes_en_el_enunciado     sonda esperada PAPEL_MARGEN   semilla 1    cazado_por_su_sonda · PAPEL_MARGEN
+  varias preguntas (I-5, condición de uso): 34 PDF de tres preguntas con solpcielo_cloze_una_por_pagina.tex (102 preguntas) · preguntas con sus cuatro figuras partidas: 0 · «Cómo marcar» en la portada: 34 de 34 · hoja 216 x 330 mm · 44 s
+  PP4_varias_preguntas_con_la_del_cloze    sonda esperada PAPEL_FIGURAS_VARIAS semillas 1,101,201 cazado_por_su_sonda · PAPEL_FIGURAS_VARIAS
+  PP5_varias_preguntas_sin_como_marcar     sonda esperada PAPEL_COMO_MARCAR    semillas 1,101,201 cazado_por_su_sonda · PAPEL_COMO_MARCAR
+
+[pantalla] I-5 a 320 y 360 px: exams2html N = 100 (semillas 1..100) medido en Chromium por CDP; familia B de la regla #23
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+  320 px: 100 versiones · figuras de la Parte 1 de 248 a 248 px y la de la Solution de 264 a 264 px · con algún código: 0
+  360 px: 100 versiones · figuras de la Parte 1 de 280 a 280 px y la de la Solution de 280 a 280 px · con algún código: 0
+  205 s
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+  PM1_ancho_sin_important                  sonda esperada PANT_ANCHO     semilla 1 a 320 px cazado_por_su_sonda · PANT_ANCHO
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+  PM2_cifra_sin_cortes_en_el_enunciado     sonda esperada PANT_DESBORDE  semilla 1 a 320 px cazado_por_su_sonda · PANT_DESBORDE
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+  PM3_rotulo_debajo_de_su_figura           sonda esperada PANT_ROTULO    semilla 1 a 320 px cazado_por_su_sonda · PANT_ROTULO
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+  PM4_figuras_solapadas                    sonda esperada PANT_SOLAPE    semilla 1 a 320 px cazado_por_su_sonda · PANT_SOLAPE
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+  PM5_suma_de_la_parte5_en_matematicas     sonda esperada PANT_DESBORDE  semilla 1 a 320 px cazado_por_su_sonda · PANT_DESBORDE
+
+[uso] SemilleroCloze.R y solpcielo_cloze_una_por_pagina.tex : literales, llamadas exams2*(), plantilla, y generar_pdf/html/moodle del semillero en una carpeta temporal
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+  semilla 1 · PDF: hoja 216 x 330 mm, páginas de las imágenes 3 3 3 3 4 6 6 6 6 7 9 9 9 9 10, «Cómo marcar» sí · gap de la Parte 1 en el orden I-IV en 3 de 3 preguntas · clave registrada por exams2pdf() (d) (b) (b), cada una en el diagrama que reproduce las viñetas impresas · HTML: 1 archivo(s) sin ##ANSWER · XML: 2 pregunta(s) con gaps MULTICHOICE_V|NUMERICAL|NUMERICAL|NUMERICAL|NUMERICAL|MULTIRESPONSE · 14 s
+  sin fallas: literales del semillero, exshuffle = FALSE solo en exams2pdf(), archivos = 100, plantilla igual a ../solpcielo_cloze.tex salvo el comentario y \clearpage, PDF en oficio con las cuatro figuras de cada pregunta en una página, «Cómo marcar», el gap de la Parte 1 en el orden I-IV y la clave registrada en el diagrama correcto, HTML sin ##ANSWER y XML con los seis gaps medidos
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+[WARNING] Deprecated: --mathjax. Use --math-method=mathjax[:URL] instead.
+[WARNING] Deprecated: --mathml. Use --math-method=mathml instead.
+! LaTeX Error: Environment documento undefined.
+
+  U1_semillero_con_plantilla_plain               sonda esperada USO_SEMILLERO    semilla -   cazado_por_su_sonda · USO_SEMILLERO
+  U2_semillero_con_archivo_de_prueba             sonda esperada USO_SEMILLERO    semilla -   cazado_por_su_sonda · USO_SEMILLERO
+  U3_plantilla_que_cambia_otra_linea             sonda esperada USO_PLANTILLA    semilla -   cazado_por_su_sonda · USO_PLANTILLA
+  U4_plantilla_en_disco_sin_clearpage            sonda esperada USO_FIGURAS_PDF  semilla 1   cazado_por_su_sonda · USO_FIGURAS_PDF
+  U5_plantilla_en_disco_sin_como_marcar          sonda esperada USO_COMO_MARCAR  semilla 1   cazado_por_su_sonda · USO_COMO_MARCAR
+  U6_plantilla_en_disco_de_356_mm                sonda esperada USO_TAMANO       semilla 1   cazado_por_su_sonda · USO_TAMANO
+  U7_plantilla_en_disco_que_no_compila           sonda esperada USO_RENDER       semilla 1   cazado_por_su_sonda · USO_RENDER
+  U8_semillero_html_de_otro_archivo              sonda esperada USO_HTML         semilla 1   cazado_por_su_sonda · USO_HTML
+  U9_semillero_moodle_sin_multichoice_v          sonda esperada USO_MOODLE       semilla 1   cazado_por_su_sonda · USO_MOODLE
+  U10_semillero_sin_exshuffle_en_el_pdf          sonda esperada USO_ORDEN_PDF    semilla 1   cazado_por_su_sonda_y_otra (otra declarada: USO_EXSHUFFLE) · USO_EXSHUFFLE,USO_ORDEN_PDF
+  U11_semillero_moodle_tambien_sin_barajar       sonda esperada USO_EXSHUFFLE    semilla 1   cazado_por_su_sonda_y_otra (otra declarada: USO_MOODLE) · USO_EXSHUFFLE,USO_MOODLE
+  U12_semillero_con_250_archivos                 sonda esperada USO_ARCHIVOS     semilla -   cazado_por_su_sonda · USO_ARCHIVOS
+  U13_rmd_con_rotulos_permutados                 sonda esperada USO_ORDEN_PDF    semilla 1   cazado_por_su_sonda · USO_ORDEN_PDF
+  U14_rmd_con_la_clave_desplazada                sonda esperada USO_CLAVE_PDF    semilla 1   cazado_por_su_sonda · USO_CLAVE_PDF
+  U15_semillero_sin_exshuffle_y_rmd_sin_barajar  sonda esperada USO_EXSHUFFLE    semilla 1   cazado_por_su_sonda · USO_EXSHUFFLE
+  U16_semillero_html_tambien_sin_barajar         sonda esperada USO_EXSHUFFLE    semilla 1   cazado_por_su_sonda · USO_EXSHUFFLE
+  U17_rmd_con_rotulos_sin_negrita                sonda esperada USO_CLAVE_PDF    semilla 1   cazado_por_su_sonda · USO_CLAVE_PDF
+
+RESUMEN: rojos 0  · pendientes ninguno · md5 cableado coincide · secciones e1,texto,pesos,cruce,bateria,mutantes,v6,moodle,solucion,papel,pantalla,uso 
+EXIT 4 (rojo §P7 de la Parte 1 cubierto por la firma C-4; no es PASS) 
+Error al cerrar parallel: no se pueden finalizar algunos procesos hijos
+exit=4

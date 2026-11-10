@@ -1,0 +1,30 @@
+17:37:06
+md5 del .Rmd CLOZE: 889d828e8129e11b0ec5dceda0cf108b · exams 2.4.5 · modo uso 
+
+[uso] SemilleroCloze.R y solpcielo_cloze_una_por_pagina.tex : literales, llamadas exams2*(), plantilla, y generar_pdf/html/moodle del semillero en una carpeta temporal
+  semilla 1 · PDF: hoja 216 x 330 mm, páginas de las imágenes 3 3 3 3 4 6 6 6 6 7 9 9 9 9 10, «Cómo marcar» sí · gap de la Parte 1 en el orden I-IV en 3 de 3 preguntas · clave registrada por exams2pdf() (d) (b) (b), cada una en el diagrama que reproduce las viñetas impresas · HTML: 1 archivo(s) sin ##ANSWER · XML: 2 pregunta(s) con gaps MULTICHOICE_V|NUMERICAL|NUMERICAL|NUMERICAL|NUMERICAL|MULTIRESPONSE · 14 s
+  sin fallas: literales del semillero, exshuffle = FALSE solo en exams2pdf(), archivos = 100, plantilla igual a ../solpcielo_cloze.tex salvo el comentario y \clearpage, PDF en oficio con las cuatro figuras de cada pregunta en una página, «Cómo marcar», el gap de la Parte 1 en el orden I-IV y la clave registrada en el diagrama correcto, HTML sin ##ANSWER y XML con los seis gaps medidos
+! LaTeX Error: Environment documento undefined.
+
+  U1_semillero_con_plantilla_plain               sonda esperada USO_SEMILLERO    semilla -   cazado_por_su_sonda · USO_SEMILLERO
+  U2_semillero_con_archivo_de_prueba             sonda esperada USO_SEMILLERO    semilla -   cazado_por_su_sonda · USO_SEMILLERO
+  U3_plantilla_que_cambia_otra_linea             sonda esperada USO_PLANTILLA    semilla -   cazado_por_su_sonda · USO_PLANTILLA
+  U4_plantilla_en_disco_sin_clearpage            sonda esperada USO_FIGURAS_PDF  semilla 1   cazado_por_su_sonda · USO_FIGURAS_PDF
+  U5_plantilla_en_disco_sin_como_marcar          sonda esperada USO_COMO_MARCAR  semilla 1   cazado_por_su_sonda · USO_COMO_MARCAR
+  U6_plantilla_en_disco_de_356_mm                sonda esperada USO_TAMANO       semilla 1   cazado_por_su_sonda · USO_TAMANO
+  U7_plantilla_en_disco_que_no_compila           sonda esperada USO_RENDER       semilla 1   cazado_por_su_sonda · USO_RENDER
+  U8_semillero_html_de_otro_archivo              sonda esperada USO_HTML         semilla 1   cazado_por_su_sonda · USO_HTML
+  U9_semillero_moodle_sin_multichoice_v          sonda esperada USO_MOODLE       semilla 1   cazado_por_su_sonda · USO_MOODLE
+  U10_semillero_sin_exshuffle_en_el_pdf          sonda esperada USO_ORDEN_PDF    semilla 1   cazado_por_su_sonda_y_otra (otra declarada: USO_EXSHUFFLE) · USO_EXSHUFFLE,USO_ORDEN_PDF
+  U11_semillero_moodle_tambien_sin_barajar       sonda esperada USO_EXSHUFFLE    semilla 1   cazado_por_su_sonda_y_otra (otra declarada: USO_MOODLE) · USO_EXSHUFFLE,USO_MOODLE
+  U12_semillero_con_250_archivos                 sonda esperada USO_ARCHIVOS     semilla -   cazado_por_su_sonda · USO_ARCHIVOS
+  U13_rmd_con_rotulos_permutados                 sonda esperada USO_ORDEN_PDF    semilla 1   cazado_por_su_sonda · USO_ORDEN_PDF
+  U14_rmd_con_la_clave_desplazada                sonda esperada USO_CLAVE_PDF    semilla 1   cazado_por_su_sonda · USO_CLAVE_PDF
+  U15_semillero_sin_exshuffle_y_rmd_sin_barajar  sonda esperada USO_EXSHUFFLE    semilla 1   cazado_por_su_sonda · USO_EXSHUFFLE
+  U16_semillero_html_tambien_sin_barajar         sonda esperada USO_EXSHUFFLE    semilla 1   cazado_por_su_sonda · USO_EXSHUFFLE
+  U17_rmd_con_rotulos_sin_negrita                sonda esperada USO_CLAVE_PDF    semilla 1   cazado_por_su_sonda · USO_CLAVE_PDF
+
+RESUMEN: rojos 0  · pendientes ninguno · md5 cableado coincide · secciones uso 
+EXIT 3 (sin cubrir) 
+exit=3
+17:37:37

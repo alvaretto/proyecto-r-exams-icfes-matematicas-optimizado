@@ -1,0 +1,60 @@
+=== r3_div
+md5 del .Rmd: f886dfaa45b80a5ee16f9820908049b5 (/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_schoice_v1.Rmd)
+Diversidad sustantiva: 100/100 versiones evaluadas | respuesta correcta: 96 valor(es) unico(s) | errores=0 indeterminadas=0
+PASS: la respuesta correcta varia suficientemente (diversidad sustantiva confirmada).
+exit=0
+=== r3_diag
+md5 del .Rmd: f886dfaa45b80a5ee16f9820908049b5 (/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_schoice_v1.Rmd)
+=== Diagnosticidad de distractores (gaps de seleccion unica) ===
+Archivo: diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_schoice_v1.Rmd | semillas: 100 | umbral: 70 % | margen H1: 15 %
+
+gap      vers          H1 mas-larga          H1 mas-corta    H2 prefijo
+                  tasa (margen med)     tasa (margen med)          tasa
+unico     100              0% (    -)              0% (   7%)            0%
+               H3 veredicto: la correcta empieza por "13" en el 14% de 100 versiones
+
+PASS: ninguna sonda superficial supera el 70 %.
+exit=0
+=== r3_stress
+md5 del .Rmd: f886dfaa45b80a5ee16f9820908049b5 (/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_schoice_v1.Rmd)
+Semillas: 100/100 · mediana 1.39 s · máximo 2.45 s · tipo schoice
+Posición de la clave: 17 / 22 / 22 / 39 
+PASS: compilación completa sin errores, cuelgues ni fugas de texto.
+exit=0
+=== r3_unicas
+versiones únicas sobre 300: 296 · vectores de clave únicos: 282 
+clave por posición, N = 4000: 1016 1031 965 988 · chi2 p = 0.46 
+=== r3_lit
+md5 del .Rmd: f886dfaa45b80a5ee16f9820908049b5
+catálogo niveles-mat.json 426ea08a3746c669a1467df579284ca7
+catálogo evidencias-mat.json 427d2e29c9a5a99da619ee2526fbd785
+catálogo estandares-mat-ebc.json 4862e82c3cd19b31af4b2f2784bb4aef
+catálogo estructura-prueba-mat.json 330f5f841063af8db7486777ee407f9d
+
+[OK] Competencia: 'Interpretación y representación'
+   literal en evidencias-mat.json /evidencias_oficiales/IyR_E1/competencia
+   literal en evidencias-mat.json /evidencias_oficiales/IyR_E2/competencia
+[OK] Componente: 'Aleatorio'
+   literal en estructura-prueba-mat.json /contenidos/equivalencia_componente/Estadística
+[OK] Afirmacion: 'Comprende y transforma la información cuantitativa y esquemática presentada en distintos formatos.'
+   literal en evidencias-mat.json /afirmaciones_oficiales/Interpretación y representación/texto_oficial
+[OK] Evidencia: 'Transforma la representación de una o más piezas de información.'
+   literal en evidencias-mat.json /evidencias_oficiales/IyR_E2/texto_oficial
+[OK] Descriptor (texto tras ' — '): 'Identifica información relevante cuando el tipo de registro contiene información de más de tres categorías.'
+   literal en niveles-mat.json /niveles_oficiales/N3[10]
+   literal en niveles-mat.json /mapeo_codigos_proyecto_a_oficial/D3.11/texto_oficial
+[OK] Estandar (texto antes de ' ('): 'Reconozco la relación entre un conjunto de datos y su representación.'
+   literal en estandares-mat-ebc.json /estandares_oficiales_por_pensamiento_grado/Aleatorio_6-7[1]
+
+TOTAL fallos: 0
+exit=0
+=== r3_glifos
+OK: sin glifos que rompan pdflatex
+exit=0
+=== r3_multi (final)
+  Fallos: 0
+  Tasa de éxito: 100.0%
+============================================
+
+  RESULTADO: APROBADO (0 fallos en  100  semillas)
+exit=0

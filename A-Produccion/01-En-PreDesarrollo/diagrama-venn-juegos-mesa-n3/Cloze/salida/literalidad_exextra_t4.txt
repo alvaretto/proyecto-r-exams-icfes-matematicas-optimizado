@@ -1,0 +1,22 @@
+md5 del .Rmd: 889d828e8129e11b0ec5dceda0cf108b
+catálogo niveles-mat.json 426ea08a3746c669a1467df579284ca7
+catálogo evidencias-mat.json 427d2e29c9a5a99da619ee2526fbd785
+catálogo estandares-mat-ebc.json 4862e82c3cd19b31af4b2f2784bb4aef
+catálogo estructura-prueba-mat.json 330f5f841063af8db7486777ee407f9d
+
+[OK] Competencia: 'Interpretación y representación'
+   literal en evidencias-mat.json /evidencias_oficiales/IyR_E1/competencia
+   literal en evidencias-mat.json /evidencias_oficiales/IyR_E2/competencia
+[OK] Componente: 'Aleatorio'
+   literal en estructura-prueba-mat.json /contenidos/equivalencia_componente/Estadística
+[OK] Afirmacion: 'Comprende y transforma la información cuantitativa y esquemática presentada en distintos formatos.'
+   literal en evidencias-mat.json /afirmaciones_oficiales/Interpretación y representación/texto_oficial
+[OK] Evidencia: 'Transforma la representación de una o más piezas de información.'
+   literal en evidencias-mat.json /evidencias_oficiales/IyR_E2/texto_oficial
+[OK] Descriptor (texto tras ' — '): 'Identifica información relevante cuando el tipo de registro contiene información de más de tres categorías.'
+   literal en niveles-mat.json /niveles_oficiales/N3[10]
+   literal en niveles-mat.json /mapeo_codigos_proyecto_a_oficial/D3.11/texto_oficial
+[OK] Estandar (texto antes de ' ('): 'Reconozco la relación entre un conjunto de datos y su representación.'
+   literal en estandares-mat-ebc.json /estandares_oficiales_por_pensamiento_grado/Aleatorio_6-7[1]
+
+TOTAL fallos: 0

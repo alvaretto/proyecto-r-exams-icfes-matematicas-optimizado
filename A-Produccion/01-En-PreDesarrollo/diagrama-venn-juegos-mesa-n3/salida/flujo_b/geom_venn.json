@@ -1,0 +1,31 @@
+{
+  "unidades": "1 unidad = 1 px del recorte; origen en el eje del trazo de la esquina superior izquierda del marco; y hacia abajo",
+  "W": 231, "H": 239, "margen_exterior": 3, "px_por_unidad": 3,
+  "r": 67.8,
+  "circulos": {
+    "c1": {"x": 74.0,  "y": 87.0,  "color": "#4A8FA8", "nombre": "azul verdoso, arriba a la izquierda"},
+    "c2": {"x": 155.5, "y": 87.0,  "color": "#7E1F3E", "nombre": "granate, arriba a la derecha"},
+    "c3": {"x": 112.5, "y": 164.5, "color": "#2F7F5F", "nombre": "verde, abajo al centro"}
+  },
+  "trazo_circulo": 2.2, "trazo_marco": 1.7, "color_marco": "#000000", "color_texto": "#000000",
+  "orden_regiones": ["s1", "p12", "s2", "ctr", "p13", "p23", "s3"],
+  "alineado_numeros": "izquierda",
+  "lsb_numero": 0.6,
+  "lsb_nota": "Margen lateral tipico de un digito en la fuente bold condensada a em 20 (AFM de Helvetica Bold por 0,82): 0,36-0,52 unidades, y 1,12 en el 1. La pluma va en x_izq - lsb_numero para que la tinta caiga en x_izq.",
+  "anclas_nota": "x_izq = borde izquierdo de la tinta; y = centro vertical de la tinta. Medianas sobre los 4 recortes rehechos, con cada recorte referido al centro de sus 3 circulos. Sustituye al centrado (decision del profesor, WAIT_USER #2, 2026-11-06).",
+  "anclas": {
+    "s1":  {"x_izq": 47.9,  "y": 86.2,  "dentro": ["c1"]},
+    "p12": {"x_izq": 102.1, "y": 81.2,  "dentro": ["c1", "c2"]},
+    "s2":  {"x_izq": 164.8, "y": 83.8,  "dentro": ["c2"]},
+    "ctr": {"x_izq": 105.8, "y": 116.2, "dentro": ["c1", "c2", "c3"]},
+    "p13": {"x_izq": 67.4,  "y": 135.2, "dentro": ["c1", "c3"]},
+    "p23": {"x_izq": 143.4, "y": 136.9, "dentro": ["c2", "c3"]},
+    "s3":  {"x_izq": 105.8, "y": 183.6, "dentro": ["c3"]}
+  },
+  "rotulos": {
+    "r1": {"x": 7.5,   "base": 16.5,  "ajuste": "izquierda"},
+    "r2": {"x": 221.0, "base": 16.5,  "ajuste": "derecha"},
+    "r3": {"x": 163.5, "base": 226.5, "ajuste": "izquierda"}
+  },
+  "em_numero": 20, "em_rotulo": 18, "fuente": "Nimbus Sans Narrow Bold"
+}

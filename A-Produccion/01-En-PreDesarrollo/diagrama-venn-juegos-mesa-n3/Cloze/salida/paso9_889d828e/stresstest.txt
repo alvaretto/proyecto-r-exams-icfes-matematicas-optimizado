@@ -1,0 +1,3 @@
+md5 del .Rmd: 889d828e8129e11b0ec5dceda0cf108b (/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/Cloze/diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1.Rmd)
+Semillas: 100/100 · mediana 1.47 s · máximo 1.61 s · tipo cloze
+PASS: compilación completa sin errores, cuelgues ni fugas de texto.

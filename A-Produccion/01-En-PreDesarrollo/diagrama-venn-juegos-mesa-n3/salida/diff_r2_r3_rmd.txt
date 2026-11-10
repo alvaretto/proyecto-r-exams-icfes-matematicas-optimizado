@@ -1,0 +1,26 @@
+232c232
+<     paste0("A la zona de solo ", t1, " no basta con quitarle la intersección con ", t2, ": ", mat(paste0(dat$P, " - ", dat$b, " = ", dat$P - dat$b)),
+---
+>     paste0("Para llegar a la zona de solo ", t1, " no basta con quitarle al total la intersección con ", t2, ": ", mat(paste0(dat$P, " - ", dat$b, " = ", dat$P - dat$b)),
+240c240
+<     paste0("A la zona de solo ", t3, " no basta con quitarle las dos intersecciones: en ",
+---
+>     paste0("Para llegar a la zona de solo ", t3, " no basta con quitarle al total las dos intersecciones: en ",
+344,347c344,347
+< * ![Diagrama de Venn](diagrama_a_`r fig_id`.png){width=280px style="max-width:100%"}&#8203;
+< * ![Diagrama de Venn](diagrama_b_`r fig_id`.png){width=280px style="max-width:100%"}&#8203;
+< * ![Diagrama de Venn](diagrama_c_`r fig_id`.png){width=280px style="max-width:100%"}&#8203;
+< * ![Diagrama de Venn](diagrama_d_`r fig_id`.png){width=280px style="max-width:100%"}&#8203;
+---
+> * ![Diagrama de Venn](diagrama_a_`r fig_id`.png){width=5.5cm style="width:280px!important;max-width:100%"}&#8203;
+> * ![Diagrama de Venn](diagrama_b_`r fig_id`.png){width=5.5cm style="width:280px!important;max-width:100%"}&#8203;
+> * ![Diagrama de Venn](diagrama_c_`r fig_id`.png){width=5.5cm style="width:280px!important;max-width:100%"}&#8203;
+> * ![Diagrama de Venn](diagrama_d_`r fig_id`.png){width=5.5cm style="width:280px!important;max-width:100%"}&#8203;
+363c363
+< cat("![Diagrama de Venn de la respuesta correcta](", archivos[which(sol)], "){width=280px style=\"max-width:100%\"}&#8203;\n\n", sep = "")
+---
+> cat("![Diagrama de Venn de la respuesta correcta](", archivos[which(sol)], "){width=5.5cm style=\"width:280px!important;max-width:100%\"}&#8203;\n\n", sep = "")
+400c400
+< cat("- Antes de elegir, comprueba los siete datos: los tres totales y las cuatro intersecciones.\n")
+---
+> cat("- Antes de elegir, comprueba los siete datos: los tres totales, las tres intersecciones y el dato «pero no».\n")

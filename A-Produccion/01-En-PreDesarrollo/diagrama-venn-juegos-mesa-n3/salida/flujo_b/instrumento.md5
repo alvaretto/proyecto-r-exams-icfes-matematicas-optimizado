@@ -1,0 +1,6 @@
+# Recongelado el 2026-11-06. Motivo: el profesor eligió TikZ con los números alineados a la izquierda como en la plana (WAIT_USER #2).
+# La vara «centro de tinta en el ancla» dejó de valer: ahora mide izq_<región> (borde izquierdo, <=1,5), cy_<región> (<=2) y region_<región> (toda la tinta).
+# Recongelado el 2026-11-06 tras la FASE 2C r1. Motivo: el marco pasa de 2,4 a 1,7 unidades en geom_venn.json (el 2,4 se fijó a ojo; 1,51 en el recorte, ~1,7 en el cuadernillo).
+# comparar_venn.py no cambia: lee el grosor esperado de geom_venn.json.
+b99724d93f7bedfc54ae8326576a375b  salida/flujo_b/comparar_venn.py
+bafe6089eecd0f801314ff01af26c61e  salida/flujo_b/geom_venn.json

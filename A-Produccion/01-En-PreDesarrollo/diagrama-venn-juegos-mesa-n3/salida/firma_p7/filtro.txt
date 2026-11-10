@@ -1,0 +1,6 @@
+versiones que quedan 5133405 46.67 %
+cero todo 14.50 %  filtrado 21.74 %
+p13_0 todo 5.00 %  filtrado 8.64 %
+p23_0 todo 5.00 %  filtrado 8.64 %
+s3_0 todo 5.00 %  filtrado 5.32 %
+centro medio 7.0 7.24 | aceptación mínima en una pareja (centro, a): 33.2 %

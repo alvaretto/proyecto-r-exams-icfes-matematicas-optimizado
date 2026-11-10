@@ -1,0 +1,688 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## =============================================================================
+## CLOZE hermano de MAT-2026-07-014 (diagrama-venn-juegos-mesa-n3). Seis partes: schoice|num|num|num|num|mchoice.
+## Decisiones del profesor del 2026-11-09 (C-1 a C-5): ../.claude/CLAUDE.md, sección «CLOZE hermano».
+##
+## Parte 1 = el SCHOICE aprobado. Las líneas entre @@INICIO_BLOQUE_P1@@ y @@FIN_BLOQUE_P1@@ las escribe
+## empalmar_bloque_p1.R desde el cuerpo firmado del SCHOICE (md5 f886dfaa…): son su chunk data_generation, sin
+## editar, con tres renombres de código (opciones -> opciones_p1, sol -> sol_p1, feedback -> feedback_p1).
+## E1 de verificar_espacio_cloze.R comprueba que objetos y .Random.seed coinciden con los del SCHOICE.
+## Los COMENTARIOS del bloque son los del SCHOICE y hablan del SCHOICE: allí exshuffle es FALSE y las opciones
+## son imágenes. Aquí los cuatro diagramas van en el enunciado, rotulados I a IV en el orden de la mezcla, y el
+## gap ofrece texto (Incidente G; conflicto 1 declarado). No se editan para no tocar el bloque firmado.
+## =============================================================================
+## @@INICIO_BLOQUE_P1@@
+## =============================================================================
+## MAT-2026-07-014 — Simulacro SAI «Nivelación 6» de grado 10, pregunta impresa 14, reciclada de
+## Evaluar para Avanzar 2023, Saber 10.°, Cuadernillo 2, pregunta 8 (I_1957870).
+## Fuente verbatim: ITEM_OFICIAL.md. Invariantes I-1..I-5: .claude/CLAUDE.md local.
+##
+## Diseño:
+##   - Las cuatro opciones son diagramas de Venn con la misma geometría; solo cambian los siete
+##     números (I-1). La capa metacognitiva va en la Solution.
+##   - Los datos se construyen desde las regiones, sin bucles que resampleen (familia F1, I-3).
+##   - Los tres distractores son los de la Guía oficial, en todas las versiones (I-3). Por eso el
+##     tipo de error no se sortea: la selección sobre el pool solo los filtra por precondición, y
+##     los dos errores no ofrecibles se comentan en la Solution. Conflicto con la regla #1 declarado en
+##     .claude/CLAUDE.md local, pendiente de la decisión del profesor.
+##   - GEOM_VENN y dibujar_venn salen de salida/flujo_b/tikz/venn_tikz.R (elección del profesor,
+##     WAIT_USER #2). El dibujo se hace en el chunk dibujo_opciones, no aquí.
+##
+## Notación (ITEM_OFICIAL.md): a = dos conjuntos, pero no el tercero; b, c, d = intersecciones de
+## primero-segundo, segundo-tercero y primero-tercero; P, M, B = totales; z = b - a, el centro.
+## Regiones: s1, p12, s2, ctr, p13, p23, s3, siempre en ese orden.
+## =============================================================================
+library(exams)
+
+## --- Utilidades (familia F5: muestreo seguro) --------------------------------
+pick  <- function(x) x[sample.int(length(x), 1L)]     # vectores, también de longitud 1
+pick1 <- function(x) x[[sample.int(length(x), 1L)]]   # listas
+cap1  <- function(s) paste0(toupper(substr(s, 1L, 1L)), substring(s, 2L))
+mat   <- function(x) paste0("$", x, "$")
+
+## --- Figura: copia de salida/flujo_b/tikz/venn_tikz.R ---------------------------
+GEOM_VENN <- list(
+  W = 231, H = 239, margen = 3, r = 67.8,
+  circ = list(c1 = list(x = 74.0,  y = 87.0,  color = "4A8FA8"),
+              c2 = list(x = 155.5, y = 87.0,  color = "7E1F3E"),
+              c3 = list(x = 112.5, y = 164.5, color = "2F7F5F")),
+  trazo_circulo = 2.2, trazo_marco = 1.7,
+  orden = c("s1", "p12", "s2", "ctr", "p13", "p23", "s3"),
+  lsb_numero = 0.6, alto_digito = 14.5,
+  anclas = list(s1 = list(x_izq = 47.9, y = 86.2), p12 = list(x_izq = 102.1, y = 81.2), s2 = list(x_izq = 164.8, y = 83.8),
+                ctr = list(x_izq = 105.8, y = 116.2), p13 = list(x_izq = 67.4, y = 135.2), p23 = list(x_izq = 143.4, y = 136.9),
+                s3 = list(x_izq = 105.8, y = 183.6)),
+  rotulos = list(r1 = list(x = 7.5, base = 16.5, ajuste = "izquierda"),
+                 r2 = list(x = 221.0, base = 16.5, ajuste = "derecha"),
+                 r3 = list(x = 163.5, base = 226.5, ajuste = "izquierda")),
+  em_numero = 20, em_rotulo = 18, dpi = 216
+)
+
+dibujar_venn <- function(regiones, rotulos, archivo, geom = GEOM_VENN) {
+  stopifnot(length(regiones) == 7, is.numeric(regiones), all(regiones == round(regiones)),
+            all(regiones >= 0), all(regiones <= 99), length(rotulos) == 3, is.character(rotulos))
+  regiones <- as.integer(regiones)
+  f <- function(v) formatC(v, format = "f", digits = 2)
+  g <- geom; m <- g$margen
+  # unidades en bp, y hacia abajo; el origen es la esquina del marco, el lienzo lo rebasa en margen
+  tik <- c(sprintf("\\begin{tikzpicture}[x=1bp,y=-1bp,every node/.style={inner sep=0pt,outer sep=0pt,text=black}]"),
+           sprintf("\\useasboundingbox (%s,%s) rectangle (%s,%s);", f(-m), f(-m), f(g$W + m), f(g$H + m)),
+           sprintf("\\fill[white] (%s,%s) rectangle (%s,%s);", f(-m), f(-m), f(g$W + m), f(g$H + m)))
+  for (k in names(g$circ)) {
+    cc <- g$circ[[k]]
+    tik <- c(tik, sprintf("\\definecolor{c%s}{HTML}{%s}\\draw[c%s,line width=%sbp] (%s,%s) circle (%sbp);",
+                          k, cc$color, k, f(g$trazo_circulo), f(cc$x), f(cc$y), f(g$r)))
+  }
+  tik <- c(tik, sprintf("\\draw[black,line width=%sbp] (0,0) rectangle (%s,%s);", f(g$trazo_marco), f(g$W), f(g$H)))
+  for (i in 1:7) {
+    a <- g$anclas[[g$orden[i]]]
+    tik <- c(tik, sprintf("\\node[anchor=base west] at (%s,%s) {\\num{%d}};", f(a$x_izq - g$lsb_numero), f(a$y + g$alto_digito / 2), regiones[i]))
+  }
+  for (i in 1:3) {
+    r <- g$rotulos[[i]]
+    an <- if (r$ajuste == "izquierda") "base west" else "base east"
+    tik <- c(tik, sprintf("\\node[anchor=%s] at (%s,%s) {\\rot{%s}};", an, f(r$x), f(r$base), rotulos[i]))
+  }
+  tik <- c(tik, "\\end{tikzpicture}")
+  cab <- c("\\usepackage[T1]{fontenc}", "\\usepackage[utf8]{inputenc}", "\\usepackage{helvet}",
+           sprintf("\\newcommand{\\num}[1]{{\\fontfamily{phv}\\fontseries{bc}\\fontsize{%d}{%d}\\selectfont #1}}", g$em_numero, g$em_numero),
+           sprintf("\\newcommand{\\rot}[1]{{\\fontfamily{phv}\\fontseries{bc}\\fontsize{%d}{%d}\\selectfont #1}}", g$em_rotulo, g$em_rotulo))
+  td <- tempfile("venn_"); dir.create(td)
+  on.exit(unlink(td, recursive = TRUE), add = TRUE)
+  tex <- c("\\documentclass[border=0pt]{standalone}", cab, "\\usepackage{tikz}", "\\begin{document}", tik, "\\end{document}")
+  writeLines(tex, file.path(td, "v.tex"), useBytes = FALSE)
+  old <- setwd(td); on.exit(setwd(old), add = TRUE, after = FALSE)
+  st <- system2("pdflatex", c("-interaction=nonstopmode", "-halt-on-error", "v.tex"), stdout = FALSE, stderr = FALSE)
+  if (st != 0 || !file.exists("v.pdf")) stop("pdflatex falló al dibujar el diagrama")
+  st <- system2("pdftoppm", c("-png", "-r", g$dpi, "-singlefile", "v.pdf", "v"), stdout = FALSE, stderr = FALSE)
+  if (st != 0) stop("pdftoppm falló")
+  setwd(old)
+  dir.create(dirname(archivo), showWarnings = FALSE, recursive = TRUE)
+  salida <- file.path(td, "v.png")
+  writeBin(readBin(salida, "raw", file.size(salida)), archivo)
+  invisible(archivo)
+}
+
+## --- Instancia canónica (I-2) ---------------------------------------------------
+P_CANON <- 0.05
+stopifnot("I-2: la canónica no pasa de 0,10" = P_CANON <= 0.10)
+es_canonica <- sample(c(TRUE, FALSE), 1L, prob = c(P_CANON, 1 - P_CANON))
+
+## --- Regiones de la clave (F1) --------------------------------------------------
+## Las cotas garantizan que el mecanismo A (I-3) dé enteros >= 0, sin rechazar nada:
+##   s1 >= ctr y s2 >= ctr        (P - b - d y M - b - c)
+##   p13, p23 >= p12 - ctr        (d - a y c - a)
+##   s3 >= ctr - p12              (B - d - c + a)
+## p12 != ctr: si coincidieran, el centro de A sería el de la clave y se perdería la trampa.
+## p12, ctr >= 2: todas las cantidades del enunciado llevan el verbo en plural.
+ORDEN <- GEOM_VENN$orden
+if (es_canonica) {
+  reg <- list(s1 = 7L, p12 = 3L, s2 = 9L, ctr = 7L, p13 = 0L, p23 = 1L, s3 = 5L)
+} else {
+  v_ctr <- pick(2:12)
+  v_p12 <- pick(setdiff(2:12, v_ctr))
+  piso  <- max(0L, v_p12 - v_ctr)
+  reg <- list(s1 = v_ctr + pick(0:9), p12 = v_p12, s2 = v_ctr + pick(0:9), ctr = v_ctr,
+              p13 = piso + pick(0:9), p23 = piso + pick(0:9), s3 = max(0L, v_ctr - v_p12) + pick(0:9))
+}
+
+## Los siete datos que muestra un vector de regiones (vectorizado). Es la definición del ítem:
+## solo la clave debe reproducir los del enunciado.
+datos_desde <- function(r) with(r, list(a = p12, b = p12 + ctr, c = p23 + ctr, d = p13 + ctr,
+                                        P = s1 + p12 + p13 + ctr, M = s2 + p12 + p23 + ctr,
+                                        B = s3 + p13 + p23 + ctr))
+dat <- datos_desde(reg)
+
+## Fórmulas puras y vectorizadas de I-3, con el orden de regiones de arriba. p son los siete datos.
+FORMULAS <- list(
+  "CLAVE"              = function(p) with(p, cbind(P - a - d, a, M - a - c, b - a, d - (b - a), c - (b - a), B - d - c + (b - a))),
+  "VN-A-CENTRO"        = function(p) with(p, cbind(P - b - d, b, M - b - c, a, d - a, c - a, B - d - c + a)),
+  "VN-B-TOTALES"       = function(p) with(p, cbind(P, a, M, b - a, d - (b - a), c - (b - a), B)),
+  "VN-D-SIN-OPERAR"    = function(p) with(p, cbind(P, b, M, a, d, c, B)),
+  "VN-X-RESTA-UNA"     = function(p) with(p, cbind(P - b, a, M - c, b - a, d - (b - a), c - (b - a), B - d)),
+  "VN-X-CENTRO-DOBLE"  = function(p) with(p, cbind(P - a - d, a, M - a - c, b - a, d - (b - a), c - (b - a), B - d - c))
+)
+reg_clave <- as.integer(FORMULAS[["CLAVE"]](dat))
+stopifnot("I-3: la fórmula de la clave reproduce las regiones construidas" =
+            identical(reg_clave, as.integer(unlist(reg[ORDEN]))))
+
+## --- Contexto (regla #11: siete plantillas de siete tipos) -------------------------
+conj <- function(rotulo, texto = tolower(rotulo)) list(rotulo = rotulo, texto = texto)
+contextos <- list(
+  list(tipo = "institucional", grupo = "estudiantes", verbo = "tomarían",
+       protagonistas = c("El comité cultural de un colegio", "La coordinación de un instituto técnico", "La rectoría de una escuela"),
+       conjuntos = list(conj("Pintura"), conj("Música"), conj("Teatro")),
+       plantilla = function(prot) paste0(prot, " abrirá talleres por la tarde y, para armar los grupos, recogió los ",
+                                         "siguientes datos sobre las preferencias de los estudiantes en cuanto a tres talleres.")),
+  list(tipo = "problema", grupo = "socios", verbo = "practicarían",
+       protagonistas = c("un club de barrio", "una liga deportiva", "una caja de compensación"),
+       conjuntos = list(conj("Fútbol"), conj("Voleibol"), conj("Tenis")),
+       plantilla = function(prot) paste0("En ", prot, " no alcanzan las canchas para todos los socios, así que primero hay que ",
+                                         "saber cuántos practicarían cada deporte. Estos son los datos recogidos sobre tres deportes.")),
+  list(tipo = "periodistico", grupo = "asociados", verbo = "tomarían",
+       protagonistas = c("El boletín de una cooperativa", "La revista de una cooperativa", "El periódico de un sindicato"),
+       conjuntos = list(conj("Inglés"), conj("Francés"), conj("Alemán")),
+       plantilla = function(prot) paste0(prot, " publicó el resultado de una consulta entre sus asociados sobre tres ",
+                                         "cursos de idiomas que podrían abrirse el próximo semestre.")),
+  list(tipo = "estudiante", grupo = "vecinos", verbo = "comprarían",
+       protagonistas = c("la feria gastronómica del barrio", "el bazar de la parroquia", "la fiesta de la vereda"),
+       conjuntos = list(conj("Empanadas"), conj("Arepas"), conj("Tamales")),
+       plantilla = function(prot) paste0("Te encargaron organizar ", prot, ". Para calcular cuánto preparar, les preguntaste a ",
+                                         "los vecinos cuáles de tres platos comprarían, y estos fueron los resultados.")),
+  list(tipo = "descubrimiento", grupo = "usuarios", verbo = "leerían",
+       protagonistas = c("la bibliotecaria del pueblo", "el encargado de la biblioteca municipal", "la directora de la casa de la cultura"),
+       conjuntos = list(conj("Novelas"), conj("Cuentos"), conj("Poesía")),
+       plantilla = function(prot) paste0("Al revisar las encuestas del último mes, ", prot, " encontró los siguientes datos sobre ",
+                                         "los géneros que leerían los usuarios, y quiere organizar con ellos tres clubes de lectura.")),
+  list(tipo = "retorica", grupo = "asistentes", verbo = "harían",
+       protagonistas = c("un campamento juvenil", "una colonia de vacaciones", "un encuentro de jóvenes"),
+       conjuntos = list(conj("Senderismo"), conj("Natación"), conj("Ciclismo")),
+       plantilla = function(prot) paste0("¿Cómo repartir a los asistentes de ", prot, " entre tres actividades? ",
+                                         "Los monitores empezaron por recoger los siguientes datos.")),
+  list(tipo = "dialogo", grupo = "personas", verbo = "verían",
+       protagonistas = c("del cineclub", "del cine al aire libre", "de la semana de cine"),
+       conjuntos = list(conj("Comedia"), conj("Drama"), conj("Terror")),
+       plantilla = function(prot) paste0("—Necesito saber cuántas personas vendrían a cada función ", prot, " —pidió el coordinador. ",
+                                         "Le entregaron los siguientes datos sobre tres géneros de películas."))
+)
+canonico <- list(grupo = "personas", verbo = "jugarían",
+                 conjuntos = list(conj("Parqués"), conj("Monopoly", "Monopoly"), conj("Bingo")),
+                 enunciado = paste0("Para realizar una jornada de juegos con los empleados de una empresa, se recogen los siguientes ",
+                                    "datos con el fin de organizar a las personas de acuerdo con sus preferencias en cuanto a tres ",
+                                    "juegos de mesa."))
+ctx <- if (es_canonica) canonico else pick1(contextos)
+enunciado <- if (es_canonica) ctx$enunciado else ctx$plantilla(pick(ctx$protagonistas))
+grupo <- ctx$grupo; verbo <- ctx$verbo
+rotulos <- vapply(ctx$conjuntos, function(k) k$rotulo, "")
+t1 <- ctx$conjuntos[[1L]]$texto; t2 <- ctx$conjuntos[[2L]]$texto; t3 <- ctx$conjuntos[[3L]]$texto
+## Largo admitido por la figura: el rótulo 3 se mide contra el círculo verde (verificar_espacio.R).
+stopifnot("rótulos dentro de lo medido" = all(nchar(rotulos[1:2]) <= 10L), nchar(rotulos[3L]) <= 8L)
+
+personas <- function(n, x) paste0(n, " ", grupo, " ", verbo, " ", x)
+vineta_1 <- paste0(personas(dat$a, paste0(t1, " y ", t2)), ", pero no ", t3, ".")
+vineta_2 <- paste0(personas(dat$b, paste0(t1, " y ", t2)), ", ", personas(dat$c, paste0(t2, " y ", t3)), ", y ",
+                   personas(dat$d, paste0(t1, " y ", t3)), ".")
+vineta_3 <- paste0(personas(dat$P, t1), ", ", personas(dat$B, t3), " y ", personas(dat$M, t2), ".")
+pregunta <- "De acuerdo con lo anterior, ¿cuál diagrama de Venn organiza los datos de manera adecuada?"
+
+## --- Pool de errores (regla #1) ---------------------------------------------------
+## Nombres de zona: solo para los textos de la Solution.
+z12 <- paste0(t1, " y ", t2, " sin ", t3)
+z13 <- paste0(t1, " y ", t3, " sin ", t2)
+z23 <- paste0(t2, " y ", t3, " sin ", t1)
+sumatxt <- function(...) { v <- c(...); paste0(paste(v, collapse = " + "), " = ", sum(v)) }
+nuevo_error <- function(codigo, nombre, descripcion_corta, descripcion_larga, causa_raiz, ofrecible, precondicion) {
+  list(codigo = codigo, nombre = nombre, descripcion_corta = descripcion_corta, descripcion_larga = descripcion_larga,
+       causa_raiz = causa_raiz, ofrecible = ofrecible, precondicion = precondicion,
+       calcula = function(p) {
+         if (!isTRUE(precondicion(p))) stop("fuera de contexto: ", codigo)
+         as.integer(FORMULAS[[codigo]](p))
+       })
+}
+no_negativo <- function(codigo) function(p) all(FORMULAS[[codigo]](p) >= 0L)
+errores_conceptuales <- list(
+  "VN-A-CENTRO" = nuevo_error("VN-A-CENTRO", "Poner en el centro el dato «pero no»",
+    "tomen a quienes están fuera del tercer conjunto como si fueran el centro",
+    paste0("El dato de ", dat$b, " ", grupo, " quedó entero en la zona de ", z12, ", y esa zona con el centro suma ",
+           mat(sumatxt(dat$b, dat$a)), ", no ", dat$b, ". Desde ahí las demás restas están bien hechas: por eso los tres círculos suman ",
+           dat$P, ", ", dat$M, " y ", dat$B, ", y revisar solo los totales no lo delata."),
+    "leer «X y Y» y «X y Y, pero no Z» como si dijeran lo mismo, y repartir los dos datos al revés",
+    TRUE, no_negativo("VN-A-CENTRO")),
+  "VN-B-TOTALES" = nuevo_error("VN-B-TOTALES", "Confundir el total de un conjunto con quienes están solo en él",
+    "dejen cada total en la zona de un solo conjunto, sin restar lo que ese conjunto comparte",
+    paste0("El centro y las zonas de dos conjuntos están bien, pero el círculo de ", t1, " suma ",
+           mat(sumatxt(dat$P, dat$a, dat$b - dat$a, dat$d - (dat$b - dat$a))), ", no ", dat$P, ". Lo mismo pasa con los círculos de ", t2, " y de ", t3, "."),
+    "creer que el total de un conjunto cuenta solo a quienes no están en ningún otro",
+    TRUE, no_negativo("VN-B-TOTALES")),
+  "VN-D-SIN-OPERAR" = nuevo_error("VN-D-SIN-OPERAR", "Poner cada dato en una zona, sin operar",
+    "repartan las cifras del enunciado entre las zonas sin hacer ninguna resta",
+    paste0("Aquí ", dat$a, " también quedó en el centro y ninguna cifra se restó, así que no se cumple ni un solo dato. Por ejemplo, el círculo de ",
+           t1, " suma ", mat(sumatxt(dat$P, dat$b, dat$a, dat$d)), ", no ", dat$P, "."),
+    "tratar cada frase del enunciado como el contenido de una zona, cuando seis de los siete datos reúnen varias zonas",
+    TRUE, no_negativo("VN-D-SIN-OPERAR")),
+  "VN-X-RESTA-UNA" = nuevo_error("VN-X-RESTA-UNA", "Restarle al total solo una de las intersecciones",
+    "descuenten del total una intersección y olviden la otra",
+    paste0("Para llegar a la zona de solo ", t1, " no basta con quitarle al total la intersección con ", t2, ": ", mat(paste0(dat$P, " - ", dat$b, " = ", dat$P - dat$b)),
+           " todavía incluye la zona de ", z13, "."),
+    "mirar un solo vecino de cada zona en lugar de todas las zonas que comparten el círculo",
+    ## Con p13 = 0, P - b sí es la zona de solo t1, y decir que todavía incluye otra zona sería falso.
+    FALSE, function(p) p$d > p$b - p$a),
+  ## B - d - c = s3 - z: puede dar negativo o cero (en la canónica, -2), así que el texto no lo trata como una cantidad de personas.
+  "VN-X-CENTRO-DOBLE" = nuevo_error("VN-X-CENTRO-DOBLE", "Restar dos veces el centro",
+    "le quiten al total del tercer conjunto las dos intersecciones y no devuelvan el centro",
+    paste0("Para llegar a la zona de solo ", t3, " no basta con quitarle al total las dos intersecciones: en ",
+           mat(paste0(dat$B, " - ", dat$d, " - ", dat$c, " = ", dat$B - dat$d - dat$c)),
+           " el centro quedó restado dos veces, porque pertenece a las dos, y por eso el resultado se queda corto en ", dat$b - dat$a,
+           ". Hay que sumarlo una vez: ", mat(paste0(dat$B - dat$d - dat$c, " + ", dat$b - dat$a, " = ", reg$s3)), "."),
+    "olvidar que el centro pertenece a las dos intersecciones que se restan",
+    FALSE, function(p) TRUE)
+)
+aplicables <- Filter(function(e) e$ofrecible && isTRUE(e$precondicion(dat)), errores_conceptuales)
+otro_error <- pick1(Filter(function(e) !e$ofrecible && isTRUE(e$precondicion(dat)), errores_conceptuales))
+stopifnot("regla #1: pool de al menos 5 errores" = length(errores_conceptuales) >= 5L,
+          "I-3: los tres mecanismos de la Guía están en todas las versiones" = length(aplicables) == 3L,
+          "regla #13: VN-X-RESTA-UNA afirma que falta una zona, y esa zona no puede estar vacía" =
+            otro_error$codigo != "VN-X-RESTA-UNA" || dat$P - dat$b != reg$s1)
+
+## --- Opciones ------------------------------------------------------------------
+ops <- c(list(list(codigo = "CLAVE", regiones = reg_clave, es_clave = TRUE)),
+         lapply(unname(aplicables), function(e) list(codigo = e$codigo, regiones = e$calcula(dat), es_clave = FALSE)))
+datos_de <- function(v) unlist(datos_desde(as.list(stats::setNames(v, ORDEN))))
+cumple <- vapply(ops, function(o) sum(datos_de(o$regiones) == unlist(dat)), 0L)
+vec <- stats::setNames(lapply(ops, function(o) o$regiones), vapply(ops, function(o) o$codigo, ""))
+stopifnot("I-3: cuatro vectores distintos" = length(unique(vec)) == 4L,
+          "I-3: enteros de 0 a 99 en todas las regiones" = all(vapply(vec, function(v) all(v >= 0L & v <= 99L), TRUE)),
+          "I-4: solo la clave reproduce los siete datos, y A, B y D cumplen 5, 4 y 0" = identical(as.integer(cumple), c(7L, 5L, 4L, 0L)),
+          "I-3: el mecanismo A conserva los tres totales" =
+            identical(unname(datos_de(vec[["VN-A-CENTRO"]])[5:7]), unname(unlist(dat)[5:7])))
+## Afirmaciones absolutas de la Solution sobre datos sorteados (regla #13 v1.1).
+falla <- function(v) names(which(datos_de(v) != unlist(dat)))
+stopifnot("regla #13: A falla exactamente los dos datos de t1 y t2" = identical(falla(vec[["VN-A-CENTRO"]]), c("a", "b")),
+          "regla #13: B falla exactamente los tres totales" = identical(falla(vec[["VN-B-TOTALES"]]), c("P", "M", "B")),
+          "regla #13: ninguna opción contiene el centro restado dos veces" =
+            !(dat$B - dat$d - dat$c) %in% vapply(vec, function(v) v[[7L]], 0L))
+
+## Mezcla interna: exshuffle es FALSE porque las opciones son gráficas (regla #4). Los nombres son
+## neutrales y posteriores a la mezcla, con un sufijo por versión (regla #4 v6.1); el dibujo llega después.
+ops <- ops[sample.int(4L)]
+sol_p1 <- vapply(ops, function(o) o$es_clave, TRUE)
+regiones_mezcladas <- lapply(ops, function(o) o$regiones)
+fig_id <- paste(sample(c(0:9, letters[1:6]), 8L, replace = TRUE), collapse = "")
+archivos <- paste0("diagrama_", letters[1:4], "_", fig_id, ".png")
+## Las opciones son imágenes. Este texto solo existe para los validadores, que leen opciones, sol
+## y valor_correcto; el estudiante no lo ve.
+texto_regiones <- function(v) paste(v, collapse = " ")
+opciones_p1 <- vapply(regiones_mezcladas, texto_regiones, "")
+valor_correcto <- texto_regiones(reg_clave)
+
+## --- Textos de la Solution ---------------------------------------------------------
+describe <- function(v) {
+  v <- stats::setNames(v, ORDEN)
+  paste0("el diagrama con ", v[["ctr"]], " en el centro, ", v[["p12"]], " en la zona de ", z12, " y ", v[["s1"]], " en la zona de solo ", t1)
+}
+diagnostico <- vapply(unname(aplicables), function(e) {
+  paste0("**", e$nombre, ".** Es posible que los estudiantes que eligen ", describe(e$calcula(dat)), " ", e$descripcion_corta, ". ", e$descripcion_larga,
+         " *Causa de fondo:* ", e$causa_raiz, ".")
+}, "")
+feedback_por_codigo <- c(
+  "CLAVE" = "Correcta. Este diagrama reproduce los siete datos.",
+  "VN-A-CENTRO" = paste0("Incorrecta. Los tres totales cuadran, pero ", dat$a, " va en la zona de ", z12, ", no en el centro."),
+  "VN-B-TOTALES" = "Incorrecta. El centro y las zonas de dos conjuntos están bien, pero cada total quedó en la zona de un solo conjunto.",
+  "VN-D-SIN-OPERAR" = "Incorrecta. Cada dato quedó en una zona sin operar, y ninguno de los siete se cumple.")
+feedback_p1 <- unname(feedback_por_codigo[vapply(ops, function(o) o$codigo, "")])
+reflexiones <- c(
+  "Antes de escribir un número en una zona, pregúntate a quiénes cuenta esa zona y a quiénes deja por fuera.",
+  "Una frase con «pero no» describe una parte de una intersección: compárala con la frase que habla de la intersección completa.",
+  "Que los totales cuadren no prueba que el diagrama esté bien: revisa cada dato del enunciado, no solo algunos.",
+  "Si un dato no se deja ubicar en una sola zona, es porque reúne varias: sepáralas antes de escribir.",
+  "Cuando dos diagramas se parezcan, busca el dato que los distingue en lugar de mirar el conjunto de los números.")
+reflexion <- pick(reflexiones)
+
+## --- I-2: la instancia canónica reproduce el impreso --------------------------------
+if (es_canonica) stopifnot(
+  "I-2: enunciado" = identical(enunciado, "Para realizar una jornada de juegos con los empleados de una empresa, se recogen los siguientes datos con el fin de organizar a las personas de acuerdo con sus preferencias en cuanto a tres juegos de mesa."),
+  "I-2: viñeta 1" = identical(vineta_1, "3 personas jugarían parqués y Monopoly, pero no bingo."),
+  "I-2: viñeta 2" = identical(vineta_2, "10 personas jugarían parqués y Monopoly, 8 personas jugarían Monopoly y bingo, y 7 personas jugarían parqués y bingo."),
+  "I-2: viñeta 3" = identical(vineta_3, "17 personas jugarían parqués, 13 personas jugarían bingo y 20 personas jugarían Monopoly."),
+  "I-2: rótulos" = identical(rotulos, c("Parqués", "Monopoly", "Bingo")),
+  "I-2: opción A" = identical(vec[["VN-A-CENTRO"]], c(0L, 10L, 2L, 3L, 4L, 5L, 1L)),
+  "I-2: opción B" = identical(vec[["VN-B-TOTALES"]], c(17L, 3L, 20L, 7L, 0L, 1L, 13L)),
+  "I-2: opción C" = identical(vec[["CLAVE"]], c(7L, 3L, 9L, 7L, 0L, 1L, 5L)),
+  "I-2: opción D" = identical(vec[["VN-D-SIN-OPERAR"]], c(17L, 10L, 20L, 3L, 7L, 8L, 13L)))
+## @@FIN_BLOQUE_P1@@
+
+## =============================================================================
+## Lo propio del CLOZE. Todo lo que sigue consume el RNG DESPUÉS del bloque P1: no cambia la Parte 1.
+## =============================================================================
+
+## --- Parte 1 en el CLOZE (Incidente G) ------------------------------------------------------------
+## archivos[i] es la opción i de la mezcla del bloque P1; su rótulo es ROMANOS[i] y su texto en el gap, textos_p1[i].
+ROMANOS <- c("I", "II", "III", "IV")
+textos_p1 <- paste("Diagrama", ROMANOS)
+codigos_p1 <- vapply(ops, function(o) o$codigo, "")
+ANCHO <- "{width=5.5cm style=\"width:280px!important;max-width:100%\"}"
+stopifnot("Parte 1: una sola clave" = sum(sol_p1) == 1L && length(sol_p1) == 4L,
+          "Parte 1: nombres neutrales con sufijo por versión (regla #4 v6.1)" =
+            identical(archivos, paste0("diagrama_", letters[1:4], "_", fig_id, ".png")),
+          "Parte 1: el rótulo marcado es el diagrama de la clave (Incidente G, punto 5)" =
+            identical(regiones_mezcladas[[which(sol_p1)]], reg_clave) && codigos_p1[which(sol_p1)] == "CLAVE")
+
+## Lo que imprime la Parte 1: sus siete datos y los 28 números de los cuatro diagramas (V11, C-2).
+diag_p1 <- sort(unique(unlist(vec, use.names = FALSE)))
+impresos_p1 <- sort(unique(c(as.integer(unlist(dat)), diag_p1)))
+
+## --- Partes 2 a 6: otra encuesta (C-2, Alternativa A) --------------------------------------------
+## Otro contexto: en las variantes, distinto del de la Parte 1; en la canónica, uno de los siete de las variantes.
+CATEGORIA <- c(institucional = "talleres", problema = "deportes", periodistico = "cursos", estudiante = "platos",
+               descubrimiento = "géneros", retorica = "actividades", dialogo = "géneros")
+CATEGORIA_FEM <- c(institucional = FALSE, problema = FALSE, periodistico = FALSE, estudiante = FALSE,
+                   descubrimiento = FALSE, retorica = TRUE, dialogo = FALSE)
+GRUPO_FEM <- c(estudiantes = FALSE, socios = FALSE, asociados = FALSE, vecinos = FALSE, usuarios = FALSE,
+               asistentes = FALSE, personas = TRUE)
+ctx2 <- pick1(Filter(function(k) !identical(k$tipo, ctx$tipo), contextos))
+enunciado2 <- ctx2$plantilla(pick(ctx2$protagonistas))
+grupo2 <- ctx2$grupo; verbo2 <- ctx2$verbo
+u <- vapply(ctx2$conjuntos, function(k) k$texto, "")
+cat2 <- CATEGORIA[[ctx2$tipo]]; fem_cat2 <- CATEGORIA_FEM[[ctx2$tipo]]; fem2 <- GRUPO_FEM[[grupo2]]
+cuantos2 <- if (fem2) "¿Cuántas" else "¿Cuántos"
+art2 <- if (fem2) "las" else "los"
+ellos2 <- if (fem2) "ellas" else "ellos"
+los_tres2 <- paste(if (fem_cat2) "las tres" else "los tres", cat2)
+al_menos2 <- paste0("al menos ", if (fem_cat2) "una de las tres " else "uno de los tres ", cat2)
+ZONA2 <- c(s1 = paste("solo", u[1]), p12 = paste("solo", u[1], "y", u[2]), s2 = paste("solo", u[2]), ctr = los_tres2,
+           p13 = paste("solo", u[1], "y", u[3]), p23 = paste("solo", u[2], "y", u[3]), s3 = paste("solo", u[3]))
+
+## Qué se pregunta y los veredictos de la Parte 6 se sortean ANTES que los datos (F1).
+q3 <- pick(c("p13", "p23"))          # Parte 3: una zona de dos conjuntos que el texto no da
+q4 <- pick(c("s1", "s2", "s3"))      # Parte 4: una zona de un solo conjunto
+COMB6 <- as.matrix(expand.grid(rep(list(c(TRUE, FALSE)), 4L)))
+COMB6 <- COMB6[rowSums(COMB6) %in% 1:3, , drop = FALSE]
+v6 <- unname(COMB6[sample.int(nrow(COMB6), 1L), ])   # al menos una verdadera y una falsa
+
+## Regiones de la otra encuesta (F1, sin bucles que resampleen): centro y dato «pero no» de 13 a 24, distintos;
+## zonas de un conjunto = centro + 0..9 (las tres con la misma regla) y zonas dobles = piso + 0..9.
+gen_otra <- function(K) {
+  ctr <- sample(13:24, K, TRUE)
+  p12 <- (ctr - 13L + sample(1:11, K, TRUE)) %% 12L + 13L
+  piso <- pmax(0L, p12 - ctr)
+  data.frame(s1 = ctr + sample(0:9, K, TRUE), p12 = p12, s2 = ctr + sample(0:9, K, TRUE), ctr = ctr,
+             p13 = piso + sample(0:9, K, TRUE), p23 = piso + sample(0:9, K, TRUE), s3 = ctr + sample(0:9, K, TRUE))
+}
+## Condiciones de un candidato: V11 en los dos sentidos (C-2), respuestas que no están entre los datos impresos de
+## la otra encuesta, y sin empates en los cinco pares que puede comparar la Parte 6.
+acepta_otra <- function(g) {
+  datos <- with(g, cbind(p12, p12 + ctr, p23 + ctr, p13 + ctr, s1 + p12 + p13 + ctr, s2 + p12 + p23 + ctr, s3 + p13 + p23 + ctr))
+  resp <- cbind(g$ctr, g[[q3]], g[[q4]], rowSums(g))
+  ok_resp <- rowSums(matrix(resp %in% impresos_p1, ncol = 4L)) == 0L
+  ok_datos <- rowSums(matrix(datos %in% diag_p1, ncol = 7L)) == 0L
+  ## Sin comillas invertidas en el chunk: la FASE 2D del arsenal corta el chunk en la primera que encuentra.
+  ok_copia <- Reduce(function(x, y) x & y, lapply(1:4, function(j) rowSums(datos == resp[, j]) == 0L))
+  ok_empate <- with(g, s1 != s2 & s1 != s3 & s2 != s3 & p13 != p23 & ctr != p12)
+  ok_resp & ok_datos & ok_copia & ok_empate
+}
+## Cascada F1: dos lotes; sin candidato en ninguno, el render aborta con un mensaje (validar_stresstest.R lo vería).
+for (K2 in c(4000L, 40000L)) {
+  g2 <- gen_otra(K2); ok2 <- acepta_otra(g2)
+  if (any(ok2)) break
+}
+stopifnot("F1: la cascada encontró una otra encuesta que cumple V11" = any(ok2))
+r2 <- stats::setNames(as.integer(unlist(g2[pick(which(ok2)), ORDEN])), ORDEN)
+d2 <- datos_desde(as.list(r2))
+z2 <- d2$b - d2$a
+
+## --- Partes 2 a 5 (num) ----------------------------------------------------------------------------
+exsol_p2 <- r2[["ctr"]]
+exsol_p3 <- r2[[q3]]
+exsol_p4 <- r2[[q4]]
+exsol_p5 <- sum(r2)
+texto_p2 <- paste0(cuantos2, " ", grupo2, " ", verbo2, " ", los_tres2, "?")
+texto_p3 <- paste0(cuantos2, " ", grupo2, " ", verbo2, " ", ZONA2[[q3]], "?")
+texto_p4 <- paste0(cuantos2, " ", grupo2, " ", verbo2, " ", ZONA2[[q4]], "?")
+texto_p5 <- paste0(cuantos2, " ", grupo2, " ", verbo2, " ", al_menos2, "?")
+gente2 <- function(n, x) paste0(n, " ", grupo2, " ", verbo2, " ", x)
+vineta2_1 <- paste0(gente2(d2$a, paste0(u[1], " y ", u[2])), ", pero no ", u[3], ".")
+vineta2_2 <- paste0(gente2(d2$b, paste0(u[1], " y ", u[2])), ", ", gente2(d2$c, paste0(u[2], " y ", u[3])), ", y ",
+                    gente2(d2$d, paste0(u[1], " y ", u[3])), ".")
+vineta2_3 <- paste0(gente2(d2$P, u[1]), ", ", gente2(d2$B, u[3]), " y ", gente2(d2$M, u[2]), ".")
+datos2 <- as.integer(unlist(d2))
+resp2 <- c(exsol_p2, exsol_p3, exsol_p4, exsol_p5)
+
+## --- Parte 6 (mchoice): cuatro afirmaciones sin cifras sobre la otra encuesta ----------------------------
+## Cada afirmación compara dos zonas de un par distinto (ningún par complementario). Su veredicto ya está
+## sorteado (v6); la palabra «Más»/«Menos» se sortea aparte, y el orden de las dos zonas sale de ambos.
+PARES6 <- list(c("s1", "s2"), c("s1", "s3"), c("s2", "s3"), c("p13", "p23"), c("ctr", "p12"))
+pares6 <- PARES6[sample.int(length(PARES6), 4L)]
+af6 <- lapply(seq_len(4L), function(i) {
+  x <- pares6[[i]][1L]; y <- pares6[[i]][2L]; w <- pick(c("Más", "Menos"))
+  verdad <- if (w == "Más") r2[[x]] > r2[[y]] else r2[[x]] < r2[[y]]
+  if (verdad != v6[i]) { t0 <- x; x <- y; y <- t0 }
+  list(w = w, x = x, y = y, texto = paste0(w, " ", grupo2, " ", verbo2, " ", ZONA2[[x]], " que ", ZONA2[[y]], "."))
+})
+verdad6 <- vapply(af6, function(a) if (a$w == "Más") r2[[a$x]] > r2[[a$y]] else r2[[a$x]] < r2[[a$y]], TRUE)
+opciones_p6 <- vapply(af6, function(a) a$texto, "")
+sol_p6 <- v6
+just6 <- vapply(af6, function(a) paste0(cap1(ZONA2[[a$x]]), ": ", r2[[a$x]], "; ", ZONA2[[a$y]], ": ", r2[[a$y]], "."), "")
+texto_p6 <- paste0("¿Cuáles de las siguientes afirmaciones sobre la otra encuesta son verdaderas? Puede haber más de una.")
+
+## --- Guardas de las Partes 2 a 6 --------------------------------------------------------------------------
+textos_2a6 <- c(texto_p2, texto_p3, texto_p4, texto_p5, texto_p6, opciones_p6)
+stopifnot(
+  "Partes 2 a 5: las respuestas salen de los siete datos impresos de la otra encuesta" =
+    identical(as.integer(FORMULAS[["CLAVE"]](d2)), unname(r2)),
+  "Partes 2 a 5: regiones enteras, no negativas y de dos cifras como máximo" = all(r2 >= 0L & r2 <= 99L),
+  "V11 por valor: ninguna respuesta de las Partes 2 a 5 es un número impreso en la Parte 1" = !any(resp2 %in% impresos_p1),
+  "V11 por valor: ningún dato de la otra encuesta es un número de los cuatro diagramas" = !any(datos2 %in% diag_p1),
+  "Partes 2 a 5: ninguna respuesta está impresa entre los datos de la otra encuesta" = !any(resp2 %in% datos2),
+  "V11 por contenido: la otra encuesta no comparte conjuntos con la Parte 1" =
+    !any(u %in% c(t1, t2, t3)) && !identical(ctx2$tipo, ctx$tipo),
+  "Partes 2 a 6: sin la frase «pero no» ni vocabulario de error (C-2)" =
+    !any(grepl("pero no|\\b(error|err[oó]ne|equivoc|incorrect|confund)", textos_2a6, ignore.case = TRUE)),   # \b: «terror» no es «error»; err[oó]ne: FASE 2C r1, H5
+  "Parte 6: sin cifras en las afirmaciones" = !any(grepl("[0-9]", opciones_p6)),
+  "Parte 6: al menos una verdadera y una falsa" = any(sol_p6) && any(!sol_p6),
+  "Parte 6: la marca de cada afirmación es su verdad sobre las regiones (F4)" = identical(verdad6, sol_p6),
+  "Parte 6: pares distintos, ninguno complementario" =
+    !anyDuplicated(vapply(pares6, function(p) paste(sort(p), collapse = "-"), "")),
+  "Parte 6: sin empates en los pares comparados" = all(vapply(af6, function(a) r2[[a$x]] != r2[[a$y]], TRUE)),
+  "Parte 6: afirmaciones únicas" = !anyDuplicated(opciones_p6))
+
+## --- Gaps del cloze (regla #14: seis tipos, seis soluciones, seis ##ANSWERi## en orden) -------------------
+exsolution_str <- paste(mchoice2string(sol_p1), exsol_p2, exsol_p3, exsol_p4, exsol_p5, mchoice2string(sol_p6), sep = "|")
+stopifnot("seis entradas en exsolution" = length(strsplit(exsolution_str, "|", fixed = TRUE)[[1L]]) == 6L)
+
+## --- Retroalimentación de las Partes 2 a 6 (texto plano: viaja a los gaps de Moodle) ------------------------
+feedback_p2 <- paste0("Quienes ", verbo2, " ", u[1], " y ", u[2], " son ", d2$b, ", y ", d2$a, " de ", ellos2, " no ", verbo2,
+                      " ", u[3], ": en ", los_tres2, " hay ", d2$b, " - ", d2$a, " = ", z2, ".")
+dato_q3 <- if (q3 == "p13") list(v = d2$d, par = paste(u[1], "y", u[3])) else list(v = d2$c, par = paste(u[2], "y", u[3]))
+feedback_p3 <- paste0(cap1(ZONA2[[q3]]), ": de ", art2, " ", dato_q3$v, " que ", verbo2, " ", dato_q3$par, " se quitan ", art2, " ",
+                      z2, " de ", los_tres2, ": ", dato_q3$v, " - ", z2, " = ", exsol_p3, ".")
+cuenta_q4 <- switch(q4,
+  s1 = list(txt = paste0("al total de ", u[1], ", ", d2$P, ", se le quitan ", art2, " ", d2$a, " de ", ZONA2[["p12"]], " y ", art2, " ",
+                         d2$d, " que ", verbo2, " ", u[1], " y ", u[3]), op = paste0(d2$P, " - ", d2$a, " - ", d2$d)),
+  s2 = list(txt = paste0("al total de ", u[2], ", ", d2$M, ", se le quitan ", art2, " ", d2$a, " de ", ZONA2[["p12"]], " y ", art2, " ",
+                         d2$c, " que ", verbo2, " ", u[2], " y ", u[3]), op = paste0(d2$M, " - ", d2$a, " - ", d2$c)),
+  s3 = list(txt = paste0("al total de ", u[3], ", ", d2$B, ", se le quitan ", art2, " ", d2$d, " que ", verbo2, " ", u[1], " y ", u[3],
+                         " y ", art2, " ", d2$c, " que ", verbo2, " ", u[2], " y ", u[3], ", y se suman ", art2, " ", z2, " de ",
+                         los_tres2, ", que quedaron ", if (fem2) "restadas" else "restados", " dos veces"),
+                op = paste0(d2$B, " - ", d2$d, " - ", d2$c, " + ", z2)))
+feedback_p4 <- paste0(cap1(ZONA2[[q4]]), ": ", cuenta_q4$txt, ": ", cuenta_q4$op, " = ", exsol_p4, ".")
+## FASE 2C r1, H4: el participio concuerda con el grupo («las 16 personas … restadas»), como art2 y ellos2.
+stopifnot("Concordancia (regla #7): restados/restadas concuerda con el grupo de la otra encuesta" =
+            !grepl(if (fem2) "restados" else "restadas", feedback_p4, fixed = TRUE))
+feedback_p5 <- paste0("Se suman las siete zonas: ", sumatxt(r2[["s1"]], r2[["p12"]], r2[["s2"]], r2[["ctr"]], r2[["p13"]], r2[["p23"]],
+                                                             r2[["s3"]]), ".")
+feedback_p6 <- unname(paste(ifelse(sol_p6, "Verdadera.", "Falsa."), just6))
+## La retroalimentación de la Parte 1 lleva el rótulo de su diagrama: en el PDF y el HTML las cuatro van seguidas, y el
+## rótulo dice a cuál corresponde cada una aunque el gap salga barajado. feedback_p1 (del bloque P1) no se toca.
+fb_p1 <- paste0(textos_p1, ": ", feedback_p1)
+stopifnot("retroalimentación de las Partes 2 a 5 con su respuesta al final" =
+            all(endsWith(c(feedback_p2, feedback_p3, feedback_p4, feedback_p5), paste0("= ", resp2, "."))))
+
+## Reflexión del CLOZE: se sortea después del bloque P1, aparte de la de la Parte 1.
+reflexiones_cloze <- c(
+  "Calcular primero el centro de la otra encuesta deja cada zona de dos conjuntos a una resta: es el mismo orden que sirve en la Parte 1.",
+  "Una afirmación sin cifras se decide con cifras: antes de juzgarla, escribe cuántos hay en cada una de las dos zonas que compara.",
+  "Si las cuatro zonas de un círculo no suman el total de ese conjunto, alguna está mal: revísala antes de seguir.")
+reflexion_cloze <- pick(reflexiones_cloze)
+```
+
+```{r dibujo_opciones, echo = FALSE, results = "hide"}
+## El dibujo va aparte de data_generation, y solo dentro de un knit. validar_diagnosticidad.R y
+## validar_diversidad_sustantiva.R leen solo data_generation; las FASES 2A y 2G ejecutan TODOS los
+## chunks fuera de knitr, y compilar 4 figuras por versión les sumaría unos 120 s por cada 100
+## versiones, contra un tope de 300 s del hook. Las exportaciones, la FASE 2H y validar_stresstest.R
+## tejen el .Rmd, y ahí el dibujo sí corre. Ningún validador del repo lee los números de la figura
+## (I-4): esa prueba está en verificar_espacio.R, que ejecuta este chunk con el dibujo real.
+if (isTRUE(getOption("knitr.in.progress"))) {
+  for (i in seq_along(archivos)) dibujar_venn(regiones_mezcladas[[i]], rotulos, archivos[i])
+}
+```
+
+Question
+========
+
+```{r enunciado, echo = FALSE, results = "asis"}
+cat(enunciado, "\n\n", sep = "")
+cat("- ", vineta_1, "\n- ", vineta_2, "\n- ", vineta_3, "\n\n", sep = "")
+cat("**Parte 1.** ", pregunta, "\n\n", sep = "")
+## Cada rótulo va ENCIMA de su imagen (6b, MEDIO: en línea, «Diagrama II» quedaba pegado a la imagen I a 1024 px).
+## HTML y Moodle: un span inline-block por figura (dos por fila en pantalla ancha, uno por fila a 360 px). PDF: un
+## minipage por figura, en LaTeX crudo que pandoc descarta fuera del PDF. DOCX: los saltos de línea dejan rótulo e
+## imagen en líneas propias. Las comillas invertidas salen de intToUtf8(96): la FASE 2D corta el chunk en la primera.
+bt <- intToUtf8(96L)
+mp_ini <- paste0(bt, "\\begin{minipage}[t]{0.48\\linewidth}", bt, "{=latex}")
+mp_fin <- paste0(bt, "\\end{minipage}", bt, "{=latex}")
+img_p1 <- function(i) paste0("[", mp_ini, "**", textos_p1[i], "**\\\n![Diagrama de Venn](", archivos[i], ")", ANCHO, "\\\n", mp_fin,
+                             "]{style=\"display:inline-block;vertical-align:top;margin:0 16px 12px 0\"}")
+cat(img_p1(1L), " ", img_p1(2L), "\n\n", sep = "")
+cat(img_p1(3L), " ", img_p1(4L), "\n", sep = "")
+```
+
+##ANSWER1##
+
+```{r parte2, echo = FALSE, results = "asis"}
+cat("**Las Partes 2 a 6 se refieren a otra encuesta.** ", enunciado2, "\n\n", sep = "")
+cat("- ", vineta2_1, "\n- ", vineta2_2, "\n- ", vineta2_3, "\n\n", sep = "")
+cat("**Parte 2.** ", texto_p2, "\n", sep = "")
+```
+
+##ANSWER2##
+
+```{r parte3, echo = FALSE, results = "asis"}
+cat("**Parte 3.** ", texto_p3, "\n", sep = "")
+```
+
+##ANSWER3##
+
+```{r parte4, echo = FALSE, results = "asis"}
+cat("**Parte 4.** ", texto_p4, "\n", sep = "")
+```
+
+##ANSWER4##
+
+```{r parte5, echo = FALSE, results = "asis"}
+cat("**Parte 5.** ", texto_p5, "\n", sep = "")
+```
+
+##ANSWER5##
+
+```{r parte6, echo = FALSE, results = "asis"}
+cat("**Parte 6.** ", texto_p6, "\n", sep = "")
+```
+
+##ANSWER6##
+
+Answerlist
+----------
+```{r answerlist_q, echo = FALSE, results = "asis"}
+## Solo los gaps de elección (Partes 1 y 6), en el orden de sus partes; los num no llevan entradas.
+for (x in c(textos_p1, opciones_p6)) cat("* ", x, "\n", sep = "")
+```
+
+Solution
+========
+
+```{r solucion, echo = FALSE, results = "asis"}
+## Encabezados en negrita, con el cierre que LaTeX pone tras un título de sección (como en el SCHOICE): el bloque
+## {=latex} lo descartan HTML, Moodle y DOCX. Las comillas invertidas salen de intToUtf8(96).
+valla <- strrep(intToUtf8(96L), 3L)
+encabezado <- function(t) cat("**", t, "**\n\n", valla, "{=latex}\n",
+  "\\nobreak\\makeatletter\\@afterindenttrue\\@afterheading\\makeatother\n", valla, "\n\n", sep = "")
+z <- dat$b - dat$a
+k1 <- which(sol_p1)
+encabezado("Parte 1 · Respuesta correcta")
+cat("La respuesta correcta es el ", textos_p1[k1], ": ", describe(reg_clave), ". Es el único de los cuatro que reproduce los siete datos.\n\n", sep = "")
+cat("![Diagrama de Venn de la respuesta correcta](", archivos[k1], ")", ANCHO, "&#8203;\n\n", sep = "")
+cat("**Qué evalúa la Parte 1:** la capacidad de organizar datos de intersección y totales en un diagrama de Venn.\n\n", sep = "")
+encabezado("Parte 1 · Análisis del error")
+cat("La trampa está en la frase «pero no ", t3, "». Ese dato ocupa una zona del diagrama, la de ", z12, ", y no el centro. ",
+    "En cambio, el dato de ", dat$b, " ", grupo, " que ", verbo, " ", t1, " y ", t2, " incluye a quienes también ", verbo, " ", t3,
+    ": es esa zona más el centro.\n\n", sep = "")
+cat("Revisar solo los totales no basta: uno de los diagramas los conserva todos y aun así falla los dos datos de ", t1, " y ", t2, ".\n\n", sep = "")
+cat("*Causa de fondo:* leer «X y Y» y «X y Y, pero no Z» como si dijeran lo mismo. La primera frase cuenta toda la intersección; ",
+    "la segunda, solo la parte que queda fuera del tercer conjunto.\n\n", sep = "")
+encabezado("Parte 1 · Procedimiento correcto")
+cat("- **Centro.** Quienes están en los tres conjuntos son los de ", t1, " y ", t2, " menos los que no están en ", t3, ": ",
+    mat(paste0(dat$b, " - ", dat$a, " = ", z)), ".\n", sep = "")
+cat("- **Zonas de dos conjuntos.** ", cap1(z12), ": ", mat(dat$a), ". ", cap1(z23), ": ", mat(paste0(dat$c, " - ", z, " = ", reg$p23)), ". ",
+    cap1(z13), ": ", mat(paste0(dat$d, " - ", z, " = ", reg$p13)), ".\n", sep = "")
+cat("- **Zonas de un solo conjunto.** Solo ", t1, ": ", mat(paste0(dat$P, " - ", dat$a, " - ", dat$d, " = ", reg$s1)), ". Solo ", t2, ": ",
+    mat(paste0(dat$M, " - ", dat$a, " - ", dat$c, " = ", reg$s2)), ". Solo ", t3, ": ",
+    mat(paste0(dat$B, " - ", dat$d, " - ", dat$c, " + ", z, " = ", reg$s3)), ", porque ", dat$d, " y ", dat$c, " cuentan dos veces el centro.\n\n", sep = "")
+encabezado("Parte 1 · Análisis de los diagramas incorrectos")
+## Agrupado por mecanismo de error (orden del pool), no por posición; cada diagrama se nombra por su rótulo.
+for (k in seq_along(aplicables)) {
+  cat("*", textos_p1[which(codigos_p1 == aplicables[[k]]$codigo)], ".* ", diagnostico[k], "\n\n", sep = "")
+}
+cat("**Otro error posible: ", otro_error$nombre, ".** Es posible que los estudiantes ",
+    otro_error$descripcion_corta, ". ", otro_error$descripcion_larga, " *Causa de fondo:* ", otro_error$causa_raiz, ".\n\n", sep = "")
+encabezado("Partes 2 a 5 · Procedimiento en la otra encuesta")
+cat("- **Parte 2, ", los_tres2, ".** Quienes ", verbo2, " ", u[1], " y ", u[2], " son ", d2$b, ", y ", d2$a, " de ", ellos2, " no ", verbo2,
+    " ", u[3], ": ", mat(paste0(d2$b, " - ", d2$a, " = ", z2)), ".\n", sep = "")
+cat("- **Parte 3, ", ZONA2[[q3]], ".** De ", art2, " ", dato_q3$v, " que ", verbo2, " ", dato_q3$par, " se quitan ", art2, " ", z2, " de ",
+    los_tres2, ": ", mat(paste0(dato_q3$v, " - ", z2, " = ", exsol_p3)), ".\n", sep = "")
+cat("- **Parte 4, ", ZONA2[[q4]], ".** ", cap1(cuenta_q4$txt), ": ", mat(paste0(cuenta_q4$op, " = ", exsol_p4)), ".\n", sep = "")
+## La suma de las siete zonas va en texto (FASE 2C r1, pasada 2): en MathML no parte la línea y a 320 px se salía de 2 a 18 px
+## (sección pantalla de verificar_espacio_cloze.R); en texto parte en los espacios, como la retroalimentación del gap 5.
+cat("- **Parte 5, ", al_menos2, ".** Se suman las siete zonas: ",
+    sumatxt(r2[["s1"]], r2[["p12"]], r2[["s2"]], r2[["ctr"]], r2[["p13"]], r2[["p23"]], r2[["s3"]]), ".\n\n", sep = "")
+## Parte 6 agrupada por veredicto: la prosa no repite el orden de las opciones (Incidente Q, V6).
+for (g in c(TRUE, FALSE)) {
+  n_g <- sum(sol_p6 == g)
+  encabezado(paste0("Parte 6 · ", if (n_g == 1L) "Afirmación " else "Afirmaciones ",
+                    if (g) (if (n_g == 1L) "verdadera" else "verdaderas") else (if (n_g == 1L) "falsa" else "falsas")))
+  for (i in which(sol_p6 == g)) cat("- «", opciones_p6[i], "» ", just6[i], "\n", sep = "")
+  cat("\n")
+}
+encabezado("Propiedades del concepto")
+cat("- Las siete zonas no se solapan: cada elemento se cuenta en una sola.\n")
+cat("- La intersección de dos conjuntos se parte en dos zonas: la que queda fuera del tercero y el centro.\n")
+cat("- El total de un conjunto es la suma de las cuatro zonas de su círculo.\n")
+cat("- Una cifra del enunciado no siempre aparece tal cual en una zona: muchas son la suma de varias.\n\n")
+encabezado("Caso específico")
+cat("Con el diagrama correcto de la Parte 1, el círculo de ", t1, " suma ", mat(sumatxt(reg$s1, reg$p12, reg$p13, reg$ctr)), ", el de ", t2, " suma ",
+    mat(sumatxt(reg$s2, reg$p12, reg$p23, reg$ctr)), " y el de ", t3, " suma ", mat(sumatxt(reg$s3, reg$p13, reg$p23, reg$ctr)),
+    ". Además, ", t1, " y ", t2, " suman ", mat(sumatxt(reg$p12, reg$ctr)), ", ", t2, " y ", t3, " suman ", mat(sumatxt(reg$p23, reg$ctr)),
+    ", y ", t1, " y ", t3, " suman ", mat(sumatxt(reg$p13, reg$ctr)), ".\n\n", sep = "")
+cat("En la otra encuesta pasa lo mismo: el círculo de ", u[1], " suma ", mat(sumatxt(r2[["s1"]], r2[["p12"]], r2[["p13"]], r2[["ctr"]])),
+    ", el de ", u[2], " suma ", mat(sumatxt(r2[["s2"]], r2[["p12"]], r2[["p23"]], r2[["ctr"]])), " y el de ", u[3], " suma ",
+    mat(sumatxt(r2[["s3"]], r2[["p13"]], r2[["p23"]], r2[["ctr"]])), ".\n\n", sep = "")
+encabezado("Reflexión metacognitiva")
+cat(reflexion, " ", reflexion_cloze, "\n\n", sep = "")
+encabezado("Estrategia para evitar el error")
+cat("- Empieza por el centro y avanza hacia afuera: centro, zonas de dos conjuntos y zonas de un solo conjunto.\n")
+cat("- Marca en cada frase si habla de una zona o de varias: «pero no» señala una sola zona.\n")
+cat("- Antes de elegir, comprueba los siete datos: los tres totales, las tres intersecciones y el dato «pero no».\n")
+cat("- Si un diagrama falla en un dato, descártalo; si cumple uno, sigue revisando.\n")
+cat("- Cuando construyas tú las zonas, como en la otra encuesta, comprueba que las cuatro zonas de cada círculo sumen el total de ese conjunto.\n\n")
+```
+
+```{r feedback, echo = FALSE, results = "asis"}
+answerlist(c(fb_p1, feedback_p2, feedback_p3, feedback_p4, feedback_p5, feedback_p6), markup = "markdown")
+```
+
+Meta-information
+================
+exname: diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1
+extype: cloze
+exclozetype: schoice|num|num|num|num|mchoice
+exsolution: `r exsolution_str`
+extol: 0|0|0|0|0|0
+expoints: 1|1|1|1|1|1
+exshuffle: TRUE
+exextra[Type]: CLOZE
+exextra[Competencia]: Interpretación y representación
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Comprende y transforma la información cuantitativa y esquemática presentada en distintos formatos.
+exextra[Evidencia]: Transforma la representación de una o más piezas de información.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.11 — Identifica información relevante cuando el tipo de registro contiene información de más de tres categorías.
+exextra[Contenido]: Estadística
+exextra[TemaEspecifico]: Diagramas de Venn de tres conjuntos
+exextra[Tarea]: A partir de un texto con cantidades de intersecciones y totales de tres grupos, seleccionar el diagrama de Venn que distribuye correctamente los datos.
+exextra[Estandar]: Reconozco la relación entre un conjunto de datos y su representación. (6°-7°, Pensamiento aleatorio)
+exextra[DOK]: 2
+exextra[Bloom]: Evaluar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: analisis_error
+exextra[ItemOriginal]: MAT-2026-07-014
+exextra[GradoSugerido]: 6°-7°

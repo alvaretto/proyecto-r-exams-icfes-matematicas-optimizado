@@ -1,0 +1,51 @@
+versiones 11000000 seg 63
+--- tasas exactas (independientes) ---
+MAG-suma-segunda-menor               100.000 %  exceso +67.8 pp
+EST-menos-cifras-del-enunciado        69.553 %  exceso +37.4 pp
+MAG-menor-maximo                      53.032 %  exceso +20.8 pp
+MAG-suma-no-extrema                   50.000 %  exceso +17.8 pp
+MAG-sin-el-mayor-numero               50.000 %  exceso +17.8 pp
+REL-no-extrema-en-coincidencias       50.000 %  exceso +17.8 pp
+EST-primer-dato-en-la-zona-doble      50.000 %  exceso +17.8 pp
+EST-total-en-zona-de-un-conjunto      49.456 %  exceso +17.3 pp
+LEX-con-repetidos                     33.418 %  exceso +1.2 pp
+DIV-suma-par                          29.545 %  exceso -2.7 pp
+DIV-suma-impar                        29.545 %  exceso -2.7 pp
+DIV-suma-mult5                        25.079 %  exceso -7.1 pp
+MAG-centro-mayor                      25.000 %  exceso -7.2 pp
+MAG-centro-menor                      25.000 %  exceso -7.2 pp
+DIV-centro-par                        25.000 %  exceso -7.2 pp
+DIV-centro-impar                      25.000 %  exceso -7.2 pp
+FOR-menos-dos-cifras                  24.759 %  exceso -7.4 pp
+FOR-cadena-corta                      24.759 %  exceso -7.4 pp
+SIG-sin-cero                          23.579 %  exceso -8.6 pp
+SIG-tiene-cero                        23.223 %  exceso -9.0 pp
+LEX-sin-repetidos                     16.302 %  exceso -15.9 pp
+FOR-mas-dos-cifras                     0.049 %  exceso -32.2 pp
+FOR-cadena-larga                       0.049 %  exceso -32.2 pp
+MAG-suma-max                           0.000 %  exceso -32.2 pp
+MAG-suma-min                           0.000 %  exceso -32.2 pp
+MAG-suma-segunda-mayor                 0.000 %  exceso -32.2 pp
+MAG-mayor-numero                       0.000 %  exceso -32.2 pp
+REL-mas-coincidencias                  0.000 %  exceso -32.2 pp
+REL-menos-coincidencias                0.000 %  exceso -32.2 pp
+EST-mas-cifras-del-enunciado           0.000 %  exceso -32.2 pp
+--- EST-menos-cifras: clave con cuántas cifras del enunciado ---
+1 30.90 %
+2 40.70 %
+3 21.64 %
+4 5.87 %
+5 0.84 %
+6 0.05 %
+clave sola en el mínimo 53.26 % | clave empatada en el mínimo 32.68 %
+--- margen ---
+suma, clave vs rival más próximo: versiones con margen < 15 %: 67.5 % pct 0/10/50/90 medios [ 8.6 10.4 12.  14.1]
+MAG-menor-maximo, margen < 15 % cuando favorece a la clave: 33.1 %
+MAG-sin-el-mayor-numero, margen < 15 %: 0.0 %
+--- filtros hipotéticos ---
+lit(K)>=lit(A) quedan 46.67 % de las versiones
+    MAG-suma-segunda-menor 100.0 · MAG-menor-maximo 54.9 · MAG-suma-no-extrema 50.0 · MAG-sin-el-mayor-numero 50.0 · REL-no-extrema-en-coincidencias 50.0 · EST-primer-dato-en-la-zona-doble 50.0 · EST-total-en-zona-de-un-conjunto 49.0 · EST-menos-cifras-del-enunciado 34.8 · LEX-con-repetidos 34.1
+lit(K)>=2 quedan 69.10 % de las versiones
+    MAG-suma-segunda-menor 100.0 · EST-menos-cifras-del-enunciado 55.9 · MAG-suma-no-extrema 50.0 · MAG-sin-el-mayor-numero 50.0 · REL-no-extrema-en-coincidencias 50.0 · EST-primer-dato-en-la-zona-doble 50.0 · EST-total-en-zona-de-un-conjunto 49.2 · MAG-menor-maximo 48.4 · LEX-con-repetidos 32.6
+lit(K)>=3 quedan 28.40 % de las versiones
+    MAG-suma-segunda-menor 100.0 · MAG-suma-no-extrema 50.0 · MAG-sin-el-mayor-numero 50.0 · REL-no-extrema-en-coincidencias 50.0 · EST-primer-dato-en-la-zona-doble 50.0 · EST-total-en-zona-de-un-conjunto 48.7 · MAG-menor-maximo 42.7 · LEX-con-repetidos 33.6 · EST-menos-cifras-del-enunciado 33.2

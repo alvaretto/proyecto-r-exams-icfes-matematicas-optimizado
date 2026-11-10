@@ -1,0 +1,3 @@
+versiones únicas (texto + exsolution): 300 de 300 (umbral 250)
+Parte 1, conjuntos de cuatro diagramas distintos: 282 de 300
+md5 889d828e8129e11b0ec5dceda0cf108b 

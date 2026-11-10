@@ -1,0 +1,137 @@
+{
+  "version": "2.0",
+  "ejercicio": "diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_schoice_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-11-06T15:08:52.497262-05:00",
+  "timestamp_ultima_actualizacion": "2026-11-06T19:03:25.434447-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-11-06T15:10:16.628232-05:00",
+      "resultado": null,
+      "competencia": "Interpretación y representación",
+      "componente": "Aleatorio",
+      "nivel": 3,
+      "descriptor": "D3.11",
+      "dok": 2,
+      "bloom": "Evaluar",
+      "solo": "Relacional",
+      "metacognicion": "analisis_error",
+      "nota": "ClasificadorICFES (haiku) leyó el recorte y comprobó los literales contra el catálogo canónico; coinciden con ITEM_OFICIAL.md. DOK 2 con Nivel 3 por obstáculo empírico: el distractor A conserva los tres totales."
+    },
+    "flujo_b": {
+      "requerido": true,
+      "completado": true,
+      "timestamp": "2026-11-06T15:48:15.321425-05:00",
+      "justificacion_h1": "Visto en el recorte orig_pregunta_14.png: las cuatro opciones son diagramas de Venn de tres conjuntos, con siete números cada uno (regla #24 H-1). H-2: el enunciado no tiene ningún patrón de trampa deliberada.",
+      "similitud_tikz": 100.0,
+      "similitud_python": 100.0,
+      "similitud_r": 100.0,
+      "artefactos": "salida/flujo_b/ (SPEC_VENN.md, geom_venn.json, comparar_venn.py, tikz/, python/, r/, output_*_v1.png, comparativa_*.png)",
+      "lenguaje": "tikz",
+      "alineacion_numeros": "izquierda",
+      "nota": "Decisión del profesor (WAIT_USER #2): TikZ con números alineados a la izquierda como en la plana. x_izq medido por región en los 4 recortes rehechos, referido a sus círculos. Seis casos 100/100; barrido 0-99 en las siete zonas sin rojos, holgura mínima 4,99 unidades; mutantes T1-T6 sobre código real cazados. Instrumento recongelado con motivo en salida/flujo_b/instrumento.md5."
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-11-06T17:44:54.031918-05:00",
+      "archivo": "diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_schoice_v1.Rmd",
+      "nota": "md5 f886dfaa45b80a5ee16f9820908049b5. Sobre el md5 7a594069 (auditado por la FASE 2C r2, APROBAR_CON_CAMBIOS): H9 con {width=5.5cm style=\"width:280px!important;max-width:100%\"} en las 5 figuras, medido por el coordinador en 216 × 330 mm; H15 y H16 en la prosa. verificar_espacio.R espacio: 11 000 000 de versiones sin fallas."
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-11-06T17:44:54.092723-05:00",
+      "nota": "md5 f886dfaa45b80a5ee16f9820908049b5. verificar_espacio.R solucion: canónica 100 y resto 100, 0 fallas; cada párrafo casa con su plantilla, coincide letra a letra con el texto reconstruido desde las viñetas (H12) y sus cifras con la figura. Sección moodle: 200 versiones del XML real, 0 fallas."
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-11-06T17:44:54.153390-05:00",
+      "nota": "md5 f886dfaa45b80a5ee16f9820908049b5, en salida/render_r3/. PDF n=5 y canónica con perifericos/solpcielo.tex en 216 × 330 mm: las 4 figuras en una misma página. HTML n=3, DOCX n=1 (figuras de 5,5 cm), NOPS n=1 con twocolumn y samepage (A4), Moodle n=5 (5 correctas, 15 incorrectas, 20 nombres neutrales, 25 style con 280px!important, 0 códigos VN-, 0 makeatletter). 0 usos de pandocbounded y 0 pies Figure. NOPS de 5 preguntas: 4 figuras por página en las 5, con 3 semillas."
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-11-06T17:44:54.213475-05:00",
+      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_schoice_v1/20261106-173959-1038303/informe.txt · md5 f886dfaa45b80a5ee16f9820908049b5 · 0 errores / 2 advertencias (tabla de metadatos y letra_correcta: plantilla antigua; este ítem no las usa)"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-11-06T18:31:35.497526-05:00",
+      "veredicto": "APROBAR_CON_CAMBIOS",
+      "nota": "FASE 2C r3 sobre el md5 f886dfaa45b80a5ee16f9820908049b5, detractor nuevo: APROBAR_CON_CAMBIOS, 0 de CORRECCIÓN, 0 críticas, 0 altas; citas verificadas. Reporte: salida/fase2c_r3_detractor.md. r1 RECHAZAR (fa00bf48) y r2 APROBAR_CON_CAMBIOS (7a594069) atendidas. Tercera y última pasada de §P7-D. Lo abierto por r3 (H17 a H21) se aplicó después al verificador, md5 b51920766863f44aa1b13157e5b53d73, 87 mutantes muertos por su sonda: esa versión no la auditó ningún detractor, y el .Rmd no cambió."
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-11-06T18:22:07.493883-05:00",
+      "nota": "md5 f886dfaa45b80a5ee16f9820908049b5. AgenteValidadorVisual: 5 coherencias OK en 6 instancias con la plantilla de 216 × 330 mm, todas las páginas, más NOPS. 4 opciones en una misma página en las 6 y en NOPS. Marco 0,86 % del ancho frente a 0,97-0,99 % del recorte; círculos 0,52 % frente a 0,54-0,58 %. Hallazgos MEDIA o BAJA de maquetación, ninguno de clave ni de cifras."
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-11-06T18:22:07.551555-05:00",
+      "versiones_unicas": 296,
+      "nota": "md5 f886dfaa45b80a5ee16f9820908049b5. 296/300 versiones únicas, 282 vectores de clave únicos; multisemilla 100/100; validar_stresstest 100/100; diversidad sustantiva PASS con 96 claves distintas en 100; diagnosticidad PASS (H1 0 % y 0 %, H2 0 %, H3 14 %), sondas que miden una cadena que el estudiante no ve. Batería §P7 en rojo, pendiente de firma regla por regla: no es PASS. Registro: salida/paso9_10_r3.txt."
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-11-06T18:22:07.608701-05:00",
+      "nota": "md5 f886dfaa45b80a5ee16f9820908049b5. validar_literalidad_exextra.py exit 0, 0 fallos, 6 campos oficiales literales. Metadatos completos (FASE 2E). DOK 2, Nivel 3, Bloom Evaluar, SOLO Relacional: coherente (Bloom Evaluar exige Nivel >= 3; DOK 2 con Nivel 3 por obstáculo empírico: el distractor A conserva los tres totales). Estándar y Grado 6°-7°: decisión del profesor."
+    },
+    "aprobacion_usuario": {
+      "completado": true,
+      "timestamp": "2026-11-06T19:03:25.434447-05:00",
+      "nota": "Respuesta del profesor en el WAIT_USER #3, transmitida por el coordinador: «firmo tal cual, mantengo I-3, a». .Rmd md5 f886dfaa45b80a5ee16f9820908049b5; verificar_espacio.R md5 3d58f45501aa004b35acd709b3b6c58a; verificar_espacio.R todo: exit 4, rojo cubierto por la firma, 0 rojos, 0 pendientes, 99 mutantes muertos por su sonda (salida/verificar_espacio_firma.txt). Registro de la firma: salida/tabla_firma_p7.md."
+    }
+  },
+  "reaperturas": [
+    {
+      "timestamp": "2026-11-06T16:34:13.250184-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "FASE 2C r1 RECHAZAR sobre md5 fa00bf48: H1 a H4 de CORRECCIÓN en la Solution y el pool de errores. La misma pasada corrige H5, H6, H7 y H11, la raya del contexto de diálogo y el marco a 1,7 unidades.",
+      "reporte": "salida/fase2c_r1_detractor.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-11-06T15:51:49.158259-05:00",
+          "archivo": "diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_schoice_v1.Rmd",
+          "nota": "Escrito por el orquestador. 400 semillas de data_generation sin errores, con los stopifnot de I-2, I-3 e I-4 activos; glifos OK; literalidad de exextra exit 0."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-11-06T15:51:49.215529-05:00",
+          "nota": "Solution con Análisis del error, Procedimiento, Propiedades, Caso específico, análisis de los tres mecanismos por código, un error no ofrecible sorteado, Reflexión y Estrategia; feedback por opción, sin letras."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-11-06T15:57:17.424461-05:00",
+          "nota": "md5 bb593f4422d93223e17d4e2e0612721f. HTML n=3, PDF n=5, DOCX n=1, NOPS n=1 y Moodle n=5 con exit 0 en salida/render/. .tex: pandocbounded solo como definición de la plantilla; PDF sin pies Figure; Moodle: 5 correctas, 15 incorrectas, 20 nombres diagrama_<letra>_<hex>; multicopia de 3 con 12 páginas distintas."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-11-06T16:08:17.795575-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_schoice_v1/20261106-160623-812423/informe.txt · md5 fa00bf4874558bfa7e85cd54444de7ee · 0 errores / 2 advertencias · sustituye al informe del md5 bb593f44 tras cambiar el ancho de las opciones"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-06T17:04:56.560594-05:00",
+      "desde": "renderizado_4_formatos",
+      "motivo": "Aviso del coordinador: el profesor usará el ítem en PDF y NOPS impresos en hojas oficio (H9 deja de ser «mantener declarado»). El ancho de las figuras va a cambiar y todo lo renderizado es A4, así que no sirve como evidencia. Este sello se hizo antes de recibir el aviso. La FASE 2C r2 también se lanzó antes del aviso, sobre el md5 7a594069, y no puede cerrar la fase si el .Rmd cambia.",
+      "reporte": null,
+      "pasos_desellados": [
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "renderizado_4_formatos": {
+          "timestamp": "2026-11-06T17:00:53.630791-05:00",
+          "nota": "md5 7a594069b07bb31538a1b1023d7fc5b5. HTML n=3, PDF n=5, DOCX n=1, NOPS n=1 y Moodle n=5 con exit 0 en salida/render_r2/. .tex: pandocbounded solo como definición de plantilla, 0 usos; 0 pies Figure; Moodle: 5 correctas, 15 incorrectas, 20 nombres diagrama_<letra>_<hex>, 0 códigos VN-, 0 makeatletter; multicopia de 3 con 12 páginas y 15 imágenes; canónica (seed = 7) en PDF, HTML y Moodle, revisada a ojo en PDF."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-11-06T17:00:53.696783-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_schoice_v1/20261106-165649-906833/informe.txt · md5 7a594069b07bb31538a1b1023d7fc5b5 · 0 errores / 2 advertencias (tabla de metadatos y letra_correcta: plantilla antigua; este ítem no las usa)"
+        }
+      }
+    }
+  ]
+}

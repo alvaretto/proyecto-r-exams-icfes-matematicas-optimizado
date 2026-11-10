@@ -1,0 +1,2 @@
+EST-menos-cifras-del-enunciado: favorece a la clave en 9452819 versiones; margen < 15 % en 0.0 %; margen medio 47.9 %
+REL-no-extrema-en-coincidencias: favorece a la clave en 11000000 versiones; margen < 15 % en 0.0 %; margen medio 42.9 %

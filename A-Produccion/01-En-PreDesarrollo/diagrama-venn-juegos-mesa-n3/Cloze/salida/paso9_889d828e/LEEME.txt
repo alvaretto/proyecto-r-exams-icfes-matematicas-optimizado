@@ -1,0 +1,7 @@
+md5 889d828e8129e11b0ec5dceda0cf108b · inicio 15:00:56
+diversidad_sustantiva exit=0 (1 s)
+diagnosticidad exit=0 (1 s)
+multisemilla exit=0 (2 s)
+stresstest exit=0 (150 s)
+unicas exit=0 (2 s)
+fin 15:03:32

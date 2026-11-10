@@ -1,0 +1,82 @@
+{
+  "version": "2.0",
+  "ejercicio": "diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1",
+  "tipo": "cloze",
+  "timestamp_inicio": "2026-11-09T12:58:06.404063-05:00",
+  "timestamp_ultima_actualizacion": "2026-11-09T18:29:25.347333-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-11-09T12:58:06.442741-05:00",
+      "resultado": null,
+      "competencia": "Interpretación y representación",
+      "componente": "Aleatorio",
+      "nivel": 3,
+      "descriptor": "D3.11",
+      "dok": 2,
+      "bloom": "Evaluar",
+      "solo": "Relacional",
+      "metacognicion": "analisis_error",
+      "nota": "Heredada del SCHOICE hermano sin reclasificar (C-5, D5 a, firma del profesor del 2026-11-09): mismos valores que ../ejercicio_state.json (ClasificadorICFES 2026-11-06, cotejados con ITEM_OFICIAL.md y el catálogo canónico). Literalidad de exextra del SCHOICE: validar_literalidad_exextra.py exit 0 en el dry-run (md5 2608498b); se repite sobre el .Rmd CLOZE en el paso 10. El Nivel se declara una vez y corresponde a la parte más exigente, la Parte 1 (la pregunta oficial); las Partes 2 a 6 quedan en DOK 2 (condición de C-5). No se relanzó ClasificadorICFES: la decisión firmada es no reclasificar."
+    },
+    "flujo_b": {
+      "requerido": true,
+      "completado": true,
+      "timestamp": "2026-11-09T12:58:06.580850-05:00",
+      "justificacion_h1": "Visto en esta sesión el recorte ../Originales/orig_pregunta_14.png (regla #24 H-1): las cuatro opciones son diagramas de Venn de tres conjuntos con siete números cada uno. H-2: sin patrón de trampa deliberada en el enunciado.",
+      "lenguaje": "tikz",
+      "nota": "Decisión del profesor: decisiones_humanas.flujo_b = s y lenguaje_grafico = tikz, firmadas como C-1 (D1 a) el 2026-11-09. Herencia del SCHOICE: la misma dibujar_venn y GEOM_VENN viajan en el chunk trasplantado (E1 de verificar_espacio_cloze.R), sobre ../salida/flujo_b/geom_venn.json. No se regenera el graficador: en el paso 2 del SCHOICE, TikZ, Python y R dieron 100,0 %."
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-11-09T14:59:16.821821-05:00",
+      "archivo": null,
+      "md5": "e2d2eb34d068141bc319efaea9c1ea00",
+      "nota": "Re-sello tras la pasada 2 de la FASE 2C (H2 de la r1). Único cambio en el .Rmd: la suma de las siete zonas de la Parte 5 en la Solution pasa de MathML a texto, porque a 320 px se salía de 2 a 18 px (lo detectó la sección pantalla nueva del verificador; mutante PM5 la revierte y muere por PANT_DESBORDE). Bloque P1 y Partes 2 a 6 de data_generation sin cambios. md5 889d828e8129e11b0ec5dceda0cf108b."
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-11-09T14:59:16.879401-05:00",
+      "nota": "Re-sello sobre 889d828e: sección solucion nueva del verificador (I-4.7): 60 semillas sin códigos (plantilla con cifras desde las viñetas, letra a letra y retroalimentación de los seis gaps) y 21 mutantes cazados solo por su sonda; la corrida completa con cuotas va en salida/verificar_r5.txt. PDF del hook revisado: Parte 5 en texto, cifras recalculadas a mano."
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-11-09T14:59:16.936274-05:00",
+      "formatos": "HTML,PDF,DOCX,Moodle",
+      "nops": "N/A (exams2nops rechaza extype cloze por diseño)",
+      "nota": "Re-render sobre 889d828e con render_cloze.R (semillas 7 canónica, 2, 1, 3): HTML, PDF oficio con ../solpcielo_cloze.tex, DOCX, Moodle 5 preguntas / 30 gaps (5 MULTICHOICE_V, 20 NUMERICAL, 5 MULTIRESPONSE), 0 gaps con imagen, 20/20 nombres neutrales, pesos 1|1|1|1|1|1; NOPS N/A con «cloze exercises»."
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-11-09T14:59:16.993681-05:00",
+      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1/20261109-145738-434614/informe.txt · md5 889d828e8129e11b0ec5dceda0cf108b · 0 errores / 3 advertencias (2F heurísticas: tabla de metadatos, análisis de distractores, letra_correcta ausente por la regla #19); 2G 100/100, 2H PASA, 2I-2O OK; 4 previews revisadas."
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-11-09T18:16:30.508052-05:00",
+      "veredicto": "APROBAR_CON_CAMBIOS",
+      "nota": "FASE 2C r4 (tanda 5): cuarta pasada autorizada por el profesor («H1 c · H2 100», ../.claude/CLAUDE.md, CLOZE hermano), limitada al semillero y a la sección uso. AgenteDetractor NUEVO, sin name: APROBAR_CON_CAMBIOS sin defectos de CORRECCIÓN (H1 y H2 BAJA COBERTURA, residuo declarado; H3 BAJA OTRO, atendido en el HANDOFF y en el conflicto 3). Reporte íntegro salida/fase2c_r4_detractor.md (md5 f88b5a4c038e44077f5bc74faa0f7a20), citas 13 de 13 (salida/t5/citas_r4.txt; hook: ENTREGA VERIFICADA). Auditó SemilleroCloze.R d01bbf0f (antes 69194749) y verificar_espacio_cloze.R bf11b0a4 (antes d489bafb) frente a la r3, la r7 (salida/verificar_r7.txt: exit 4, 0 rojos, 0 pendientes) y la subsección «Decisiones del profesor tras la tanda 4». El .Rmd sigue en 889d828e: no se reabrió ningún paso (instrucción del coordinador) y los pasos 8 a 10 siguen valiendo. Después del veredicto no se cambiaron el .Rmd, las plantillas, el semillero ni el verificador."
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-11-09T16:48:54.628422-05:00",
+      "nota": "Tanda 4, sobre 889d828e con la FASE 2C r3 cerrada: AgenteValidadorVisual (sin name) renderizó HTML y PDF oficio (../solpcielo_cloze.tex) con semillas 7 (canónica), 1, 2 y 3 en salida/paso8_t4/ y verificó las 5 coherencias: todas OK, 0 hallazgos, VEREDICTO_VISUAL: APTO (reporte salida/paso8_t4/reporte_paso8.md). Canónica: enunciado, datos y los cuatro diagramas iguales al recorte; claves de las Partes 1 a 6 recalculadas a mano en las 4 versiones; cuatro figuras en una página del PDF en las 4."
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-11-09T16:49:13.169896-05:00",
+      "versiones_unicas": 300,
+      "nota": "Medido sobre 889d828e (md5 sin cambios desde entonces; la FASE 2C r3 no tocó el .Rmd) en salida/paso9_889d828e/ (LEEME.txt): diversidad sustantiva N = 100, 6 de 6 gaps (p1 96, p2 12, p3 17, p4 20, p5 42, p6 97 de 100; WARN_DIV_BAJA en p2-p4, variables dentro del rango 13-24 de C-2); diagnosticidad N = 100 PASS (p1: H1 más larga 0 %, más corta 0 % con margen 7 %, H2 0 %, H3 «13» 14 %); multisemilla 100/100; validar_stresstest 100/100 PASS (mediana 1,47 s); 300 de 300 versiones únicas (umbral 250), 282 de 300 conjuntos distintos de cuatro diagramas. Canales cruzados §P7-G y §P7 de la Parte 1: secciones cruce y bateria de la r6 (exit 4, cubierto por C-4)."
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-11-09T16:49:13.227156-05:00",
+      "nota": "Tanda 4 sobre 889d828e: V1 6 ##ANSWERi## = 6 tipos = 6 partes; V2 en orden; V3 exsolution/extol por gap y expoints 1|1|1|1|1|1 (sección pesos de la r6); V4 6 partes; V5 0 gaps con imagen y 0 nombres de rol en salida/moodle/cloze.xml, y sección moodle de la r6 (100 preguntas, 0 códigos, 400 nombres neutrales); V6 sección v6 de la r6 (100 versiones, 0 códigos); V7 solo la clave reproduce los siete datos (oráculo texto, P1_MARCA); V8 6/6 gaps declarados (paso 9); V9 PASS; V10 y V11 sección texto de la r6 (oráculo desde el texto, en los dos sentidos y por contenido). Regla #19: 0. Glifos: 0 ERR. Literalidad de exextra: validar_literalidad_exextra.py exit 0 (salida/literalidad_exextra_t4.txt). Clasificación heredada (C-5): Interpretación y representación · Aleatorio · Nivel 3 · D3.11 · DOK 2 · Evaluar · Relacional; Bloom Evaluar ⇒ Nivel ≥ 3 cumple; el Nivel corresponde a la Parte 1, la más exigente."
+    },
+    "aprobacion_usuario": {
+      "completado": true,
+      "timestamp": "2026-11-09T18:29:25.347333-05:00",
+      "nota": "WAIT_USER #3 de la tanda 5 (2026-11-09): el profesor respondió «a» a la pregunta que pedía aprobar el .Rmd con md5 889d828e8129e11b0ec5dceda0cf108b, y lo aprueba para el aula. md5 comprobados en disco al sellar: .Rmd 889d828e, semillero d01bbf0f, verificador bf11b0a4 (RMD_MD5 = 889d828e), plantilla 1 b 290a3f79. Pasos 1 a 10 sellados tras su artefacto, sin reaperturas. FASE 2C r4 APROBAR_CON_CAMBIOS sin CORRECCIÓN (salida/fase2c_r4_detractor.md, f88b5a4c); r7 exit 4 = rojo §P7 de la Parte 1 cubierto por la firma C-4, no es PASS, con 0 rojos y 0 pendientes; PDF con N = 100: gap en el orden I-IV y clave en el diagrama correcto, 100 de 100. Decisiones firmadas en ../.claude/CLAUDE.md, «CLOZE hermano»: C-1 a C-5, «1 b · semillero sí», «H1 c · H2 100» y esta aprobación. Condición de uso del PDF impreso: generar_pdf() del semillero. Residuos declarados en HANDOFF.md. No está en producción: falta la evidencia de aula y probar en lab la nota del MULTIRESPONSE de la Parte 6 en Moodle."
+    }
+  }
+}

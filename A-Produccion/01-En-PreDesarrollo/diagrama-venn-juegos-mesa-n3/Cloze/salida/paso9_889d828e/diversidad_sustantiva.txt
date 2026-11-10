@@ -1,0 +1,10 @@
+md5 del .Rmd: 889d828e8129e11b0ec5dceda0cf108b
+md5 del .Rmd: 889d828e8129e11b0ec5dceda0cf108b (A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/Cloze/diagrama_venn_juegos_mesa_aleatorio_interpretacion_representacion_n3_cloze_v1.Rmd)
+Diversidad sustantiva (CLOZE): 6 gap(s) medidos de 6 declarados (exclozetype) | 100 version(es) evaluadas | errores=0
+  gap p1   clave:  96 valor(es) unico(s) de 100  [ok]
+  gap p2   clave:  12 valor(es) unico(s) de 100  [baja]
+  gap p3   clave:  17 valor(es) unico(s) de 100  [baja]
+  gap p4   clave:  20 valor(es) unico(s) de 100  [baja]
+  gap p5   clave:  42 valor(es) unico(s) de 100  [ok]
+  gap p6   clave:  97 valor(es) unico(s) de 100  [ok]
+WARN_DIV_BAJA: la clave varia poco en p2, p3, p4. Ampliar rangos de aleatorizacion.

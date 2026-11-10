@@ -1,0 +1,45 @@
+--- /tmp/claude-1000/-home-bootcamp-Proyectos-2026-RepositorioMatematicasICFES-R-Exams/3530c5eb-2f14-461c-b6c9-761d2d82ab0b/scratchpad/t5/SemilleroCloze.r3.R	2026-11-09 17:37:59.304555318 -0500
++++ SemilleroCloze.R	2026-11-09 17:25:45.542795027 -0500
+@@ -28,6 +28,12 @@
+ # - Se quitaron crear_version_pdf() y la función que escribía el archivo de prueba del PDF.
+ # NOPS no aplica (exams2nops rechaza todo extype cloze). El DOCX no deja juntas las cuatro figuras: no se usa
+ # para imprimir este ítem. Vigilado por la sección «uso» de verificar_espacio_cloze.R.
++#
++# Cambios de la tanda 5, por decisión del profesor tras la tanda 4 (respuesta literal «H1 c · H2 100»):
++# - generar_pdf() pasa exshuffle en FALSE a exams2pdf(), y solo ahí: el gap de la Parte 1 se imprime en el orden
++#   «Diagrama I / Diagrama II / Diagrama III / Diagrama IV», y la letra que pide «Cómo marcar» coincide con el número
++#   del diagrama. HTML, Moodle y Canvas siguen barajando.
++# - config$archivos baja de 250 a 100: el máximo de 100 del profesor rige también las exportaciones.
+ # Ejecutar con el directorio de trabajo en esta carpeta (Cloze/).
+ # ===============================================================================
+ 
+@@ -44,7 +50,7 @@
+ 
+ # Configuración de generación
+ config <- list(
+-  archivos =250,                  # Número de versiones a generar (HTML, Moodle y Canvas)
++  archivos = 100,                 # Versiones de HTML, Moodle y Canvas: máximo 100 (decisión del profesor, H2)
+   preguntas_pdf = 10,             # Preguntas del PDF impreso, cada una desde arriba de una página (I-5)
+   semilla_base = sample(100:1e8, 1), # Semilla base para generar semillas únicas
+   dir_salida = "salida_hibrida",    # Directorio de salida
+@@ -271,6 +277,12 @@
+ 
+     # Plantilla local: copia de ../solpcielo_cloze.tex con \clearpage al empezar cada pregunta.
+     # No cambiarla por "plain" (A4) ni por ../solpcielo_cloze.tex: las figuras de la Parte 1 se parten.
++    # exshuffle en FALSE solo en esta llamada (decisión del profesor tras la tanda 4, H1 c). La hoja pide marcar (a)
++    # la primera opción, (b) la segunda...; con la mezcla de R/exams el gap de la Parte 1 salía, por ejemplo,
++    # «Diagrama I / Diagrama IV / Diagrama III / Diagrama II», y la letra de la clave difería del número de su diagrama
++    # en 3 de cada 4 versiones. Sin barajar se imprime en el orden I-IV y la letra coincide con el número. La clave sigue
++    # sorteada: el .Rmd mezcla los diagramas antes de rotularlos, y la Parte 6 sortea el orden de sus afirmaciones.
++    # HTML, Moodle y Canvas no lo llevan: allí el estudiante elige el texto, no una letra.
+     cat("⏳ Iniciando generación PDF...\n")
+     resultado <- exams2pdf(rep(archivo_examen, config$preguntas_pdf),
+                           n = 1,
+@@ -279,6 +291,7 @@
+                           edir = config$dir_ejercicios,
+                           encoding = config$encoding,
+                           template = "solpcielo_cloze_una_por_pagina",
++                          exshuffle = FALSE,
+                           verbose = TRUE)
+ 
+     cat("✅ Archivo PDF generado exitosamente\n")
