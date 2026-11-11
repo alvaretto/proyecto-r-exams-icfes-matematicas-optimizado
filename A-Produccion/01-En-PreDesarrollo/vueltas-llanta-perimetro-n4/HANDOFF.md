@@ -172,13 +172,40 @@ resultado, 100/100, está arriba).
 - Citas de la r4 que fallan al cierre: regla #9 v1.8, «Sin commit» (`.claude/docs/reglas/detractor-obligatorio.md`).
 - Índice: `.claude/docs/INDICE_LECCIONES.md` §8 y el changelog del índice, v3.41.1.
 
+## 2026-11-11: Knit de RStudio y dos avisos de consola (sin cambio en el ejercicio)
+
+El profesor reportó dos mensajes al renderizar. Ninguno salía del `.Rmd`, y el md5 firmado no cambió.
+
+- **Knit alteró el `.Rmd` y se restauró.** El archivo en disco tenía una cabecera YAML de cinco líneas
+  (`output: pdf_document / html_document`) y un espacio menos en el comentario de la línea `ED <- " "`: md5
+  `372168be…` (Error 43, regla #26). Se restauró con `git checkout` desde `efe34781`, con el visto bueno del profesor. El
+  md5 vuelve a ser `85773027d040e2ce4b45eda03afa362c`, `git status` no muestra cambios en el archivo y los sellos siguen
+  valiendo. No se guardó copia de la versión alterada.
+- **«The following object is masked _by_ ‘.GlobalEnv’: fmt».** Sale en el `library(exams)` de la línea 2 de
+  `SemilleroUnico_v2.R` cuando RStudio restaura el `.RData` de la raíz del repo, que traía una función `fmt` de otra
+  sesión; `exams` 2.4.5 exporta una con el mismo nombre. El `.Rmd` no usa `fmt`. Reproducido con `R --no-save` desde la
+  raíz; con `Rscript --no-restore` no aparece. El `.RData` se borró a petición del profesor (ya estaba en `.gitignore`).
+  RStudio lo recrea al cerrar mientras «Save workspace to .RData on exit» no esté en «Never».
+- **«[WARNING] Deprecated: --mathjax».** Es de pandoc 3.11 por una opción que pasa `exams` 2.4.5. Medido etapa por etapa
+  en una copia fuera del repo: lo emiten `exams2moodle()` y el cuestionario interactivo (`webquiz_autocontenido.R`, que
+  termina en `WEBQUIZ_OK`); `exams2pandoc()` a DOCX no. `exams2html()` emite el gemelo `--mathml`. Todas terminan con
+  exit 0 y no cambia la salida: no se corrige en el `.Rmd`, en el semillero ni en `perifericos/`. `exams2pdf()` con
+  `solpcielo` y `exams2nops()` no se midieron por separado.
+- **Render de comprobación** en sesión limpia, sobre el md5 firmado: `exams2html()` y `exams2pdf()` con `n = 1`, exit 0,
+  sin el mensaje de `fmt` y con las fórmulas del HTML en MathML.
+- **En disco, sin versionar:** el profesor ejecutó `SemilleroUnico_v2.R` a las 04:59 y dejó en `salida/` el PDF, el DOCX,
+  el XML de Moodle, el NOPS y el cuestionario interactivo. Los semilleros y las plantillas `.tex` de la carpeta siguen sin
+  seguimiento de git.
+
 ## Próximo paso
 
 Aprobado para el aula (11 de 11). Lo que falta:
 
-- **Git:** el subproyecto no está versionado. Antes de commit o push, la suite completa (`R_TESTS_FULL=1`). `.gitignore`
-  ignora `**/salida/`: la evidencia que respalda la firma (`salida/verificar_vueltas.R`, `salida/alcance_r4.R`,
-  `salida/tabla_firma_p7.md`, `salida/detractor_r3/reglas_r3.R` y los reportes `fase2c_r*`) entra con `git add -f`, por nombre.
+- **Git:** el ejercicio y su evidencia están versionados y en el remoto (`efe34781`, rama
+  `feat/plantillas-oficiales-rexams`; lista en «Archivos versionados»). Siguen sin seguimiento los semilleros y las
+  plantillas `.tex` de la carpeta. `.gitignore` ignora `**/salida/`: evidencia nueva entra con `git add -f`, por nombre.
+  Antes de un commit que toque el `.Rmd` o el verificador, la suite completa (`R_TESTS_FULL=1`).
+- **Render:** con `SemilleroUnico_v2.R`, nunca con el botón Knit (cambia el md5 firmado; ver la sección del 2026-11-11).
 - **Aula:** llevarlo a clase y anotar si los estudiantes usan «la más ancha» u otro atajo de la tabla.
 - **Antes de promover:** evidencia de aula (Nivel 3) y FASE 2C-bis (`/detractor-hetero`).
 - **Si se toca el `.Rmd`:** atender H2 y H4 de la r4. La firma queda sin efecto, y hacen falta otro verificador, otra tabla
