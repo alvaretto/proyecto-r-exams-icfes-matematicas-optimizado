@@ -184,8 +184,13 @@ El profesor reportó dos mensajes al renderizar. Ninguno salía del `.Rmd`, y el
 - **«The following object is masked _by_ ‘.GlobalEnv’: fmt».** Sale en el `library(exams)` de la línea 2 de
   `SemilleroUnico_v2.R` cuando RStudio restaura el `.RData` de la raíz del repo, que traía una función `fmt` de otra
   sesión; `exams` 2.4.5 exporta una con el mismo nombre. El `.Rmd` no usa `fmt`. Reproducido con `R --no-save` desde la
-  raíz; con `Rscript --no-restore` no aparece. El `.RData` se borró a petición del profesor (ya estaba en `.gitignore`).
-  RStudio lo recrea al cerrar mientras «Save workspace to .RData on exit» no esté en «Never».
+  raíz; con `Rscript --no-restore` no aparece. El `.RData` (ya estaba en `.gitignore`) se borró dos veces a petición del
+  profesor, porque RStudio lo recreó a los pocos minutos de la primera.
+- **RStudio, corregido en el origen.** El profesor cambió la preferencia global (Tools → Global Options → General): no
+  restaurar el `.RData` al abrir y no guardarlo al cerrar. Comprobado en disco: `~/.config/rstudio/rstudio-prefs.json`
+  tiene `"save_workspace": "never"` y `"load_workspace": false`; el `.Rproj` del repo sigue en `Default` y hereda eso; no
+  hay `.RData` en la raíz. La sesión abierta conserva el `fmt` hasta Session → Restart R. Si el mensaje reaparece, mirar
+  primero esas dos claves y si volvió a existir un `.RData`.
 - **«[WARNING] Deprecated: --mathjax».** Es de pandoc 3.11 por una opción que pasa `exams` 2.4.5. Medido etapa por etapa
   en una copia fuera del repo: lo emiten `exams2moodle()` y el cuestionario interactivo (`webquiz_autocontenido.R`, que
   termina en `WEBQUIZ_OK`); `exams2pandoc()` a DOCX no. `exams2html()` emite el gemelo `--mathml`. Todas terminan con
