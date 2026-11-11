@@ -198,7 +198,11 @@ El profesor reportó dos mensajes al renderizar. Ninguno salía del `.Rmd`, y el
 - **Semilleros y plantillas, versionados el mismo día** a petición del profesor: `SemilleroUnico_v2.R`,
   `SemilleroCloze.R`, `SemilleroMoodle_v2.R`, `pcielo.tex`, `pcielo_nosol.tex`, `solpcielo.tex`, `solpcielo_cloze.tex` y
   `solpcielo_cloze_una_por_pagina.tex`. Siete son idénticos a los de `A-Produccion/perifericos/`; `SemilleroUnico_v2.R`
-  solo cambia `archivo_examen`. `SemilleroCloze.R` y `SemilleroMoodle_v2.R` van sin adaptar (el ejercicio es solo SCHOICE).
+  solo cambia `archivo_examen`. `SemilleroCloze.R` va sin adaptar (el ejercicio es solo SCHOICE).
+- **Moodle, 100 versiones.** El profesor apuntó `SemilleroMoodle_v2.R` a este ejercicio (`copias <- 100`, dentro del tope)
+  y generó `salida/…_schoice_v1_.xml` a las 05:23: 100 preguntas `R001` a `R100`, 4 opciones y una correcta en cada una,
+  fórmulas con `\( … \)`, 85 enunciados y 67 claves distintas. `numpreg` no llega a Moodle: `exams2moodle()` usa `copias`.
+  `exams2nops()` admite 45 preguntas por examen como máximo, así que `numpreg` no pasa de 45 en `SemilleroUnico_v2.R`.
 
 ## Próximo paso
 

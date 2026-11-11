@@ -5,7 +5,7 @@ library(exams)
 .exams_generation_mode <- TRUE
 
 # Definición del archivo de examen y configuración inicial
-archivo_examen <- "probabilidad_fichas_tabla_doble_entrada_aleatorio_formulacion_ejecucion_n2_schoice_v1.Rmd"
+archivo_examen <- "vueltas_llanta_perimetro_numerico_variacional_formulacion_ejecucion_n4_schoice_v1.Rmd"
 copias <- 100  # Máximo 100 (decisión del profesor): son las versiones que valida validar_stresstest.R
 stopifnot("copias: máximo 100" = copias <= 100)
 numpreg <- 1
