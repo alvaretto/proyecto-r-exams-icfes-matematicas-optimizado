@@ -8,6 +8,25 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.41.1 (2026-11-10)
+
+Aclaraciones del ciclo de `vueltas-llanta-perimetro-n4` (`MAT-2026-07-028`, SCHOICE aprobado y firmado el 2026-11-10). No
+cambian la norma: los textos compactos de `.claude/rules/` quedan igual y solo se amplían los íntegros.
+
+1. **Regla #24, H-2** (`.claude/docs/reglas/hermes-imagenes-icfes.md`): una errata del editor que deja el ítem sin clave no
+   es una trampa deliberada. Se corrige desde la fuente oficial, mirada en su página, y se declara en `ITEM_OFICIAL.md`; si
+   el enunciado pregunta por un error, rige H-2 sin excepción.
+2. **Regla #22, §P7-F, cuarto caso** (`.claude/docs/reglas/diversidad-sustantiva.md`): en opciones-expresión, los
+   distractores a un solo cambio de la clave la dejan como medoide; la pasada que lo cerró llevó el canal al ancho medido en
+   TeX, y la que cerró el ancho reescribió la clave y cambió lo que el ítem mide. La cifra que se le muestra al profesor
+   para decidir sale de la enumeración cuando el espacio es finito.
+3. **Regla #9, v1.8** (`.claude/docs/reglas/detractor-obligatorio.md`): sin commit, la prueba de que las citas eran ciertas
+   al entregar es la línea del hook en `citas-detractor.log` y la hora de los archivos citados.
+4. **Referencias cruzadas:**
+   - `INDICE_LECCIONES.md` v1.4: la regla #26 en §3, que faltaba desde la v3.41.0; la fila 3.41.1 en §6; y tres filas en §8;
+   - `HANDOFF_REPO.md`;
+   - el `ITEM_OFICIAL.md` y el `HANDOFF.md` del ejercicio, que remiten a estas aclaraciones.
+
 ### Cambios v3.41.0 (2026-11-09)
 
 Lo aprendido al llevar `diagrama-venn-juegos-mesa-n3` (SCHOICE y CLOZE, commit `0ab5fc64`) al aula, convertido en regla, y

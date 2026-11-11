@@ -81,6 +81,19 @@ es **fidelidad-crítico** y su figura NO se toca sin verificación humana contra
 
 Los dos últimos son el patrón `CORRIGE_REP` y la marca `VALIDACION`, añadidos tras `q107` y `Q058`.
 
+**Errata editorial: no es una trampa (aclaración del 2026-11-10, sin cambio de norma).** H-2 protege los errores
+*deliberados*, los que la pregunta pide detectar. Una errata del editor que deja el ítem **sin clave** no es uno de ellos.
+Caso `MAT-2026-07-028`: el simulacro SAI de julio de 2026 imprimió la opción C de su pregunta 28 como «101/120 × 150». Con
+ella ninguna opción es correcta, y el enunciado no pregunta por ningún error. El ítem de origen (Evaluar para Avanzar 2023,
+9.°, cuadernillo 1, pregunta 12) trae C = (100/p) × 150, y la ficha de alineación ya la había corregido.
+
+- Se corrige desde la fuente oficial, mirada en su página (H-4: dos fuentes derivadas que coinciden no son confirmación).
+- La divergencia con la plana se declara en `ITEM_OFICIAL.md`, con la fuente y la página.
+- La instancia canónica usa la opción oficial, y se comprueba en las salidas que la errata no aparece en ninguna versión.
+- Si el enunciado pregunta por un error, rige H-2 sin excepción.
+
+Registro: `A-Produccion/01-En-PreDesarrollo/vueltas-llanta-perimetro-n4/ITEM_OFICIAL.md`, § «Errata del editor en la opción C».
+
 ### H-3 — Gate de fidelidad POR TIPO, no un checklist único
 
 Un solo criterio de "se parece" produce falsos negativos y, peor, falsos positivos. Hermes usa cuatro

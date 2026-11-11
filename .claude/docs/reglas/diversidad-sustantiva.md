@@ -669,6 +669,31 @@ molde de la clave para que dejaran de delatarla por su vocabulario.
 Antes de escribir distractores sobre el molde de la clave, hay que medir también las reglas relacionales (§P7-E), no solo
 las léxicas. Con las pasadas agotadas, el profesor quitó el tipo con más reglas en rojo y firmó el residuo del otro.
 
+**Cuarto caso: opciones-expresión, de la convergencia al ancho y del ancho a la forma (aclaración del 2026-11-10, sin
+cambio de norma).** En `vueltas-llanta-perimetro-n4` (`MAT-2026-07-028`) las opciones son expresiones algebraicas, y las
+versiones que no son la canónica sortean 3 errores de un banco de 6.
+- **Convergencia.** Tres errores del banco eran la clave con un solo cambio: la fracción invertida, ÷ en lugar de × y un
+  factor de más. La clave quedó en el centro de las opciones: centralidad 81,0 % y medoide 68,0 % con N = 100, y 0 % en la
+  canónica. La batería congelada lo veía a medias, por «la que MÁS comparte» (+15,6 pp).
+- **Pasada 2.** Una tabla de pesos por (terna, forma de escritura), con su guarda, bajó la convergencia al 25 %, pero el
+  canal pasó a «la más ancha»: 60,0 % exacto en las versiones nuevas y 75,0 % en la forma más frecuente. Contar caracteres
+  del código no lo ve; el ancho se mide como se ve, con las cajas de TeX.
+- **Pasada 3.** Escribir la clave de otra forma («d ÷ P/K») cerró el ancho (20,0 %). Pero en el 90 % de las versiones la
+  clave dejó de verse como la escribe quien modela el problema, y aparecieron siete pistas de forma: seis entre 43 y 50 %
+  en el conjunto, y dentro de una forma hasta el 82 %.
+- **Cierre.** El profesor volvió a la escritura de la pasada 2 y firmó 36 reglas con cifras exactas, obtenidas enumerando
+  las 1248 combinaciones del diseño. La cifra de «la más ancha» que había visto al decidir (67 %) era de muestra.
+
+Lecciones:
+1. Un distractor a un solo cambio de la clave la vuelve el medoide de las opciones: al diseñar el banco se miden también
+   la centralidad y el medoide.
+2. Cambiar cómo se escribe la clave para cerrar un canal puede cambiar lo que el ítem mide. Hay que comprobar que la clave
+   siga siendo la expresión que escribe quien resuelve bien.
+3. Si el espacio de diseño es finito, la cifra que se le muestra al profesor para decidir sale de la enumeración, no de
+   una muestra.
+
+Registro: `A-Produccion/01-En-PreDesarrollo/vueltas-llanta-perimetro-n4/HANDOFF.md` y `salida/tabla_firma_p7.md`.
+
 #### §P7-G — El estímulo es una entrada de la batería (v1.10, 2026-10-31)
 
 Una regla de eliminación recibe las opciones de una versión. **El enunciado no entra.** Si muestra un valor o

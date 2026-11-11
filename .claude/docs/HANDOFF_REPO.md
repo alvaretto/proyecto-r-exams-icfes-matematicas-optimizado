@@ -1,8 +1,25 @@
 # HANDOFF — repositorio (infraestructura `.claude/`, tests y documentación)
 
 > Archivo de retorno para el trabajo que no pertenece a un ejercicio; cada ejercicio lleva su propio
-> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-11-09 (v3.41.0: regla #26 y `perifericos/` en disco como versión oficial).
+> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-11-10 (v3.41.1: aclaraciones del ciclo de `vueltas-llanta-perimetro-n4`).
 > Si este archivo y el código discrepan, manda el código: verificar antes de actuar.
+
+## 2026-11-10: aclaraciones del ciclo de `vueltas-llanta-perimetro-n4` (v3.41.1)
+
+- **Qué es:** lo aprendido al llevar a 11/11 el SCHOICE de `MAT-2026-07-028` (pregunta 28 del simulacro SAI de julio de
+  2026, reciclada de EPA 2023 9.°), en cuatro rondas del orquestador y con tres decisiones del profesor sobre la
+  diagnosticidad. Queda como aclaración en los íntegros de tres reglas, sin cambio de norma (ver el changelog del índice):
+  - regla #24 H-2: la errata editorial no es trampa;
+  - regla #22 §P7-F, cuarto caso: convergencia, ancho en TeX y constructo en opciones-expresión;
+  - regla #9 v1.8: citas sin commit.
+- **Pendiente (infraestructura):**
+  - La batería congelada (`bateria_eliminacion.R` y `bateria_referencia_icfes.R`) no trae sondas de centralidad ni de
+    medoide; en este ejercicio las midió aparte su verificador (familia V1). Llevarlas al helper exige antes un barrido sobre
+    los ejercicios ya firmados, porque una regla nueva cambia su vara (§P7-C).
+  - El hook post-render solo se dispara cuando el comando nombra el `.Rmd` literal dentro de `exams2*("…")`: con el nombre
+    en una variable sale en silencio. Así lo dice su cabecera; el orquestador lo corrió a mano en la ronda 4.
+- **Archivos de esta línea:** los íntegros de las reglas #9, #22 y #24; `INDICE_LECCIONES.md` (además, la regla #26 que
+  faltaba en su §3); este archivo, el índice y su changelog.
 
 ## 2026-11-09: regla #26 y versión oficial de `perifericos/` (v3.41.0)
 

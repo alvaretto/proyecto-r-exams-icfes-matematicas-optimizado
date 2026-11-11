@@ -2,7 +2,7 @@
 
 > **Propósito:** mapa unificado de TODAS las fuentes de lecciones, errores y decisiones del proyecto ICFES R/exams. Si tienes una pregunta del tipo "¿esto ya pasó? ¿hay un fix conocido?", **empieza por aquí**.
 
-**Última actualización:** 2026-11-05 (Error 41, reglas hasta la #25 y versiones de R/exams; antes: 2026-09-13, Errores 35-37 agregados en §2.7 — ciclo `teorema-coseno-datos-suficientes-n3`: segunda clave por criterio ambiguo, invariante sin guardia ejecutable, cobertura nominal y sonda sin control positivo)
+**Última actualización:** 2026-11-10 (aclaraciones del ciclo de `vueltas-llanta-perimetro-n4` en las reglas #9, #22 y #24, tres filas en §8 y la regla #26 en §3; antes: 2026-11-05, Error 41, reglas hasta la #25 y versiones de R/exams; antes: 2026-09-13, Errores 35-37 agregados en §2.7 — ciclo `teorema-coseno-datos-suficientes-n3`: segunda clave por criterio ambiguo, invariante sin guardia ejecutable, cobertura nominal y sonda sin control positivo)
 **Mantenedor:** Álvaro Ángel Molina
 
 ---
@@ -108,7 +108,7 @@
 
 ---
 
-## 3. Reglas críticas (25, todas obligatorias)
+## 3. Reglas críticas (26, todas obligatorias)
 
 | # | Regla | Archivo | Categoría |
 |---|---|---|---|
@@ -137,6 +137,7 @@
 | 23 | Muestra estándar de validación: N = 100 | `muestra-estandar-validacion.md` | Validación |
 | 24 | Hermes: triaje y fidelidad de figuras | `hermes-imagenes-icfes.md` | Visual |
 | 25 | Glifos Unicode que rompen pdflatex | `glifos-latex-prohibidos.md` | Ingeniería |
+| 26 | Material del aula (oficio, NOPS, Moodle, celulares sin internet) | `material-aula.md` | Workflow |
 
 ---
 
@@ -185,6 +186,7 @@ Ver `.claude/CLAUDE.md` sección "Cambios v3.X" o `.claude/docs/CHANGELOG.md`. R
 | **3.13.0** | **2026-05-14** | **Errores 18 y 20 + Formato Equilibrado en opciones gráficas (v5.0 de graficos-como-opciones.md) + GRAF-BAR-01** |
 | 3.39.0 | 2026-11-04 | Novedades de R/exams verificadas: `validar_stresstest.R` en el paso 9, comparador, vigía, webquiz y control NOPS |
 | 3.41.0 | 2026-11-09 | Regla #26: material del aula (oficio, NOPS, CLOZE en papel, exportaciones de 100, cuestionario sin internet); `perifericos/` en disco es la versión oficial; Errores 42 y 43 |
+| 3.41.1 | 2026-11-10 | Aclaraciones sin cambio de norma (`vueltas-llanta-perimetro-n4`): errata editorial ≠ trampa (regla #24 H-2); convergencia, ancho y constructo en opciones-expresión (regla #22 §P7-F, cuarto caso); citas sin commit (regla #9 v1.8) |
 
 Las versiones intermedias están en `.claude/docs/CHANGELOG_CLAUDE_MD.md`.
 
@@ -219,6 +221,9 @@ Archivos en `~/.claude/projects/-home-bootcamp-Proyectos-2026-RepositorioMatemat
 | "¿El criterio del enunciado admite más de una lectura y puede haber una segunda clave?" | Error 35 + regla #22 §P7-F — enumerar el espacio de diseño y fijar el criterio de desambiguación por escrito, como invariante ejecutable |
 | "¿Mi invariante local (`.claude/CLAUDE.md` del subproyecto) realmente impide el defecto que describe?" | Error 36 — probarla por mutación (revertirla y ver si el render aborta); sin guarda ejecutable, es sólo documentación |
 | "¿Un `PASS` o un `0` de mi batería/sonda significan lo que creo?" | Error 37 — medir la aplicabilidad de cada regla y exigir un control positivo antes de confiar en un cero |
+| "¿La opción impresa del cuadernillo trae una errata que deja el ítem sin clave?" | Regla #24 H-2, aclaración del 2026-11-10 (`.claude/docs/reglas/hermes-imagenes-icfes.md`): una errata editorial no es trampa; se corrige desde la fuente oficial y se declara en `ITEM_OFICIAL.md`. Caso: `vueltas-llanta-perimetro-n4` |
+| "¿Mis opciones-expresión dejan la clave como la del medio o la más ancha?" | Regla #22 §P7-F, cuarto caso (2026-11-10): medir centralidad, medoide y ancho en TeX al diseñar el banco, y no reescribir la clave sin comprobar lo que el ítem mide |
+| "¿Las citas del detractor fallan después de atender sus hallazgos?" | Regla #9 v1.8: `verificar_citas_detractor.py --commit <sha>`; sin commit, la línea del hook en `~/.claude/hooks/logs/citas-detractor.log` |
 | "¿Cómo evito patrones detectables en opciones gráficas?" | Error 18 + `.claude/rules/graficos-como-opciones.md` §Formato Equilibrado |
 | "¿Cómo diseño un buen distractor de barras?" | Error 20 (GRAF-BAR-01) — alturas permutadas |
 | "¿Por qué solo se generan N versiones únicas?" | Error 8 + regla `codigo-rmd.md` #10 |
@@ -252,5 +257,5 @@ Archivos en `~/.claude/projects/-home-bootcamp-Proyectos-2026-RepositorioMatemat
 
 ---
 
-**Versión del índice:** 1.3 (2026-09-13 — agregada §2.7 "Diseño de ítem, cobertura de reglas y guardas sin mutante" con Errores 35-37 (`teorema-coseno-datos-suficientes-n3`); fila nueva en §1 y tres filas nuevas en §8; v1.2 2026-07-28 — agregados retroactivamente Errores 21-24 al catálogo §2: fila 22 en §2.3, fila 21 en §2.5, §2.6 renombrada "Legibilidad geométrica y fuga de información en diagramas dinámicos" con filas 23-24 antepuestas a 25-26; secuencia 21-26 continua)
+**Versión del índice:** 1.4 (2026-11-10 — regla #26 en §3, fila 3.41.1 en §6 y tres filas en §8: errata editorial, opciones-expresión y citas sin commit; 1.3 2026-09-13 — agregada §2.7 "Diseño de ítem, cobertura de reglas y guardas sin mutante" con Errores 35-37 (`teorema-coseno-datos-suficientes-n3`); fila nueva en §1 y tres filas nuevas en §8; v1.2 2026-07-28 — agregados retroactivamente Errores 21-24 al catálogo §2: fila 22 en §2.3, fila 21 en §2.5, §2.6 renombrada "Legibilidad geométrica y fuga de información en diagramas dinámicos" con filas 23-24 antepuestas a 25-26; secuencia 21-26 continua)
 **Próxima revisión:** cuando se agregue una nueva categoría o el catálogo de errores supere los 30 entries.

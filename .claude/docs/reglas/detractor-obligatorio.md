@@ -721,6 +721,12 @@ el sello necesitó la firma del profesor.
   momento.
 - **No relaja nada:** una cita falsa en el commit auditado sigue fallando, y el control positivo de
   `test_citas_detractor.R` comprueba que `AUSENTE` sigue disparando.
+- **Sin commit (aclaración del 2026-11-10, sin cambio de norma).** Si los archivos citados no están en git, `--commit` no
+  aplica. La prueba de que las citas eran ciertas al entregar es la línea del hook en
+  `~/.claude/hooks/logs/citas-detractor.log` (agente, número de citas, `fallos=0` y «ENTREGA VERIFICADA»), junto con la hora
+  de modificación de los archivos citados, posterior a esa línea. Caso: en la FASE 2C r4 de `vueltas-llanta-perimetro-n4`,
+  10 de 31 citas fallaban al cierre porque la tabla de firma se corrigió después de la entrega (19:55) para atender H1 y
+  H3; el hook las había verificado a las 19:52:16.
 
 ### Cambios v1.7 (2026-11-02) — el lanzamiento sin `name:` es asíncrono
 
