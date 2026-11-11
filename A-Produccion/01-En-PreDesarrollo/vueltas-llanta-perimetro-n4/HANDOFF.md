@@ -194,16 +194,19 @@ El profesor reportó dos mensajes al renderizar. Ninguno salía del `.Rmd`, y el
 - **Render de comprobación** en sesión limpia, sobre el md5 firmado: `exams2html()` y `exams2pdf()` con `n = 1`, exit 0,
   sin el mensaje de `fmt` y con las fórmulas del HTML en MathML.
 - **En disco, sin versionar:** el profesor ejecutó `SemilleroUnico_v2.R` a las 04:59 y dejó en `salida/` el PDF, el DOCX,
-  el XML de Moodle, el NOPS y el cuestionario interactivo. Los semilleros y las plantillas `.tex` de la carpeta siguen sin
-  seguimiento de git.
+  el XML de Moodle, el NOPS y el cuestionario interactivo.
+- **Semilleros y plantillas, versionados el mismo día** a petición del profesor: `SemilleroUnico_v2.R`,
+  `SemilleroCloze.R`, `SemilleroMoodle_v2.R`, `pcielo.tex`, `pcielo_nosol.tex`, `solpcielo.tex`, `solpcielo_cloze.tex` y
+  `solpcielo_cloze_una_por_pagina.tex`. Siete son idénticos a los de `A-Produccion/perifericos/`; `SemilleroUnico_v2.R`
+  solo cambia `archivo_examen`. `SemilleroCloze.R` y `SemilleroMoodle_v2.R` van sin adaptar (el ejercicio es solo SCHOICE).
 
 ## Próximo paso
 
 Aprobado para el aula (11 de 11). Lo que falta:
 
 - **Git:** el ejercicio y su evidencia están versionados y en el remoto (`efe34781`, rama
-  `feat/plantillas-oficiales-rexams`; lista en «Archivos versionados»). Siguen sin seguimiento los semilleros y las
-  plantillas `.tex` de la carpeta. `.gitignore` ignora `**/salida/`: evidencia nueva entra con `git add -f`, por nombre.
+  `feat/plantillas-oficiales-rexams`; lista en «Archivos versionados»), y desde el 2026-11-11 también los semilleros y
+  las plantillas `.tex` de la carpeta. `.gitignore` ignora `**/salida/`: evidencia nueva entra con `git add -f`, por nombre.
   Antes de un commit que toque el `.Rmd` o el verificador, la suite completa (`R_TESTS_FULL=1`).
 - **Render:** con `SemilleroUnico_v2.R`, nunca con el botón Knit (cambia el md5 firmado; ver la sección del 2026-11-11).
 - **Aula:** llevarlo a clase y anotar si los estudiantes usan «la más ancha» u otro atajo de la tabla.
