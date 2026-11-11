@@ -1,0 +1,25 @@
+85773027d040e2ce4b45eda03afa362c  /home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/vueltas-llanta-perimetro-n4/vueltas_llanta_perimetro_numerico_variacional_formulacion_ejecucion_n4_schoice_v1.Rmd
+md5 del .Rmd: 85773027d040e2ce4b45eda03afa362c
+catálogo niveles-mat.json 426ea08a3746c669a1467df579284ca7
+catálogo evidencias-mat.json 427d2e29c9a5a99da619ee2526fbd785
+catálogo estandares-mat-ebc.json 4862e82c3cd19b31af4b2f2784bb4aef
+catálogo estructura-prueba-mat.json 330f5f841063af8db7486777ee407f9d
+
+[OK] Competencia: 'Formulación y ejecución'
+   literal en evidencias-mat.json /evidencias_oficiales/FyE_E1/competencia
+   literal en evidencias-mat.json /evidencias_oficiales/FyE_E2/competencia
+   literal en evidencias-mat.json /evidencias_oficiales/FyE_E3/competencia
+[OK] Componente: 'Numérico-variacional'
+   literal en estructura-prueba-mat.json /contenidos/equivalencia_componente/Álgebra y Cálculo
+[OK] Afirmacion: 'Frente a un problema que involucre información cuantitativa, plantea e implementa estrategias que lleven a soluciones adecuadas.'
+   literal en evidencias-mat.json /afirmaciones_oficiales/Formulación y ejecución/texto_oficial
+[OK] Evidencia: 'Diseña planes para la solución de problemas que involucran información cuantitativa o esquemática.'
+   literal en evidencias-mat.json /evidencias_oficiales/FyE_E1/texto_oficial
+[OK] Descriptor (texto tras ' — '): 'Modela usando lenguaje algebraico información dada en lenguaje natural, tablas o representaciones geométricas.'
+   literal en niveles-mat.json /niveles_oficiales/N4[3]
+   literal en niveles-mat.json /mapeo_codigos_proyecto_a_oficial/D4.4/texto_oficial
+[OK] Estandar (texto antes de ' ('): 'Describo y represento situaciones de variación relacionando diferentes representaciones (diagramas, expresiones verbales generalizadas y tablas).'
+   literal en estandares-mat-ebc.json /estandares_oficiales_por_pensamiento_grado/Variacional_6-7[0]
+
+TOTAL fallos: 0
+exit=0

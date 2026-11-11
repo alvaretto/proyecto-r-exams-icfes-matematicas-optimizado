@@ -1,0 +1,1 @@
+85773027d040e2ce4b45eda03afa362c  vueltas_llanta_perimetro_numerico_variacional_formulacion_ejecucion_n4_schoice_v1.Rmd

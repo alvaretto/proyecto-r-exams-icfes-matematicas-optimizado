@@ -1,0 +1,173 @@
+{
+  "version": "2.0",
+  "ejercicio": "vueltas_llanta_perimetro_numerico_variacional_formulacion_ejecucion_n4_schoice_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-11-10T15:12:05.078048-05:00",
+  "timestamp_ultima_actualizacion": "2026-11-10T20:17:26.213424-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-11-10T15:14:09.950264-05:00",
+      "resultado": "Ficha MAT-2026-07-028: N4 / Formulación y ejecución / Numérico-variacional / D4.4. ClasificadorICFES (haiku, lectura independiente sin la ficha): coincide en competencia y componente; lee N3 (DOK 2, Aplicar, Relacional). Se conserva N4 de la ficha (regla #1: el nivel es banda empírica, sin inflar DOK); la discrepancia se informa al profesor en la pausa 1. Sin figura en el recorte (md5 34c19727…)."
+    },
+    "flujo_b": {
+      "requerido": false,
+      "completado": true,
+      "timestamp": "2026-11-10T15:19:56.229632-05:00",
+      "nota": "Profesor 2026-11-10, literal: «Sin figura». Recorte orig_pregunta_28.png (md5 34c19727…): solo texto y cuatro expresiones; regla #24 H-1 por inspección visual."
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-11-10T19:22:22.050187-05:00",
+      "archivo": "vueltas_llanta_perimetro_numerico_variacional_formulacion_ejecucion_n4_schoice_v1.Rmd",
+      "nota": "Ronda 4: escritura de la r2 restaurada desde la copia exacta (md5 4389766…) por decisión del profesor («Volver a la de la ronda 2»); se conservan los arreglos de la r3 que no son de escritura (feedback de VL-F, span de separación, modelo de ancho y crédito 1/4 en la guarda); fuera cociente/cociente_b/fraccion_nv con sus textos. Guarda con 5 atajos y topes por (nivel, atajo); all(PESOS > 0) con nombre. Glosa de cabecera con cifras exactas. md5 85773027d040e2ce4b45eda03afa362c"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-11-10T19:22:22.112687-05:00",
+      "nota": "Solution y feedbacks de la r2 (validados por el detractor r2 con oráculo de texto) + feedback de VL-F de la r3. Regla #19: 0 letras. PDF v1 revisado a ojo en sus 2 páginas. md5 85773027…"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-11-10T19:22:22.174185-05:00",
+      "nota": "salida/render_r4: HTML 4, PDF 5 (+tex), DOCX 2, NOPS 2, Moodle 10 (seed 1:10). pandocbounded 0 fuera del preámbulo; span ausente en PDF/NOPS/DOCX, 40 en Moodle, 4 por HTML; 101/120 en 0 salidas; LTcaptype solo en el preámbulo de la plantilla (sin tablas). md5 85773027…"
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-11-10T19:27:07.070031-05:00",
+      "nota": "Hook post-exams2-validation.sh v6.3 ejecutado a mano (la sesión arrancó en la subcarpeta y los hooks del repo no se cargan) con la ruta literal del .Rmd: 0 errores, 6 advertencias de siempre; FASE 2G 100/100, 2H 0 anomalías, 2I y 2J limpias. Salida en salida/hook_post_render_r4.json. md5 85773027d040e2ce4b45eda03afa362c"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-11-10T19:56:26.824661-05:00",
+      "veredicto": null,
+      "nota": "FASE 2C r4, detractor nuevo lanzado sin name: APROBAR_CON_CAMBIOS; 0 de CORRECCIÓN (oráculo propio: 1248 combinaciones por el chunk real, 48 canónicas y 1500 semillas, 0 problemas), 0 críticas y 0 altas; 1 MEDIA y 3 BAJAS. Citas verificadas: 31, 0 problemas. H1 y H3 aplicados a salida/tabla_firma_p7.md sin cambiar el md5; H2 y H4 (BAJAS, opcionales) declarados en HANDOFF. Reporte: salida/fase2c_r4_detractor.md. md5 85773027d040e2ce4b45eda03afa362c"
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-11-10T19:56:26.884092-05:00",
+      "nota": "salida/paso8_coherencias_r4.md: OK_CON_OBSERVACIONES (AgenteValidadorVisual, sin name): Moodle 10/10 emparejado por contenido, PDF v1 completo, literalidad 0 fallos. 6b (salida/paso6b_auditoria_visual_r4.md): APTO_VISUAL, N = 24, hueco mínimo 9,6 px a 320 y 360 px. md5 85773027…"
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-11-10T19:56:26.942380-05:00",
+      "versiones_unicas": null,
+      "nota": "md5 85773027…: verificador r4 ROJO_CUBIERTO exit 3 (enumeración exacta, 36 rojos cubiertos, 0 sin alcance, 0 fallos; oráculo algebraico 1249/1249 y de texto en 602 versiones distintas; 20 mutantes de guarda, 5 de atajo, 20 pares y 3 del alcance cazados por su sonda); multisemilla 100/100; diversidad PASS; diagnosticidad PASS (H1 0 %, H2 3 %, H3 58 % de 19, H3b 67 %); stresstest 100/100; 268 únicas de 300."
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-11-10T19:56:27.008564-05:00",
+      "nota": "validar_literalidad_exextra.py --item ITEM_OFICIAL.md: TOTAL fallos 0, con el catálogo canónico montado (salida/paso10_literalidad.txt). Nivel 4 con DOK 2 y Bloom Aplicar: coherente (DOK >= 3 implica Nivel >= 3, no se viola). md5 85773027…"
+    },
+    "aprobacion_usuario": {
+      "completado": true,
+      "timestamp": "2026-11-10T20:17:26.213424-05:00",
+      "respuesta": "Aprobar y firmar",
+      "rmd_md5": "85773027d040e2ce4b45eda03afa362c",
+      "verificador_md5": "6e3d38fc4089f4039c659c599cf26b74",
+      "alcance_md5": "8678860de2afd072f35675f9e96ae30c",
+      "tabla_firma_md5": "b331ea59b03fcaae841bc408107d401c",
+      "nota": "Pausa 3 de la ronda 4, 2026-11-10: el profesor aprueba llevarlo al aula y firma las 36 reglas de salida/tabla_firma_p7.md tal como están (cifra corregida de la más ancha: 60 de cada 100 versiones nuevas). Respuesta transmitida por el coordinador; md5 comprobados en disco antes de sellar."
+    }
+  },
+  "reaperturas": [
+    {
+      "timestamp": "2026-11-10T16:50:34.236072-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "FASE 2C r1 (APROBAR_CON_CAMBIOS): cambios obligatorios H2, H3, H4 y comentario de diseño; H5 opcional; pasada 2 de 3 de §P7 contra la convergencia (H1) con tabla de pesos (terna, estilo). Decisión del profesor tras la r1: «Aceptarla» (regla de estímulo K/V a firma en la pausa 3).",
+      "reporte": "A-Produccion/01-En-PreDesarrollo/vueltas-llanta-perimetro-n4/salida/fase2c_r1_detractor.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render",
+        "coherencias_5"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-11-10T15:36:27.038936-05:00",
+          "archivo": "vueltas_llanta_perimetro_numerico_variacional_formulacion_ejecucion_n4_schoice_v1.Rmd",
+          "nota": "md5 c946ba28f3f3. Smoke data_generation 400 semillas: 0 fallos, 42 canónicas, 90 claves distintas, 11 ternas (10 no canónicas + Guía). Banco 6 errores (VL-A/B/D Guía, VL-E/F/G nuevos, decisión profesor 2026-11-10); oráculo LaTeX→R en guarda. Dos defectos cazados por guardas y corregidos: falso positivo (*UCP) y 'de el rodillo' en plantilla divulgación."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-11-10T15:42:17.589736-05:00",
+          "nota": "md5 827429ef. Solution leída en el PDF de la canónica (2 págs): respuesta correcta por contenido, procedimiento con unidades, caso específico P=200 → 75, análisis del error (dos pruebas: monotonía y unidades) + diagnóstico por error con la fórmula de la Guía para VL-A/B/D, propiedades, reflexión, estrategia; Answerlist de la Solution alineado (a)-(d). 2J letter-independent."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-11-10T15:45:56.890957-05:00",
+          "nota": "Re-render sobre md5 3d8dc379 (tras ERR_DIAG_SUPERFICIAL H3/H3b → estilo de escritura sorteado, y coma decimal en texto por la observación 6b). salida/r3: HTML 4, PDF 5 (texdir), DOCX 2, NOPS 2, Moodle 10 (seed 1:10), exit 0; exercise*.tex sin pandocbounded."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-11-10T15:45:56.948411-05:00",
+          "nota": "informe ~/.cache/post-exams2-validation/vueltas_.../20261110-154518-884224/informe.txt · md5 3d8dc37993f6bd298bf8b788636351fb · 0 errores / 6 advertencias heredadas (2B, 2E Tarea, 2F x4). 2G 100/100, 2H 10 sin anomalías, 2J OK, 2N OK, 2O limpio."
+        },
+        "coherencias_5": {
+          "timestamp": "2026-11-10T15:48:42.833577-05:00",
+          "nota": "AgenteValidadorVisual (sonnet, sin name) sobre md5 3d8dc379, 9 versiones renderizadas (HTML, PDF, NOPS, DOCX; canónica incluida): Semántica, Visual-Texto, Matemática, Código y General OK; VEREDICTO_COHERENCIAS: OK. Cifras del Answerlist recalculadas a mano."
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-10T17:55:46.857271-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "FASE 2C r2 (APROBAR_CON_CAMBIOS): canal de anchura visual de las opciones (H1, +42,6 pp) y alcance §P7-E mal demostrado (H2). Decisión del profesor del 2026-11-10: «Corregirla en la última pasada». Pasada 3 de 3 de §P7-D.",
+      "reporte": "A-Produccion/01-En-PreDesarrollo/vueltas-llanta-perimetro-n4/salida/fase2c_r2_detractor.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-11-10T17:10:30.994847-05:00",
+          "archivo": "vueltas_llanta_perimetro_numerico_variacional_formulacion_ejecucion_n4_schoice_v1.Rmd",
+          "nota": "md5 4389766601257f9e715c274e82d66d2c (ronda 2): cambios de la FASE 2C r1 (H3, H4, H5 y comentario de diseño) y pasada 2 de §P7: tabla de pesos CELDAS (8 celdas, salida/pesos_lp.txt) con guarda «diagnosticidad: tabla de pesos»; smoke 0 errores en 300 semillas; oráculo 401/401 en salida/paso9_verificador.txt"
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-11-10T17:10:31.055221-05:00",
+          "nota": "md5 4389766601257f9e715c274e82d66d2c: Solution con H3 (dos pruebas necesarias, no suficientes; decide el caso específico), H4 (distancia en la misma unidad del perímetro) y H5 (cita literal de la Guía solo en la canónica); leída en salida/render_r2/pdf/vueltas2.pdf (2 páginas); FASE 2J limpia"
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-11-10T17:10:31.117430-05:00",
+          "nota": "md5 4389766601257f9e715c274e82d66d2c: salida/render_r2 con HTML 4, PDF 5 (+tex), DOCX 2, NOPS 2 y Moodle 10 (seed 1:10); \\pandocbounded solo en el preámbulo (providecommand), cuerpo limpio; PDF revisado a ojo, todas las páginas"
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-11-10T17:10:31.180005-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/vueltas_llanta_perimetro_numerico_variacional_formulacion_ejecucion_n4_schoice_v1/20261110-170734-1002885/informe.txt · md5 4389766601257f9e715c274e82d66d2c · 0 errores / 6 advertencias (las 6 heredadas de la r1)"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-10T19:02:07.333594-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "FASE 2C r3 (APROBAR_CON_CAMBIOS): H1 alcance cableado con muestra y no con cifras exactas; H2 siete reglas de conjunto sin medir; H3 la clave escrita distinta del cuadernillo en 9 de cada 10 versiones. Decisión del profesor del 2026-11-10: «Volver a la de la ronda 2» (escritura de la r2, se conservan los arreglos que no son de escritura). §P7-D agotado: no es una cuarta pasada.",
+      "reporte": "A-Produccion/01-En-PreDesarrollo/vueltas-llanta-perimetro-n4/salida/fase2c_r3_detractor.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-11-10T18:16:24.380143-05:00",
+          "archivo": "vueltas_llanta_perimetro_numerico_variacional_formulacion_ejecucion_n4_schoice_v1.Rmd",
+          "nota": "Ronda 3, pasada 3 de 3 de §P7 (decisión del profesor del 2026-11-10: «Corregirla en la última pasada»). md5 6a51d76af76a3a1352812c2adc2f8a77. Formas cociente, cociente_b y fraccion_nv elegidas por salida/p3_lp.py con el ancho medido en el render de TeX (salida/p3_celdas.R, 160 celdas x 100 versiones; p3_modelo_ancho.R, error máximo 0,0045 pt en 2046 cadenas). Guarda de la tabla con 7 atajos y revisar_tabla(). Smoke 400/400 sin errores; ortografía exit 0; glifos OK."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-11-10T18:16:24.440079-05:00",
+          "nota": "Solution con textos por forma (TXT_CLAVE, PROC_FORMA, B_CORTA, G_CORTA, G_LARGA): cada expresión se describe tal como se ve. PDF v1 (forma cociente) leído a ojo, 3 páginas. Oráculo del verificador 401/401 sobre el md5 6a51d76a."
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-11-10T18:16:24.532002-05:00",
+          "nota": "salida/render_r3: HTML 4, PDF 5 con tex, DOCX 2, NOPS 2, Moodle 10 (seed 1:10). pandocbounded 0 fuera del preámbulo. Separador HTML: 0 fugas en PDF, NOPS y DOCX; 40 en el XML de Moodle. Hueco entre opciones (Chromium, mismas semillas, 12 versiones): de 0,0 px a 9,6 px a 320 y 360 px. md5 6a51d76a."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-11-10T18:16:24.596769-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/vueltas_llanta_perimetro_numerico_variacional_formulacion_ejecucion_n4_schoice_v1/20261110-180742-1096272/informe.txt · md5 6a51d76af76a3a1352812c2adc2f8a77 · 0 errores / 6 advertencias (las mismas de r1 y r2); FASE 2G 100/100; 2H 0 anomalías"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+md5: 6a51d76af76a3a1352812c2adc2f8a77 
+ORÁCULO: 2000 semillas | versiones leídas 2000 (canónicas 210) | problemas 0
+             
+              cm_m m_km mm_m
+  canonica     210    0    0
+  cociente     233  116  157
+  cociente_b   394  210  298
+  fraccion_nv  174   86  122
+             
+                p   P
+  canonica      0 210
+  cociente    259 247
+  cociente_b  446 456
+  fraccion_nv 178 204
+                                  agregado (primeras 100) agregado (todas)
+V1 centralidad                                       31.5             31.2
+V1 medoide                                           40.0             36.2
+usa K, d y la letra                                  32.9             33.8
+ancho TeX (tol 0,01 pt)                              15.8             19.5
+ancho TeX (tol 1 pt)                                 15.8             19.3
+estrecha TeX (tol 0,01 pt)                            5.7              6.0
+letra arriba (conjunto)                              50.9             50.0
+letra abajo (conjunto)                                5.7              7.1
+letra fuera de fraccion                              22.0             21.8
+K abajo (conjunto)                                   47.9             46.7
+contiene x (conjunto)                                10.8             15.1
+contiene div (conjunto)                              31.8             30.3
+sin operador                                          5.2              5.1
+un operador                                          43.0             43.0
+dos operadores                                        9.8             10.9
+contiene K/V del enunciado                            0.0              0.0
+NO contiene K/V del enunciado                        47.2             46.9
+empieza por la distancia                             49.8             48.4
+divide entre una fraccion                            48.8             47.1
+multiplica por una fraccion                          19.0             19.8
+gemelas (1 simbolo o intercambio)                    44.8             43.7
+techo                                                30.2             26.2
+p95                                                  34.5             27.1
+n                                                   100.0           1790.0
+                                  cociente (100) cociente_b (100)
+V1 centralidad                              25.0             28.0
+V1 medoide                                  25.0             40.0
+usa K, d y la letra                         32.2             31.0
+ancho TeX (tol 0,01 pt)                     21.0              6.7
+ancho TeX (tol 1 pt)                        21.0              6.7
+estrecha TeX (tol 0,01 pt)                   4.3              9.3
+letra arriba (conjunto)                     47.8             60.0
+letra abajo (conjunto)                       0.0              0.0
+letra fuera de fraccion                     25.0             25.0
+K abajo (conjunto)                          47.8             60.0
+contiene x (conjunto)                        0.0              5.0
+contiene div (conjunto)                     43.8             31.0
+sin operador                                 3.2              7.0
+un operador                                 37.3             42.0
+dos operadores                              15.8              5.0
+contiene K/V del enunciado                   0.0              0.0
+NO contiene K/V del enunciado               47.8             50.0
+empieza por la distancia                    62.0             50.0
+divide entre una fraccion                   81.5             36.7
+multiplica por una fraccion                  6.0             25.0
+gemelas (1 simbolo o intercambio)           44.0             50.0
+techo                                       30.0             29.8
+p95                                         34.0             34.0
+n                                          100.0            100.0
+                                  fraccion_nv (100) cociente (todas)
+V1 centralidad                                 48.5             23.4
+V1 medoide                                     50.5             23.4
+usa K, d y la letra                            42.5             32.5
+ancho TeX (tol 0,01 pt)                        40.5             21.1
+ancho TeX (tol 1 pt)                           40.3             21.1
+estrecha TeX (tol 0,01 pt)                      0.0              3.4
+letra arriba (conjunto)                        25.0             48.3
+letra abajo (conjunto)                         33.3              0.0
+letra fuera de fraccion                        10.8             25.0
+K abajo (conjunto)                             10.8             48.3
+contiene x (conjunto)                          56.7              0.0
+contiene div (conjunto)                        11.0             43.9
+sin operador                                    3.5              2.5
+un operador                                    56.2             37.8
+dos operadores                                 15.2             15.8
+contiene K/V del enunciado                      0.0              0.0
+NO contiene K/V del enunciado                  37.3             48.3
+empieza por la distancia                       25.0             63.3
+divide entre una fraccion                      25.0             81.6
+multiplica por una fraccion                    25.0              6.7
+gemelas (1 simbolo o intercambio)              28.2             43.3
+techo                                          30.5             27.3
+p95                                            34.5             29.0
+n                                             100.0            506.0
+                                  cociente_b (todas) fraccion_nv (todas)
+V1 centralidad                                  29.9                44.6
+V1 medoide                                      38.5                47.8
+usa K, d y la letra                             30.8                42.7
+ancho TeX (tol 0,01 pt)                          7.6                45.2
+ancho TeX (tol 1 pt)                             7.6                44.6
+estrecha TeX (tol 0,01 pt)                      10.0                 0.0
+letra arriba (conjunto)                         61.5                25.0
+letra abajo (conjunto)                           0.0                33.3
+letra fuera de fraccion                         25.0                 9.8
+K abajo (conjunto)                              61.5                 9.8
+contiene x (conjunto)                            5.7                57.2
+contiene div (conjunto)                         30.8                11.0
+sin operador                                     7.5                 3.1
+un operador                                     41.2                54.1
+dos operadores                                   5.7                16.8
+contiene K/V del enunciado                       0.0                 0.0
+NO contiene K/V del enunciado                   50.0                37.5
+empieza por la distancia                        50.0                25.0
+divide entre una fraccion                       37.2                25.0
+multiplica por una fraccion                     25.0                25.0
+gemelas (1 simbolo o intercambio)               50.0                29.2
+techo                                           26.5                27.8
+p95                                             27.9                29.8
+n                                              902.0               382.0
+exit=0

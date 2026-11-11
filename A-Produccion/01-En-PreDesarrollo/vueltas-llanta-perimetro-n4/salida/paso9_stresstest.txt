@@ -1,0 +1,5 @@
+md5 del .Rmd: 85773027d040e2ce4b45eda03afa362c (/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/vueltas-llanta-perimetro-n4/vueltas_llanta_perimetro_numerico_variacional_formulacion_ejecucion_n4_schoice_v1.Rmd)
+Semillas: 100/100 · mediana 0.18 s · máximo 0.34 s · tipo schoice
+Posición de la clave: 22 / 32 / 19 / 27 
+PASS: compilación completa sin errores, cuelgues ni fugas de texto.
+exit=0

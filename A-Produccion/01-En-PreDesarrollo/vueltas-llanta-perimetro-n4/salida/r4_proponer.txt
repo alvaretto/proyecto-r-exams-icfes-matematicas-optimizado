@@ -1,0 +1,130 @@
+md5 del .Rmd: fe5cd0409acf1f4f2ba0ed17a215c8fa 
+MUESTRA (semillas 1-763): agregado 100 | fraccion_izq 100 · numero_izq 100 · fraccion_unica 100 | canónica sí
+MUESTRA (semillas 5001-5684): agregado 100 | fraccion_izq 100 · numero_izq 100 · fraccion_unica 100 | canónica sí
+ORÁCULO de texto: 802 versiones | exactamente 1 correcta: 802 | la marcada es la correcta: 802
+ENUMERACIÓN: 1248 combinaciones no canónicas | suma de probabilidades 1.000000000 | con opciones repetidas: 0 | canónica con probabilidad 0.10
+PERTENENCIA: 800 de 800 versiones no canónicas de la muestra están en la enumeración con su celda y sus cuatro opciones
+FRECUENCIAS de las celdas (200 no canónicas sin cuota): chi-cuadrado p = 0.755 | VL-A+VL-D+VL-F|fraccion_izq 15 (esp. 15.0) · VL-B+VL-F+VL-G|fraccion_izq 17 (esp. 15.0) · VL-B+VL-F+VL-G|numero_izq 11 (esp. 15.0) · VL-D+VL-E+VL-F|numero_izq 15 (esp. 15.0) · VL-A+VL-B+VL-F|fraccion_unica 50 (esp. 50.0) · VL-B+VL-D+VL-E|fraccion_unica 6 (esp. 5.0) · VL-B+VL-D+VL-F|fraccion_unica 58 (esp. 50.0) · VL-B+VL-F+VL-G|fraccion_unica 28 (esp. 35.0)
+ORÁCULO algebraico sobre la enumeración (y la canónica): 1249 de 1249 con exactamente una correcta, y es la clave
+ANCHO: 1182 cadenas medidas con pdflatex | modelo de la guarda: error máximo 0.0045 pt | mutante A1 (P sin corrección itálica): error 1.389 pt, cazado_por_su_sonda
+Familia B con N = 100, agregado, tanda 1: veredicto de la batería BLOQUEA | techo nulo 32.1 % | máximo 67.5 % (la mas ancha (TeX))
+Familia B con N = 100, fraccion_izq, tanda 1: veredicto de la batería BLOQUEA | techo nulo 31.9 % | máximo 42.3 % (estimulo: contiene la relacion K/V y otra operacion)
+Familia B con N = 100, numero_izq, tanda 1: veredicto de la batería BLOQUEA | techo nulo 32.3 % | máximo 43.0 % (el numero menor)
+Familia B con N = 100, fraccion_unica, tanda 1: veredicto de la batería BLOQUEA | techo nulo 32.3 % | máximo 80.0 % (la mas ancha (TeX))
+Familia B con N = 24, canonica, tanda 1: veredicto de la batería BLOQUEA | techo nulo 39.2 % | máximo 100.0 % (estimulo: contiene la relacion K/V y otra operacion)
+
+=== Techo nulo con N = 100 (el menor de las dos tandas), por familia y nivel ===
+  B   agregado 32.1 % · fraccion_izq 31.9 % · numero_izq 32.2 % · fraccion_unica 32.3 % · canonica 39.2 %
+  V1  agregado 27.8 % · fraccion_izq 27.1 % · numero_izq 27.1 % · fraccion_unica 27.9 % · canonica 30.1 %
+  V2  agregado 28.9 % · fraccion_izq 29.6 % · numero_izq 29.1 % · fraccion_unica 28.4 % · canonica 31.5 %
+  V3  agregado 29.4 % · fraccion_izq 29.0 % · numero_izq 29.2 % · fraccion_unica 29.5 % · canonica 32.1 %
+
+H3b EXACTA (todas las versiones): «dfrac p times» 23.5 % · «dfrac times p» 63.0 % · «times dfrac p» 13.5 % | sin la canónica: «dfrac p times» 15.0 % · «dfrac times p» 70.0 % · «times dfrac p» 15.0 %
+
+=== Márgenes exactos cuando la clave es la única en el extremo (mediana ponderada) ===
+  agregado        ancho (TeX) 27 % (en el 52.5 % de las versiones; 52.5 % con margen >= 15 %)
+                  centralidad 3 % (en el 32.5 % de las versiones; 0.0 % con margen >= 15 %) · medoide 18 % (en el 32.5 % de las versiones; 32.5 % con margen >= 15 %)
+  fraccion_izq    ancho (TeX) -
+                  centralidad 9 % (en el 50.0 % de las versiones; 0.0 % con margen >= 15 %) · medoide 29 % (en el 50.0 % de las versiones; 50.0 % con margen >= 15 %)
+  numero_izq      ancho (TeX) -
+                  centralidad 9 % (en el 50.0 % de las versiones; 0.0 % con margen >= 15 %) · medoide 33 % (en el 50.0 % de las versiones; 50.0 % con margen >= 15 %)
+  fraccion_unica  ancho (TeX) 27 % (en el 75.0 % de las versiones; 75.0 % con margen >= 15 %)
+                  centralidad 3 % (en el 25.0 % de las versiones; 0.0 % con margen >= 15 %) · medoide 18 % (en el 25.0 % de las versiones; 25.0 % con margen >= 15 %)
+
+=== Vector completo, tasas EXACTAS (% de acierto si se aplica el atajo; azar 25 %) ===
+  V1  centralidad                                          agregado  32.5 · fraccion_izq  50.0 · numero_izq  50.0 · fraccion_unica  25.0 · canonica   0.0
+  V1  medoide                                              agregado  32.5 · fraccion_izq  50.0 · numero_izq  50.0 · fraccion_unica  25.0 · canonica   0.0
+  B   la que MAS comparte                                  agregado  31.0 · fraccion_izq  29.2 · numero_izq  29.2 · fraccion_unica  31.8 · canonica  50.0
+  V1  tres_datos                                           agregado  33.5 · fraccion_izq  37.5 · numero_izq  37.5 · fraccion_unica  31.8 · canonica  50.0
+  B   la mas ancha (TeX)                                   agregado  60.0 · fraccion_izq  25.0 · numero_izq  25.0 · fraccion_unica  75.0 · canonica  50.0
+  V3  divide entre una fraccion                            agregado  25.0 · fraccion_izq  25.0 · numero_izq  25.0 · fraccion_unica  25.0 · canonica  25.0
+  V3  empieza por la distancia                             agregado  32.5 · fraccion_izq  25.0 · numero_izq  75.0 · fraccion_unica  25.0 · canonica   0.0
+  V3  letra arriba (conjunto)                              agregado  21.3 · fraccion_izq  12.5 · numero_izq  12.5 · fraccion_unica  25.0 · canonica   0.0
+  V3  contiene x (conjunto)                                agregado  42.3 · fraccion_izq  66.7 · numero_izq  66.7 · fraccion_unica  31.8 · canonica  50.0
+  V3  un operador                                          agregado  36.3 · fraccion_izq  41.7 · numero_izq  41.7 · fraccion_unica  33.9 · canonica  50.0
+  V3  NO contiene K/V del enunciado                        agregado  19.8 · fraccion_izq   0.0 · numero_izq   0.0 · fraccion_unica  28.3 · canonica   0.0
+  V3  gemelas (1 simbolo o intercambio)                    agregado  25.0 · fraccion_izq  29.2 · numero_izq  25.0 · fraccion_unica  24.1 · canonica   0.0
+  V2  contiene division                                    agregado  17.5 · fraccion_izq   0.0 · numero_izq   0.0 · fraccion_unica  25.0 · canonica  25.0
+  B   estimulo: contiene la relacion K/V y otra operacion  agregado  30.0 · fraccion_izq  41.7 · numero_izq  41.7 · fraccion_unica  25.0 · canonica 100.0
+
+CONTROL guarda = exacta: diferencia máxima por celda entre la instancia de referencia y la enumeración: 5.55e-16 (8 celdas × 5 atajos)
+CONTROL de estabilidad (dos tandas de semillas, 616 tasas): |z| máximo 1.62 (t2, fraccion_unica, B · la mas ancha (TeX)); con |z| > 4,5: 0
+
+=== Reglas en rojo: tasa EXACTA con exceso >= 8 pp sobre el techo nulo de su familia (N = 100) ===
+  agregado        V3  ancho TeX (tol 1 pt)                                  60.0 % (techo 29.4 %, +30.6 pp)  ROJO SIN ALCANCE
+  agregado        B   la mas ancha (TeX)                                    60.0 % (techo 32.1 %, +27.9 pp)  ROJO SIN ALCANCE
+  agregado        V3  letra abajo (conjunto)                                56.5 % (techo 29.4 %, +27.0 pp)  ROJO SIN ALCANCE
+  agregado        V3  contiene x (conjunto)                                 42.3 % (techo 29.4 %, +12.9 pp)  ROJO SIN ALCANCE
+  canonica        V2  marca: unica sin termina_fraccion                    100.0 % (techo 31.5 %, +68.5 pp)  ROJO SIN ALCANCE
+  canonica        B   estimulo: contiene la relacion K/V y otra operacion  100.0 % (techo 39.2 %, +60.8 pp)  ROJO SIN ALCANCE
+  canonica        V1  tres_datos                                            50.0 % (techo 30.1 %, +19.9 pp)  ROJO SIN ALCANCE
+  canonica        V3  ancho TeX (tol 1 pt)                                  50.0 % (techo 32.1 %, +17.9 pp)  ROJO SIN ALCANCE
+  canonica        V3  letra abajo (conjunto)                                50.0 % (techo 32.1 %, +17.9 pp)  ROJO SIN ALCANCE
+  canonica        V3  contiene x (conjunto)                                 50.0 % (techo 32.1 %, +17.9 pp)  ROJO SIN ALCANCE
+  canonica        V3  un operador                                           50.0 % (techo 32.1 %, +17.9 pp)  ROJO SIN ALCANCE
+  canonica        V3  contiene K/V del enunciado                            50.0 % (techo 32.1 %, +17.9 pp)  ROJO SIN ALCANCE
+  canonica        B   la mas ancha (TeX)                                    50.0 % (techo 39.2 %, +10.8 pp)  ROJO SIN ALCANCE
+  canonica        B   la que MAS comparte                                   50.0 % (techo 39.2 %, +10.8 pp)  ROJO SIN ALCANCE
+  canonica        B   ultimo numero mayor                                   50.0 % (techo 39.2 %, +10.8 pp)  ROJO SIN ALCANCE
+  fraccion_izq    V3  contiene x (conjunto)                                 66.7 % (techo 29.0 %, +37.6 pp)  ROJO SIN ALCANCE
+  fraccion_izq    V2  marca: unica con producto                             62.5 % (techo 29.6 %, +32.9 pp)  ROJO SIN ALCANCE
+  fraccion_izq    V1  centralidad                                           50.0 % (techo 27.1 %, +22.9 pp)  ROJO SIN ALCANCE
+  fraccion_izq    V1  medoide                                               50.0 % (techo 27.1 %, +22.9 pp)  ROJO SIN ALCANCE
+  fraccion_izq    V3  un operador                                           41.7 % (techo 29.0 %, +12.6 pp)  ROJO SIN ALCANCE
+  fraccion_izq    V1  tres_datos                                            37.5 % (techo 27.1 %, +10.4 pp)  ROJO SIN ALCANCE
+  fraccion_izq    B   estimulo: contiene la relacion K/V y otra operacion   41.7 % (techo 31.9 %,  +9.8 pp)  ROJO SIN ALCANCE
+  fraccion_unica  V3  ancho TeX (tol 1 pt)                                  75.0 % (techo 29.5 %, +45.5 pp)  ROJO SIN ALCANCE
+  fraccion_unica  B   la mas ancha (TeX)                                    75.0 % (techo 32.3 %, +42.7 pp)  ROJO SIN ALCANCE
+  fraccion_unica  V3  letra abajo (conjunto)                                67.3 % (techo 29.5 %, +37.7 pp)  ROJO SIN ALCANCE
+  numero_izq      V3  empieza por la distancia                              75.0 % (techo 29.2 %, +45.8 pp)  ROJO SIN ALCANCE
+  numero_izq      V3  contiene x (conjunto)                                 66.7 % (techo 29.2 %, +37.5 pp)  ROJO SIN ALCANCE
+  numero_izq      V3  multiplica por una fraccion                           66.7 % (techo 29.2 %, +37.5 pp)  ROJO SIN ALCANCE
+  numero_izq      V2  marca: unica con producto                             62.5 % (techo 29.1 %, +33.4 pp)  ROJO SIN ALCANCE
+  numero_izq      V2  marca: unica sin empieza_fraccion                     62.5 % (techo 29.1 %, +33.4 pp)  ROJO SIN ALCANCE
+  numero_izq      V2  marca: unica con empieza_numero                       62.5 % (techo 29.1 %, +33.4 pp)  ROJO SIN ALCANCE
+  numero_izq      V1  centralidad                                           50.0 % (techo 27.1 %, +22.9 pp)  ROJO SIN ALCANCE
+  numero_izq      V1  medoide                                               50.0 % (techo 27.1 %, +22.9 pp)  ROJO SIN ALCANCE
+  numero_izq      V3  un operador                                           41.7 % (techo 29.2 %, +12.5 pp)  ROJO SIN ALCANCE
+  numero_izq      V1  tres_datos                                            37.5 % (techo 27.1 %, +10.4 pp)  ROJO SIN ALCANCE
+  numero_izq      B   estimulo: contiene la relacion K/V y otra operacion   41.7 % (techo 32.2 %,  +9.5 pp)  ROJO SIN ALCANCE
+
+## PROPUESTA DE ALCANCE (tasa exacta, redondeada hacia arriba a 6 decimales)
+  a("agregado",       "V3", "ancho TeX (tol 1 pt)",                                 0.600001),
+  a("agregado",       "B",  "la mas ancha (TeX)",                                   0.600001),
+  a("agregado",       "V3", "letra abajo (conjunto)",                               0.564584),
+  a("agregado",       "V3", "contiene x (conjunto)",                                0.422917),
+  a("canonica",       "V2", "marca: unica sin termina_fraccion",                    1.000000),
+  a("canonica",       "B",  "estimulo: contiene la relacion K/V y otra operacion",  1.000000),
+  a("canonica",       "V1", "tres_datos",                                           0.500000),
+  a("canonica",       "V3", "ancho TeX (tol 1 pt)",                                 0.500000),
+  a("canonica",       "V3", "letra abajo (conjunto)",                               0.500000),
+  a("canonica",       "V3", "contiene x (conjunto)",                                0.500000),
+  a("canonica",       "V3", "un operador",                                          0.500000),
+  a("canonica",       "V3", "contiene K/V del enunciado",                           0.500000),
+  a("canonica",       "B",  "la mas ancha (TeX)",                                   0.500000),
+  a("canonica",       "B",  "la que MAS comparte",                                  0.500000),
+  a("canonica",       "B",  "ultimo numero mayor",                                  0.500000),
+  a("fraccion_izq",   "V3", "contiene x (conjunto)",                                0.666667),
+  a("fraccion_izq",   "V2", "marca: unica con producto",                            0.625000),
+  a("fraccion_izq",   "V1", "centralidad",                                          0.500000),
+  a("fraccion_izq",   "V1", "medoide",                                              0.500000),
+  a("fraccion_izq",   "V3", "un operador",                                          0.416667),
+  a("fraccion_izq",   "V1", "tres_datos",                                           0.375000),
+  a("fraccion_izq",   "B",  "estimulo: contiene la relacion K/V y otra operacion",  0.416667),
+  a("fraccion_unica", "V3", "ancho TeX (tol 1 pt)",                                 0.750001),
+  a("fraccion_unica", "B",  "la mas ancha (TeX)",                                   0.750000),
+  a("fraccion_unica", "V3", "letra abajo (conjunto)",                               0.672620),
+  a("numero_izq",     "V3", "empieza por la distancia",                             0.750000),
+  a("numero_izq",     "V3", "contiene x (conjunto)",                                0.666667),
+  a("numero_izq",     "V3", "multiplica por una fraccion",                          0.666667),
+  a("numero_izq",     "V2", "marca: unica con producto",                            0.625000),
+  a("numero_izq",     "V2", "marca: unica sin empieza_fraccion",                    0.625000),
+  a("numero_izq",     "V2", "marca: unica con empieza_numero",                      0.625000),
+  a("numero_izq",     "V1", "centralidad",                                          0.500000),
+  a("numero_izq",     "V1", "medoide",                                              0.500000),
+  a("numero_izq",     "V3", "un operador",                                          0.416667),
+  a("numero_izq",     "V1", "tres_datos",                                           0.375000),
+  a("numero_izq",     "B",  "estimulo: contiene la relacion K/V y otra operacion",  0.416667),
+
+tiempo: 4.325232 mins 
+exit=0

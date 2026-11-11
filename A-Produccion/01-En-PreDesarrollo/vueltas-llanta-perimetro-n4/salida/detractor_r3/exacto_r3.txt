@@ -1,0 +1,102 @@
+md5: 6a51d76af76a3a1352812c2adc2f8a77 
+combinaciones: 1716 | suma de pesos: 1 | con opciones repetidas: 0 
+peso por forma: 27.5 50 22.5 
+
+=== EXACTO (enumeración de objeto x distancia x letra x celda, pesos del diseño) — atajos propios y V1, % ===
+                                  agregado cociente cociente_b fraccion_nv
+V1 centralidad                        31.2     22.7       30.0        44.4
+V1 medoide                            35.0     22.7       37.5        44.4
+usa K, d y la letra                   34.2     32.6       30.8        43.5
+ancho TeX (tol 0,01 pt)               20.0     21.2        8.3        44.4
+ancho TeX (tol 1 pt)                  19.7     21.2        8.3        43.3
+estrecha TeX (tol 0,01 pt)             5.8      3.0       10.0         0.0
+letra arriba (conjunto)               50.2     48.5       62.5        25.0
+letra abajo (conjunto)                 7.5      0.0        0.0        33.3
+letra fuera de fraccion               21.9     25.0       25.0        11.1
+K abajo (conjunto)                    47.1     48.5       62.5        11.1
+contiene x (conjunto)                 16.5      0.0        6.2        59.3
+contiene div (conjunto)               30.0     43.9       30.8        11.1
+sin operador                           5.0      2.3        7.5         2.8
+un operador                           43.3     37.9       40.8        55.6
+dos operadores                        11.2     15.9        6.2        16.7
+contiene K/V del enunciado             0.0      0.0        0.0         0.0
+NO contiene K/V del enunciado         46.7     48.5       50.0        37.0
+empieza por la distancia              48.1     63.6       50.0        25.0
+divide entre una fraccion             46.9     81.8       37.5        25.0
+multiplica por una fraccion           20.0      6.8       25.0        25.0
+gemelas (1 simbolo o intercambio)     43.1     43.2       50.0        27.8
+
+=== Por celda (crédito medio de la clave), reglas seleccionadas ===
+                           letra arriba (conjunto) contiene x (conjunto)
+VL-A+VL-D+VL-G|fraccion_nv                    25.0                  50.0
+VL-A+VL-E+VL-F|fraccion_nv                    25.0                 100.0
+VL-B+VL-D+VL-E|fraccion_nv                    25.0                  50.0
+VL-B+VL-D+VL-F|cociente                       50.0                   0.0
+VL-B+VL-D+VL-F|fraccion_nv                    25.0                  50.0
+VL-B+VL-D+VL-G|cociente_b                     50.0                   0.0
+VL-B+VL-E+VL-F|cociente_b                    100.0                  25.0
+VL-B+VL-F+VL-G|cociente                       33.3                   0.0
+VL-B+VL-F+VL-G|cociente_b                     50.0                   0.0
+VL-B+VL-F+VL-G|fraccion_nv                    25.0                  33.3
+VL-D+VL-F+VL-G|cociente                       50.0                   0.0
+                           NO contiene K/V del enunciado
+VL-A+VL-D+VL-G|fraccion_nv                          33.3
+VL-A+VL-E+VL-F|fraccion_nv                          33.3
+VL-B+VL-D+VL-E|fraccion_nv                          33.3
+VL-B+VL-D+VL-F|cociente                             50.0
+VL-B+VL-D+VL-F|fraccion_nv                          50.0
+VL-B+VL-D+VL-G|cociente_b                           50.0
+VL-B+VL-E+VL-F|cociente_b                           50.0
+VL-B+VL-F+VL-G|cociente                             33.3
+VL-B+VL-F+VL-G|cociente_b                           50.0
+VL-B+VL-F+VL-G|fraccion_nv                          33.3
+VL-D+VL-F+VL-G|cociente                             50.0
+                           ancho TeX (tol 0,01 pt) ancho TeX (tol 1 pt)
+VL-A+VL-D+VL-G|fraccion_nv                     0.0                  0.0
+VL-A+VL-E+VL-F|fraccion_nv                    57.8                 53.9
+VL-B+VL-D+VL-E|fraccion_nv                    92.2                 92.2
+VL-B+VL-D+VL-F|cociente                       33.3                 33.3
+VL-B+VL-D+VL-F|fraccion_nv                    50.0                 48.7
+VL-B+VL-D+VL-G|cociente_b                      0.0                  0.0
+VL-B+VL-E+VL-F|cociente_b                     33.3                 33.3
+VL-B+VL-F+VL-G|cociente                        0.0                  0.0
+VL-B+VL-F+VL-G|cociente_b                      0.0                  0.0
+VL-B+VL-F+VL-G|fraccion_nv                     0.0                  0.0
+VL-D+VL-F+VL-G|cociente                        0.0                  0.0
+                           V1 medoide V1 centralidad
+VL-A+VL-D+VL-G|fraccion_nv         50            100
+VL-A+VL-E+VL-F|fraccion_nv          0              0
+VL-B+VL-D+VL-E|fraccion_nv          0             50
+VL-B+VL-D+VL-F|cociente             0              0
+VL-B+VL-D+VL-F|fraccion_nv        100              0
+VL-B+VL-D+VL-G|cociente_b          50              0
+VL-B+VL-E+VL-F|cociente_b           0              0
+VL-B+VL-F+VL-G|cociente           100            100
+VL-B+VL-F+VL-G|cociente_b          50            100
+VL-B+VL-F+VL-G|fraccion_nv        100            100
+VL-D+VL-F+VL-G|cociente            50             50
+
+=== EXACTO — batería congelada (sin las de posición, que valen 25 %) + estímulo + ancho/estrecha TeX, % (orden de mayor a menor en el agregado) ===
+                                       agregado cociente cociente_b fraccion_nv
+el numero menor                            36.0     45.5       32.7        31.8
+la mas larga (chars)                       14.2      0.0        8.3        44.4
+la mas ancha (TeX)                         20.0     21.2        8.3        44.4
+la que MAS comparte                        36.2     40.9       30.8        42.6
+ultimo redondo (mult 50) y positivo        34.0     31.3       31.6        42.5
+estimulo: contiene K y d del enunciado     32.5     32.6       30.8        36.1
+ultimo numero mayor                        28.0     23.8       27.3        34.4
+unica no multiplo de 10                    27.0     32.3       25.0        25.0
+mas digitos                                15.8     21.2        8.3        25.9
+primer numero PAR                          21.2     25.5       19.6        19.6
+unica con decimal                          25.0     25.0       25.0        25.0
+unica sin decimal                          25.0     25.0       25.0        25.0
+unica multiplo de 5                        24.0     25.0       23.8        23.4
+unica con negativo                         25.0     25.0       25.0        25.0
+grupo minoritario negativo                 25.0     25.0       25.0        25.0
+unica con negacion lexica                  25.0     25.0       25.0        25.0
+grupo desigualdad estricta                 25.0     25.0       25.0        25.0
+unica con fraccion /                       25.0     25.0       25.0        25.0
+unica con parentesis                       25.0     25.0       25.0        25.0
+unica con '='                              25.0     25.0       25.0        25.0
+tiempo: 3.7534 mins 
+exit=0

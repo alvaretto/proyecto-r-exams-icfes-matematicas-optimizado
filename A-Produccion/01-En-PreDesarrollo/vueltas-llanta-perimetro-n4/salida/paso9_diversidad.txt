@@ -1,0 +1,4 @@
+md5 del .Rmd: 85773027d040e2ce4b45eda03afa362c (A-Produccion/01-En-PreDesarrollo/vueltas-llanta-perimetro-n4/vueltas_llanta_perimetro_numerico_variacional_formulacion_ejecucion_n4_schoice_v1.Rmd)
+Diversidad sustantiva: 100/100 versiones evaluadas | respuesta correcta: 63 valor(es) unico(s) | errores=0 indeterminadas=0
+PASS: la respuesta correcta varia suficientemente (diversidad sustantiva confirmada).
+exit=0

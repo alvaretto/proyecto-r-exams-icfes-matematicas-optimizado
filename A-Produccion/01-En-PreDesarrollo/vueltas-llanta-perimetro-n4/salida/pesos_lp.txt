@@ -1,0 +1,115 @@
+Parámetros: TOPE_CELDA=0.25 MAX_EST=0.70 MIN_EST=0.15 PISO_ERR=0.10
+Diseño anterior (estructura, sin muestreo): K/V 37.2 %; máximo del vector 93.3 % (centralidad)
+Etapa 1: Optimization terminated successfully. (HiGHS Status 7: Optimal) | tasa máxima óptima 33.33 %
+
+== Diseño anterior: K/V 37.2 %
+   centralidad                                              93.3 %
+   medoide                                                  85.0 %
+   la que MAS comparte                                      40.4 %
+   tres_datos                                               32.5 %
+   estimulo: contiene K y d del enunciado                   30.0 %
+   unica con decimal                                        25.0 %
+   unica con negacion lexica                                25.0 %
+   unica sin decimal                                        25.0 %
+   [centralidad] 93.3 %
+   [medoide] 85.0 %
+   [tres_datos] 32.5 %
+   forma fraccion_izq    33.3 %
+   forma numero_izq      33.3 %
+   forma fraccion_unica  33.3 %
+   error VL-A en 30.0 % de las versiones
+   error VL-B en 70.0 % de las versiones
+   error VL-D en 30.0 % de las versiones
+   error VL-E en 30.0 % de las versiones
+   error VL-F en 70.0 % de las versiones
+   error VL-G en 70.0 % de las versiones
+
+== Óptimo continuo: K/V 30.3 %
+   centralidad                                              33.8 %
+   medoide                                                  33.8 %
+   tres_datos                                               33.8 %
+   la mas larga (chars)                                     33.8 %
+   la que MAS comparte                                      31.5 %
+   estimulo: contiene K y d del enunciado                   31.3 %
+   ultimo numero menor                                      25.6 %
+   unica con decimal                                        25.0 %
+   [centralidad] 33.8 %
+   [medoide] 33.8 %
+   [tres_datos] 33.8 %
+   forma fraccion_izq    16.2 %
+   forma numero_izq      15.0 %
+   forma fraccion_unica  68.8 %
+   error VL-A en 26.9 % de las versiones
+   error VL-B en 80.1 % de las versiones
+   error VL-D en 43.0 % de las versiones
+   error VL-E en 16.2 % de las versiones
+   error VL-F en 100.0 % de las versiones
+   error VL-G en 33.8 % de las versiones
+
+== Pesos en 40 partes: K/V 30.0 %
+   centralidad                                              35.0 %
+   medoide                                                  35.0 %
+   tres_datos                                               33.7 %
+   la mas larga (chars)                                     33.0 %
+   la que MAS comparte                                      31.9 %
+   estimulo: contiene K y d del enunciado                   31.0 %
+   ultimo numero menor                                      25.6 %
+   unica con decimal                                        25.0 %
+   [centralidad] 35.0 %
+   [medoide] 35.0 %
+   [tres_datos] 33.7 %
+   forma fraccion_izq    15.0 %
+   forma numero_izq      15.0 %
+   forma fraccion_unica  70.0 %
+   error VL-A en 27.5 % de las versiones
+   error VL-B en 80.0 % de las versiones
+   error VL-D en 42.5 % de las versiones
+   error VL-E en 15.0 % de las versiones
+   error VL-F en 100.0 % de las versiones
+   error VL-G en 35.0 % de las versiones
+
+PESOS <- c("VL-D+VL-E+VL-F|fraccion_izq" = 6,
+           "VL-B+VL-F+VL-G|numero_izq" = 6,
+           "VL-A+VL-B+VL-F|fraccion_unica" = 9,
+           "VL-A+VL-D+VL-F|fraccion_unica" = 2,
+           "VL-B+VL-D+VL-F|fraccion_unica" = 9,
+           "VL-B+VL-F+VL-G|fraccion_unica" = 8)
+
+=== Etapa por estrato: tope condicional mínimo por forma 50.00 %; máximo agregado 33.33 %
+   forma fraccion_izq    (15.0 % de las versiones): la mas larga (chars) 50.5 %; centralidad 49.5 %; medoide 49.5 %; tres_datos 37.6 %
+   forma numero_izq      (15.0 % de las versiones): la mas larga (chars) 50.5 %; centralidad 49.5 %; medoide 49.5 %; tres_datos 37.6 %
+   forma fraccion_unica  (70.0 % de las versiones): la que MAS comparte 31.8 %; tres_datos 31.5 %; ultimo numero menor 29.3 %; estimulo: contiene K y d del enunciado 28.5 %
+
+== Pesos por estrato en 40 partes: K/V 30.0 %
+   tres_datos                                               33.5 %
+   la mas larga (chars)                                     33.0 %
+   medoide                                                  32.5 %
+   centralidad                                              32.5 %
+   la que MAS comparte                                      30.3 %
+   estimulo: contiene K y d del enunciado                   30.2 %
+   ultimo numero menor                                      25.4 %
+   unica con decimal                                        25.0 %
+   [centralidad] 32.5 %
+   [medoide] 32.5 %
+   [tres_datos] 33.5 %
+   forma fraccion_izq    15.0 %
+   forma numero_izq      15.0 %
+   forma fraccion_unica  70.0 %
+   error VL-A en 32.5 % de las versiones
+   error VL-B en 85.0 % de las versiones
+   error VL-D en 42.5 % de las versiones
+   error VL-E en 10.0 % de las versiones
+   error VL-F en 97.5 % de las versiones
+   error VL-G en 32.5 % de las versiones
+   [redondeado] forma fraccion_izq   : centralidad 50.0 %; medoide 50.0 %; la mas larga (chars) 50.0 %
+   [redondeado] forma numero_izq     : centralidad 50.0 %; medoide 50.0 %; la mas larga (chars) 50.0 %
+   [redondeado] forma fraccion_unica : la que MAS comparte 32.1 %; tres_datos 31.8 %; ultimo numero menor 29.4 %
+
+PESOS_ESTRATO <- c("VL-A+VL-D+VL-F|fraccion_izq" = 3,
+           "VL-B+VL-F+VL-G|fraccion_izq" = 3,
+           "VL-B+VL-F+VL-G|numero_izq" = 3,
+           "VL-D+VL-E+VL-F|numero_izq" = 3,
+           "VL-A+VL-B+VL-F|fraccion_unica" = 10,
+           "VL-B+VL-D+VL-E|fraccion_unica" = 1,
+           "VL-B+VL-D+VL-F|fraccion_unica" = 10,
+           "VL-B+VL-F+VL-G|fraccion_unica" = 7)

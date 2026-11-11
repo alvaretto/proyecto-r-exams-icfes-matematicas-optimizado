@@ -1,0 +1,12 @@
+md5 del .Rmd: 85773027d040e2ce4b45eda03afa362c (A-Produccion/01-En-PreDesarrollo/vueltas-llanta-perimetro-n4/vueltas_llanta_perimetro_numerico_variacional_formulacion_ejecucion_n4_schoice_v1.Rmd)
+=== Diagnosticidad de distractores (gaps de seleccion unica) ===
+Archivo: vueltas_llanta_perimetro_numerico_variacional_formulacion_ejecucion_n4_schoice_v1.Rmd | semillas: 100 | umbral: 70 % | margen H1: 15 %
+
+gap      vers          H1 mas-larga          H1 mas-corta    H2 prefijo
+                  tasa (margen med)     tasa (margen med)          tasa
+unico     100              0% (   8%)              0% (    -)            3%
+               H3 veredicto: la correcta empieza por "dfrac" en el 58% de 19 versiones
+               H3b contenido: la clave dice lo mismo ("dfrac times p") en el 67% de 100 versiones
+
+PASS: ninguna sonda superficial supera el 70 %.
+exit=0

@@ -1,0 +1,549 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## =============================================================================
+## MAT-2026-07-028 — Expresión para el número de vueltas de una llanta.
+## Origen oficial: Evaluar para Avanzar 2023, Matemáticas 9.°, cuadernillo 1, pregunta 12 (I_1461453).
+## Fuente verbatim, errata y decisiones del profesor: ITEM_OFICIAL.md. La plana del simulacro imprime en la
+## opción C «101/120 × 150» (errata del editor): ninguna versión la muestra. La clave está en el CONTENIDO
+## de la opción (\dfrac{K}{V} \times d); la letra no se fija (exshuffle: TRUE).
+##
+## Diseño:
+##   - Canónica (P_CANON = 0,10): enunciado de la plana, P en negrita, 150 metros, cm y m, y los tres
+##     distractores de la Guía oficial (100/150, 150 × P/100, 100/P).
+##   - Demás versiones: objeto que rueda, par de unidades (la constante K es la conversión y cambia con
+##     ellas), distancia d, letra de la variable y contexto narrativo sorteados. Sus 3 distractores se
+##     sortean de un banco de 6 (decisión del profesor del 2026-11-10): los 3 de la Guía y 3 nuevos.
+##   - Selección (regla #22 §P7; FASE 2C r1 H1, r2 H1 y r3 H1-H2): la pareja (terna de distractores, forma de escritura)
+##     se sortea de la tabla de pesos CELDAS, sin bucles (F1). Los pesos son los de la pasada 2 (salida/pesos_celdas.R,
+##     salida/pesos_lp.py y pesos_lp.txt). La pasada 3, la última de §P7-D, cambió la forma de escribir la clave, y el
+##     profesor la revirtió el 2026-11-10 («Volver a la de la ronda 2»): la clave se ve como la escribe quien modela el
+##     problema (100/P × 150, 150 × 100/P o (100 × 150)/P). La guarda «diagnosticidad: tabla de pesos» recalcula en cada
+##     render cinco atajos en el agregado y en cada forma, y aborta si alguno pasa de su tope.
+##     Residuo declarado, a firma del profesor regla por regla (§P7-E), con las cifras EXACTAS de la enumeración del
+##     diseño (salida/verificar_vueltas.R y salida/alcance_r4.R). En las versiones nuevas, elegir la expresión más ancha
+##     acierta el 60,0 % (el 75,0 % en la forma de fracción única, que es el 70 % de esas versiones); elegir una con la
+##     letra sola debajo de una raya de fracción, el 56,5 %; y una con el signo ×, el 42,3 %. Dentro de las formas con la
+##     fracción o el número a la izquierda (el 15 % de las versiones nuevas cada una) hay atajos que aciertan del 37,5 %
+##     al 75,0 %. La canónica reproduce el impreso (regla #24 H-2) y hereda sus atajos.
+## =============================================================================
+library(exams)
+
+pick <- function(x) x[[sample.int(length(x), 1L)]]   # F5: sin la trampa de sample() con un escalar
+ED <- "\u00a0"                                        # espacio duro, nunca como carácter literal
+
+## --- Formato de números ----------------------------------------------------------
+num_tex <- function(n) {   # entero en modo matemático; espacio fino desde 5 cifras
+  s <- format(round(n), scientific = FALSE, trim = TRUE)
+  if (nchar(s) >= 5L) s <- gsub("(?<=[0-9])(?=([0-9]{3})+$)", "\\\\,", s, perl = TRUE)
+  s
+}
+num_txt <- function(n) {   # entero en texto; espacio duro desde 5 cifras
+  s <- format(round(n), scientific = FALSE, trim = TRUE)
+  if (nchar(s) >= 5L) s <- gsub("(?<=[0-9])(?=([0-9]{3})+$)", ED, s, perl = TRUE)
+  s
+}
+val_txt <- function(x) {   # valor de una expresión, en texto (en MathML la coma {,} sale separada)
+  if (abs(x - round(x)) < 1e-9) return(num_txt(x))
+  for (k in 1:4) if (abs(x * 10^k - round(x * 10^k)) < 1e-6)
+    return(sub(".", ",", formatC(x, format = "f", digits = k), fixed = TRUE))
+  s <- if (abs(x) >= 0.1) formatC(x, format = "f", digits = 2) else formatC(x, format = "fg", digits = 2)
+  paste0("aproximadamente ", sub(".", ",", s, fixed = TRUE))
+}
+fr <- function(a, b) paste0("\\dfrac{", a, "}{", b, "}")
+
+## --- Sistemas de unidades: la constante K es la conversión -----------------------
+SISTEMAS <- list(
+  cm_m = list(K = 100,  up = "cm", up_pl = "centímetros", ud = "m",  ud_sing = "metro",     ud_pl = "metros"),
+  mm_m = list(K = 1000, up = "mm", up_pl = "milímetros",  ud = "m",  ud_sing = "metro",     ud_pl = "metros"),
+  m_km = list(K = 1000, up = "m",  up_pl = "metros",      ud = "km", ud_sing = "kilómetro", ud_pl = "kilómetros")
+)
+
+## --- Objetos que ruedan: perímetros de referencia realistas y distancias del banco -
+objeto <- function(sis, nucleo, gen, uso, sujeto, doc, tema, P_cand, d_cand)
+  list(sis = sis, nucleo = nucleo, gen = gen, uso = uso, sujeto = sujeto, doc = doc, tema = tema,
+       P_cand = P_cand, d_cand = d_cand)
+OBJETOS <- list(
+  objeto("cm_m", "llanta", "f", function(d, s) paste0("recorrer ", d, " ", s$ud_pl, " en bicicleta"),
+         "cada llanta de la bicicleta", "la ficha técnica de la bicicleta", "el ciclismo urbano",
+         c(200, 220), c(40, 60, 80, 120, 150, 180, 240, 300, 360, 420, 480, 600)),
+  objeto("cm_m", "rueda", "f", function(d, s) paste0("llevar una carretilla cargada a lo largo de ", d, " ", s$ud_pl),
+         "la rueda de la carretilla", "el manual de la carretilla", "las herramientas de construcción",
+         c(125, 120), c(30, 45, 60, 75, 90, 120, 150, 180, 240)),
+  objeto("cm_m", "rueda", "f", function(d, s) paste0("recorrer ", d, " ", s$ud_pl, " en silla de ruedas"),
+         "cada rueda grande de la silla de ruedas", "el manual de la silla de ruedas", "la movilidad en silla de ruedas",
+         c(200, 190), c(30, 50, 80, 120, 150, 250, 300, 400)),
+  objeto("cm_m", "llanta", "f", function(d, s) paste0("recorrer ", d, " ", s$ud_pl, " en motocicleta"),
+         "cada llanta de la motocicleta", "la ficha técnica de la motocicleta", "el mantenimiento de las motocicletas",
+         c(200, 190), c(50, 80, 120, 150, 250, 350, 500, 800)),
+  objeto("mm_m", "rueda", "f", function(d, s) paste0("patinar ", d, " ", s$ud_pl),
+         "cada rueda de los patines", "la caja de los patines", "el patinaje",
+         c(200, 250), c(12, 15, 18, 20, 25, 30, 40, 45, 60, 75, 90)),
+  objeto("mm_m", "rueda", "f", function(d, s) paste0("arrastrar una maleta ", d, " ", s$ud_pl, " por el aeropuerto"),
+         "cada rueda de la maleta", "la etiqueta de la maleta", "el equipaje de viaje",
+         c(200, 160), c(15, 20, 25, 35, 40, 50, 80, 120, 150)),
+  objeto("mm_m", "rueda", "f", function(d, s) paste0("recorrer ", d, " ", s$ud_pl, " en patineta"),
+         "cada rueda de la patineta", "la ficha técnica de la patineta", "las patinetas",
+         c(200, 180), c(10, 24, 30, 45, 60, 75, 100, 150)),
+  objeto("m_km", "rodillo", "m", function(d, s) paste0("compactar un tramo de vía de ", d, " ", s$ud_pl, " con una aplanadora"),
+         "el rodillo de la aplanadora", "el manual de la aplanadora", "la construcción de vías",
+         c(4, 5), c(2, 3, 5, 6, 8, 12)),
+  objeto("m_km", "llanta", "f", function(d, s) paste0("recorrer ", d, " ", s$ud_pl, " en un tractor"),
+         "cada llanta trasera del tractor", "la ficha técnica del tractor", "las máquinas agrícolas",
+         c(5, 4), c(3, 4, 6, 9, 10, 15, 20))
+)
+
+## Perímetro de referencia para el caso específico de la Solution: da un número entero de vueltas y
+## ningún error del banco vale lo mismo que la clave con él (B = clave si P = K; A = clave si P = d^2).
+elegir_Pref <- function(cands, K, d) {
+  ok <- vapply(cands, function(P) (K * d) %% P == 0 && P != K && P != d^2 && P != d, logical(1))
+  if (!any(ok)) NA_real_ else cands[which(ok)[1L]]
+}
+## Precondición del DISEÑO, verificada en cada render: toda distancia del banco tiene su perímetro exacto.
+stopifnot("diseño: toda distancia del banco tiene un perímetro de referencia exacto" =
+  all(unlist(lapply(OBJETOS, function(o)
+    vapply(o$d_cand, function(dd) !is.na(elegir_Pref(o$P_cand, SISTEMAS[[o$sis]]$K, dd)), logical(1))))))
+
+## --- Versión ----------------------------------------------------------------------
+P_CANON <- 0.10
+es_canonica <- runif(1L) < P_CANON
+
+if (es_canonica) {
+  o <- list(sis = "cm_m", nucleo = "llanta", gen = "f")
+  d <- 150
+  V <- "P"
+} else {
+  o <- pick(OBJETOS)
+  d <- pick(o$d_cand)
+  V <- pick(c("P", "p"))
+}
+s <- SISTEMAS[[o$sis]]
+K <- s$K
+P_ref <- if (es_canonica) 200 else elegir_Pref(o$P_cand, K, d)
+KT <- num_tex(K)
+dT <- num_tex(d)
+
+## --- Formas de escritura --------------------------------------------------------------
+## Forma de escritura de las expresiones que usan los tres datos (regla #22 §P4-bis, sonda H3b: la forma de
+## la clave no puede ser la misma en todas las versiones). En cada forma, la clave se escribe igual que los
+## distractores completos (VL-B, VL-F, VL-G): la forma no la distingue de ellos dentro de la versión.
+## Las cifras entran como argumentos: la guarda de la tabla de pesos usa una instancia de referencia.
+FORMAS <- list(
+  canonica       = list(C = function(k, n, v) paste0(fr(k, v), " \\times ", n),
+                        B = function(k, n, v) paste0(n, " \\times ", fr(v, k)),
+                        F = function(k, n, v) paste0(fr(k, v), " \\div ", n),
+                        G = function(k, n, v) paste0(fr(k, v), " \\times ", k, " \\times ", n)),
+  fraccion_izq   = list(C = function(k, n, v) paste0(fr(k, v), " \\times ", n),
+                        B = function(k, n, v) paste0(fr(v, k), " \\times ", n),
+                        F = function(k, n, v) paste0(fr(k, v), " \\div ", n),
+                        G = function(k, n, v) paste0(fr(k, v), " \\times ", k, " \\times ", n)),
+  numero_izq     = list(C = function(k, n, v) paste0(n, " \\times ", fr(k, v)),
+                        B = function(k, n, v) paste0(n, " \\times ", fr(v, k)),
+                        F = function(k, n, v) paste0(fr(k, v), " \\div ", n),
+                        G = function(k, n, v) paste0(k, " \\times ", n, " \\times ", fr(k, v))),
+  fraccion_unica = list(C = function(k, n, v) fr(paste0(k, " \\times ", n), v),
+                        B = function(k, n, v) fr(paste0(n, " \\times ", v), k),
+                        F = function(k, n, v) fr(k, paste0(v, " \\times ", n)),
+                        G = function(k, n, v) fr(paste0(k, " \\times ", k, " \\times ", n), v))
+)
+SIMPLES <- list(A = function(k, n, v) fr(k, n), D = function(k, n, v) fr(k, v), E = function(k, n, v) fr(n, v))
+expr_de <- function(cod, est, k, n, v)   # cod: "C" (la clave) o la letra del error (VL-A -> "A")
+  if (cod %in% names(SIMPLES)) SIMPLES[[cod]](k, n, v) else FORMAS[[est]][[cod]](k, n, v)
+
+## --- Selección de la versión: (terna de distractores, forma de escritura) -------------
+GUIA_OFICIAL <- c("VL-A", "VL-B", "VL-D")   # los tres distractores del impreso
+COMPLETOS    <- c("VL-B", "VL-F", "VL-G")   # usan K, la letra y d
+ESTILOS <- c("fraccion_izq", "numero_izq", "fraccion_unica")
+TERNAS  <- vapply(combn(paste0("VL-", c("A", "B", "D", "E", "F", "G")), 3L, simplify = FALSE), paste, "", collapse = "+")
+CELDAS  <- expand.grid(terna = TERNAS, estilo = ESTILOS, stringsAsFactors = FALSE)
+## Pesos en partes; una celda que no aparece pesa 0. Elegidos en la pasada 2 con salida/pesos_celdas.R.
+PESOS <- c("VL-A+VL-D+VL-F|fraccion_izq"   = 3, "VL-B+VL-F+VL-G|fraccion_izq" = 3,
+           "VL-B+VL-F+VL-G|numero_izq"     = 3, "VL-D+VL-E+VL-F|numero_izq"   = 3,
+           "VL-A+VL-B+VL-F|fraccion_unica" = 10, "VL-B+VL-D+VL-E|fraccion_unica" = 1,
+           "VL-B+VL-D+VL-F|fraccion_unica" = 10, "VL-B+VL-F+VL-G|fraccion_unica" = 7)
+id_celda <- paste(CELDAS$terna, CELDAS$estilo, sep = "|")
+stopifnot("tabla de pesos: cada celda con peso existe" = all(names(PESOS) %in% id_celda),
+          "tabla de pesos: todos los pesos son positivos" = all(PESOS > 0))
+CELDAS$peso <- ifelse(id_celda %in% names(PESOS), PESOS[id_celda], 0)
+if (es_canonica) {
+  estilo <- "canonica"
+  sel <- GUIA_OFICIAL
+} else {
+  celda  <- CELDAS[sample.int(nrow(CELDAS), 1L, prob = CELDAS$peso), ]
+  estilo <- celda$estilo
+  sel    <- strsplit(celda$terna, "+", fixed = TRUE)[[1L]]
+}
+
+## Artículos y contracciones según el género del objeto (regla #7: concordancia dinámica).
+una_n <- paste(if (o$gen == "f") "una" else "un", o$nucleo)
+la_n  <- paste(if (o$gen == "f") "la" else "el", o$nucleo)
+del_n <- if (o$gen == "f") paste("de la", o$nucleo) else paste("del", o$nucleo)
+
+params <- list(K = K, d = d, P = P_ref)
+valor_correcto <- K * d / P_ref   # vueltas con el perímetro de referencia
+
+## --- Banco de errores conceptuales (regla #1: al menos 6) --------------------------
+## En la canónica la Guía habla de estas mismas cifras; en las demás versiones, del error análogo (FASE 2C r1, H5).
+GUIA <- if (es_canonica) "así lo explica la Guía de orientación de Evaluar para Avanzar 2023 para la pregunta en la que se basa este ejercicio" else
+  "es la explicación que da la Guía de orientación de Evaluar para Avanzar 2023 para el error análogo en la pregunta original"
+errores_conceptuales <- list(
+  "VL-A" = list(
+    codigo = "VL-A", nombre = "Toma la distancia como si fuera el perímetro", guia = TRUE,
+    expr = expr_de("A", estilo, KT, dT, V),
+    descripcion_corta = paste0("divide ", K, " entre la distancia y deja por fuera el perímetro $", V, "$"),
+    descripcion_larga = paste0("Quien la elige usa los ", d, " ", s$ud_pl, " del recorrido en el lugar del perímetro, ",
+      "como si el contorno ", del_n, " midiera ", d, " ", s$ud_pl, ". La expresión no cambia aunque cambie el tamaño ",
+      del_n, ", y eso no puede ser: ", una_n, " más grande da menos vueltas en el mismo recorrido."),
+    causa_raiz = "confunde la distancia que se recorre con la longitud de una vuelta.",
+    nota_guia = paste0("Es posible que los estudiantes que eligen esta expresión consideren que el perímetro ", del_n,
+      " es la distancia que se debe recorrer: ", GUIA, "."),
+    en_lista = "tomar la distancia como si fuera el perímetro",
+    feedback = paste0("Incorrecta. No contiene el perímetro $", V, "$: daría el mismo número de vueltas para cualquier ",
+      o$nucleo, "."),
+    precondicion = function(p) p$d != p$K,
+    calcula = function(p) p$K / p$d),
+  "VL-B" = list(
+    codigo = "VL-B", nombre = "Invierte la relación entre las vueltas y el perímetro", guia = TRUE,
+    expr = expr_de("B", estilo, KT, dT, V),
+    descripcion_corta = paste0("multiplica la distancia por $", fr(V, KT), "$, que es lo que avanza ", la_n,
+      " en una vuelta, medido en ", s$ud_pl),
+    descripcion_larga = paste0("Al dividir $", V, "$ entre ", K, " se obtiene la longitud de una vuelta en ", s$ud_pl,
+      ". Multiplicar esa longitud por ", d, " da la distancia que se recorre en ", d, " vueltas, no el número de ",
+      "vueltas que hay en ", d, " ", s$ud_pl, ". Además, con esta expresión ", una_n, " más grande daría más vueltas, ",
+      "cuando debe dar menos."),
+    causa_raiz = "trata el número de vueltas como si fuera directamente proporcional al perímetro.",
+    nota_guia = paste0("Es posible que los estudiantes que eligen esta expresión consideren que al dividir el perímetro ",
+      "entre ", K, " obtienen la distancia que recorre ", la_n, " en una vuelta, y que al multiplicar ese resultado por ",
+      d, " obtienen la cantidad de vueltas: ", GUIA, "."),
+    en_lista = "invertir la relación entre las vueltas y el perímetro",
+    feedback = paste0("Incorrecta. Multiplica la distancia por la longitud de una vuelta: eso da los ", s$ud_pl,
+      " recorridos en ", d, " vueltas, no un número de vueltas."),
+    precondicion = function(p) p$P != p$K,
+    calcula = function(p) p$d * p$P / p$K),
+  "VL-D" = list(
+    codigo = "VL-D", nombre = "Omite la distancia del recorrido", guia = TRUE,
+    expr = expr_de("D", estilo, KT, dT, V),
+    descripcion_corta = paste0("da las vueltas para un solo ", s$ud_sing, " y no tiene en cuenta los ", d, " ", s$ud_pl),
+    descripcion_larga = paste0("$", fr(KT, V), "$ es exactamente la relación del enunciado: las vueltas que da ", una_n,
+      " en un ", s$ud_sing, ". La pregunta pide las vueltas para ", d, " ", s$ud_pl, ", así que falta multiplicar por ",
+      d, "."),
+    causa_raiz = "toma la relación por unidad del enunciado como si fuera la respuesta, sin llevarla a la distancia pedida.",
+    nota_guia = paste0("Es posible que los estudiantes que eligen esta expresión consideren que la relación del ",
+      "enunciado ya es la respuesta, sin tener en cuenta que se deben recorrer ", d, " ", s$ud_pl, ": ", GUIA, "."),
+    en_lista = "omitir la distancia del recorrido",
+    feedback = paste0("Incorrecta. Son las vueltas para un solo ", s$ud_sing, "; falta multiplicar por los ", d, " ",
+      s$ud_pl, "."),
+    precondicion = function(p) p$d != 1,
+    calcula = function(p) p$K / p$P),
+  "VL-E" = list(
+    codigo = "VL-E", nombre = "Divide sin convertir las unidades", guia = FALSE,
+    expr = expr_de("E", estilo, KT, dT, V),
+    descripcion_corta = paste0("divide la distancia en ", s$ud_pl, " entre el perímetro en ", s$up_pl,
+      " sin convertir las unidades"),
+    descripcion_larga = paste0("Dividir la distancia entre el perímetro es una buena idea, pero solo funciona si las dos ",
+      "longitudes están en la misma unidad. Aquí la distancia está en ", s$ud_pl, " y el perímetro en ", s$up_pl,
+      ": como 1 ", s$ud, " = ", K, " ", s$up, ", el resultado es ", K, " veces menor que el número correcto de vueltas."),
+    causa_raiz = "no revisa que las longitudes que divide estén en la misma unidad.",
+    nota_guia = "", en_lista = "dividir sin convertir las unidades",
+    feedback = paste0("Incorrecta. Divide ", s$ud_pl, " entre ", s$up_pl, " sin convertir: el resultado es ", K,
+      " veces menor que el correcto."),
+    precondicion = function(p) p$K != 1,
+    calcula = function(p) p$d / p$P),
+  "VL-F" = list(
+    codigo = "VL-F", nombre = "Divide entre la distancia en lugar de multiplicar", guia = FALSE,
+    expr = expr_de("F", estilo, KT, dT, V),
+    descripcion_corta = paste0("divide las vueltas de un ", s$ud_sing, " entre la distancia, en lugar de multiplicarlas por ella"),
+    descripcion_larga = paste0("$", fr(KT, V), "$ son las vueltas en un ", s$ud_sing, ". Para ", d, " ", s$ud_pl,
+      " hay que multiplicar por ", d, ", porque cada ", s$ud_sing, " adicional suma esa misma cantidad de vueltas. ",
+      "Dividir entre ", d, " da menos vueltas que las de un solo ", s$ud_sing, ": según esta expresión, un recorrido ",
+      "más largo necesitaría menos vueltas."),
+    causa_raiz = "elige la operación sin revisar si el resultado debe crecer o disminuir con la distancia.",
+    nota_guia = "", en_lista = "dividir entre la distancia en lugar de multiplicar",
+    feedback = paste0("Incorrecta. Divide entre la distancia: según esta expresión, un recorrido más largo necesitaría ",
+      "menos vueltas, y debe ser al revés."),
+    precondicion = function(p) p$d != 1,
+    calcula = function(p) p$K / (p$P * p$d)),
+  "VL-G" = list(
+    codigo = "VL-G", nombre = "Convierte las unidades dos veces", guia = FALSE,
+    expr = expr_de("G", estilo, KT, dT, V),
+    descripcion_corta = paste0("pasa los ", d, " ", s$ud_pl, " a ", s$up_pl, " y además usa la relación por ",
+      s$ud_sing, ", que ya trae esa conversión"),
+    descripcion_larga = paste0("El ", K, " del enunciado ya convierte ", s$ud_pl, " en ", s$up_pl, ": por eso $",
+      fr(KT, V), "$ son las vueltas en un ", s$ud_sing, ". Si además se multiplica por $", KT, " \\times ", dT,
+      "$, que son los ", d, " ", s$ud_pl, " escritos en ", s$up_pl, ", la conversión se aplica dos veces y el ",
+      "resultado es ", K, " veces mayor que el correcto."),
+    causa_raiz = "no identifica que la relación del enunciado ya incluye la conversión de unidades.",
+    nota_guia = "", en_lista = "convertir las unidades dos veces",
+    feedback = paste0("Incorrecta. Aplica dos veces la conversión de unidades: el resultado es ", K,
+      " veces mayor que el correcto."),
+    precondicion = function(p) p$K != 1,
+    calcula = function(p) p$K * p$K * p$d / p$P)
+)
+stopifnot("regla #1: banco de al menos 6 errores" = length(errores_conceptuales) >= 6L,
+          "regla #1: cada error declara precondición y calcula" =
+            all(vapply(errores_conceptuales, function(e) is.function(e$precondicion) && is.function(e$calcula), TRUE)))
+
+## --- Distractores de la versión (los fija la celda) ----------------------------------
+sel <- names(errores_conceptuales)[names(errores_conceptuales) %in% sel]   # orden del banco
+stopifnot("selección: tres distractores del banco" = length(sel) == 3L)
+clave_expr <- expr_de("C", estilo, KT, dT, V)
+
+## Guarda de la tabla de pesos (FASE 2C r1 H1, r2 H1 y r3 H4). Cinco atajos: centralidad por bigramas de símbolos,
+## medoide por distancia de edición y «usa los tres datos» (detractor r1); «la que más comparte» (batería congelada);
+## «la más ancha» con el ancho del render de TeX (detractor r2). Se calculan una vez por celda con una instancia de
+## referencia (100, 150, P) y se ponderan con la tabla. En las formas de esta tabla los cinco dependen solo de la
+## estructura de las expresiones: salida/verificar_vueltas.R lo comprueba celda por celda contra la enumeración
+## exacta del diseño. Crédito de la clave: 1/(número de empatadas) si está entre ellas; si el atajo no señala ninguna
+## opción, 1/4 (azar), como en la batería. Topes por (nivel, atajo): la cifra del diseño más 0,5 pp en cada forma y
+## más 1 pp en el agregado; una tabla que suba cualquiera aborta el render. «La más ancha» vuelve con la escritura de la
+## ronda 2 (decisión del profesor del 2026-11-10, «Volver a la de la ronda 2») y se firma en la pausa 3 (§P7-E).
+ANCHO_GLIFO <- c(dig = 5, P = 6.42 + 1.38903, p = 5.03, op = 7.78 + 2 * 40 / 18, pad = 2.4)   # pt; P con corrección itálica
+ancho_tex <- function(s) {   # ancho en el render de TeX (cmr10, cmmi10, cmsy10 a 10 pt); salida/p3_modelo_ancho.R
+  s <- gsub("[$ ]", "", s); s <- gsub("\\,", "", s, fixed = TRUE); i <- regexpr("\\dfrac{", s, fixed = TRUE)
+  if (i < 0) { ch <- strsplit(gsub("\\\\times|\\\\div", "#", s), "")[[1L]]
+    return(sum(ifelse(ch == "#", ANCHO_GLIFO[["op"]], ifelse(ch == "P", ANCHO_GLIFO[["P"]],
+      ifelse(ch == "p", ANCHO_GLIFO[["p"]], ANCHO_GLIFO[["dig"]]))))) }
+  cierre <- function(r) { ch <- strsplit(r, "")[[1L]]; dep <- 1L
+    for (k in seq_along(ch)) { dep <- dep + (ch[k] == "{") - (ch[k] == "}"); if (dep == 0L) return(k) } }
+  r <- substr(s, i + 7L, nchar(s)); k <- cierre(r); r2 <- substr(r, k + 2L, nchar(r)); j <- cierre(r2)
+  ancho_tex(substr(s, 1L, i - 1L)) + max(ancho_tex(substr(r, 1L, k - 1L)), ancho_tex(substr(r2, 1L, j - 1L))) +
+    ANCHO_GLIFO[["pad"]] + ancho_tex(substr(r2, j + 1L, nchar(r2)))
+}
+tok_r <- function(x) {
+  x <- gsub("\\dfrac{", " F( ", x, fixed = TRUE); x <- gsub("}{", " / ", x, fixed = TRUE)
+  x <- gsub("}", " ) ", x, fixed = TRUE); x <- gsub("\\times", " x ", x, fixed = TRUE)
+  x <- gsub("\\div", " d ", x, fixed = TRUE); strsplit(trimws(gsub("\\s+", " ", x)), " ")[[1L]]
+}
+bigr_r <- function(t) paste(head(t, -1L), tail(t, -1L))
+credito <- function(ganan) if (!length(ganan)) 0.25 else if (1L %in% ganan) 1 / length(ganan) else 0   # la clave va primera
+ATAJOS <- c("centralidad", "medoide", "tres_datos", "mas_comparte", "ancho")
+atajos_celda <- function(terna, est) {
+  cods <- c("C", sub("VL-", "", strsplit(terna, "+", fixed = TRUE)[[1L]], fixed = TRUE))
+  op <- vapply(cods, expr_de, "", est = est, k = "100", n = "150", v = "P")
+  ts <- lapply(op, tok_r); u <- unique(unlist(ts)); ch <- intToUtf8(seq_along(u) + 64L, multiple = TRUE)
+  sL <- rowSums(adist(vapply(ts, function(t) paste(ch[match(t, u)], collapse = ""), "")))
+  J <- sapply(ts, function(a) sapply(ts, function(z)
+    length(intersect(bigr_r(a), bigr_r(z))) / length(union(bigr_r(a), bigr_r(z)))))
+  sJ <- colSums(J) - 1
+  tk <- lapply(op, function(s) unique(tolower(regmatches(s, gregexpr("[A-Za-z]{3,}", s))[[1L]])))
+  sM <- vapply(seq_along(tk), function(i) length(intersect(tk[[i]], unlist(tk[-i]))), 0L)
+  w <- vapply(op, ancho_tex, 0)
+  c(centralidad = credito(which(abs(sJ - max(sJ)) < 1e-12)), medoide = credito(which(sL == min(sL))),
+    tres_datos = credito(which(vapply(ts, function(t) all(c("100", "150", "P") %in% t), TRUE))),
+    mas_comparte = credito(which(sM == max(sM))),
+    ancho = credito(which(abs(w - max(w)) < 0.01)))
+}
+## Topes por (nivel, atajo). Diseño, de la instancia de referencia (agregado): centralidad 32,5 %, medoide 32,5 %, tres
+## datos 33,5 %, la que más comparte 31,0 % y ancho 60,0 %; en «fraccion_unica», ancho 75,0 %.
+TOPES <- rbind(
+  agregado       = c(centralidad = 0.335, medoide = 0.335, tres_datos = 0.346, mas_comparte = 0.321, ancho = 0.610),
+  fraccion_izq   = c(centralidad = 0.505, medoide = 0.505, tres_datos = 0.380, mas_comparte = 0.297, ancho = 0.255),
+  numero_izq     = c(centralidad = 0.505, medoide = 0.505, tres_datos = 0.380, mas_comparte = 0.297, ancho = 0.255),
+  fraccion_unica = c(centralidad = 0.255, medoide = 0.255, tres_datos = 0.324, mas_comparte = 0.324, ancho = 0.755))
+revisar_tabla <- function(A, w, est) {   # pares «nivel: atajo» por encima de su tope
+  w <- w / sum(w); fallan <- character(0); t_ag <- colSums(w * A)
+  f_ag <- names(t_ag)[t_ag > TOPES["agregado", names(t_ag)] + 1e-9]; if (length(f_ag) > 0L) fallan <- paste("agregado:", f_ag)
+  for (e in unique(est)) {
+    en <- est == e; t_e <- colSums(w[en] * A[en, , drop = FALSE]) / sum(w[en])
+    f_e <- names(t_e)[t_e > TOPES[e, names(t_e)] + 1e-9]; if (length(f_e) > 0L) fallan <- c(fallan, paste0(e, ": ", f_e))
+  }
+  fallan
+}
+activas <- which(CELDAS$peso > 0)
+A_cel <- t(vapply(activas, function(i) atajos_celda(CELDAS$terna[i], CELDAS$estilo[i]), setNames(numeric(length(ATAJOS)), ATAJOS)))
+w_cel <- CELDAS$peso[activas] / sum(CELDAS$peso[activas])
+fallan <- revisar_tabla(A_cel, w_cel, CELDAS$estilo[activas])
+if (length(fallan) > 0L) stop("diagnosticidad: tabla de pesos — por encima del tope: ", paste(fallan, collapse = ", "))
+expr_sel <- vapply(errores_conceptuales[sel], function(e) e$expr, "")
+
+## Orden interno barajado: los validadores leen este vector antes de exshuffle.
+ord <- sample.int(4L)
+codigos  <- c("CLAVE", sel)[ord]
+opciones <- paste0("$", c(clave_expr, expr_sel), "$")[ord]
+sol      <- as.integer(codigos == "CLAVE")
+
+## --- Guardas de corrección ----------------------------------------------------------
+## Oráculo: traduce cada opción LaTeX a R y la evalúa; solo la clave vale K·d/P en dos perímetros.
+tex2r <- function(x) {
+  x <- gsub("$", "", x, fixed = TRUE)
+  x <- gsub("\\,", "", x, fixed = TRUE)
+  for (i in 1:3) x <- gsub("\\\\dfrac\\{([^{}]*)\\}\\{([^{}]*)\\}", "((\\1)/(\\2))", x)
+  x <- gsub("\\times", "*", x, fixed = TRUE)
+  x <- gsub("\\div", "/", x, fixed = TRUE)
+  gsub(V, "x", x, fixed = TRUE)
+}
+evaluar <- function(x, P) eval(parse(text = tex2r(x)), list(x = P))
+P_prueba <- c(P_ref, P_ref * 1.37)
+coincide <- vapply(opciones, function(op)
+  all(abs(vapply(P_prueba, function(P) evaluar(op, P), 0) - K * d / P_prueba) < 1e-9 * K * d / P_prueba), logical(1))
+vals_sel <- vapply(errores_conceptuales[sel], function(e) e$calcula(params), 0)
+stopifnot(
+  "regla #13: exactamente una clave" = sum(sol) == 1L,
+  "regla #13: el oráculo LaTeX solo da por correcta la opción marcada" = identical(as.integer(coincide), sol),
+  "opciones distintas" = !anyDuplicated(opciones),
+  "Capa C: ningún distractor vale lo mismo que la clave con el perímetro de referencia" =
+    all(abs(vals_sel - valor_correcto) > 1e-9 * valor_correcto),
+  "precondiciones de los errores mostrados" =
+    all(vapply(errores_conceptuales[sel], function(e) isTRUE(e$precondicion(params)), TRUE)),
+  "caso específico: número entero de vueltas" = abs(valor_correcto - round(valor_correcto)) < 1e-9,
+  "errata: ninguna versión muestra 101/120" = !any(grepl("{101}{120}", opciones, fixed = TRUE)))
+
+## --- Enunciado ------------------------------------------------------------------------
+NOMBRES <- c("Camila", "Valentina", "Sofía", "Mariana", "Daniela", "Isabella",
+             "Andrés", "Santiago", "Mateo", "Julián", "Sebastián", "Samuel")
+CONTEXTOS <- list(
+  situacion   = function(o, s, d, n) paste0(n, " va a ", o$uso(d, s), ". Antes de empezar, quiere saber cuántas vueltas dará ",
+                                            o$sujeto, "."),
+  documento   = function(o, s, d, n) paste0("En ", o$doc, " aparece la siguiente información."),
+  clase       = function(o, s, d, n) paste0("En la clase de matemáticas, el grupo de ", n, " analiza cuántas vueltas da ",
+                                            o$sujeto, " en un recorrido."),
+  dialogo     = function(o, s, d, n) paste0("—¿Cuántas vueltas dará ", o$sujeto, "? —preguntó ", n, " antes de ",
+                                            o$uso(d, s), ". Su compañera le recordó la siguiente relación."),
+  hallazgo    = function(o, s, d, n) paste0("Al revisar ", o$doc, ", ", n, " descubrió cómo calcular las vueltas que da ",
+                                            o$sujeto, "."),
+  divulgacion = function(o, s, d, n) paste0("Una nota de divulgación sobre ", o$tema, " explica cómo calcular cuántas vueltas da ",
+                                            o$sujeto, " en un recorrido."),
+  en_curso    = function(o, s, d, n) paste0("Mientras ", n, " se prepara para ", o$uso(d, s), ", se pregunta cuántas vueltas ",
+                                            "dará ", o$sujeto, ".")
+)
+if (es_canonica) {
+  contexto <- ""
+  regla <- paste0("La cantidad de vueltas que da una llanta para recorrer un metro es igual a 100 dividido entre el ",
+                  "perímetro de la llanta, donde el perímetro de la llanta se expresa en centímetros.")
+  pregunta <- paste0("¿Cuál de las siguientes expresiones permite determinar la cantidad de vueltas que debe dar una ",
+                     "llanta de perímetro **P** (en cm), para recorrer 150 metros?")
+} else {
+  contexto <- pick(CONTEXTOS)(o, s, d, pick(NOMBRES))
+  regla <- paste0("La cantidad de vueltas que da ", una_n, " para recorrer un ", s$ud_sing, " es igual a ", K,
+                  " dividido entre el perímetro ", del_n, ", donde el perímetro ", del_n, " se expresa en ", s$up_pl, ".")
+  pregunta <- paste0("¿Cuál de las siguientes expresiones permite determinar la cantidad de vueltas que debe dar ", una_n,
+                     " de perímetro **", V, "** (en ", s$up, "), para recorrer ", d, " ", s$ud_pl, "?")
+}
+if (es_canonica) stopifnot(
+  "canónica: enunciado verbatim de la plana" = identical(regla, paste0(
+    "La cantidad de vueltas que da una llanta para recorrer un metro es igual a 100 dividido entre el perímetro de ",
+    "la llanta, donde el perímetro de la llanta se expresa en centímetros.")),
+  "canónica: pregunta verbatim de la plana" = identical(pregunta, paste0(
+    "¿Cuál de las siguientes expresiones permite determinar la cantidad de vueltas que debe dar una llanta de ",
+    "perímetro **P** (en cm), para recorrer 150 metros?")),
+  "canónica: opciones de la Guía con la C oficial" = setequal(opciones, c(
+    "$\\dfrac{100}{150}$", "$150 \\times \\dfrac{P}{100}$", "$\\dfrac{100}{P} \\times 150$", "$\\dfrac{100}{P}$")),
+  "canónica: clave en el contenido de la C oficial" = opciones[sol == 1L] == "$\\dfrac{100}{P} \\times 150$")
+
+## --- Textos de la Solution ------------------------------------------------------------
+diagnostico <- vapply(sel, function(cd) {
+  e <- errores_conceptuales[[cd]]
+  paste0("**", e$codigo, " — ", e$nombre, ".** La expresión $", e$expr, "$ ", e$descripcion_corta, ". ",
+         e$descripcion_larga, if (e$guia) paste0(" ", e$nota_guia) else "",
+         " *Causa de fondo:* ", e$causa_raiz)
+}, "")
+feedback <- vapply(codigos, function(cd) {
+  if (cd == "CLAVE")
+    return(paste0("Correcta. $", fr(KT, V), "$ son las vueltas en un ", s$ud_sing, ", y se multiplican por los ", d, " ",
+                  s$ud_pl, " del recorrido. Con un perímetro de ", P_ref, " ", s$up, " da ", num_txt(valor_correcto),
+                  " vueltas, lo mismo que el cálculo directo."))
+  e <- errores_conceptuales[[cd]]
+  paste0(e$feedback, " Con un perímetro de ", P_ref, " ", s$up, ", esta expresión da ", val_txt(e$calcula(params)),
+         ", y el número correcto de vueltas es ", num_txt(valor_correcto), ".")
+}, "")
+lista_errores <- paste(vapply(errores_conceptuales[sel], function(e) e$en_lista, ""), collapse = "; ")
+reflexiones <- c(
+  "Antes de elegir, pregúntate qué debe pasar con el número de vueltas si el recorrido se alarga o si el perímetro aumenta, y revisa si la expresión se comporta así.",
+  "Escribir la unidad junto a cada número permite detectar cuándo se dividen dos longitudes que no están en la misma unidad.",
+  "Probar la expresión con un perímetro sencillo y compararla con un cálculo directo es una forma rápida de saber si el modelo es correcto.",
+  "La relación del enunciado es una herramienta: identifica qué mide (vueltas por cada unidad de distancia) antes de decidir cómo usarla.",
+  "Cuando dos expresiones se parecen, compara qué hace cada una con los datos: cuál multiplica, cuál divide y por qué.")
+reflexion <- pick(reflexiones)
+
+textos_visibles <- c(contexto, regla, pregunta, diagnostico, feedback, reflexion)
+stopifnot("regla #7: contracciones al y del" = !any(grepl("(*UCP)\\b[Aa] el\\b|\\b[Dd]e el\\b", textos_visibles, perl = TRUE)),
+          "regla #25: sin signo menos tipográfico" = !any(grepl("\u2212", textos_visibles, fixed = TRUE)),
+          "textos sin NA" = !any(grepl("NA", textos_visibles, fixed = TRUE)))
+```
+
+Question
+========
+
+```{r enunciado, echo = FALSE, results = "asis"}
+if (nchar(contexto) > 0L) cat(contexto, "\n\n", sep = "")
+cat(regla, "\n\n", sep = "")
+cat(pregunta, "\n", sep = "")
+```
+
+```{r opciones, echo = FALSE, results = "asis"}
+## Separación vertical entre opciones en HTML y Moodle (6b r2: a 360 px las fracciones de dos opciones seguidas se
+## tocaban). Es HTML crudo: pandoc lo descarta en PDF, NOPS y DOCX. El vector «opciones», que leen los validadores,
+## no cambia.
+answerlist(paste0("<span style=\"display:inline-block;margin:0.3em 0\">", opciones, "</span>"), markup = "markdown")
+```
+
+Solution
+========
+
+```{r solucion, echo = FALSE, results = "asis"}
+## Encabezados en negrita (no con almohadillas: así no salen numerados en el PDF), seguidos del cierre que
+## LaTeX pone tras un título de sección para que no queden solos al pie de la página. Es un bloque {=latex}
+## que pandoc descarta en HTML, Moodle y DOCX. Las comillas invertidas salen de intToUtf8(96): el arsenal
+## corta el chunk en la primera que encuentra.
+valla <- strrep(intToUtf8(96L), 3L)
+encabezado <- function(t) cat("**", t, "**\n\n", valla, "{=latex}\n",
+  "\\nobreak\\makeatletter\\@afterindenttrue\\@afterheading\\makeatother\n", valla, "\n\n", sep = "")
+encabezado("Respuesta correcta")
+cat("La expresión correcta es $", clave_expr, "$, que equivale a $", fr(num_tex(K * d), V), "$ vueltas.\n\n", sep = "")
+encabezado("Procedimiento correcto")
+cat("- En una vuelta completa, ", la_n, " avanza una distancia igual a su perímetro: $", V, "$ ", s$up_pl, ".\n", sep = "")
+cat("- Como 1 ", s$ud, " = ", K, " ", s$up, ", en un ", s$ud_sing, " ", la_n, " da $", fr(KT, V),
+    "$ vueltas. Es la relación que da el enunciado.\n", sep = "")
+cat("- Para recorrer ", d, " ", s$ud_pl, " da ", d, " veces esa cantidad: $", clave_expr, " = ", fr(num_tex(K * d), V),
+    "$ vueltas.\n\n", sep = "")
+encabezado("Caso específico")
+cat("Si ", la_n, " tuviera un perímetro de ", P_ref, " ", s$up, ": ", d, " ", s$ud_pl, " son ", num_txt(K * d), " ",
+    s$up_pl, ", y ", num_txt(K * d), " ÷ ", P_ref, " = ", num_txt(valor_correcto), " vueltas. La expresión correcta ",
+    "da lo mismo: $", gsub(V, P_ref, clave_expr, fixed = TRUE), " = ", num_tex(valor_correcto), "$.\n\n", sep = "")
+encabezado("Análisis del error")
+cat("Las tres expresiones incorrectas corresponden a errores al traducir la relación del enunciado: ", lista_errores, ". ",
+    "Toda expresión correcta debe pasar dos pruebas: crecer cuando crece la distancia y disminuir cuando crece el ",
+    "perímetro, y dar un resultado en vueltas, con las longitudes en la misma unidad. Cada una de las tres ",
+    "expresiones incorrectas de esta pregunta falla al menos una de las dos. Pasar las dos pruebas no basta: la ",
+    "comprobación que decide es el caso específico.\n\n", sep = "")
+cat(paste(diagnostico, collapse = "\n\n"), "\n\n", sep = "")
+encabezado("Propiedades del concepto")
+cat("- El número de vueltas es directamente proporcional a la distancia: el doble de recorrido, el doble de vueltas.\n")
+cat("- El número de vueltas es inversamente proporcional al perímetro: con un perímetro mayor, ", la_n,
+    " da menos vueltas en el mismo recorrido.\n", sep = "")
+cat("- Para dividir una distancia entre un perímetro, las dos longitudes deben estar en la misma unidad. El ", K,
+    " del enunciado es esa conversión: 1 ", s$ud, " = ", K, " ", s$up, ".\n\n", sep = "")
+encabezado("Reflexión metacognitiva")
+cat(reflexion, "\n\n", sep = "")
+encabezado("Estrategia para evitar el error")
+cat("- Escribe la unidad de cada dato: vueltas por ", s$ud_sing, ", ", s$ud_pl, " y ", s$up_pl, ".\n", sep = "")
+cat("- Comprueba el sentido de la relación: más distancia, más vueltas; más perímetro, menos vueltas.\n")
+cat("- Verifica que el resultado quede en vueltas, con las longitudes en la misma unidad.\n")
+cat("- Prueba la expresión con un perímetro sencillo y compárala con el cálculo directo: la distancia, escrita en la misma unidad del perímetro, dividida entre el perímetro.\n\n")
+```
+
+```{r feedback, echo = FALSE, results = "asis"}
+answerlist(feedback, markup = "markdown")
+```
+
+Meta-information
+================
+exname: vueltas_llanta_perimetro_numerico_variacional_formulacion_ejecucion_n4_schoice_v1
+extype: schoice
+exsolution: `r mchoice2string(as.logical(sol))`
+exshuffle: TRUE
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Competencia]: Formulación y ejecución
+exextra[Componente]: Numérico-variacional
+exextra[Afirmacion]: Frente a un problema que involucre información cuantitativa, plantea e implementa estrategias que lleven a soluciones adecuadas.
+exextra[Evidencia]: Diseña planes para la solución de problemas que involucran información cuantitativa o esquemática.
+exextra[Nivel]: 4
+exextra[Descriptor]: D4.4 — Modela usando lenguaje algebraico información dada en lenguaje natural, tablas o representaciones geométricas.
+exextra[Estandar]: Describo y represento situaciones de variación relacionando diferentes representaciones (diagramas, expresiones verbales generalizadas y tablas). (6°-7°, Pensamiento variacional)
+exextra[GradoSugerido]: 6°-7°
+exextra[Contenido]: Álgebra y Cálculo
+exextra[TemaEspecifico]: Modelación algebraica de una relación inversa
+exextra[DOK]: 2
+exextra[Bloom]: Aplicar
+exextra[SOLO]: Relacional
+exextra[TipoMetacognicion]: verificacion_con_caso_particular
+exextra[ItemOriginal]: EPA-2023-MAT-9-1-12 (I_1461453); MAT-2026-07-028
