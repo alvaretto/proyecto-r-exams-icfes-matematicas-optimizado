@@ -1,0 +1,62 @@
+[
+ {
+  "id": "L-001",
+  "fecha": "2026-11-12",
+  "video": "vueltas-llanta-perimetro-n4",
+  "revisor": "cadena",
+  "tipo": "mecanica",
+  "leccion": "Lo que se escribe en los subtítulos se comprueba contra el guion sobre el archivo ya escrito, no solo sobre la función que lo construye.",
+  "defecto": "Signos de pregunta y exclamación del guion que no llegan a los subtítulos (o llegan incompletos)",
+  "comprobacion": "video_icfes/montar.py: comprobar_signos() sobre el .ass ya escrito",
+  "prueba": "Quitar con_signos del montaje (usar las palabras de la voz sin signos) o borrar a mano el «¿» de «¿CÓMO» en subtitulos_h.ass: la compuerta debe fallar nombrando s1 y el signo «¿».",
+  "estado": "programada"
+ },
+ {
+  "id": "L-002",
+  "fecha": "2026-11-12",
+  "video": "vueltas-llanta-perimetro-n4",
+  "revisor": "guion",
+  "tipo": "mecanica",
+  "leccion": "Todo guion con «?» o «!» debe llevar también su «¿» o «¡», porque los subtítulos copian exactamente lo que el guion escribe.",
+  "defecto": "Signo de apertura o de cierre ausente en el propio guion (pregunta o exclamación mal puntuada)",
+  "comprobacion": "video_icfes/guion_lint.py: signos ¿? ¡! emparejados por frase",
+  "prueba": "Quitar el «¿» de «¿Cómo lo sé sin contarlas?» en s1[1] del guion de la llanta: python -m video_icfes.guion_lint debe salir con exit 1 citando s1[1].",
+  "estado": "programada"
+ },
+ {
+  "id": "L-003",
+  "fecha": "2026-11-12",
+  "video": "vueltas-llanta-perimetro-n4",
+  "revisor": "guion",
+  "tipo": "instruccion",
+  "leccion": "Cuando un procedimiento usa unidades distintas para cada dato (centímetros y metros, horas y minutos, litros y mililitros), la frase que lo resume debe decir qué número hace la conversión y por qué; si no, un estudiante lo aplicará con otras unidades y le saldrá mal. Si lo señalas, márcalo como alta salvo que ese paso ya esté explicado en la misma escena.",
+  "defecto": "Un aviso de nivel medio sobre unidades que el revisor del guion marcó pero que el profesor tuvo que pedir de nuevo",
+  "comprobacion": "",
+  "prueba": "Dar al revisor del guion una versión de la escena final sin la frase que explica el cien (o un guion de otro ejercicio con litros y mililitros, sin conversión explicada): debe emitir un hallazgo de gravedad alta citando esa frase.",
+  "estado": "vigente"
+ },
+ {
+  "id": "L-004",
+  "fecha": "2026-11-12",
+  "video": "vueltas-llanta-perimetro-n4",
+  "revisor": "guion",
+  "tipo": "instruccion",
+  "leccion": "No repitas un aviso que la cadena ya listó; añade solo lo que la cadena no puede ver. De las observaciones de estilo que no cambian lo que el estudiante entiende (G4, G5, G6 de esta pasada: orden de definiciones, redacción de la primera frase), conserva como máximo dos, y solo si el estudiante podría entender algo distinto.",
+  "defecto": "El revisor del guion repite los avisos que la cadena ya da (G2 repite los 4 avisos de la letra «P» sin coma) y llena el informe de hallazgos de gravedad baja",
+  "comprobacion": "",
+  "prueba": "Correr el revisor sobre el mismo expediente con los 4 avisos de «P» en la sección de la cadena: el hallazgo G2 no debe reaparecer y el total de hallazgos de gravedad baja debe ser de dos o menos.",
+  "estado": "vigente"
+ },
+ {
+  "id": "L-005",
+  "fecha": "2026-11-12",
+  "video": "vueltas-llanta-perimetro-n4",
+  "revisor": "oido",
+  "tipo": "instruccion",
+  "leccion": "Una diferencia entre el guion y lo que transcribió la máquina solo es hallazgo si cambia el sentido de la frase para quien la oye una vez. Si el contexto de la frase vecina lo deja claro, no lo reportes. Una pausa corta por sí sola no es hallazgo sin una segunda lectura posible de la frase.",
+  "defecto": "El revisor de oído convierte en hallazgos las discrepancias del transcriptor (O2, O4: «es 100» frente a «da cien», «75» sin «es») que no cambian lo que el estudiante entiende",
+  "comprobacion": "",
+  "prueba": "Con las medidas de este video, O2 y O4 (de gravedad baja, sin segunda lectura) no deben aparecer; O1 («no el lado a lado») sí debe seguir apareciendo porque la transcripción cambia el sentido.",
+  "estado": "vigente"
+ }
+]
