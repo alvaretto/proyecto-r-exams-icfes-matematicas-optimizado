@@ -150,6 +150,39 @@ fracc_simp <- paste(numerador / mcd, "/", denominador / mcd)
 # Generamos los distractores con fracciones similares
 distractors <- generate_distractors(cantidades[1], total_bolas, n = 3, target_fraction = fracc_simp)
 
+# Garantía de opciones distintas (F1: reintentos acotados). Una fila de distractor se
+# regenera si repite la composición de la clave o de otro distractor, o si su
+# probabilidad para el primer color coincide con la dada (sería otra clave).
+fila_invalida <- function(i) {
+  fila <- distractors[i, ]
+  repite_clave <- all(fila == cantidades)
+  repite_otro <- any(vapply(setdiff(1:3, i), function(j) all(fila == distractors[j, ]), logical(1)))
+  misma_prob <- fila[1] * total_bolas == cantidades[1] * sum(fila)
+  repite_clave || repite_otro || misma_prob
+}
+max_intentos_dist <- 20
+# Candidatos de respaldo (construcción determinista): composiciones cercanas a la clave
+# (cada cantidad varía entre -3 y +3, siempre >= 1)
+candidatos_respaldo <- expand.grid(d1 = -3:3, d2 = -3:3, d3 = -3:3)
+candidatos_respaldo <- sweep(as.matrix(candidatos_respaldo), 2, cantidades, "+")
+candidatos_respaldo <- candidatos_respaldo[apply(candidatos_respaldo, 1, min) >= 1, , drop = FALSE]
+for (i in 1:3) {
+  intentos_fila <- 0
+  while (fila_invalida(i) && intentos_fila < max_intentos_dist) {
+    intentos_fila <- intentos_fila + 1
+    distractors[i, ] <- generate_distractors(cantidades[1], total_bolas, n = 1, target_fraction = fracc_simp)[1, ]
+  }
+  if (fila_invalida(i)) {
+    # El generador no produjo una fila válida: se elige una de las candidatas válidas
+    orden <- sample.int(nrow(candidatos_respaldo))
+    for (k in orden) {
+      distractors[i, ] <- candidatos_respaldo[k, ]
+      if (!fila_invalida(i)) break
+    }
+  }
+}
+stopifnot(!vapply(1:3, fila_invalida, logical(1)))
+
 # Calculamos las fracciones para los distractores (para mostrar en la solución)
 fracciones_distractores <- vector("character", 3)
 for (i in 1:3) {
@@ -228,6 +261,7 @@ todas_opciones <- c(opcion_correcta, opciones_incorrectas)
 
 # Aleatorizar el orden de las opciones
 opciones_aleatorias <- sample(todas_opciones)
+stopifnot(length(unique(opciones_aleatorias)) == 4)
 
 # Determinar la posición de la respuesta correcta
 posicion_correcta <- which(opciones_aleatorias == opcion_correcta)
@@ -295,9 +329,9 @@ $P(\text{bola } `r aleacolor[1]`) = \frac{\text{número de bolas } `r aleacolor[
 
 Por lo tanto, en la caja debe haber:
 
-- `r cantidades[1]` bolas de color `r aleacolor[1]` (que representan el `r prob_color1_percent`% del total)
-- `r cantidades[2]` bolas de color `r aleacolor[2]` (que representan el `r prob_color2_percent`% del total)
-- `r cantidades[3]` bolas de color `r aleacolor[3]` (que representan el `r prob_color3_percent`% del total)
+- `r cantidades[1]` bolas de color `r aleacolor[1]` (que representan el `r format(prob_color1_percent, decimal.mark = ",")`% del total)
+- `r cantidades[2]` bolas de color `r aleacolor[2]` (que representan el `r format(prob_color2_percent, decimal.mark = ",")`% del total)
+- `r cantidades[3]` bolas de color `r aleacolor[3]` (que representan el `r format(prob_color3_percent, decimal.mark = ",")`% del total)
 
 Lo que suma un total de `r total_bolas` bolas.
 
@@ -322,3 +356,10 @@ exname: 11_C01_G09_2020_Tipo1_Probabilidades_N3(single-choice)
 extype: schoice
 exsolution: `r solucion_string`
 exshuffle: FALSE
+exextra[Type]: SCHOICE
+exextra[Competencia]: Interpretación y representación
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Comprende y transforma la información cuantitativa y esquemática presentada en distintos formatos.
+exextra[Evidencia]: Transforma la representación de una o más piezas de información.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.6 — Compara la probabilidad de eventos simples en diversos contextos (casos favorables/casos posibles), incluso cuando los casos posibles de cada evento son diferentes.

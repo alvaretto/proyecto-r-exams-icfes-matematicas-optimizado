@@ -4,7 +4,7 @@
 cat("=== PRUEBA DE FUNCIONAMIENTO DE SEMILLAS ===\n\n")
 
 # Definir las preguntas
-preg01 <- "cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd"
+preg01 <- "cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n3_v1_1.Rmd"
 preg03 <- "ExportacionesGraficosEstadisticaInterpretacion_n3_v1.Rmd"
 preg04 <- "pasteleria_sabores_ventas_estadistica_interpretacion_representacion_n2_v1.Rmd"
 

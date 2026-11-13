@@ -5,7 +5,7 @@
 Cuando cambiabas la semilla de 1001 a 1002 a 1003, las preguntas generadas eran idénticas debido a:
 
 ### 1. **`set.seed()` interno en archivos .Rmd**
-El archivo `cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd` usaba `set.seed(seed_distractores)` en dos lugares, lo que sobrescribía la semilla global y rompía la secuencia aleatoria.
+El archivo `cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n3_v1_1.Rmd` usaba `set.seed(seed_distractores)` en dos lugares, lo que sobrescribía la semilla global y rompía la secuencia aleatoria.
 
 ### 2. **Caché de R/exams**
 Los archivos temporales de compilaciones anteriores podían estar causando que se reutilizaran ejercicios previamente generados.
@@ -15,7 +15,7 @@ El script restablecía la semilla antes de cada `exams2pdf`, lo que podía causa
 
 ## CAMBIOS REALIZADOS
 
-### ✅ **Archivo: cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd**
+### ✅ **Archivo: cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n3_v1_1.Rmd**
 
 **Líneas 199 y 329**: Eliminados los `set.seed(seed_distractores)` que rompían la secuencia aleatoria global.
 

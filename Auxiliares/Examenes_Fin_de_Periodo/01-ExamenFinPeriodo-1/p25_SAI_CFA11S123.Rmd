@@ -28,8 +28,11 @@ nombres_s <- sample(c(
 
 
 pepe <- 0
+intentos_pepe <- 0L
 
 while(pepe == 0) {
+  intentos_pepe <- intentos_pepe + 1L
+  stopifnot(intentos_pepe <= 10000L)  # tope de intentos (familia F1, Error 22)
 
   nombres_c <- nombres_s[3:length(nombres_s)]
 
@@ -65,7 +68,10 @@ while(pepe == 0) {
 edad_resto <- round(suma_resto / 2)
 
 # Asegurarse de que edad_resto sea mayor o igual a 4
+intentos_edad <- 0L
 while(edad_resto < 4) {
+  intentos_edad <- intentos_edad + 1L
+  stopifnot(intentos_edad <= 10000L)  # tope de intentos (familia F1, Error 22)
   edades_al <- sample(25:55, num_students - 2)
   promedio <- round((sum(edades_al) + 2 * sample(25:55, 1)) / num_students)
   suma_conocida <- sum(edades_al)
@@ -74,7 +80,7 @@ while(edad_resto < 4) {
   edad_resto <- round(suma_resto / 2)
 }
 
-sol <- c(edad_resto)
+sol <- c(edad_resto, edad_resto)  # una parte por cada estudiante desconocido
 ```
 
 Question
@@ -88,7 +94,7 @@ library(xtable)
 # Suponiendo que tienes dos vectores en R: nombres_s y edades_al
 data <- data.frame(
   Estudiante = nombres_s,
-  Edad = c(rep("##ANSWER1##", 2), edades_al)
+  Edad = c("##ANSWER1##", "##ANSWER2##", edades_al)
 )
 # Imprimir sin nombres de filas y comentario
 print(xtable(data, align = c('l', 'l', 'c')), type = 'latex', include.rownames = FALSE, comment = FALSE)
@@ -102,7 +108,7 @@ answerlist(rep("", length(sol)), markup = "markdown")
 
 Solution
 ========
-`r nombres_s[1]` y `r nombres_s[2]` tienen, cada uno, `r sol` años. ¿De dónde salió esto?
+`r nombres_s[1]` y `r nombres_s[2]` tienen, cada uno, `r edad_resto` años. ¿De dónde salió esto?
 
 ¡Hagamos esto juntos!
 
@@ -176,7 +182,14 @@ Por tanto,
 Meta-information
 ================
 extype: cloze
-exsolution: `r paste(as.character(sol))`
-exclozetype: num
+exsolution: `r paste(as.character(sol), collapse = "|")`
+exclozetype: num|num
 exname: P25
 extol: 0.05
+exextra[Type]: CLOZE
+exextra[Competencia]: Formulación y ejecución
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Frente a un problema que involucre información cuantitativa, plantea e implementa estrategias que lleven a soluciones adecuadas.
+exextra[Evidencia]: Resuelve un problema que involucra información cuantitativa o esquemática.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.7 — Selecciona información necesaria para resolver problemas que involucran operaciones aritméticas.

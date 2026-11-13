@@ -40,10 +40,6 @@ knitr::opts_chunk$set(
   fig.pos = "H"
 )
 
-# Configuración para chunks de Python
-knitr::knit_engines$set(python = function(options) {
-  knitr::engine_output(options, options$code, '')
-})
 
 # Asegurar que Python esté correctamente configurado
 use_python(Sys.which("python"), required = TRUE)
@@ -52,15 +48,31 @@ use_python(Sys.which("python"), required = TRUE)
 ```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
 
+# Formato numérico del ICFES para el texto visible: coma decimal y punto de miles (7.000; 5,5).
+# Solo cambia la presentación: los valores internos siguen siendo numéricos.
+num <- function(x, dec = NULL) {
+  if (is.null(dec)) format(x, decimal.mark = ",", big.mark = ".", scientific = FALSE, trim = TRUE)
+  else formatC(x, format = "f", digits = dec, decimal.mark = ",", big.mark = ".")
+}
+
 # Establecer semilla aleatoria
 set.seed(sample(1:10000, 1))
 
 # Aleatorización del contexto del problema
-contextos <- c(
-  "empresa", "organización", "compañía", "institución", "corporación",
-  "entidad", "firma", "negocio", "sociedad", "grupo empresarial"
+# Cada sustantivo sorteado lleva su género (regla #7, concordancia dinámica)
+contextos_data <- data.frame(
+  nombre = c("empresa", "organización", "compañía", "institución", "corporación",
+             "entidad", "firma", "negocio", "sociedad", "grupo empresarial"),
+  genero = c("f", "f", "f", "f", "f",
+             "f", "f", "m", "f", "m"),
+  stringsAsFactors = FALSE
 )
-contexto <- sample(contextos, 1)
+contexto_seleccionado <- contextos_data[sample(nrow(contextos_data), 1), ]
+contexto <- contexto_seleccionado$nombre
+ctx_f <- contexto_seleccionado$genero == "f"
+art_ind_contexto <- if (ctx_f) "una" else "un"   # "de una empresa" / "de un negocio"
+de_contexto <- if (ctx_f) "de la" else "del"     # "de la empresa" / "del negocio"
+en_contexto <- if (ctx_f) "en la" else "en el"   # "en la empresa" / "en el negocio"
 
 # Aleatorización de los tipos de bienes
 tipos_bien1 <- c("carro", "auto", "vehículo", "automóvil", "coche")
@@ -72,8 +84,14 @@ bien2 <- sample(tipos_bien2, 1)
 bien3 <- sample(tipos_bien3, 1)
 
 # Aleatorización de términos para el enunciado
-terminos_encuesta <- c("encuesta", "sondeo", "estudio", "investigación", "consulta")
-termino_encuesta <- sample(terminos_encuesta, 1)
+terminos_encuesta_data <- data.frame(
+  nombre = c("encuesta", "sondeo", "estudio", "investigación", "consulta"),
+  genero = c("f", "m", "m", "f", "f"),
+  stringsAsFactors = FALSE
+)
+termino_encuesta_seleccionado <- terminos_encuesta_data[sample(nrow(terminos_encuesta_data), 1), ]
+termino_encuesta <- termino_encuesta_seleccionado$nombre
+art_ind_encuesta <- if (termino_encuesta_seleccionado$genero == "f") "una" else "un"
 
 terminos_personas <- c("personas", "empleados", "trabajadores", "colaboradores", "miembros")
 termino_personas <- sample(terminos_personas, 1)
@@ -81,8 +99,14 @@ termino_personas <- sample(terminos_personas, 1)
 terminos_bienes <- c("bienes", "posesiones", "propiedades", "activos", "patrimonios")
 termino_bienes <- sample(terminos_bienes, 1)
 
-terminos_resultados <- c("resultados", "datos", "estadísticas", "cifras")
-termino_resultados <- sample(terminos_resultados, 1)
+terminos_resultados_data <- data.frame(
+  nombre = c("resultados", "datos", "estadísticas", "cifras"),
+  genero = c("m", "m", "f", "f"),
+  stringsAsFactors = FALSE
+)
+termino_resultados_seleccionado <- terminos_resultados_data[sample(nrow(terminos_resultados_data), 1), ]
+termino_resultados <- termino_resultados_seleccionado$nombre
+art_def_resultados <- if (termino_resultados_seleccionado$genero == "f") "Las" else "Los"
 
 # Aleatorización de colores para el gráfico circular (múltiples estilos)
 paleta_colores <- list(
@@ -151,22 +175,23 @@ if (modo_color == "paleta") {
 
 # Aleatorización de los porcentajes manteniendo coherencia matemática
 # Generación de porcentajes iniciales para cada categoría
+# Construcción determinista (F1): se enumeran todas las combinaciones de los rangos
+# originales y se sortea una de las válidas (misma distribución que el rechazo por bucle)
 set_porcentajes <- function() {
-  repeat {
-    # Generar valores base aleatorios
-    p_bien1_bien3 <- sample(15:35, 1)  # Porcentaje de bien1 y bien3
-    p_solo_bien3 <- sample(15:30, 1)   # Porcentaje solo bien3
-    p_solo_bien2 <- sample(25:40, 1)   # Porcentaje solo bien2
-    p_solo_bien1 <- sample(5:10, 1)    # Porcentaje solo bien1
-
-    # Calcular el porcentaje restante para bien1 y bien2
-    p_bien1_bien2 <- 100 - (p_bien1_bien3 + p_solo_bien3 + p_solo_bien2 + p_solo_bien1)
-
-    # Validar que el porcentaje restante sea positivo y razonable
-    if (p_bien1_bien2 >= 10 && p_bien1_bien2 <= 25) {
-      return(c(p_bien1_bien3, p_solo_bien3, p_solo_bien2, p_solo_bien1, p_bien1_bien2))
-    }
-  }
+  combinaciones <- expand.grid(
+    p_bien1_bien3 = 15:35,  # Porcentaje de bien1 y bien3
+    p_solo_bien3 = 15:30,   # Porcentaje solo bien3
+    p_solo_bien2 = 25:40,   # Porcentaje solo bien2
+    p_solo_bien1 = 5:10     # Porcentaje solo bien1
+  )
+  # Porcentaje restante para bien1 y bien2
+  combinaciones$p_bien1_bien2 <- 100 - rowSums(combinaciones)
+  # Validar que el porcentaje restante sea positivo y razonable
+  validas <- combinaciones[combinaciones$p_bien1_bien2 >= 10 & combinaciones$p_bien1_bien2 <= 25, ]
+  stopifnot(nrow(validas) > 0)
+  elegida <- validas[sample.int(nrow(validas), 1), ]
+  return(c(elegida$p_bien1_bien3, elegida$p_solo_bien3, elegida$p_solo_bien2,
+           elegida$p_solo_bien1, elegida$p_bien1_bien2))
 }
 
 # Obtener porcentajes válidos
@@ -381,7 +406,10 @@ if (abs(valor_condicion - respuesta_correcta) >= min_diferencia) {
 }
 
 # Asegurar que todos los distractores sean diferentes entre sí
-while (length(unique(c(distractor1, distractor2, distractor3))) < 3) {
+max_intentos <- 1000
+intentos_dist <- 0
+while (length(unique(c(distractor1, distractor2, distractor3))) < 3 && intentos_dist < max_intentos) {
+  intentos_dist <- intentos_dist + 1
   if (distractor1 == distractor2) {
     distractor1 <- distractor1 + sample(c(-1, 1), 1) * (min_diferencia + sample(5:10, 1))
   }
@@ -392,6 +420,7 @@ while (length(unique(c(distractor1, distractor2, distractor3))) < 3) {
     distractor3 <- distractor3 + sample(c(-1, 1), 1) * (min_diferencia + sample(5:10, 1))
   }
 }
+stopifnot(length(unique(c(distractor1, distractor2, distractor3))) == 3)
 
 # Asegurar que todos los distractores sean valores positivos y plausibles
 distractor1 <- max(distractor1, 1)
@@ -472,7 +501,13 @@ import matplotlib
 matplotlib.use('Agg')  # Usar backend no interactivo
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.colors import LinearSegmentedColormap
+import textwrap
+
+# Tipografia incrustable (TrueType) para el PDF vectorial
+plt.rcParams['pdf.fonttype'] = 42
+plt.rcParams['ps.fonttype'] = 42
+plt.rcParams['font.family'] = 'sans-serif'
+plt.rcParams['font.sans-serif'] = ['Liberation Sans', 'Arial', 'Helvetica', 'DejaVu Sans']
 
 # Datos para el gráfico - usamos los porcentajes para mostrar que se calcularon para asegurar coherencia
 labels = ['", bien1, " y ", bien3, "', 'Solo ", bien3, "', 'Solo ", bien2, "',
@@ -482,138 +517,112 @@ labels = ['", bien1, " y ", bien3, "', 'Solo ", bien3, "', 'Solo ", bien2, "',
 sizes = [", porcentajes_mostrar$bien1_bien3, ", ", porcentajes_mostrar$solo_bien3, ", ", porcentajes_mostrar$solo_bien2, ",
          ", porcentajes_mostrar$solo_bien1, ", ", porcentajes_mostrar$bien1_bien2, "]
 
-colors = ['", paleta_seleccionada[1], "', '", paleta_seleccionada[2], "',
-          '", paleta_seleccionada[3], "', '", paleta_seleccionada[4], "',
-          '", paleta_seleccionada[5], "']
+colores_paleta = ['", paleta_seleccionada[1], "', '", paleta_seleccionada[2], "',
+                  '", paleta_seleccionada[3], "', '", paleta_seleccionada[4], "',
+                  '", paleta_seleccionada[5], "']
+
+# Para imprimir en blanco y negro: se conserva el tono de cada color de la paleta,
+# pero se ajusta su luminosidad a un nivel de gris propio de cada sector, de modo que
+# los sectores vecinos se distingan siempre en gris (separación mínima de 0,24)
+def luma(h):
+    h = h.lstrip('#')
+    r, g, b = [int(h[i:i+2], 16) / 255.0 for i in (0, 2, 4)]
+    return 0.299 * r + 0.587 * g + 0.114 * b
+
+def con_luma(h, objetivo):
+    h = h.lstrip('#')
+    c = np.array([int(h[i:i+2], 16) / 255.0 for i in (0, 2, 4)])
+    l = luma(h)
+    if l < objetivo:
+        t = (objetivo - l) / (1.0 - l)
+        c = c + (1.0 - c) * t
+    else:
+        t = 1.0 - objetivo / l
+        c = c * (1.0 - t)
+    c = np.clip(c, 0.0, 1.0)
+    return '#%02x%02x%02x' % tuple(int(round(v * 255)) for v in c)
+
+niveles = [0.30, 0.74, 0.50, 0.90, 0.62]
+colors = [con_luma(c, n) for c, n in zip(colores_paleta, niveles)]
 
 # Crear explode para destacar un sector específico
 explode = [0, 0, 0, 0, 0]
 explode[", estilo_grafico$sector_destacado, "] = 0.03  # Destacar el sector seleccionado
 
-# Crear figura con más espacio para acomodar las etiquetas externas
-plt.figure(figsize=(7, 6))  # Aumentar tamaño para dar espacio a las etiquetas
+# Figura a tamaño final (columna de ~3,6 in); los textos se dibujan a 8 pt o más
+fig = plt.figure(figsize=(3.6, 2.9))
+ax = fig.add_axes([0.5 - 0.7 / 3.6, 0.52 - 0.7 / 2.9, 1.4 / 3.6, 1.4 / 2.9])
 
-# Crear gráfico circular con estilos personalizados
-wedges, texts, autotexts = plt.pie(
+wedges, texts, autotexts = ax.pie(
     sizes,
     explode=explode,
     colors=colors,
     shadow=", ifelse(estilo_grafico$sombra, "True", "False"), ",
     startangle=", estilo_grafico$angulo_inicio, ",  # Ángulo de inicio aleatorizado
     autopct='%d%%',  # Siempre mostrar porcentajes enteros para evitar confusiones
-    pctdistance=0.75,  # Ubicar porcentajes más cerca del borde exterior
-    wedgeprops={'edgecolor': '", estilo_grafico$borde$color, "', 'linewidth': ", estilo_grafico$borde$grosor, "},
-    textprops={'fontsize': 10, 'fontweight': 'bold', 'color': 'white'}
+    pctdistance=0.72,
+    wedgeprops={'edgecolor': '#222222', 'linewidth': 0.6},
+    textprops={'fontsize': 8, 'fontweight': 'bold'}
 )
+ax.set_xlim(-1.1, 1.1)
+ax.set_ylim(-1.1, 1.1)
 
-# Configuración estética de los textos de porcentaje con recuadros
-for autotext in autotexts:
-    autotext.set_fontsize(9)  # Tamaño de fuente para porcentajes
+# Porcentajes dentro de cada sector: texto con contraste según el gris del sector
+for autotext, wedge, color in zip(autotexts, wedges, colors):
+    autotext.set_fontsize(8)
     autotext.set_weight('bold')
-    # Crear un recuadro semitransparente para los porcentajes
-", if(estilo_grafico$estilo_porcentaje$color_fondo != "none") paste0("    bbox_props = {'boxstyle': '", estilo_grafico$estilo_porcentaje$estilo, "',
-                 'facecolor': '", estilo_grafico$estilo_porcentaje$color_fondo, "',
-                 'alpha': ", estilo_grafico$estilo_porcentaje$alpha, ",
-                 'edgecolor': 'none'}
-    autotext.set_bbox(bbox_props)"), "
+", if(estilo_grafico$estilo_porcentaje$color_fondo != "none") paste0("    autotext.set_color('white')
+    autotext.set_bbox({'boxstyle': 'round,pad=0.15',
+                       'facecolor': '", estilo_grafico$estilo_porcentaje$color_fondo, "',
+                       'alpha': ", max(estilo_grafico$estilo_porcentaje$alpha, 0.8), ",
+                       'edgecolor': 'none'})") else "    autotext.set_color('black' if luma(color) > 0.5 else 'white')", "
 
 # Eliminar los textos del pie (los reemplazaremos con etiquetas externas)
 for text in texts:
     text.set_visible(False)
 
-# Crear etiquetas externas con líneas conectoras
-bbox_props = {'boxstyle': '", estilo_grafico$estilo_etiquetas$estilo, "',
-             'facecolor': '", estilo_grafico$estilo_etiquetas$color_fondo, "',
-             'edgecolor': '", estilo_grafico$estilo_etiquetas$color_borde, "',
-             'alpha': ", estilo_grafico$estilo_etiquetas$alpha, "}
+# Etiquetas externas: una columna a cada lado, sin solaparse, con línea conectora
+bbox_props = {'boxstyle': 'round,pad=0.2',
+              'facecolor': '", estilo_grafico$estilo_etiquetas$color_fondo, "',
+              'edgecolor': '", estilo_grafico$estilo_etiquetas$color_borde, "',
+              'alpha': ", estilo_grafico$estilo_etiquetas$alpha, "}
 
-# Calcular posiciones de etiquetas externas optimizadas para evitar solapamiento
-def get_label_position(angle_rad, wedge_size):
-    # Ajustar distancia basada en el tamaño del sector
-    # Sectores más pequeños tienen etiquetas más alejadas para evitar solapamiento
-    distance_factor = 1.25 if wedge_size < 15 else 1.15
-
-    # Determinar coordenadas
-    x = distance_factor * np.cos(angle_rad)
-    y = distance_factor * np.sin(angle_rad)
-
-    # Ajustar alineación basada en cuadrante
-    if x < 0:
-        ha = 'right'
-    else:
-        ha = 'left'
-
-    if y < 0:
-        va = 'top'
-    else:
-        va = 'bottom'
-
-    # Para sectores muy pequeños, ajustar más la posición para evitar solapamiento
-    if wedge_size < 10:
-        x *= 1.1
-        y *= 1.1
-
-    return x, y, ha, va
-
-# Variables de Python (no podemos acceder a las variables de R directamente)
-# Añadimos un marcador de categoría simple
-labels_with_info = [
-    f'{labels[0]} (categoría 1)',
-    f'{labels[1]} (categoría 2)',
-    f'{labels[2]} (categoría 3)',
-    f'{labels[3]} (categoría 4)',
-    f'{labels[4]} (categoría 5)'
-]
-
-# Colocar etiquetas externas con líneas conectoras
+posiciones = []
 for i, wedge in enumerate(wedges):
-    # Calcular ángulo medio del sector
-    ang = (wedge.theta1 + wedge.theta2) / 2
-    ang_rad = np.radians(ang)
+    ang = np.radians((wedge.theta1 + wedge.theta2) / 2)
+    lado = 1 if np.cos(ang) >= 0 else -1
+    posiciones.append({'i': i, 'lado': lado, 'xe': np.cos(ang), 'ye': np.sin(ang),
+                       'y0': 1.25 * np.sin(ang), 'y': 1.25 * np.sin(ang)})
 
-    # Calcular coordenadas para el inicio de la línea conectora (en el borde del sector)
-    # El factor 0.85 asegura que la línea empiece cerca del borde del sector
-    x_edge = 0.85 * np.cos(ang_rad)
-    y_edge = 0.85 * np.sin(ang_rad)
+separacion_min = 0.5  # unidades del grafico (~0,3 in): dos lineas de 8 pt
+for lado in (1, -1):
+    grupo = sorted([p for p in posiciones if p['lado'] == lado], key=lambda p: p['y'])
+    for k in range(1, len(grupo)):
+        if grupo[k]['y'] - grupo[k - 1]['y'] < separacion_min:
+            grupo[k]['y'] = grupo[k - 1]['y'] + separacion_min
+    if grupo:
+        desplazamiento = np.mean([p['y'] - p['y0'] for p in grupo])
+        for p in grupo:
+            p['y'] -= desplazamiento
 
-    # Obtener posición optimizada para la etiqueta
-    x_label, y_label, ha, va = get_label_position(ang_rad, sizes[i])
+for p in posiciones:
+    lado = p['lado']
+    ax.annotate('', xy=(0.9 * p['xe'], 0.9 * p['ye']), xytext=(lado * 1.27, p['y']),
+                arrowprops=dict(arrowstyle='-', color='#444444', lw=0.7),
+                annotation_clip=False)
+    ax.text(lado * 1.3, p['y'], textwrap.fill(labels[p['i']], 12),
+            fontsize=8, fontweight='bold', color='black',
+            ha=('left' if lado > 0 else 'right'), va='center',
+            bbox=bbox_props, zorder=10, clip_on=False)
 
-    # Dibujar línea conectora
-    con = plt.annotate('',
-                      xy=(x_edge, y_edge),  # Inicio (en el borde del sector)
-                      xytext=(x_label * 0.95, y_label * 0.95),  # Fin (cerca de la etiqueta)
-                      arrowprops=dict(arrowstyle='-', color='", estilo_grafico$estilo_etiquetas$color_borde, "', lw=0.8))
+# Título en la parte inferior del gráfico
+fig.text(0.5, 0.02, 'Distribución de bienes', fontsize=9, fontweight='bold',
+         color='#222222', ha='center')
 
-    # Añadir etiqueta con recuadro personalizado - mostramos solo el texto básico sin el conteo
-    plt.text(x_label, y_label, labels[i],
-            fontsize=8,
-            fontweight='bold',
-            ha=ha,
-            va=va,
-            bbox=bbox_props,
-            zorder=10)
-
-# Asegurar que el gráfico sea un círculo
-plt.axis('equal')
-
-# Añadir título en la parte inferior del gráfico
-plt.figtext(0.5, 0.01,  # Posición x=0.5 (centro), y=0.01 (parte inferior)
-           'Distribución de bienes',
-           fontsize=12,
-           fontweight='bold',
-           color='#333333',
-           ha='center')  # Alineación horizontal centrada
-
-# Ajustar los márgenes para dejar espacio a las etiquetas externas
-plt.tight_layout(pad=1.5, rect=[0, 0.05, 1, 0.95])  # Ajustar rect para dar más espacio
-
-# Guardar en múltiples formatos para asegurar compatibilidad
-plt.savefig('grafico_circular.png', dpi=150, bbox_inches='tight',
-           transparent=True, format='png')
-plt.savefig('grafico_circular.pdf', dpi=150, bbox_inches='tight',
-           transparent=True, format='pdf')
-plt.close()
+# PDF vectorial para impresión y PNG a 300 ppp para HTML, Word y Moodle
+fig.savefig('grafico_circular.png', dpi=300, transparent=True)
+fig.savefig('grafico_circular.pdf', transparent=True)
+plt.close(fig)
 ")
 
 # Ejecutar código Python para generar la figura
@@ -623,7 +632,7 @@ py_run_string(codigo_python)
 Question
 ========
 
-En La Tebaida se realizó un(a) `r termino_encuesta` a un grupo de `r termino_personas` de un(a) `r contexto` sobre el tipo de `r termino_bienes` que poseen. Los(las) `r termino_resultados` se presentan en la gráfica.
+En La Tebaida se realizó `r art_ind_encuesta` `r termino_encuesta` a un grupo de `r termino_personas` de `r art_ind_contexto` `r contexto` sobre el tipo de `r termino_bienes` que poseen. `r art_def_resultados` `r termino_resultados` se presentan en la gráfica.
 
 ```{r mostrar_grafico_circular, echo=FALSE, results='asis', fig.align="center"}
 # Detectar si se está generando para Moodle
@@ -632,24 +641,27 @@ formatos_moodle <- c("exams2moodle", "exams2qti12",
                      "exams2qti21", "exams2openolat")
 es_moodle <- (match_exams_call() %in% formatos_moodle)
 
-# Mostrar la imagen del gráfico circular
-if (es_moodle) {
+# Mostrar la figura (PDF vectorial en LaTeX, PNG en los demás formatos)
+ext <- if (match_exams_device() == "pdf") "pdf" else "png"
+if (ext == "pdf") {
+  cat("![](grafico_circular.pdf){width=100%}\n")
+} else if (es_moodle) {
   # Tamaño para Moodle
-  cat("![](grafico_circular.png){width=60%}")
+  cat("![](grafico_circular.png){width=60%}\n")
 } else {
-  # Tamaño para PDF/Word
-  cat("![](grafico_circular.png){width=70%}")
+  # Tamaño para HTML/Word
+  cat("![](grafico_circular.png){width=70%}\n")
 }
 ```
 
-Si `r valor_condicion` `r termino_personas` de el(la) `r contexto` poseen `r texto_condicion`, ¿cuántas personas poseen `r texto_pregunta`?
+Si `r num(valor_condicion)` `r termino_personas` `r de_contexto` `r contexto` poseen `r texto_condicion`, ¿cuántas personas poseen `r texto_pregunta`?
 
 Answerlist
 ----------
-- `r opciones_mezcladas[1]`
-- `r opciones_mezcladas[2]`
-- `r opciones_mezcladas[3]`
-- `r opciones_mezcladas[4]`
+- `r num(opciones_mezcladas[1])`
+- `r num(opciones_mezcladas[2])`
+- `r num(opciones_mezcladas[3])`
+- `r num(opciones_mezcladas[4])`
 
 Solution
 ========
@@ -658,15 +670,15 @@ Para resolver este problema, necesitamos aplicar proporciones y regla de tres a 
 
 ### Paso 1: Identificar los datos conocidos:
 
-* Sabemos que `r valor_condicion` `r termino_personas` poseen `r texto_condicion`.
-* Según el gráfico circular, este grupo representa el `r porcentajes_mostrar[[tipo_condicion]]`% del total.
-* También observamos en el gráfico que las personas que poseen `r texto_pregunta` representan el `r porcentajes_mostrar[[tipo_pregunta]]`% del total.
+* Sabemos que `r num(valor_condicion)` `r termino_personas` poseen `r texto_condicion`.
+* Según el gráfico circular, este grupo representa el `r num(porcentajes_mostrar[[tipo_condicion]])`% del total.
+* También observamos en el gráfico que las personas que poseen `r texto_pregunta` representan el `r num(porcentajes_mostrar[[tipo_pregunta]])`% del total.
 
 ### Paso 2: Calcular el número total de personas:
 
-Para encontrar el total de `r termino_personas` en la `r contexto`, utilizamos la siguiente relación de proporcionalidad:
+Para encontrar el total de `r termino_personas` `r en_contexto` `r contexto`, utilizamos la siguiente relación de proporcionalidad:
 
-Si `r porcentajes_mostrar[[tipo_condicion]]`% del total = `r valor_condicion` `r termino_personas`.
+Si `r num(porcentajes_mostrar[[tipo_condicion]])`% del total = `r num(valor_condicion)` `r termino_personas`.
 
 Entonces 100% del total = X `r termino_personas`
 
@@ -674,46 +686,46 @@ Aplicando regla de tres:
 
 ```
 X = (valor_conocido × 100%) ÷ porcentaje_conocido
-X = (`r valor_condicion` × 100%) ÷ `r porcentajes_mostrar[[tipo_condicion]]`%
-X = (`r valor_condicion` × 100) ÷ `r porcentajes_mostrar[[tipo_condicion]]`
-X = `r valor_condicion * 100` ÷ `r porcentajes_mostrar[[tipo_condicion]]`
-X = `r sprintf("%.4f", (valor_condicion * 100) / porcentajes_mostrar[[tipo_condicion]])`
-X = `r total_personas` `r termino_personas`
+X = (`r num(valor_condicion)` × 100%) ÷ `r num(porcentajes_mostrar[[tipo_condicion]])`%
+X = (`r num(valor_condicion)` × 100) ÷ `r num(porcentajes_mostrar[[tipo_condicion]])`
+X = `r num(valor_condicion * 100)` ÷ `r num(porcentajes_mostrar[[tipo_condicion]])`
+X = `r num((valor_condicion * 100) / porcentajes_mostrar[[tipo_condicion]], 4)`
+X = `r num(total_personas)` `r termino_personas`
 ```
 
-Por lo tanto, el total de `r termino_personas` en la `r contexto` es `r total_personas`.
+Por lo tanto, el total de `r termino_personas` `r en_contexto` `r contexto` es `r num(total_personas)`.
 
 ### Paso 3: Calcular el número de personas que poseen `r texto_pregunta`
 Una vez conocido el total, podemos calcular cuántas personas poseen `r texto_pregunta` utilizando el porcentaje correspondiente del gráfico circular:
 
-Si 100% del total = `r total_personas` `r termino_personas`.
+Si 100% del total = `r num(total_personas)` `r termino_personas`.
 
-Entonces `r porcentajes_mostrar[[tipo_pregunta]]`% del total = Y `r termino_personas`
+Entonces `r num(porcentajes_mostrar[[tipo_pregunta]])`% del total = Y `r termino_personas`
 
 Aplicando regla de tres:
 
 ```
 Y = (porcentaje_buscado × total_personas) ÷ 100%
-Y = (`r porcentajes_mostrar[[tipo_pregunta]]`% × `r total_personas`) ÷ 100%
-Y = (`r porcentajes_mostrar[[tipo_pregunta]]` × `r total_personas`) ÷ 100
-Y = `r porcentajes_mostrar[[tipo_pregunta]] * total_personas` ÷ 100
-Y = `r sprintf("%.4f", (porcentajes_mostrar[[tipo_pregunta]] * total_personas) / 100)`
-Y = `r respuesta_correcta` `r termino_personas`
+Y = (`r num(porcentajes_mostrar[[tipo_pregunta]])`% × `r num(total_personas)`) ÷ 100%
+Y = (`r num(porcentajes_mostrar[[tipo_pregunta]])` × `r num(total_personas)`) ÷ 100
+Y = `r num(porcentajes_mostrar[[tipo_pregunta]] * total_personas)` ÷ 100
+Y = `r num((porcentajes_mostrar[[tipo_pregunta]] * total_personas) / 100, 4)`
+Y = `r num(respuesta_correcta)` `r termino_personas`
 ```
 
 ### Paso 4: Verificación de la respuesta
 Podemos verificar nuestra respuesta comprobando que los números calculados son coherentes con los porcentajes del gráfico:
 
-* `r bien1` y `r bien3`: `r personas_bien1_bien3` `r termino_personas` (`r porcentajes_mostrar$bien1_bien3`% del total)
-* Solo `r bien3`: `r personas_solo_bien3` `r termino_personas` (`r porcentajes_mostrar$solo_bien3`% del total)
-* Solo `r bien2`: `r personas_solo_bien2` `r termino_personas` (`r porcentajes_mostrar$solo_bien2`% del total)
-* Solo `r bien1`: `r personas_solo_bien1` `r termino_personas` (`r porcentajes_mostrar$solo_bien1`% del total)
-* `r bien1` y `r bien2`: `r personas_bien1_bien2` `r termino_personas` (`r porcentajes_mostrar$bien1_bien2`% del total)
+* `r bien1` y `r bien3`: `r num(personas_bien1_bien3)` `r termino_personas` (`r num(porcentajes_mostrar$bien1_bien3)`% del total)
+* Solo `r bien3`: `r num(personas_solo_bien3)` `r termino_personas` (`r num(porcentajes_mostrar$solo_bien3)`% del total)
+* Solo `r bien2`: `r num(personas_solo_bien2)` `r termino_personas` (`r num(porcentajes_mostrar$solo_bien2)`% del total)
+* Solo `r bien1`: `r num(personas_solo_bien1)` `r termino_personas` (`r num(porcentajes_mostrar$solo_bien1)`% del total)
+* `r bien1` y `r bien2`: `r num(personas_bien1_bien2)` `r termino_personas` (`r num(porcentajes_mostrar$bien1_bien2)`% del total)
 
-La suma de todas estas categorías es `r sum(c(personas_bien1_bien3, personas_solo_bien3, personas_solo_bien2, personas_solo_bien1, personas_bien1_bien2))` `r termino_personas`, que coincide exactamente con nuestro total calculado de `r total_personas` `r termino_personas`.
+La suma de todas estas categorías es `r num(sum(c(personas_bien1_bien3, personas_solo_bien3, personas_solo_bien2, personas_solo_bien1, personas_bien1_bien2)))` `r termino_personas`, que coincide exactamente con nuestro total calculado de `r num(total_personas)` `r termino_personas`.
 
 ### Conclusión
-Por lo tanto, `r respuesta_correcta` `r termino_personas` de la `r contexto` poseen `r texto_pregunta`.
+Por lo tanto, `r num(respuesta_correcta)` `r termino_personas` `r de_contexto` `r contexto` poseen `r texto_pregunta`.
 
 Answerlist
 ----------
@@ -730,3 +742,10 @@ exsolution: `r paste(as.integer(solucion), collapse="")`
 exshuffle: TRUE
 extol: 0.0001
 exsection: Estadística|Proporciones|Interpretación de gráficos
+exextra[Type]: SCHOICE
+exextra[Competencia]: Formulación y ejecución
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Frente a un problema que involucre información cuantitativa, plantea e implementa estrategias que lleven a soluciones adecuadas.
+exextra[Evidencia]: Resuelve un problema que involucra información cuantitativa o esquemática.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.2 — Compara información gráfica que requiere algunas manipulaciones aritméticas.

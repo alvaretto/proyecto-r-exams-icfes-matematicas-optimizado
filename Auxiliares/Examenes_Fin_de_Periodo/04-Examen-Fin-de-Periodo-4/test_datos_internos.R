@@ -6,7 +6,7 @@ library(exams)
 cat("=== PRUEBA DE DATOS INTERNOS DE PREGUNTAS ===\n\n")
 
 # Archivo de pregunta a probar
-archivo_prueba <- "cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd"
+archivo_prueba <- "cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n3_v1_1.Rmd"
 
 cat("Probando archivo:", archivo_prueba, "\n\n")
 

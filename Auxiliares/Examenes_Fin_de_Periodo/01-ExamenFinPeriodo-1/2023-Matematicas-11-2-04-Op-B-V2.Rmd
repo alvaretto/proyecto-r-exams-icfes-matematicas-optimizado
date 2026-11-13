@@ -8,6 +8,10 @@ output:
 # Generación de datos aleatorios
 library(exams)
 
+# Formato numérico del ICFES: coma decimal y punto de miles (solo presentación)
+fmt_es <- function(x) vapply(x, function(v) format(round(v, 2), big.mark = ".", decimal.mark = ",",
+                                                   trim = TRUE, drop0trailing = TRUE, scientific = FALSE), character(1))
+
 # Generación de nombres aleatorios para modelos
 modelos <- c("X", "Y", "Z")
 modelos <- sample(c("Modelo A", "Modelo B", "Modelo C", "Modelo D", "Modelo E", 
@@ -29,7 +33,10 @@ mediana_deseada_x <- median(sort(matriz_datos[1,]))
 mediana_deseada_y <- median(sort(matriz_datos[2,]))
 
 # Aseguramos que Y tenga una mediana diferente a X (puede ser mayor o menor)
+intentos_y <- 0L
 while (mediana_deseada_y == mediana_deseada_x) {
+  intentos_y <- intentos_y + 1L
+  stopifnot(intentos_y <= 10000L)  # tope de intentos (familia F1, Error 22)
   matriz_datos[2,] <- matriz_datos[2,] + sample(-5:5, num_pruebas, replace = TRUE)
   mediana_deseada_y <- median(sort(matriz_datos[2,]))
 }
@@ -56,11 +63,13 @@ matriz_datos[3,] <- sample(matriz_datos[3,])
 
 # Verificamos que Z tenga una mediana mayor que X e Y
 mediana_deseada_z <- median(sort(matriz_datos[3,]))
-while (mediana_deseada_z <= max_mediana_xy) {
-  # Si aún no es mayor, hacemos un ajuste mínimo
-  matriz_datos[3,] <- matriz_datos[3,] + 5
+if (mediana_deseada_z <= max_mediana_xy) {
+  # Si aún no es mayor, ajuste mínimo en pasos de 5, calculado de forma directa (sin bucle)
+  paso_z <- 5 * (floor((max_mediana_xy - mediana_deseada_z) / 5) + 1)
+  matriz_datos[3,] <- matriz_datos[3,] + paso_z
   mediana_deseada_z <- median(sort(matriz_datos[3,]))
 }
+stopifnot(mediana_deseada_z > max_mediana_xy)
 
 # Garantizamos que haya dos valores iguales en dos modelos diferentes
 # Seleccionamos aleatoriamente dos modelos diferentes
@@ -108,6 +117,10 @@ prueba_seleccionada <- sample(pruebas, 1)
 
 Question
 ========
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
 La empresa `r marca_seleccionada` realizó pruebas de `r prueba_seleccionada` en tres modelos de teléfonos celulares. La siguiente tabla muestra la duración de la batería (en minutos) para cada modelo durante `r num_pruebas` pruebas diferentes:
 
 ```{r, echo = FALSE, results = "asis"}
@@ -123,7 +136,9 @@ tabla_reordenada <- tabla[, c(1, indices_aleatorios + 1)]
 
 # Generar la tabla con los nombres de columnas aleatorizados
 # pero manteniendo la correspondencia con los datos
-knitr::kable(tabla_reordenada, col.names = c("", modelos_aleatorios))
+tabla_mostrar <- tabla_reordenada
+tabla_mostrar[-1] <- lapply(tabla_mostrar[-1], fmt_es)
+knitr::kable(tabla_mostrar, col.names = c("", modelos_aleatorios), align = c("l", "r", "r", "r"))
 
 # Guardar la correspondencia entre los índices originales y los aleatorios
 # para usarla en el resto del documento
@@ -149,13 +164,13 @@ Para resolver este problema, debemos:
 
 1. Ordenar los datos de cada modelo y encontrar su mediana:
 
-* `r modelos_aleatorios[indice_x]`: `r sort(matriz_datos[1,])` → Mediana = `r med1`
-* `r modelos_aleatorios[indice_y]`: `r sort(matriz_datos[2,])` → Mediana = `r med2`
-* `r modelos_aleatorios[indice_z]`: `r sort(matriz_datos[3,])` → Mediana = `r med3`
+* `r modelos_aleatorios[indice_x]`: `r fmt_es(sort(matriz_datos[1,]))` → Mediana = `r fmt_es(med1)`
+* `r modelos_aleatorios[indice_y]`: `r fmt_es(sort(matriz_datos[2,]))` → Mediana = `r fmt_es(med2)`
+* `r modelos_aleatorios[indice_z]`: `r fmt_es(sort(matriz_datos[3,]))` → Mediana = `r fmt_es(med3)`
 
 2. Comparar las medianas:
-* Mediana de `r modelos_aleatorios[indice_z]` (`r med3`) > Mediana de `r modelos_aleatorios[indice_x]` (`r med1`)
-* Mediana de `r modelos_aleatorios[indice_z]` (`r med3`) > Mediana de `r modelos_aleatorios[indice_y]` (`r med2`)
+* Mediana de `r modelos_aleatorios[indice_z]` (`r fmt_es(med3)`) > Mediana de `r modelos_aleatorios[indice_x]` (`r fmt_es(med1)`)
+* Mediana de `r modelos_aleatorios[indice_z]` (`r fmt_es(med3)`) > Mediana de `r modelos_aleatorios[indice_y]` (`r fmt_es(med2)`)
 
 Por lo tanto, el `r modelos_aleatorios[indice_z]` tiene una mediana mayor que la del `r modelos_aleatorios[indice_y]` y que la del `r modelos_aleatorios[indice_x]`.
 
@@ -165,3 +180,10 @@ exname: medianas-celulares
 extype: schoice
 exsolution: 0100
 exshuffle: TRUE
+exextra[Type]: SCHOICE
+exextra[Competencia]: Interpretación y representación
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Comprende y transforma la información cuantitativa y esquemática presentada en distintos formatos.
+exextra[Evidencia]: Da cuenta de las características básicas de la información presentada en diferentes formatos, como series, gráficas, tablas y esquemas.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.2 — Compara información gráfica que requiere algunas manipulaciones aritméticas.

@@ -322,7 +322,9 @@ test_that("Prueba de diversidad de versiones", {
 tabla_preferencias <- paste0("
 \\begin{tikzpicture}
 \\node[inner sep=0pt] {
-  \\begin{tabular}{|c|c|}
+  \\footnotesize
+  \\renewcommand{\\arraystretch}{1.5}
+  \\begin{tabular}{|>{\\centering\\arraybackslash}p{4cm}|>{\\centering\\arraybackslash}p{4cm}|}
     \\hline
     \\textbf{Sabor} & \\textbf{Número de clientes que} \\\\
     & \\textbf{prefieren el sabor} \\\\
@@ -345,7 +347,7 @@ max_ventas <- max(datos$ventas_por_dia)
 escala_y <- 50 / max_ventas  # Escalar para que la barra más alta sea 50 unidades
 
 grafico_barras <- paste0("
-\\begin{tikzpicture}[scale=0.8]
+\\begin{tikzpicture}[scale=0.92, every node/.style={font=\\footnotesize}]
   \\draw[->] (0,0) -- (8,0) node[right] {Día};
   \\draw[->] (0,0) -- (0,6) node[above] {Tortas vendidas};
   
@@ -382,9 +384,10 @@ Una pastelería realizó una encuesta para conocer los sabores de tortas preferi
 ```{r tabla_preferencias, echo=FALSE, results='asis'}
 include_tikz(tabla_preferencias, 
              name = "tabla_preferencias",
+             format = typ,
              markup = "markdown",
              packages = c("tikz", "colortbl", "xcolor"),
-             width = "8cm")
+             width = "100%")
 ```
 
 Además, el gerente elaboró una gráfica que muestra el número de tortas vendidas cada día de la última semana.
@@ -394,9 +397,10 @@ Además, el gerente elaboró una gráfica que muestra el número de tortas vendi
 ```{r grafico_ventas, echo=FALSE, results='asis'}
 include_tikz(grafico_barras, 
              name = "grafico_ventas",
+             format = typ,
              markup = "markdown",
              packages = c("tikz", "colortbl", "xcolor"),
-             width = "10cm")
+             width = "100%")
 ```
 
 La pastelería planea realizar una promoción con tortas de los 2 sabores preferidos por los clientes, para venderlas el día de la semana con el mayor número de ventas. ¿Cuál día de la semana se venderán las tortas y de qué sabores serán?
@@ -502,3 +506,10 @@ extype: schoice
 exsolution: `r c("1000", "0100", "0010", "0001")[datos$posicion_correcta]`
 exshuffle: TRUE
 exsection: Estadística/Interpretación de datos/Gráficos y tablas
+exextra[Type]: SCHOICE
+exextra[Competencia]: Interpretación y representación
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Comprende y transforma la información cuantitativa y esquemática presentada en distintos formatos.
+exextra[Evidencia]: Da cuenta de las características básicas de la información presentada en diferentes formatos, como series, gráficas, tablas y esquemas.
+exextra[Nivel]: 2
+exextra[Descriptor]: D2.6 — Reconoce e interpreta, según el contexto, el significado de promedio simple, moda, mayor, menor, máximo y mínimo.

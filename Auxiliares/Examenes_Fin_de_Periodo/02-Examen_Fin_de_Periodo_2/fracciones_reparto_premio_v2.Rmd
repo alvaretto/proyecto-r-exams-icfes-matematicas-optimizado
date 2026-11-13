@@ -48,10 +48,6 @@ knitr::opts_chunk$set(
   fig.pos = "H"
 )
 
-# Configuración para chunks de Python
-knitr::knit_engines$set(python = function(options) {
-  knitr::engine_output(options, options$code, '')
-})
 
 # Asegurar que Python esté correctamente configurado
 use_python(Sys.which("python"), required = TRUE)
@@ -59,6 +55,10 @@ use_python(Sys.which("python"), required = TRUE)
 
 ```{r DefinicionDeVariables, message=FALSE, warning=FALSE, results='asis'}
 options(OutDec = ".")  # Asegurar punto decimal en este chunk
+
+# Formato numérico del ICFES para el texto visible: coma decimal y punto de miles (7.000; 5,5).
+# Solo cambia la presentación: los valores internos siguen siendo numéricos.
+num <- function(x) format(x, decimal.mark = ",", big.mark = ".", scientific = FALSE, trim = TRUE)
 
 # Establecer semilla aleatoria para reproducibilidad
 set.seed(sample(1:10000, 1))
@@ -239,7 +239,6 @@ respuesta_correcta <- monto_tercer_puesto
 # para que la respuesta correcta pueda aparecer en cualquier posición
 
 # Generar un pool amplio de distractores candidatos con variación aleatoria
-set.seed(NULL)  # Asegurar aleatoriedad real
 distractores_candidatos <- c(
   # Variaciones aleatorias MUY amplias para cubrir todo el espectro
   round(respuesta_correcta * runif(4, 0.15, 0.6), 1),                    # 15%-60% del correcto (muy menores)
@@ -268,12 +267,17 @@ distractores_validos <- distractores_candidatos[distractores_candidatos != respu
 distractores_validos <- unique(distractores_validos)
 
 # Si no tenemos suficientes, generar algunos adicionales completamente aleatorios
-while (length(distractores_validos) < 10) {
+max_intentos <- 1000
+intentos_pool <- 0
+while (length(distractores_validos) < 10 && intentos_pool < max_intentos) {
+  intentos_pool <- intentos_pool + 1
   nuevo_distractor <- round(respuesta_correcta * runif(1, 0.2, 3.5), 1)
-  if (nuevo_distractor != respuesta_correcta && nuevo_distractor > 0) {
+  if (nuevo_distractor != respuesta_correcta && nuevo_distractor > 0 &&
+      !(nuevo_distractor %in% distractores_validos)) {
     distractores_validos <- c(distractores_validos, nuevo_distractor)
   }
 }
+stopifnot(length(distractores_validos) >= 10)
 
 # SELECCIÓN COMPLETAMENTE ALEATORIA - SIN PATRONES FORZADOS
 # Simplemente seleccionar 3 distractores al azar del pool disponible
@@ -331,103 +335,77 @@ codigo_python <- paste0('
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
 from matplotlib.gridspec import GridSpec
-import numpy as np
 
-# Configurar colores
-color_encabezado = "', color_encabezado, '"
-color_primer_puesto = "', color_primer_puesto, '"
-color_segundo_puesto = "', color_segundo_puesto, '"
-color_tercer_puesto = "', color_tercer_puesto, '"
+# Tipografia incrustable (TrueType) para el PDF vectorial
+plt.rcParams["pdf.fonttype"] = 42
+plt.rcParams["ps.fonttype"] = 42
+plt.rcParams["font.family"] = "sans-serif"
+plt.rcParams["font.sans-serif"] = ["Liberation Sans", "Arial", "Helvetica", "DejaVu Sans"]
 
-# Crear figura y configurar grid
-fig = plt.figure(figsize=(8, 3.5))
-gs = GridSpec(4, 2, height_ratios=[1, 1, 1, 1], width_ratios=[3, 7])
+def mezclar_con_blanco(hex_color, t):
+    # Aclara el color: t = proporción de blanco (0 a 1)
+    h = hex_color.lstrip("#")
+    r, g, b = [int(h[i:i+2], 16) for i in (0, 2, 4)]
+    r, g, b = [int(round(c + (255 - c) * t)) for c in (r, g, b)]
+    return "#%02x%02x%02x" % (r, g, b)
+
+# Colores aclarados: el texto negro contrasta también al imprimir en gris
+color_encabezado = mezclar_con_blanco("', color_encabezado, '", 0.55)
+color_primer_puesto = mezclar_con_blanco("', color_primer_puesto, '", 0.70)
+color_segundo_puesto = mezclar_con_blanco("', color_segundo_puesto, '", 0.70)
+color_tercer_puesto = mezclar_con_blanco("', color_tercer_puesto, '", 0.70)
+
+TAM = 8.5  # puntos: la figura se dibuja a su tamano final en la columna
+
+# Figura a tamaño final (columna de ~3,6 in)
+fig = plt.figure(figsize=(3.6, 1.9))
+gs = GridSpec(4, 2, height_ratios=[1, 1, 1, 1], width_ratios=[3.8, 6.2])
+
+textos = []
+
+def celda(ax, fondo, texto, negrita):
+    ax.set_facecolor(fondo)
+    textos.append((ax, ax.text(0.5, 0.5, texto, ha="center", va="center", color="black",
+            fontweight=("bold" if negrita else "normal"), fontsize=TAM)))
+    ax.set_xticks([])
+    ax.set_yticks([])
+    for lado in ("top", "bottom", "left", "right"):
+        ax.spines[lado].set_visible(True)
+        ax.spines[lado].set_linewidth(0.8)
+        ax.spines[lado].set_color("black")
 
 # Encabezado (ocupa todo el ancho)
-ax_header = plt.subplot(gs[0, :])
-ax_header.set_facecolor(color_encabezado)
-ax_header.text(0.5, 0.5, "Distribución del premio de ', premio_total, ' millones de pesos",
-              ha="center", va="center", color="white", fontweight="bold", fontsize=11)
-ax_header.set_xticks([])
-ax_header.set_yticks([])
-ax_header.spines["top"].set_visible(True)
-ax_header.spines["bottom"].set_visible(True)
-ax_header.spines["left"].set_visible(True)
-ax_header.spines["right"].set_visible(True)
+celda(plt.subplot(gs[0, :]), color_encabezado,
+      "Distribución del premio de ', premio_total, ' millones de pesos", True)
 
 # Primera fila
-ax_p1_label = plt.subplot(gs[1, 0])
-ax_p1_label.set_facecolor(color_primer_puesto)
-ax_p1_label.text(0.5, 0.5, "Primer puesto", ha="center", va="center", color="white", fontweight="bold", fontsize=10)
-ax_p1_label.set_xticks([])
-ax_p1_label.set_yticks([])
-ax_p1_label.spines["top"].set_visible(True)
-ax_p1_label.spines["bottom"].set_visible(True)
-ax_p1_label.spines["left"].set_visible(True)
-ax_p1_label.spines["right"].set_visible(True)
-
-ax_p1_value = plt.subplot(gs[1, 1])
-ax_p1_value.set_facecolor("white")
-ax_p1_value.text(0.5, 0.5, "', fraccion_primer_puesto, ' del ', termino_dinero, ' total",
-                ha="center", va="center", color="black", fontsize=10)
-ax_p1_value.set_xticks([])
-ax_p1_value.set_yticks([])
-ax_p1_value.spines["top"].set_visible(True)
-ax_p1_value.spines["bottom"].set_visible(True)
-ax_p1_value.spines["left"].set_visible(True)
-ax_p1_value.spines["right"].set_visible(True)
+celda(plt.subplot(gs[1, 0]), color_primer_puesto, "Primer puesto", True)
+celda(plt.subplot(gs[1, 1]), "white",
+      "', fraccion_primer_puesto, ' del ', termino_dinero, ' total", False)
 
 # Segunda fila
-ax_p2_label = plt.subplot(gs[2, 0])
-ax_p2_label.set_facecolor(color_segundo_puesto)
-ax_p2_label.text(0.5, 0.5, "Segundo puesto", ha="center", va="center", color="white", fontweight="bold", fontsize=10)
-ax_p2_label.set_xticks([])
-ax_p2_label.set_yticks([])
-ax_p2_label.spines["top"].set_visible(True)
-ax_p2_label.spines["bottom"].set_visible(True)
-ax_p2_label.spines["left"].set_visible(True)
-ax_p2_label.spines["right"].set_visible(True)
-
-ax_p2_value = plt.subplot(gs[2, 1])
-ax_p2_value.set_facecolor("white")
-ax_p2_value.text(0.5, 0.5, "', fraccion_segundo_puesto, ' del ', termino_dinero, ' restante",
-                ha="center", va="center", color="black", fontsize=10)
-ax_p2_value.set_xticks([])
-ax_p2_value.set_yticks([])
-ax_p2_value.spines["top"].set_visible(True)
-ax_p2_value.spines["bottom"].set_visible(True)
-ax_p2_value.spines["left"].set_visible(True)
-ax_p2_value.spines["right"].set_visible(True)
+celda(plt.subplot(gs[2, 0]), color_segundo_puesto, "Segundo puesto", True)
+celda(plt.subplot(gs[2, 1]), "white",
+      "', fraccion_segundo_puesto, ' del ', termino_dinero, ' restante", False)
 
 # Tercera fila
-ax_p3_label = plt.subplot(gs[3, 0])
-ax_p3_label.set_facecolor(color_tercer_puesto)
-ax_p3_label.text(0.5, 0.5, "Tercer puesto", ha="center", va="center", color="white", fontweight="bold", fontsize=10)
-ax_p3_label.set_xticks([])
-ax_p3_label.set_yticks([])
-ax_p3_label.spines["top"].set_visible(True)
-ax_p3_label.spines["bottom"].set_visible(True)
-ax_p3_label.spines["left"].set_visible(True)
-ax_p3_label.spines["right"].set_visible(True)
+celda(plt.subplot(gs[3, 0]), color_tercer_puesto, "Tercer puesto", True)
+celda(plt.subplot(gs[3, 1]), "white",
+      "el ', termino_dinero, ' restante", False)
 
-ax_p3_value = plt.subplot(gs[3, 1])
-ax_p3_value.set_facecolor("white")
-ax_p3_value.text(0.5, 0.5, "el ', termino_dinero, ' restante",
-                ha="center", va="center", color="black", fontsize=10)
-ax_p3_value.set_xticks([])
-ax_p3_value.set_yticks([])
-ax_p3_value.spines["top"].set_visible(True)
-ax_p3_value.spines["bottom"].set_visible(True)
-ax_p3_value.spines["left"].set_visible(True)
-ax_p3_value.spines["right"].set_visible(True)
+plt.tight_layout(pad=0.3, w_pad=0.0, h_pad=0.0)
 
-plt.tight_layout(pad=0.5)
+# Ajustar el tamaño del texto para que quepa en su celda (mínimo 7.5 pt)
+fig.canvas.draw()
+for ax, t in textos:
+    while t.get_fontsize() > 7.5 and t.get_window_extent().width > 0.94 * ax.get_window_extent().width:
+        t.set_fontsize(t.get_fontsize() - 0.25)
+        fig.canvas.draw()
 
-# Guardar la figura
-plt.savefig("tabla_distribucion.png", dpi=150, bbox_inches="tight")
-plt.savefig("tabla_distribucion.pdf", dpi=150, bbox_inches="tight")
+# Guardar: PDF vectorial para impresión y PNG a 300 ppp para HTML, Word y Moodle
+plt.savefig("tabla_distribucion.png", dpi=300)
+plt.savefig("tabla_distribucion.pdf")
 plt.close()
 ')
 
@@ -438,20 +416,21 @@ py_run_string(codigo_python)
 Question
 ========
 
-En `r articulo_contexto` `r contexto` se realizará `r articulo_competencia` `r competencia` para `r grupo_edad`. Para `r termino_premiar` a los `r termino_participantes`, `r if(contexto_seleccionado$genero == "f") "la" else "el"` `r contexto` `r termino_cuenta` `r premio_total` millones de pesos, que se `r termino_repartiran` entre los tres `r termino_puestos`, como se indica a continuación:
+En `r articulo_contexto` `r contexto` se realizará `r articulo_competencia` `r competencia` para `r grupo_edad`. Para `r termino_premiar` a los `r termino_participantes`, `r if(contexto_seleccionado$genero == "f") "la" else "el"` `r contexto` `r termino_cuenta` `r num(premio_total)` millones de pesos, que se `r termino_repartiran` entre los tres `r termino_puestos`, como se indica a continuación:
 
 ```{r tabla_distribucion, echo=FALSE, results='asis', fig.align='center'}
 # Detectar si se está generando para Moodle u otros formatos
 formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
 es_moodle <- (match_exams_call() %in% formatos_moodle)
 
-# Incluir la imagen generada por Python
-if (es_moodle) {
-  # Tamaño para Moodle
-  cat("![](tabla_distribucion.png){width=80%}")
+# Incluir la figura generada por Python (PDF vectorial en LaTeX, PNG en los demás formatos)
+ext <- if (match_exams_device() == "pdf") "pdf" else "png"
+if (ext == "pdf") {
+  cat("![](tabla_distribucion.pdf){width=100%}\n")
+} else if (es_moodle) {
+  cat("![](tabla_distribucion.png){width=80%}\n")
 } else {
-  # Tamaño para PDF/Word
-  cat("![](tabla_distribucion.png){width=90%}")
+  cat("![](tabla_distribucion.png){width=90%}\n")
 }
 ```
 
@@ -459,10 +438,10 @@ if (es_moodle) {
 
 Answerlist
 ----------
-- `r opciones_mezcladas[1]` millones.
-- `r opciones_mezcladas[2]` millones.
-- `r opciones_mezcladas[3]` millones.
-- `r opciones_mezcladas[4]` millones.
+- `r num(opciones_mezcladas[1])` millones.
+- `r num(opciones_mezcladas[2])` millones.
+- `r num(opciones_mezcladas[3])` millones.
+- `r num(opciones_mezcladas[4])` millones.
 
 Solution
 ========
@@ -470,29 +449,29 @@ Solution
 Para resolver este problema, debemos calcular qué fracción del premio total corresponde al tercer puesto y luego convertirlo a millones de pesos.
 
 ### Paso 1: Identificar los datos del problema
-- Premio total: `r premio_total` millones de pesos
+- Premio total: `r num(premio_total)` millones de pesos
 - Primer puesto: `r fraccion_primer_puesto` del `r termino_dinero` total
 - Segundo puesto: `r fraccion_segundo_puesto` del `r termino_dinero` restante (después del primer puesto)
 - Tercer puesto: el `r termino_dinero` restante (después del primer y segundo puesto)
 
 ### Paso 2: Calcular el monto del primer puesto
-- Primer puesto: `r fraccion_primer_puesto` = `r round(valor_primer_puesto, 4)`
-- Monto del primer puesto = `r round(valor_primer_puesto, 4)` × `r premio_total` = `r round(monto_primer_puesto_exacto, 2)` millones
+- Primer puesto: `r fraccion_primer_puesto` = `r num(round(valor_primer_puesto, 4))`
+- Monto del primer puesto = `r num(round(valor_primer_puesto, 4))` × `r num(premio_total)` = `r num(round(monto_primer_puesto_exacto, 2))` millones
 
 ### Paso 3: Calcular el dinero restante después del primer puesto
-- Dinero restante = `r premio_total` - `r round(monto_primer_puesto_exacto, 2)` = `r round(dinero_restante_despues_primer_puesto, 2)` millones
+- Dinero restante = `r num(premio_total)` - `r num(round(monto_primer_puesto_exacto, 2))` = `r num(round(dinero_restante_despues_primer_puesto, 2))` millones
 
 ### Paso 4: Calcular el monto del segundo puesto
 El segundo puesto recibe `r fraccion_segundo_puesto` del dinero restante:
-- Segundo puesto: `r fraccion_segundo_puesto` = `r round(valor_segundo_puesto_fraccion, 4)`
-- Monto del segundo puesto = `r round(valor_segundo_puesto_fraccion, 4)` × `r round(dinero_restante_despues_primer_puesto, 2)` = `r round(monto_segundo_puesto_exacto, 2)` millones
+- Segundo puesto: `r fraccion_segundo_puesto` = `r num(round(valor_segundo_puesto_fraccion, 4))`
+- Monto del segundo puesto = `r num(round(valor_segundo_puesto_fraccion, 4))` × `r num(round(dinero_restante_despues_primer_puesto, 2))` = `r num(round(monto_segundo_puesto_exacto, 2))` millones
 
 ### Paso 5: Calcular el monto del tercer puesto
 El tercer puesto recibe lo que resta después de los dos primeros puestos:
 
-- Monto del tercer puesto = `r premio_total` - `r round(monto_primer_puesto_exacto, 2)` - `r round(monto_segundo_puesto_exacto, 2)`
-- Monto del tercer puesto = `r round(monto_tercer_puesto_exacto, 2)` millones
-- Redondeando: `r monto_tercer_puesto` millones de pesos
+- Monto del tercer puesto = `r num(premio_total)` - `r num(round(monto_primer_puesto_exacto, 2))` - `r num(round(monto_segundo_puesto_exacto, 2))`
+- Monto del tercer puesto = `r num(round(monto_tercer_puesto_exacto, 2))` millones
+- Redondeando: `r num(monto_tercer_puesto)` millones de pesos
 
 **Nota:** Con la nueva lógica, el segundo puesto se calcula como una fracción del dinero restante después del primer puesto, lo que garantiza matemáticamente que el primer puesto siempre reciba más que el segundo, y el segundo más que el tercero.
 
@@ -501,21 +480,21 @@ Comprobemos que la suma de los tres montos es igual al premio total:
 
 **Cálculos exactos con la nueva lógica:**
 
-- Primer puesto: `r fraccion_primer_puesto` × `r premio_total` = `r round(monto_primer_puesto_exacto, 2)` millones
-- Dinero restante: `r premio_total` - `r round(monto_primer_puesto_exacto, 2)` = `r round(dinero_restante_despues_primer_puesto, 2)` millones
-- Segundo puesto: `r fraccion_segundo_puesto` × `r round(dinero_restante_despues_primer_puesto, 2)` = `r round(monto_segundo_puesto_exacto, 2)` millones
-- Tercer puesto: `r premio_total` - `r round(monto_primer_puesto_exacto, 2)` - `r round(monto_segundo_puesto_exacto, 2)` = `r round(monto_tercer_puesto_exacto, 2)` millones
+- Primer puesto: `r fraccion_primer_puesto` × `r num(premio_total)` = `r num(round(monto_primer_puesto_exacto, 2))` millones
+- Dinero restante: `r num(premio_total)` - `r num(round(monto_primer_puesto_exacto, 2))` = `r num(round(dinero_restante_despues_primer_puesto, 2))` millones
+- Segundo puesto: `r fraccion_segundo_puesto` × `r num(round(dinero_restante_despues_primer_puesto, 2))` = `r num(round(monto_segundo_puesto_exacto, 2))` millones
+- Tercer puesto: `r num(premio_total)` - `r num(round(monto_primer_puesto_exacto, 2))` - `r num(round(monto_segundo_puesto_exacto, 2))` = `r num(round(monto_tercer_puesto_exacto, 2))` millones
 
 **Montos finales (redondeados):**
 
-- Primer puesto: `r monto_primer_puesto` millones
-- Segundo puesto: `r monto_segundo_puesto` millones
-- Tercer puesto: `r monto_tercer_puesto` millones
-- **Total: `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` millones**
+- Primer puesto: `r num(monto_primer_puesto)` millones
+- Segundo puesto: `r num(monto_segundo_puesto)` millones
+- Tercer puesto: `r num(monto_tercer_puesto)` millones
+- **Total: `r num(monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto)` millones**
 
-Como `r monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto` = `r premio_total`, confirmamos que nuestra respuesta es correcta.
+Como `r num(monto_primer_puesto + monto_segundo_puesto + monto_tercer_puesto)` = `r num(premio_total)`, confirmamos que nuestra respuesta es correcta.
 
-**Por lo tanto, el tercer puesto recibirá `r monto_tercer_puesto` millones de pesos.**
+**Por lo tanto, el tercer puesto recibirá `r num(monto_tercer_puesto)` millones de pesos.**
 
 Answerlist
 ----------
@@ -531,3 +510,10 @@ extype: schoice
 exsolution: `r paste(as.integer(solucion), collapse="")`
 exshuffle: TRUE
 exsection: Aritmética|Fracciones|Reparto proporcional
+exextra[Type]: SCHOICE
+exextra[Competencia]: Formulación y ejecución
+exextra[Componente]: Numérico-variacional
+exextra[Afirmacion]: Frente a un problema que involucre información cuantitativa, plantea e implementa estrategias que lleven a soluciones adecuadas.
+exextra[Evidencia]: Resuelve un problema que involucra información cuantitativa o esquemática.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.7 — Selecciona información necesaria para resolver problemas que involucran operaciones aritméticas.

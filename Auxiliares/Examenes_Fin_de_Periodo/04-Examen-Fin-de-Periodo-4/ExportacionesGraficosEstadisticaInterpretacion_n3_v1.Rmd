@@ -41,10 +41,6 @@ knitr::opts_chunk$set(
   fig.pos = "H"
 )
 
-# Configuración para chunks de Python
-knitr::knit_engines$set(python = function(options) {
-  knitr::engine_output(options, options$code, '')
-})
 
 # Asegurar que Python esté correctamente configurado
 use_python(Sys.which("python3"), required = TRUE)
@@ -56,6 +52,10 @@ use_python(Sys.which("python3"), required = TRUE)
 # Esto garantiza que todas las versiones (con/sin soluciones, PDF/DOCX)
 # generen exactamente los mismos datos aleatorios
 
+# Formato numérico del ICFES para el texto visible: coma decimal y punto de miles (7.000; 5,5).
+# Solo cambia la presentación: los valores internos siguen siendo numéricos.
+num <- function(x) format(x, decimal.mark = ",", big.mark = ".", scientific = FALSE, trim = TRUE)
+
 # SOLUCIÓN CRÍTICA: Generar semilla única para Python desde R
 # Cada instancia del ejercicio debe tener una semilla diferente
 semilla_python <- sample(1:1000000, 1)
@@ -65,6 +65,7 @@ codigo_barras <- paste0("
 import matplotlib.pyplot as plt
 import random
 import numpy as np
+from matplotlib.ticker import FuncFormatter
 
 # CORRECCIÓN CRÍTICA: Usar semilla generada desde R
 # Esto garantiza que cada instancia tenga datos diferentes
@@ -90,27 +91,34 @@ valorex = [round(x / 10, 1) for x in range(101, 911, 1)]
 exports = sorted(random.sample(valorex, 5))
 
 # Crear un gráfico de barras
-plt.figure(figsize=(8, 5))
+plt.rcParams['pdf.fonttype'] = 42
+plt.rcParams['ps.fonttype'] = 42
+plt.rcParams['font.size'] = 8
+plt.figure(figsize=(3.6, 2.9))
 bars = plt.bar(selected_years, exports, color='#404040', zorder=2)
 
 # Añadir los valores sobre cada barra
 for bar in bars:
     yval = bar.get_height()
-    plt.text(bar.get_x() + bar.get_width()/2.0, yval, round(yval,1), va='bottom', ha='center')
+    plt.text(bar.get_x() + bar.get_width()/2.0, yval, str(round(yval,1)).replace('.', ','), va='bottom', ha='center', fontsize=8)
 
 # Títulos y etiquetas
-plt.title(f'Exportaciones anuales totales de Tebailandia\\\\n en millones de tebos, {selected_years[0]}-{selected_years[4]}')
-plt.xlabel('Año')
-plt.ylabel('Exportaciones (en millones de tebos)')
+plt.title(f'Exportaciones anuales totales de Tebailandia\\n en millones de tebos, {selected_years[0]}-{selected_years[4]}', fontsize=9)
+plt.xlabel('Año', fontsize=8)
+plt.ylabel('Exportaciones (millones de tebos)', fontsize=8)
 
 # Estilo
 plt.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)
-plt.xticks(rotation=45)
+plt.xticks(selected_years, fontsize=8)
+plt.yticks(fontsize=8)
+# Formato ICFES en el eje: coma decimal
+plt.gca().yaxis.set_major_formatter(FuncFormatter(lambda v, _: ('%g' % v).replace('.', ',')))
+plt.ylim(0, max(exports) * 1.12)
 plt.tight_layout()
 
 # Guardar el gráfico
-plt.savefig('GraficoBarras.png', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
-plt.savefig('GraficoBarras.pdf', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
+plt.savefig('GraficoBarras.png', dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
+plt.savefig('GraficoBarras.pdf', dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
 plt.close()
 ")
 
@@ -129,12 +137,9 @@ La imagen muestra dos gráficos relacionados con las exportaciones de Tebailandi
 formatos_moodle <- c("exams2moodle", "exams2qti12", "exams2qti21", "exams2openolat")
 es_moodle <- (match_exams_call() %in% formatos_moodle)
 
-# Mostrar la imagen del gráfico de barras
-if (es_moodle) {
-  cat("![](GraficoBarras.png){width=70%}")
-} else {
-  cat("![](GraficoBarras.png){width=80%}")
-}
+# Mostrar la imagen del gráfico de barras (PDF vectorial en el PDF; PNG en los demás formatos)
+ext <- if (match_exams_device() == "pdf") "pdf" else "png"
+cat("![](GraficoBarras.", ext, "){width=100%}\n", sep = "")
 ```
 
 \
@@ -167,13 +172,20 @@ def generar_lista_suma_100():
     numeros = [5] * 8
     restantes = 60
 
-    while restantes > 0:
+    iteraciones = 0
+    while restantes > 0 and iteraciones < 1000:
+        iteraciones += 1
         for i in range(8):
             adicion = random.randint(0, restantes)
             numeros[i] += adicion
             restantes -= adicion
             if restantes == 0:
                 break
+
+    if restantes > 0:
+        numeros[0] += restantes
+        restantes = 0
+    assert sum(numeros) == 100
 
     random.shuffle(numeros)
     return numeros
@@ -201,15 +213,29 @@ colors = random.sample(coloress, 8)
 producto_index = random.randint(0, 7)
 explode = [0.1 if i == producto_index else 0 for i in range(8)]
 
-fig1, ax1 = plt.subplots(figsize=(6, 5))
-ax1.pie(sizes, explode=explode, labels=selectots, colors=colors,
-        autopct='%1.0f%%', pctdistance=0.85, labeldistance=1.1,
-        shadow=True, startangle=15)
-ax1.axis('equal')
-ax1.set_title(f'Distribución de exportaciones de\\\\\\\\n Tebailandia en {year_aleatorio}', pad=20)
+# Paleta segura en blanco y negro: grises separados y tramas distintas por porción
+# (los colores sorteados arriba se descartan; se conservan sus sorteos para no alterar los datos)
+grises = ['#ffffff', '#b8b8b8', '#e6e6e6', '#8f8f8f', '#f5f5f5', '#a3a3a3', '#d0d0d0', '#7a7a7a']
+tramas = ['', '//', '..', '', 'xx', '\\\\\\\\', '--', '++']
 
-plt.savefig('GraficoTorta.png', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
-plt.savefig('GraficoTorta.pdf', dpi=150, bbox_inches='tight', facecolor='white', edgecolor='none')
+plt.rcParams['pdf.fonttype'] = 42
+plt.rcParams['ps.fonttype'] = 42
+plt.rcParams['font.size'] = 8
+fig1, ax1 = plt.subplots(figsize=(3.6, 3.4))
+wedges, textos, autotextos = ax1.pie(sizes, explode=explode, labels=selectots, colors=grises,
+        autopct='%1.0f%%', pctdistance=0.72, labeldistance=1.08,
+        shadow=False, startangle=15, textprops={'fontsize': 8},
+        wedgeprops={'edgecolor': 'black', 'linewidth': 0.6})
+for w, h in zip(wedges, tramas):
+    w.set_hatch(h)
+for t in autotextos:
+    t.set_fontsize(8)
+    t.set_bbox(dict(facecolor='white', edgecolor='none', pad=0.8))
+ax1.axis('equal')
+ax1.set_title(f'Distribución de exportaciones de\\n Tebailandia en {year_aleatorio}', fontsize=9, pad=12)
+
+plt.savefig('GraficoTorta.png', dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
+plt.savefig('GraficoTorta.pdf', dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
 plt.close()
 
 # Calcular xol
@@ -231,11 +257,7 @@ py_run_string(codigo_torta)
 
 ```{r mostrar_grafico_torta, echo=FALSE, results='asis', fig.align="center"}
 # Mostrar la imagen del gráfico de torta
-if (es_moodle) {
-  cat("![](GraficoTorta.png){width=60%}")
-} else {
-  cat("![](GraficoTorta.png){width=70%}")
-}
+cat("![](GraficoTorta.", ext, "){width=100%}\n", sep = "")
 ```
 
 \
@@ -261,7 +283,7 @@ err1 <- xol * 0.95
 err2 <- xol * 1.05
 
 # Distractor 3: Escoger entre 80% o 120% de xol de forma reproducible
-# CORRECCIÓN CRÍTICA: Eliminar set.seed(NULL) que rompía reproducibilidad
+# CORRECCIÓN CRÍTICA: no se reinicia la semilla con el reloj (rompía reproducibilidad)
 # Usar selección determinística basada en el valor de xol
 err3_options <- c(0.8, 1.2)
 # Selección reproducible basada en el valor de xol
@@ -279,7 +301,10 @@ if (length(unique(opciones)) != 4) {
   warning("Algunas opciones de respuesta son idénticas. Ajustando...")
   # Ajustar ligeramente las opciones duplicadas de forma reproducible
   for (i in 2:4) {
+    intentos_ajuste <- 0
     while (opciones[i] %in% opciones[1:(i-1)]) {
+      intentos_ajuste <- intentos_ajuste + 1
+      stopifnot(intentos_ajuste <= 1000)
       opciones[i] <- opciones[i] + 0.01
     }
   }
@@ -295,13 +320,13 @@ if (length(unique(opciones)) != 4) {
 Answerlist
 ----------
 
-- `r xol` millones de tebos.
+- `r num(xol)` millones de tebos.
 
-- `r err1` millones de tebos.
+- `r num(err1)` millones de tebos.
 
-- `r err2` millones de tebos.
+- `r num(err2)` millones de tebos.
 
-- `r err3` millones de tebos.
+- `r num(err3)` millones de tebos.
 
 
 Solution
@@ -318,11 +343,11 @@ Para resolver este problema de interpretación de gráficos estadísticos, neces
 El primer gráfico muestra las exportaciones anuales totales de Tebailandia en millones de tebos para el período `r py$selected_years[1]`-`r py$selected_years[5]`. Los valores específicos para cada año son:
 
 ```{r mostrar_datos_barras, echo=FALSE, results='asis'}
-cat("- Año", py$selected_years[1], ":", py$exports[1], "millones de tebos\n")
-cat("- Año", py$selected_years[2], ":", py$exports[2], "millones de tebos\n")
-cat("- Año", py$selected_years[3], ":", py$exports[3], "millones de tebos\n")
-cat("- Año", py$selected_years[4], ":", py$exports[4], "millones de tebos\n")
-cat("- Año", py$selected_years[5], ":", py$exports[5], "millones de tebos\n")
+cat("- Año", py$selected_years[1], ":", num(py$exports[1]), "millones de tebos\n")
+cat("- Año", py$selected_years[2], ":", num(py$exports[2]), "millones de tebos\n")
+cat("- Año", py$selected_years[3], ":", num(py$exports[3]), "millones de tebos\n")
+cat("- Año", py$selected_years[4], ":", num(py$exports[4]), "millones de tebos\n")
+cat("- Año", py$selected_years[5], ":", num(py$exports[5]), "millones de tebos\n")
 ```
 
 \
@@ -344,7 +369,7 @@ if (anio == py$selected_years[1]) {
   valor_total <- py$exports[5]
 }
 
-cat("**Valor total de exportaciones en", anio, ":", valor_total,
+cat("**Valor total de exportaciones en", anio, ":", num(valor_total),
     "millones de tebos**\n")
 ```
 
@@ -374,32 +399,32 @@ Para calcular el valor específico de `r producto_seleccionado` exportado en `r 
 Sustituyendo los valores:
 
 ```{r calculo_detallado, echo=FALSE, results='asis'}
-cat("Valor de", producto_seleccionado, "= ", valor_total, " millones de tebos × ",
+cat("Valor de", producto_seleccionado, "= ", num(valor_total), " millones de tebos × ",
     py$sizes[py$producto_index + 1], "%\n")
-cat("Valor de", producto_seleccionado, "= ", valor_total, " × ", py$sizes[py$producto_index + 1] / 100, "\n")
-cat("Valor de", producto_seleccionado, "= ", valor_total * (py$sizes[py$producto_index + 1] / 100),
+cat("Valor de", producto_seleccionado, "= ", num(valor_total), " × ", num(py$sizes[py$producto_index + 1] / 100), "\n")
+cat("Valor de", producto_seleccionado, "= ", num(valor_total * (py$sizes[py$producto_index + 1] / 100)),
     " millones de tebos\n")
 ```
 
 \
 **Paso 6: Verificación del resultado**
 
-El cálculo nos da: **`r xol` millones de tebos**
+El cálculo nos da: **`r num(xol)` millones de tebos**
 
 **Verificación de coherencia:**
 
-- El resultado (`r xol` millones) es menor que el total (`r valor_total` millones), lo cual es lógico ya que representa solo una fracción del total.
+- El resultado (`r num(xol)` millones) es menor que el total (`r num(valor_total)` millones), lo cual es lógico ya que representa solo una fracción del total.
 - El porcentaje de `r producto_seleccionado` (`r py$sizes[py$producto_index + 1]`%) multiplicado por el total debe dar exactamente nuestro resultado.
-- Verificación: `r valor_total` × `r py$sizes[py$producto_index + 1]`% = `r valor_total` × `r py$sizes[py$producto_index + 1]/100` = `r xol` (correcto)
+- Verificación: `r num(valor_total)` × `r py$sizes[py$producto_index + 1]`% = `r num(valor_total)` × `r num(py$sizes[py$producto_index + 1]/100)` = `r num(xol)` (correcto)
 
 \
 **Paso 7: Análisis de las opciones distractoras**
 
 Las otras opciones presentadas son:
 
-- `r err1` millones de tebos (aproximadamente 95% del valor correcto)
-- `r err2` millones de tebos (aproximadamente 105% del valor correcto)
-- `r err3` millones de tebos (aproximadamente `r ifelse(err3 < xol, "80%", "120%")` del valor correcto)
+- `r num(err1)` millones de tebos (aproximadamente 95% del valor correcto)
+- `r num(err2)` millones de tebos (aproximadamente 105% del valor correcto)
+- `r num(err3)` millones de tebos (aproximadamente `r ifelse(err3 < xol, "80%", "120%")` del valor correcto)
 
 Estas opciones están diseñadas para capturar errores comunes como:
 
@@ -410,7 +435,7 @@ Estas opciones están diseñadas para capturar errores comunes como:
 \
 **Conclusión:**
 
-Por lo tanto, el valor de **`r producto_seleccionado`** exportado desde Tebailandia en **`r anio`** fue de **`r xol` millones de tebos**.
+Por lo tanto, el valor de **`r producto_seleccionado`** exportado desde Tebailandia en **`r anio`** fue de **`r num(xol)` millones de tebos**.
 
 Este problema evalúa competencias fundamentales en:
 
@@ -427,3 +452,10 @@ exname: Problemattic-PISA-Exportaciones-01(single-choice)
 extype: schoice
 exsolution: 1000
 exshuffle: TRUE
+exextra[Type]: SCHOICE
+exextra[Competencia]: Interpretación y representación
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Comprende y transforma la información cuantitativa y esquemática presentada en distintos formatos.
+exextra[Evidencia]: Da cuenta de las características básicas de la información presentada en diferentes formatos, como series, gráficas, tablas y esquemas.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.11 — Identifica información relevante cuando el tipo de registro contiene información de más de tres categorías.

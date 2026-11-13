@@ -8,6 +8,10 @@ output:
 # Generación de datos aleatorios
 library(exams)
 
+# Formato numérico del ICFES: coma decimal y punto de miles (solo presentación)
+fmt_es <- function(x) vapply(x, function(v) format(round(v, 2), big.mark = ".", decimal.mark = ",",
+                                                   trim = TRUE, drop0trailing = TRUE, scientific = FALSE), character(1))
+
 # Generación de nombres aleatorios para modelos
 modelos <- c("X", "Y", "Z")
 modelos <- sample(c("Modelo A", "Modelo B", "Modelo C", "Modelo D", "Modelo E", 
@@ -31,90 +35,63 @@ mediana_deseada_x <- median(sort(matriz_datos[1,]))
 matriz_datos[2,] <- matriz_datos[2,] + 50
 mediana_deseada_y <- median(sort(matriz_datos[2,]))
 
-while (mediana_deseada_y <= mediana_deseada_x + 30) {
-  matriz_datos[2,] <- matriz_datos[2,] + 10
+if (mediana_deseada_y <= mediana_deseada_x + 30) {
+  # Desplazamiento en pasos de 10 calculado de forma directa (sin bucle)
+  matriz_datos[2,] <- matriz_datos[2,] + 10 * (floor((mediana_deseada_x + 30 - mediana_deseada_y) / 10) + 1)
   mediana_deseada_y <- median(sort(matriz_datos[2,]))
 }
+stopifnot(mediana_deseada_y > mediana_deseada_x + 30)
 
 # Aseguramos que Z tenga una mediana mayor que X pero menor que Y
 matriz_datos[3,] <- sort(matriz_datos[1,]) + 20
 mediana_deseada_z <- median(sort(matriz_datos[3,]))
 
-while (mediana_deseada_z <= mediana_deseada_x || mediana_deseada_z >= mediana_deseada_y) {
-  if (mediana_deseada_z <= mediana_deseada_x) {
-    matriz_datos[3,] <- matriz_datos[3,] + 10
-  } else if (mediana_deseada_z >= mediana_deseada_y) {
-    matriz_datos[3,] <- matriz_datos[3,] - 10
-  }
-  mediana_deseada_z <- median(sort(matriz_datos[3,]))
-}
+# Con Y > X + 30 y Z = X + 20, la condición se cumple por construcción
+stopifnot(mediana_deseada_z > mediana_deseada_x, mediana_deseada_z < mediana_deseada_y)
 
-# Garantizamos que haya dos valores iguales en dos modelos diferentes
-# Elegimos aleatoriamente qué modelos tendrán un valor igual
-modelos_con_valor_igual <- sample(1:3, 2)
-posicion_valor_igual <- sample(1:num_pruebas, 1)
-valor_comun <- matriz_datos[modelos_con_valor_igual[1], posicion_valor_igual]
-matriz_datos[modelos_con_valor_igual[2], posicion_valor_igual] <- valor_comun
-
-# Verificamos que las medianas sigan manteniendo la relación deseada
-mediana_x <- median(matriz_datos[1,])
-mediana_y <- median(matriz_datos[2,])
-mediana_z <- median(matriz_datos[3,])
-
-# Si las medianas no mantienen la relación deseada, ajustamos
-while (!(mediana_z > mediana_x && mediana_z < mediana_y)) {
-  if (mediana_z <= mediana_x) {
-    # Incrementamos un valor en Z que no sea el valor común
-    posiciones_no_comunes <- setdiff(1:num_pruebas, posicion_valor_igual)
-    pos_a_cambiar <- ifelse(modelos_con_valor_igual[2] == 3, 
-                           sample(posiciones_no_comunes, 1), 
-                           posicion_valor_igual)
-    matriz_datos[3, pos_a_cambiar] <- matriz_datos[3, pos_a_cambiar] + 20
-  } else if (mediana_z >= mediana_y) {
-    # Decrementamos un valor en Z que no sea el valor común
-    posiciones_no_comunes <- setdiff(1:num_pruebas, posicion_valor_igual)
-    pos_a_cambiar <- ifelse(modelos_con_valor_igual[2] == 3, 
-                           sample(posiciones_no_comunes, 1), 
-                           posicion_valor_igual)
-    matriz_datos[3, pos_a_cambiar] <- matriz_datos[3, pos_a_cambiar] - 20
-  }
-  
-  mediana_z <- median(matriz_datos[3,])
-}
-
-# Verificamos que realmente haya dos valores iguales en dos modelos diferentes
-# Si por algún ajuste se perdió la igualdad, la restauramos
-if (matriz_datos[modelos_con_valor_igual[1], posicion_valor_igual] != 
-    matriz_datos[modelos_con_valor_igual[2], posicion_valor_igual]) {
+# Garantizamos que haya dos valores iguales en dos modelos diferentes y que la relación
+# deseada (X < Z < Y) se mantenga. El ajuste es acotado (familia F1, Error 22): si con el par
+# de modelos y la posición sorteados no se alcanza en `max_pasos` ajustes, se vuelve a sortear.
+matriz_base <- matriz_datos
+max_intentos <- 2000L
+max_pasos <- 200L
+exito <- FALSE
+for (intento in seq_len(max_intentos)) {
+  matriz_datos <- matriz_base
+  # Elegimos aleatoriamente qué modelos tendrán un valor igual
+  modelos_con_valor_igual <- sample(1:3, 2)
+  posicion_valor_igual <- sample(1:num_pruebas, 1)
   valor_comun <- matriz_datos[modelos_con_valor_igual[1], posicion_valor_igual]
   matriz_datos[modelos_con_valor_igual[2], posicion_valor_igual] <- valor_comun
-  
-  # Verificamos nuevamente las medianas
+
   mediana_x <- median(matriz_datos[1,])
   mediana_y <- median(matriz_datos[2,])
   mediana_z <- median(matriz_datos[3,])
-  
-  # Si las medianas no mantienen la relación deseada, ajustamos otros valores
-  while (!(mediana_z > mediana_x && mediana_z < mediana_y)) {
+
+  pasos <- 0L
+  while (!(mediana_z > mediana_x && mediana_z < mediana_y) && pasos < max_pasos) {
+    pasos <- pasos + 1L
+    posiciones_no_comunes <- setdiff(1:num_pruebas, posicion_valor_igual)
+    pos_a_cambiar <- ifelse(modelos_con_valor_igual[2] == 3,
+                           sample(posiciones_no_comunes, 1),
+                           posicion_valor_igual)
     if (mediana_z <= mediana_x) {
-      # Incrementamos un valor en Z que no sea el valor común
-      posiciones_no_comunes <- setdiff(1:num_pruebas, posicion_valor_igual)
-      pos_a_cambiar <- ifelse(modelos_con_valor_igual[2] == 3, 
-                             sample(posiciones_no_comunes, 1), 
-                             sample(posiciones_no_comunes, 1))
       matriz_datos[3, pos_a_cambiar] <- matriz_datos[3, pos_a_cambiar] + 20
-    } else if (mediana_z >= mediana_y) {
-      # Decrementamos un valor en Z que no sea el valor común
-      posiciones_no_comunes <- setdiff(1:num_pruebas, posicion_valor_igual)
-      pos_a_cambiar <- ifelse(modelos_con_valor_igual[2] == 3, 
-                             sample(posiciones_no_comunes, 1), 
-                             sample(posiciones_no_comunes, 1))
+    } else {
       matriz_datos[3, pos_a_cambiar] <- matriz_datos[3, pos_a_cambiar] - 20
     }
-    
     mediana_z <- median(matriz_datos[3,])
   }
+  mediana_x <- median(matriz_datos[1,])
+  mediana_y <- median(matriz_datos[2,])
+  if (mediana_z > mediana_x && mediana_z < mediana_y &&
+      matriz_datos[modelos_con_valor_igual[1], posicion_valor_igual] ==
+      matriz_datos[modelos_con_valor_igual[2], posicion_valor_igual]) {
+    exito <- TRUE
+    break
+  }
 }
+stopifnot(exito)
 
 # Creamos la tabla de datos
 tabla <- data.frame(
@@ -138,6 +115,10 @@ prueba_seleccionada <- sample(pruebas, 1)
 
 Question
 ========
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
 La empresa `r marca_seleccionada` realizó pruebas de `r prueba_seleccionada` en tres modelos de teléfonos celulares. La siguiente tabla muestra la duración de la batería (en minutos) para cada modelo durante `r num_pruebas` pruebas diferentes:
 
 ```{r, echo = FALSE, results = "asis"}
@@ -153,7 +134,9 @@ tabla_reordenada <- tabla[, c(1, indices_aleatorios + 1)]
 
 # Generar la tabla con los nombres de columnas aleatorizados
 # pero manteniendo la correspondencia con los datos
-knitr::kable(tabla_reordenada, col.names = c("", modelos_aleatorios))
+tabla_mostrar <- tabla_reordenada
+tabla_mostrar[-1] <- lapply(tabla_mostrar[-1], fmt_es)
+knitr::kable(tabla_mostrar, col.names = c("", modelos_aleatorios), align = c("l", "r", "r", "r"))
 
 # Guardar la correspondencia entre los índices originales y los aleatorios
 # para usarla en el resto del documento
@@ -179,13 +162,13 @@ Para resolver este problema, debemos:
 
 1. Ordenar los datos de cada modelo y encontrar su mediana:
 
-* `r modelos_aleatorios[indice_x]`: `r sort(matriz_datos[1,])` → Mediana = `r med1`
-* `r modelos_aleatorios[indice_y]`: `r sort(matriz_datos[2,])` → Mediana = `r med2`
-* `r modelos_aleatorios[indice_z]`: `r sort(matriz_datos[3,])` → Mediana = `r med3`
+* `r modelos_aleatorios[indice_x]`: `r fmt_es(sort(matriz_datos[1,]))` → Mediana = `r fmt_es(med1)`
+* `r modelos_aleatorios[indice_y]`: `r fmt_es(sort(matriz_datos[2,]))` → Mediana = `r fmt_es(med2)`
+* `r modelos_aleatorios[indice_z]`: `r fmt_es(sort(matriz_datos[3,]))` → Mediana = `r fmt_es(med3)`
 
 2. Comparar las medianas:
-* Mediana de `r modelos_aleatorios[indice_z]` (`r med3`) > Mediana de `r modelos_aleatorios[indice_x]` (`r med1`)
-* Mediana de `r modelos_aleatorios[indice_z]` (`r med3`) < Mediana de `r modelos_aleatorios[indice_y]` (`r med2`)
+* Mediana de `r modelos_aleatorios[indice_z]` (`r fmt_es(med3)`) > Mediana de `r modelos_aleatorios[indice_x]` (`r fmt_es(med1)`)
+* Mediana de `r modelos_aleatorios[indice_z]` (`r fmt_es(med3)`) < Mediana de `r modelos_aleatorios[indice_y]` (`r fmt_es(med2)`)
 
 Por lo tanto, el `r modelos_aleatorios[indice_z]` tiene una mediana mayor que la del `r modelos_aleatorios[indice_x]` y menor que la del `r modelos_aleatorios[indice_y]`.
 
@@ -195,3 +178,10 @@ exname: medianas-celulares
 extype: schoice
 exsolution: 0001
 exshuffle: TRUE
+exextra[Type]: SCHOICE
+exextra[Competencia]: Interpretación y representación
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Comprende y transforma la información cuantitativa y esquemática presentada en distintos formatos.
+exextra[Evidencia]: Da cuenta de las características básicas de la información presentada en diferentes formatos, como series, gráficas, tablas y esquemas.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.2 — Compara información gráfica que requiere algunas manipulaciones aritméticas.

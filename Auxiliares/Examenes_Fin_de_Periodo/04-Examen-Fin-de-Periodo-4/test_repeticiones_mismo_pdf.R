@@ -13,7 +13,7 @@ set.seed(semilla)
 cat("Generando 5 instancias de preg01 (cateto_teorema_pitagoras)...\n\n")
 
 ejercicios_preg01 <- exams2html(
-  rep("cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n2_v1_1.Rmd", 5),
+  rep("cateto_teorema_pitagoras_geometrico_metrico_formulacion_ejecucion_n3_v1_1.Rmd", 5),
   n = 1,
   name = "test_preg01",
   dir = "salida/test_repeticiones",

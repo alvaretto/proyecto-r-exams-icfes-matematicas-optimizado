@@ -180,23 +180,21 @@ typ <- match_exams_device()
 
 # Código TikZ para el Diagrama de Venn
 tikz_venn <- sprintf('
-\\begin{tikzpicture}[scale=0.7]
-  \\begin{scope}[opacity=0.5]
-    \\fill[red]   ( 90:1.5) circle (2);
-    \\fill[green] (210:1.5) circle (2);
-    \\fill[blue]  (330:1.5) circle (2);
-  \\end{scope}
-  \\node at ( 90:3.3) {%s};
-  \\node at (210:3.3) {%s};
-  \\node at (330:3.3) {%s};
-  \\node at ( 90:1.3) {%d};
+\\begin{tikzpicture}[scale=0.7, every node/.style={font=\\small}]
+  \\draw[line width=1.6pt, fill=black!15, fill opacity=0.4] ( 90:1.5) circle (2);
+  \\draw[line width=1.6pt, dash pattern=on 7pt off 3pt, fill=black!15, fill opacity=0.4] (210:1.5) circle (2);
+  \\draw[line width=1.6pt, line cap=round, dash pattern=on 0.1pt off 3pt, fill=black!15, fill opacity=0.4] (330:1.5) circle (2);
+  \\node[anchor=south, font=\\small\\bfseries] at ( 90:3.55) {%s};
+  \\node[anchor=north east, font=\\small\\bfseries] at (210:3.55) {%s};
+  \\node[anchor=north west, font=\\small\\bfseries] at (330:3.55) {%s};
+  \\node at ( 90:2.2) {%d};
   \\node at (210:1.3) {%d};
   \\node at (330:1.3) {%d};
   \\node at ( 30:1.7) {%d};
   \\node at (150:1.7) {%d};
   \\node at (270:1.7) {%d};
   \\node at (0:0) {%d};
-  \\node at (270:3.5) {Ninguno: %d};
+  \\node at (270:3.9) {Ninguno: %d};
 \\end{tikzpicture}
 ', A, B, C, n_only_A, n_only_B, n_only_C, n_AC_only, n_AB_only, n_BC_only, n_all, n_none)
 
@@ -208,7 +206,7 @@ include_venn <- function() {
   include_tikz(tikz_venn, name = "venn_diagram", markup = "markdown",
                format = typ, library = c("shapes", "backgrounds"),
                packages = c("tikz"),
-               width = "6cm")
+               width = "6.5cm")
 }
 ```
 
@@ -257,3 +255,10 @@ exclozetype: num|num|num|num
 exsolution: `r selected_answers[1]`|`r selected_answers[2]`|`r selected_answers[3]`|`r selected_answers[4]`
 extol: 0
 exsection: Diagrama de Venn
+exextra[Type]: CLOZE
+exextra[Competencia]: Formulación y ejecución
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Frente a un problema que involucre información cuantitativa, plantea e implementa estrategias que lleven a soluciones adecuadas.
+exextra[Evidencia]: Resuelve un problema que involucra información cuantitativa o esquemática.
+exextra[Nivel]: 4
+exextra[Descriptor]: D4.3 — Resuelve problemas que requieren construir una representación auxiliar (gráficas y fórmulas) como paso intermedio para su solución.

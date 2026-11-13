@@ -28,6 +28,12 @@ library(digest)
 library(testthat)
 
 typ <- match_exams_device()
+
+# Formato numérico del ICFES: coma decimal y punto de miles (solo presentación).
+# fmt_tex() es para fórmulas $...$: la coma decimal va como {,}.
+fmt_es <- function(x) vapply(x, function(v) format(round(v, 2), big.mark = ".", decimal.mark = ",",
+                                                   trim = TRUE, drop0trailing = TRUE, scientific = FALSE), character(1))
+fmt_tex <- function(x) gsub(",", "{,}", fmt_es(x), fixed = TRUE)
 options(scipen = 999)
 knitr::opts_chunk$set(
   warning = FALSE,
@@ -541,7 +547,7 @@ include_tikz(tikz_code,
              width = "3cm")
 ```
 
-`r estudiante_error`, un compañero de clase, analizó estos datos y afirmó: *"La mediana de este conjunto de datos es `r mediana_erronea`"*.
+`r estudiante_error`, un compañero de clase, analizó estos datos y afirmó: *"La mediana de este conjunto de datos es `r fmt_es(mediana_erronea)`"*.
 
 Sin embargo, `r protagonista` sospecha que `r estudiante_error` cometió un error conceptual.
 
@@ -549,7 +555,7 @@ Sin embargo, `r protagonista` sospecha que `r estudiante_error` cometió un erro
 
 ##ANSWER1##
 
-**Parte 2.** Calcule la media aritmética correcta de los datos (redondee a dos decimales si es necesario). *Escriba el número decimal con punto; por ejemplo: 73.25*
+**Parte 2.** Calcule la media aritmética correcta de los datos (redondee a dos decimales si es necesario). *Escriba el número decimal con coma o con punto; por ejemplo: 73,25*
 
 ##ANSWER2##
 
@@ -577,7 +583,7 @@ Solution
 
 ### Análisis del Error (Parte 1)
 
-`r estudiante_error` afirmó que la mediana es **`r mediana_erronea`**, cuando la mediana correcta es **`r mediana_calc`**.
+`r estudiante_error` afirmó que la mediana es **`r fmt_es(mediana_erronea)`**, cuando la mediana correcta es **`r fmt_es(mediana_calc)`**.
 
 **Error identificado:** `r error_sel$descripcion_larga`
 
@@ -597,7 +603,7 @@ $$\text{Suma} = `r paste(datos_ord, collapse = " + ")` = `r sum(datos_ord)`$$
 
 **Paso 2:** Dividir entre el número de datos.
 
-$$\text{Media} = \frac{`r sum(datos_ord)`}{`r n`} = `r media_calc`$$
+$$\text{Media} = \frac{`r sum(datos_ord)`}{`r n`} = `r fmt_tex(media_calc)`$$
 
 **Cálculo de la mediana:**
 
@@ -610,12 +616,12 @@ if (n %% 2 == 1) {
   pos <- (n + 1) / 2
   cat(paste0("**Paso 2:** Como hay ", n, " datos (número **impar**), la mediana es el valor en la posición central.\n\n"))
   cat(paste0("$$\\text{Posición} = \\frac{", n, " + 1}{2} = ", pos, "$$\n\n"))
-  cat(paste0("$$\\text{Mediana} = ", mediana_calc, "$$\n\n"))
+  cat(paste0("$$\\text{Mediana} = ", fmt_tex(mediana_calc), "$$\n\n"))
 } else {
   pos1 <- n / 2
   pos2 <- pos1 + 1
   cat(paste0("**Paso 2:** Como hay ", n, " datos (número **par**), la mediana es el promedio de los dos valores centrales (posiciones ", pos1, " y ", pos2, ").\n\n"))
-  cat(paste0("$$\\text{Mediana} = \\frac{", datos_ord[pos1], " + ", datos_ord[pos2], "}{2} = ", mediana_calc, "$$\n\n"))
+  cat(paste0("$$\\text{Mediana} = \\frac{", datos_ord[pos1], " + ", datos_ord[pos2], "}{2} = ", fmt_tex(mediana_calc), "$$\n\n"))
 }
 ```
 
@@ -635,7 +641,7 @@ if (es_verdadero_vf) {
 
 ### Caso Específico
 
-En este conjunto de datos: Media = `r media_calc`, Mediana = `r mediana_calc`, Moda = `r moda_calc`. Las tres medidas son diferentes, lo cuál es frecuente cuando la distribución de los datos no es simétrica.
+En este conjunto de datos: Media = `r fmt_es(media_calc)`, Mediana = `r fmt_es(mediana_calc)`, Moda = `r moda_calc`. Las tres medidas son diferentes, lo cual es frecuente cuando la distribución de los datos no es simétrica.
 
 ### Reflexión Metacognitiva
 
@@ -654,8 +660,8 @@ Answerlist
 * `r if(sol_p1[2] == 1) "Correcto. Este es el error que cometió el compañero." else "Incorrecto. Este no es el error que explica la respuesta del compañero."`
 * `r if(sol_p1[3] == 1) "Correcto. Este es el error que cometió el compañero." else "Incorrecto. Este no es el error que explica la respuesta del compañero."`
 * `r if(sol_p1[4] == 1) "Correcto. Este es el error que cometió el compañero." else "Incorrecto. Este no es el error que explica la respuesta del compañero."`
-* La media correcta es $`r resp2`$ `r ctx$unidad`.
-* La mediana correcta es $`r resp3`$ `r ctx$unidad`.
+* La media correcta es $`r fmt_tex(resp2)`$ `r ctx$unidad`.
+* La mediana correcta es $`r fmt_tex(resp3)`$ `r ctx$unidad`.
 * `r if(sol_p4[1] == 1) "Correcto. La afirmación es verdadera." else "Incorrecto."`
 * `r if(sol_p4[2] == 1) "Correcto. La afirmación es falsa." else "Incorrecto."`
 
@@ -671,10 +677,10 @@ exsection: Estadistica-Probabilidad|Pensamiento-Aleatorio|Medidas-Tendencia-Cent
 exextra[Type]: CLOZE
 exextra[Program]: R
 exextra[Language]: es
-exextra[Competencia]: Interpretacion
+exextra[Competencia]: Interpretación y representación
 exextra[Componente]: Aleatorio
-exextra[Afirmacion]: Interpreta y diferencia las medidas de tendencia central (media, mediana y moda) identificando errores conceptuales en su calculo
-exextra[Evidencia]: Identifica errores en el calculo de la mediana y aplica correctamente los procedimientos para media, mediana y moda
+exextra[Afirmacion]: Comprende y transforma la información cuantitativa y esquemática presentada en distintos formatos.
+exextra[Evidencia]: Da cuenta de las características básicas de la información presentada en diferentes formatos, como series, gráficas, tablas y esquemas.
 exextra[Nivel]: 2
 exextra[Contexto]: Escolar
 exextra[DOK]: 3

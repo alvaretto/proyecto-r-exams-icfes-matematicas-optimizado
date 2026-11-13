@@ -1,0 +1,128 @@
+%% PROTOTIPO (fase 2, prueba de concepto). Deriva de A-Produccion/perifericos/solpcielo.tex.
+%% Cambios frente a la oficial:
+%%   - doble columna (multicols) con filete de 0,2 pt; encabezado compacto en lugar de portada;
+%%   - sin a4wide ni floatrow (chocan con geometry y con float); flotantes [H], porque multicols no admite flotantes;
+%%   - toda imagen limitada al ancho de su columna (adjustbox, export);
+%%   - longtable -> tabular dentro de la columna (longtable no funciona en multicols), sin posprocesar el .tex;
+%%   - Solution oculta (cuadernillo del estudiante); numeración «Página X de Y»; total de páginas par (dúplex).
+\documentclass[10pt]{article}
+
+%% packages
+\usepackage[papersize={216mm,330mm},tmargin=12mm,bmargin=15mm,lmargin=10mm,rmargin=10mm,headsep=4mm,footskip=8mm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,latexsym,cancel,amsthm}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{color,verbatim,Sweave,url,xargs,tabu,multicol,graphicx,booktabs,array,calc}
+\pgfplotsset{compat=1.17}
+\usepackage{mathrsfs}
+\usepackage{tkz-euclide}
+\usetikzlibrary{babel}
+\usepackage[spanish]{babel}
+\usepackage{ragged2e}
+\usetikzlibrary{shapes,arrows,chains,matrix,calc,trees,positioning,fit}
+\usepgfplotslibrary{patchplots}
+\usepackage[export]{adjustbox}
+\usepackage{float}
+\floatplacement{figure}{H}
+\floatplacement{table}{H}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{hyperref}
+
+%% doble columna
+\setlength{\columnsep}{6mm}
+\setlength{\columnseprule}{0.2pt}
+\raggedcolumns
+
+%% imágenes: nunca más anchas que su columna. \setkeys{Gin}{max width=...} NO basta: no actúa cuando la
+%% imagen trae su propio width (medido: 3 Overfull de 27, 141 y 163 pt). Se envuelve cada \includegraphics.
+\let\includegraphicsoriginal\includegraphics
+\renewcommand{\includegraphics}[2][]{\adjustbox{max width=\linewidth}{\includegraphicsoriginal[#1]{#2}}}
+%% sin pies de figura: el texto alternativo de knitr («plot of chunk ...») llegaba como «Figura 1: ...»
+\usepackage{etoolbox}
+\AtBeginEnvironment{figure}{\renewcommand{\caption}[2][]{}\centering}
+
+%% tablas de pandoc (longtable) como tabular dentro de la columna
+\usepackage{longtable}
+\let\origbottomrule\bottomrule
+\renewenvironment{longtable}[2][]{%
+  \par\smallskip\centering
+  \def\endhead{}\def\endfirsthead{}\def\endfoot{}\def\endlastfoot{}%
+  \def\bottomrule{}%
+  \begin{adjustbox}{max width=\linewidth}\begin{tabular}{#2}}{%
+  \origbottomrule\end{tabular}\end{adjustbox}\par\smallskip}
+
+%% new environments
+\newenvironment{question}{\item \textbf{Escenario:}\newline}{}
+\newenvironment{solution}{\comment}{\endcomment}
+\newenvironment{answerlist}{\renewcommand{\labelenumi}{(\alph{enumi})}\begin{enumerate}}{\end{enumerate}}
+\setlist[enumerate,1]{leftmargin=*,itemsep=8pt plus 2pt,topsep=0pt}
+\setlist[enumerate,2]{itemsep=1pt,topsep=2pt,parsep=0pt}
+
+%% paragraphs
+\setlength{\parskip}{0.5ex plus0.1ex minus0.1ex}
+\setlength{\parindent}{0em}
+\clubpenalty=10000
+\widowpenalty=10000
+
+%% compatibility with pandoc
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\pandocbounded}[1]{#1}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+\setcounter{secnumdepth}{0}
+
+%% fonts: Helvetica
+\usepackage{helvet}
+\IfFileExists{sfmath.sty}{\RequirePackage[helvet]{sfmath}}{}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\rmdefault}{phv}
+
+\newcommand{\extext}[1]{\textbf{\large #1}}
+\newcommand{\exnum}[9]{#1#2#3#4#5#6.#7#8#9}
+\newcommand{\exstring}[1]{#1}
+\newcommandx{\exmchoice}[9][2=-,3=-,4=-,5=-,6=-,7=-,8=-,9=-]{#1}
+
+%% new commands
+\makeatletter
+\newcommand{\ID}[1]{\def\@ID{#1}}
+\newcommand{\Date}[1]{\def\@Date{#1}}
+\ID{00000000000}
+\Date{YYYY-MM-DD}
+
+%% \exinput{header}
+
+\newcommand{\myID}{\@ID}
+\newcommand{\myDate}{\@Date}
+\makeatother
+
+%% headings
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textbf{Saber ICFES Matemáticas} \textperiodcentered{} Versión \myID}
+\fancyhead[R]{\small Página \thepage{} de \pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\begin{document}
+
+%% encabezado compacto (la hoja NOPS lleva nombre y documento)
+{\sffamily
+\noindent\begin{tabular}{@{}p{0.62\textwidth}@{}p{0.38\textwidth}@{}}
+\textbf{I. E. Pedacito de Cielo, La Tebaida, Quindío} & \hfill\textbf{Versión \myID}\\
+\textbf{Saber ICFES Matemáticas} \textperiodcentered{} \myDate & \hfill Grupo: \rule{2.5cm}{0.3pt}\\[3mm]
+\multicolumn{2}{@{}l@{}}{Nombre: \rule{0.86\textwidth}{0.3pt}}
+\end{tabular}\par\medskip\hrule\medskip}
+
+\begin{multicols}{2}
+\begin{enumerate}
+
+%% \exinput{exercises}
+
+\end{enumerate}
+\end{multicols}
+
+%% total de páginas par para impresión a doble cara
+\clearpage
+\ifodd\value{page}\else\thispagestyle{empty}\null\clearpage\fi
+\end{document}

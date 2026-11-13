@@ -52,6 +52,12 @@ options(digits = 10)
 # Esto garantiza que todas las versiones (con/sin soluciones, PDF/DOCX)
 # generen exactamente los mismos datos aleatorios
 
+# Formato numérico del ICFES para el texto visible: coma decimal (5,5).
+# Solo cambia la presentación; los valores internos siguen siendo numéricos.
+coma_tex <- function(s) gsub(".", "{,}", s, fixed = TRUE)   # dentro de $...$
+mat <- function(x) coma_tex(format(round(x, 6), trim = TRUE, scientific = FALSE))   # número en fórmula
+txt <- function(x) gsub(".", ",", format(round(x, 6), trim = TRUE, scientific = FALSE), fixed = TRUE)  # en texto
+
 # Función principal de generación de datos
 generar_datos <- function() {
   # NUEVA IMPLEMENTACIÓN: Aleatorización de catetos manteniendo filosofía ICFES
@@ -142,7 +148,7 @@ generar_datos <- function() {
 
     # Decimales simples (una cifra decimal)
     if (abs(x - round(x, 1)) < 0.001 && x < 10) {
-      return(as.character(round(x, 1)))
+      return(coma_tex(as.character(round(x, 1))))
     }
 
     # Fracciones comunes
@@ -165,7 +171,7 @@ generar_datos <- function() {
     if (abs(x - sqrt(18)) < 0.001) return("3\\sqrt{2}")  # sqrt(18) = 3*sqrt(2)
 
     # Formato por defecto
-    return(as.character(round(x, 2)))
+    return(coma_tex(as.character(round(x, 2))))
   }
 
   # Función específica para TikZ que necesita escape adicional
@@ -185,7 +191,7 @@ generar_datos <- function() {
     if (abs(x - 3 * sqrt(2)) < 0.001) return("3\\\\sqrt{2}")  # sqrt(18) = 3*sqrt(2)
 
     # Formato por defecto
-    return(as.character(round(x, 2)))
+    return(coma_tex(as.character(round(x, 2))))
   }
 
   # Formatear valores principales
@@ -298,7 +304,11 @@ generar_datos <- function() {
   for (i in seq_along(distractores_pool)) {
     distractor <- distractores_pool[[i]]
     # Verificar que el distractor sea diferente del valor correcto
-    if (abs(distractor$valor - cateto_desconocido) > 0.01) {
+    # y con TEXTO visible distinto de la correcta y de los ya aceptados
+    textos_aceptados <- vapply(distractores_validos, function(x) x$texto, character(1))
+    if (abs(distractor$valor - cateto_desconocido) > 0.01 &&
+        distractor$texto != cateto_desconocido_tex &&
+        !(distractor$texto %in% textos_aceptados)) {
       distractores_validos <- append(distractores_validos, list(distractor))
     }
   }
@@ -321,7 +331,10 @@ generar_datos <- function() {
     )
 
     for (generico in distractores_genericos) {
+      textos_aceptados <- vapply(distractores_validos, function(x) x$texto, character(1))
       if (abs(generico$valor - cateto_desconocido) > 0.01 &&
+          generico$texto != cateto_desconocido_tex &&
+          !(generico$texto %in% textos_aceptados) &&
           length(distractores_validos) < 10) {
         distractores_validos <- append(distractores_validos, list(generico))
       }
@@ -350,11 +363,15 @@ generar_datos <- function() {
   }
 
   # VERIFICACIÓN CRÍTICA: Garantizar que tenemos exactamente 4 opciones
-  while (length(opciones) < 4) {
+  intentos_extra <- 0
+  max_intentos_extra <- 1000
+  while (length(opciones) < 4 && intentos_extra < max_intentos_extra) {
+    intentos_extra <- intentos_extra + 1
     # Agregar distractor adicional si es necesario
     valor_adicional <- cateto_desconocido + sample(c(-2, -1, 1, 2), 1) * 0.5
     if (valor_adicional > 0 &&
-        !any(sapply(opciones, function(x) abs(x$valor - valor_adicional) < 0.01))) {
+        !any(sapply(opciones, function(x) abs(x$valor - valor_adicional) < 0.01)) &&
+        !(formato_numero(valor_adicional) %in% sapply(opciones, function(x) x$texto))) {
       opciones <- append(opciones, list(list(
         valor = valor_adicional,
         texto = formato_numero(valor_adicional),
@@ -363,6 +380,8 @@ generar_datos <- function() {
       )))
     }
   }
+
+  stopifnot(length(opciones) >= 4)
 
   # Tomar solo las primeras 4 opciones si hay más
   opciones <- opciones[1:4]
@@ -388,6 +407,10 @@ generar_datos <- function() {
       list(valor = cateto_desconocido + 1, texto = formato_numero(cateto_desconocido + 1), correcta = FALSE, justificacion = "error aritmético")
     )
   }
+
+  # Garantía por construcción: 4 opciones con TEXTO visible distinto
+  opciones_texto <- sapply(opciones, function(x) x$texto)
+  stopifnot(length(unique(opciones_texto)) == 4)
 
   # Aleatorizar orden de opciones
   orden_opciones <- sample(1:4)
@@ -533,7 +556,7 @@ Para esto, efectúa correctamente el siguiente procedimiento:
 
 **Paso 1.** Calcula la hipotenusa $\sqrt{x^2 + `r datos$cateto_conocido_tex`^2}$ y obtiene $`r datos$hipotenusa_tex`$.
 
-**Paso 2.** El resultado del paso 1 lo eleva al cuadrado y obtiene como resultado el número `r datos$hipotenusa^2`.
+**Paso 2.** El resultado del paso 1 lo eleva al cuadrado y obtiene como resultado el número `r txt(datos$hipotenusa^2)`.
 
 ¿Cuál es el valor del cateto $x$?
 
@@ -559,36 +582,36 @@ Para resolver este problema, debemos analizar la información geométrica y apli
 
 Del **Paso 1**: $\sqrt{x^2 + `r datos$cateto_conocido_tex`^2} = `r datos$hipotenusa_tex`$
 
-Del **Paso 2**: $(`r datos$hipotenusa_tex`)^2 = `r datos$hipotenusa^2`$
+Del **Paso 2**: $(`r datos$hipotenusa_tex`)^2 = `r mat(datos$hipotenusa^2)`$
 
-Verificamos el **Paso 2**: $(`r datos$hipotenusa_tex`)^2 = `r datos$hipotenusa^2`$ (correcto)
+Verificamos el **Paso 2**: $(`r datos$hipotenusa_tex`)^2 = `r mat(datos$hipotenusa^2)`$ (correcto)
 
 Sustituyendo en la ecuación del **Paso 1**:
-$x^2 + `r datos$cateto_conocido_tex`^2 = `r datos$hipotenusa^2`$
+$x^2 + `r datos$cateto_conocido_tex`^2 = `r mat(datos$hipotenusa^2)`$
 
-Resolviendo: $x^2 + `r datos$cateto_conocido^2` = `r datos$hipotenusa^2`$
+Resolviendo: $x^2 + `r mat(datos$cateto_conocido^2)` = `r mat(datos$hipotenusa^2)`$
 
-Por lo tanto: $x^2 = `r datos$hipotenusa^2` - `r datos$cateto_conocido^2` = `r datos$cateto_desconocido^2`$
+Por lo tanto: $x^2 = `r mat(datos$hipotenusa^2)` - `r mat(datos$cateto_conocido^2)` = `r mat(datos$cateto_desconocido^2)`$
 
 ```{r calculos_solucion, echo=FALSE, results="asis"}
 # Mostrar el cálculo específico para el valor de x generado
 x_cuadrado <- datos$cateto_desconocido^2
 cat("Para este ejercicio específico:\n\n")
-cat("$$x^2 = ", datos$hipotenusa^2, " - ", datos$cateto_conocido^2, " = ", datos$cateto_desconocido^2, "$$\n\n")
-cat("Entonces: $$x = \\sqrt{", datos$cateto_desconocido^2, "} = ", datos$cateto_desconocido_tex, "$$\n\n")
+cat("$$x^2 = ", mat(datos$hipotenusa^2), " - ", mat(datos$cateto_conocido^2), " = ", mat(datos$cateto_desconocido^2), "$$\n\n")
+cat("Entonces: $$x = \\sqrt{", mat(datos$cateto_desconocido^2), "} = ", datos$cateto_desconocido_tex, "$$\n\n")
 ```
 
 **Verificación geométrica:**
-Si $x = `r datos$cateto_desconocido_tex`$, entonces $\sqrt{(`r datos$cateto_desconocido_tex`)^2 + (`r datos$cateto_conocido_tex`)^2} = \sqrt{`r datos$cateto_desconocido^2` + `r datos$cateto_conocido^2`} = \sqrt{`r datos$cateto_desconocido^2 + datos$cateto_conocido^2`} = `r datos$hipotenusa_tex`$
+Si $x = `r datos$cateto_desconocido_tex`$, entonces $\sqrt{(`r datos$cateto_desconocido_tex`)^2 + (`r datos$cateto_conocido_tex`)^2} = \sqrt{`r mat(datos$cateto_desconocido^2)` + `r mat(datos$cateto_conocido^2)`} = \sqrt{`r mat(datos$cateto_desconocido^2 + datos$cateto_conocido^2)`} = `r datos$hipotenusa_tex`$
 
-Y $(`r datos$hipotenusa_tex`)^2 = `r datos$hipotenusa^2`$ (verificado)
+Y $(`r datos$hipotenusa_tex`)^2 = `r mat(datos$hipotenusa^2)`$ (verificado)
 
 Answerlist
 ----------
-* `r if(datos$opciones[[1]]$correcta) "Verdadero" else "Falso"`. `r if(datos$opciones[[1]]$correcta) paste("Aplicando correctamente el teorema de Pitágoras: x² +", datos$cateto_conocido^2, "=", datos$hipotenusa^2, ", por lo tanto x =", datos$cateto_desconocido_tex) else paste("Error:", datos$opciones[[1]]$justificacion)`
-* `r if(datos$opciones[[2]]$correcta) "Verdadero" else "Falso"`. `r if(datos$opciones[[2]]$correcta) paste("Aplicando correctamente el teorema de Pitágoras: x² +", datos$cateto_conocido^2, "=", datos$hipotenusa^2, ", por lo tanto x =", datos$cateto_desconocido_tex) else paste("Error:", datos$opciones[[2]]$justificacion)`
-* `r if(datos$opciones[[3]]$correcta) "Verdadero" else "Falso"`. `r if(datos$opciones[[3]]$correcta) paste("Aplicando correctamente el teorema de Pitágoras: x² +", datos$cateto_conocido^2, "=", datos$hipotenusa^2, ", por lo tanto x =", datos$cateto_desconocido_tex) else paste("Error:", datos$opciones[[3]]$justificacion)`
-* `r if(datos$opciones[[4]]$correcta) "Verdadero" else "Falso"`. `r if(datos$opciones[[4]]$correcta) paste("Aplicando correctamente el teorema de Pitágoras: x² +", datos$cateto_conocido^2, "=", datos$hipotenusa^2, ", por lo tanto x =", datos$cateto_desconocido_tex) else paste("Error:", datos$opciones[[4]]$justificacion)`
+* `r if(datos$opciones[[1]]$correcta) "Verdadero" else "Falso"`. `r if(datos$opciones[[1]]$correcta) paste0("Aplicando correctamente el teorema de Pitágoras: $x^2 + ", mat(datos$cateto_conocido^2), " = ", mat(datos$hipotenusa^2), "$, por lo tanto $x = ", datos$cateto_desconocido_tex, "$.") else paste("Error:", datos$opciones[[1]]$justificacion)`
+* `r if(datos$opciones[[2]]$correcta) "Verdadero" else "Falso"`. `r if(datos$opciones[[2]]$correcta) paste0("Aplicando correctamente el teorema de Pitágoras: $x^2 + ", mat(datos$cateto_conocido^2), " = ", mat(datos$hipotenusa^2), "$, por lo tanto $x = ", datos$cateto_desconocido_tex, "$.") else paste("Error:", datos$opciones[[2]]$justificacion)`
+* `r if(datos$opciones[[3]]$correcta) "Verdadero" else "Falso"`. `r if(datos$opciones[[3]]$correcta) paste0("Aplicando correctamente el teorema de Pitágoras: $x^2 + ", mat(datos$cateto_conocido^2), " = ", mat(datos$hipotenusa^2), "$, por lo tanto $x = ", datos$cateto_desconocido_tex, "$.") else paste("Error:", datos$opciones[[3]]$justificacion)`
+* `r if(datos$opciones[[4]]$correcta) "Verdadero" else "Falso"`. `r if(datos$opciones[[4]]$correcta) paste0("Aplicando correctamente el teorema de Pitágoras: $x^2 + ", mat(datos$cateto_conocido^2), " = ", mat(datos$hipotenusa^2), "$, por lo tanto $x = ", datos$cateto_desconocido_tex, "$.") else paste("Error:", datos$opciones[[4]]$justificacion)`
 
 Meta-information
 ================
@@ -597,13 +620,20 @@ extype: schoice
 exsolution: `r solucion`
 exshuffle: TRUE
 exsection: Geometria/Teorema de Pitagoras
+exextra[Type]: SCHOICE
+exextra[Competencia]: Formulación y ejecución
+exextra[Componente]: Geométrico-métrico
+exextra[Afirmacion]: Frente a un problema que involucre información cuantitativa, plantea e implementa estrategias que lleven a soluciones adecuadas.
+exextra[Evidencia]: Ejecuta un plan de solución para un problema que involucra información cuantitativa o esquemática.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.12 — Hace manipulaciones algebraicas sencillas (aritmética de términos semejantes).
 
 # Metadatos ICFES obligatorios
 icfes:
   competencia: formulacion_ejecucion
-  nivel_dificultad: 2
+  nivel_dificultad: 3
   contenido:
-    categoria: geometria
+    tema: geometria
     tipo: generico
   contexto: matematico
   eje_axial: eje2

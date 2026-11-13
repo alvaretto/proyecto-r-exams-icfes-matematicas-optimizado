@@ -28,40 +28,34 @@ nombre <- sample(nombres, 1)
 radio <- sample(20:50, 1)  # Radio entre 20 y 50 cm
 altura <- sample(60:100, 1)  # Altura entre 60 y 100 cm
 
+# Formato numérico del ICFES: coma decimal y punto de miles (7.000; 5,5).
+# Dentro de $...$ cada separador va entre llaves ({.} y {,}) para que LaTeX no
+# agregue espacio ni babel convierta el punto.
+fmt_icfes <- function(x, dec = 2) {
+  s <- formatC(round(x, dec), format = "f", digits = dec,
+               big.mark = ".", decimal.mark = ",")
+  s <- trimws(s)
+  s <- gsub(".", "{.}", s, fixed = TRUE)
+  gsub(",", "{,}", s, fixed = TRUE)
+}
+
 # Calcular el volumen del cilindro
 volumen <- pi * radio^2 * altura
-# Formatear el volumen para evitar notación científica
-volumen_redondeado <- format(round(volumen, 2),
-                             scientific = FALSE,
-                             big.mark = "\\,")
-# Eliminar espacios en blanco al inicio y final si existen
-volumen_redondeado <- trimws(volumen_redondeado)
+volumen_redondeado <- fmt_icfes(volumen)
 
 # Calcular otras medidas para las opciones
 area_base <- pi * radio^2
-area_base_redondeada <- format(round(area_base, 2),
-                               scientific = FALSE,
-                               big.mark = "\\,")
-area_base_redondeada <- trimws(area_base_redondeada)
+area_base_redondeada <- fmt_icfes(area_base)
 
 perimetro_base <- 2 * pi * radio
-perimetro_base_redondeado <- format(round(perimetro_base, 2),
-                                    scientific = FALSE,
-                                    big.mark = "\\,")
-perimetro_base_redondeado <- trimws(perimetro_base_redondeado)
+perimetro_base_redondeado <- fmt_icfes(perimetro_base)
 
 area_lateral <- 2 * pi * radio * altura
-area_lateral_redondeada <- format(round(area_lateral, 2),
-                                  scientific = FALSE,
-                                  big.mark = "\\,")
-area_lateral_redondeada <- trimws(area_lateral_redondeada)
+area_lateral_redondeada <- fmt_icfes(area_lateral)
 
 # Calcular el área total (área lateral + 2 bases)
 area_total <- area_lateral + 2 * area_base
-area_total_redondeada <- format(round(area_total, 2),
-                                scientific = FALSE,
-                                big.mark = "\\,")
-area_total_redondeada <- trimws(area_total_redondeada)
+area_total_redondeada <- fmt_icfes(area_total)
 
 # Crear vector de opciones común
 opciones <- c(
@@ -133,7 +127,9 @@ if (version == 5) {
 ```{r, echo=FALSE}
 # Código para generar el cilindro con TikZ
 # Definir factor de escala para mantener proporciones con valores grandes
-factor_escala <- 0.1
+# (0.06 mantiene el dibujo cerca de los 8 cm de ancho del include_tikz, de modo
+# que no se reduce y el exponente del rótulo conserva su tamaño de impresión).
+factor_escala <- 0.06
 radio_escalado <- radio * factor_escala
 altura_escalada <- altura * factor_escala
 
@@ -186,12 +182,15 @@ tikz_resto <- paste0("
     \\draw[<->] (", radio_escalado + 0.5, ",0) --
         (", radio_escalado + 0.5, ",", altura_escalada, ")
         node[midway, right, font=\\large] {", altura, " cm};
-    \\draw[<->] (0,", altura_escalada + 0.5, ") --
-        (", radio_escalado, ",", altura_escalada + 0.5, ")
+    % Radio: cota por encima de la elipse superior (fuera del contorno)
+    \\draw[dotted] (0,", altura_escalada, ") -- (0,", altura_escalada + radio_escalado*0.4 + 0.25, ");
+    \\draw[dotted] (", radio_escalado, ",", altura_escalada, ") -- (", radio_escalado, ",", altura_escalada + radio_escalado*0.4 + 0.25, ");
+    \\draw[<->] (0,", altura_escalada + radio_escalado*0.4 + 0.25, ") --
+        (", radio_escalado, ",", altura_escalada + radio_escalado*0.4 + 0.25, ")
         node[midway, above, font=\\large] {", radio, " cm};
 
-    % Añadir la operación matemática
-    \\node[align=center, font=\\large] at (0,-2)
+    % Operación: debajo de la base, fuera del contorno del cilindro
+    \\node[align=center, font=\\large, text width=6.5cm, anchor=north] at (0,-", radio_escalado*0.4 + 0.3, ")
         {", formula_tikz, "};
 \\end{tikzpicture}")
 
@@ -205,7 +204,7 @@ Question
 `r contexto`. El vaso tiene una base circular de radio `r radio` cm y una altura de `r altura` cm, como se muestra en la figura.
 
 
-```{r cilindro, echo=FALSE, results="asis", fig.align='center'}
+```{r cilindro, echo=FALSE, results="asis", message=FALSE, warning=FALSE, fig.align='center'}
 include_tikz(cilindro_tikz,
              name = "cilindro",
              markup = "markdown",
@@ -251,7 +250,7 @@ Sustituyendo los valores:
 
 Calculamos:
 
-$V = \\pi \\times (", radio, ")^2 \\times ", altura, " = \\pi \\times ", format(radio^2, scientific = FALSE), " \\times ", altura, " = ", volumen_redondeado, " \\text{ cm}^3$
+$V = \\pi \\times (", radio, ")^2 \\times ", altura, " = \\pi \\times ", fmt_icfes(radio^2, 0), " \\times ", altura, " = ", volumen_redondeado, " \\text{ cm}^3$
 
 El resultado corresponde al volumen del vaso cilíndrico.")
 } else if (version == 2) {
@@ -337,8 +336,8 @@ Sustituyendo los valores:
 
 Calculamos:
 - Área lateral: $A_L = 2 \\times \\pi \\times ", radio, " \\times ", altura, " = ", area_lateral_redondeada, " \\text{ cm}^2$
-- Área de las dos bases: $A_B = 2 \\times \\pi \\times ", radio, "^2 = 2 \\times ", area_base_redondeada, " = ", format(round(2*area_base, 2), scientific=FALSE, big.mark="\\,"), " \\text{ cm}^2$
-- Área total: $A_T = A_L + A_B = ", area_lateral_redondeada, " + ", format(round(2*area_base, 2), scientific=FALSE, big.mark="\\,"), " = ", area_total_redondeada, " \\text{ cm}^2$
+- Área de las dos bases: $A_B = 2 \\times \\pi \\times ", radio, "^2 = 2 \\times ", area_base_redondeada, " = ", fmt_icfes(2*area_base), " \\text{ cm}^2$
+- Área total: $A_T = A_L + A_B = ", area_lateral_redondeada, " + ", fmt_icfes(2*area_base), " = ", area_total_redondeada, " \\text{ cm}^2$
 
 El resultado corresponde al área total del vaso cilíndrico, que representa la cantidad total de material necesario para construirlo, incluyendo la superficie lateral y las dos bases circulares.")
 }
@@ -359,3 +358,10 @@ exname: `r exname`
 extype: schoice
 exsolution: `r paste(sol, collapse="")`
 exshuffle: TRUE
+exextra[Type]: SCHOICE
+exextra[Competencia]: Interpretación y representación
+exextra[Componente]: Geométrico-métrico
+exextra[Afirmacion]: Comprende y transforma la información cuantitativa y esquemática presentada en distintos formatos.
+exextra[Evidencia]: Transforma la representación de una o más piezas de información.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.8 — Selecciona información necesaria para resolver problemas que involucran características medibles de figuras geométricas elementales (triángulos, cuadriláteros y circunferencias).

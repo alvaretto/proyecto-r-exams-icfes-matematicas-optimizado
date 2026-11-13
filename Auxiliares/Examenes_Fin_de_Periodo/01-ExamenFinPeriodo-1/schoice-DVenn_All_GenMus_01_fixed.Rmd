@@ -179,27 +179,25 @@ main_question <- questions[question_index]
 correct_answer <- answers[question_index]
 
 # Generar distractores (respuestas incorrectas pero plausibles)
-generate_distractors <- function(correct, n = 3) {
-  # Crear distractores cercanos al valor correcto
-  distractors <- c()
-  
-  # Distractor 1: Valor cercano por debajo
-  dist1 <- max(1, correct - sample(1:3, 1))
-  distractors <- c(distractors, dist1)
-  
-  # Distractor 2: Valor cercano por encima
-  dist2 <- correct + sample(1:3, 1)
-  distractors <- c(distractors, dist2)
-  
-  # Distractor 3: Valor más alejado
-  if (runif(1) > 0.5) {
-    dist3 <- max(1, correct - sample(4:6, 1))
-  } else {
-    dist3 <- correct + sample(4:6, 1)
-  }
-  distractors <- c(distractors, dist3)
-  
-  return(distractors)
+# Construcción determinista de tres valores distintos entre sí y distintos de la correcta
+# (sin bucles; familia F1/F5): cercano por debajo, cercano por encima y más alejado.
+elegir_uno <- function(x) x[sample.int(length(x), 1)]
+
+generate_distractors <- function(correct) {
+  abajo  <- (correct - 3):(correct - 1)
+  abajo  <- abajo[abajo >= 1]
+  arriba <- (correct + 1):(correct + 3)
+  lejos  <- c((correct - 6):(correct - 4), (correct + 4):(correct + 6))
+  lejos  <- lejos[lejos >= 1]
+
+  # Distractor 2: valor cercano por encima
+  dist2 <- elegir_uno(arriba)
+  # Distractor 1: valor cercano por debajo (si no hay valores positivos por debajo, otro por encima)
+  dist1 <- elegir_uno(if (length(abajo) > 0) abajo else setdiff(arriba, dist2))
+  # Distractor 3: valor más alejado
+  dist3 <- elegir_uno(setdiff(lejos, c(dist1, dist2)))
+
+  c(dist1, dist2, dist3)
 }
 
 # Generar distractores
@@ -212,28 +210,31 @@ options <- sample(options)
 # Identificar la posición de la respuesta correcta
 solution_index <- which(options == correct_answer)
 
+# Exactamente una opción correcta y cuatro opciones con texto distinto
+stopifnot(sum(options == correct_answer) == 1,
+          length(solution_index) == 1,
+          length(unique(as.character(options))) == 4)
+
 # Usar el mismo tipo de gráfico (pdf, svg, png) que la llamada actual de xweave()
 typ <- match_exams_device()
 
 # Código TikZ para el Diagrama de Venn
 tikz_venn <- sprintf('
-\\begin{tikzpicture}[scale=0.7]
-  \\begin{scope}[opacity=0.5]
-    \\fill[red]   ( 90:1.5) circle (2);
-    \\fill[green] (210:1.5) circle (2);
-    \\fill[blue]  (330:1.5) circle (2);
-  \\end{scope}
-  \\node at ( 90:3.3) {%s};
-  \\node at (210:3.3) {%s};
-  \\node at (330:3.3) {%s};
-  \\node at ( 90:1.3) {%d};
+\\begin{tikzpicture}[scale=0.7, every node/.style={font=\\small}]
+  \\draw[line width=1.6pt, fill=black!15, fill opacity=0.4] ( 90:1.5) circle (2);
+  \\draw[line width=1.6pt, dash pattern=on 7pt off 3pt, fill=black!15, fill opacity=0.4] (210:1.5) circle (2);
+  \\draw[line width=1.6pt, line cap=round, dash pattern=on 0.1pt off 3pt, fill=black!15, fill opacity=0.4] (330:1.5) circle (2);
+  \\node[anchor=south, font=\\small\\bfseries] at ( 90:3.55) {%s};
+  \\node[anchor=north east, font=\\small\\bfseries] at (210:3.55) {%s};
+  \\node[anchor=north west, font=\\small\\bfseries] at (330:3.55) {%s};
+  \\node at ( 90:2.2) {%d};
   \\node at (210:1.3) {%d};
   \\node at (330:1.3) {%d};
   \\node at ( 30:1.7) {%d};
   \\node at (150:1.7) {%d};
   \\node at (270:1.7) {%d};
   \\node at (0:0) {%d};
-  \\node at (270:3.5) {Ninguno: %d};
+  \\node at (270:3.9) {Ninguno: %d};
 \\end{tikzpicture}
 ', A, B, C, n_only_A, n_only_B, n_only_C, n_AC_only, n_AB_only, n_BC_only, n_all, n_none)
 
@@ -246,7 +247,7 @@ include_venn <- function() {
     include_tikz(tikz_venn, name = "venn_diagram", markup = "markdown",
                  format = typ, library = c("shapes", "backgrounds"),
                  packages = c("tikz"),
-                 width = "6cm")
+                 width = "6.5cm")
   }, error = function(e) {
     # Si falla TikZ, mostrar un mensaje de texto con los valores
     cat("Diagrama de Venn (representación textual):\n\n")
@@ -334,6 +335,10 @@ create_venn_table <- function() {
 
 Question
 ========
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
 `r random_text`
 
 Por último sabemos que solamente `r n_all` escuchan los tres géneros musicales.
@@ -413,3 +418,10 @@ extype: schoice
 exsolution: `r mchoice2string(1:4 == solution_index)`
 extol: 0
 exsection: Diagrama de Venn
+exextra[Type]: SCHOICE
+exextra[Competencia]: Interpretación y representación
+exextra[Componente]: Aleatorio
+exextra[Afirmacion]: Comprende y transforma la información cuantitativa y esquemática presentada en distintos formatos.
+exextra[Evidencia]: Da cuenta de las características básicas de la información presentada en diferentes formatos, como series, gráficas, tablas y esquemas.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.11 — Identifica información relevante cuando el tipo de registro contiene información de más de tres categorías.
