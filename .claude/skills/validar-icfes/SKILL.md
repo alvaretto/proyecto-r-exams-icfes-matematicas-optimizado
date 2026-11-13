@@ -2,7 +2,7 @@
 name: validar-icfes
 description: >
   Valida estructura R-exams y metadatos ICFES de archivos .Rmd. Verifica extype, exsolution, exshuffle,
-  las 6 dimensiones ICFES y distractores pedagógicos con 250+ versiones únicas.
+  las 6 dimensiones ICFES y distractores pedagógicos con 100+ versiones únicas de 150.
   Usa cuando necesites "validar icfes", "verificar metadatos", "revisar estructura .Rmd", o "chequear ejercicio".
 metadata:
   model_recommendation: haiku
@@ -12,5 +12,5 @@ metadata:
 
 1. Lee el archivo .Rmd generado.
 2. Verifica la presencia de 'schoice' o 'cloze' según el tipo de ejercicio en el workflow [2].
-3. Asegura que existan distractores pedagógicos y 250+ versiones únicas (de 300 intentos) [3].
+3. Asegura que existan distractores pedagógicos y 100+ versiones únicas (de 150 intentos) [3].
 4. Compara los VALORES de `exextra[...]` con el catálogo canónico o la ficha del ítem de forma LITERAL: van con tildes, mayúsculas y signos (regla #7, 2026-10-22); las claves `exextra[Nombre]` van en ASCII. Clasifica cada discrepancia como CONTENIDO (otro texto u otro valor: NO CUMPLE) o FORMATO (mismo texto con distinta tilde, «°» o mayúscula: se corrige al tocar el ejercicio, o se declara si el profesor decidió conservarlo). Un FORMATO no es un NO CUMPLE de clasificación.

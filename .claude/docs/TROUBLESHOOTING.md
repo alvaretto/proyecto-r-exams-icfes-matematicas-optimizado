@@ -33,11 +33,11 @@ Error: LaTeX failed to compile archivo.tex
 
 ---
 
-### 2. ⚠️ Diversidad insuficiente (< 250 versiones únicas)
+### 2. ⚠️ Diversidad insuficiente (< 100 versiones únicas de 150)
 
 **Error:**
 ```
-Solo se generaron X versiones únicas. Se requieren al menos 250.
+Solo se generaron X versiones únicas. Se requieren al menos 100 (de 150).
 ```
 
 **Solución:**
@@ -233,7 +233,7 @@ Rscript .claude/scripts/validar_multisemilla.R archivo.Rmd --modo exhaustivo
 **Validación:**
 
 - `/validar-renderizado` - Ciclo completo exams2* (html, pdf, docx, nops)
-- `/validar-diversidad` - Validar 250+ versiones únicas (de 300 intentos)
+- `/validar-diversidad` - Validar 100+ versiones únicas (de 150 intentos)
 - `/validar-coherencia` - Verificar coherencia matemática/imagen/código
 
 **Diagnóstico y Corrección:**
@@ -301,7 +301,7 @@ Antes de usar `/promover-ejercicio`, validar en **TRES NIVELES**:
 
 ### **Validación Adicional**
 
-- [ ] Diversidad ≥ 250 versiones únicas (de 300 intentos)
+- [ ] Diversidad ≥ 100 versiones únicas (de 150 intentos)
 - [ ] Metadatos ICFES completos
 - [ ] Solución matemática correcta
 - [ ] Sin errores en tests unitarios

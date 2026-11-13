@@ -55,7 +55,7 @@
 6. Arsenal post-render automático (FASES 2A-2O)
 7. `/adversario` — Detractor FASE 2C
 8. Documenta 5 coherencias visualmente
-9. `/validar-diversidad` — 250+ versiones únicas
+9. `/validar-diversidad` — 100+ versiones únicas de 150
 10. `/validar-icfes` — metadatos y estructura
 11. Aprobación usuario
 
@@ -134,7 +134,7 @@ Detecta automáticamente en qué paso quedó el workflow y retoma desde ahí.
 9. Arsenal post-render automático (FASES 2A-2O)
 10. `/adversario` — Detractor FASE 2C
 11. Documenta 5 coherencias
-12. `/validar-diversidad` — 250+ versiones únicas
+12. `/validar-diversidad` — 100+ versiones únicas de 150
 13. `/validar-icfes` — metadatos y estructura
 14. Aprobación usuario → `/promover-ejercicio`
 
@@ -180,7 +180,7 @@ exextra[Componente]: [clasificación]
 11. Arsenal post-render automático (FASES 2A-2O)
 12. `/adversario` — Detractor FASE 2C
 13. Documenta 5 coherencias
-14. `/validar-diversidad` — 250+ versiones únicas
+14. `/validar-diversidad` — 100+ versiones únicas de 150
 15. `/validar-icfes` — metadatos y estructura
 16. Aprobación usuario → `/promover-ejercicio`
 
@@ -768,7 +768,7 @@ allowed-tools:
 | promover-ejercicio | Haiku | Mover a producción |
 | transferir-conocimiento-grafico | Haiku | Lecciones entre lenguajes |
 | validar-coherencia | Haiku | FASE 2: 5 coherencias |
-| validar-diversidad | Haiku | 250+ versiones únicas |
+| validar-diversidad | Haiku | 100+ versiones únicas de 150 |
 | validar-icfes | Haiku | Estructura R-exams + ICFES |
 | validar-renderizado | Haiku | FASE 1: 4 formatos |
 

@@ -40,7 +40,7 @@ Este workflow utiliza **Skills de Claude Code** configurados en `.claude/skills/
 - `/auto-refinar-grafico` - Graficador secuencial (tikz/python/r)
 - `/promover-ejercicio` - Promocion a carpeta de produccion
 - `/corregir-error-imagen` - Correccion de errores TikZ
-- `/validar-diversidad` - Validar 250+ versiones únicas (de 300 intentos)
+- `/validar-diversidad` - Validar 100+ versiones únicas (de 150 intentos)
 - `/validar-icfes` - Validar metadatos
 
 ---
@@ -289,7 +289,7 @@ El comando de generación:
    - Encabezado YAML con paquetes LaTeX
    - Chunk de configuración inicial
    - Chunk de generación de datos (aleatorización)
-   - Chunk de prueba de diversidad (250+ versiones únicas de 300 intentos)
+   - Chunk de prueba de diversidad (100+ versiones únicas de 150 intentos)
    - Chunks de gráficos (TikZ, Python, R según necesidad)
    - Sección Question con enunciado
    - Sección Solution con explicación detallada
@@ -351,7 +351,7 @@ code A-Produccion/02-En-Desarrollo/[nombre_archivo].Rmd
   - [ ] Formato numérico estándar
   
 - [ ] **Chunk de prueba de diversidad** (`version_diversity_test`)
-  - [ ] Test de 250+ versiones únicas (de 300 intentos)
+  - [ ] Test de 100+ versiones únicas (de 150 intentos)
   
 - [ ] **Chunks de gráficos** (si aplica)
   - [ ] TikZ con `include_tikz()` (Flujo B)
@@ -440,7 +440,7 @@ code A-Produccion/02-En-Desarrollo/[nombre_archivo].Rmd
 
 ```
 ═══════════════════════════════════════════════════════════
-VALIDACIÓN DE DIVERSIDAD - 250+ VERSIONES ÚNICAS
+VALIDACIÓN DE DIVERSIDAD - 100+ VERSIONES ÚNICAS DE 150
 ═══════════════════════════════════════════════════════════
 
 📊 Generando 1000 versiones de prueba...
@@ -452,7 +452,7 @@ VALIDACIÓN DE DIVERSIDAD - 250+ VERSIONES ÚNICAS
    - Versiones generadas: 1000
    - Versiones únicas: 847
    - Tasa de unicidad: 84.7%
-   - Mínimo requerido: 250
+   - Mínimo requerido: 100 (de 150)
    - Estado: ✅ APROBADO
 
 ═══════════════════════════════════════════════════════════
@@ -460,12 +460,12 @@ VALIDACIÓN DE DIVERSIDAD - 250+ VERSIONES ÚNICAS
 
 ### 5.3 Si la Validación Falla
 
-**Si se generan < 250 versiones únicas:**
+**Si se generan < 100 versiones únicas de 150:**
 
 ```
-❌ RESULTADO: 187 versiones únicas generadas
+❌ RESULTADO: 72 versiones únicas generadas
 
-⚠️ PROBLEMA: No se alcanza el mínimo de 250 versiones únicas
+⚠️ PROBLEMA: No se alcanza el mínimo de 100 (de 150) versiones únicas
 
 💡 SOLUCIONES:
 
@@ -633,7 +633,7 @@ exams2moodle("[archivo].Rmd", n = 30, name = "examen_moodle")
 **Checklist obligatorio (TODOS los niveles):**
 
 Nivel 1+2 (Automatico):
-- [ ] ✅ Diversidad validada (200+ versiones unicas)
+- [ ] ✅ Diversidad validada (100+ versiones unicas de 150)
 - [ ] ✅ Compilacion PDF/HTML/DOCX exitosa
 - [ ] ✅ 5 coherencias verificadas
 - [ ] ✅ Metadatos ICFES completos
@@ -778,7 +778,7 @@ cat .claude/docs/patrones-errores-conocidos.md
 /corregir-error-imagen [archivo].Rmd
 ```
 
-### Problema 3: Menos de 250 versiones únicas
+### Problema 3: Menos de 100 versiones únicas de 150
 
 **Solución:**
 
@@ -847,7 +847,7 @@ Por favor, mejora la fidelidad visual del código TikZ.
 - [ ] Flujo A o B identificado
 - [ ] Comando de generación ejecutado
 - [ ] Archivo .Rmd revisado
-- [ ] Diversidad validada (250+ versiones únicas)
+- [ ] Diversidad validada (100+ versiones únicas de 150)
 - [ ] PDF compilado sin errores
 - [ ] HTML compilado sin errores
 - [ ] Calidad matemática verificada
@@ -960,7 +960,7 @@ N. Validar todos → Compilar todos → Promover todos
 
 | Métrica | Valor Objetivo | Cómo Verificar |
 |---------|----------------|----------------|
-| **Diversidad de versiones** | ≥ 250 únicas (de 300 intentos) | `/validar-diversidad` |
+| **Diversidad de versiones** | ≥ 100 únicas (de 150 intentos) | `/validar-diversidad` |
 | **Compilación PDF** | Sin errores | `exams2pdf()` |
 | **Compilación HTML** | Sin errores | `exams2html()` |
 | **Fidelidad gráfica** | ≥ 98% | Comparación visual |
@@ -973,7 +973,7 @@ N. Validar todos → Compilar todos → Promover todos
 **⭐ Básico (Mínimo Aceptable)**
 
 - ✅ Compila sin errores
-- ✅ 250+ versiones únicas (de 300 intentos)
+- ✅ 100+ versiones únicas (de 150 intentos)
 - ✅ Metadatos ICFES completos
 
 **⭐⭐ Bueno (Recomendado)**

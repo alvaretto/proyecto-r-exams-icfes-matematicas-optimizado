@@ -13,7 +13,7 @@
 - [ ] Metadatos exclozetype, exsolution, extol consistentes y separados por `|`
 - [ ] Numero de tipos en exclozetype = numero de partes = numero de ##ANSWERi##
 - [ ] Metadatos DOK (>= 3), Bloom (Evaluar), SOLO presentes
-- [ ] Test de diversidad > 250 versiones unicas de 300 intentos
+- [ ] Test de diversidad >= 100 versiones unicas de 150 intentos
 
 ## Condiciones criticas
 
@@ -49,7 +49,7 @@
 - DOCX: OK
 - NOPS: Puede fallar (ESPERADO si hay gaps num/string — no es error)
 - **Respuesta erronea diferente de correcta**
-- Test de diversidad > 250 versiones unicas
+- Test de diversidad >= 100 versiones unicas de 150
 - **Solucion incluye todas las subsecciones obligatorias** (5 secciones)
 - Ciclo de validacion completo (FASE 1 → 2A → 2B → 2C → 3)
 

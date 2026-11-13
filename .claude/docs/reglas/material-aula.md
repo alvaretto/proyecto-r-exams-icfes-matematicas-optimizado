@@ -95,8 +95,8 @@ y permutan los rótulos.
 
 Máximo 100 versiones en Moodle, Canvas y HTML. En Moodle, `seed = matrix(seq_len(copias), ncol = 1)`, para exportar las
 semillas 1 a 100 que valida `validar_stresstest.R` en el paso 9. Un `stopifnot(copias <= 100)` en el semillero hace
-visible el tope. El umbral de diversidad de 250 únicas sobre 300 (regla #3 de `codigo-rmd.md`) mide la capacidad del
-ejercicio, no lo que se exporta, y no cambia.
+visible el tope. El umbral de diversidad mide la capacidad del ejercicio, no lo que se exporta. Desde el 2026-11-13 es de 100 únicas
+sobre 150 renders (regla #3 de `codigo-rmd.md`; antes, 250 sobre 300): alcanza para exportar 100 versiones distintas.
 
 ### Cuestionario sin internet
 

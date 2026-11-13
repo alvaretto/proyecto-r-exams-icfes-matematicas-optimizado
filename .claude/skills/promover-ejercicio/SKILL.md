@@ -40,7 +40,7 @@ Mueve un archivo .Rmd desde su ubicacion actual a `/A-Produccion/03-En-Produccio
 1. ✅ FASE 1: Renderizado exitoso en 4 formatos (HTML, PDF, DOCX, NOPS)
 2. ✅ FASE 2: Coherencias verificadas (matematica, visual-texto, codigo, semantica, general)
 3. ✅ FASE 3: Sin errores pendientes
-4. ✅ Diversidad: 200+ versiones unicas de 300 intentos
+4. ✅ Diversidad: 100+ versiones unicas de 150 intentos
 5. ✅ Detractor: Auditoria aprobada
 
 ### Nivel 3: Validacion en Terreno (OBLIGATORIO NUEVO)

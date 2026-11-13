@@ -179,7 +179,7 @@ El Graficador-Experto está completamente integrado en el workflow principal. Se
 │   ├── diagnosticar-errores/               # Diagnóstico de errores
 │   ├── promover-ejercicio/                 # Promoción a producción
 │   ├── validar-coherencia/                 # Validación de coherencia
-│   ├── validar-diversidad/                 # Validación de 250+ versiones únicas
+│   ├── validar-diversidad/                 # Validación de 100+ versiones únicas de 150
 │   ├── validar-icfes/                      # Validación de metadatos
 │   └── validar-renderizado/                # Validación de renderizado
 │   ├── analizar-imagen-grafica/           # 🎨 Análisis visual matemático

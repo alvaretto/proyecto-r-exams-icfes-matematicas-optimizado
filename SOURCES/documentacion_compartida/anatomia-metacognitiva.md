@@ -6,7 +6,7 @@ Un archivo metacognitivo válido tiene exactamente **8 secciones** en este orden
 1. ENCABEZADO YAML (output + taxonomías cognitivas)
 2. CHUNK setup (librerías + configuración)
 3. CHUNK data_generation (pool de errores + aleatorización)
-4. CHUNK version_diversity_test (validación 200+ versiones)
+4. CHUNK version_diversity_test (validación 100+ versiones de 150)
 5. CHUNK validaciones_matematicas (test_that obligatorios)
 6. SECCIÓN Question (patrón metacognitivo + Answerlist)
 7. SECCIÓN Solution (análisis de error + reflexión + Answerlist)
@@ -275,7 +275,7 @@ options(OutDec = ".")
 
 test_that("Prueba de diversidad de versiones", {
   versiones <- list()
-  for (i in 1:500) {
+  for (i in 1:150) {
     datos_test <- generar_datos()
     hash_datos <- digest::digest(list(
       contexto = datos_test$ctx$rol,
@@ -287,14 +287,14 @@ test_that("Prueba de diversidad de versiones", {
   }
 
   n_versiones_unicas <- length(unique(versiones))
-  expect_true(n_versiones_unicas >= 200,
+  expect_true(n_versiones_unicas >= 100,
               info = paste("Solo se generaron", n_versiones_unicas,
-                          "versiones únicas. Se requieren al menos 200."))
+                          "versiones únicas. Se requieren al menos 100 (de 150)."))
 })
 ```
 ```
 
-**Umbral reducido a 200** para ejercicios con restricciones fuertes (errores conceptuales limitados, contextos específicos).
+**Umbral único:** al menos 100 versiones únicas sobre 150 renders, también para ejercicios con restricciones fuertes (regla #3 de `codigo-rmd.md`).
 
 ---
 

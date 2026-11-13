@@ -1101,7 +1101,7 @@ ya corrieron. No los doy por hechos leyendo `ejercicio_state.json`.
 | 6b | auditoria_visual_html | **Auditoría visual masiva** de ~24 versiones HTML (móvil 360px + desktop 1024px): fugas de markup, math sin renderizar, ##ANSWERi## sin resolver, partes/gaps faltantes, desbordes/responsividad, anomalías cross-versión | Task `subagent_type="auditor-visual-html"` | sonnet |
 | 7 | detractor_fase2c | Revisión adversarial 8 dominios | Task `subagent_type="AgenteDetractor"` | opus |
 | 8 | coherencias_5 | Verificar 5 coherencias visualmente (cada parte muestra su gap) | Task `subagent_type="AgenteValidadorVisual"` | sonnet |
-| 9 | validar_diversidad | 250+ versiones únicas (combinación de TODAS las partes) via `validar_multisemilla.R` **+ compilación completa** via `validar_stresstest.R` **+ diversidad SUSTANTIVA POR GAP** via `validar_diversidad_sustantiva.R --n 100` (regla #22, V8 — `ERR_DIV_COSMETICA` bloqueante; `WARN_DIV_GAP_FIJO` y la `NOTA DE COBERTURA` exigen declaración explícita, no se ignoran) **+ DIAGNOSTICIDAD de los distractores** via `validar_diagnosticidad.R --n 100` (V9 — `ERR_DIAG_SUPERFICIAL` bloqueante; la `NOTA DE ORDEN` se transcribe, no se ignora) | Bash | — |
+| 9 | validar_diversidad | 100+ versiones únicas de 150 (combinación de TODAS las partes) via `validar_multisemilla.R` **+ compilación completa** via `validar_stresstest.R` **+ diversidad SUSTANTIVA POR GAP** via `validar_diversidad_sustantiva.R --n 100` (regla #22, V8 — `ERR_DIV_COSMETICA` bloqueante; `WARN_DIV_GAP_FIJO` y la `NOTA DE COBERTURA` exigen declaración explícita, no se ignoran) **+ DIAGNOSTICIDAD de los distractores** via `validar_diagnosticidad.R --n 100` (V9 — `ERR_DIAG_SUPERFICIAL` bloqueante; la `NOTA DE ORDEN` se transcribe, no se ignora) | Bash | — |
 | 10 | validar_icfes | Estructura R-exams + V1-V11 CLOZE + 6 dimensiones + DOK/Bloom/SOLO **+ literalidad contra el catálogo canónico y coherencia Nivel↔DOK** (§ Exigencia ICFES) | Bash | — |
 | 11 | aprobacion_usuario | **WAIT_USER #3** Preview + checklist + decisión | (humano) | — |
 | 12 | sello | `workflow-state.sh complete <dir> aprobacion_usuario` | Bash | — |
@@ -1684,7 +1684,7 @@ Renderizado: HTML/PDF/DOCX/Moodle OK  |  NOPS: N/A (esperado para todo CLOZE)
 Moodle: ningún gap contiene imágenes (Incidente G) — OK | N/A
 Detractor FASE 2C: APROBAR
 5 coherencias: <checklist>
-Diversidad: NNN/300 versiones únicas (umbral 250)
+Diversidad: NNN/150 versiones únicas (umbral 100)
 Validación ICFES: 6 dimensiones + DOK/Bloom/SOLO OK
 Multi-semilla Nivel 5: NN/NN OK
 Stress Test Visual: 0 anomalías

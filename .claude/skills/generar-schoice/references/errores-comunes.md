@@ -109,7 +109,7 @@ b <- sample(5:30, 1)  # 26 valores
 c <- sample(1:15, 1)  # 15 valores
 # Total: 19 × 26 × 15 = 7,410 versiones posibles
 
-test_versiones(300)  # Debe dar 250+ únicas
+test_versiones(150)  # Debe dar 100+ únicas
 ```
 
 ## Error 6: No Consultar Ejemplos Funcionales

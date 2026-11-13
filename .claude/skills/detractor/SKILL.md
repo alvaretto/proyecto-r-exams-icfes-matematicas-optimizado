@@ -65,7 +65,7 @@ Resumen:
 4. **Gramatica/Ortografia** — tildes, redaccion ICFES, terminologia matematica
 5. **Coherencia Matematica** — formulas, calculos, distractores plausibles, sin NA/NaN/Inf
 6. **ICFES Metacognitivo** — Progressive Disclosure, pool errores, Solution 6 subsecciones
-7. **Testing y Regresion** — tests unitarios, cobertura 100%, diversidad 200+, CI/CD
+7. **Testing y Regresion** — tests unitarios, cobertura 100%, diversidad 100+ de 150, CI/CD
 8. **Coherencia Semantica** — precondicion declarada, keywords Capa B, calcula() determinista
 
 ---

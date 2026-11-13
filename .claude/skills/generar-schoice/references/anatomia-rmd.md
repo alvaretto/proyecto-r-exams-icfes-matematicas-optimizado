@@ -18,7 +18,7 @@ Un archivo SCHOICE válido tiene exactamente **7 secciones** en este orden:
 1. ENCABEZADO YAML (output + header-includes)
 2. CHUNK setup (librerías + configuración)
 3. CHUNK data_generation (aleatorización + cálculos)
-4. CHUNK version_diversity_test (validación 250+ versiones)
+4. CHUNK version_diversity_test (validación 100+ versiones de 150)
 5. SECCIÓN Question (enunciado + Answerlist)
 6. SECCIÓN Solution (explicación + Answerlist)
 7. META-INFORMATION (metadatos R/exams + ICFES)
@@ -134,7 +134,7 @@ Reglas críticas:
 
 ```r
 ```{r version_diversity_test, include=FALSE}
-test_versiones <- function(n = 300) {
+test_versiones <- function(n = 150) {
   versiones <- replicate(n, {
     datos <- generar_datos()
     paste(datos$a, datos$b, datos$c, datos$respuesta_correcta, sep = "_")
@@ -145,19 +145,19 @@ test_versiones <- function(n = 300) {
 
   cat("Versiones únicas:", n_unicas, "/", n, "(", porcentaje, "%)\n")
 
-  if (n_unicas < 250) {
-    warning("ALERTA: Menos de 250 versiones únicas.")
+  if (n_unicas < 100) {
+    warning("ALERTA: Menos de 100 versiones únicas de 150.")
   }
 
   return(n_unicas)
 }
 
 # Ejecutar test (comentar después de validar)
-# test_versiones(300)
+# test_versiones(150)
 ```
 ```
 
-Requisitos: Mínimo 250 versiones únicas de 300 intentos (83%).
+Requisitos: Mínimo 100 versiones únicas de 150 intentos (67 %).
 
 ## Sección 5: Question
 

@@ -956,7 +956,7 @@ Antes de finalizar CUALQUIER ejercicio:
 - [ ] Ortografía validada (tildes correctas)
 - [ ] Tests ejecutados y pasando (100%)
 - [ ] Renderizado exitoso en 4 formatos
-- [ ] 200+ versiones únicas generadas (250+ si no hay restricciones fuertes)
+- [ ] Al menos 100 versiones únicas sobre 150 renders
 - [ ] Usuario aprobó explícitamente
 - [ ] Documentación actualizada
 - [ ] **Routing de modelos** respetado (skills delegados al modelo correcto) 🆕

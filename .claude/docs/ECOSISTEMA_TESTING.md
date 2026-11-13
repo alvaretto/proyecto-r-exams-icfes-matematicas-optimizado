@@ -39,7 +39,7 @@ tests/
 │   ├── test_validacion_matematica.R     # Tests de validación matemática (FASE 2A)
 │   ├── test_ortografia_espanol.R        # Tests de corrección ortográfica
 │   ├── test_renderizado_4_formatos.R    # Tests HTML/PDF/DOCX/NOPS
-│   ├── test_aleatorization_diversity.R  # Tests exshuffle y 250+ versiones
+│   ├── test_aleatorization_diversity.R  # Tests exshuffle y 100+ versiones de 150
 │   ├── test_flujo_b_graficador.R        # Tests del Graficador Secuencial
 │   ├── test_regression_suite.R          # Tests anti-regresión
 │   ├── test_neg_visual_distinctness.R   # Tests distintividad visual _neg_
@@ -131,17 +131,17 @@ tests/
 
 ### 4. **Tests de Aleatorización y Diversidad** (`test_aleatorization_diversity.R`)
 
-**Objetivo:** Validar que `exshuffle = TRUE` y la generación de 250+ versiones únicas funcionan correctamente.
+**Objetivo:** Validar que `exshuffle = TRUE` y la generación de 100+ versiones únicas de 150 funcionan correctamente.
 
 **Cobertura:**
 - ✅ `exshuffle = TRUE` genera orden diferente en múltiples renderizados
-- ✅ Ejercicio genera al menos 250 versiones únicas
+- ✅ Ejercicio genera al menos 100 versiones únicas de 150
 - ✅ Aleatorización de datos numéricos cubre rango esperado
 - ✅ Distractores se generan correctamente y son distintos
 
 **Tests Implementados:**
 - `test_that("exshuffle = TRUE genera orden diferente en múltiples renderizados")`
-- `test_that("Ejercicio genera al menos 250 versiones únicas")`
+- `test_that("Ejercicio genera al menos 100 versiones únicas sobre 150 renders")`
 - `test_that("Aleatorización de datos numéricos cubre rango esperado")`
 - `test_that("Distractores se generan correctamente y son distintos")`
 

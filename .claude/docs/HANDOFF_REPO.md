@@ -1,8 +1,46 @@
 # HANDOFF — repositorio (infraestructura `.claude/`, tests y documentación)
 
 > Archivo de retorno para el trabajo que no pertenece a un ejercicio; cada ejercicio lleva su propio
-> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-11-10 (v3.41.1: aclaraciones del ciclo de `vueltas-llanta-perimetro-n4`).
+> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-11-13 (v3.43.0: umbral de producto, 100 únicas sobre 150).
 > Si este archivo y el código discrepan, manda el código: verificar antes de actuar.
+
+## 2026-11-13: umbral de producto, 100 únicas sobre 150 (v3.43.0)
+
+- **Qué es:** instrucción del profesor: el umbral de diversidad pasa de «al menos 250 versiones únicas de 300 intentos» a
+  «al menos 100 versiones únicas sobre 150 renders». Es un umbral único: sustituye también a «200+», «200 de 200» y «200 de
+  300». La norma está en la regla #3 de `codigo-rmd.md` (ver el changelog v3.43.0). No cambian N = 100 de las mediciones
+  estadísticas (regla #23) ni el máximo de 100 versiones exportadas (regla #26).
+- **Qué se hizo en este barrido de textos:** un script (`umbral_100_150.py`, con backup por archivo) reemplazó la cifra en
+  `.claude/docs/` (guías, workflow, troubleshooting, testing, comandos), `.claude/skills/` (SKILL y references, incluida la
+  plantilla del chunk `version_diversity_test`, ahora con `n = 150` y umbral 100), `commands/validate.md` y el paso 9 y la
+  plantilla de reporte de `orquestador-schoice` y `orquestador-cloze`. No se tocaron los registros históricos (incidente
+  «288/300», `patrones-errores-conocidos.md`, `diversidad-sustantiva.md`, changelogs).
+- **Pendiente:**
+  - Los `.Rmd` ya aprobados conservan su chunk `version_diversity_test` con 250/300; se ajustan en el próximo ciclo de cada
+    uno.
+  - Las definiciones de los agentes se cargan de HEAD: el cambio en los orquestadores rige tras commit y sesión nueva.
+  - En commit desde el 2026-11-13: la regla #27 y el umbral van juntos en un solo commit, con los ejecutables y la guarda de `test_muestra_estandar.R`.
+
+## 2026-11-13: regla #27, clasificación impresa en el original (v3.42.0)
+
+- **Qué es:** instrucción del profesor durante el paso 1 de `serie-seno-aproximacion-n3` (`MAT-2026-07-017`): cuando el
+  original traiga componente, competencia, nivel, descriptor o similares, triangular con lo local y tomar decisiones. Queda
+  como la regla #27 (`.claude/rules/triangulacion-clasificacion-impresa.md`): el rótulo impreso es un voto; se transcribe,
+  se decodifica con el catálogo canónico y se triangula con la ficha y con una clasificación propia a ciegas. Decide la
+  mayoría; el empate a tres se le pregunta al profesor.
+- **Primer caso, `MAT-2026-07-017`:** competencia, componente y afirmación coinciden en los tres votos (3 de 3); la evidencia
+  coincide en 2 de 3 a favor de la ficha («Ejecuta un plan de solución…» frente al «2.3» del rótulo). La clasificación del
+  ejercicio no cambia.
+- **Pendiente:**
+  - La regla #27 no tiene guarda mecánica. El íntegro describe la guarda posible: un validador que exija en
+    `ITEM_OFICIAL.md` la línea «Rótulo impreso» y, cuando no diga «no trae», la tabla con una decisión por fila.
+  - Los agentes `orquestador-schoice` y `orquestador-cloze` y el skill `analizar-icfes` no se editaron. Cablear el paso 1 y el
+    paso 10 pide commit y sesión nueva, porque un subagente carga su definición de HEAD.
+  - En commit desde el 2026-11-13: la regla #27 y el umbral van juntos en un solo commit, con los ejecutables y la guarda de `test_muestra_estandar.R`.
+- **Archivos de esta línea:**
+  - la regla nueva: `.claude/rules/triangulacion-clasificacion-impresa.md` y `.claude/docs/reglas/triangulacion-clasificacion-impresa.md`;
+  - el índice `.claude/CLAUDE.md` (entrada 27, referencias rápidas, versión y fecha) y su changelog;
+  - referencias cruzadas: `INDICE_LECCIONES.md` v1.5, `MANUAL_USUARIO.md` y este archivo.
 
 ## 2026-11-10: aclaraciones del ciclo de `vueltas-llanta-perimetro-n4` (v3.41.1)
 

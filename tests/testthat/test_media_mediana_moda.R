@@ -173,8 +173,8 @@ test_that("Renderiza correctamente en DOCX (pandoc)", {
 # ============================================================
 context("Media-Mediana-Moda: diversidad de versiones")
 
-test_that("200+ versiones unicas de 300 intentos", {
-  N_DIV <- if (.quick) 30 else 300
+test_that("100+ versiones unicas de 150 intentos", {
+  N_DIV <- if (.quick) 30 else 150
   versiones <- character(N_DIV)
   for (i in 1:N_DIV) {
     ex <- .gen_one()
@@ -188,8 +188,8 @@ test_that("200+ versiones unicas de 300 intentos", {
     versiones[i] <- hash_version
   }
   n_unicas <- length(unique(versiones))
-  expect_true(n_unicas >= if (.quick) 20 else 200,
-    info = paste("Solo", n_unicas, "versiones unicas de", N_DIV, ". Se requieren", if (.quick) 20 else 200, "+."))
+  expect_true(n_unicas >= if (.quick) 20 else 100,
+    info = paste("Solo", n_unicas, "versiones unicas de", N_DIV, ". Se requieren", if (.quick) 20 else 100, "+."))
 })
 
 # ============================================================

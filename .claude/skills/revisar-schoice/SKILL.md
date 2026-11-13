@@ -163,7 +163,7 @@ Leer los PNGs de preview generados en PASO 6 y verificar VISUALMENTE:
 
 ### PASO 9: Validar diversidad
 
-Ejecutar `/validar-diversidad`. Requiere 250+ versiones únicas de 300 intentos.
+Ejecutar `/validar-diversidad`. Requiere 100+ versiones únicas de 150 intentos.
 
 **Si no alcanza el umbral**: Revisar aleatorización en data_generation, ampliar rangos de parámetros.
 

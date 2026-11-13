@@ -73,7 +73,7 @@ Fuentes: `.claude/rules/ejercicios-metacognitivos.md` (N1), Marco Conceptual ICF
 
 - Tests unitarios para componentes criticos
 - Cobertura >= 100% para scripts de validacion
-- Tests de diversidad (200+ versiones unicas)
+- Tests de diversidad (100+ versiones unicas de 150)
 - Sin regresiones en funcionalidad existente
 - Git hooks nativos configurados (pre-commit, pre-push)
 - CI/CD activo y pasando

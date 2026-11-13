@@ -288,7 +288,9 @@ suites <- list(
     watch = c("muestra-estandar-validacion", "validar_diagnosticidad",
               "validar_diversidad_sustantiva", "validar_multisemilla",
               "post-exams2-validation", "settings\\.json", "test_muestra_estandar",
-              "orquestador-schoice", "orquestador-cloze")
+              "orquestador-schoice", "orquestador-cloze",
+              "test-diversidad", "\\.claude/rules/", "SKILL\\.md",
+              "references/", "commands/validate")
   ),
   list(
     nombre = "Invocabilidad de validar_multisemilla (Error 31)",

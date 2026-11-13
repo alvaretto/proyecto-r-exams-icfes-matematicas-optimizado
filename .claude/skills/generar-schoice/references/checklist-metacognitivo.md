@@ -13,7 +13,7 @@ Verificar TODOS los items antes de avanzar:
 - [ ] DOK >= 2 (preferible 3)
 - [ ] Bloom incluye Analizar o Evaluar
 - [ ] SOLO incluye Relacional o Abstracto-Extendido
-- [ ] Test de diversidad > 250 versiones unicas de 300 intentos
+- [ ] Test de diversidad >= 100 versiones unicas de 150 intentos
 
 ## Condiciones criticas
 
@@ -45,7 +45,7 @@ Verificar TODOS los items antes de avanzar:
 - Renderizado exitoso en 4 formatos (HTML, PDF, DOCX, NOPS)
 - Coherencia matematica pregunta-respuesta-distractores
 - **Respuesta erronea diferente de correcta** (test_that confirma)
-- Test de diversidad > 250 versiones unicas
+- Test de diversidad >= 100 versiones unicas de 150
 - **Solucion incluye todas las subsecciones obligatorias** (6 secciones)
 - Ciclo de validacion completo (FASE 1 → 2A → 2B → 2C → 3)
 

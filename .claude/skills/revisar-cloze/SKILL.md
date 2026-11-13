@@ -207,7 +207,7 @@ Leer los PNGs de preview y verificar VISUALMENTE:
 
 ### PASO 9: Validar diversidad
 
-Ejecutar `/validar-diversidad`. Requiere 250+ versiones únicas de 300 intentos.
+Ejecutar `/validar-diversidad`. Requiere 100+ versiones únicas de 150 intentos.
 
 **Atención CLOZE**: La diversidad se mide sobre la COMBINACIÓN de todas las partes, no sobre cada parte individual.
 

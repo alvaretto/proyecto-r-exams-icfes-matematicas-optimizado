@@ -105,7 +105,7 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 
 #### `/validar-diversidad`
 
-**Propósito:** Validar que el ejercicio genera 250+ versiones únicas (de 300 intentos)
+**Propósito:** Validar que el ejercicio genera 100+ versiones únicas (de 150 intentos)
 
 **Uso:**
 ```bash
@@ -133,7 +133,7 @@ Decisión de Flujo: Flujo B (Con gráficas TikZ)
 
 **Prerequisitos:**
 
-- ✅ Diversidad de 250+ versiones únicas verificada
+- ✅ Diversidad de 100+ versiones únicas de 150 verificada
 - ✅ Compilación exitosa en PDF y HTML
 - ✅ Metadatos ICFES completos
 - ✅ Calidad del contenido validada
@@ -232,7 +232,7 @@ ls A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/
 2. Si es error de imagen faltante: `/corregir-error-imagen`
 3. Verificar logs de compilación
 
-### Problema: Menos de 250 versiones únicas
+### Problema: Menos de 100 versiones únicas de 150
 
 **Solución:**
 

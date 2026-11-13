@@ -7,7 +7,7 @@
 ## Nunca
 1. `include_tikz()` con `markup="tex"` ni ramificar con `is_latex_output()`: esa función es FALSE también en `exams2pdf()`/`exams2nops()` (RAMA MUERTA; pierde la figura en PDF). Usar `include_tikz(..., format = "png", markup = "markdown")`.
 2. Mezclar Python/R sin validar ambos.
-3. Menos de 200 versiones únicas (`exams2html(n = 200)`).
+3. Menos de **100 versiones únicas sobre 150 renders** (`exams2html(n = 150)`). Umbral único desde 2026-11-13: sustituye a «250 de 300» y a «200 de 200».
 4. Omitir alguno de los 4 formatos. 5. Modificar ejemplos funcionales.
 6. `exshuffle: FALSE` salvo SCHOICE con opciones gráficas PNG (regla #4); la Solution es letter-independent (regla #19). En un CLOZE impreso con gráficas rotuladas, el `FALSE` va en la llamada `exams2pdf()` del semillero, no en el `.Rmd` (regla #26).
 7. `_neg_` sin su test (regla #10).

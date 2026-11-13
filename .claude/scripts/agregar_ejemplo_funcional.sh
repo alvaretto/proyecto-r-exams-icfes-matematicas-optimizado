@@ -126,8 +126,8 @@ while true; do
 done
 
 # Pedir versiones únicas
-read -p "Versiones únicas validadas (default: 250+): " VERSIONES
-VERSIONES=${VERSIONES:-"250+"}
+read -p "Versiones únicas validadas (default: 100+ de 150): " VERSIONES
+VERSIONES=${VERSIONES:-"100+ de 150"}
 
 # Generar entrada para CATALOGO.md
 info "Generando entrada para CATALOGO.md..."

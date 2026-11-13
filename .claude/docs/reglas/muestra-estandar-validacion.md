@@ -133,11 +133,12 @@ medida (el peso del estrato menor), no del criterio de la sesión. Implementaci�
 
 ## Lo que NO cambia esta regla
 
-**El requisito de producto de 250+ versiones únicas sobre 300 intentos** (regla #3 de
-`codigo-rmd.md`, paso 9 del workflow) es otra cosa y sigue igual. Ahí el número no es un tamaño de
+**El requisito de producto de al menos 100 versiones únicas sobre 150 renders** (regla #3 de
+`codigo-rmd.md`, paso 9 del workflow) es otra cosa. Ahí el número no es un tamaño de
 muestra para medir una propiedad: es el umbral de diversidad que el ejercicio debe alcanzar. No
 confundir «cuántas versiones genero para MEDIR» (100) con «cuántas versiones únicas debe ser capaz
-de producir el ejercicio» (250 de 300).
+de producir el ejercicio» (100 de 150). Hasta el 2026-11-13 ese umbral era de 250 sobre 300; lo bajó
+el profesor, y esta regla no lo fija: solo remite a él.
 
 **El máximo de versiones exportadas** (Moodle, Canvas o el HTML de un semillero) también es 100, por decisión del
 profesor del 2026-08-15 («Ya no se necesitan 300 preguntas. Son y serán máximo 100»), reafirmada el 2026-11-09 en el
@@ -185,7 +186,7 @@ nombrando el archivo y la línea.
 | Copiar el N de un HANDOFF o de un reporte anterior | Los handoffs no son fuente de verdad ejecutable; el default del script sí |
 | Reportar «medido sobre 400 versiones» | Gasta minutos por corrida sin ganar nada que se haya pedido |
 | Dar una cifra de auditoría visual sin decir cuántas versiones se miraron | Un porcentaje sin denominador no es una medición |
-| Cambiar el 250/300 de diversidad creyendo que es lo mismo | Son cosas distintas: umbral de producto ≠ tamaño de muestra |
+| Cambiar el umbral de diversidad (100 de 150) creyendo que es lo mismo | Son cosas distintas: umbral de producto ≠ tamaño de muestra. Ese umbral solo lo cambia el profesor (lo hizo el 2026-11-13) |
 
 ---
 

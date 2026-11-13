@@ -25,7 +25,7 @@
    /promover-ejercicio archivo.Rmd
    ```
 
-   **Nota**: `validar-diversidad` valida 250+ versiones únicas del ejercicio
+   **Nota**: `validar-diversidad` valida 100+ versiones únicas (de 150 intentos) del ejercicio
 
 3. **Nueva sección "Configuración de Claude Code"**
    - Estructura de `.claude/`

@@ -158,3 +158,109 @@ test_that("CONTROL POSITIVO: el detector caza un default degradado", {
               info = "El detector no nombro el archivo con el default degradado")
   unlink(fake, recursive = TRUE)
 })
+
+# =============================================================================
+# Umbral de producto (regla #3 de codigo-rmd.md), vigente desde 2026-11-13:
+# al menos 100 versiones unicas sobre 150 renders. Sustituye a "250 de 300",
+# "200 de 200" y "200 de 300", que convivian. Es un umbral distinto del N = 100
+# de las mediciones estadisticas (arriba) y del maximo de 100 exportadas.
+# =============================================================================
+RE_CIFRA_RIVAL <- paste0(
+  "250\\+|250 versiones|250 \u00fanicas|250 unicas|de 300 intentos|umbral 250|",
+  "200\\+ versiones|>= ?250|< ?250|250 (de|sobre) 300|200 de (200|300)")
+# Lineas que nombran la cifra vieja como historia, no como norma.
+RE_HISTORIA <- "antes|sustituye|288/300|Hasta el"
+
+# Archivos normativos: lista de (ruta relativa, filtro de lineas o NULL = todas).
+archivos_normativos <- function(base_dir) {
+  rel <- function(p) sub(paste0("^", base_dir, "/"), "", p)
+  listar <- function(d, pat) {
+    if (!dir.exists(file.path(base_dir, d))) return(character(0))
+    rel(list.files(file.path(base_dir, d), pattern = pat, recursive = TRUE,
+                   full.names = TRUE))
+  }
+  sk <- listar(".claude/skills", "\\.md$")
+  sk <- sk[grepl("^\\.claude/skills/[^/]+/SKILL\\.md$", sk) |
+           grepl("^\\.claude/skills/[^/]+/references/[^/]+\\.md$", sk)]
+  fijos <- c(".claude/CLAUDE.md", ".claude/commands/validate.md")
+  fijos <- fijos[file.exists(file.path(base_dir, fijos))]
+  list(
+    completos = c(listar(".claude/rules", "\\.md$")[!grepl("/", sub("^\\.claude/rules/", "",
+                    listar(".claude/rules", "\\.md$")))], sk, fijos),
+    orquestadores = c(".claude/agents/orquestador-schoice.md",
+                      ".claude/agents/orquestador-cloze.md")
+  )
+}
+
+detectar_cifras_rivales <- function(base_dir) {
+  n <- archivos_normativos(base_dir)
+  malos <- character(0)
+  revisar <- function(ruta, solo_lineas = NULL) {
+    f <- file.path(base_dir, ruta)
+    if (!file.exists(f)) return(character(0))
+    ln <- readLines(f, warn = FALSE, encoding = "UTF-8")
+    idx <- which(grepl(RE_CIFRA_RIVAL, ln, perl = TRUE) &
+                 !grepl(RE_HISTORIA, ln, perl = TRUE))
+    if (!is.null(solo_lineas)) idx <- intersect(idx, solo_lineas(ln))
+    if (!length(idx)) return(character(0))
+    sprintf("%s:%d: %s", ruta, idx, trimws(ln[idx]))
+  }
+  for (r in n$completos) malos <- c(malos, revisar(r))
+  for (r in n$orquestadores) {
+    malos <- c(malos, revisar(r, function(ln) {
+      which(grepl("^\\| 9 \\| validar_diversidad \\|", ln) | grepl("Diversidad: ?NNN/", ln))
+    }))
+  }
+  malos
+}
+
+test_that("Umbral de producto: test-diversidad.R usa 100 de 150", {
+  f <- file.path(repo_root, ".claude/skills/generar-schoice/scripts/test-diversidad.R")
+  expect_true(file.exists(f))
+  ln <- readLines(f, warn = FALSE)
+  expect_true(any(grepl("^if \\(n_unicas >= 100\\) \\{", ln)),
+              info = "El umbral de aprobacion no es n_unicas >= 100")
+  expect_true(any(grepl("as\\.integer\\(args\\[2\\]\\) else 150", ln)),
+              info = "El default de intentos no es 150")
+  expect_false(any(grepl("250|else 300", ln)), info = "Quedan cifras viejas (250/300)")
+})
+
+test_that("Umbral de producto: la compacta de codigo-rmd.md declara 100 sobre 150", {
+  f <- file.path(repo_root, ".claude/rules/codigo-rmd.md")
+  expect_true(file.exists(f))
+  txt <- paste(readLines(f, warn = FALSE, encoding = "UTF-8"), collapse = "\n")
+  expect_true(grepl("100 versiones \u00fanicas sobre 150", txt),
+              info = "codigo-rmd.md no declara '100 versiones \u00fanicas sobre 150'")
+})
+
+test_that("Umbral de producto: ningun archivo normativo trae una cifra rival", {
+  malos <- detectar_cifras_rivales(repo_root)
+  expect_equal(length(malos), 0,
+    info = paste0("Cifras rivales del umbral de producto:\n  ",
+                  paste(malos, collapse = "\n  ")))
+})
+
+test_that("CONTROL POSITIVO: el detector de cifras rivales caza SKILL.md y respeta la historia", {
+  fake <- file.path(tempdir(), paste0("umb_", as.integer(runif(1, 1e6, 9e6))))
+  dir.create(file.path(fake, ".claude", "skills", "x"), recursive = TRUE, showWarnings = FALSE)
+  sk <- file.path(fake, ".claude", "skills", "x", "SKILL.md")
+  writeLines(c("# x", "Exigir 250+ versiones \u00fanicas de 300 intentos.", "otra"), sk)
+  malos <- detectar_cifras_rivales(fake)
+  expect_equal(length(malos), 1)
+  expect_true(grepl("^\\.claude/skills/x/SKILL\\.md:2:", malos),
+              info = paste("No nombro archivo y linea exactos:", paste(malos, collapse = "|")))
+
+  # Control negativo: la misma cifra como historia no se detecta.
+  writeLines(c("# x", "antes 250 sobre 300 (250+ versiones)", "otra"), sk)
+  expect_equal(length(detectar_cifras_rivales(fake)), 0)
+
+  # Orquestador: solo cuentan la fila del paso 9 y la plantilla Diversidad.
+  dir.create(file.path(fake, ".claude", "agents"), recursive = TRUE, showWarnings = FALSE)
+  orq <- file.path(fake, ".claude", "agents", "orquestador-schoice.md")
+  writeLines(c("texto libre con 250+ versiones",
+               "| 9 | validar_diversidad | exige 250+ versiones |"), orq)
+  malos <- detectar_cifras_rivales(fake)
+  expect_equal(length(malos), 1)
+  expect_true(grepl("orquestador-schoice\\.md:2:", malos))
+  unlink(fake, recursive = TRUE)
+})

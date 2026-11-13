@@ -155,7 +155,7 @@ Veredicto: MODIFICAR/RECHAZAR → Bloquear promoción
 **Qué revisa:**
 - Tests unitarios existen para componentes críticos
 - Cobertura de tests ≥ 100% para scripts de validación
-- Tests de diversidad (200+ versiones únicas)
+- Tests de diversidad (100+ versiones únicas de 150)
 - Sin regresiones en funcionalidad existente
 - Git hooks nativos configurados (pre-commit, pre-push)
 - CI/CD activo y pasando

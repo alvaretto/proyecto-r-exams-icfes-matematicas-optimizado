@@ -62,7 +62,7 @@ Esta carpeta contiene la documentación técnica del sistema de automatizaciones
 │   ├── corregir-graficos/          # Corrector de gráficos
 │   ├── diagnosticar-errores/       # Diagnóstico de errores
 │   ├── validar-coherencia/         # Validación de coherencia
-│   ├── validar-diversidad/         # Validador de 250+ versiones únicas
+│   ├── validar-diversidad/         # Validador de 100+ versiones únicas de 150
 │   ├── validar-icfes/              # Validador de metadatos ICFES
 │   └── validar-renderizado/        # Validación de renderizado
 ├── deprecated/                     # ⚠️ Archivos deprecados
@@ -268,7 +268,7 @@ Los skills son procedimientos automatizados que Claude puede ejecutar para tarea
 
 ### Skill: validar-diversidad
 
-**Función:** Valida que un ejercicio genere 250+ versiones únicas (de 300 intentos).
+**Función:** Valida que un ejercicio genere 100+ versiones únicas (de 150 intentos).
 
 **Cuándo usar:**
 ```bash

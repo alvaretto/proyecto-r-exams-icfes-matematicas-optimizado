@@ -60,10 +60,16 @@ Antes de editar cualquier archivo .Rmd, verifica OBLIGATORIAMENTE:
    - Siempre probar con reticulate activo e inactivo
    - Validar que variables se transfieren correctamente
 
-3. **NO crear ejercicios con < 200 versiones únicas**
-   - Validar con `exams2html("archivo.Rmd", n = 200)`
+3. **NO crear ejercicios con menos de 100 versiones únicas sobre 150 renders**
+   - Validar con `exams2html("archivo.Rmd", n = 150)`: al menos 100 de las 150 deben ser distintas
    - Verificar diversidad de parámetros aleatorios
-   - Razón del umbral: ejercicios con restricciones algebraicas fuertes
+   - **Umbral único desde el 2026-11-13**, por instrucción del profesor: «Bajar a "al menos 100 versiones distintas de
+     150"». Antes convivían tres cifras: «250 de 300» (orquestadores, skills y la mayoría de los documentos), «200 de 200»
+     (esta regla) y «200 de 300» (`promover-ejercicio`). Las tres quedan sustituidas
+   - Razón del umbral: al aula llegan como máximo 100 versiones exportadas (regla #26), y 100 únicas las cubren. Este
+     conteo mide el envoltorio; que la respuesta correcta varíe lo mide la regla #22
+   - Los `.Rmd` aprobados antes conservan su chunk de prueba con la cifra anterior y se ajustan en el próximo ciclo de
+     cada uno
      (cubos perfectos, primos, etc.) no pueden generar más sin degradar
      la diagnosticidad de los distractores
 

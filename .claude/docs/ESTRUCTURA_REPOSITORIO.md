@@ -274,7 +274,7 @@ skills/
 ├── skill-retroalimentacion/     # Opus — retroalimentación científica ICFES
 ├── transferir-conocimiento-grafico/ # Haiku — lecciones entre lenguajes
 ├── validar-coherencia/          # Haiku — FASE 2: 5 coherencias
-├── validar-diversidad/          # Haiku — 250+ versiones únicas
+├── validar-diversidad/          # Haiku — 100+ versiones únicas de 150
 ├── validar-icfes/               # Haiku — estructura R-exams + ICFES
 ├── validar-pedagogico/          # Opus — análisis pedagógico profundo
 └── validar-renderizado/         # Haiku — FASE 1: 4 formatos

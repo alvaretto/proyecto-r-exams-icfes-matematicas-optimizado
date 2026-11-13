@@ -145,12 +145,12 @@
 │  📊 Estadísticas:                                       │
 │     • Versiones generadas: 1000                        │
 │     • Versiones únicas: 847                            │
-│     • Mínimo requerido: 250 versiones únicas           │
+│     • Mínimo requerido: 100 versiones únicas de 150    │
 │     • Estado: ✅ APROBADO                              │
 └──────────────────────────────────────────────────────────┘
 ```
 
-**Criterio:** ≥ 250 versiones únicas (de 300 intentos)
+**Criterio:** ≥ 100 versiones únicas (de 150 intentos)
 
 ---
 
@@ -271,7 +271,7 @@
 │  [ ] ✅ Análisis completo (6 dimensiones)               │
 │  [ ] ✅ Archivo .Rmd generado                           │
 │  [ ] ✅ Estructura revisada                             │
-│  [ ] ✅ Diversidad ≥ 250 versiones únicas               │
+│  [ ] ✅ Diversidad ≥ 100 versiones únicas de 150        │
 │  [ ] ✅ PDF compila sin errores                         │
 │  [ ] ✅ HTML compila sin errores                        │
 │  [ ] ✅ Gráficos correctos (si aplica)                  │
@@ -293,7 +293,7 @@
 │                                                         │
 │  ❌ Análisis incompleto      → Solicitar 6 dimensiones │
 │  ❌ Error compilación PDF    → /corregir-error-imagen  │
-│  ❌ < 250 versiones únicas   → Aumentar rangos         │
+│  ❌ < 100 versiones únicas de 150 → Aumentar rangos    │
 │  ❌ Gráfico TikZ mal         → Solicitar mejora        │
 │  ❌ Error Python             → Consultar ejemplos      │
 │  ❌ Error LaTeX              → Ver patrones-errores    │

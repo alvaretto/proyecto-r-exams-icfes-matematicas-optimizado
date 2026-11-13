@@ -191,7 +191,7 @@ Verificar y documentar con checklist:
 
 ### PASO 12: Validar diversidad (workflow paso 9)
 
-Ejecutar `/validar-diversidad`. Requiere 250+ versiones únicas de 300 intentos.
+Ejecutar `/validar-diversidad`. Requiere 100+ versiones únicas de 150 intentos.
 
 ```bash
 .claude/scripts/workflow-state.sh complete <dir> validar_diversidad --versiones_unicas [N]
@@ -498,7 +498,7 @@ Si forzar premisas siempre verdaderas (Patrón B aplicado a todos los distractor
       ↓
 8. documentar 5 coherencias
       ↓
-9. validar-diversidad (250+ versiones únicas)
+9. validar-diversidad (100+ versiones únicas de 150)
       ↓
 10. validar-icfes (metadatos + estructura)
       ↓

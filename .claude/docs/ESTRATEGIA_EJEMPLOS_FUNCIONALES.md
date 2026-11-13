@@ -148,7 +148,7 @@ cp A-Produccion/02-En-Desarrollo/ejercicio/ejercicio.Rmd \
 ### ✅ Incluir si:
 
 - ✅ Pasó todas las fases del ciclo de validación (1→2A→2B→2C→3)
-- ✅ Genera 200+ versiones únicas
+- ✅ Genera 100+ versiones únicas de 150
 - ✅ Ha sido usado en producción exitosamente
 - ✅ Representa un **patrón útil** para futuros ejercicios
 - ✅ Implementa técnicas que queremos reutilizar

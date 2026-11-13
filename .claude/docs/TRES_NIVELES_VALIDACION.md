@@ -428,7 +428,7 @@ NIVEL 2: GENERACIÓN MASIVA
 [ ] exams2pandoc(): EXITOSO
 [ ] exams2nops(): EXITOSO
 [ ] Tasa de éxito: 100%
-[ ] Diversidad ≥ 250 versiones únicas (de 300 intentos)
+[ ] Diversidad ≥ 100 versiones únicas (de 150 intentos)
 [ ] Metadatos ICFES completos
 
 NIVEL 3: TERRENO (post-producción)

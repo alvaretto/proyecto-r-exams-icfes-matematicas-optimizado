@@ -283,7 +283,7 @@ explica por qué ocurre."
 7. [ ] Escribir Solution con 6 subsecciones
 8. [ ] Agregar metadatos ICFES + cognitivos
 9. [ ] Renderizar en 4 formatos
-10. [ ] Validar diversidad (250+ versiones únicas)
+10. [ ] Validar diversidad (100+ versiones únicas de 150)
 11. [ ] Pedir aprobación del usuario
 
 ---

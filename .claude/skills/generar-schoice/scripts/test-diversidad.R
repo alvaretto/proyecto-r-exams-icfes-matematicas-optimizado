@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # Uso: Rscript test-diversidad.R <archivo.Rmd> [n_intentos]
-# Valida que el ejercicio genere 250+ versiones unicas de n_intentos
+# Valida que el ejercicio genere al menos 100 versiones unicas de n_intentos (default 150)
 
 args <- commandArgs(trailingOnly = TRUE)
 
@@ -11,20 +11,20 @@ if (length(args) == 0 || args[1] == "--help") {
   cat("\n")
   cat("Argumentos:\n")
   cat("  archivo.Rmd   Archivo del ejercicio a validar\n")
-  cat("  n_intentos    Numero de versiones a generar (default: 300)\n")
+  cat("  n_intentos    Numero de versiones a generar (default: 150)\n")
   cat("\n")
   cat("Requisitos:\n")
   cat("  - El archivo debe tener una funcion generar_datos()\n")
-  cat("  - Minimo 250 versiones unicas de 300 intentos (83%)\n")
+  cat("  - Minimo 100 versiones unicas de 150 intentos (67 %)\n")
   cat("\n")
   cat("Retorna codigo de salida:\n")
-  cat("  0 = Diversidad suficiente (>= 250)\n")
-  cat("  1 = Diversidad insuficiente (< 250)\n")
+  cat("  0 = Diversidad suficiente (>= 100)\n")
+  cat("  1 = Diversidad insuficiente (< 100)\n")
   quit(status = 0)
 }
 
 archivo <- args[1]
-n_intentos <- if (length(args) >= 2) as.integer(args[2]) else 300
+n_intentos <- if (length(args) >= 2) as.integer(args[2]) else 150
 
 if (!file.exists(archivo)) {
   cat("ERROR: Archivo no encontrado:", archivo, "\n")
@@ -90,11 +90,11 @@ cat("Versiones unicas:", n_unicas, "\n")
 cat("Porcentaje:", porcentaje, "%\n")
 cat("\n")
 
-if (n_unicas >= 250) {
+if (n_unicas >= 100) {
   cat("APROBADO: Diversidad suficiente\n")
   quit(status = 0)
 } else {
-  cat("RECHAZADO: Menos de 250 versiones unicas\n")
+  cat("RECHAZADO: Menos de 100 versiones unicas\n")
   cat("Sugerencia: Ampliar rangos en sample() dentro de generar_datos()\n")
   quit(status = 1)
 }

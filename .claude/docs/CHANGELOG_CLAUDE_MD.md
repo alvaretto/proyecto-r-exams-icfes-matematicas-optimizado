@@ -8,6 +8,44 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.43.0 (2026-11-13)
+
+Cambio de norma, por instrucción del profesor durante el ciclo de `serie-seno-aproximacion-n3`: «Bajar a "al menos 100
+versiones distintas de 150". Modificar/Convertir en Regla/LEY».
+
+1. **Regla #3 de `codigo-rmd.md`** (compacta e íntegro): el umbral de producto pasa a **al menos 100 versiones únicas sobre
+   150 renders** (`exams2html(n = 150)`). Es un umbral único: sustituye a las tres cifras que convivían, «250 de 300»
+   (orquestadores, skills y la mayoría de los documentos), «200 de 200» (la propia regla) y «200 de 300»
+   (`promover-ejercicio`).
+2. **Reglas #23 y #26** (compactas v1.3 y v1.1, e íntegros): remiten al umbral nuevo. La #26 ya no declara tensión con él: 100
+   únicas cubren el máximo de 100 versiones exportadas.
+3. **Índice:** «Versiones por ejercicio» y el párrafo de la regla #23.
+4. **Ejecutables y guarda:** `test-diversidad.R` del skill `generar-schoice`, `test_aleatorization_diversity.R` y la plantilla
+   del chunk `version_diversity_test`; una guarda que falla si una cifra rival vuelve a un archivo normativo.
+5. **Barrido** de orquestadores, skills, comandos y documentos que citaban «250 de 300» o «200». No se tocan los registros
+   históricos (incidente «288/300» de la regla #22, `patrones-errores-conocidos.md`, mediciones pasadas) ni los `.Rmd` ya
+   aprobados, que se ajustan en el próximo ciclo de cada uno.
+6. **No cambian:** N = 100 para las mediciones estadísticas (regla #23) y el máximo de 100 versiones exportadas (regla #26).
+
+### Cambios v3.42.0 (2026-11-13)
+
+Regla nueva, por instrucción del profesor durante el paso 1 de `serie-seno-aproximacion-n3` (`MAT-2026-07-017`): «Cuando el
+archivo Original traiga (Componente, competencia, nivel, descriptor y/o similares) triangular con local y tomar decisiones».
+
+1. **Regla #27, clasificación impresa en el original** (`.claude/rules/triangulacion-clasificacion-impresa.md`, íntegro en
+   `.claude/docs/reglas/triangulacion-clasificacion-impresa.md`): el rótulo impreso es un voto. Se transcribe en
+   `ITEM_OFICIAL.md` (T-1), se decodifica con el catálogo canónico (T-2) y se triangula con la ficha y con una clasificación
+   propia a ciegas (T-3). Decide la mayoría, aunque la ficha quede en minoría; el empate a tres se le pregunta al profesor; una
+   clasificación impresa por el ICFES prevalece (T-4). La tabla de triangulación va en `ITEM_OFICIAL.md` y en el reporte del
+   paso 10 (T-5).
+2. **Clave de lectura del rótulo SAI**, comprobada contra la Guía de orientación Saber 11.° 2026-2 (Tablas 14 a 16): «A: X.Y»
+   es el número oficial de la evidencia, y su orden coincide con los identificadores del catálogo.
+3. **Primer caso**, `MAT-2026-07-017`: competencia, componente y afirmación, 3 de 3; evidencia, 2 de 3 a favor de la ficha
+   («Ejecuta un plan de solución…» frente al «2.3» del rótulo). La clasificación del ejercicio no cambia.
+4. **Sin guarda mecánica**, y los agentes orquestadores no se editaron: la regla llega a ellos por `.claude/rules/`. El íntegro
+   describe la guarda posible.
+5. **Índice:** entrada 27, fila en «Referencias rápidas», versión y fecha.
+
 ### Cambios v3.41.1 (2026-11-10)
 
 Aclaraciones del ciclo de `vueltas-llanta-perimetro-n4` (`MAT-2026-07-028`, SCHOICE aprobado y firmado el 2026-11-10). No

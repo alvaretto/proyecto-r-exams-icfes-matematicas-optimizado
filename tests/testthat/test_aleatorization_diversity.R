@@ -1,5 +1,5 @@
 # Tests de aleatorización y diversidad de versiones
-# Cobertura: 100% de validación de exshuffle y generación de 250+ versiones únicas
+# Cobertura: 100% de validación de exshuffle y generación de al menos 100 versiones únicas sobre 150 renders
 
 library(testthat)
 library(exams)
@@ -61,7 +61,7 @@ test_that("exshuffle = TRUE genera orden diferente en múltiples renderizados", 
   unlink(temp_file)
 })
 
-test_that("Ejercicio genera al menos 250 versiones únicas", {
+test_that("Ejercicio genera al menos 100 versiones únicas sobre 150 renders", {
   temp_file <- tempfile(fileext = ".Rmd")
   writeLines(c(
     "```{r data generation, echo = FALSE, results = \"hide\"}",
@@ -99,7 +99,7 @@ test_that("Ejercicio genera al menos 250 versiones únicas", {
   temp_dir <- tempdir()
 
   # Generar versiones (para asegurar diversidad)
-  N_DIV <- if (.quick) 30 else 300
+  N_DIV <- if (.quick) 30 else 150
   set.seed(NULL)
   resultado <- tryCatch({
     exams2html(temp_file, n = N_DIV, dir = temp_dir, name = "diversity_test")
@@ -125,7 +125,7 @@ test_that("Ejercicio genera al menos 250 versiones únicas", {
   })
 
   expect_true(resultado$exito, info = paste("Error:", resultado$mensaje))
-  expect_true(resultado$n_unicas >= if (.quick) 20 else 250,
+  expect_true(resultado$n_unicas >= if (.quick) 20 else 100,
               info = paste("Solo se generaron", resultado$n_unicas, "versiones únicas"))
 
   unlink(temp_file)
