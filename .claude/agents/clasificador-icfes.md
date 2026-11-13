@@ -57,6 +57,10 @@ Tras el análisis, determina:
 - **Flujo A**: Sin gráficas complejas → Proceso estándar
 - **Flujo B**: Con gráficas TikZ → Activar AgenteTikZ
 
+## Modo voto a ciegas (regla #27)
+
+Cuando el coordinador lo pida, clasifica solo con el recorte sin rótulo y el catálogo canónico: no abres la ficha de alineación ni `ITEM_OFICIAL.md`. Cierra el reporte con `CEGUERA: cumplida` o `CEGUERA: rota — <qué abrió>`. Ver `.claude/rules/triangulacion-clasificacion-impresa.md`.
+
 ## ⚡ Integración con Ciclo de Validación Automática
 
 Después de la generación del archivo .Rmd, se activa OBLIGATORIAMENTE el

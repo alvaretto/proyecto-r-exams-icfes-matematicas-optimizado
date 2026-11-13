@@ -3,6 +3,15 @@
 **Fecha:** 2026-11-13. **Estado: 11/11, aprobado y firmado por el profesor el 2026-11-13.** md5 firmado del `.Rmd`:
 `b9d489a9dd838630875a4958146b9bc8`. 11/11 no quiere decir terminado: la promoción depende de la evidencia de aula.
 
+**En el remoto desde el 2026-11-13** (rama `feat/plantillas-oficiales-rexams`): `7cd5eef0` trae este ejercicio y `b90044ff` la
+regla #27 y el umbral de 100 únicas sobre 150, que salieron de este ciclo. Suite completa antes del push: 54 suites de 54.
+
+**Segundo Knit, 2026-11-13 a las 12:01 (sin resolver).** Otro Knit de RStudio reordenó dos líneas del YAML (`html_document` y
+`pdf_document`). El `.Rmd` en disco tiene md5 `35090792a857343326a9153a4411bb32`, y el cuerpo, sin las 6 líneas del YAML, es
+idéntico al de `7cd5eef0`. `salida/verificar_bateria_p7.R` da exit 4 (`FIRMA_NO_CUBRE`) sobre ese archivo. La versión firmada
+está en el commit: `git checkout 7cd5eef0 -- <el .Rmd>` la restaura. Falta la decisión del profesor: restaurarla, o atar la
+firma al cuerpo sin el YAML para que un Knit no la anule.
+
 ## Artefactos
 
 - **`.Rmd`:** `serie_seno_aproximacion_numerico_variacional_formulacion_ejecucion_n3_schoice_v1.Rmd`, md5 `b9d489a9…`.

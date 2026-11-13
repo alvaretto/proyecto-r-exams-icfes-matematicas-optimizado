@@ -118,6 +118,8 @@ opción. H-3 añade el gemelo: que la figura no delate ni contradiga nada por lo
 
 - **Ancla = el número impreso en el JPG, NO el índice del mapeo.** Los mapeos página↔pregunta acumulan
   desfase: la página que el mapeo daba como "Q143" imprimía "146". Verifica el número impreso.
+  El rótulo de clasificación del editor va debajo de las opciones de su ítem (el que queda encima del número impreso es del
+  ítem anterior) y se trata según la regla #27.
 - **El recorte va al borde del contenido, no a un % fijo.** Un crop al 86 % cortaba la 8.ª columna de las
   tablas anchas y el gate no podía certificarla. Si una figura ancha "no se puede verificar", **regenera
   el crop antes de sospechar del gate**.

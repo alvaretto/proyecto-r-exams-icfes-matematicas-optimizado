@@ -147,8 +147,9 @@ Rótulo impreso (literal): «A: 2.3 M / Compt.: Numérico-variacional / Comp.: F
 - **Sin guarda mecánica (v1.0).** La regla viaja en el contexto de cada sesión y de cada subagente porque su compacta está en
   `.claude/rules/`. La aplican el paso 1 y el paso 10 de los orquestadores y la audita el detractor en el dominio ICFES. Nada
   ejecutable impide sellar `validar_icfes` sin la tabla.
-- **Los agentes orquestadores no se editaron en esta versión.** Su definición se carga de HEAD: cablear el paso 1 y el paso 10
-  pide commit y sesión nueva, y sus guardas en `tests/run_all_tests.R`.
+- **Dónde está nombrada (desde la v3.43.1 del índice, 2026-11-13):** los dos orquestadores (párrafo del paso 1 y frase del
+  paso 10) y sus comandos, los skills `analizar-icfes` y `validar-icfes`, el agente `clasificador-icfes` (modo voto a ciegas) y
+  el dominio ICFES del detractor. Las definiciones de los agentes se cargan de HEAD: rigen desde la sesión siguiente al commit.
 - **Guarda posible**, si la regla se incumple: un validador que exija en `ITEM_OFICIAL.md` la línea «Rótulo impreso» y, cuando
   no diga «no trae», la tabla con sus seis columnas y una decisión por fila.
 - **Solo Matemáticas tiene catálogo canónico montado en este repo.** En otra área, T-2 usa el catálogo de esa área en
@@ -160,3 +161,4 @@ Rótulo impreso (literal): «A: 2.3 M / Compt.: Numérico-variacional / Comp.: F
 | Versión | Fecha | Cambio |
 |---|---|---|
 | 1.0 | 2026-11-13 | Regla nueva, por instrucción del profesor. Clave de lectura del rótulo SAI comprobada contra la Guía 2026-2. Primer caso: `MAT-2026-07-017` |
+| 1.0 | 2026-11-13 | Sin cambio de norma: la regla queda nombrada en los orquestadores, sus comandos, `analizar-icfes`, `validar-icfes`, `clasificador-icfes` y el dominio ICFES del detractor (v3.43.1 del índice) |

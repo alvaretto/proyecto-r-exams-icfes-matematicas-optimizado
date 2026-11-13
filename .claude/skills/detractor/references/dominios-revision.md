@@ -66,6 +66,7 @@ Fuentes: Definiciones matematicas estandar (N1), Wolfram Alpha (N1), `.claude/sc
   6. Estrategia para evitar el error
 - Antipatron detectado: ejercicio puramente procedimental
 - Distractores basados en errores conceptuales reales
+- Clasificación impresa en el original (regla #27): la tabla de triangulación existe en `ITEM_OFICIAL.md`, cada voto está respaldado (rótulo literal, ficha, voto a ciegas con su marca de ceguera) y la decisión sigue la regla de mayoría
 
 Fuentes: `.claude/rules/ejercicios-metacognitivos.md` (N1), Marco Conceptual ICFES 2026 (N1).
 

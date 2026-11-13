@@ -4023,3 +4023,88 @@ E1 del CLOZE hermano, que trasplanta la Parte 1 desde ese `.Rmd`, da verde con l
 
 - `.claude/rules/material-aula.md` (regla #26) y `.claude/rules/codigo-rmd.md` (regla 15)
 - `A-Produccion/01-En-PreDesarrollo/diagrama-venn-juegos-mesa-n3/HANDOFF.md`
+
+---
+
+## Error 44: Un `$…$` cuyo `$` de cierre va pegado a un dígito sale literal, y un negativo armado como `"$-$" + número` lo provoca
+
+### ❌ Mensaje de Error
+
+No hay mensaje: el render termina bien y el estudiante lee, en lugar del número negativo:
+
+```
+$-$0,9093
+```
+
+Aparece en HTML, PDF, NOPS y DOCX, y solo en las versiones donde el valor es negativo (en las positivas el texto es `0,9093`).
+
+### 🔍 Causa Raíz
+
+Pandoc (`tex_math_dollars`) no toma como matemática un `$…$` cuyo `$` de cierre va seguido de un dígito. Su manual (`man pandoc`, pandoc 3.11) lo dice así: el `$` de cierre «must not be followed immediately by a digit». La función `dec_txt()` del ejercicio concatenaba `"$-$"` con `dec(abs(v))`, así que el cierre quedaba pegado al primer dígito.
+
+Medido con `pandoc -f markdown -t native` (pandoc 3.11): `$-$1` → `Str "$-$1"`; en cambio `$-$.`, `$-$,` y `$-$)` → `Math InlineMath "-"`; y `$-$x` → `Math InlineMath "-"` seguido de `Str "x"`. Solo el dígito inmediato impide la lectura como matemática. El mismo patrón en otro contexto, `$x$2`, también sale literal.
+
+**Por qué no lo ve ningún validador del texto.** En el fuente `.Rmd` el `"$-$"` está en una cadena de R y el dígito se pega en tiempo de ejecución, así que ni un grep del `.Rmd` ni una lectura del código muestran `$-$0`. La FASE 2C r4 del ejercicio reportó «Los decimales de sen(x) y de S_n son correctos a 4 cifras, incluido «$-$0,9093» para x negativo» (`salida/fase2c_r4_detractor.md`, línea 33): el detractor leyó el valor, no el texto compuesto. Lo vio la auditoría visual del HTML (6b) y la revisión de coherencias r4 (`salida/aplicar_cambios_r4.py`, línea 1 y comentario de `dec_txt`).
+
+### ✅ Solución
+
+Dejar el signo y el número dentro de la misma fórmula, con el número en `\text{}`:
+
+```r
+# ❌ Antes
+dec_txt <- function(v) paste0(if (v < 0) "$-$" else "", dec(abs(v)))
+
+# ✅ Después
+dec_txt <- function(v) if (v < 0) paste0("$-\\text{", dec(abs(v)), "}$") else dec(v)
+```
+
+El cierre `}$` queda después de una llave, no de un dígito. `\text{0,9093}` conserva la coma decimal como texto (el comentario del `.Rmd` indica que con `{,}` en MathML la coma sale separada; ese punto no se midió aquí).
+
+### 🧪 Validación
+
+Prueba mínima `v.Rmd` (SCHOICE de una pregunta, cada variante repetida en Question y en Solution), `exams` 2.4.5, pandoc 3.11, `MPLBACKEND=Agg`. HTML con `exams2html(template = "plain", mathjax = FALSE)`; PDF con `exams2pdf()` y su `.tex`; DOCX con `exams2pandoc(type = "docx")` leyendo `word/document.xml`; NOPS con `exams2nops()`.
+
+| Variante | HTML (`<math` o `$`) | PDF y NOPS (`pdftotext`, `.tex`) | DOCX (`m:oMath`) |
+|---|---|---|---|
+| (a) `$-$0,9093` | `$` literal | `$-$0,9093`; `.tex`: `\$-\$0,9093` | sin `oMath`, texto `$-$0,9093` |
+| (b) `$-$ 0,9093` | matemática, pero queda un espacio: `− 0,9093` | `− 0,9093` | matemática (`oMath`) |
+| (c) `$-0{,}9093$` | matemática | `−0,9093` | matemática (`oMath`) |
+| (d) `$-\text{0,9093}$` | matemática | `−0,9093` | matemática (`oMath`) |
+| (e) `$-$x` | matemática | `−x` | matemática (`oMath`) |
+| (f) `$x$2` | `$` literal | `$x$2` | sin `oMath`, texto `$x$2` |
+| (g) `` `r paste0("$-$", "0,9093")` `` | `$` literal | `$-$0,9093` | sin `oMath`, texto `$-$0,9093` |
+
+Los resultados de PDF y NOPS coinciden en las siete variantes. El fallo se reproduce con (a), (f) y (g); (d) lo corrige en los cuatro formatos. En el ejercicio real, la nota del `.Rmd` y `salida/aplicar_cambios_r4.py` indican que el arreglo se probó en HTML, PDF, NOPS y DOCX; esa prueba no se repitió aquí sobre el ejercicio, solo sobre la prueba mínima.
+
+### 🔎 Cómo detectarlo mecánicamente
+
+Contar `$` en el texto que ve el estudiante, con un control positivo:
+
+```bash
+grep -o '\$' salida.html | wc -l                 # HTML: debe dar 0
+pdftotext salida.pdf - | grep -o '\$' | wc -l    # PDF/NOPS: debe dar 0
+```
+
+Control positivo medido en la prueba mínima: con las variantes (a), (f) y (g) el HTML da 12 `$` y el texto del PDF 12; sin ellas, 0 y 0. Un ejercicio que escriba `$` literal a propósito (precios) debe excluirlos. Sobre varias semillas hay que incluir las de valor negativo: en las positivas el defecto no aparece.
+
+### 📋 Checklist
+
+- [ ] Ningún `$…$` queda con un dígito inmediatamente después del `$` de cierre; si hay un número pegado, va dentro de la fórmula.
+- [ ] Un número negativo en prosa se escribe `$-\text{N}$` o `$-N$` completo, no `"$-$" + N`.
+- [ ] Se renderiza al menos una semilla con valor negativo y se cuentan los `$` en el HTML y en el texto del PDF.
+- [ ] El conteo de `$` se probó antes contra un caso que falla, para que un 0 signifique algo.
+
+### 📁 Ejemplo funcional
+
+`A-Produccion/01-En-PreDesarrollo/serie-seno-aproximacion-n3/serie_seno_aproximacion_numerico_variacional_formulacion_ejecucion_n3_schoice_v1.Rmd` (funciones `dec_txt()` y `dec_sig_txt()`, líneas 65-68).
+
+### 📅 Historial
+
+| Fecha | Cambio |
+|---|---|
+| 2026-11-13 | Hallado en la auditoría visual 6b de `serie-seno-aproximacion-n3`, que ningún detractor había visto; corregido con `$-\text{…}$`. Causa reproducida y medida en una prueba mínima (pandoc 3.11, `exams` 2.4.5) |
+
+### 📚 Referencias
+
+- `man pandoc`, sección «Math», extensión `tex_math_dollars`
+- `A-Produccion/01-En-PreDesarrollo/serie-seno-aproximacion-n3/salida/aplicar_cambios_r4.py` y `salida/fase2c_r4_detractor.md`

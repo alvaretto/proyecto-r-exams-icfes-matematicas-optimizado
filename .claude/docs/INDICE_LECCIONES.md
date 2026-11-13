@@ -2,7 +2,7 @@
 
 > **Propósito:** mapa unificado de TODAS las fuentes de lecciones, errores y decisiones del proyecto ICFES R/exams. Si tienes una pregunta del tipo "¿esto ya pasó? ¿hay un fix conocido?", **empieza por aquí**.
 
-**Última actualización:** 2026-11-13 (regla #27, clasificación impresa en el original: entrada en §3, fila 3.42.0 en §6 y una fila en §8; antes: 2026-11-10, aclaraciones del ciclo de `vueltas-llanta-perimetro-n4` en las reglas #9, #22 y #24, tres filas en §8 y la regla #26 en §3; antes: 2026-11-05, Error 41, reglas hasta la #25 y versiones de R/exams; antes: 2026-09-13, Errores 35-37 agregados en §2.7 — ciclo `teorema-coseno-datos-suficientes-n3`: segunda clave por criterio ambiguo, invariante sin guardia ejecutable, cobertura nominal y sonda sin control positivo)
+**Última actualización:** 2026-11-13 (Error 44 en §2.1 y §8, y filas 3.43.0 y 3.43.1 en §6; antes: 2026-11-13, regla #27, clasificación impresa en el original: entrada en §3, fila 3.42.0 en §6 y una fila en §8; antes: 2026-11-10, aclaraciones del ciclo de `vueltas-llanta-perimetro-n4` en las reglas #9, #22 y #24, tres filas en §8 y la regla #26 en §3; antes: 2026-11-05, Error 41, reglas hasta la #25 y versiones de R/exams; antes: 2026-09-13, Errores 35-37 agregados en §2.7 — ciclo `teorema-coseno-datos-suficientes-n3`: segunda clave por criterio ambiguo, invariante sin guardia ejecutable, cobertura nominal y sonda sin control positivo)
 **Mantenedor:** Álvaro Ángel Molina
 
 ---
@@ -48,6 +48,7 @@
 | 2 | "argumento no numérico" en `abs()` | Variable string pasada a función matemática | Verificar tipos en `data_generation` con `is.numeric()` | §Error 2 |
 | 3 | Imágenes Python no visibles en PDF | `reticulate` + matplotlib sin `plt.savefig()` explícito | Guardar PNG con ruta absoluta + `cat("![](ruta)")` | §Error 3 |
 | 41 | Una exportación con `n > 1` mezcla `12,5` y `12.5`, o el Python armado con `paste0()` falla | El backend Qt de matplotlib fija `LC_NUMERIC` en el locale del sistema al crear la primera figura | `MPLBACKEND=Agg` en `.Rprofile` y `~/.Renviron` | `patrones-errores-conocidos.md` |
+| 44 | Un número negativo sale como `$-$0,9093` literal en HTML, PDF, NOPS y DOCX, solo en las versiones con valor negativo | Pandoc no toma como matemática un `$…$` cuyo `$` de cierre va seguido de un dígito; `"$-$"` + número arma ese caso en tiempo de ejecución, fuera del alcance de un grep del `.Rmd` | `$-\text{N}$` en una sola fórmula; detectar contando `$` en el HTML y en `pdftotext`, con control positivo | `patrones-errores-conocidos.md` |
 
 ### 2.2 Gráficos como opciones
 
@@ -190,6 +191,7 @@ Ver `.claude/CLAUDE.md` sección "Cambios v3.X" o `.claude/docs/CHANGELOG.md`. R
 | 3.41.1 | 2026-11-10 | Aclaraciones sin cambio de norma (`vueltas-llanta-perimetro-n4`): errata editorial ≠ trampa (regla #24 H-2); convergencia, ancho y constructo en opciones-expresión (regla #22 §P7-F, cuarto caso); citas sin commit (regla #9 v1.8) |
 | 3.42.0 | 2026-11-13 | Regla #27: la clasificación impresa en el original es un voto; se transcribe, se decodifica y se triangula con la ficha y con una clasificación propia a ciegas, y decide la mayoría (primer caso: `MAT-2026-07-017`) |
 | 3.43.0 | 2026-11-13 | Umbral de producto de diversidad: al menos 100 versiones únicas sobre 150 renders (regla #3 de `codigo-rmd.md`), único; sustituye a «250 de 300», «200 de 200» y «200 de 300»; no cambian N = 100 de las mediciones ni el máximo de 100 exportadas |
+| 3.43.1 | 2026-11-13 | Cierre documental del ciclo de `serie-seno-aproximacion-n3`: la regla #27 queda nombrada en orquestadores, skills y documentos; quinto caso de §P7-F (la opción de la calculadora); segundo caso de semillero local en la regla #26; Error 44 |
 
 Las versiones intermedias están en `.claude/docs/CHANGELOG_CLAUDE_MD.md`.
 
@@ -216,6 +218,7 @@ Archivos en `~/.claude/projects/-home-bootcamp-Proyectos-2026-RepositorioMatemat
 | "¿Cómo genero un .Rmd SCHOICE?" | `.claude/skills/generar-schoice/SKILL.md` o `Task(subagent_type="orquestador-schoice")` |
 | "¿Cómo manejo los gráficos?" | Regla `flujo-b-obligatorio.md` + `graficador-secuencial.md` |
 | "¿Por qué falló el render?" | `.claude/docs/patrones-errores-conocidos.md` Errores 1-6, 16 |
+| "¿Un número negativo en prosa con el signo en `$-$`?" | Error 44 — el `$` de cierre pegado a un dígito deja el `$` literal en los cuatro formatos; escribir `$-\text{N}$` y contar `$` en el HTML y en el texto del PDF |
 | "¿Por qué se solapan etiquetas en un diagrama dinámico?" | Error 23 — radio del label consciente del ancho del texto + `1/sin(ángulo/2)`; validar el caso extremo (ángulo mínimo) |
 | "¿La respuesta correcta es predecible por su posición/cuadrante?" | Error 24 + regla #22 §P4 — aleatorizar orientación global (NE/NO/SE/SO); el validador de diversidad por VALOR no detecta predictibilidad posicional |
 | "¿Mi distractor de dirección/posición se elimina de un vistazo?" | Error 24 + regla #22 §P5 — no usar outlier obvio (180°, longitud/formato único); usar cuasi-acierto plausible (reflejo este↔oeste a la distancia correcta). Gemelo del Formato Equilibrado |
@@ -261,5 +264,5 @@ Archivos en `~/.claude/projects/-home-bootcamp-Proyectos-2026-RepositorioMatemat
 
 ---
 
-**Versión del índice:** 1.5 (2026-11-13 — regla #27 en §3, fila 3.42.0 en §6 y una fila en §8: clasificación impresa en el original; antes: 1.4 2026-11-10 — regla #26 en §3, fila 3.41.1 en §6 y tres filas en §8: errata editorial, opciones-expresión y citas sin commit; 1.3 2026-09-13 — agregada §2.7 "Diseño de ítem, cobertura de reglas y guardas sin mutante" con Errores 35-37 (`teorema-coseno-datos-suficientes-n3`); fila nueva en §1 y tres filas nuevas en §8; v1.2 2026-07-28 — agregados retroactivamente Errores 21-24 al catálogo §2: fila 22 en §2.3, fila 21 en §2.5, §2.6 renombrada "Legibilidad geométrica y fuga de información en diagramas dinámicos" con filas 23-24 antepuestas a 25-26; secuencia 21-26 continua)
+**Versión del índice:** 1.6 (2026-11-13 — Error 44 en §2.1 y una fila en §8: `$…$` cerrado junto a un dígito; filas 3.43.0 y 3.43.1 en §6; antes: 1.5 2026-11-13 — regla #27 en §3, fila 3.42.0 en §6 y una fila en §8: clasificación impresa en el original; antes: 1.4 2026-11-10 — regla #26 en §3, fila 3.41.1 en §6 y tres filas en §8: errata editorial, opciones-expresión y citas sin commit; 1.3 2026-09-13 — agregada §2.7 "Diseño de ítem, cobertura de reglas y guardas sin mutante" con Errores 35-37 (`teorema-coseno-datos-suficientes-n3`); fila nueva en §1 y tres filas nuevas en §8; v1.2 2026-07-28 — agregados retroactivamente Errores 21-24 al catálogo §2: fila 22 en §2.3, fila 21 en §2.5, §2.6 renombrada "Legibilidad geométrica y fuga de información en diagramas dinámicos" con filas 23-24 antepuestas a 25-26; secuencia 21-26 continua)
 **Próxima revisión:** cuando se agregue una nueva categoría o el catálogo de errores supere los 30 entries.

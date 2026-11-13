@@ -1,8 +1,35 @@
 # HANDOFF — repositorio (infraestructura `.claude/`, tests y documentación)
 
 > Archivo de retorno para el trabajo que no pertenece a un ejercicio; cada ejercicio lleva su propio
-> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-11-13 (v3.43.0: umbral de producto, 100 únicas sobre 150).
+> `HANDOFF.md`. Frase disparadora: «Continúa con el repo». Última actualización: 2026-11-13 (v3.43.1: referencias cruzadas de la regla #27 y del umbral, Error 44).
 > Si este archivo y el código discrepan, manda el código: verificar antes de actuar.
+
+## 2026-11-13: referencias cruzadas de la regla #27 y del umbral, y Error 44 (v3.43.1)
+
+- **Qué es:** cierre documental del ciclo de `serie-seno-aproximacion-n3` (`MAT-2026-07-017`, 11/11, aprobado y firmado el
+  2026-11-13; en el remoto, `7cd5eef0`). No cambia ninguna norma.
+- **Qué se hizo:**
+  - Regla #27 nombrada donde se aplica: párrafo del paso 1 y frase del paso 10 en `orquestador-schoice` y `orquestador-cloze`,
+    una viñeta en sus comandos, `analizar-icfes`, `validar-icfes`, `clasificador-icfes` (modo voto a ciegas) y el dominio ICFES
+    del detractor. Referencias en `WORKFLOW_PASO_A_PASO.md`, `COMANDOS_Y_SKILLS.md`, `REGLAS_CRITICAS.md` (27 reglas) y en los
+    íntegros de las reglas #7 y #24.
+  - Regla #26, íntegro: segundo caso de semillero local, el de un SCHOICE sin opciones gráficas que centra el NOPS en oficio.
+  - Regla #22, íntegro: quinto caso de §P7-F, la opción que da la calculadora.
+  - Error 44 en `patrones-errores-conocidos.md`: un `$…$` cuyo `$` de cierre va pegado a un dígito sale literal. Reproducido
+    con `exams` 2.4.5 y pandoc 3.11 en los cuatro formatos.
+- **Pendiente (defectos vistos en el ciclo y sin arreglar):**
+  - FASE 2D del hook post-render: la expresión que quita los chunks se corta en la primera comilla invertida de un comentario
+    del chunk, y entonces lee nombres de variables como texto (dio 2 errores de ortografía falsos). Mientras no se arregle, los
+    comentarios de un chunk no llevan comillas invertidas.
+  - `verificar_citas_detractor.py`: dos falsos positivos en la ronda 2 del detractor, por la cita «familia F1» y por la
+    cabecera «R1». Falta reproducirlos y decidir si se ajusta el verificador.
+  - `test_infraestructura_claude.R` falla en I-7 en una copia limpia del repo: el respaldo `.claude.pre-ruflo-…tar.gz` está
+    ignorado por git. En el checkout principal pasa. Falta decidir si la invariante debe saltarse cuando el archivo no puede
+    existir (CI, worktrees).
+  - El `.Rmd` firmado de `serie-seno-aproximacion-n3` lleva YAML de Knit por decisión del profesor. Cada Knit con otro formato
+    reordena ese YAML y cambia el md5: a las 12:01 del 2026-11-13 pasó, y el verificador da `FIRMA_NO_CUBRE` sobre el archivo
+    en disco (el cuerpo es idéntico al de `7cd5eef0`). Falta que el profesor decida: restaurar la versión del commit, o atar la
+    firma al cuerpo sin el YAML.
 
 ## 2026-11-13: umbral de producto, 100 únicas sobre 150 (v3.43.0)
 
@@ -34,8 +61,8 @@
 - **Pendiente:**
   - La regla #27 no tiene guarda mecánica. El íntegro describe la guarda posible: un validador que exija en
     `ITEM_OFICIAL.md` la línea «Rótulo impreso» y, cuando no diga «no trae», la tabla con una decisión por fila.
-  - Los agentes `orquestador-schoice` y `orquestador-cloze` y el skill `analizar-icfes` no se editaron. Cablear el paso 1 y el
-    paso 10 pide commit y sesión nueva, porque un subagente carga su definición de HEAD.
+  - Hecho en la v3.43.1 (entrada de arriba): los orquestadores, sus comandos, `analizar-icfes`, `validar-icfes`,
+    `clasificador-icfes` y el dominio ICFES del detractor ya nombran la regla. Rige desde la sesión siguiente al commit.
   - En commit desde el 2026-11-13: la regla #27 y el umbral van juntos en un solo commit, con los ejecutables y la guarda de `test_muestra_estandar.R`.
 - **Archivos de esta línea:**
   - la regla nueva: `.claude/rules/triangulacion-clasificacion-impresa.md` y `.claude/docs/reglas/triangulacion-clasificacion-impresa.md`;

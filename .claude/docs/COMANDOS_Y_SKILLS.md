@@ -33,6 +33,7 @@
    - Tipo (SCHOICE/CLOZE)
 3. Detecta si requiere gráficos (activa Flujo B si aplica)
 4. Genera reporte de análisis completo
+5. Si el original trae clasificación impresa, la transcribe y la triangula con la ficha y un voto a ciegas (regla #27); `/validar-icfes` exige la tabla de triangulación antes de sellar
 
 **Output**: Archivo JSON con clasificación multidimensional
 

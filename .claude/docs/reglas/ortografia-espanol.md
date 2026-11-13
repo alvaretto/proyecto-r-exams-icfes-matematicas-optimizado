@@ -123,7 +123,7 @@ Las **claves** de `exextra` también van en ASCII: `exextra[Afirmacion]`, `exext
 
 ### 2b. Valores de `exextra`: LITERALES del catálogo ICFES (decisión del 2026-10-22)
 Los **valores** de `exextra` se copian literales del catálogo canónico o de la ficha del ítem, con sus
-tildes, mayúsculas y signos (`°`, `—`):
+tildes, mayúsculas y signos (`°`, `—`). Si el original trae clasificación impresa, el valor que se copia es el decidido por la triangulación de la regla #27:
 
 ```
 exextra[Competencia]: Argumentación

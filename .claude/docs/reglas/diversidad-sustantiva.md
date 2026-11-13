@@ -694,6 +694,32 @@ Lecciones:
 
 Registro: `A-Produccion/01-En-PreDesarrollo/vueltas-llanta-perimetro-n4/HANDOFF.md` y `salida/tabla_firma_p7.md`.
 
+**Quinto caso: la opción que da la calculadora (aclaración del 2026-11-13, sin cambio de norma).** En
+`serie-seno-aproximacion-n3` (`MAT-2026-07-017`) la clave es la suma de los primeros términos de la serie del seno, escrita
+como fracción sobre el factorial del último término.
+- **Instancia impresa (x = 1).** «La más cercana a sen(x)» acierta el 100 % (+68,2 pp sobre el techo nulo con N = 100). Con
+  x = ±1 y denominador común no tiene arreglo: el error de la suma parcial es menor que media unidad del denominador, así
+  que la clave es siempre la fracción más cercana al valor que da la calculadora.
+- **Pasada 2, por decisión del profesor.** x pasa a {2, 3, −2, −3} y cada versión lleva como distractor la fracción más
+  cercana al valor de la calculadora. «La más cercana a sen(x)» baja a 0 %, pero el canal se traslada a su vecina: «la
+  segunda más cercana» acierta el 100 % (+75,0 pp exacto), porque los demás distractores quedan lejos.
+- **Pasada 4, por orden del profesor.** Un tope de valor absoluto 4 en los distractores, el entero más estricto que deja
+  al menos 3 errores elegibles en las 8 ramas (elegido por enumeración), quita los valores absurdos. En la rama x = ±3 con
+  tres términos deja la clave como la opción extrema en el 100 % de las versiones.
+- **Cierre.** El profesor firmó 21 reglas de la batería y 3 medidas por el detractor de la ronda 4, con cifras de
+  enumeración exacta y atadas al md5 del `.Rmd`.
+
+Lecciones:
+1. Si la clave aproxima un valor que una calculadora da directo, el canal es estructural mientras las opciones compartan
+   denominador y el error de la aproximación sea menor que medio paso entre opciones. Se mide antes de diseñar el banco.
+2. Un distractor obligatorio que ocupa el lugar del atajo lo desplaza al vecino. Antes de fijarlo se mide la regla
+   relacional sobre el par que forman (§P7-E).
+3. Un tope de plausibilidad elegido sobre el conjunto puede dejar la clave en un extremo dentro de una rama. El balance de
+   posición y de magnitud se mide por rama, como H1 y H2 en §P4-bis.
+
+Registro: `A-Produccion/01-En-PreDesarrollo/serie-seno-aproximacion-n3/HANDOFF.md`, `ITEM_OFICIAL.md` y
+`salida/p9_tabla_atajos_r4.csv`.
+
 #### §P7-G — El estímulo es una entrada de la batería (v1.10, 2026-10-31)
 
 Una regla de eliminación recibe las opciones de una versión. **El enunciado no entra.** Si muestra un valor o

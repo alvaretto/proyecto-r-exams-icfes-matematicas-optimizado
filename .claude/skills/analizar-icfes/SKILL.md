@@ -55,6 +55,7 @@ Imagen/texto de ejercicio?
 
 Si es imagen: Leer enunciado, identificar datos, detectar graficos.
 Si es texto: Extraer variables, relaciones, pregunta.
+Si el original trae impresa una clasificacion (rotulo del editor bajo las opciones), se transcribe literal y se triangula con la ficha y con un voto propio a ciegas (recorte sin el rotulo, sin la ficha), segun la regla #27 (`.claude/rules/triangulacion-clasificacion-impresa.md`).
 
 Ver [plantilla de analisis](references/plantilla-analisis.md) para formato.
 

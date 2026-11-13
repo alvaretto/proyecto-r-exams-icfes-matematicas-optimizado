@@ -8,6 +8,28 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.43.1 (2026-11-13)
+
+Cierre documental del ciclo de `serie-seno-aproximacion-n3` (`MAT-2026-07-017`, SCHOICE aprobado y firmado el 2026-11-13). No
+cambia ninguna norma: las compactas de `.claude/rules/` quedan igual.
+
+1. **Regla #27, nombrada donde se aplica:** un párrafo del paso 1 y una frase del paso 10 en `orquestador-schoice` y
+   `orquestador-cloze`; una viñeta en sus comandos; `analizar-icfes`, `validar-icfes`, `clasificador-icfes` (modo voto a
+   ciegas) y el dominio ICFES del detractor. El íntegro de la regla deja de decir que los orquestadores no se editaron.
+2. **Referencias cruzadas:** `WORKFLOW_PASO_A_PASO.md`, `COMANDOS_Y_SKILLS.md`, `REGLAS_CRITICAS.md` (la lista vigente es de 27
+   reglas) y los íntegros de las reglas #7 (el valor de `exextra` es el decidido por la triangulación) y #24 (H-4: el rótulo
+   del editor va debajo de las opciones de su ítem).
+3. **Regla #26, íntegro:** segundo caso de semillero local, `serie-seno-aproximacion-n3`: un SCHOICE sin opciones gráficas
+   cuyo `SemilleroUnico_v2.R` centra el NOPS en oficio con `pdfjam`, vigilado por `salida/verificar_uso_semillero.R`.
+4. **Regla #22, íntegro, quinto caso de §P7-F:** la opción que da la calculadora. El distractor obligatorio traslada el atajo
+   a «la segunda más cercana», y un tope de valores elegido sobre el conjunto puede dejar la clave en un extremo dentro de
+   una rama.
+5. **Error 44** (`patrones-errores-conocidos.md`): un `$…$` cuyo `$` de cierre va pegado a un dígito sale literal en HTML,
+   PDF, NOPS y DOCX; `"$-$"` más un número lo provoca en tiempo de ejecución. Reproducido con `exams` 2.4.5 y pandoc 3.11, con
+   la salida de `pandoc -t native` y el manual de pandoc como causa. Arreglo medido: `$-\text{N}$`.
+6. **Índices:** `INDICE_LECCIONES.md` v1.6 (Error 44 en §2 y §8, filas 3.43.1 en §6) y `HANDOFF_REPO.md`, con cuatro
+   defectos vistos en el ciclo y sin arreglar.
+
 ### Cambios v3.43.0 (2026-11-13)
 
 Cambio de norma, por instrucción del profesor durante el ciclo de `serie-seno-aproximacion-n3`: «Bajar a "al menos 100

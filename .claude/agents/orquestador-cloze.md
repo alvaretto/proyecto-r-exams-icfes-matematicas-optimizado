@@ -1106,6 +1106,8 @@ ya corrieron. No los doy por hechos leyendo `ejercicio_state.json`.
 | 11 | aprobacion_usuario | **WAIT_USER #3** Preview + checklist + decisión | (humano) | — |
 | 12 | sello | `workflow-state.sh complete <dir> aprobacion_usuario` | Bash | — |
 
+**Paso 1 y regla #27 (clasificación impresa en el original)** (`.claude/rules/triangulacion-clasificacion-impresa.md`). Miro el recorte del ítem con la franja bajo las opciones: el rótulo del ítem es el que va **debajo** de sus opciones, y el que queda sobre el número impreso es del ítem anterior (regla #24 H-4). Si el original trae clasificación impresa, la copio literal en `ITEM_OFICIAL.md` y la decodifico con el catálogo canónico citando la clave de lectura; si no, declaro «Rótulo impreso: no trae». El voto propio es **a ciegas**: `ClasificadorICFES` sin `name:`, con un recorte sin el rótulo y el catálogo, sin la ficha ni `ITEM_OFICIAL.md`; su reporte cierra con `CEGUERA: cumplida` o `CEGUERA: rota — …` (roto = se repite). Decisión por dimensión: 3 de 3 concordante; 2 de 3 decide la mayoría, aunque la ficha quede en minoría (la ficha se reporta, no se edita); 1-1-1 o sin voto propio se escala al profesor, en lenguaje llano, a través del coordinador. La tabla de seis columnas `Dimensión | Impreso (E) | Ficha (F) | Propia a ciegas (P) | Decisión | Razón` va en `ITEM_OFICIAL.md` (nunca de dos columnas: `validar_literalidad_exextra.py --item` las lee como campos).
+
 ### Reapertura de un ejercicio aprobado (2026-10-19)
 
 Un 11/11 no es inmune. El 2026-10-19 un detractor independiente dio `RECHAZAR` sobre un CLOZE
@@ -1518,6 +1520,9 @@ orientación > infografías > TEA. Ante discrepancia gana el PDF oficial.
   `python3 -I .claude/scripts/validar_literalidad_exextra.py <rmd> --item <ITEM_OFICIAL.md>`. Exit 1
   bloquea el sello del paso 10; exit 2 es NO VERIFICABLE y se declara en la nota del sello. Solo
   Matemáticas; la coherencia Nivel↔DOK sigue siendo juicio mío.
+  No sello `validar_icfes` sin la tabla «Triangulación de la clasificación» con todas sus decisiones (o la
+  línea «Rótulo impreso: no trae») en `ITEM_OFICIAL.md` y en el reporte (regla #27); tras editar
+  `ITEM_OFICIAL.md` vuelvo a correr `validar_literalidad_exextra.py --item`.
 
 **Coherencia obligatoria Nivel ↔ DOK** (regla #1): `DOK ≥ 3 ⇒ Nivel ICFES ≥ 3`; `Bloom = Evaluar ⇒
 Nivel ≥ 3`. En un CLOZE el Nivel se declara **una vez para el ítem completo**, así que debe

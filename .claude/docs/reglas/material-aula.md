@@ -121,6 +121,11 @@ Si el ejercicio tiene condiciones de impresión medidas, su semillero local:
 Ejemplos: `diagrama-venn-juegos-mesa-n3/verificar_espacio.R` (sección `uso`, 5 literales) y
 `diagrama-venn-juegos-mesa-n3/Cloze/verificar_espacio_cloze.R` (sección `uso`, mutantes U1 a U17).
 
+Segundo caso (2026-11-13): `serie-seno-aproximacion-n3`, SCHOICE sin opciones gráficas. Su `SemilleroUnico_v2.R` centra el NOPS en
+oficio con `pdfjam` (`--noautoscale`) sin `twocolumn`, `samepage` ni plantilla de una pregunta por página, y lo vigila
+`salida/verificar_uso_semillero.R`: literales de los dos semilleros, un render real de 2 preguntas con las medidas de `pdfinfo` y
+un mutante sin el paso de `pdfjam` (detalle en su `HANDOFF.md`, «Semilleros y papel oficio (2026-11-13)»).
+
 ### YAML de un Knit de RStudio
 
 No se pulsa Knit sobre un `.Rmd` de R/exams; para ver el ítem, el semillero o `exams2html()`. Si el YAML aparece:

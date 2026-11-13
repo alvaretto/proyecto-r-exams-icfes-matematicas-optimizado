@@ -144,6 +144,8 @@ El comando `/analizar-icfes` realiza:
 3. **Detección de gráficos** (Flujo A vs Flujo B)
 4. **Determinación del tipo** (SCHOICE vs CLOZE)
 
+> Si el original trae impresa una clasificación (rótulo del editor bajo las opciones), se transcribe y se triangula con la ficha y con un voto propio a ciegas (regla #27, `.claude/rules/triangulacion-clasificacion-impresa.md`).
+
 ### 1.3 Tiempo Estimado
 
 ⏱️ **2-3 minutos** (dependiendo de la complejidad de la imagen)
@@ -373,6 +375,7 @@ code A-Produccion/02-En-Desarrollo/[nombre_archivo].Rmd
   - [ ] `exsolution` correcto
   - [ ] `exshuffle: TRUE` (excepción: FALSE en SCHOICE con opciones gráficas PNG — ver `graficos-como-opciones.md`)
   - [ ] Metadatos ICFES completos
+  - [ ] `ITEM_OFICIAL.md` con la tabla «Triangulación de la clasificación» decidida, o «Rótulo impreso: no trae» (regla #27)
 
 **Contenido matemático:**
 
