@@ -1,0 +1,23 @@
+md5 del .Rmd: b9d489a9dd838630875a4958146b9bc8
+catálogo niveles-mat.json 426ea08a3746c669a1467df579284ca7
+catálogo evidencias-mat.json 427d2e29c9a5a99da619ee2526fbd785
+catálogo estandares-mat-ebc.json 4862e82c3cd19b31af4b2f2784bb4aef
+catálogo estructura-prueba-mat.json 330f5f841063af8db7486777ee407f9d
+
+[OK] Competencia: 'Formulación y ejecución'
+   literal en evidencias-mat.json /evidencias_oficiales/FyE_E1/competencia
+   literal en evidencias-mat.json /evidencias_oficiales/FyE_E2/competencia
+   literal en evidencias-mat.json /evidencias_oficiales/FyE_E3/competencia
+[OK] Componente: 'Numérico-variacional'
+   literal en estructura-prueba-mat.json /contenidos/equivalencia_componente/Álgebra y Cálculo
+[OK] Afirmacion: 'Frente a un problema que involucre información cuantitativa, plantea e implementa estrategias que lleven a soluciones adecuadas.'
+   literal en evidencias-mat.json /afirmaciones_oficiales/Formulación y ejecución/texto_oficial
+[OK] Evidencia: 'Ejecuta un plan de solución para un problema que involucra información cuantitativa o esquemática.'
+   literal en evidencias-mat.json /evidencias_oficiales/FyE_E2/texto_oficial
+[OK] Descriptor (texto tras ' — '): 'Selecciona información necesaria para resolver problemas que involucran operaciones aritméticas.'
+   literal en niveles-mat.json /niveles_oficiales/N3[6]
+   literal en niveles-mat.json /mapeo_codigos_proyecto_a_oficial/D3.7/texto_oficial
+[OK] Estandar (texto antes de ' ('): 'Utilizo las técnicas de aproximación en procesos infinitos numéricos.'
+   literal en estandares-mat-ebc.json /estandares_oficiales_por_pensamiento_grado/Variacional_10-11[0]
+
+TOTAL fallos: 0

@@ -1,0 +1,450 @@
+---
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+```{r data_generation, echo = FALSE, results = "hide"}
+## =============================================================================
+## MAT-2026-07-017 — Aproximación de sen(x) con los primeros términos de su serie.
+## Origen: SAI «Nivelación 6», grado 10, julio de 2026, pregunta impresa 17. Transcripción verbatim,
+## clasificación, triangulación (regla #27) y decisiones del profesor: ITEM_OFICIAL.md.
+##
+## Diseño de la pasada de corrección 2 (decisiones del profesor del 2026-11-13; enumeración exacta en
+## salida/enumerar_diseno_r2.R, resultado en salida/enumeracion_diseno_r2.txt):
+##   - x en {2, 3, -2, -3} y n en {3, 4} términos: 8 claves distintas. Sin x = 1 o -1 y sin dos términos.
+##     La instancia impresa (x = 1) quedó FUERA: con x = 1 la clave es siempre la fracción de denominador D
+##     más cercana a sen(1), así que la calculadora la acertaba siempre.
+##   - Distractor obligatorio SS-C («calculadora»): la fracción k/D más cercana al valor real de sen(x).
+##   - Otros dos distractores de un banco de 10 errores: se sortea cuántas opciones quedan por debajo de la clave entre los
+##     repartos factibles (la clave nunca es la extrema del lado de la trampa) y una cascada que prefiere que al menos
+##     uno de los dos tenga valor absoluto <= 1 (política P2 de la enumeración). Sin bucles (F1).
+##   - Opciones sin simplificar sobre D = (2n - 1)!, el factorial del último término usado, como el impreso.
+##   - Pasada 4 (profesor, 2026-11-13): ningún distractor del banco pasa de 4 en valor absoluto (TOPE_VALOR, en la precondición
+##     de cada error; salida/enumeracion_tope_r4.txt: es el tope entero más estricto (mínimo exacto 3,525) con al menos 3 errores elegibles además de
+##     SS-C en las 8 ramas). Una igualdad por ecuación en display. Decimales con coma.
+##   - Residuo de diagnosticidad PENDIENTE DE FIRMA del profesor, regla por regla (§P7-E): cifras de la batería ampliada en
+##     salida/p9_bateria_p7.txt (enumeración exacta, 21 reglas; control N = 100). Varios canales son estructurales de D1: la trampa
+##     queda siempre junto a la clave. Alcance cableado en salida/verificar_bateria_p7.R, PENDIENTE DE FIRMA.
+## =============================================================================
+library(exams)
+
+pick <- function(x) x[[sample.int(length(x), 1L)]]   # F5: sin la trampa de sample() con un escalar
+
+## --- Versión ---------------------------------------------------------------------
+es_canonica <- FALSE          # instancia impresa fuera (profesor, 2026-11-13); lo leen salida/smoke_data_generation.R y verificar_bateria_p7.R
+x <- pick(c(2L, 3L, -2L, -3L))
+n <- pick(3:4)
+D <- factorial(2 * n - 1)              # denominador común: factorial del último término usado
+p <- list(x = x, n = n, D = D)
+## Depende solo de x y n: se comprueba antes de elegir distractores (pasada 4; mutantes M5 y M6).
+stopifnot("Solution: a partir del último término usado, cada término es menor que el anterior en valor absoluto (FASE 2C r2 H1)" =
+  all(diff(abs(vapply((n - 2L):(n + 5L), function(k) x^(2 * k + 1) / factorial(2 * k + 1), 0))) < 0))
+PALABRA <- c("uno", "dos", "tres", "cuatro")
+
+## --- Sumas parciales: numerador exacto sobre D (funciones puras, regla #1) -----------
+numerador <- function(p, nt, den, sgn) {
+  if (nt < 1L) return(0)
+  k <- seq_len(nt) - 1L
+  sum(sgn(k) * p$x^(2 * k + 1) * p$D / den(k))
+}
+alt        <- function(k, n) (-1)^k
+fact_impar <- function(k) factorial(2 * k + 1)
+fact_par   <- function(k) factorial(2 * k)
+tex_impar  <- function(k) ifelse(k == 0, "1", paste0(2 * k + 1, "!"))
+tex_par    <- function(k) ifelse(k == 0, "1", paste0(2 * k, "!"))
+num_clave  <- numerador(p, n, fact_impar, function(k) alt(k, n))
+
+## --- Formato -----------------------------------------------------------------------
+fr  <- function(a, b) paste0("\\dfrac{", a, "}{", b, "}")
+frs <- function(num, den) if (num < 0) paste0("-", fr(entero(-num), den)) else fr(entero(num), den)   # fracción con signo
+m   <- function(v) paste0("$", v, "$")
+lista_y <- function(v) if (length(v) == 1L) v else paste0(paste(v[-length(v)], collapse = ", "), " y ", v[length(v)])
+dec <- function(v, d = 4L) sub(".", ",", formatC(v, format = "f", digits = d), fixed = TRUE)
+dec_sig <- function(v) sub(".", ",", formatC(v, format = "fg", digits = 3), fixed = TRUE)   # 3 cifras (FASE 2C r1 H4)
+## Decimal con coma, sin espacio tras la coma en MathML: en texto si es positivo; si es negativo, $-\text{...}$ (un «$-$» pegado a un
+## dígito no lo reconoce pandoc como matemática: 6b y coherencias r4). Probado en HTML, PDF, NOPS y DOCX.
+dec_txt     <- function(v) if (v < 0) paste0("$-\\text{", dec(abs(v)), "}$") else dec(v)
+dec_sig_txt <- function(v) if (v < 0) paste0("$-\\text{", dec_sig(abs(v)), "}$") else dec_sig(v)
+entero   <- function(v) format(v, scientific = FALSE, trim = TRUE)
+xs_tex   <- if (x < 0) paste0("(", x, ")") else as.character(x)     # x sustituido, con paréntesis si es negativo
+## Suma ya sustituida: coeficientes enteros sobre los denominadores como los escribe el estudiante.
+suma_tex <- function(coef, dtex) {
+  out <- ""
+  for (i in seq_along(coef)) {
+    t <- if (dtex[i] == "1") entero(abs(coef[i])) else fr(entero(abs(coef[i])), dtex[i])
+    if (i == 1L) out <- paste0(if (coef[i] < 0) "-" else "", t)
+    else out <- paste0(out, if (coef[i] < 0) " - " else " + ", t)
+  }
+  out
+}
+nums_tex <- function(nums, D) {
+  out <- ""
+  for (i in seq_along(nums)) {
+    t <- fr(entero(abs(nums[i])), D)
+    if (i == 1L) out <- paste0(if (nums[i] < 0) "-" else "", t)
+    else out <- paste0(out, if (nums[i] < 0) " - " else " + ", t)
+  }
+  out
+}
+calculo <- function(p, nt, den, dtex, sgn) {   # l0 = sustitución con los signos de la fórmula; l1 = ya sustituida; l2 = sobre D
+  k <- seq_len(nt) - 1L
+  s <- rep_len(sgn(k), length(k))                     # un signo constante (SS-B, SS-D) llega como escalar
+  coef <- s * p$x^(2 * k + 1)
+  nums <- coef * p$D / den(k)
+  dt <- dtex(k)
+  l0 <- ""
+  for (i in seq_along(k)) {   # FASE 2C r1 H2: el texto habla de los signos de la fórmula, no de los ya sustituidos
+    t <- if (k[i] == 0) xs_tex else fr(paste0(xs_tex, "^{", 2 * k[i] + 1, "}"), dt[i])
+    l0 <- if (i == 1L) paste0(if (s[i] < 0) "-" else "", t) else paste0(l0, if (s[i] < 0) " - " else " + ", t)
+  }
+  list(l0 = l0, l1 = suma_tex(coef, dt), l2 = nums_tex(nums, p$D), total = sum(nums))
+}
+eq_display <- function(tex)   # F3: ecuación en display con desplazamiento horizontal en pantallas angostas
+  paste0("::: {style=\"overflow-x:auto; -webkit-overflow-scrolling:touch; max-width:100%;\"}\n\n$$", tex, "$$\n\n:::\n")
+
+## --- Datos de la versión para los textos --------------------------------------------
+k_usados <- seq_len(n) - 1L
+impares  <- m(paste0(2 * k_usados[-1] + 1, "!"))      # 3!, 5!, ...
+pares    <- m(paste0(2 * k_usados[-1], "!"))          # 2!, 4!, ...
+expo     <- m(as.character(2 * k_usados[-1] + 1))     # 3, 5, ...
+ult      <- n - 1L
+ult_tex  <- fr(paste0("x^{", 2 * ult + 1, "}"), paste0(2 * ult + 1, "!"))
+ult_signo_mas <- (ult %% 2L) == 0L                    # signo del último término en la serie
+ult_num  <- (-1)^ult * x^(2 * ult + 1)                # numerador del último término sobre D, con su signo
+ult_tex_signo <- paste0(if (ult %% 2L == 1L) "-" else "", ult_tex)   # el término tal como aparece en la serie
+stopifnot("Solution SS-F: el término mostrado vale lo que dice el texto (FASE 2C r1 H1)" =
+  abs((if (startsWith(ult_tex_signo, "-")) -1 else 1) * x^(2 * ult + 1) / factorial(2 * ult + 1) - ult_num / D) < 1e-12)
+ejemplo_fact  <- lista_y(paste0("$x^{", 2 * k_usados[-1] + 1, "}$ va con $", 2 * k_usados[-1] + 1, "!$"))
+num_trampa <- round(sin(x) * D)                       # SS-C: fracción con denominador D más cercana a sen(x)
+
+## --- Banco de errores conceptuales (regla #1: 11 entradas, cada una con precondición y calcula puros) ---
+## ficha = TRUE solo documenta cuáles son los tres distractores del impreso (SS-A, SS-B, SS-D); ningún código lo lee.
+TOPE_VALOR <- 4   # pasada 4: |valor| máximo de un distractor del banco (salida/enumeracion_tope_r4.txt)
+error_serie <- function(codigo, nombre, ficha, nt, den, dtex, sgn, pre, corta, larga, causa, feedback) {
+  calc <- function(p) numerador(p, nt(p$n), den, function(k) sgn(k, p$n))
+  list(codigo = codigo, nombre = nombre, ficha = ficha, nt = nt, den = den, dtex = dtex, sgn = sgn,
+       precondicion = function(p) isTRUE(pre(p)) && abs(calc(p) / p$D) <= TOPE_VALOR,
+       descripcion_corta = corta, descripcion_larga = larga, causa_raiz = causa,
+       feedback = feedback, calcula = calc)
+}
+mismo_n <- function(n) n
+banco <- list(
+  "SS-C" = list(codigo = "SS-C", nombre = "Responde con el valor del seno y no con el de la serie", ficha = FALSE,
+    precondicion = function(p) abs(round(sin(p$x) * p$D) - numerador(p, p$n, fact_impar, function(k) alt(k, p$n))) > 0.5,
+    calcula = function(p) round(sin(p$x) * p$D),
+    descripcion_corta = paste0("calculado $\\mathrm{sen}(", x, ")$ con la calculadora, en radianes, y buscado la fracción con ",
+                               "denominador ", D, " más cercana a ese valor"),
+    descripcion_larga = paste0("Esa fracción aproxima el valor del seno; no es el valor de la serie con sus primeros ", PALABRA[n], " términos, que es ",
+                               "lo que pide la pregunta. La serie truncada es una aproximación: con pocos términos su valor ",
+                               "puede quedar lejos del seno."),
+    causa_raiz = "no distingue entre el valor exacto de la función y el valor de la aproximación que se pide calcular.",
+    feedback = paste0("Incorrecta. Es la fracción con denominador ", D, " más cercana al valor del seno que da la calculadora",
+                      "; la pregunta pide el valor de la serie con los primeros ", PALABRA[n], " términos.")),
+  "SS-A" = error_serie("SS-A", "Factoriales pares y todos los términos restados", TRUE, mismo_n, fact_par, tex_par,
+    function(k, n) ifelse(k == 0, 1, -1), function(p) p$n >= 2,
+    paste0("usa ", lista_y(pares), " en lugar de ", lista_y(impares), " y resta todos los términos después del primero"),
+    paste0("En la serie del seno, el denominador de cada término es el factorial de su exponente: ", ejemplo_fact,
+           ". Quien elige esta opción baja cada factorial al número par anterior y, además, escribe un signo menos ",
+           "delante de todos los términos que siguen a $x$, aunque en la serie los signos se alternan."),
+    "copia los denominadores sin mirar el exponente de cada término y no sigue la alternancia de los signos.",
+    "Incorrecta. Usa factoriales pares y resta todos los términos; en la serie del seno los factoriales son impares y los signos se alternan."),
+  "SS-B" = error_serie("SS-B", "Factoriales pares y todos los términos sumados", TRUE, mismo_n, fact_par, tex_par,
+    function(k, n) 1, function(p) p$n >= 2,
+    paste0("usa ", lista_y(pares), " en lugar de ", lista_y(impares), " y suma todos los términos"),
+    paste0("En la serie del seno, el denominador de cada término es el factorial de su exponente: ", ejemplo_fact,
+           ". Quien elige esta opción baja cada factorial al número par anterior y, además, escribe un signo más ",
+           "entre todos los términos."),
+    "copia los denominadores sin mirar el exponente de cada término e ignora los signos de la serie.",
+    "Incorrecta. Usa factoriales pares y suma todos los términos; en la serie del seno los factoriales son impares y los signos se alternan."),
+  "SS-D" = error_serie("SS-D", "Suma todos los términos sin alternar los signos", TRUE, mismo_n, fact_impar, tex_impar,
+    function(k, n) 1, function(p) p$n >= 2,
+    "usa los factoriales correctos, pero escribe un signo más entre todos los términos",
+    paste0("Los denominadores están bien. El error está en los signos: en la serie del seno, después de $x$ el ",
+           "segundo término se resta, el tercero se suma, y así sucesivamente."),
+    "no tiene en cuenta el signo de cada término al sustituir.",
+    "Incorrecta. Suma todos los términos; en la serie del seno los signos se alternan."),
+  "SS-E" = error_serie("SS-E", "Divide entre el exponente en lugar de su factorial", FALSE, mismo_n,
+    function(k) 2 * k + 1, function(k) ifelse(k == 0, "1", as.character(2 * k + 1)), alt, function(p) p$n >= 2,
+    paste0("divide entre ", lista_y(expo), " en lugar de ", lista_y(impares)),
+    paste0("El signo de admiración indica factorial: $3! = 3 \\times 2 \\times 1 = 6$ y ",
+           "$5! = 5 \\times 4 \\times 3 \\times 2 \\times 1 = 120$. Quien elige esta opción divide solo entre el ",
+           "exponente, como si el signo no estuviera."),
+    "lee el signo de admiración como puntuación y no como la operación factorial.",
+    "Incorrecta. Divide entre el exponente y olvida el factorial."),
+  "SS-F" = error_serie("SS-F", "Usa un término menos", FALSE, function(n) n - 1L, fact_impar, tex_impar, alt,
+    function(p) p$n >= 3,
+    paste0("usa solo los primeros ", PALABRA[n - 1], " términos"),
+    paste0("La pregunta pide los primeros ", PALABRA[n], " términos. Quien elige esta opción se detiene un término ",
+           "antes y deja por fuera el término $", ult_tex_signo, "$, que con $x = ", x, "$ vale $", frs(ult_num, D),
+           "$. Por eso el resultado difiere de la respuesta correcta en exactamente $", fr(entero(abs(ult_num)), D), "$."),
+    "no cuenta cuántos términos debe usar antes de empezar a calcular.",
+    paste0("Incorrecta. Usa ", PALABRA[n - 1], " términos y la pregunta pide ", PALABRA[n], ".")),
+  "SS-G" = error_serie("SS-G", "Calcula mal 3!", FALSE, mismo_n,
+    function(k) ifelse(k == 1, 2, factorial(2 * k + 1)), function(k) ifelse(k == 1, "2", tex_impar(k)), alt,
+    function(p) p$n >= 3,
+    "toma $3!$ como $2 \\times 1 = 2$",
+    paste0("El factorial de 3 es $3 \\times 2 \\times 1 = 6$. Quien elige esta opción olvida el factor 3 y divide el ",
+           "segundo término entre 2; los signos y los demás factoriales están bien."),
+    "omite el factor 3 al calcular 3!: es un desliz de cálculo en un solo término.",
+    "Incorrecta. Toma 3! como 2; el factorial de 3 es 6."),
+  "SS-H" = error_serie("SS-H", "Factoriales pares con los signos correctos", FALSE, mismo_n, fact_par, tex_par, alt,
+    function(p) p$n >= 3,
+    paste0("alterna bien los signos, pero usa ", lista_y(pares), " en lugar de ", lista_y(impares)),
+    paste0("Los signos están bien. El error está en los denominadores: el factorial que acompaña a cada potencia es ",
+           "el de su exponente (", ejemplo_fact, "), no el del número par anterior, que es el que aparece en la ",
+           "serie del coseno."),
+    "mezcla los denominadores de la serie del seno con los de la serie del coseno.",
+    "Incorrecta. Los signos se alternan bien, pero usa factoriales pares; en la serie del seno son impares."),
+  "SS-I" = error_serie("SS-I", "Invierte la alternancia de los signos", FALSE, mismo_n, fact_impar, tex_impar,
+    function(k, n) ifelse(k == 0, 1, -(-1)^k), function(p) p$n >= 3,
+    paste0("alterna los signos al revés (suma el segundo término y resta el tercero",
+           if (n >= 4) ", y suma el cuarto" else "", ")"),
+    paste0("En la serie, después de $x$ el segundo término se resta y el tercero se suma. Quien elige esta opción ",
+           "alterna los signos, pero empieza con un signo más."),
+    "no lee el signo de cada término en la serie dada.",
+    "Incorrecta. Alterna los signos al revés: en la serie, el segundo término se resta."),
+  "SS-N" = error_serie("SS-N", "Cambia el signo del último término", FALSE, mismo_n, fact_impar, tex_impar,
+    function(k, n) ifelse(k == n - 1, -(-1)^k, (-1)^k), function(p) p$n >= 3,
+    paste0(if (ult_signo_mas) "resta" else "suma", " el último término, $", ult_tex, "$, en lugar de ",
+           if (ult_signo_mas) "sumarlo" else "restarlo"),
+    paste0("Los signos de la serie se alternan hasta el final. Quien elige esta opción repite en el último término el ",
+           "signo del anterior. Cambiar el signo de un término mueve el resultado el doble de ese término: la ",
+           "diferencia con la respuesta correcta es $", fr(entero(2 * abs(ult_num)), D), "$."),
+    "deja de seguir la alternancia de los signos al llegar al último término.",
+    "Incorrecta. Cambia el signo del último término; en la serie los signos se alternan hasta el final."),
+  "SS-O" = error_serie("SS-O", "Confunde el factorial con una suma", FALSE, mismo_n,
+    function(k) (2 * k + 1) * (k + 1), function(k) ifelse(k == 0, "1", as.character((2 * k + 1) * (k + 1))), alt,
+    function(p) p$n >= 3,
+    paste0("toma $5!$ como $1 + 2 + 3 + 4 + 5 = 15$", if (n >= 4) " y $7!$ como $1 + 2 + \\cdots + 7 = 28$" else ""),
+    paste0("El factorial es un producto: $5! = 5 \\times 4 \\times 3 \\times 2 \\times 1 = 120$. Quien elige esta ",
+           "opción suma los números en lugar de multiplicarlos. Con $3!$ el error no se nota, porque ",
+           "$1 + 2 + 3 = 6 = 1 \\times 2 \\times 3$; aparece desde $5!$."),
+    "confunde el factorial de un número con la suma de los números desde 1 hasta él.",
+    "Incorrecta. Suma los números en lugar de multiplicarlos: 5! es 120, no 15.")
+)
+stopifnot("regla #1: banco de al menos 6 errores" = length(banco) >= 6L,
+          "regla #1: cada error declara precondición y calcula" =
+            all(vapply(banco, function(e) is.function(e$precondicion) && is.function(e$calcula), TRUE)))
+
+## --- Selección de los distractores: SS-C siempre + 2 del banco (política P2) -------------
+aplic <- names(banco)[vapply(banco, function(e) isTRUE(e$precondicion(p)), TRUE)]
+vals  <- vapply(banco[aplic], function(e) e$calcula(p), 0)
+vals  <- vals[abs(vals - num_clave) > 0.5]            # Capa C: ningún distractor vale lo mismo que la clave
+vals  <- vals[!duplicated(round(vals))]               # opciones distintas (SS-C va primera y nunca se descarta)
+stopifnot("la trampa de la calculadora está entre los distractores válidos" = "SS-C" %in% names(vals))
+otros <- vals[names(vals) != "SS-C"]
+stopifnot("selección: al menos dos distractores del banco además de SS-C" = length(otros) >= 2L)
+pares_dis <- combn(names(otros), 2L, simplify = FALSE)
+b_par  <- vapply(pares_dis, function(pp) sum(otros[pp] < num_clave) + (vals[["SS-C"]] < num_clave), 0)
+rango1 <- vapply(pares_dis, function(pp) any(abs(otros[pp]) <= D), TRUE)
+bs <- sort(unique(b_par))
+b  <- bs[sample.int(length(bs), 1L)]                  # opciones por debajo de la clave: reparto sorteado
+cand <- which(b_par == b & rango1)                    # cascada: primero con un distractor de valor absoluto <= 1
+cascada_rango_cumplida <- length(cand) > 0L
+if (!cascada_rango_cumplida) cand <- which(b_par == b)
+sel <- c("SS-C", pares_dis[[cand[sample.int(length(cand), 1L)]]])
+sel <- names(banco)[names(banco) %in% sel]            # orden del banco, no el de las opciones
+stopifnot("selección: tres distractores" = length(sel) == 3L, "selección: todos válidos" = all(sel %in% names(vals)))
+nums_sel <- vapply(banco[sel], function(e) e$calcula(p), 0)
+
+## Orden interno barajado: los validadores leen este vector antes de exshuffle.
+ord <- sample.int(4L)
+codigos     <- c("CLAVE", sel)[ord]
+numeradores <- c(num_clave, nums_sel)[ord]
+opciones    <- paste0("$", vapply(numeradores, function(v) frs(v, D), ""), "$")
+sol         <- as.integer(codigos == "CLAVE")
+valor_correcto <- num_clave / D
+
+## --- Guardas de corrección ---------------------------------------------------------------
+## Oráculo: lee cada opción como fracción y la compara con la suma parcial de la serie calculada aparte.
+leer_opcion <- function(s) {
+  d <- as.numeric(regmatches(s, gregexpr("[0-9]+", s))[[1L]])
+  (if (grepl("-\\\\dfrac", s)) -1 else 1) * d[1] / d[2]
+}
+terminos <- vapply(seq_len(n + 1L) - 1L, function(k) (-1)^k * x^(2 * k + 1) / factorial(2 * k + 1), 0)
+suma_directa <- sum(terminos[seq_len(n)])
+coincide <- vapply(opciones, function(s) abs(leer_opcion(s) - suma_directa) < 1e-12, logical(1))
+cola <- abs(terminos[n + 1L])                         # valor absoluto del primer término que se deja por fuera
+stopifnot(
+  "regla #13: exactamente una clave" = sum(sol) == 1L,
+  "regla #13: el oráculo solo da por correcta la opción marcada" = identical(as.integer(coincide), sol),
+  "opciones distintas" = !anyDuplicated(opciones),
+  "numeradores enteros" = all(abs(c(num_clave, nums_sel) - round(c(num_clave, nums_sel))) < 1e-9),
+  "precondiciones de los errores mostrados" = all(vapply(banco[sel], function(e) isTRUE(e$precondicion(p)), TRUE)),
+  "trampa SS-C: es la fracción con denominador D más cercana a sen(x)" = abs(nums_sel[["SS-C"]] / D - sin(x)) <= 0.5 / D,
+  "trampa SS-C: no coincide con la clave" = abs(nums_sel[["SS-C"]] - num_clave) > 0.5,
+  "pasada 4: ningún distractor del banco pasa de 4 en valor absoluto" = all(abs(nums_sel[names(nums_sel) != "SS-C"] / D) <= 4),
+  "Solution SS-F: difiere de la clave en exactamente |último término|" =
+    abs(abs(banco[["SS-F"]]$calcula(p) - num_clave) - abs(ult_num)) < 1e-9,
+  "Solution SS-N: difiere de la clave en exactamente el doble del último término" =
+    !("SS-N" %in% sel) || abs(abs(nums_sel[["SS-N"]] - num_clave) - 2 * abs(ult_num)) < 1e-9,
+  "Solution: el error de la aproximación es menor que el primer término omitido (serie alternante)" =
+    abs(valor_correcto - sin(x)) < cola)
+
+## --- Enunciado ------------------------------------------------------------------------------
+serie_tex <- local({
+  s <- "x"
+  for (k in seq_len(n - 1L)) s <- paste0(s, if (k %% 2L == 1L) " - " else " + ", fr(paste0("x^", 2 * k + 1), paste0(2 * k + 1, "!")))
+  paste0("\\mathrm{sen}(x) = ", s, if (n %% 2L == 1L) " - " else " + ", "\\ldots")
+})
+NOMBRES <- c("Ignacio", "Valentina", "Sofía", "Mateo", "Daniela", "Julián", "Mariana", "Samuel")
+FENOMENOS <- c("una onda de sonido", "el movimiento de un péndulo", "la corriente alterna de un circuito",
+               "la altura de una cabina en una rueda de la fortuna", "la vibración de una cuerda de guitarra",
+               "el nivel del agua de un puerto durante las mareas")
+CONTEXTOS <- list(
+  situacion     = function(nm, f) paste0("Para analizar ", f, ", ", nm, " utiliza la siguiente serie para hacer cálculos a partir de la función seno:"),
+  en_curso      = function(nm, f) paste0("Mientras modela ", f, ", ", nm, " usa la siguiente serie para calcular valores de la función seno sin calculadora:"),
+  descubrimiento= function(nm, f) paste0("Al estudiar ", f, ", ", nm, " descubrió que puede calcular valores de la función seno con la siguiente serie:"),
+  clase         = function(nm, f) paste0("En la clase de física, el grupo de ", nm, " estudia ", f, " y calcula valores de la función seno con la siguiente serie:"),
+  institucional = function(nm, f) paste0("En la feria de ciencias del colegio, el equipo de ", nm, " presenta un modelo sobre ", f, " que usa la siguiente serie para calcular valores de la función seno:"),
+  pregunta      = function(nm, f) paste0("¿Cómo se calcula el seno de un número sin calculadora? Para estudiar ", f, ", ", nm, " usa la siguiente serie:"),
+  dialogo       = function(nm, f) paste0("«Para modelar ", f, " necesito valores del seno», le dijo ", nm, " a su compañero, «y los puedo calcular con esta serie»:")
+)
+nombre <- pick(NOMBRES)
+contexto <- pick(CONTEXTOS)(nombre, pick(FENOMENOS))
+pregunta <- paste0("Si ", nombre, " utiliza la serie solamente con los primeros ", PALABRA[n], " términos para aproximar el valor de $\\mathrm{sen}(", x, ")$, ¿qué valor obtendría?")
+
+## --- Textos de la Solution -------------------------------------------------------------------
+ck <- calculo(p, n, fact_impar, function(k) ifelse(k == 0, "1", as.character(factorial(2 * k + 1))), function(k) alt(k, n))
+sustitucion <- local({
+  s <- xs_tex
+  for (k in seq_len(n - 1L)) s <- paste0(s, if (k %% 2L == 1L) " - " else " + ", fr(paste0(xs_tex, "^{", 2 * k + 1, "}"), paste0(2 * k + 1, "!")))
+  s
+})
+stopifnot("Solution: el cálculo mostrado da la clave" = abs(ck$total - num_clave) < 1e-9)
+diagnostico <- vapply(sel, function(cd) {
+  e <- banco[[cd]]
+  if (cd == "SS-C")
+    return(paste0("**", e$codigo, " — ", e$nombre, ".** Es posible que los estudiantes que eligen $", frs(e$calcula(p), D),
+                  "$ hayan ", e$descripcion_corta, ": $\\mathrm{sen}(", x, ") \\approx$ ", dec_txt(sin(x)),
+                  ", y $", frs(e$calcula(p), D), " \\approx$ ", dec_txt(e$calcula(p) / D), ". ", e$descripcion_larga,
+                  " *Causa de fondo:* ", e$causa_raiz))
+  cc <- calculo(p, e$nt(n), e$den, e$dtex, function(k) e$sgn(k, n))
+  ops <- trimws(regmatches(cc$l0, gregexpr(" [+-] ", cc$l0))[[1L]])
+  dice <- list("SS-A" = function(o) all(o == "-"), "SS-B" = function(o) all(o == "+"),
+               "SS-D" = function(o) all(o == "+"), "SS-I" = function(o) o[1L] == "+")
+  stopifnot("Solution: el cálculo mostrado da el valor de la opción" = abs(cc$total - e$calcula(p)) < 1e-9,
+            "coherencia texto-cálculo: los signos mostrados son los que el texto describe (FASE 2C r1 H2)" =
+              !(cd %in% names(dice)) || isTRUE(dice[[cd]](ops)))
+  paste0("**", e$codigo, " — ", e$nombre, ".** Es posible que los estudiantes que eligen $", frs(e$calcula(p), D),
+         "$ hayan hecho un cálculo que ", e$descripcion_corta, ":\n\n",
+         { partes <- unique(c(cc$l0, cc$l1, cc$l2, frs(cc$total, D)))   # pasada 4: una igualdad por display (PDF, 360 y 320 px)
+           paste0(eq_display(partes[1L]), paste(vapply(partes[-1L], function(t) eq_display(paste0("= ", t)), ""), collapse = "")) }, "\n",
+         e$descripcion_larga, " *Causa de fondo:* ", e$causa_raiz)
+}, "")
+feedback <- vapply(seq_along(codigos), function(i) {
+  if (codigos[i] == "CLAVE")
+    return(paste0("Correcta. Usa los primeros ", PALABRA[n], " términos, con los signos alternados y los factoriales impares; ",
+                  "el resultado es $", frs(num_clave, D), "$."))
+  banco[[codigos[i]]]$feedback
+}, "")
+reflexiones <- c(
+  "Antes de sumar, escribe cada término con su signo y su denominador: así se ve si los signos se alternan y si cada factorial corresponde a su exponente.",
+  "Comprobar que el factorial de cada término coincide con su exponente es una revisión rápida que evita la mayoría de los errores con esta serie.",
+  "Antes de comparar con la calculadora, pregúntate qué pide la pregunta: el valor de la serie con unos pocos términos, no el valor exacto del seno.",
+  "Al pasar todo a un denominador común, verifica que cada numerador sea el cociente entre el denominador común y el factorial del término.",
+  "Contar primero cuántos términos pide la pregunta, y escribirlos todos antes de operar, evita quedarse corto o pasarse.")
+reflexion <- pick(reflexiones)
+dif <- abs(valor_correcto - sin(x))
+stopifnot("Comprobación: la diferencia redondeada que se imprime es menor que la cota impresa (FASE 2C r1 H4)" =
+  as.numeric(sub(",", ".", dec_sig(dif), fixed = TRUE)) < as.numeric(sub(",", ".", dec_sig(cola), fixed = TRUE)))
+
+textos_visibles <- c(contexto, pregunta, diagnostico, feedback, reflexion,
+                     vapply(banco, function(e) paste(e$nombre, e$descripcion_corta, e$descripcion_larga, e$causa_raiz, e$feedback), ""))
+stopifnot("regla #7: contracciones al y del" = !any(grepl("(*UCP)\\b[Aa] el\\b|\\b[Dd]e el\\b", textos_visibles, perl = TRUE)),
+          "regla #25: sin signo menos tipográfico ni símbolo de aproximación" = !any(grepl("\u2212|\u2248", textos_visibles)),
+          "textos sin NA ni notación científica" = !any(grepl("\\bNA\\b|[0-9]e[+-]?[0-9]", textos_visibles)))
+```
+
+Question
+========
+
+```{r enunciado, echo = FALSE, results = "asis"}
+cat(contexto, "\n\n", sep = "")
+cat(eq_display(serie_tex), "\n", sep = "")
+cat(pregunta, "\n", sep = "")
+```
+
+```{r opciones, echo = FALSE, results = "asis"}
+## Separación vertical entre opciones en HTML y Moodle: las fracciones en display de dos opciones seguidas pueden
+## tocarse a 360 px. Es HTML crudo: pandoc lo descarta en PDF, NOPS y DOCX. El vector «opciones» no cambia.
+answerlist(paste0("<span style=\"display:inline-block;margin:0.3em 0\">", opciones, "</span>"), markup = "markdown")
+```
+
+Solution
+========
+
+```{r solucion, echo = FALSE, results = "asis"}
+## Encabezados en negrita (no con almohadillas, para que no salgan numerados en el PDF), seguidos del cierre que LaTeX
+## pone tras un título para que no queden solos al pie de la página; el bloque {=latex} lo descarta pandoc fuera del PDF.
+valla <- strrep(intToUtf8(96L), 3L)
+encabezado <- function(t) cat("**", t, "**\n\n", valla, "{=latex}\n",
+  "\\nobreak\\makeatletter\\@afterindenttrue\\@afterheading\\makeatother\n", valla, "\n\n", sep = "")
+encabezado("Respuesta correcta")
+cat("Con los primeros ", PALABRA[n], " términos de la serie, la aproximación de $\\mathrm{sen}(", x, ")$ es $",
+    frs(num_clave, D), "$.\n\n", sep = "")
+encabezado("Procedimiento correcto")
+cat("Los primeros ", PALABRA[n], " términos de la serie tienen los signos alternados ($+$, $-$, $+$, $\\ldots$) y, en cada uno, el ",
+    "denominador es el factorial de su exponente, que es un número impar. Al sustituir $x = ", x, "$, $\\mathrm{sen}(", x, ")$ es aproximadamente:\n\n", sep = "")
+cat(eq_display(sustitucion), eq_display(paste0("= ", ck$l1)), "\n", sep = "")
+cat("Como $", D, " = ", 2 * n - 1, "!$ es múltiplo de todos los demás factoriales, sirve como denominador común:\n\n", sep = "")
+cat(eq_display(ck$l2), eq_display(paste0("= ", frs(num_clave, D))), "\n", sep = "")
+encabezado("Comprobación")
+cat("Con una calculadora en radianes, $\\mathrm{sen}(", x, ") \\approx$ ", dec_txt(sin(x)), ", y la serie con los primeros ",
+    PALABRA[n], " términos da $", frs(num_clave, D), " \\approx$ ", dec_txt(valor_correcto), ". No son iguales: ",
+    "la serie truncada es una aproximación. La diferencia, cerca de ", dec_sig_txt(dif), ", es menor que el valor ",
+    "absoluto del primer término que se dejó por fuera, $", fr(paste0(abs(x), "^{", 2 * n + 1, "}"), paste0(2 * n + 1, "!")),
+    " = ", fr(entero(abs(x)^(2 * n + 1)), entero(factorial(2 * n + 1))), " \\approx$ ", dec_sig_txt(cola), ": a partir del ",
+    "último término usado, cada término es menor que el anterior en valor absoluto y los signos se alternan, así que el ",
+    "error nunca supera el primero de los que se dejaron por fuera.\n\n", sep = "")
+cat("La pregunta pide el valor de la serie con los primeros ", PALABRA[n], " términos, no el valor del seno. Por eso la ",
+    "fracción con denominador ", D, " más cercana a lo que da la calculadora, $", frs(num_trampa, D),
+    "$, no es la respuesta.\n\n", sep = "")
+encabezado("Análisis del error")
+cat("Esta pregunta tiene dos obstáculos: el signo alternado de los términos y los factoriales impares de los ",
+    "denominadores. Dos de las otras opciones salen de errores con alguno de ellos, con el número de términos o con el ",
+    "cálculo de un factorial; la otra es la fracción más cercana al valor del seno que da la calculadora. Cada una se identifica por su valor:\n\n", sep = "")
+cat(paste(diagnostico, collapse = "\n\n"), "\n\n", sep = "")
+encabezado("Propiedades del concepto")
+cat("- En la serie del seno los exponentes son impares (1, 3, 5, 7, ...) y cada término se divide entre el factorial de su exponente.\n")
+cat("- Los signos se alternan: el primer término se suma, el segundo se resta, el tercero se suma, y así sucesivamente.\n")
+cat("- Con más términos la aproximación se acerca al valor del seno, y el error es menor que el primer término que se deja por fuera.\n")
+cat("- El factorial es un producto: $5! = 5 \\times 4 \\times 3 \\times 2 \\times 1 = 120$. Como cada factorial es múltiplo de los anteriores, el mayor sirve como denominador común.\n\n")
+encabezado("Reflexión metacognitiva")
+cat(reflexion, "\n\n", sep = "")
+encabezado("Estrategia para evitar el error")
+cat("- Cuenta cuántos términos pide la pregunta y escríbelos todos antes de operar.\n")
+cat("- Escribe el signo de cada término: $+$, $-$, $+$, $\\ldots$\n")
+cat("- Comprueba que cada denominador es el factorial del exponente: $x^3$ con $3!$, $x^5$ con $5!$.\n")
+cat("- Calcula las potencias de $x$ con su signo, y los factoriales como productos; usa el mayor como denominador común.\n")
+cat("- Distingue lo que se pide: el valor de la serie con esos términos, no el valor exacto del seno.\n\n")
+```
+
+```{r feedback, echo = FALSE, results = "asis"}
+answerlist(feedback, markup = "markdown")
+```
+
+Meta-information
+================
+exname: serie_seno_aproximacion_numerico_variacional_formulacion_ejecucion_n3_schoice_v1
+extype: schoice
+exsolution: `r mchoice2string(as.logical(sol))`
+exshuffle: TRUE
+extol: 0
+exextra[Type]: SCHOICE
+exextra[Competencia]: Formulación y ejecución
+exextra[Componente]: Numérico-variacional
+exextra[Afirmacion]: Frente a un problema que involucre información cuantitativa, plantea e implementa estrategias que lleven a soluciones adecuadas.
+exextra[Evidencia]: Ejecuta un plan de solución para un problema que involucra información cuantitativa o esquemática.
+exextra[Nivel]: 3
+exextra[Descriptor]: D3.7 — Selecciona información necesaria para resolver problemas que involucran operaciones aritméticas.
+exextra[Estandar]: Utilizo las técnicas de aproximación en procesos infinitos numéricos. (10°-11°, Pensamiento variacional)
+exextra[GradoSugerido]: 10°-11°
+exextra[Contenido]: Álgebra y Cálculo
+exextra[TemaEspecifico]: Aproximación por series
+exextra[DOK]: 2
+exextra[Bloom]: Aplicar
+exextra[SOLO]: Multiestructural
+exextra[TipoMetacognicion]: monitoreo_del_procedimiento
+exextra[ItemOriginal]: SAI Nivelación 6 (grado 10, julio de 2026), pregunta 17; MAT-2026-07-017 (variante: la instancia impresa queda fuera por decisión del profesor del 2026-11-13)

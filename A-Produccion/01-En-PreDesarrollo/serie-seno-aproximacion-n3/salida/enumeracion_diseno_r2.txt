@@ -1,0 +1,72 @@
+x= 2 n=3 D= 120 clave=   112 (0.9333) red=TRUE | trampa=  109 (0.9083) red=FALSE | A=-400 B=880 D=432 E=688 F=80[in] G=-208 H=-80[in] I=368 N=48[in] O=336
+x= 2 n=4 D=5040 clave=  4576 (0.9079) red=TRUE | trampa= 4583 (0.9093) red=FALSE | A=-17696 B=37856 D=18272 E=-63264 F=4704[in] G=-8864 H=-4256[in] I=15584 N=4832[in] O=-8928
+x= 3 n=3 D= 120 clave=    63 (0.5250) red=TRUE | trampa=   17 (0.1417) red=FALSE | A=-2475 B=3195 D=1143 E=5112 F=-180 G=-1017 H=-45[in] I=657 N=-423 O=1764
+x= 3 n=4 D=5040 clave=   459 (0.0911) red=TRUE | trampa=  711 (0.1411) red=TRUE | A=-119259 B=149499 D=50193 E=-1.35994e+06 F=2646[in] G=-44901 H=-17199 I=29781 N=4833[in] O=-319572
+x=-2 n=3 D= 120 clave=  -112 (-0.9333) red=TRUE | trampa= -109 (-0.9083) red=FALSE | A=400 B=-880 D=-432 E=-688 F=-80[in] G=208 H=80[in] I=-368 N=-48[in] O=-336
+x=-2 n=4 D=5040 clave= -4576 (-0.9079) red=TRUE | trampa=-4583 (-0.9093) red=FALSE | A=17696 B=-37856 D=-18272 E=63264 F=-4704[in] G=8864 H=4256[in] I=-15584 N=-4832[in] O=8928
+x=-3 n=3 D= 120 clave=   -63 (-0.5250) red=TRUE | trampa=  -17 (-0.1417) red=FALSE | A=2475 B=-3195 D=-1143 E=-5112 F=180 G=1017 H=45[in] I=-657 N=423 O=-1764
+x=-3 n=4 D=5040 clave=  -459 (-0.0911) red=TRUE | trampa= -711 (-0.1411) red=TRUE | A=119259 B=-149499 D=-50193 E=1.35994e+06 F=-2646[in] G=44901 H=17199 I=-29781 N=-4833[in] O=319572
+
+==================== P1 ====================
+ternas con peso > 0: 360 | rango de la clave (%): 16.7 / 33.3 / 33.3 / 16.7 
+               regla agregado_pp peor_rama_pp peor_rama
+ rel_par_mas_cercano        25.0         25.0  x=-2,n=3
+        est_cerca_S2        25.0         75.0  x=-2,n=4
+    est_entre_S2_y_x        21.0         25.0  x=-2,n=3
+      est_rango_seno        17.9         21.7  x=-3,n=3
+         est_cerca_x        15.0         55.0  x=-2,n=3
+    mag_menos_cifras        11.1         25.0  x=-3,n=4
+         est_signo_x         9.8         11.1  x=-2,n=4
+        mag_2a_menor         8.3          8.3  x=-2,n=3
+        mag_2a_mayor         8.3          8.3  x=-2,n=3
+       pos_centrales         8.3          8.3  x=-2,n=3
+    est_no_cerca_sen         8.3          8.3  x=-2,n=3
+       div_reducible         6.2          8.3  x=-2,n=3
+
+==================== P2 ====================
+ternas con peso > 0: 208 | rango de la clave (%): 16.7 / 33.3 / 33.3 / 16.7 
+               regla agregado_pp peor_rama_pp peor_rama
+ rel_par_mas_cercano        25.0         25.0  x=-2,n=3
+        est_cerca_S2        25.0         75.0  x=-2,n=4
+    est_entre_S2_y_x        16.8         25.0  x=-2,n=3
+         est_cerca_x        15.0         55.0  x=-2,n=3
+      est_rango_seno        12.0         13.9  x=-3,n=3
+         est_signo_x         9.5         11.1  x=-2,n=4
+        mag_2a_menor         8.3          8.3  x=-2,n=3
+        mag_2a_mayor         8.3          8.3  x=-2,n=3
+       pos_centrales         8.3          8.3  x=-2,n=3
+    est_no_cerca_sen         8.3          8.3  x=-2,n=3
+    mag_menos_cifras         6.9         25.0  x=-3,n=4
+     rel_cerca_media         6.4          8.3  x=-2,n=3
+
+==================== P3 ====================
+ternas con peso > 0: 360 | rango de la clave (%): 16.7 / 33.3 / 33.3 / 16.7 
+               regla agregado_pp peor_rama_pp peor_rama
+ rel_par_mas_cercano        25.0         25.0  x=-2,n=3
+        est_cerca_S2        25.0         75.0  x=-2,n=4
+    est_entre_S2_y_x        21.0         25.0  x=-2,n=3
+      est_rango_seno        17.9         21.7  x=-3,n=3
+         est_cerca_x        15.0         55.0  x=-2,n=3
+    mag_menos_cifras        11.1         25.0  x=-3,n=4
+         est_signo_x         9.8         11.1  x=-2,n=4
+        mag_2a_menor         8.3          8.3  x=-2,n=3
+        mag_2a_mayor         8.3          8.3  x=-2,n=3
+       pos_centrales         8.3          8.3  x=-2,n=3
+    est_no_cerca_sen         8.3          8.3  x=-2,n=3
+       div_reducible         6.2          8.3  x=-2,n=3
+
+==================== P4 ====================
+ternas con peso > 0: 208 | rango de la clave (%): 16.7 / 33.3 / 33.3 / 16.7 
+               regla agregado_pp peor_rama_pp peor_rama
+ rel_par_mas_cercano        25.0         25.0  x=-2,n=3
+        est_cerca_S2        25.0         75.0  x=-2,n=4
+    est_entre_S2_y_x        16.8         25.0  x=-2,n=3
+         est_cerca_x        15.0         55.0  x=-2,n=3
+      est_rango_seno        12.0         13.9  x=-3,n=3
+         est_signo_x         9.5         11.1  x=-2,n=4
+        mag_2a_menor         8.3          8.3  x=-2,n=3
+        mag_2a_mayor         8.3          8.3  x=-2,n=3
+       pos_centrales         8.3          8.3  x=-2,n=3
+    est_no_cerca_sen         8.3          8.3  x=-2,n=3
+    mag_menos_cifras         6.9         25.0  x=-3,n=4
+     rel_cerca_media         6.4          8.3  x=-2,n=3

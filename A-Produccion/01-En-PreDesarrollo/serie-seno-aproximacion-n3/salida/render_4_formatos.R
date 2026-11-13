@@ -1,0 +1,11 @@
+library(exams)
+rmd <- "serie_seno_aproximacion_numerico_variacional_formulacion_ejecucion_n3_schoice_v1.Rmd"
+out <- "salida/render"; unlink(out, recursive = TRUE); dir.create(out, recursive = TRUE)
+s_canon <- 12L   # semilla fija de referencia (ya no hay instancia canónica)
+cat("semilla de referencia:", s_canon, "\n")
+exams2html(rmd, n = 1, dir = out, name = "html_s12", seed = s_canon, solution = TRUE)
+exams2html(rmd, n = 3, dir = out, name = "html_", seed = 101:103, solution = TRUE)
+exams2pdf(rmd, n = 5, dir = out, name = "pdf_", seed = c(s_canon, 201:204), texdir = file.path(out, "tex"))
+exams2pandoc(rmd, n = 1, dir = out, name = "docx_", type = "docx", seed = 301)
+exams2nops(rmd, n = 1, dir = out, name = "nops_", seed = 401)
+cat("ARCHIVOS:\n"); print(list.files(out, recursive = TRUE))

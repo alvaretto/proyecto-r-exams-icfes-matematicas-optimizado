@@ -1,0 +1,25 @@
+ mutante
+      M1
+      M2
+      M3
+      M4
+      M5
+      M6
+      M7
+                                                                    sonda
+                            el término mostrado vale lo que dice el texto
+                       los signos mostrados son los que el texto describe
+     la diferencia redondeada que se imprime es menor que la cota impresa
+          la trampa de la calculadora está entre los distractores válidos
+ a partir del último término usado, cada término es menor que el anterior
+ a partir del último término usado, cada término es menor que el anterior
+                  ningún distractor del banco pasa de 4 en valor absoluto
+ semilla           veredicto
+       1 cazado_por_su_sonda
+       9 cazado_por_su_sonda
+       1 cazado_por_su_sonda
+       1 cazado_por_su_sonda
+       4 cazado_por_su_sonda
+      17 cazado_por_su_sonda
+       4 cazado_por_su_sonda
+línea base sin mutar: fallos en 600 semillas = 0 

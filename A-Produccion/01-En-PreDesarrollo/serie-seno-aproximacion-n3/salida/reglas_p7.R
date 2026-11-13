@@ -1,0 +1,52 @@
+## Batería §P7 congelada (44 reglas; pasada 4 sin ampliarla). La leen verificar_bateria_p7.R y enumeracion_exacta.R.
+## Requiere haber cargado .claude/scripts/bateria_eliminacion.R (nueva_regla).
+gcdv <- function(a, b) { a <- abs(a); b <- abs(b); while (b > 0) { t <- b; b <- a %% b; a <- t }; a }
+R <- list(
+  nueva_regla("mag_mayor", "magnitud", function(o) o == max(o)),
+  nueva_regla("mag_menor", "magnitud", function(o) o == min(o)),
+  nueva_regla("mag_2a_menor", "magnitud", function(o) rank(o) == 2),
+  nueva_regla("mag_2a_mayor", "magnitud", function(o) rank(o) == 3),
+  nueva_regla("mag_mas_cifras", "magnitud", function(o) nchar(abs(o)) == max(nchar(abs(o)))),
+  nueva_regla("mag_menos_cifras", "magnitud", function(o) nchar(abs(o)) == min(nchar(abs(o)))),
+  nueva_regla("pos_centrales", "posicion", function(o) rank(o) %in% c(2, 3)),
+  nueva_regla("div_irreducible", "divisibilidad", function(o, e) vapply(o, gcdv, 0, b = e$D) == 1, usa_estimulo = TRUE),
+  nueva_regla("div_reducible", "divisibilidad", function(o, e) vapply(o, gcdv, 0, b = e$D) > 1, usa_estimulo = TRUE),
+  nueva_regla("div_impar", "divisibilidad", function(o) abs(o) %% 2 == 1),
+  nueva_regla("div_par", "divisibilidad", function(o) abs(o) %% 2 == 0),
+  nueva_regla("div_mult5", "divisibilidad", function(o) abs(o) %% 5 == 0),
+  nueva_regla("div_no_mult5", "divisibilidad", function(o) abs(o) %% 5 != 0),
+  nueva_regla("div_mult3", "divisibilidad", function(o) abs(o) %% 3 == 0),
+  nueva_regla("div_no_mult3", "divisibilidad", function(o) abs(o) %% 3 != 0),
+  nueva_regla("div_termina_en_1", "divisibilidad", function(o) abs(o) %% 10 == 1),
+  nueva_regla("sig_positiva", "signo", function(o) o > 0),
+  nueva_regla("sig_negativa", "signo", function(o) o < 0),
+  nueva_regla("fmt_cifras_singular", "formato", function(o) { nc <- nchar(abs(o)); tb <- table(nc); nc %in% as.integer(names(tb)[tb == 1]) }),
+  nueva_regla("rel_par_mas_cercano", "magnitud", function(o) { d <- abs(outer(o, o, "-")); diag(d) <- Inf; apply(d == min(d), 1, any) }),
+  nueva_regla("rel_mas_lejana", "magnitud", function(o) { d <- abs(outer(o, o, "-")); s <- rowSums(d); s == max(s) }),
+  nueva_regla("rel_cerca_media", "magnitud", function(o) abs(o - mean(o)) == min(abs(o - mean(o)))),
+  nueva_regla("est_rango_seno", "magnitud", function(o, e) abs(o) <= e$D, usa_estimulo = TRUE),
+  nueva_regla("est_fuera_rango", "magnitud", function(o, e) abs(o) > e$D, usa_estimulo = TRUE),
+  nueva_regla("est_cerca_sen", "magnitud", function(o, e) { d <- abs(o / e$D - sin(e$x)); d == min(d) }, usa_estimulo = TRUE),
+  nueva_regla("est_cerca_x", "magnitud", function(o, e) { d <- abs(o / e$D - e$x); d == min(d) }, usa_estimulo = TRUE),
+  nueva_regla("est_signo_x", "signo", function(o, e) sign(o) == sign(e$x), usa_estimulo = TRUE),
+  ## Pasada 2 (§P7-C: la batería cambia, se vuelve a medir todo): las dos estructurales del detractor r1, la inversa de
+  ## «más cercana a sen(x)» y «termina en 1 o 9».
+  nueva_regla("est_no_cerca_sen", "magnitud", function(o, e) { d <- abs(o / e$D - sin(e$x)); d != min(d) }, usa_estimulo = TRUE),
+  nueva_regla("est_cerca_S2", "magnitud", function(o, e) { d <- abs(o / e$D - (e$x - e$x^3 / 6)); d == min(d) }, usa_estimulo = TRUE),
+  nueva_regla("est_entre_S2_y_x", "magnitud", function(o, e) { a <- e$x - e$x^3 / 6; o / e$D > min(a, e$x) & o / e$D < max(a, e$x) }, usa_estimulo = TRUE),
+  nueva_regla("est_2a_cerca_sen", "magnitud", function(o, e) { d <- abs(o / e$D - sin(e$x)); rank(d, ties.method = "min") == 2 }, usa_estimulo = TRUE),
+  nueva_regla("rel_par_lejos_sen", "magnitud", function(o, e) { d <- abs(outer(o, o, "-")); diag(d) <- Inf; ij <- which(d == min(d), arr.ind = TRUE)[1, ]; s <- abs(o[ij] / e$D - sin(e$x)); seq_along(o) == ij[which.max(s)] }, usa_estimulo = TRUE),
+  nueva_regla("rel_par_mayor_abs", "magnitud", function(o) { d <- abs(outer(o, o, "-")); diag(d) <- Inf; ij <- which(d == min(d), arr.ind = TRUE)[1, ]; seq_along(o) == ij[which.max(abs(o[ij]))] }),
+  nueva_regla("rel_par_menor_abs", "magnitud", function(o) { d <- abs(outer(o, o, "-")); diag(d) <- Inf; ij <- which(d == min(d), arr.ind = TRUE)[1, ]; seq_along(o) == ij[which.min(abs(o[ij]))] }),
+  nueva_regla("rel_par_reducible", "divisibilidad", function(o, e) { d <- abs(outer(o, o, "-")); diag(d) <- Inf; ij <- which(d == min(d), arr.ind = TRUE)[1, ]; seq_along(o) %in% ij & vapply(o, gcdv, 0, b = e$D) > 1 }, usa_estimulo = TRUE),
+  nueva_regla("est_rango_no_cerca_sen", "magnitud", function(o, e) { r <- abs(o) <= e$D; d <- abs(o / e$D - sin(e$x)); r & d != min(d) }, usa_estimulo = TRUE),
+  nueva_regla("est_rango_reducible", "divisibilidad", function(o, e) abs(o) <= e$D & vapply(o, gcdv, 0, b = e$D) > 1, usa_estimulo = TRUE),
+  nueva_regla("est_rango_mayor_abs", "magnitud", function(o, e) { r <- abs(o) <= e$D; r & abs(o) == max(abs(o[r])) }, usa_estimulo = TRUE),
+  nueva_regla("est_rango_menor_abs", "magnitud", function(o, e) { r <- abs(o) <= e$D; r & abs(o) == min(abs(o[r])) }, usa_estimulo = TRUE),
+  ## Ronda 3 (§P7-C: la batería cambia, se vuelve a medir todo): reglas nuevas del detractor r3.
+  nueva_regla("rel_par_mult_x", "divisibilidad", function(o, e) { d <- abs(outer(o, o, "-")); diag(d) <- Inf; ij <- which(d == min(d), arr.ind = TRUE)[1, ]; seq_along(o) %in% ij & abs(o) %% abs(e$x) == 0 }, usa_estimulo = TRUE),
+  nueva_regla("est_abs_menor_x", "magnitud", function(o, e) abs(o / e$D) < abs(e$x), usa_estimulo = TRUE),
+  nueva_regla("div_mult_x", "divisibilidad", function(o, e) abs(o) %% abs(e$x) == 0, usa_estimulo = TRUE),
+  nueva_regla("sig_mayoritario", "signo", function(o) { s <- sign(o); tb <- table(s); s == as.numeric(names(tb)[which.max(tb)]) }),
+  nueva_regla("div_termina_1o9", "divisibilidad", function(o) abs(o) %% 10 %in% c(1, 9))
+)

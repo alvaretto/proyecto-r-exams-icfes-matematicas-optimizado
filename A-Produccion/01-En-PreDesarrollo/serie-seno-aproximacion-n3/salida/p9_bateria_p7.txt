@@ -1,0 +1,67 @@
+md5 del .Rmd: b9d489a9dd838630875a4958146b9bc8 | configuraciones: 88 | rango de la clave (exacto): 27.1 / 22.9 / 22.9 / 27.1 %
+clave en un extremo, por rama (%): x=-2,n=3 33 · x=-2,n=4 33 · x=-3,n=3 100 · x=-3,n=4 50 · x=2,n=3 33 · x=2,n=4 33 · x=3,n=3 100 · x=3,n=4 50 
+
+                  regla       familia aplica_pct exceso_pp exceso_diluido_pp peor_rama_pp peor_rama
+       est_2a_cerca_sen      magnitud      100.0      75.0              75.0         75.0  x=-2,n=3
+      rel_par_lejos_sen      magnitud      100.0      75.0              75.0         75.0  x=-2,n=3
+      rel_par_reducible divisibilidad      100.0      62.5              62.5         75.0  x=-2,n=3
+         rel_par_mult_x divisibilidad      100.0      62.5              62.5         75.0  x=-2,n=3
+    est_rango_reducible divisibilidad       87.5      26.2              22.9         39.8  x=-2,n=3
+ est_rango_no_cerca_sen      magnitud      100.0      26.1              26.1         39.8  x=-2,n=3
+    rel_par_mas_cercano      magnitud      100.0      25.0              25.0         25.0  x=-2,n=3
+           est_cerca_S2      magnitud      100.0      25.0              25.0         75.0  x=-2,n=4
+      rel_par_mayor_abs      magnitud      100.0      25.0              25.0         75.0  x=-2,n=3
+      rel_par_menor_abs      magnitud      100.0      25.0              25.0         75.0  x=-2,n=4
+    est_rango_mayor_abs      magnitud      100.0      25.0              25.0         75.0  x=-2,n=3
+            est_signo_x         signo       64.4      17.4              11.2         25.0  x=-3,n=3
+            est_cerca_x      magnitud      100.0      16.7              16.7         75.0  x=-3,n=3
+       est_entre_S2_y_x      magnitud       85.8      15.1              13.0         25.0  x=-2,n=3
+           div_no_mult5 divisibilidad       38.0      15.0               5.7         16.7  x=-3,n=3
+    est_rango_menor_abs      magnitud      100.0      13.3              13.3         75.0  x=-3,n=4
+        est_abs_menor_x      magnitud       57.2      10.8               6.2         15.5  x=-2,n=3
+         est_rango_seno      magnitud       81.4      10.0               8.2         14.6  x=-2,n=3
+          div_reducible divisibilidad       75.0       8.3               6.2          8.3  x=-2,n=3
+       est_no_cerca_sen      magnitud      100.0       8.3               8.3          8.3  x=-2,n=3
+             div_mult_x divisibilidad       75.0       8.3               6.2          8.3  x=-2,n=3
+margen rel_par_mas_cercano  acierta en 100.0 %; margen mediano cuando acierta 90 %; aciertos con margen < 15 %: 0.0 % del peso
+margen est_cerca_x          acierta en 41.7 %; margen mediano cuando acierta 13 %; aciertos con margen < 15 %: 41.7 % del peso
+margen est_cerca_S2         acierta en 50.0 %; margen mediano cuando acierta 1 %; aciertos con margen < 15 %: 50.0 % del peso
+
+control N = 100 (helper, semillas 1..100):
+  Maximo observado : 100.0 %  (regla 'est_2a_cerca_sen')
+  Techo nulo       : 32.6 %  (media del maximo con la clave permutada, 400 replicas)
+  EXCESO           : +67.4 pp   <-- ESTO decide el veredicto
+  Exceso ATOMICO   : +75.0 pp  (la regla top sobre su propio nulo exacto, 25.0 %;
+  BLOQUEA (exit 1)
+
+-- Alcance (§P7-E) --
+en alcance, firmada: est_2a_cerca_sen (75 pp <= 75)
+en alcance, firmada: rel_par_lejos_sen (75 pp <= 75)
+en alcance, firmada: rel_par_reducible (62.5 pp <= 62.5)
+en alcance, firmada: rel_par_mult_x (62.5 pp <= 62.5)
+en alcance, firmada: est_rango_reducible (26.2 pp <= 26.2)
+en alcance, firmada: est_rango_no_cerca_sen (26.1 pp <= 26.1)
+en alcance, firmada: rel_par_mas_cercano (25 pp <= 25)
+en alcance, firmada: est_cerca_S2 (25 pp <= 25)
+en alcance, firmada: rel_par_mayor_abs (25 pp <= 25)
+en alcance, firmada: rel_par_menor_abs (25 pp <= 25)
+en alcance, firmada: est_rango_mayor_abs (25 pp <= 25)
+en alcance, firmada: est_signo_x (17.4 pp <= 17.4)
+en alcance, firmada: est_cerca_x (16.7 pp <= 16.7)
+en alcance, firmada: est_entre_S2_y_x (15.1 pp <= 15.1)
+en alcance, firmada: div_no_mult5 (15 pp <= 15)
+en alcance, firmada: est_rango_menor_abs (13.3 pp <= 13.3)
+en alcance, firmada: est_abs_menor_x (10.8 pp <= 10.8)
+en alcance, firmada: est_rango_seno (10 pp <= 10)
+en alcance, firmada: div_reducible (8.3 pp <= 8.3)
+en alcance, firmada: est_no_cerca_sen (8.3 pp <= 8.3)
+en alcance, firmada: div_mult_x (8.3 pp <= 8.3)
+
+-- Firmadas fuera de la batería --
+la más cercana a la opción de la calculadora: +75.0 pp (salida/fase2c_r4_detractor.md (H2))
+entre las de numerador múltiplo de x, la más cercana al seno: +50.0 pp (salida/fase2c_r4_detractor.md (H2))
+si x es positivo la mayor, si es negativo la menor: +8.3 pp; acierto del 100 % en la rama x = ±3 con tres términos (salida/fase2c_r4_detractor.md (H2))
+
+Firma: 2026-11-13 · md5 firmado b9d489a9dd838630875a4958146b9bc8 · md5 medido b9d489a9dd838630875a4958146b9bc8
+
+VEREDICTO_P7: ROJO_CUBIERTO — firma del 2026-11-13 

@@ -1,0 +1,3 @@
+rel_par_mas_cercano (la clave está en el par más cercano): acierta en 100/100; margen mediano cuando acierta 92 % (mín 26 %); versiones con margen < 15 %: 0 
+est_cerca_x (la clave es la más cercana a x): acierta en 50/100; margen mediano cuando acierta 8 % (mín 0 %); versiones con margen < 15 %: 50 
+est_cerca_S2 (la clave es la más cercana a x - x^3/6): acierta en 41/100; margen mediano cuando acierta 3 % (mín 1 %); versiones con margen < 15 %: 41 

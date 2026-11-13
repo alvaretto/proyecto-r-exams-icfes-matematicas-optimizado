@@ -1,0 +1,170 @@
+{
+  "version": "2.0",
+  "ejercicio": "serie_seno_aproximacion_numerico_variacional_formulacion_ejecucion_n3_schoice_v1",
+  "tipo": "schoice",
+  "timestamp_inicio": "2026-11-13T06:01:34.101783-05:00",
+  "timestamp_ultima_actualizacion": "2026-11-13T11:43:09.968812-05:00",
+  "pasos": {
+    "analisis_icfes": {
+      "completado": true,
+      "timestamp": "2026-11-13T06:02:52.391401-05:00",
+      "resultado": null,
+      "competencia": "Formulación y ejecución",
+      "componente": "Numérico-variacional",
+      "nivel": 3,
+      "dok": 2,
+      "bloom": "Aplicar",
+      "solo": "multiestructural",
+      "patron": "analisis_error",
+      "item_oficial": "MAT-2026-07-017",
+      "nota": "ClasificadorICFES (haiku) sobre el recorte del ítem impreso 17 de Originales/pagina_005.jpg: 7/7 dimensiones oficiales coinciden con la ficha MAT-2026-07-017; Afirmación, Evidencia (FyE_E2), D3.7 y EBC Variacional_10-11 verificados literales contra catalogos-oficiales-mat. DOK 2 / Nivel 3 (sin conflicto: solo DOK>=3 obliga Nivel>=3). Clave 101/120 y distractores 55/185/141 sobre 120 recalculados."
+    },
+    "flujo_b": {
+      "requerido": false,
+      "completado": true,
+      "timestamp": "2026-11-13T08:14:46.937140-05:00",
+      "decidido_por": "profesor",
+      "nota": "Decisión del profesor el 2026-11-13 (WAIT_USER #1, vía coordinador): «No, sin gráficas», tras ver que el ítem impreso 17 de Originales/pagina_005.jpg solo trae texto, una fórmula y cuatro fracciones, sin figura (regla #24 H-1: recorte mirado)."
+    },
+    "generacion_rmd": {
+      "completado": true,
+      "timestamp": "2026-11-13T11:04:18.072184-05:00",
+      "archivo": "serie_seno_aproximacion_numerico_variacional_formulacion_ejecucion_n3_schoice_v1.Rmd",
+      "nota": "Pasada 4 + cambios r4 (salida/aplicar_pasada4.py, aplicar_pasada4b.py, aplicar_cambios_r4.py): tope |valor|<=4, una igualdad por display, decimales con coma (negativos como $-\\text{..}$), feedback de la clave sin cadena, SS-A/SS-I. Smoke 0/300. El .Rmd conserva el YAML del Knit de RStudio (pendiente del visto bueno del profesor, regla #26). md5 b9d489a9dd838630875a4958146b9bc8"
+    },
+    "retroalimentacion": {
+      "completado": true,
+      "timestamp": "2026-11-13T11:04:18.133763-05:00",
+      "nota": "Mutantes M1-M7 cazados por su sonda, base 0/600. Sin $ literales: 0 en 100 HTML y en los PDF (control positivo: 88 en la versión anterior). md5 b9d489a9dd838630875a4958146b9bc8"
+    },
+    "renderizado_4_formatos": {
+      "completado": true,
+      "timestamp": "2026-11-13T11:04:18.195819-05:00",
+      "nota": "salida/render_4_formatos.R sobre md5 b9d489a9dd838630875a4958146b9bc8: HTML x4, PDF x5 con .tex (0 pandocbounded), DOCX, NOPS. Desborde pareado N=100 (salida/p6b_desborde_360_320.txt y p6b_desborde_moodle_270_310.txt)."
+    },
+    "arsenal_post_render": {
+      "completado": true,
+      "timestamp": "2026-11-13T11:04:18.257725-05:00",
+      "nota": "informe /home/bootcamp/.cache/post-exams2-validation/serie_seno_aproximacion_numerico_variacional_formulacion_ejecucion_n3_schoice_v1/20261113-110325-563271/informe.txt · md5 b9d489a9dd838630875a4958146b9bc8 · 0 errores / 6 advertencias (2B sin preview; 2E/2F heurísticas)"
+    },
+    "detractor_fase2c": {
+      "completado": true,
+      "timestamp": "2026-11-13T11:04:18.319892-05:00",
+      "veredicto": "APROBAR_CON_CAMBIOS",
+      "ronda": 4,
+      "reporte": "salida/fase2c_r4_detractor.md",
+      "nota": "Ronda 4, AgenteDetractor nuevo sin name, sobre md5 b310061e: APROBAR_CON_CAMBIOS, 0 fallos de corrección en 88 configuraciones; 12 citas verificadas (0 problemas). Cambios H1, H3, H5, H6 aplicados en md5 b9d489a9dd838630875a4958146b9bc8; H2 (3 reglas extra) llevado a la lista de firma; H4 (YAML del Knit) pendiente del profesor."
+    },
+    "coherencias_5": {
+      "completado": true,
+      "timestamp": "2026-11-13T11:04:18.384388-05:00",
+      "nota": "AgenteValidadorVisual r4 sobre md5 b310061e: CON_HALLAZGOS, único hallazgo ALTO el signo menos «$-$» literal (x negativo), corregido en md5 b9d489a9dd838630875a4958146b9bc8 y verificado mecánicamente (0 $ literales en 100 HTML y en los PDF); el resto OK (clave, trampa, tope, cadenas de igualdades, decimales, metadatos, NOPS, DOCX). 6b r4: APTO_CON_OBSERVACIONES (mismo ALTO), 0 desbordes a 360/320."
+    },
+    "validar_diversidad": {
+      "completado": true,
+      "timestamp": "2026-11-13T11:04:18.447303-05:00",
+      "versiones_unicas": "150 de 150 (criterio del profesor >= 100 de 150)",
+      "nota": "md5 b9d489a9dd838630875a4958146b9bc8: diversidad 100/100, 8 claves (WARN_DIV_BAJA); diagnosticidad PASS; stress 100/100; multisemilla 100/100; verificador §P7 por enumeración exacta (88 configuraciones): ROJO_SIN_CUBRIR, 21 reglas > +8 pp en alcance PENDIENTE DE FIRMA (salida/p9_bateria_p7.txt); mutantes del alcance probados (quitar, tope, firma ficticia)."
+    },
+    "validar_icfes": {
+      "completado": true,
+      "timestamp": "2026-11-13T11:04:18.509394-05:00",
+      "nota": "md5 b9d489a9dd838630875a4958146b9bc8: literalidad 0 fallos; tabla de la regla #27 sin cambios en ITEM_OFICIAL.md; DOK 2 / Nivel 3 coherente; D3.7 comodín declarado."
+    },
+    "aprobacion_usuario": {
+      "completado": true,
+      "timestamp": "2026-11-13T11:43:09.968812-05:00",
+      "decision": "a",
+      "md5": "b9d489a9dd838630875a4958146b9bc8",
+      "nota": "Aprobado y firmado por el profesor el 2026-11-13 (transmitido por el coordinador). Firma §P7-E: «Firmar los atajos de la tabla y aprobar» y, tras ver las seis cifras nuevas o cambiadas de la pasada 4, «Firmar también estos seis y aprobar». md5 firmado b9d489a9dd838630875a4958146b9bc8 (con el YAML del Knit, que el profesor decidió dejar: «No, dejarlas»). salida/verificar_bateria_p7.R: ROJO_CUBIERTO (exit 3)."
+    }
+  },
+  "reaperturas": [
+    {
+      "timestamp": "2026-11-13T09:28:21.806811-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Rediseño por decisión del profesor del 2026-11-13 (pasada de corrección 2 de 3): x en {2,3,-2,-3}, distractor calculadora obligatorio, sin versiones de dos términos, sin instancia impresa; tras FASE 2C r1 RECHAZAR y batería §P7 BLOQUEA",
+      "reporte": "A-Produccion/01-En-PreDesarrollo/serie-seno-aproximacion-n3/salida/fase2c_r1_detractor.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-11-13T08:30:02.580217-05:00",
+          "archivo": "serie_seno_aproximacion_numerico_variacional_formulacion_ejecucion_n3_schoice_v1.Rmd",
+          "nota": "SCHOICE analisis_error escrito inline. Diseño enumerado en salida/enumerar_diseno.R (salida/enumeracion_diseno_final.txt): x en {1,-1}, n en {2,3,4}, banco de 10 errores con precondicion y calcula puros, rango de la clave balanceado, canónica P=0,10 con el impreso verbatim (guardas stopifnot). Smoke salida/smoke_data_generation.R: 0 errores en 300 semillas, 6 claves, 90 ternas."
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-11-13T08:50:56.071313-05:00",
+          "nota": "Pasada de corrección 1 (FASE 2C r1 RECHAZAR; salida/fase2c_r1_detractor.md, 15 citas OK): H1 término omitido de SS-F con su signo, H2 sustitución con los signos de la fórmula en cada distractor, H4 3 cifras y cota decimal, H5 causa de SS-G, H6 sin igualdad repetida, H8 decimales en math; guardas nuevas con 3 mutantes cazados por su sonda (salida/p9_mutantes_textos.txt). md5 eafc5840e02095345458ea1347238a51"
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-11-13T08:50:56.133844-05:00",
+          "nota": "Re-render tras la pasada 1, md5 eafc5840e02095345458ea1347238a51: HTML (canónica s=12 + 3), PDF 5 semillas con .tex (0 usos de pandocbounded), DOCX, NOPS (salida/render)."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-11-13T08:50:56.194241-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/serie_seno_aproximacion_numerico_variacional_formulacion_ejecucion_n3_schoice_v1/20261113-085010-308055/informe.txt · md5 eafc5840e02095345458ea1347238a51 · 0 errores / 5 advertencias (2E Tarea; 2F tabla de metadatos, descripción de evaluación, análisis de distractores, letra_correcta)"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-11-13T10:34:12.099344-05:00",
+      "desde": "generacion_rmd",
+      "motivo": "Pendientes menores por instrucción del profesor del 2026-11-13 (pasada 4): ecuaciones a 360 px y distractores de valor extremo",
+      "reporte": "A-Produccion/01-En-PreDesarrollo/serie-seno-aproximacion-n3/salida/fase2c_r3_detractor.md",
+      "pasos_desellados": [
+        "generacion_rmd",
+        "retroalimentacion",
+        "renderizado_4_formatos",
+        "arsenal_post_render",
+        "detractor_fase2c",
+        "coherencias_5",
+        "validar_diversidad",
+        "validar_icfes"
+      ],
+      "estado_previo": {
+        "generacion_rmd": {
+          "timestamp": "2026-11-13T10:11:31.776947-05:00",
+          "archivo": "serie_seno_aproximacion_numerico_variacional_formulacion_ejecucion_n3_schoice_v1.Rmd",
+          "nota": "Cambios de la FASE 2C r3 (APROBAR_CON_CAMBIOS) aplicados con salida/aplicar_cambios_r3.py: H3 (2 frases de la calculadora), H5 (guarda (n-2):(n+5) + mutante M6), H4 (cabecera). Smoke 0 errores/300. md5 735ae17ec331e301c21bbc02c4df422e"
+        },
+        "retroalimentacion": {
+          "timestamp": "2026-11-13T10:11:31.837388-05:00",
+          "nota": "Solution final: 6 mutantes M1-M6 cazados por su sonda, base 0/600 (salida/p9_mutantes_textos.txt). md5 735ae17ec331e301c21bbc02c4df422e"
+        },
+        "renderizado_4_formatos": {
+          "timestamp": "2026-11-13T10:11:31.899372-05:00",
+          "nota": "salida/render_4_formatos.R sobre md5 735ae17ec331e301c21bbc02c4df422e: HTML x4, PDF 5 semillas con .tex (0 usos de pandocbounded), DOCX, NOPS. Overfull: 0 en oficio sobre las 208 configuraciones (detractor r3, md5 c6468f30, mismas ecuaciones)."
+        },
+        "arsenal_post_render": {
+          "timestamp": "2026-11-13T10:11:31.960013-05:00",
+          "nota": "informe /home/bootcamp/.cache/post-exams2-validation/serie_seno_aproximacion_numerico_variacional_formulacion_ejecucion_n3_schoice_v1/20261113-101042-473389/informe.txt · md5 735ae17ec331e301c21bbc02c4df422e · 0 errores / 5 advertencias"
+        },
+        "detractor_fase2c": {
+          "timestamp": "2026-11-13T10:11:32.021463-05:00",
+          "veredicto": "APROBAR_CON_CAMBIOS",
+          "ronda": 3,
+          "reporte": "salida/fase2c_r3_detractor.md",
+          "nota": "Ronda 3, AgenteDetractor nuevo sin name, sobre md5 c6468f30: APROBAR_CON_CAMBIOS, 0 fallos de corrección en las 208 configuraciones; 10 citas verificadas (verificar_citas_detractor.py, 0 problemas). Cambios H3/H5/H4/H2-doc aplicados en md5 735ae17ec331e301c21bbc02c4df422e; el detractor indicó que no requieren otra ronda. H1/H2 de diagnosticidad pasan a firma del profesor. Rondas previas: r1 y r2 RECHAZAR (salida/fase2c_r1_detractor.md, fase2c_r2_detractor.md)."
+        },
+        "coherencias_5": {
+          "timestamp": "2026-11-13T10:11:32.081036-05:00",
+          "nota": "AgenteValidadorVisual r3 sobre md5 c6468f30: VEREDICTO_COHERENCIAS OK (5/5), oráculo independiente 0 discrepancias en 600 semillas; 6b r3 APTO_CON_OBSERVACIONES (1 MEDIO: ecuaciones con scroll a 360 px en 6/24; 3 BAJO). Diferencia con el md5 735ae17ec331e301c21bbc02c4df422e: solo 2 frases de la calculadora y el rango de una guarda (verificados por smoke, mutantes y hook)."
+        },
+        "validar_diversidad": {
+          "timestamp": "2026-11-13T10:11:32.140014-05:00",
+          "versiones_unicas": "150 de 150 (criterio del profesor >= 100 de 150; 300 de 300)",
+          "nota": "md5 735ae17ec331e301c21bbc02c4df422e: diversidad 100/100, 8 claves (WARN_DIV_BAJA, consecuencia de D1+D3); diagnosticidad PASS (H2/H3 ciegas); stress 100/100 PASS; multisemilla 2G 100/100; batería §P7 BLOQUEA +67,4 pp (est_2a_cerca_sen/rel_par_lejos_sen 100 %): residuo estructural de D1 pendiente de firma regla por regla en la pausa 3 (tabla exacta: H1 de salida/fase2c_r3_detractor.md)."
+        },
+        "validar_icfes": {
+          "timestamp": "2026-11-13T10:11:32.199646-05:00",
+          "nota": "md5 735ae17ec331e301c21bbc02c4df422e: validar_literalidad_exextra.py --item ITEM_OFICIAL.md 0 fallos; tabla de triangulación de la regla #27 en ITEM_OFICIAL.md (competencia, componente y afirmación 3 de 3; evidencia 2 de 3 con la ficha en la mayoría); DOK 2 con Nivel 3 coherente (regla #1); D3.7 comodín declarado."
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+antes     360 px: versiones con alguna ecuación que exige desplazamiento 22/100; ecuaciones afectadas 38; exceso máximo 46 px; versiones con desborde de página 0
+antes     320 px: versiones con alguna ecuación que exige desplazamiento 40/100; ecuaciones afectadas 97; exceso máximo 86 px; versiones con desborde de página 0
+despues2  360 px: versiones con alguna ecuación que exige desplazamiento 0/100; ecuaciones afectadas 0; exceso máximo 0 px; versiones con desborde de página 0
+despues2  320 px: versiones con alguna ecuación que exige desplazamiento 0/100; ecuaciones afectadas 0; exceso máximo 0 px; versiones con desborde de página 0

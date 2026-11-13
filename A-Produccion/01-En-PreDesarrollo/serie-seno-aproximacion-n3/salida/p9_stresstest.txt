@@ -1,0 +1,4 @@
+md5 del .Rmd: b9d489a9dd838630875a4958146b9bc8 (/home/bootcamp/Proyectos-2026/RepositorioMatematicasICFES_R_Exams/A-Produccion/01-En-PreDesarrollo/serie-seno-aproximacion-n3/serie_seno_aproximacion_numerico_variacional_formulacion_ejecucion_n3_schoice_v1.Rmd)
+Semillas: 100/100 · mediana 0.16 s · máximo 0.33 s · tipo schoice
+Posición de la clave: 21 / 26 / 28 / 25 
+PASS: compilación completa sin errores, cuelgues ni fugas de texto.

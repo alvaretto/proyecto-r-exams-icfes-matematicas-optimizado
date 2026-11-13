@@ -1,0 +1,4 @@
+b310061e  caja 286 px (contenido 270 = Moodle a 320): versiones con alguna ecuación que exige desplazamiento 14/100; ecuaciones afectadas 16; exceso máximo 13 px; versiones con desborde de página 8
+b310061e  caja 326 px (contenido 310 = Moodle a 360): versiones con alguna ecuación que exige desplazamiento 0/100; ecuaciones afectadas 0; exceso máximo 0 px; versiones con desborde de página 0
+b9d489a9  caja 286 px (contenido 270 = Moodle a 320): versiones con alguna ecuación que exige desplazamiento 14/100; ecuaciones afectadas 16; exceso máximo 13 px; versiones con desborde de página 0
+b9d489a9  caja 326 px (contenido 310 = Moodle a 360): versiones con alguna ecuación que exige desplazamiento 0/100; ecuaciones afectadas 0; exceso máximo 0 px; versiones con desborde de página 0
