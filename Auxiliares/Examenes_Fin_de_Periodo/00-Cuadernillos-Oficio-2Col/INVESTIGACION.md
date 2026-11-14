@@ -1,10 +1,10 @@
 # Cuadernillos Saber 11 Matemáticas en oficio a doble columna: investigación y propuesta
 
-Fecha: 2026-11-13. Fases 0 a 3 del prompt optimizado.
-- Estado: hay un prototipo medido en `prototipo/`. La arquitectura del §5 fue APROBADA por el profesor, y su
-  implementación sigue el PRP `PRPs/motor-cuadernillos-oficio-2col.md`.
+Fecha: 2026-11-13 (fases 0 a 3 del prompt optimizado) y 2026-11-14 (implementación).
+- Estado: la arquitectura del §5, APROBADA por el profesor, **está implementada** según el PRP
+  `PRPs/motor-cuadernillos-oficio-2col.md`. El uso, las guardas, los tiempos y los límites están en el **§10**.
 - Los 33 `.Rmd` de `01-`, `02-` y `04-` se corrigieron (§4; commit `db6d9cc3`).
-- `A-Produccion/perifericos/` y las reglas de `.claude/` todavía no se modificaron: es tarea del PRP.
+- Las reglas de `.claude/` que cambian (regla 1 de `codigo-rmd.md` y regla #26) están actualizadas en la v3.44.0.
 
 Convenciones: **[MEDIDO]** = medido en este equipo (R/exams 2.4.5, pandoc 3.11, pdfTeX de TeX Live 2026);
 **[FUENTE]** = respaldado por la fuente citada; **[NO VERIFICADO]** = no se pudo respaldar.
@@ -229,7 +229,13 @@ Cada cuadernillo: 216 × 330 mm, 4 caras, 0 imágenes rasterizadas y todas las f
 
 ---
 
-## 5. Arquitectura propuesta
+## 5. Arquitectura propuesta (IMPLEMENTADA: ver §10)
+
+> Este apartado se conserva como se aprobó el 2026-11-13. Lo que la implementación midió distinto está en el §10.6:
+> el NOPS va con `twocolumn = FALSE`, la clave es un PDF generado y no una plantilla, la retroalimentación se llama
+> `retro_celular.tex`, el medidor sigue en `prototipo/medir_pdf.py`, y la salida va en `salida/<examen>/sesion-<k>/`.
+> Las cuatro plantillas ya no están en `plantillas/`: el 2026-11-14 pasaron a `A-Produccion/perifericos/` como versión
+> oficial (decisión 5 del §7), y el motor las lee de allí.
 
 ```
 00-Cuadernillos-Oficio-2Col/
@@ -313,8 +319,9 @@ Rscript prototipo/pruebas/poc_nops.R      # tabla texto= clave= repro= por versi
 Rscript prototipo/pruebas/poc_docx.R      # Word en oficio a dos columnas
 ```
 
-El medidor reconoce el inicio de cada pregunta por «Escenario:» y el fin por la última opción «d)». Si se quita la
-etiqueta (decisión 2), hay que darle otra marca de inicio (`--inicio`).
+El medidor reconoce el inicio de cada pregunta por «Escenario:» y el fin por la última opción «d)» (modo `--marcas texto`,
+el de la plantilla oficial vieja). Con las plantillas del motor usa las anclas `qini.N` / `qfin.N` (modo `dests`, que
+elige solo si el PDF las trae).
 
 ---
 
@@ -322,9 +329,309 @@ etiqueta (decisión 2), hay que darle otra marca de inicio (`--inicio`).
 
 | Carpeta | Qué hay | Estado de los `.Rmd` |
 |---|---|---|
-| `muestras/` | Examen real de 11 preguntas (de los exámenes 01, 02 y 04) en 3 versiones: `cuadernillo_version_*.pdf` (oficio, 2 columnas) y su hoja NOPS `hoja_respuestas_version_*.pdf` con el mismo número de versión; `hojas_version1_color.png` y `hojas_version1_gris.png` (las 4 caras de la versión 1, en color y como saldrían en la impresora en blanco y negro) | **Después** de todas las correcciones (§4) |
+| `muestras/` | Examen real de 11 preguntas (de los exámenes 01, 02 y 04) en 3 versiones, **generado por el motor** el 2026-11-14 (`configuraciones/examen_real_11.R`): `cuadernillo_<ID>.pdf` (el del estudiante: oficio, 2 columnas, 4 caras, sin retroalimentación), `cuadernillo_docente_<ID>.pdf` (el del docente: las mismas preguntas con la clave y la retroalimentación, 8 caras), `hoja_respuestas_<ID>.pdf` (hoja NOPS centrada en oficio, 2 caras), `retro_<ID>.pdf` (retroalimentación de 90 × 160 mm para el celular), `cuadernillo_<ID>.docx` (Word en oficio a 2 columnas), `clave.pdf` (clave por versión), y `revision_gris_v1.png` y `revision_gris_vN.png` (las 4 caras de la primera y de la última versión, como saldrían en la impresora en blanco y negro). `<ID>` = `26111300001`, `26111300002` y `26111300003` | **Después** de todas las correcciones (§4) y con las plantillas del 2026-11-14 (§10.6) |
 | `prototipo/evidencia/` | Línea base con la plantilla oficial (`linea_base_8preg_oficial.pdf`) frente al prototipo a 2 columnas (`prototipo_8preg_2col.pdf`, `prototipo_10preg_2col.pdf`), Word en oficio (`word_oficio_2col.docx` y su conversión con LibreOffice), torta en color frente a gris | **Antes** de corregir los `.Rmd` (sirve para comparar) |
 | `prototipo/pruebas/` | Scripts que generan todo lo anterior; `prueba_examen_real.R` es el que produce `muestras/` | — |
 
-`muestras/` se regenera con `prototipo/pruebas/prueba_examen_real.R`, desde una carpeta con copias de los `.Rmd` en `ej/`
-y la plantilla `cuadernillo_oficio_2col.tex` al lado.
+`muestras/` se regenera con el motor, que nunca escribe ahí (esa ruta no pasa su guarda): se genera en `salida/regen/` y se
+copia. Desde `00-Cuadernillos-Oficio-2Col/`:
+
+```bash
+Rscript generar_cuadernillos.R configuraciones/examen_real_11.R --dir-salida salida/regen --limpiar   # debe salir con 0
+# después, con los ID de salida/regen/sesion-1/firmas.rds, copiar a muestras/ los cinco archivos de cada versión,
+# clave/clave.pdf y las dos hojas en gris
+```
+
+Las muestras del 2026-11-13 (`*_version_*` y `hojas_version1_*.png`) llevaban el defecto de Sweave del §10.6 (toda figura
+ampliada al ancho de la columna) y no traían retroalimentación ni Word: se retiraron al regenerar. Quedan en el historial
+de git (commit `7dcbd282`). Lo regenerado es idéntico, píxel a píxel, a lo que se revisó con la vista (C10): 115 páginas de
+cuadernillos y retroalimentación comparadas, 0 distintas. La comparación se repitió después de añadir el cuadernillo del
+docente y la opción `partir_preguntas`: otra vez 115 páginas y 0 distintas (control: dos versiones distintas difieren en
+sus 4 páginas). Los tres `cuadernillo_docente_<ID>.pdf` se añadieron entonces.
+
+El mismo día, con el visto bueno del profesor, se corrigió la forma de la retroalimentación de tres ejercicios (preguntas
+y claves, sin cambios): en `pasteleria_sabores…n2_v1.Rmd`, un `cat()` separaba con espacios y
+dejaba los asteriscos a la vista («** Jueves **») y un espacio antes de los dos puntos; en
+`ExportacionesGraficosEstadisticaInterpretacion_n3_v1.Rmd`, tres renglones del cálculo salían pegados en uno; en
+`vaso-cilindrico-v6.Rmd`, dos listas de la rama del área total salían pegadas a su párrafo. Después: examen real con
+exit 0 (341 s), cuadernillos del estudiante idénticos píxel a píxel (12 páginas, 0 distintas) y ningún «**» en el texto de
+los 9 PDF. Las muestras del docente y de la retroalimentación son las de esa corrida.
+
+---
+
+## 10. Uso del motor (implementado el 2026-11-13 y el 2026-11-14)
+
+Todo lo de este apartado está **[MEDIDO]** en este equipo (R/exams 2.4.5, pandoc 3.11, pdfTeX de TinyTeX, poppler,
+LibreOffice), salvo donde dice otra cosa.
+
+### 10.1 Comandos
+
+Desde `Auxiliares/Examenes_Fin_de_Periodo/00-Cuadernillos-Oficio-2Col/`:
+
+```bash
+# 1. Copiar una configuración y editarla: título, fecha, número de estudiantes y lista de .Rmd de cada sesión
+cp configuraciones/examen_real_11.R configuraciones/mi_examen.R
+
+# 2. Generar las cinco salidas y verificarlas (termina con la tabla C1-C15)
+Rscript generar_cuadernillos.R configuraciones/mi_examen.R              # la primera vez
+Rscript generar_cuadernillos.R configuraciones/mi_examen.R --limpiar    # para repetir sobre la misma salida
+
+# Opciones: solo algunas salidas, o la salida en otra carpeta (debe quedar dentro de una carpeta «salida»)
+Rscript generar_cuadernillos.R configuraciones/mi_examen.R --salidas cuadernillo,hoja,clave --limpiar
+Rscript generar_cuadernillos.R configuraciones/mi_examen.R --dir-salida salida/prueba --limpiar
+
+# 3. Volver a verificar una sesión ya generada, o comprobar que las guardas siguen vivas
+Rscript verificar_cuadernillos.R salida/mi-examen/sesion-1
+Rscript verificar_cuadernillos.R --mutantes
+```
+
+Código de salida del motor: **0** = C1-C9 y C11-C15 en verde (los avisos `WARN` se listan y no bloquean); **1** = alguna
+guarda en `FAIL`; **2** = algo no se pudo verificar (`NO_VERIFICABLE`) o la carpeta de salida no pasó la guarda de ruta
+(`ERR_DIR_SALIDA`). **C10 nunca cuenta como aprobada**: es la revisión visual en gris y se hace mirando.
+
+El motor se niega a escribir en una carpeta que ya tiene contenido, salvo con `--limpiar`; y `--limpiar` solo borra una
+carpeta que el propio motor creó (lleva el marcador `.cuadernillos_salida`).
+
+**Estudiante y docente a la vez.** La salida `cuadernillo` produce siempre dos PDF por versión, con la misma plantilla y
+las mismas semillas: el del estudiante (sin retroalimentación) y el del docente (las mismas preguntas en el mismo orden,
+con la clave en la primera página y la retroalimentación debajo de cada pregunta). No hay que pedir el segundo.
+
+**Partir o no las preguntas** (`partir_preguntas` en la configuración). Por defecto es `TRUE`: una pregunta puede empezar
+en una columna y terminar en la siguiente, que es como caben más preguntas por hoja. Con `partir_preguntas = FALSE` cada
+pregunta queda entera en una columna; ocupa más caras, y una pregunta más alta que la columna no cabe (la guarda C3 lo
+reprueba). Lo medido con cada valor está en el §10.6.
+
+Las plantillas están en `A-Produccion/perifericos/`: `cuadernillo_oficio_2col.tex`, `retro_celular.tex`,
+`pandoc_cuadernillo.tex` y `referencia_oficio_2col.docx`. Son versión oficial (regla #26): no se editan sin instrucción del
+profesor. El motor las busca allí por la raíz git; la variable `CUADERNILLOS_PLANTILLAS` apunta a otra carpeta, y la usan los
+mutantes para dañar una copia y nunca las oficiales.
+
+### 10.2 Qué produce
+
+Por cada sesión, en `salida/<examen>/sesion-<k>/`, con `<ID>` = fecha `aammdd` + cinco cifras (el número de versión):
+
+| Archivo | Para qué |
+|---|---|
+| `cuadernillos/cuadernillo_<ID>.pdf` y `cuadernillos_imprimir.pdf` | Cuadernillo del estudiante: oficio, 2 columnas, número par de caras, **sin retroalimentación**. El combinado se imprime de una vez a doble cara |
+| `docente/cuadernillo_docente_<ID>.pdf` y `docente_imprimir.pdf` | Cuadernillo del docente: las mismas preguntas de esa versión, con la clave en la primera página y la retroalimentación debajo de cada pregunta. Lleva «DOCENTE» en el encabezado de todas las páginas |
+| `hojas/hoja_respuestas_<ID>.pdf` y `hojas_imprimir.pdf` | Hoja NOPS centrada en oficio, de 2 caras (la segunda en blanco) |
+| `clave/clave.csv` y `clave/clave.pdf` | Clave por versión, para el profesor |
+| `retro/retro_<ID>.pdf` | Retroalimentación de 90 × 160 mm para el celular, con la clave y la Solution de cada pregunta |
+| `word/cuadernillo_<ID>.docx` | Réplica en Word (oficio, 2 columnas, sin Solution) para retocar |
+| `nops/nops_.rds` | Lo que necesita `nops_eval()` para calificar las hojas escaneadas |
+| `revision_gris_v1.png`, `revision_gris_vN.png` y `revision_gris_*_p<K>.png` | Primera y última versión en gris, a 50 y a 150 ppp, para la revisión visual (C10) |
+| `semillas.rds`/`.csv`, `firmas.rds`, `preflight.log`, `motor.log`, `verificacion.txt`/`.json`, `tex/` | Trazabilidad: la matriz de semillas, las huellas de cada salida, el pre-vuelo y los `.log` de LaTeX |
+
+### 10.3 Guardas y mutantes
+
+`verificar_cuadernillos.R --mutantes` construye 26 copias dañadas (de una plantilla, del motor, de una configuración o de un
+ejercicio de prueba) y exige que la guarda correspondiente falle. Los 26 mueren.
+
+| Guarda | Qué certifica | Mutantes |
+|---|---|---|
+| C1 | Papel: cuadernillos y hojas de 216 × 330 mm, retro de 90 × 160 mm; Word en oficio a 2 columnas, sin marcadores `##` y **sin imágenes ni tablas más anchas que su columna** | M1, M13, M16, M16b |
+| C2 | Todas las fuentes incrustadas | M2 |
+| C3 | Ningún `Overfull \hbox` de más de 1 pt, en los dos cuadernillos y en la retro; y **ninguna página de los cuadernillos con tinta a menos de 10 mm del borde inferior** (el margen es de 15 mm) | M3, M3b, M17b |
+| C4 | Texto vectorial de 7 pt o más. El texto en fuentes Type 3 no se puede medir: `NO_VERIFICABLE` | M4, M4b |
+| C5 | Imágenes raster de 300 ppi o más (150 a 299: aviso), en cuadernillos, retro y Word | M5 |
+| C6 | Mismo texto y misma clave en la hoja NOPS, el cuadernillo, la retro y el Word | M6 |
+| C7 | El número de versión impreso es el ID de la hoja NOPS | M7 |
+| C8 | Cuadernillos con caras pares; hojas de 2 caras exactas, la segunda sin tinta | M8, M10b |
+| C9 | Un ejercicio que se cuelga se corta y se nombra. Tope por ejercicio: 60 + 10 × N segundos (N = versiones), o el `presupuesto_s` de la configuración | M9 |
+| C10 | Revisión visual en gris: **manual** | — |
+| C11 | Límites: 1 a 100 versiones, 45 preguntas, tipos y opciones que admite la hoja NOPS, y la guarda de ruta | M11, M11b, M14 |
+| C12 | Ningún ejercicio cambia el estado de knitr para los siguientes | M12, M12b |
+| C13 | **Numeración impresa de las preguntas: 1..Q en cada cuadernillo (estudiante y docente) y en cada retro** | M15, M15b |
+| C14 | Con `partir_preguntas = FALSE`, ninguna pregunta empieza en una columna y termina en otra. Con el valor por defecto no aplica, e informa cuántas se partieron | M17 |
+| C15 | **El cuadernillo del estudiante no trae retroalimentación; el del docente y la retro traen la de cada pregunta.** Se comprueba con testigos: trozos de la Solution de cada pregunta que no están en ningún enunciado. Sin testigos, `NO_VERIFICABLE` | M18, M18b |
+
+Suite: `tests/testthat/test_cuadernillos_oficio.R` (30 bloques), registrada en `tests/run_all_tests.R` con su `watch`.
+
+### 10.4 Tiempos medidos
+
+| Corrida | Tamaño | Tiempo |
+|---|---|---|
+| Camino feliz (5 ejercicios de prueba, 5 salidas) | 5 preguntas × 2 versiones | 25,7 s |
+| Examen real (`examen_real_11.R`) | 11 preguntas × 3 versiones | 346 s (5 min 46 s) con el cuadernillo del docente; antes de añadirlo, 280 y 281 s |
+| Simulacro (`simulacro_2x25.R`) | 2 sesiones × 25 preguntas × 2 versiones | 903 s (15 min 3 s) con el cuadernillo del docente: unos 7 min y medio por sesión; antes de añadirlo, 728 s |
+| Capacidad (`capacidad_1x25.R`) | 1 sesión × 25 preguntas × 25 versiones | 4 538 s (75 min 38 s), exit 0. **Sin el cuadernillo del docente**, que se añadió después |
+| `verificar_cuadernillos.R --mutantes` | 26 mutantes | 251 s (4 min 11 s); con los 22 de antes, 149 s |
+| Suite `test_cuadernillos_oficio.R` (incluye los mutantes) | 30 bloques, 235 expectativas | 349 s (5 min 49 s) |
+
+Por etapa, en el examen real (11 × 3): pre-vuelo 50,3 s; hojas NOPS 70,6 s; clave 0,4 s; cuadernillos del estudiante
+54,2 s; cuadernillos del docente 54,0 s; retroalimentación 53,8 s; Word 50,2 s; hojas en gris 3,7 s; el resto (unos 9 s)
+es la verificación. El camino feliz y la capacidad se midieron antes de añadir el cuadernillo del docente: les falta
+esa etapa.
+En el simulacro, por sesión (25 × 2; primera y segunda sesión): pre-vuelo 64,4 y 66,3 s; hojas NOPS 86,9 y 86,1 s;
+cuadernillos del estudiante 70,6 y 70,2 s; cuadernillos del docente 70,5 y 70,5 s; retroalimentación 71,3 y 70,9 s; Word
+69,3 y 68,7 s; hojas en gris 7,8 y 7,6 s. Las dos sesiones, con C1-C15 en verde y testigos de la retroalimentación en 50 de
+50 preguntas.
+En la capacidad (25 × 25): pre-vuelo 845,4 s; hojas NOPS 914,8 s; clave 0,4 s; cuadernillos 889,2 s; retroalimentación
+931,3 s; Word 902,9 s; hojas en gris 7,8 s; verificación, unos 46 s. Se midió mientras en el mismo equipo (12 núcleos)
+corrían otras pruebas del motor: es una cota superior. Salieron 25 cuadernillos de 8 caras (200 páginas y 16 MB en
+`cuadernillos_imprimir.pdf`), retroalimentaciones de 74 a 78 páginas y 261 MB en total.
+
+Tamaño de lo que sale: el examen real de 11 preguntas ocupa **4 caras** (2 hojas) por cuadernillo y de 34 a 35 páginas de
+retroalimentación; una sesión de 25 preguntas ocupa **8 caras** (4 hojas) y de 75 a 77 páginas. El cuadernillo del docente
+ocupa 8 caras con 11 preguntas y 16 con 25. El §2 estimaba de 6 a 7 caras para 25 preguntas: con estos ejercicios, que
+traen muchas figuras, son 8.
+
+**Cuánto tarda un examen completo [ESTIMADO a partir de lo anterior, no medido].** Cada etapa vuelve a tejer todos los
+ejercicios de cada versión, así que el tiempo crece con el número de versiones: con 25 preguntas, unos 36 s por versión
+y por etapa (NOPS: 86,9 s con 2 versiones y 914,8 s con 25; cuadernillos: 70,6 s y 889,2 s).
+
+- El cuadernillo del docente es una etapa más, igual a la del estudiante (54,0 s frente a 54,2 s en el examen real;
+  70,5 s frente a 70,6 y 70,2 s en el simulacro). Con 25 × 25 serían unos 890 s más: cerca de **90 minutos por sesión**.
+- Un simulacro de 2 sesiones × 25 preguntas × 25 versiones tardaría el doble: cerca de **3 horas**, sin atenderlo. Conviene
+  lanzarlo la víspera.
+- Con menos versiones baja en proporción: 6 versiones de las dos sesiones, unos 45 minutos.
+
+### 10.5 Calificar las hojas escaneadas
+
+La hoja de cada estudiante es la de `exams2nops()`, centrada en oficio sin escalar. Su número es el del cuadernillo.
+
+1. Escanear las hojas. Si el escáner las coloca en la esquina o las ajusta al ancho, pasarlas antes por
+   `Auxiliares/exams2nops-escaner/normalizar_escaneos_nops.py` (regla #26).
+2. `exams::nops_scan()` sobre las imágenes, y `Auxiliares/exams2nops-escaner/nops_control_calidad.R` sobre su resultado.
+3. `exams::nops_eval(register = <lista del grupo>, solutions = "salida/<examen>/sesion-<k>/nops/nops_.rds", scans = <zip de nops_scan>, …)`.
+
+**[MEDIDO] solo en simulación**: una hoja del examen real (`hoja_respuestas_26111300002.pdf`), rasterizada a 300 ppp y sin
+marcar, pasa por `nops_scan()`, que lee el número `26111300002` y el tipo de hoja `011` (11 preguntas); ese número está en
+`names()` de `nops_.rds`. **Falta la prueba con papel y escáner reales**, igual que en la regla #26.
+
+### 10.6 Lo que la implementación midió distinto del plan
+
+El PRP manda que, si una medición lo contradice, gane la medición y se declare. Estas son todas.
+
+**Sobre R/exams, LaTeX y pandoc**
+
+- R/exams inserta el `header` en la PRIMERA línea de la plantilla que contenga la marca `\exinput{header}`, aunque sea un
+  comentario. Nombrarla en un comentario dio «Undefined control sequence \ID».
+- `exams2pdf()` compila con `tinytex::latexmk`, que borra el `.log`. Con `options(tinytex.clean = FALSE)` se conserva
+  (`tmp_1.log` en `texdir`). `exams2pdf()` crea `texdir` sin `recursive`: el motor crea antes la carpeta padre.
+- El primer `include_tikz()` de la sesión imprime «Loading required namespace: tinytex» DENTRO del PDF. El motor carga
+  `tinytex` antes de generar.
+- `exams2pandoc()` sustituye cualquier clave de `header` escrita entre dobles almohadillas, y su plantilla necesita
+  exactamente 9 líneas «#-». En el Word, un título con «&» y «_» sale bien sin escapar.
+- `file.rename()` falla entre `/tmp` y `/home`: los archivos se copian y se borran.
+- **Nombre de las copias con 10 o más versiones.** R/exams rellena el índice de cada copia con ceros hasta el ancho de `n`
+  (`nops_01.pdf` … `nops_25.pdf`). El motor buscaba `nops_1.pdf`: con menos de 10 versiones los dos nombres coinciden, y
+  todas las corridas habían sido de 2 o 3. Lo destapó la corrida de capacidad, que abortó en las hojas a los 27 minutos.
+  Ahora el nombre sale de `nombre_copia()`, con la misma fórmula de R/exams, y la suite corre el motor con 10 versiones.
+- `qpdf` sale con 3 («operation succeeded with warnings») con el PDF de `exams2nops()`: se usa `--warning-exit-0`.
+- `Sys.readlink()` da `NA` en una ruta que no existe y `nzchar(NA)` es `TRUE`: la guarda de ruta la tomaba por enlace.
+- **`Sweave.sty` ampliaba toda figura y toda tabla** (defecto del prototipo): fija `\setkeys{Gin}{width=0.8\textwidth}` y
+  `adjustbox` hereda ese ancho. Una figura pedida a 5 cm salía a 257 pt. Con `\usepackage[nogin]{Sweave}` se respeta el ancho
+  pedido (3 cm = 85,4 pt; 5 cm = 142,3 pt) y solo se reduce lo que no cabe. Las muestras del 2026-11-13 llevaban el defecto.
+- **Numeración de las preguntas.** Cuando una lista numerada del ejercicio no empieza en 1, pandoc escribe
+  `\setcounter{enumi}{N}`. Con las preguntas numeradas por `enumi`, la retroalimentación del examen real numeró
+  1, 2, 3, **2**, 4, 5, 6, 7, 8, 9: la lista «2. Comparar las medianas» de la Solution 3 cambió el número de la pregunta 4 y
+  corrió las siete siguientes, mientras la clave del encabezado decía 1..11. Las dos plantillas numeran ahora con listas
+  propias (`\newlist{preguntas}`, `\newlist{opciones}`), y las listas de pandoc recuperan la etiqueta del autor («1.», «2.»)
+  en lugar de «a)». El cuadernillo quedó idéntico píxel a píxel (0 píxeles distintos en 4 páginas × 3 versiones; control:
+  146 033 entre dos páginas distintas). De ahí la guarda C13.
+- **Fuentes de mapa de bits.** El texto de ancho fijo y los símbolos que Helvetica no trae («→», «×» y «÷» en un bloque de
+  código) salían de las fuentes EC/TC, que en este TinyTeX no tienen versión escalable: pdflatex las incrusta como Type 3.
+  Las plantillas usan Latin Modern para eso (`\ttdefault` y las familias de sustitución de TS1). El kernel elige la
+  sustitución según la familia en uso: como `rm` y `sf` son Helvetica, manda `\rmsubstdefault`.
+- **Retroalimentación.** En 82 mm, la sangría de dos niveles dejaba las figuras de las opciones a 68 mm y sus rótulos de
+  8 pt bajaban a 6,3 pt. Ahora las preguntas y las opciones no llevan sangría; si una opción empieza con una figura, su
+  letra queda sola en su renglón y la figura va debajo, a 82 mm (7,6 pt). Un bloque de código parte el renglón (`fvextra`,
+  `breaklines`; `breakanywhere` no compila con pdflatex y caracteres UTF-8). `\emergencystretch` evita que una cifra larga
+  desborde (33 pt con «1 - (0,4705882353 + …»).
+- **Word.** pandoc calcula el ancho de las imágenes y de las tablas contra el ancho útil de la página (19,58 cm), no
+  contra la columna (9,50 cm) ni contra la sangría de la lista (720 twips por nivel). En el examen real, 14 de 17 imágenes
+  se salían de su espacio, dos medían 19,58 cm, y la tabla de la pregunta 3 (rejilla de 13,97 cm) mostraba en LibreOffice
+  una sola columna de datos. El motor reduce cada imagen y cada tabla a su espacio (`ajustar_docx_a_columna()`).
+- Las figuras TikZ llegan al Word como PNG de 650 píxeles (`exams::tex2image(resize = 650)`): entre 201 y 254 ppi. Es el
+  aviso de C5 en el examen real. Subirlo es cosa de cada ejercicio: `include_tikz(..., resize = 1200)`.
+
+**Decisiones del profesor del 2026-11-14** (respondidas en la sesión, con las mediciones a la vista)
+
+- **Letra de las opciones gráficas: arriba.** LaTeX apoya por abajo una imagen que empieza un renglón, así que la letra de
+  una opción que es una figura o una tabla quedaba al pie de ella y pegada a la figura siguiente: en la página 3 del examen
+  real, la «c)» se leía con la gráfica de la opción d). Ahora su borde superior se alinea con la letra (`valign=t`, solo
+  cuando la figura o la tabla es lo primero de una opción). Las páginas sin opciones gráficas quedaron idénticas píxel a
+  píxel; la retroalimentación no cambia (103 páginas, 0 distintas), porque allí la letra ya iba sola en su renglón.
+- **Tope de tiempo del pre-vuelo: 60 + 10 × N segundos por ejercicio**, en lugar de los 30 + 5 × N del PRP. Con N = 25,
+  `I_1796473-Opc-A2.Rmd` (una tabla TikZ y tres gráficas de matplotlib por versión) tardó 143,1 y 141,4 s de los 155 s
+  que tenía: unos 5,7 s por versión. Desde unas 44 versiones lo habría cortado sin estar colgado.
+- **Plantillas oficiales `solpcielo.tex` y `solpcielo_cloze.tex`: corregidas** con las mismas listas propias. Medido antes
+  de tocarlas: tres preguntas salían numeradas 1, 5 y 6, y una lista «3., 4.» del enunciado salía como «a), b)». Después:
+  1, 2 y 3, y la lista con sus números. Los cinco ejercicios de los tres subproyectos que copian esas plantillas
+  (`serie-seno-aproximacion-n3`, `diagrama-venn-juegos-mesa-n3` y `vueltas-llanta-perimetro-n4`, SCHOICE y CLOZE) dan
+  PDF idénticos píxel a píxel con la plantilla anterior y con la nueva.
+- **Partir las preguntas: sí, por defecto.** Instrucción: «Priorizar partirlas, teniendo en cuenta la LEY de acomodar la
+  mayor cantidad de preguntas respetando los estándares de calidad visual». `partir_preguntas` vale `TRUE` si la
+  configuración no lo nombra; con `FALSE`, cada pregunta va en una caja que `multicols` no puede partir. Medido:
+
+  | Examen | Partiendo (por defecto) | Enteras (`partir_preguntas = FALSE`) |
+  |---|---|---|
+  | Real, 11 preguntas × 3 versiones | 4 caras en las tres versiones; exit 0 | 6, 4 y 6 caras; exit 0, ninguna pregunta partida |
+  | `venn_12_versiones.R`: 12 versiones de un ítem con cuatro diagramas | 8 caras (7 con contenido); exit 0 | 8 caras; **exit 1**: la pregunta no cabe en la primera página y la tinta llega a 7,0 mm del borde inferior (C3) |
+
+  Añadir la opción no cambió el cuadernillo por defecto: quedó idéntico píxel a píxel al anterior (4 páginas, 0 píxeles
+  distintos).
+- **Cuadernillo del docente junto con el del estudiante.** Instrucción: «cuando solicite impresión a doble columna, se
+  generen en simultáneo la versión para el estudiante (sin retroalimentación) y la versión para el docente (con
+  retroalimentación)». Es la misma plantilla con `\Docente{1}`: muestra la Solution debajo de cada pregunta, bajo el
+  título «Retroalimentación», pone la clave en la primera página y «DOCENTE» en el encabezado de todas. Sale de las mismas
+  semillas, así que cada pregunta es la que recibe el estudiante con ese número de versión. En el examen real ocupa
+  8 caras (4 el del estudiante) y añade una etapa como la del cuadernillo (54,0 s; la del estudiante, 54,2 s). La paginación no coincide con la
+  del estudiante, porque la retroalimentación ocupa espacio: coinciden el número y el orden de las preguntas.
+
+**Sobre las guardas**
+
+- **C3 tenía un falso verde, de dos maneras.** El `.log` de LaTeX no es UTF-8. Con `options(encoding = "native.enc")`,
+  `gregexpr(perl = TRUE)` solo avisa y no devuelve coincidencias; con `"UTF-8"` (la que fija el `.Rprofile` de la raíz del
+  repo), `readLines()` corta la lectura en el primer byte inválido. Sobre el log real del 2026-11-13, con tres `Overfull`
+  de hasta 58,6 pt, la lectura de antes veía 0 o 1 según desde dónde se lanzara. Ahora se leen los bytes (`readBin`).
+- **C3 mide también la tinta.** Una pregunta entera más alta que la columna no produce ningún `Overfull \hbox`, que es
+  lo que C3 buscaba en el log: se sale por abajo. Cada página de los dos cuadernillos se rasteriza a 40 ppp y se mide
+  dónde termina la tinta; a menos de 10 mm del borde inferior (el margen es de 15 mm) es `FAIL`. El ejercicio de prueba
+  `m_alta` (un enunciado largo y una figura de 27 cm) lo ejercita en los dos sentidos: partida cabe, entera se sale.
+- **C14 y el ancla de inicio.** Con las preguntas enteras, el ancla `qini.N` puesta después de `\item` se quedaba en la
+  columna anterior cuando la pregunta saltaba completa a la siguiente, y la pregunta parecía partida: un falso `FAIL`.
+  El ancla va ahora dentro de la etiqueta del número, que viaja con la pregunta. El mutante M15 se rehízo para
+  conservarla, y muere por lo que debe: «números impresos 1,3 (esperado 1..2)».
+- **C15 y sus testigos.** Lo que no debe llegar al estudiante es el texto de la Solution, no la palabra
+  «Retroalimentación». El motor guarda en `firmas.rds`, por pregunta, hasta 3 trozos de 20 a 30 letras de su Solution que
+  no están en ningún enunciado del examen. El verificador lee el texto de cada PDF y exige que ninguno esté en el del
+  estudiante, y que al menos uno de cada pregunta esté en el del docente y en la retro. Cada elemento de la lista de la
+  Solution se corta por separado: un trozo que cruzaba dos elementos dio un falso `FAIL`, porque en el PDF va entre ellos
+  la letra de la opción. En el examen real hay testigos en 33 de 33 preguntas. Sin testigos, `NO_VERIFICABLE`.
+- **C4 y las fuentes Type 3.** poppler *estima* el tamaño de una fuente Type 3. Un «×» de 10,95 pt salía como 5 pt, y
+  rótulos de 5 pt en la fuente que matplotlib escribe por defecto (`pdf.fonttype = 3`) salen como 8 pt: C4 los habría
+  aprobado. Ese texto no aprueba ni reprueba: deja C4 en `NO_VERIFICABLE`. Remedio en el ejercicio:
+  `plt.rcParams["pdf.fonttype"] = 42`. El detalle de C4, además, ya no se corta en 12 líneas: el corte escondía los rótulos
+  de 6 pt de dos gráficas detrás de 12 signos Type 3.
+- **C5 sustituye la «reducción ≥ 0,7» del §6**: los ppi efectivos ya incorporan la reducción y el texto de las figuras
+  vectoriales se mide con C4. En el Word, un PNG de knitr a 300 ppp queda a 299,0 ppi porque pandoc redondea la resolución
+  hacia abajo: el umbral es 300 con 1 % de tolerancia.
+- **C6**: la única normalización del texto es la de las figuras (`FIG`), porque el mismo ejercicio trae `.pdf` en
+  `exams2pdf()` y `.png` en el Word. No hizo falta ninguna otra: las cuatro salidas coinciden (33 de 33).
+- **C8** mide tinta (la cara rasterizada tiene un solo color), no texto: la plantilla de NOPS deja en la cara 2 un punto
+  invisible que `pdftotext` devuelve como «.».
+- **C12**: knitr 1.51 restaura `opts_chunk`, `opts_knit` y `knit_hooks` al terminar cada documento; `knit_engines` no. Por
+  eso el escaneo estático solo reprueba `knit_engines$set(` (salvo la restauración `python = reticulate::eng_python`); las
+  otras tres llamadas se informan y las vigila la comparación del estado. Cargar un paquete puede AÑADIR motores (`glue`
+  añade 3): se informa y no es fuga; sí lo es que un motor que ya existía cambie o desaparezca.
+
+### 10.7 Límites conocidos
+
+- **Suplementos.** `include_supplement()` busca en el directorio de trabajo, no junto al `.Rmd` (`xexams()` usa `getwd()`
+  si no recibe `edir`). Un ejercicio que lo use solo funciona si el motor se lanza desde la carpeta de ese ejercicio.
+  Ninguno de los 33 `.Rmd` de los exámenes lo usa; en `A-Produccion/` lo usan 5 de 452.
+- **Figuras TikZ en el Word**: entre 201 y 254 ppi (aviso de C5). El PDF las lleva vectoriales.
+- **Ejercicios muy lentos.** El tope del pre-vuelo (60 + 10 × N segundos por ejercicio) cubre con holgura al más pesado
+  medido (5,7 s por versión). Un ejercicio que tarde más de 10 s por versión necesita su `presupuesto_s` en la configuración.
+- **Preguntas enteras.** Con `partir_preguntas = FALSE`, una pregunta más alta que la columna (30,3 cm; 27,8 cm en la
+  primera página) no cabe, y el motor no la reduce: C3 falla y hay que volver al valor por defecto. Además gasta más
+  papel: 6 caras en lugar de 4 en dos de las tres versiones del examen real.
+- **Imágenes dentro de una celda** de una tabla del Word: no se reducen a la celda, solo a la columna.
+- **C10 es manual.** El verificador deja las hojas en gris; alguien tiene que mirarlas.
+- **Escaneo**: probado solo en simulación (§10.5).
+- **Copias viejas de `solpcielo.tex`.** En el repo hay 144 archivos `solpcielo*.tex`. Solo las dos oficiales y la plantilla
+  local del SCHOICE del diagrama de Venn llevan la corrección de la numeración; 131 copias ya eran versiones anteriores
+  (34 de ellas en `03-En-Produccion/`, que no se toca) y 10 eran copias idénticas de la oficial anterior. Se rehacen en el
+  próximo ciclo de cada ejercicio (regla #26).

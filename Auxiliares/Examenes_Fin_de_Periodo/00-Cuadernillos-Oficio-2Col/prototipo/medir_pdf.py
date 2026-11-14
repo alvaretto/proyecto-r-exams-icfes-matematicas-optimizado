@@ -7,7 +7,13 @@ Preguntas y partidas:
   - texto (plantilla oficial vieja): una pregunta empieza en la palabra --inicio y termina en la última --fin antes de la
     siguiente; está «partida» si su inicio y su fin caen en distinta (página, columna).
   - auto (por defecto): dests si el PDF trae anclas qini.*; si no, texto.
-Tamaño del texto: `rachas_bajo_min` lista cada racha de texto por debajo de --min-pt con su longitud (C4 distingue WARN de FAIL)."""
+Tamaño del texto: `rachas_bajo_min` lista cada racha de texto por debajo de --min-pt con su longitud (C4 distingue WARN de FAIL).
+Fuentes Type 3 (`fuentes_type3`, `texto_type3`): poppler ESTIMA su tamaño (HtmlOutputDev::updateFont: «This is a hack»:
+multiplica por el ancho de la «m» entre 0,6 y por la matriz de la fuente). MEDIDO el 2026-11-14: un signo «×» de 10,95 pt
+en una fuente de mapa de bits (tctt1095) sale como 5 pt. Ese tamaño no sirve ni para aprobar ni para reprobar: las rachas
+de una fuente Type 3 llevan `type3: true` y el verificador las declara NO VERIFICABLES.
+Numeración (`numeros`): los N de las anclas qini.N, en orden. La plantilla escribe el ancla con el mismo contador que
+imprime el número de la pregunta, así que deben ser exactamente 1..Q (C13)."""
 import re, json, argparse, subprocess, html, tempfile, os, collections
 
 ap = argparse.ArgumentParser()
@@ -38,7 +44,7 @@ def preguntas_dests(texto_dests):
         pg, num = int(pg), int(num)
         (ini if tipo == "ini" else fin)[num] = (pg, col_de(pg, float(x)))
     preg = [{"ini": ini[k], "fin": fin.get(k)} for k in sorted(ini)]
-    return preg
+    return preg, sorted(ini)
 
 
 def preguntas_texto():
@@ -64,7 +70,7 @@ modo = a.marcas
 dests = correr("pdfinfo", "-dests", a.pdf) if modo in ("auto", "dests") else ""
 if modo == "auto":
     modo = "dests" if re.search(r'"qini\.\d+"', dests) else "texto"
-preg = preguntas_dests(dests) if modo == "dests" else preguntas_texto()
+preg, numeros = preguntas_dests(dests) if modo == "dests" else (preguntas_texto(), None)
 partidas = [i + 1 for i, q in enumerate(preg) if q["fin"] and q["fin"] != q["ini"]]
 sin_fin = [i + 1 for i, q in enumerate(preg) if not q["fin"]]
 por_pag = {}
@@ -79,17 +85,20 @@ ppi = [min(int(f[12]), int(f[13])) for f in filas]
 with tempfile.TemporaryDirectory() as td:
     subprocess.run(["pdftohtml", "-xml", "-i", "-q", "-zoom", "1", a.pdf, os.path.join(td, "t")], capture_output=True)
     xml = open(os.path.join(td, "t.xml"), encoding="utf-8", errors="replace").read()
-sp = {m.group(1): float(m.group(2)) for m in re.finditer(r'<fontspec id="(\d+)" size="([\d.]+)"', xml)}
-tam = collections.Counter(); rachas = []
-for m in re.finditer(r'<text [^>]*font="(\d+)"[^>]*>(.*?)</text>', xml):
-    t = html.unescape(re.sub("<[^>]+>", "", m.group(2))).strip()
-    if not t: continue
-    tam[sp[m.group(1)]] += len(t)
-    if sp[m.group(1)] < a.min_pt:
-        rachas.append({"pt": sp[m.group(1)], "n": len(t.replace(" ", "")), "texto": t[:30]})
-
 ff = correr("pdffonts", a.pdf).splitlines()[2:]
 no_emb = [l.split()[0] for l in ff if re.search(r"\s(no)\s+(yes|no)\s+(yes|no)\s+\d+\s+\d+\s*$", l)]
+type3 = sorted({l.split()[0] for l in ff if re.search(r"\sType 3\s", l)})
+sp = {m.group(1): float(m.group(2)) for m in re.finditer(r'<fontspec id="(\d+)" size="([\d.]+)"', xml)}
+fam = {m.group(1): m.group(2) for m in re.finditer(r'<fontspec id="(\d+)"[^>]*family="([^"]*)"', xml)}
+tam = collections.Counter(); rachas = []; texto_type3 = 0
+for m in re.finditer(r'<text [^>]*font="(\d+)"[^>]*>(.*?)</text>', xml):
+    t = html.unescape(re.sub("<[^>]+>", "", m.group(2))).strip()
+    es_t3 = fam.get(m.group(1)) in type3
+    if es_t3: texto_type3 += max(1, len(t))       # un glifo sin Unicode (texto vacío) también cuenta
+    if not t: continue
+    if not es_t3: tam[sp[m.group(1)]] += len(t)   # el tamaño de una Type 3 es una estimación: no entra en el mínimo
+    if sp[m.group(1)] < a.min_pt:
+        rachas.append({"pt": sp[m.group(1)], "n": len(t.replace(" ", "")), "texto": t[:30], "type3": es_t3})
 over = []
 if a.log and os.path.exists(a.log):
     over = [float(x) for x in re.findall(r"Overfull \\hbox \(([\d.]+)pt too wide\)", open(a.log, errors="replace").read())]
@@ -97,8 +106,9 @@ papeles = sorted({f"{float(w)/72*25.4:.1f} x {float(h)/72*25.4:.1f}" for w, h, _
 w, h = (float(paginas[0][0]), float(paginas[0][1])) if paginas else (0, 0)
 print(json.dumps({"papel_mm": f"{w/72*25.4:.0f} x {h/72*25.4:.0f}", "papeles_mm": papeles,
   "ancho_mm": round(w/72*25.4, 2), "alto_mm": round(h/72*25.4, 2), "paginas": len(paginas), "marcas": modo,
-  "preguntas": len(preg), "inicios_por_pagina": por_pag, "partidas": partidas, "sin_fin": sin_fin,
+  "preguntas": len(preg), "numeros": numeros, "inicios_por_pagina": por_pag, "partidas": partidas, "sin_fin": sin_fin,
   "imagenes_raster": len(filas), "raster_ppi": ppi,
   "texto_min_pt": min(tam) if tam else None, "texto_bajo_min": [f"{r['pt']:g}pt:{r['texto']}" for r in rachas][:12],
   "rachas_bajo_min": rachas, "fuentes_no_incrustadas": no_emb, "fuentes_total": len(ff),
+  "fuentes_type3": type3, "texto_type3": texto_type3,
   "overfull_n": len(over), "overfull_max_pt": max(over) if over else 0}, ensure_ascii=False))

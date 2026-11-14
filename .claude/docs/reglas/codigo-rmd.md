@@ -56,6 +56,33 @@ Antes de editar cualquier archivo .Rmd, verifica OBLIGATORIAMENTE:
 
    Ver regla #21 §Familia 2 (medición sobre los cinco pipelines) y regla #18 §Patrón B'.
 
+   **Vectorial al imprimir: `format = match_exams_device()`** (medido el 2026-11-13 con R/exams 2.4.5; aprobado por el
+   profesor para lo que se imprime):
+
+   ```r
+   include_tikz(tikz_code, name = "grafico", format = match_exams_device(),
+                width = "8cm", markup = "markdown")
+   ```
+
+   `match_exams_device()` devuelve el dispositivo de la función `exams2*()` que está tejiendo, así que la misma llamada
+   entrega a cada formato lo suyo, sin condicional:
+
+   | Función | Dispositivo | Figura TikZ resultante |
+   |---|---|---|
+   | `exams2pdf()` | `pdf` | `\includegraphics{grafico.pdf}`, vectorial: 0 imágenes en `pdfimages -list` |
+   | `exams2nops()` | `pdf` | ídem |
+   | `exams2pandoc()` (Word) | `png` | `word/media/*.png` |
+   | `exams2html()` | `png` | `<img src="data:image/png…">` |
+   | `exams2moodle(svg = TRUE)` / `(svg = FALSE)` | `svg` / `png` | `grafico.svg` / `grafico.png` en el XML |
+
+   Por qué importa en papel: con `format = "png"`, R/exams convierte la figura a un PNG de **650 píxeles de ancho**
+   (`tex2image(resize = 650)`, su valor por defecto). A 8 cm son 206 ppi y a 9 cm, 183 ppi: por debajo de los 300 ppi
+   de una impresión limpia, y el texto de la figura deja de ser texto. Con el dispositivo `pdf`, la figura y sus rótulos
+   siguen siendo vectoriales y su tamaño se puede medir en el PDF final. `format = "png"` sigue siendo válido donde la
+   salida es solo de pantalla. En el Word la figura llega igual como PNG de 650 píxeles: para subirlo hay que pedirlo
+   en la llamada (`include_tikz(..., resize = 1200)`). 72 archivos de `Ejemplos-Funcionales-Rmd/` ya usaban
+   `match_exams_device()`. Fuente de las mediciones: `Auxiliares/Examenes_Fin_de_Periodo/00-Cuadernillos-Oficio-2Col/INVESTIGACION.md`, §3.2.
+
 2. **NO mezclar código Python/R sin validar en ambos**
    - Siempre probar con reticulate activo e inactivo
    - Validar que variables se transfieren correctamente

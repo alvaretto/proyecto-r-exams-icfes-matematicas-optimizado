@@ -1,0 +1,50 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## Mutantes M17 y M17b: una pregunta con un enunciado de unos 4 cm y una figura de 27 cm de alto.
+##   - Partida (por defecto) cabe: el enunciado queda en una columna, la figura llena la otra (la columna de la primera
+##     página mide 27,8 cm) y las opciones pasan a la página siguiente. Por construcción empieza en una columna y termina
+##     en otra (M17: el motor ignora partir_preguntas = FALSE → C14).
+##   - ENTERA (partir_preguntas = FALSE) mide unos 33 cm, más que cualquier columna (30,3 cm), y se sale por abajo
+##     (M17b → C3, margen inferior).
+## MEDIDO el 2026-11-14: una figura de 29,5 cm se sale de la primera página aunque se permita partir; por eso mide 27.
+library(exams)
+alto <- sample(21:29, 1)
+opciones <- c(alto, alto + 1, alto + 2, alto + 3)
+sol <- c(TRUE, FALSE, FALSE, FALSE)
+fig_id <- paste(sample(c(0:9, letters[1:6]), 6, replace = TRUE), collapse = "")
+tz <- sprintf("\\begin{tikzpicture}\\draw[thick] (0,0) rectangle (4,27);\\node at (2,13.5) {%d pisos};\\end{tikzpicture}", alto)
+```
+
+Question
+========
+En un barrio se construye una torre de apartamentos. La constructora publicó un dibujo de la torre terminada, que muestra la altura que tendrá el edificio y que lleva escrito, en su parte media, un rótulo con la cantidad de pisos. Un grupo de vecinos quiere saber cuántos pisos tendrá, para calcular cuántas familias llegarán al barrio y si la escuela, el centro de salud y el parque alcanzan para todos. Uno de ellos propone contar las ventanas del dibujo, pero otro le recuerda que el dibujo no las trae y que basta con leer el rótulo.
+
+La torre de la figura tiene la cantidad de pisos que indica su rótulo. ¿Cuántos pisos tiene?
+
+```{r figura, echo = FALSE, results = "asis"}
+include_tikz(tz, name = paste0("torre_", fig_id), format = match_exams_device(), markup = "markdown", width = "4cm")
+```
+
+Answerlist
+----------
+* `r opciones[1]`
+* `r opciones[2]`
+* `r opciones[3]`
+* `r opciones[4]`
+
+Solution
+========
+La cantidad de pisos se lee en el rótulo de la torre: la respuesta correcta es `r opciones[1]`.
+
+Answerlist
+----------
+* Verdadero.
+* Falso.
+* Falso.
+* Falso.
+
+Meta-information
+================
+exname: m_alta
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE

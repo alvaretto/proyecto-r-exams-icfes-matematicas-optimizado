@@ -1,0 +1,54 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## Fixture del motor de cuadernillos: listas numeradas que NO empiezan en 1 (en la pregunta y en la Solution), un bloque
+## de código con signos que no son ASCII y una flecha.
+##   - Con esas listas pandoc escribe \setcounter{enumi}{N}. Si la plantilla numerara las preguntas con enumi, la pregunta
+##     siguiente saldría con otro número (guarda C13, mutantes M15 y M15b). La lista de la Solution empieza en 5 y no en
+##     2 a propósito: en la retroalimentación manda la ÚLTIMA lista, y una que empiece en 2 deja el contador en 1, justo
+##     el valor que hace que la pregunta siguiente salga bien por casualidad (medido el 2026-11-14: M15b sobrevivía).
+##   - El bloque de código es más largo que la columna de la retroalimentación: la plantilla debe partirlo (guarda C3,
+##     mutante M3b). Sus tildes y sus signos dejan en el .log bytes que no son UTF-8.
+library(exams)
+v <- sample(10:40, 3)
+total <- sum(v)
+## las cuatro cifras son distintas: total, total + 3, total - 3 y total + 6
+opciones <- c(total, total + 3, total - 3, total + 6)
+sol <- c(TRUE, FALSE, FALSE, FALSE)
+```
+
+Question
+========
+Un grupo recogió `r v[1]`, `r v[2]` y `r v[3]` botellas en tres jornadas. Ya hizo los dos primeros pasos de su plan y le faltan estos:
+
+3. Sumar las tres cantidades.
+4. Anotar el total en la cartelera.
+
+¿Cuál es el total que debe anotar?
+
+Answerlist
+----------
+* `r opciones[1]`
+* `r opciones[2]`
+* `r opciones[3]`
+* `r opciones[4]`
+
+Solution
+========
+Se suman las tres cantidades → `r v[1]` + `r v[2]` + `r v[3]` = `r total`. En una sola línea:
+
+    total de la recolección = primera jornada + segunda jornada + tercera jornada = (suma × 1) ÷ 1
+
+5. Como último paso, se revisa la suma antes de anotarla.
+
+Answerlist
+----------
+* Verdadero: es la suma de las tres jornadas.
+* Falso: sobran tres botellas.
+* Falso: faltan tres botellas.
+* Falso: sobran seis botellas.
+
+Meta-information
+================
+exname: f_lista
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE

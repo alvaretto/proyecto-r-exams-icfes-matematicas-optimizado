@@ -1,9 +1,14 @@
 %% Retroalimentación para el celular: página de 90 x 160 mm, una columna, con la Solution de cada pregunta.
-%% Plantilla del motor generar_cuadernillos.R. No se imprime: se comparte por WhatsApp (decisión del profesor).
-%% Deriva de plantillas/cuadernillo_oficio_2col.tex. Cambios frente a ella:
+%% Plantilla del motor Auxiliares/Examenes_Fin_de_Periodo/00-Cuadernillos-Oficio-2Col/generar_cuadernillos.R
+%% No se imprime: se comparte por WhatsApp (decisión del profesor).
+%% Deriva de cuadernillo_oficio_2col.tex, que está en esta misma carpeta. Cambios frente a ella:
 %%   - papel 90 x 160 mm, márgenes de 4 mm, 11 pt, una columna;
 %%   - la Solution SE MUESTRA, con el rótulo «Retroalimentación»;
 %%   - encabezado de la página 1 con título, versión y clave (macro \Clave, pasada por `header`);
+%%   - preguntas y opciones SIN sangría (listas «wide»): en 82 mm, la sangría de dos niveles dejaba las figuras de las
+%%     opciones a 68 mm y sus rótulos de 8 pt bajaban a 6,3 pt (medido el 2026-11-14). Sin sangría quedan a 82 mm (7,6 pt);
+%%   - \emergencystretch amplio: con \RaggedRight, una cifra larga que no se puede partir desbordaba el renglón
+%%     (medido: Overfull de 33 pt con «1 - (0,4705882353 + …»);
 %%   - sin número par de caras (no se imprime).
 \documentclass[11pt]{article}
 
@@ -32,10 +37,18 @@
 \usepackage{lastpage}
 \usepackage{hyperref}
 \RaggedRight
+\setlength{\emergencystretch}{12em}
 
-%% imágenes: nunca más anchas que la columna (mismo envoltorio que el cuadernillo; Sweave con [nogin], ver allá)
+%% imágenes: nunca más anchas que la columna (mismo envoltorio que el cuadernillo; Sweave con [nogin], ver allá).
+%% Aquí las listas no llevan sangría: si una opción o una pregunta EMPIEZA con una figura o una tabla, su etiqueta
+%% («b)», «5.») se queda sola en su renglón y la figura va debajo, a todo el ancho. Sin esto la etiqueta y la figura
+%% comparten renglón y lo desbordan (medido: Overfull de 9,8 a 15,3 pt en las opciones gráficas).
+\makeatletter
+\newcommand{\etiquetasola}{\ifvmode\if@inlabel\leavevmode\par\nobreak\fi\fi}
+\makeatother
 \let\includegraphicsoriginal\includegraphics
-\renewcommand{\includegraphics}[2][]{\adjustbox{max width=\linewidth,\ifvmode center\fi}{\includegraphicsoriginal[#1]{#2}}}
+\renewcommand{\includegraphics}[2][]{\etiquetasola
+  \adjustbox{max width=\linewidth,\ifvmode center\fi}{\includegraphicsoriginal[#1]{#2}}}
 \usepackage{etoolbox}
 \AtBeginEnvironment{figure}{\renewcommand{\caption}[2][]{}\centering}
 
@@ -43,18 +56,31 @@
 \usepackage{longtable}
 \let\origbottomrule\bottomrule
 \renewenvironment{longtable}[2][]{%
-  \par\smallskip\centering
+  \etiquetasola\par\smallskip\centering
   \def\endhead{}\def\endfirsthead{}\def\endfoot{}\def\endlastfoot{}%
   \def\bottomrule{}%
   \begin{adjustbox}{max width=\linewidth}\begin{tabular}{#2}}{%
   \origbottomrule\end{tabular}\end{adjustbox}\par\smallskip}
 
-%% new environments
-\newenvironment{question}{\item}{}
+%% bloques de código de pandoc (verbatim): parten el renglón en los espacios en lugar de salirse de la página (medido:
+%% Overfull de 58,6 pt en una Solution). Sin `breakanywhere`: con pdflatex parte los caracteres UTF-8 de varios bytes
+%% («×», «÷») y no compila. Sin símbolo de continuación: el de fvextra va en \tiny y C4 lo marcaría.
+\IfFileExists{fvextra.sty}{%
+  \usepackage{fvextra}
+  \renewenvironment{verbatim}{\VerbatimEnvironment
+    \begin{Verbatim}[breaklines=true,breaksymbolleft={},breakindent=1em]}{\end{Verbatim}}}{}
+
+%% new environments. Las preguntas y las opciones son listas PROPIAS (enumitem), con contadores propios, y no `enumerate`:
+%% ver la explicación en cuadernillo_oficio_2col.tex. El ancla qini.N es testigo del número impreso (C13).
+\newlist{preguntas}{enumerate}{1}
+\setlist[preguntas]{label=\textbf{\arabic*.},wide=0pt,leftmargin=0pt,itemsep=10pt plus 2pt,topsep=0pt}
+\newlist{opciones}{enumerate}{1}
+\setlist[opciones]{label=\textit{\alph*)},wide=0pt,leftmargin=0pt,itemsep=1pt,topsep=2pt,parsep=0pt}
+\setlist[enumerate]{leftmargin=*}
+\setlist[itemize]{leftmargin=*}
+\newenvironment{question}{\item\hypertarget{qini.\arabic{preguntasi}}{}}{\hypertarget{qfin.\arabic{preguntasi}}{}}
 \newenvironment{solution}{\par\medskip\textbf{Retroalimentación}\par}{}
-\newenvironment{answerlist}{\renewcommand{\labelenumi}{(\alph{enumi})}\begin{enumerate}}{\end{enumerate}}
-\setlist[enumerate,1]{leftmargin=*,itemsep=10pt plus 2pt,topsep=0pt}
-\setlist[enumerate,2]{itemsep=1pt,topsep=2pt,parsep=0pt}
+\newenvironment{answerlist}{\begin{opciones}}{\end{opciones}}
 
 %% paragraphs
 \setlength{\parskip}{0.5ex plus0.1ex minus0.1ex}
@@ -66,11 +92,17 @@
 \makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
 \setcounter{secnumdepth}{0}
 
-%% fonts: Helvetica
+%% fonts: Helvetica. El texto de ancho fijo y los símbolos que Helvetica no trae van en Latin Modern, que es Type 1
+%% (ver la explicación en cuadernillo_oficio_2col.tex).
 \usepackage{helvet}
 \IfFileExists{sfmath.sty}{\RequirePackage[helvet]{sfmath}}{}
 \renewcommand{\sfdefault}{phv}
 \renewcommand{\rmdefault}{phv}
+\renewcommand{\ttdefault}{lmtt}
+\renewcommand{\rmsubstdefault}{lmss}
+\renewcommand{\sfsubstdefault}{lmss}
+\renewcommand{\ttsubstdefault}{lmtt}
+\renewcommand{\textcompsubstdefault}{lmss}
 
 %% new commands (exams2pdf los escribe desde `header`; el motor escapa los valores con escapar_latex())
 \makeatletter
@@ -113,10 +145,10 @@ Versión \textbf{\myID} \textperiodcentered{} \myDate\par
 Clave: \myClave\par
 \medskip\hrule\medskip}
 
-\begin{enumerate}
+\begin{preguntas}
 
 %% \exinput{exercises}
 
-\end{enumerate}
+\end{preguntas}
 
 \end{document}

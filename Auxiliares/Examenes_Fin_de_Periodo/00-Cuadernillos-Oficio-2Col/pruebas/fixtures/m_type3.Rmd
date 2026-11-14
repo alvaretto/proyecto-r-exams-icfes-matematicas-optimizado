@@ -1,0 +1,46 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## Mutante M4b (C4): figura PDF con el texto en una fuente Type 3, la que escribe matplotlib si no se le pide otra cosa
+## (pdf.fonttype = 3). poppler solo ESTIMA el tamaño de ese texto: C4 no puede aprobarlo ni reprobarlo.
+## La figura es fija (m_type3_fig.pdf, hecha una vez con matplotlib; rótulos de 5 pt): el fixture no necesita Python.
+## include_supplement() busca en el directorio de trabajo, no junto al .Rmd (MEDIDO: xexams usa getwd() si no recibe
+## edir). Por eso se le da la carpeta de los fixtures, que el verificador pasa en CUADERNILLOS_MOTOR_DIR.
+library(exams)
+dir_fix <- file.path(Sys.getenv("CUADERNILLOS_MOTOR_DIR"), "pruebas", "fixtures")
+stopifnot(file.exists(file.path(dir_fix, "m_type3_fig.pdf")))
+include_supplement("m_type3_fig.pdf", dir = dir_fix)
+n <- sample(3:9, 1)
+## la barra menor mide 2: las cuatro cifras son distintas
+opciones <- c(n + 2, n + 3, n + 4, n + 5)
+sol <- c(TRUE, FALSE, FALSE, FALSE)
+```
+
+Question
+========
+La figura muestra dos barras. Si a la barra menor se le suman `r n` unidades, ¿cuánto mide?
+
+![](m_type3_fig.pdf){width=6cm}
+
+Answerlist
+----------
+* `r opciones[1]`
+* `r opciones[2]`
+* `r opciones[3]`
+* `r opciones[4]`
+
+Solution
+========
+La barra menor mide 2 unidades: la respuesta correcta es `r opciones[1]`.
+
+Answerlist
+----------
+* Verdadero.
+* Falso.
+* Falso.
+* Falso.
+
+Meta-information
+================
+exname: m_type3
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE

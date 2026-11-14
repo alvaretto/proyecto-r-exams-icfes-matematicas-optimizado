@@ -8,6 +8,38 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.44.0 (2026-11-14)
+
+Motor de cuadernillos Saber 11 en oficio a doble columna (`Auxiliares/Examenes_Fin_de_Periodo/00-Cuadernillos-Oficio-2Col/`,
+PRP `PRPs/motor-cuadernillos-oficio-2col.md`). Cambian dos normas, en sus dos capas:
+
+1. **Regla 1 de `codigo-rmd.md` («Nunca» 1):** el patrón recomendado para `include_tikz()` pasa a ser
+   `format = match_exams_device()` (PDF vectorial en `exams2pdf()`/`exams2nops()`; PNG en Word y HTML; SVG o PNG en Moodle);
+   `format = "png"` sigue siendo válido. El íntegro lleva la tabla medida por función y la razón: con `"png"`, R/exams
+   entrega un PNG de 650 píxeles de ancho (`tex2image(resize = 650)`), que a 8 cm son 206 ppi. Es la excepción «vectorial
+   al imprimir» que el profesor aprobó el 2026-11-13.
+2. **Regla #26 (`material-aula.md`) v1.2, examen con cuadernillo propio:** el NOPS va con `twocolumn = FALSE`, como excepción
+   declarada (de él solo se usa la hoja, y `twocolumn = TRUE` aborta con una tabla Markdown); una sola matriz de semillas
+   para la hoja, el cuadernillo, la clave, la retroalimentación y el Word, con `startid` distinto por sesión; y la fuga del
+   estado de knitr entre los ejercicios de un mismo examen, que solo se ve con el examen completo.
+3. **Suite nueva:** `tests/testthat/test_cuadernillos_oficio.R`, registrada en `tests/run_all_tests.R` con su `watch`.
+4. **Promoción a `perifericos/`:** `cuadernillo_oficio_2col.tex`, `retro_celular.tex`, `pandoc_cuadernillo.tex` y
+   `referencia_oficio_2col.docx`, como archivos nuevos (decisión del profesor del 2026-11-13: «Ya, al terminar el
+   proyecto»). Antes, la suite completa (`R_TESTS_FULL=1`): 55 de 55 en verde. Después, el examen real, los mutantes y
+   la suite propia, en verde. La regla #26 las nombra como versión oficial.
+5. **Numeración de las preguntas con listas propias, también en `solpcielo.tex` y `solpcielo_cloze.tex`** (instrucción del
+   profesor del 2026-11-14). Con `enumerate`, una lista numerada del ejercicio que no empieza en 1 cambiaba el número de la
+   pregunta siguiente (medido: 1, 5, 6 en lugar de 1, 2, 3). El íntegro de la regla #26 lleva la medición, lo que se
+   comprobó y las copias que quedan para el próximo ciclo de cada ejercicio.
+6. **Cuadernillo del docente y preguntas partidas por defecto** (dos instrucciones del profesor del 2026-11-14). Pedir el
+   cuadernillo produce siempre dos PDF por versión, de las mismas semillas: el del estudiante, sin retroalimentación, y el
+   del docente, con la clave y la retroalimentación debajo de cada pregunta. Las preguntas se parten entre columnas por
+   defecto, que es como caben más; `partir_preguntas = FALSE` las deja enteras. `cuadernillo_oficio_2col.tex` (en
+   `perifericos/`) lleva las dos cosas. Guardas nuevas del motor: C14 (preguntas enteras), C15 (la retroalimentación no
+   llega al estudiante) y la medición de tinta en C3; 26 mutantes en total.
+
+Compactas medidas después del cambio: `codigo-rmd.md` 2 354 caracteres y `material-aula.md` 4 599 (tope: 5 000).
+
 ### Cambios v3.43.1 (2026-11-13)
 
 Cierre documental del ciclo de `serie-seno-aproximacion-n3` (`MAT-2026-07-017`, SCHOICE aprobado y firmado el 2026-11-13). No

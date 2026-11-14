@@ -5,10 +5,17 @@
 ##
 ## Desde UNA matriz de semillas por sesión produce, para N estudiantes (una versión por estudiante, N ≤ 100):
 ##   cuadernillos/cuadernillo_<ID>.pdf (+ cuadernillos_imprimir.pdf)   hojas/hoja_respuestas_<ID>.pdf (+ hojas_imprimir.pdf)
+##   docente/cuadernillo_docente_<ID>.pdf (+ docente_imprimir.pdf): el mismo cuadernillo a dos columnas, con la
+##     retroalimentación y la clave. Sale SIEMPRE junto con el del estudiante (salida «cuadernillo»).
 ##   clave/clave.csv y clave/clave.pdf   retro/retro_<ID>.pdf (90 x 160 mm)   word/cuadernillo_<ID>.docx
 ##   revision_gris_v1.png y revision_gris_vN.png (C10), firmas.rds, semillas.rds/.csv, preflight.log, verificacion.txt
-## y termina con verificar_cuadernillos.R sobre cada sesión. Exit: 0 (C1-C9, C11 y C12 en verde), 1 (algún FAIL),
+## y termina con verificar_cuadernillos.R sobre cada sesión. Exit: 0 (C1-C9 y C11-C15 en verde), 1 (algún FAIL),
 ## 2 (ERR_DIR_SALIDA o NO VERIFICABLE).
+##
+## Opciones de la configuración (además de las de configuraciones/examen_real_11.R):
+##   partir_preguntas = TRUE (por defecto) | FALSE. TRUE: una pregunta puede partirse entre columnas o páginas; es la LEY
+##     del cuadernillo (acomodar la mayor cantidad de preguntas). FALSE: cada pregunta queda entera en una columna.
+##   presupuesto_s: segundos por ejercicio en el pre-vuelo (por defecto 60 + 10 × N).
 ##
 ## source() de este archivo NO tiene efectos: solo define funciones. main() corre solo con Rscript.
 ## Plan y criterios: PRPs/motor-cuadernillos-oficio-2col.md (raíz del repo).
@@ -35,8 +42,11 @@ raiz_git <- function(desde = dir_motor()) {
 }
 
 ## Directorio de plantillas, una sola variable (la leen el motor, el verificador y los mutantes).
-## Por defecto: plantillas/ del proyecto hasta la Task 12 del PRP; desde la Task 12, <raíz git>/A-Produccion/perifericos.
-dir_plantillas_defecto <- function() file.path(dir_motor(), "plantillas")
+## Por defecto, <raíz git>/A-Produccion/perifericos: las cuatro plantillas del motor son versión oficial desde el
+## 2026-11-14 (regla #26) y ya no hay copia en este proyecto. CUADERNILLOS_PLANTILLAS lo sustituye: lo usan los mutantes,
+## que copian las plantillas a un directorio temporal y dañan la copia, nunca las oficiales.
+PLANTILLAS_MOTOR <- c("cuadernillo_oficio_2col.tex", "retro_celular.tex", "pandoc_cuadernillo.tex", "referencia_oficio_2col.docx")
+dir_plantillas_defecto <- function() file.path(raiz_git(), "A-Produccion", "perifericos")
 dir_plantillas <- function() {
   d <- Sys.getenv("CUADERNILLOS_PLANTILLAS", unset = "")
   normalizePath(if (nzchar(d)) d else dir_plantillas_defecto(), mustWork = TRUE)
@@ -151,7 +161,15 @@ leer_config <- function(ruta, dir_salida_cli = NULL) {
     if (es_absoluta(cfg$dir_salida)) cfg$dir_salida else file.path(base, cfg$dir_salida)
   }
   cfg$dir_salida <- guarda_ruta(ds)
-  cfg$presupuesto_s <- as.numeric(cfg$presupuesto_s %||% (30 + 5 * cfg$estudiantes))
+  ## Tope del pre-vuelo por ejercicio (C9): 60 + 10 × N segundos (decisión del profesor, 2026-11-14). El del PRP era
+  ## 30 + 5 × N; MEDIDO con N = 25: el ejercicio más pesado del examen real (I_1796473-Opc-A2, una tabla TikZ y tres
+  ## gráficas por versión) tardó 143,1 y 141,4 s de los 155 s que le daba, y desde unas 44 versiones lo habría cortado
+  ## sin estar colgado. Un ejercicio de verdad colgado se corta igual; solo tarda el doble en cortarse.
+  cfg$presupuesto_s <- as.numeric(cfg$presupuesto_s %||% (60 + 10 * cfg$estudiantes))
+  ## Partir las preguntas es la regla (decisión del profesor, 2026-11-13 y 2026-11-14: caben más). FALSE las deja enteras.
+  pp <- cfg$partir_preguntas %||% TRUE
+  if (!is.logical(pp) || length(pp) != 1L || is.na(pp)) stop("ERR_CONFIG: partir_preguntas debe ser TRUE o FALSE")
+  cfg$partir_preguntas <- pp
   cfg$ruta_config <- ruta
   cfg
 }
@@ -166,6 +184,12 @@ matriz_semillas <- function(semilla, s, N, Q) {
 
 ## La fórmula de Date2ID de exams2nops (R/exams 2.4.5): fecha %y%m%d + número de 5 cifras desde startid.
 id_version <- function(fecha, startid, i) paste0(format(as.Date(fecha), "%y%m%d"), formatC(startid + i - 1L, width = 5, flag = "0"))
+
+## Nombre que R/exams da a la copia i de n: rellena el índice con ceros hasta el ancho de n (código de
+## exams:::make_exams_write_pdf, 2.4.5: formatC(id, width = floor(log10(n)) + 1L, flag = "0")). Con n = 25 la primera hoja
+## es nops_01.pdf, no nops_1.pdf. MEDIDO el 2026-11-14: el motor buscaba nops_1.pdf y la corrida de capacidad (25
+## versiones) abortó en las hojas; con menos de 10 versiones los dos nombres coinciden y no se veía.
+nombre_copia <- function(nombre, i, n, ext) paste0(nombre, formatC(i, width = floor(log10(n)) + 1L, flag = "0"), ".", ext)
 
 ## R/exams escribe los valores de `header` tal cual en el .tex: el motor los escapa. Carácter a carácter, en una sola
 ## pasada, para que las llaves de \textbackslash{} no se escapen otra vez.
@@ -188,6 +212,33 @@ normalizar <- function(txt) {
 huella <- function(ex) digest::digest(normalizar(c(ex$question, unlist(ex$questionlist))))
 
 clave_letras <- function(ex) paste(letters[which(ex$metainfo$solution)], collapse = "")
+
+## Texto reducido a letras y cifras en minúscula: así se comparan un .tex y lo que pdftotext lee del PDF, sin que
+## importen los saltos de renglón, la partición de palabras, los espacios ni las ligaduras («ﬁ» = «fi»).
+solo_letras <- function(x) {
+  x <- paste(x, collapse = " ")
+  for (l in list(c("ﬃ", "ffi"), c("ﬄ", "ffl"), c("ﬀ", "ff"), c("ﬁ", "fi"), c("ﬂ", "fl")))
+    x <- gsub(l[1], l[2], x, fixed = TRUE)
+  tolower(gsub("[^[:alnum:]]", "", x))
+}
+
+## Testigos de la retroalimentación de una pregunta: hasta `n` trozos de texto llano de su Solution (de 20 a 30 letras
+## cada uno) que NO aparecen en ningún enunciado del examen (`excluir` = solo_letras de todas las preguntas de la versión).
+## Con ellos la guarda C15 comprueba, leyendo el PDF, que el cuadernillo del estudiante no trae la retroalimentación y
+## que el del docente y la retro sí. Se corta en toda marca de LaTeX o de fórmula: lo que queda se imprime tal cual.
+## Cada elemento de la lista de la Solution va por separado: en el PDF los separa su letra («a)», «b)»), y un trozo que
+## cruzara dos elementos no se encontraría (medido el 2026-11-14: falso FAIL en un ejercicio de prueba).
+testigos_solucion <- function(ex, excluir = "", n = 3L, largo = 30L, minimo = 20L) {
+  corte <- "\\\\[A-Za-z]+\\*?|[\\\\$_^{}&%~<>|]|\\[|\\]|\n[ \t]*\n"
+  partes <- c(paste(ex$solution, collapse = "\n"), as.character(unlist(ex$solutionlist)))
+  trozos <- unlist(lapply(partes, function(x) strsplit(x, corte, perl = TRUE)[[1]]))
+  t <- vapply(trozos, solo_letras, "", USE.NAMES = FALSE)
+  t <- t[nchar(t) >= minimo]
+  if (!length(t)) return(character(0))
+  t <- unique(substr(t[order(-nchar(t))], 1L, largo))          # los trozos más largos primero
+  t <- t[!vapply(t, grepl, TRUE, x = excluir, fixed = TRUE)]
+  utils::head(t, n)
+}
 
 ## Matriz N x Q de claves (letras minúsculas, como las casillas de la hoja NOPS) desde un objeto de R/exams.
 clave_desde <- function(x) {
@@ -353,7 +404,7 @@ generar_hojas <- function(cfg, ses, S, dir_ses) {
                           twocolumn = FALSE, dir = dn, name = "nops_")
   ids <- names(xn)
   for (i in seq_len(N)) {
-    crudo <- file.path(dn, paste0("nops_", i, ".pdf"))
+    crudo <- file.path(dn, nombre_copia("nops_", i, N, "pdf"))
     tmp <- tempfile(fileext = ".pdf")
     ## la hoja y su reverso en blanco (MEDIDO: con duplex = TRUE la página 2 sale en blanco)
     sistema("qpdf", c("--warning-exit-0", shQuote(crudo), "--pages", shQuote(crudo), "1-2", "--", shQuote(tmp)))
@@ -389,6 +440,7 @@ escribir_clave <- function(cfg, ses, clave, dir_ses) {
 }
 
 ## Una llamada por versión: exams2pdf agrega el índice de copia a `name`, así que se genera con name = "tmp_" y se renombra.
+NOMBRE_PDF <- c(cuadernillos = "cuadernillo_%s.pdf", docente = "cuadernillo_docente_%s.pdf", retro = "retro_%s.pdf")
 generar_pdf_por_version <- function(cfg, ses, S, dir_ses, ids, tipo, plantilla_tex, extra_header = NULL) {
   dd <- file.path(dir_ses, tipo); dir.create(dd)
   objs <- vector("list", cfg$estudiantes)
@@ -399,12 +451,172 @@ generar_pdf_por_version <- function(cfg, ses, S, dir_ses, ids, tipo, plantilla_t
     extra <- if (is.null(extra_header)) list() else extra_header(i)
     x <- exams::exams2pdf(ses$ejercicios, n = 1, seed = S[i, , drop = FALSE], template = plantilla_tex,
                           header = cabecera(cfg, ses, i, extra), texdir = texdir, dir = tmpd, name = "tmp_")
-    destino <- file.path(dd, sprintf(if (tipo == "cuadernillos") "cuadernillo_%s.pdf" else "retro_%s.pdf", ids[i]))
-    mover(file.path(tmpd, "tmp_1.pdf"), destino)
+    destino <- file.path(dd, sprintf(NOMBRE_PDF[[tipo]], ids[i]))
+    mover(file.path(tmpd, nombre_copia("tmp_", 1L, 1L, "pdf")), destino)
     objs[[i]] <- x[[1]]
   }
   names(objs) <- ids
   objs
+}
+
+## ---------------------------------------------------------------------------------------------------------------
+## Word: ninguna imagen ni tabla más ancha que el espacio que le deja su columna
+## ---------------------------------------------------------------------------------------------------------------
+## MEDIDO el 2026-11-14 con el examen real: pandoc calcula el ancho de una imagen contra el ancho ÚTIL DE LA PÁGINA
+## (pgSz menos márgenes), no contra la columna ni contra la sangría de la lista. Con el Word a dos columnas, una imagen
+## con {width=100%} salía a 19,58 cm en una columna de 9,50 cm, y una gráfica de 9,17 cm se salía de los 8,23 cm que deja
+## la sangría de la pregunta. El motor reduce cada imagen al espacio disponible, sin deformarla; nunca la amplía. Con las
+## tablas pasa lo mismo (ver docx_tablas): se les reparte la rejilla para que quepan.
+## Unidades: twips en sectPr y numbering.xml; EMU en los dibujos (1 twip = 635 EMU; 1 cm = 360000 EMU).
+EMU_POR_TWIP <- 635
+
+docx_parte <- function(docx, parte) {
+  x <- suppressWarnings(system2("unzip", c("-p", shQuote(docx), shQuote(parte)), stdout = TRUE, stderr = FALSE))
+  x <- paste(x, collapse = "\n"); Encoding(x) <- "UTF-8"
+  x
+}
+
+attr_num <- function(x, patron) {
+  m <- regmatches(x, regexec(patron, x, perl = TRUE))[[1]]
+  if (length(m) < 2) NA_real_ else as.numeric(m[2])
+}
+
+## Ancho de UNA columna, en twips, leído de la sección del propio documento.
+docx_columna_twips <- function(doc) {
+  sec <- regmatches(doc, regexpr("(?s)<w:sectPr\\b.*?</w:sectPr>", doc, perl = TRUE))
+  if (!length(sec)) stop("el Word no trae sectPr")
+  w <- attr_num(sec, '<w:pgSz\\b[^>]*\\bw:w="(\\d+)"')
+  izq <- attr_num(sec, '<w:pgMar\\b[^>]*\\bw:left="(\\d+)"'); der <- attr_num(sec, '<w:pgMar\\b[^>]*\\bw:right="(\\d+)"')
+  n <- attr_num(sec, '<w:cols\\b[^>]*\\bw:num="(\\d+)"'); esp <- attr_num(sec, '<w:cols\\b[^>]*\\bw:space="(\\d+)"')
+  if (is.na(n)) n <- 1
+  if (is.na(esp)) esp <- 720                       # separación por defecto de Word
+  if (anyNA(c(w, izq, der))) stop("el Word no declara pgSz o pgMar")
+  (w - izq - der - esp * (n - 1)) / n
+}
+
+## Sangría izquierda (twips) del párrafo: la suya propia (w:ind) o la del nivel de su lista en numbering.xml.
+## Si numbering.xml no la declara, la regla de pandoc: 720 twips por nivel (MEDIDO: 720, 1440, 2160…).
+docx_sangria_twips <- function(parrafo, numbering) {
+  ppr <- regmatches(parrafo, regexpr("(?s)<w:pPr>.*?</w:pPr>", parrafo, perl = TRUE))
+  if (!length(ppr)) return(0)
+  propia <- attr_num(ppr, '<w:ind\\b[^>]*\\bw:left="(\\d+)"')
+  if (!is.na(propia)) return(propia)
+  ilvl <- attr_num(ppr, '<w:ilvl\\b[^>]*\\bw:val="(\\d+)"'); numid <- attr_num(ppr, '<w:numId\\b[^>]*\\bw:val="(\\d+)"')
+  if (is.na(ilvl) || is.na(numid)) return(0)
+  regla <- 720 * (ilvl + 1)
+  num <- regmatches(numbering, regexpr(sprintf('(?s)<w:num\\b[^>]*\\bw:numId="%d"[^>]*>.*?</w:num>', numid), numbering, perl = TRUE))
+  if (!length(num)) return(regla)
+  abs_id <- attr_num(num, '<w:abstractNumId\\b[^>]*\\bw:val="(\\d+)"')
+  if (is.na(abs_id)) return(regla)
+  ab <- regmatches(numbering, regexpr(sprintf('(?s)<w:abstractNum\\b[^>]*\\bw:abstractNumId="%d"[^>]*>.*?</w:abstractNum>', abs_id),
+                                      numbering, perl = TRUE))
+  if (!length(ab)) return(regla)
+  lvl <- regmatches(ab, regexpr(sprintf('(?s)<w:lvl\\b[^>]*\\bw:ilvl="%d"[^>]*>.*?</w:lvl>', ilvl), ab, perl = TRUE))
+  if (!length(lvl)) return(regla)
+  izq <- attr_num(lvl, '<w:ind\\b[^>]*\\bw:left="(\\d+)"')
+  if (is.na(izq)) regla else izq
+}
+
+PATRON_PARRAFO <- "(?s)<w:p(?: [^>]*)?>.*?</w:p>"
+PATRON_DIBUJO <- "(?s)<w:drawing>.*?</w:drawing>"
+
+## Una fila por imagen: ancho y alto (EMU) y el espacio disponible en su columna (EMU). La usan el motor y la guarda C1.
+docx_imagenes <- function(docx) {
+  doc <- docx_parte(docx, "word/document.xml"); numbering <- docx_parte(docx, "word/numbering.xml")
+  col <- docx_columna_twips(doc)
+  filas <- list()
+  for (par in regmatches(doc, gregexpr(PATRON_PARRAFO, doc, perl = TRUE))[[1]]) {
+    dib <- regmatches(par, gregexpr(PATRON_DIBUJO, par, perl = TRUE))[[1]]
+    if (!length(dib)) next
+    disp <- (col - docx_sangria_twips(par, numbering)) * EMU_POR_TWIP
+    for (d in dib) filas[[length(filas) + 1L]] <- data.frame(
+      cx = attr_num(d, '<wp:extent\\b[^>]*\\bcx="(\\d+)"'), cy = attr_num(d, '<wp:extent\\b[^>]*\\bcy="(\\d+)"'), disponible = disp)
+  }
+  if (length(filas)) do.call(rbind, filas) else data.frame(cx = numeric(0), cy = numeric(0), disponible = numeric(0))
+}
+
+PATRON_TABLA <- "(?s)<w:tbl>.*?</w:tbl>"
+
+## Una fila por tabla: ancho (suma de su rejilla), sangría y espacio disponible en su columna, en twips.
+## MEDIDO el 2026-11-14: pandoc escribe toda tabla con una rejilla de 7920 twips (13,97 cm) repartida por igual entre sus
+## columnas, más la sangría de la lista (720). En una columna de 9,50 cm, LibreOffice muestra la tabla cortada: a la de
+## la pregunta 3 del examen real (4 columnas) solo se le veía una columna de datos.
+docx_tablas <- function(docx) {
+  doc <- docx_parte(docx, "word/document.xml")
+  col <- docx_columna_twips(doc)
+  tabs <- regmatches(doc, gregexpr(PATRON_TABLA, doc, perl = TRUE))[[1]]
+  if (!length(tabs)) return(data.frame(ancho = numeric(0), sangria = numeric(0), disponible = numeric(0)))
+  do.call(rbind, lapply(tabs, function(t) {
+    g <- as.numeric(regmatches(t, gregexpr('(?<=<w:gridCol w:w=")\\d+', t, perl = TRUE))[[1]])
+    ind <- attr_num(t, '<w:tblInd\\b[^>]*\\bw:w="(\\d+)"'); if (is.na(ind)) ind <- 0
+    data.frame(ancho = sum(g), sangria = ind, disponible = col - ind)
+  }))
+}
+
+reducir_imagenes <- function(doc, numbering, col) {
+  reducidas <- 0L
+  mp <- gregexpr(PATRON_PARRAFO, doc, perl = TRUE)
+  pars <- regmatches(doc, mp)[[1]]
+  for (k in seq_along(pars)) {
+    md <- gregexpr(PATRON_DIBUJO, pars[k], perl = TRUE)
+    dib <- regmatches(pars[k], md)[[1]]
+    if (!length(dib)) next
+    disp <- floor((col - docx_sangria_twips(pars[k], numbering)) * EMU_POR_TWIP)
+    for (j in seq_along(dib)) {
+      cx <- attr_num(dib[j], '<wp:extent\\b[^>]*\\bcx="(\\d+)"'); cy <- attr_num(dib[j], '<wp:extent\\b[^>]*\\bcy="(\\d+)"')
+      if (is.na(cx) || is.na(cy) || cx <= disp) next
+      viejo <- sprintf('cx="%.0f" cy="%.0f"', cx, cy)
+      nuevo <- sprintf('cx="%.0f" cy="%.0f"', disp, round(cy * disp / cx))
+      if (!grepl(viejo, dib[j], fixed = TRUE)) stop("Word: no se encontró ", viejo, " en el dibujo ", j)
+      dib[j] <- gsub(viejo, nuevo, dib[j], fixed = TRUE)      # wp:extent y a:ext llevan el mismo par
+      reducidas <- reducidas + 1L
+    }
+    regmatches(pars[k], md) <- list(dib)
+  }
+  if (reducidas) regmatches(doc, mp) <- list(pars)
+  list(doc = doc, n = reducidas)
+}
+
+## Reparte la rejilla de cada tabla que no cabe, en la misma proporción, y fija su ancho (w:tblW) en el nuevo total.
+reducir_tablas <- function(doc, col) {
+  reducidas <- 0L
+  mt <- gregexpr(PATRON_TABLA, doc, perl = TRUE)
+  tabs <- regmatches(doc, mt)[[1]]
+  for (k in seq_along(tabs)) {
+    mg <- gregexpr('<w:gridCol w:w="\\d+"', tabs[k], perl = TRUE)
+    cols <- regmatches(tabs[k], mg)[[1]]
+    if (!length(cols)) next
+    g <- as.numeric(sub('.*"(\\d+)"$', "\\1", cols))
+    ind <- attr_num(tabs[k], '<w:tblInd\\b[^>]*\\bw:w="(\\d+)"'); if (is.na(ind)) ind <- 0
+    disp <- col - ind
+    if (sum(g) <= disp) next
+    g2 <- floor(g * disp / sum(g))
+    regmatches(tabs[k], mg) <- list(sprintf('<w:gridCol w:w="%.0f"', g2))
+    tabs[k] <- sub("<w:tblW\\b[^>]*/>", sprintf('<w:tblW w:type="dxa" w:w="%.0f" />', sum(g2)), tabs[k], perl = TRUE)
+    reducidas <- reducidas + 1L
+  }
+  if (reducidas) regmatches(doc, mt) <- list(tabs)
+  list(doc = doc, n = reducidas)
+}
+
+## Reduce en el propio .docx lo que no cabe en su columna. Devuelve cuántas imágenes y cuántas tablas redujo.
+ajustar_docx_a_columna <- function(docx) {
+  doc <- docx_parte(docx, "word/document.xml"); numbering <- docx_parte(docx, "word/numbering.xml")
+  col <- docx_columna_twips(doc)
+  ri <- reducir_imagenes(doc, numbering, col)
+  rt <- reducir_tablas(ri$doc, col)
+  hecho <- c(imagenes = ri$n, tablas = rt$n)
+  if (!sum(hecho)) return(hecho)
+  td <- tempfile(); dir.create(td)
+  sistema("unzip", c("-q", "-o", shQuote(docx), "-d", shQuote(td)))
+  writeBin(charToRaw(enc2utf8(rt$doc)), file.path(td, "word", "document.xml"))
+  nuevo <- tempfile(fileext = ".docx")
+  ## [Content_Types].xml primero, como lo escribe Word; -X: sin atributos extra del sistema de archivos
+  sistema("sh", c("-c", shQuote(sprintf("cd %s && zip -q -X %s '[Content_Types].xml' && zip -q -X -r %s . -x '[Content_Types].xml'",
+                                        shQuote(td), shQuote(nuevo), shQuote(nuevo)))))
+  if (!file.copy(nuevo, docx, overwrite = TRUE)) stop("no se pudo reescribir ", docx)
+  unlink(c(td, nuevo), recursive = TRUE)
+  hecho
 }
 
 generar_word <- function(cfg, ses, S, dir_ses, ids) {
@@ -419,7 +631,9 @@ generar_word <- function(cfg, ses, S, dir_ses, ids) {
                              solution = FALSE, resolution = 300, options = paste0("--reference-doc=", ref),
                              header = list(ID = id_version(cfg$fecha, ses$startid, i), Titulo = cfg$titulo),
                              dir = tmpd, name = "tmp_")
-    mover(file.path(tmpd, "tmp_1.docx"), file.path(dw, paste0("cuadernillo_", ids[i], ".docx")))
+    destino <- file.path(dw, paste0("cuadernillo_", ids[i], ".docx"))
+    mover(file.path(tmpd, nombre_copia("tmp_", 1L, 1L, "docx")), destino)
+    ajustar_docx_a_columna(destino)
     objs[[i]] <- x[[1]]
   }
   names(objs) <- ids
@@ -458,7 +672,8 @@ generar_sesion <- function(cfg, ses) {
   writeLines(cfg$salidas, file.path(dir_ses, "salidas.txt"))
   fp <- etapa("pre-vuelo", preflight(cfg, ses, S, dir_ses))
   firmas <- list(ids = NULL, ids_nops = NULL, ejercicios = ses$ejercicios, salidas = cfg$salidas, huella = list(),
-                 clave = list(), preflight = fp, startid = ses$startid, fecha = cfg$fecha)
+                 clave = list(), preflight = fp, startid = ses$startid, fecha = cfg$fecha,
+                 partir_preguntas = cfg$partir_preguntas, testigos = NULL)
   if (length(unlist(fp))) {
     registrar("PRE-VUELO EN ROJO: no se genera nada. ", paste(names(fp)[lengths(fp) > 0], collapse = ", "))
     firmas$ids <- vapply(seq_len(N), function(i) id_version(cfg$fecha, ses$startid, i), "")
@@ -486,19 +701,36 @@ generar_sesion <- function(cfg, ses) {
     etapa("clave", escribir_clave(cfg, ses, xc, dir_ses))
   }
   if ("cuadernillo" %in% cfg$salidas) {
-    xa <- etapa("cuadernillos", generar_pdf_por_version(cfg, ses, S, dir_ses, ids, "cuadernillos",
-                                                       plantilla("cuadernillo_oficio_2col.tex")))
+    ## La impresión a doble columna da SIEMPRE dos cuadernillos por versión, con la misma plantilla y las mismas semillas:
+    ## el del estudiante (sin retroalimentación) y el del docente (con ella y con la clave). Decisión del profesor, 2026-11-14.
+    partir <- list(Partir = if (cfg$partir_preguntas) "1" else "0")
+    xa <- etapa("cuadernillos del estudiante", generar_pdf_por_version(cfg, ses, S, dir_ses, ids, "cuadernillos",
+                  plantilla("cuadernillo_oficio_2col.tex"), extra_header = function(i) partir))
     guardar("cuadernillo", xa)
     sistema("pdfunite", c(shQuote(file.path(dir_ses, "cuadernillos", paste0("cuadernillo_", ids, ".pdf"))),
                           shQuote(file.path(dir_ses, "cuadernillos", "cuadernillos_imprimir.pdf"))))
+    cld <- firmas$clave$nops %||% firmas$clave$cuadernillo
+    xd <- etapa("cuadernillos del docente", generar_pdf_por_version(cfg, ses, S, dir_ses, ids, "docente",
+                  plantilla("cuadernillo_oficio_2col.tex"),
+                  extra_header = function(i) c(partir, list(Docente = "1", Clave = clave_texto(cld[i, ])))))
+    guardar("docente", xd)
+    sistema("pdfunite", c(shQuote(file.path(dir_ses, "docente", paste0("cuadernillo_docente_", ids, ".pdf"))),
+                          shQuote(file.path(dir_ses, "docente", "docente_imprimir.pdf"))))
   }
+  ## testigos de la retroalimentación (C15): de cualquier salida de exams2pdf o del Word, que traen la Solution en el objeto
+  xt <- if ("cuadernillo" %in% cfg$salidas) xa else NULL
   if ("retro" %in% cfg$salidas) {
     cl <- firmas$clave$nops %||% firmas$clave$cuadernillo
     xr <- etapa("retroalimentación", generar_pdf_por_version(
       cfg, ses, S, dir_ses, ids, "retro", plantilla("retro_celular.tex"),
       extra_header = function(i) if (is.null(cl)) list() else list(Clave = clave_texto(cl[i, ]))))
     guardar("retro", xr)
+    if (is.null(xt)) xt <- xr
   }
+  if (!is.null(xt)) firmas$testigos <- lapply(xt, function(v) {
+    preguntas <- solo_letras(unlist(lapply(v, function(e) c(e$question, unlist(e$questionlist)))))
+    lapply(v, testigos_solucion, excluir = preguntas)
+  })
   if ("word" %in% cfg$salidas) {
     xw <- etapa("Word", generar_word(cfg, ses, S, dir_ses, ids))
     guardar("word", xw)

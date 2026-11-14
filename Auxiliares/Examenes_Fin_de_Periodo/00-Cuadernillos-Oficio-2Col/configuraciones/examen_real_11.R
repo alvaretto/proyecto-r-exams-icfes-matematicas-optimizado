@@ -3,6 +3,10 @@
 ## Las rutas son relativas a ESTE archivo. La salida queda en salida/examen-real-11/sesion-1/ (git ignora **/salida/).
 ## La semilla 2025 reproduce la matriz de las muestras del 2026-11-13 (el motor hace set.seed(semilla + número de sesión)).
 ## Los 11 ejercicios son schoice (medido: clave única en 33 de 33 pares).
+## La salida «cuadernillo» da dos PDF por versión: el del estudiante (cuadernillos/) y el del docente, con la clave y la
+## retroalimentación (docente/).
+## Opcional, dentro de config: partir_preguntas = FALSE deja cada pregunta entera en una columna. Por defecto (TRUE) se
+## parten, que es como caben más: este examen ocupa 4 caras partiendo, y 6 en dos de sus tres versiones con las enteras.
 ejercicios_11 <- c(
   "../../02-Examen_Fin_de_Periodo_2/01-S2-2025-SEDQ-grafico_circular_bienes_v0.Rmd",
   "../../02-Examen_Fin_de_Periodo_2/11_C01_G09_2020_Tipo1.Rmd",

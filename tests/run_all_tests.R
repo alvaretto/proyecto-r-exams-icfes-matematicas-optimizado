@@ -443,6 +443,13 @@ suites <- list(
     watch = c("post-exams2-validation", "workflow-state", "test_post_exams2_cwd")
   ),
   list(
+    nombre = "Cuadernillos oficio 2 columnas (Regla #26)",
+    archivo = "tests/testthat/test_cuadernillos_oficio.R",
+    critico = TRUE,
+    watch = c("00-Cuadernillos-Oficio-2Col", "cuadernillo_oficio_2col", "retro_celular",
+              "pandoc_cuadernillo", "referencia_oficio_2col", "test_cuadernillos_oficio")
+  ),
+  list(
     nombre = "Documento de cobertura sincronizado: tabla de suites generada desde el runner, fases y version del hook",
     archivo = "tests/testthat/test_doc_suites_sincronizada.R",
     critico = TRUE,

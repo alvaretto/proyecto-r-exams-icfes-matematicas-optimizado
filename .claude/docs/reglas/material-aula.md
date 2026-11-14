@@ -52,6 +52,40 @@ después se hace el commit. Las copias de cada ejercicio (`pcielo.tex`, `solpcie
 oficial: cuando ella cambia, se rehacen, y la sección `uso` del ejercicio lo detecta si no se hizo (`USO_PLANTILLA` compara
 la plantilla local con la oficial en disco).
 
+Desde el 2026-11-14 son también versión oficial las cuatro plantillas del motor de cuadernillos en oficio a dos columnas
+(`Auxiliares/Examenes_Fin_de_Periodo/00-Cuadernillos-Oficio-2Col/generar_cuadernillos.R`): `cuadernillo_oficio_2col.tex`
+(cuadernillo del estudiante), `retro_celular.tex` (retroalimentación de 90 × 160 mm), `pandoc_cuadernillo.tex` y
+`referencia_oficio_2col.docx` (Word). El profesor decidió promoverlas «ya, al terminar el proyecto», sin condición de aula;
+se copiaron como archivos nuevos y el motor las lee de `perifericos/`. Sus mutantes dañan una copia en un directorio temporal
+(`CUADERNILLOS_PLANTILLAS`), nunca las oficiales.
+
+### Numeración de las preguntas: listas propias, no `enumerate`
+
+Cuando una lista numerada de un ejercicio no empieza en 1 (por ejemplo «3. Sumar…»), pandoc escribe en el `.tex`
+`\setcounter{enumi}{N}`. Una plantilla que numera las preguntas con `enumerate` usa ese mismo contador: el número de la
+pregunta siguiente cambia, y la lista del ejercicio sale con la etiqueta de segundo nivel («a)») en lugar de los números que
+escribió el autor. Medido el 2026-11-14:
+
+| Plantilla | Antes | Después |
+|---|---|---|
+| `retro_celular.tex`, examen real de 11 preguntas | 1, 2, 3, **2**, 4, 5, 6, 7, 8, 9 (la clave del encabezado decía 1 a 11) | 1 a 11 |
+| `solpcielo.tex`, tres preguntas, la primera con las listas «3., 4.» y «5.» | 1, **5**, **6**; la lista como «a), b)» | 1, 2, 3; la lista como «3., 4.» |
+
+Por instrucción del profesor del 2026-11-14 («Corregirla ahora»), `solpcielo.tex` y `solpcielo_cloze.tex` numeran con dos
+listas propias de `enumitem` (`\newlist{preguntas}{enumerate}{1}` y `\newlist{opciones}{enumerate}{1}`), igual que las
+plantillas del cuadernillo. Las etiquetas de las preguntas («1.») y de las opciones («a)») no cambian. Comprobado con ocho
+conjuntos de ejercicios reales, página a página, a 100 ppp: los cinco ejercicios de los tres subproyectos que copian estas
+plantillas (`serie-seno-aproximacion-n3`, `diagrama-venn-juegos-mesa-n3` y `vueltas-llanta-perimetro-n4`, SCHOICE y
+CLOZE) dan 0 píxeles distintos; lo único que cambia es la etiqueta de las listas numeradas y el número de la pregunta
+siguiente. La plantilla local `diagrama-venn-juegos-mesa-n3/solpcielo_una_por_pagina.tex` se rehízo desde la oficial nueva
+y su verificador volvió a su estado aprobado (`verificar_espacio.R todo`, exit 4, sin rojos en sus sondas).
+
+Lo que queda igual: de los 144 archivos `solpcielo*.tex` del repo, 131 ya eran versiones anteriores a la oficial (34 en
+`03-En-Produccion/`, que no se toca) y 10 son copias idénticas de la oficial anterior, en esos tres subproyectos. No se
+rehicieron: sus ejercicios dan el mismo PDF con una y con otra, y la aprobación sellada del CLOZE del diagrama de Venn
+incluye el md5 de su plantilla local. Se rehacen en el próximo ciclo de cada ejercicio. `pcielo.tex` y `pcielo_nosol.tex` no
+tienen el defecto: las convierte pandoc, que no comparte contadores entre listas.
+
 ### Plantilla local de una pregunta por página
 
 Copia de la plantilla oficial con dos cambios: una línea de comentario que dice de dónde sale y `\clearpage` al empezar el
@@ -76,6 +110,41 @@ for (pdf in list.files(dir_salida, paste0("^", nombre_nops, "[0-9]+\\.pdf$"), fu
 ```
 
 Se imprime el `*_oficio.pdf` a tamaño real. Falta la prueba con papel y escáner reales: la del 2026-11-06 fue simulada.
+
+### Examen con cuadernillo propio (hoja NOPS aparte)
+
+Para un examen de fin de periodo o un simulacro, el estudiante recibe un cuadernillo en oficio a dos columnas y, aparte, la
+hoja de respuestas NOPS. Lo arma el motor `Auxiliares/Examenes_Fin_de_Periodo/00-Cuadernillos-Oficio-2Col/generar_cuadernillos.R`
+y lo vigila `verificar_cuadernillos.R` (guardas C1 a C15; todas menos C10, que es la revisión visual, con su mutante). Cinco normas salen de sus mediciones
+(2026-11-13 y 2026-11-14, R/exams 2.4.5, pandoc 3.11):
+
+- **El NOPS va con `twocolumn = FALSE`.** Es una excepción al procedimiento «NOPS en oficio» de arriba, que pide
+  `twocolumn = TRUE` cuando las preguntas se leen en el PDF de `exams2nops()`. Aquí ese PDF solo aporta la hoja (páginas 1 y
+  2, con `duplex = TRUE`; la segunda sale en blanco), y `twocolumn = TRUE` aborta con una tabla Markdown: «longtable not in
+  1-column mode».
+- **Una sola matriz de semillas** (versiones × preguntas) para la hoja, los dos cuadernillos, la clave, la retroalimentación
+  y el Word: `exams2nops(seed = S)` y, por versión, `exams2pdf(seed = S[i, , drop = FALSE])`. El número de versión impreso es el
+  ID del NOPS (`aammdd` + cinco cifras desde `startid`). Dos sesiones con la misma fecha llevan `startid` distintos (1 y 101)
+  para que sus IDs no choquen. Medido con 11 ejercicios reales y 3 versiones: el texto normalizado y la clave coinciden en
+  las cuatro salidas (33 de 33).
+- **Fuga entre ejercicios.** R/exams teje todos los ejercicios de un examen en una misma sesión de R. Un `.Rmd` que hace
+  `knit_engines$set(python = …)` cambia el motor para los siguientes: seis ejercicios apagaban los chunks `{python}` de los
+  que venían después y la figura desaparecía sin aviso. `validar_stresstest.R` mide cada archivo por separado y no lo ve; se
+  ve con el examen completo (guarda C12: escaneo del `.Rmd` y comparación del estado de knitr antes y después de cada
+  ejercicio). El remedio va en el chunk, nunca con un `knit_engines$set()` global; la única llamada global admitida es la que
+  restaura el motor: `knit_engines$set(python = reticulate::eng_python)`.
+- **Estudiante y docente a la vez** (instrucción del profesor, 2026-11-14). Pedir el cuadernillo produce siempre dos PDF por
+  versión, con la misma plantilla y las mismas semillas: el del estudiante, sin retroalimentación, y el del docente, con la
+  clave en la primera página y la retroalimentación debajo de cada pregunta. La guarda C15 comprueba con trozos de cada
+  Solution que ninguna llega al del estudiante y que todas están en el del docente. Medido con el examen de 11 preguntas:
+  4 caras el del estudiante y 8 el del docente; con una sesión de 25 preguntas, 8 y 16.
+- **Las preguntas se parten por defecto** (instrucción del profesor, 2026-11-14: «Priorizar partirlas, teniendo en cuenta la
+  LEY de acomodar la mayor cantidad de preguntas respetando los estándares de calidad visual»). `partir_preguntas = FALSE`
+  deja cada pregunta entera en una columna. Medido: el examen de 11 preguntas pasa de 4 caras a 6 en dos de sus tres
+  versiones; y un ítem cuya pregunta mide casi una columna (12 versiones del diagrama de Venn) no cabe en la primera página:
+  la tinta llega a 7,0 mm del borde inferior y la guarda C3 lo reprueba.
+
+El uso, los tiempos medidos y los límites conocidos del motor están en el §10 de su `INVESTIGACION.md`.
 
 ### CLOZE impreso con gráficas rotuladas
 
@@ -161,3 +230,4 @@ en el próximo ciclo de su ejercicio: el de `diagrama-venn-juegos-mesa-n3/Cloze`
 | Versión | Fecha | Cambio |
 |---|---|---|
 | 1.0 | 2026-11-09 | Regla nueva. Sale de `diagrama-venn-juegos-mesa-n3` y de dos decisiones del profesor: `perifericos/` en disco es la versión oficial y recupera la semilla, el tope de 100, `\pandocbounded` y `none`, y el cuestionario sin internet. |
+| 1.2 | 2026-11-14 | Examen con cuadernillo propio y hoja NOPS aparte: `twocolumn = FALSE` como excepción declarada, una sola matriz de semillas con `startid` por sesión, y la fuga del estado de knitr entre ejercicios. Sale del motor de `00-Cuadernillos-Oficio-2Col/`. Sus cuatro plantillas pasan a ser versión oficial en `perifericos/`. `solpcielo.tex` y `solpcielo_cloze.tex` numeran las preguntas con listas propias, por instrucción del profesor. El cuadernillo sale siempre en dos versiones, estudiante y docente, y las preguntas se parten por defecto (`partir_preguntas`), también por instrucción del profesor. |

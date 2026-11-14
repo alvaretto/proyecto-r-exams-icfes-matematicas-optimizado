@@ -1,10 +1,17 @@
 ```{r data_generation, echo = FALSE, results = "hide"}
 ## Fixture TikZ: la figura sale vectorial en exams2pdf y en PNG en exams2pandoc (match_exams_device).
 library(exams)
-base <- sample(3:7, 1)
-altura <- sample(2:4, 1)
+## Las cuatro opciones son distintas por construcción: se excluyen los pares con (base - 2) * (altura - 2) = 4, que son
+## (4, 4) y (6, 3). En ellos el área es igual al perímetro y la mitad del área es igual a la suma de los lados
+## (medido el 2026-11-14: R/exams avisaba «duplicated items in question list»).
+pares <- expand.grid(base = 3:7, altura = 2:4)
+pares <- pares[(pares$base - 2) * (pares$altura - 2) != 4, ]
+k <- sample(nrow(pares), 1)
+base <- pares$base[k]
+altura <- pares$altura[k]
 area <- base * altura
 opciones <- c(area, 2 * (base + altura), base + altura, area / 2)
+stopifnot(!anyDuplicated(opciones))
 sol <- c(TRUE, FALSE, FALSE, FALSE)
 fig_id <- paste(sample(c(0:9, letters[1:6]), 6, replace = TRUE), collapse = "")
 tz <- sprintf(paste0("\\begin{tikzpicture}\\draw[thick] (0,0) rectangle (%d,%d);",

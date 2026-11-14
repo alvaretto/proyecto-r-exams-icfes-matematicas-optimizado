@@ -5,7 +5,7 @@
 **Antes de editar un `.Rmd`:** entender el error, verificar la solución en ejemplos funcionales (`A-Produccion/03-En-Produccion/Ejemplos-Funcionales-Rmd/`, inmutables), no hacer cambios experimentales, validar los 4 formatos (HTML, PDF, DOCX, NOPS).
 
 ## Nunca
-1. `include_tikz()` con `markup="tex"` ni ramificar con `is_latex_output()`: esa función es FALSE también en `exams2pdf()`/`exams2nops()` (RAMA MUERTA; pierde la figura en PDF). Usar `include_tikz(..., format = "png", markup = "markdown")`.
+1. `include_tikz()` con `markup="tex"` ni ramificar con `is_latex_output()`: esa función es FALSE también en `exams2pdf()`/`exams2nops()` (RAMA MUERTA; pierde la figura en PDF). Usar `include_tikz(..., format = match_exams_device(), markup = "markdown")` (PDF vectorial en `exams2pdf()`/`exams2nops()`; PNG en Word y HTML; SVG o PNG en Moodle; medido el 2026-11-13) o `format = "png"`.
 2. Mezclar Python/R sin validar ambos.
 3. Menos de **100 versiones únicas sobre 150 renders** (`exams2html(n = 150)`). Umbral único desde 2026-11-13: sustituye a «250 de 300» y a «200 de 200».
 4. Omitir alguno de los 4 formatos. 5. Modificar ejemplos funcionales.
