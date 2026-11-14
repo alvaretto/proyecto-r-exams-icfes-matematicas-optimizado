@@ -1,0 +1,37 @@
+\documentclass{article}
+
+\usepackage{graphicx,xcolor,verbatim,url,fancyvrb}
+\usepackage{amsmath,amssymb,booktabs,longtable,textcomp,eurosym,latexsym}
+
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\pandocbounded}[1]{#1}
+\newcounter{none}
+\def\LTcaptype{none}
+
+\begin{document}
+
+%% Plantilla del Word del motor generar_cuadernillos.R (exams2pandoc, type = "docx").
+%% Deriva de system.file("pandoc", "plain.tex", package = "exams"): se conservan las 9 líneas «#-» que exige
+%% exams2pandoc, y quedan VACÍOS los bloques del encabezado de la pregunta y de la Solution (encabezado, texto y
+%% lista). exams2pandoc sustituye cualquier clave de `header` escrita entre dobles almohadillas, como el título.
+
+\textbf{##Titulo##} \textperiodcentered{} Versión ##ID##
+
+\begin{enumerate}
+#-
+  \item
+#-
+#-
+  ##Question##
+#-
+  \begin{enumerate}[(a)]
+    \item ##Questionlist##
+  \end{enumerate}
+#-
+#-
+#-
+#-
+#-
+\end{enumerate}
+
+\end{document}

@@ -1,8 +1,10 @@
 # Cuadernillos Saber 11 Matemáticas en oficio a doble columna: investigación y propuesta
 
-Fecha: 2026-11-13. Fases 0 a 3 del prompt optimizado. **No hay nada implementado**: hay un prototipo medido en
-`prototipo/` y una propuesta que espera la aprobación del profesor. Las carpetas `01-`, `02-` y `04-`,
-`A-Produccion/perifericos/` y las reglas de `.claude/` no se modificaron.
+Fecha: 2026-11-13. Fases 0 a 3 del prompt optimizado.
+- Estado: hay un prototipo medido en `prototipo/`. La arquitectura del §5 fue APROBADA por el profesor, y su
+  implementación sigue el PRP `PRPs/motor-cuadernillos-oficio-2col.md`.
+- Los 33 `.Rmd` de `01-`, `02-` y `04-` se corrigieron (§4; commit `db6d9cc3`).
+- `A-Produccion/perifericos/` y las reglas de `.claude/` todavía no se modificaron: es tarea del PRP.
 
 Convenciones: **[MEDIDO]** = medido en este equipo (R/exams 2.4.5, pandoc 3.11, pdfTeX de TeX Live 2026);
 **[FUENTE]** = respaldado por la fuente citada; **[NO VERIFICADO]** = no se pudo respaldar.
@@ -285,18 +287,19 @@ Cada guarda lleva un mutante que la haga fallar (p. ej., quitar el `adjustbox` �
 
 ---
 
-## 7. Decisiones abiertas para el profesor
+## 7. Decisiones del profesor (todas cerradas el 2026-11-13)
 
-1. **Formato de la retroalimentación digital.** Un PDF de una columna en tamaño pantalla (se ve en el celular sin
-   internet y se comparte en WhatsApp), o el HTML autocontenido de `webquiz_autocontenido.R`.
-2. **Etiqueta «Escenario:»**. La plantilla oficial la pone en cada pregunta y cuesta una línea por pregunta. El ICFES
-   no la usa. ¿Se conserva?
-3. **Defectos heredados del §4**: ¿se corrigen en las copias de `01-`, `02-` y `04-` antes de usarlas, o solo se
-   bloquean con las guardas C6 y C9?
-4. **Figuras de matplotlib con rótulos < 7 pt**: ¿se regeneran en TikZ todas las que marque C5, o pregunta a pregunta?
-   Para los ejercicios de `A-Produccion/`, regenerar una figura pasa por el Flujo B (reglas #2 y #3).
-5. **Promoción a `perifericos/`**: si la plantilla nueva funciona en el aula, ¿pasa a ser versión oficial (regla #26)?
-6. **Letra**: Helvetica (la de la plantilla oficial) o una sans más cercana a la Tahoma del ICFES.
+Antes eran preguntas abiertas. El profesor las respondió en la sesión del 2026-11-13; se transcribe su respuesta literal.
+
+1. **Formato de la retroalimentación digital**: «PDF tamaño celular», una columna, una por versión, para compartir por
+   WhatsApp. No se imprime.
+2. **Etiqueta «Escenario:»**: «Quitarla». La pregunta empieza con su número, como en el ICFES.
+3. **Defectos heredados del §4**: «Corrige todo». Están corregidos en los 33 `.Rmd` (§4).
+4. **Figuras de matplotlib con rótulos < 7 pt**: «reducir a la columna y, de ser necesario, regenerar la gráfica en
+   TikZ». Hecho: están a tamaño final, vectoriales y legibles en gris (§4).
+5. **Promoción a `perifericos/`**: «Ya, al terminar el proyecto», **sin condición de aula**. La pregunta ofrecía también
+   «Después de usarla en el aula (Recomendado)» y «Nunca».
+6. **Letra**: «Helvetica, como la oficial».
 
 ---
 

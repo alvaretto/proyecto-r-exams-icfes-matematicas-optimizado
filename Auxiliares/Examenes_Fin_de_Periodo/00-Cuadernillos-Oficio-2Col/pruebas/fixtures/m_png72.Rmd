@@ -1,0 +1,41 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## Mutante M5 (C5): PNG de 200 píxeles de ancho estirado al 100 % de la columna (menos de 150 ppi efectivos).
+library(exams)
+alturas <- sample(2:9, 3)
+opciones <- c(sum(alturas), sum(alturas) + 1, sum(alturas) + 2, sum(alturas) + 3)
+sol <- c(TRUE, FALSE, FALSE, FALSE)
+fig_id <- paste(sample(c(0:9, letters[1:6]), 6, replace = TRUE), collapse = "")
+png(paste0("baja_", fig_id, ".png"), width = 200, height = 120, res = 72)
+par(mar = c(2, 2, 1, 1)); barplot(alturas); dev.off()
+```
+
+Question
+========
+¿Cuánto suman las tres barras de la gráfica?
+
+![](baja_`r fig_id`.png){width=100%}
+
+Answerlist
+----------
+* `r opciones[1]`
+* `r opciones[2]`
+* `r opciones[3]`
+* `r opciones[4]`
+
+Solution
+========
+La respuesta correcta es `r opciones[1]`.
+
+Answerlist
+----------
+* Verdadero.
+* Falso.
+* Falso.
+* Falso.
+
+Meta-information
+================
+exname: m_png72
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE

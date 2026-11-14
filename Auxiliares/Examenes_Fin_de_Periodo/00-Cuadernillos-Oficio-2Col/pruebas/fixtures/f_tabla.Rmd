@@ -1,0 +1,46 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## Fixture con tabla Markdown (kable -> longtable de pandoc), con el guard del contador none (regla #20).
+library(exams)
+ventas <- sample(10:40, 3)
+datos <- data.frame(Día = c("Lunes", "Martes", "Miércoles"), Ventas = ventas)
+total <- sum(ventas)
+opciones <- c(total, max(ventas), total + 10, total - 10)
+sol <- c(TRUE, FALSE, FALSE, FALSE)
+```
+
+Question
+========
+```{=latex}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+```
+
+La tabla muestra las ventas de una tienda escolar. ¿Cuántas unidades se vendieron en los tres días?
+
+```{r tabla, echo = FALSE, results = "asis"}
+print(knitr::kable(datos, format = "markdown", align = "lc"))
+```
+
+Answerlist
+----------
+* `r opciones[1]`
+* `r opciones[2]`
+* `r opciones[3]`
+* `r opciones[4]`
+
+Solution
+========
+Se suman las ventas de los tres días: `r paste(ventas, collapse = " + ")` = `r total`.
+
+Answerlist
+----------
+* Verdadero.
+* Falso: es solo el día de más ventas.
+* Falso: sobran diez.
+* Falso: faltan diez.
+
+Meta-information
+================
+exname: f_tabla
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE

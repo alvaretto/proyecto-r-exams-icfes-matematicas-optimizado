@@ -1,0 +1,122 @@
+%% Retroalimentación para el celular: página de 90 x 160 mm, una columna, con la Solution de cada pregunta.
+%% Plantilla del motor generar_cuadernillos.R. No se imprime: se comparte por WhatsApp (decisión del profesor).
+%% Deriva de plantillas/cuadernillo_oficio_2col.tex. Cambios frente a ella:
+%%   - papel 90 x 160 mm, márgenes de 4 mm, 11 pt, una columna;
+%%   - la Solution SE MUESTRA, con el rótulo «Retroalimentación»;
+%%   - encabezado de la página 1 con título, versión y clave (macro \Clave, pasada por `header`);
+%%   - sin número par de caras (no se imprime).
+\documentclass[11pt]{article}
+
+%% packages
+\usepackage[papersize={90mm,160mm},margin=4mm,tmargin=9mm,headsep=2mm,headheight=12pt,footskip=4mm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,latexsym,cancel,amsthm}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage[nogin]{Sweave}
+\usepackage{color,verbatim,url,xargs,tabu,graphicx,booktabs,array,calc}
+\pgfplotsset{compat=1.17}
+\usepackage{mathrsfs}
+\usepackage{tkz-euclide}
+\usetikzlibrary{babel}
+\usepackage[spanish]{babel}
+\usepackage{ragged2e}
+\usetikzlibrary{shapes,arrows,chains,matrix,calc,trees,positioning,fit}
+\usepgfplotslibrary{patchplots}
+\usepackage[export]{adjustbox}
+\usepackage{float}
+\floatplacement{figure}{H}
+\floatplacement{table}{H}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{hyperref}
+\RaggedRight
+
+%% imágenes: nunca más anchas que la columna (mismo envoltorio que el cuadernillo; Sweave con [nogin], ver allá)
+\let\includegraphicsoriginal\includegraphics
+\renewcommand{\includegraphics}[2][]{\adjustbox{max width=\linewidth,\ifvmode center\fi}{\includegraphicsoriginal[#1]{#2}}}
+\usepackage{etoolbox}
+\AtBeginEnvironment{figure}{\renewcommand{\caption}[2][]{}\centering}
+
+%% tablas de pandoc (longtable) como tabular limitado al ancho de la columna (82 mm)
+\usepackage{longtable}
+\let\origbottomrule\bottomrule
+\renewenvironment{longtable}[2][]{%
+  \par\smallskip\centering
+  \def\endhead{}\def\endfirsthead{}\def\endfoot{}\def\endlastfoot{}%
+  \def\bottomrule{}%
+  \begin{adjustbox}{max width=\linewidth}\begin{tabular}{#2}}{%
+  \origbottomrule\end{tabular}\end{adjustbox}\par\smallskip}
+
+%% new environments
+\newenvironment{question}{\item}{}
+\newenvironment{solution}{\par\medskip\textbf{Retroalimentación}\par}{}
+\newenvironment{answerlist}{\renewcommand{\labelenumi}{(\alph{enumi})}\begin{enumerate}}{\end{enumerate}}
+\setlist[enumerate,1]{leftmargin=*,itemsep=10pt plus 2pt,topsep=0pt}
+\setlist[enumerate,2]{itemsep=1pt,topsep=2pt,parsep=0pt}
+
+%% paragraphs
+\setlength{\parskip}{0.5ex plus0.1ex minus0.1ex}
+\setlength{\parindent}{0em}
+
+%% compatibility with pandoc
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\providecommand{\pandocbounded}[1]{#1}
+\makeatletter\@ifundefined{c@none}{\newcounter{none}}{}\makeatother
+\setcounter{secnumdepth}{0}
+
+%% fonts: Helvetica
+\usepackage{helvet}
+\IfFileExists{sfmath.sty}{\RequirePackage[helvet]{sfmath}}{}
+\renewcommand{\sfdefault}{phv}
+\renewcommand{\rmdefault}{phv}
+
+%% new commands (exams2pdf los escribe desde `header`; el motor escapa los valores con escapar_latex())
+\makeatletter
+\newcommand{\ID}[1]{\def\@ID{#1}}
+\newcommand{\Date}[1]{\def\@Date{#1}}
+\newcommand{\Titulo}[1]{\def\@Titulo{#1}}
+\newcommand{\Institucion}[1]{\def\@Institucion{#1}}
+\newcommand{\Sesion}[1]{\def\@Sesion{#1}}
+\newcommand{\Clave}[1]{\def\@Clave{#1}}
+\ID{00000000000}
+\Date{YYYY-MM-DD}
+\Titulo{Evaluación de Matemáticas}
+\Institucion{}
+\Sesion{}
+\Clave{}
+
+%% \exinput{header}
+
+\newcommand{\myID}{\@ID}
+\newcommand{\myDate}{\@Date}
+\newcommand{\myTitulo}{\@Titulo}
+\newcommand{\myInstitucion}{\@Institucion}
+\newcommand{\mySesion}{\ifx\@Sesion\@empty\else\ \textperiodcentered\ \@Sesion\fi}
+\newcommand{\myClave}{\@Clave}
+\makeatother
+
+%% headings
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\scriptsize Versión \myID}
+\fancyhead[R]{\scriptsize \thepage{} de \pageref*{LastPage}}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\begin{document}
+
+{\sffamily
+\textbf{\myTitulo}\mySesion\par
+Versión \textbf{\myID} \textperiodcentered{} \myDate\par
+\smallskip
+Clave: \myClave\par
+\medskip\hrule\medskip}
+
+\begin{enumerate}
+
+%% \exinput{exercises}
+
+\end{enumerate}
+
+\end{document}

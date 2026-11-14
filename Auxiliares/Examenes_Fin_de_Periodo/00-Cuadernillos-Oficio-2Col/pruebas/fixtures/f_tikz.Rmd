@@ -1,0 +1,47 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## Fixture TikZ: la figura sale vectorial en exams2pdf y en PNG en exams2pandoc (match_exams_device).
+library(exams)
+base <- sample(3:7, 1)
+altura <- sample(2:4, 1)
+area <- base * altura
+opciones <- c(area, 2 * (base + altura), base + altura, area / 2)
+sol <- c(TRUE, FALSE, FALSE, FALSE)
+fig_id <- paste(sample(c(0:9, letters[1:6]), 6, replace = TRUE), collapse = "")
+tz <- sprintf(paste0("\\begin{tikzpicture}\\draw[thick] (0,0) rectangle (%d,%d);",
+  "\\node[below] at (%g,0) {%d cm};\\node[left] at (0,%g) {%d cm};\\end{tikzpicture}"),
+  base, altura, base / 2, base, altura / 2, altura)
+```
+
+Question
+========
+El rectángulo de la figura tiene las medidas indicadas. ¿Cuál es su área?
+
+```{r figura, echo = FALSE, results = "asis"}
+include_tikz(tz, name = paste0("rectangulo_", fig_id), format = match_exams_device(),
+  markup = "markdown", width = "5cm")
+```
+
+Answerlist
+----------
+* `r opciones[1]` cm²
+* `r opciones[2]` cm²
+* `r opciones[3]` cm²
+* `r opciones[4]` cm²
+
+Solution
+========
+El área es base por altura: $`r base` \cdot `r altura` = `r area`$.
+
+Answerlist
+----------
+* Verdadero.
+* Falso: es el perímetro.
+* Falso: es la suma de dos lados.
+* Falso: es la mitad del área.
+
+Meta-information
+================
+exname: f_tikz
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE

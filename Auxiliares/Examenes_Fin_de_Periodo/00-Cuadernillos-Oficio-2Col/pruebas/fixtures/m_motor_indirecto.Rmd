@@ -1,0 +1,37 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## Mutante M12b (C12): el mismo reemplazo del motor python, escrito de forma indirecta con do.call.
+library(exams)
+do.call(knitr::knit_engines$set, list(python = function(o) knitr::engine_output(o, o$code, '')))
+a <- sample(31:39, 1)
+opciones <- c(a, a + 1, a + 2, a + 3)
+sol <- c(TRUE, FALSE, FALSE, FALSE)
+```
+
+Question
+========
+¿Cuál es el menor de estos números?
+
+Answerlist
+----------
+* `r opciones[1]`
+* `r opciones[2]`
+* `r opciones[3]`
+* `r opciones[4]`
+
+Solution
+========
+La respuesta correcta es `r opciones[1]`.
+
+Answerlist
+----------
+* Verdadero.
+* Falso.
+* Falso.
+* Falso.
+
+Meta-information
+================
+exname: m_motor_indirecto
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE

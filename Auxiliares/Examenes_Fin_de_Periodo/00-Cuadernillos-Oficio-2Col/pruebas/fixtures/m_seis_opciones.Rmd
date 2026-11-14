@@ -1,0 +1,40 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## Mutante M11b (C11): seis opciones; la hoja NOPS solo tiene casillas de la a a la e.
+library(exams)
+a <- sample(11:19, 1)
+opciones <- a + 0:5
+sol <- c(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE)
+```
+
+Question
+========
+¿Cuál es el menor de estos números?
+
+Answerlist
+----------
+* `r opciones[1]`
+* `r opciones[2]`
+* `r opciones[3]`
+* `r opciones[4]`
+* `r opciones[5]`
+* `r opciones[6]`
+
+Solution
+========
+El menor es `r opciones[1]`.
+
+Answerlist
+----------
+* Verdadero.
+* Falso.
+* Falso.
+* Falso.
+* Falso.
+* Falso.
+
+Meta-information
+================
+exname: m_seis_opciones
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE

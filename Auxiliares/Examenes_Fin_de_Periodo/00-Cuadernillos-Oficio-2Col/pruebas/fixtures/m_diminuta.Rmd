@@ -1,0 +1,43 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## Mutante M4 (C4): rótulo en \tiny (5 pt) dentro de una figura TikZ de 6 cm que se incluye a 3 cm: queda en 2,5 pt.
+## Cuidado: si la figura se AMPLÍA (ancho pedido mayor que el natural), el rótulo crece y el mutante sobrevive.
+library(exams)
+lado <- sample(4:7, 1)   # con lado >= 4 las cuatro opciones son distintas
+opciones <- c(2 * lado^2, 6 * lado, 3 * lado, 2 * lado^2 + 1)
+sol <- c(TRUE, FALSE, FALSE, FALSE)
+fig_id <- paste(sample(c(0:9, letters[1:6]), 6, replace = TRUE), collapse = "")
+tz <- sprintf("\\begin{tikzpicture}\\draw (0,0) rectangle (6,3);\\node at (3,1.5) {\\tiny lado menor de %d metros};\\end{tikzpicture}", lado)
+```
+
+Question
+========
+El rectángulo de la figura mide el doble de largo que de ancho. ¿Cuál es su área?
+
+```{r figura, echo = FALSE, results = "asis"}
+include_tikz(tz, name = paste0("cuadrado_", fig_id), format = match_exams_device(), markup = "markdown", width = "3cm")
+```
+
+Answerlist
+----------
+* `r opciones[1]`
+* `r opciones[2]`
+* `r opciones[3]`
+* `r opciones[4]`
+
+Solution
+========
+La respuesta correcta es `r opciones[1]`.
+
+Answerlist
+----------
+* Verdadero.
+* Falso.
+* Falso.
+* Falso.
+
+Meta-information
+================
+exname: m_diminuta
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE

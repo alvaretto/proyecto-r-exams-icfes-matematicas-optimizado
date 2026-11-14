@@ -1,0 +1,37 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## Mutante M6 (C6): set.seed(NULL) anula la semilla que fija R/exams; cada corrida da otros números.
+library(exams)
+set.seed(NULL)
+a <- sample(100:999, 1)
+opciones <- c(a + 1000, a + 2000, a + 3000, a + 4000)
+sol <- c(TRUE, FALSE, FALSE, FALSE)
+```
+
+Question
+========
+¿Cuánto es `r a` más mil?
+
+Answerlist
+----------
+* `r opciones[1]`
+* `r opciones[2]`
+* `r opciones[3]`
+* `r opciones[4]`
+
+Solution
+========
+La respuesta correcta es `r opciones[1]`.
+
+Answerlist
+----------
+* Verdadero.
+* Falso.
+* Falso.
+* Falso.
+
+Meta-information
+================
+exname: m_semilla_nula
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE

@@ -1,0 +1,39 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## Fixture mínimo del motor de cuadernillos: texto y fórmula, sin figuras.
+library(exams)
+a <- sample(3:9, 1)
+b <- sample(3:9, 1)
+correcta <- a * b
+## con a, b >= 3 se cumple a*b >= a + b + 3: las cuatro cifras son distintas
+opciones <- c(correcta, a + b, correcta + 1, correcta - 1)
+sol <- c(TRUE, FALSE, FALSE, FALSE)
+```
+
+Question
+========
+Una caja tiene `r a` filas de `r b` fichas cada una. ¿Cuántas fichas hay en total? Recuerde que $n = f \cdot c$.
+
+Answerlist
+----------
+* `r opciones[1]`
+* `r opciones[2]`
+* `r opciones[3]`
+* `r opciones[4]`
+
+Solution
+========
+Se multiplica el número de filas por el número de fichas de cada fila: $`r a` \cdot `r b` = `r correcta`$.
+
+Answerlist
+----------
+* Verdadero: es el producto.
+* Falso: es la suma.
+* Falso: sobra una ficha.
+* Falso: falta una ficha.
+
+Meta-information
+================
+exname: f_texto
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE

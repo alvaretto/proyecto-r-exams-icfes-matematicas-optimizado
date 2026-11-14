@@ -1,0 +1,36 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## Mutante M9 (C9): bucle sin tope; lo corta el vigilante del pre-vuelo.
+library(exams)
+while (TRUE) {}
+opciones <- 1:4
+sol <- c(TRUE, FALSE, FALSE, FALSE)
+```
+
+Question
+========
+¿Cuál es el menor de estos números?
+
+Answerlist
+----------
+* `r opciones[1]`
+* `r opciones[2]`
+* `r opciones[3]`
+* `r opciones[4]`
+
+Solution
+========
+La respuesta correcta es `r opciones[1]`.
+
+Answerlist
+----------
+* Verdadero.
+* Falso.
+* Falso.
+* Falso.
+
+Meta-information
+================
+exname: m_bucle
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE

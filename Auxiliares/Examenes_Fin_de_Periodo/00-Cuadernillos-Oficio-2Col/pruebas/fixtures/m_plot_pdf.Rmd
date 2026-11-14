@@ -1,0 +1,41 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## Mutante M2 (C2): el dispositivo pdf() de R no incrusta Helvetica.
+library(exams)
+alturas <- sample(2:9, 4)
+opciones <- c(max(alturas), max(alturas) + 1, max(alturas) + 2, max(alturas) + 3)
+sol <- c(TRUE, FALSE, FALSE, FALSE)
+```
+
+Question
+========
+¿Cuál es la altura de la barra más alta de la gráfica?
+
+```{r grafico, echo = FALSE, fig.width = 3, fig.height = 2, fig.cap = "", dev = "pdf"}
+par(mar = c(3, 3, 1, 1))
+barplot(alturas, names.arg = LETTERS[1:4])
+```
+
+Answerlist
+----------
+* `r opciones[1]`
+* `r opciones[2]`
+* `r opciones[3]`
+* `r opciones[4]`
+
+Solution
+========
+La respuesta correcta es `r opciones[1]`.
+
+Answerlist
+----------
+* Verdadero.
+* Falso.
+* Falso.
+* Falso.
+
+Meta-information
+================
+exname: m_plot_pdf
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE

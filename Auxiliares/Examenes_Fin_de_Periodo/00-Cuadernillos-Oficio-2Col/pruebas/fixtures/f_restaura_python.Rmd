@@ -1,0 +1,37 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## Control negativo de C12: solo RESTAURA el motor python de reticulate (la excepción permitida).
+library(exams)
+knitr::knit_engines$set(python = reticulate::eng_python)
+a <- sample(11:19, 1)
+opciones <- c(2 * a, a + 2, a^2, a / 2)
+sol <- c(TRUE, FALSE, FALSE, FALSE)
+```
+
+Question
+========
+¿Cuál es el doble de `r a`?
+
+Answerlist
+----------
+* `r opciones[1]`
+* `r opciones[2]`
+* `r opciones[3]`
+* `r opciones[4]`
+
+Solution
+========
+El doble de `r a` es $2 \cdot `r a` = `r 2 * a`$.
+
+Answerlist
+----------
+* Verdadero.
+* Falso: suma dos.
+* Falso: es el cuadrado.
+* Falso: es la mitad.
+
+Meta-information
+================
+exname: f_restaura_python
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE

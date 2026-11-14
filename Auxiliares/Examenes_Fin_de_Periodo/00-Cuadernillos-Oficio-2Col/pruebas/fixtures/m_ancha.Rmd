@@ -1,0 +1,43 @@
+```{r data_generation, echo = FALSE, results = "hide"}
+## Mutante M3 (C3): figura pedida a 14 cm; solo el envoltorio de la plantilla la reduce a la columna.
+library(exams)
+largo <- sample(8:12, 1)
+opciones <- c(largo, largo + 1, largo + 2, largo + 3)
+sol <- c(TRUE, FALSE, FALSE, FALSE)
+fig_id <- paste(sample(c(0:9, letters[1:6]), 6, replace = TRUE), collapse = "")
+tz <- sprintf("\\begin{tikzpicture}\\draw[thick] (0,0) -- (%d,0);\\node[above] at (%g,0) {%d cm};\\end{tikzpicture}",
+  largo, largo / 2, largo)
+```
+
+Question
+========
+¿Cuánto mide el segmento de la figura?
+
+```{r figura, echo = FALSE, results = "asis"}
+include_tikz(tz, name = paste0("segmento_", fig_id), format = match_exams_device(), markup = "markdown", width = "14cm")
+```
+
+Answerlist
+----------
+* `r opciones[1]`
+* `r opciones[2]`
+* `r opciones[3]`
+* `r opciones[4]`
+
+Solution
+========
+La respuesta correcta es `r opciones[1]`.
+
+Answerlist
+----------
+* Verdadero.
+* Falso.
+* Falso.
+* Falso.
+
+Meta-information
+================
+exname: m_ancha
+extype: schoice
+exsolution: `r mchoice2string(sol)`
+exshuffle: TRUE
