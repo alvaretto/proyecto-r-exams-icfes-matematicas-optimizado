@@ -331,10 +331,12 @@ Analizando la fórmula por partes:
 Por lo tanto, la fórmula $A_T = 2 \\times \\pi \\times r \\times h + 2 \\times \\pi \\times r^2$ es la fórmula del área total de un cilindro.
 
 Sustituyendo los valores:
+
 - Radio de la base: $r = ", radio, " \\text{ cm}$
 - Altura: $h = ", altura, " \\text{ cm}$
 
 Calculamos:
+
 - Área lateral: $A_L = 2 \\times \\pi \\times ", radio, " \\times ", altura, " = ", area_lateral_redondeada, " \\text{ cm}^2$
 - Área de las dos bases: $A_B = 2 \\times \\pi \\times ", radio, "^2 = 2 \\times ", area_base_redondeada, " = ", fmt_icfes(2*area_base), " \\text{ cm}^2$
 - Área total: $A_T = A_L + A_B = ", area_lateral_redondeada, " + ", fmt_icfes(2*area_base), " = ", area_total_redondeada, " \\text{ cm}^2$

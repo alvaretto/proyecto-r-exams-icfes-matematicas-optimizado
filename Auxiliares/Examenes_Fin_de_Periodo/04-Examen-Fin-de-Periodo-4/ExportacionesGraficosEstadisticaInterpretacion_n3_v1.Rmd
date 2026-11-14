@@ -343,11 +343,11 @@ Para resolver este problema de interpretación de gráficos estadísticos, neces
 El primer gráfico muestra las exportaciones anuales totales de Tebailandia en millones de tebos para el período `r py$selected_years[1]`-`r py$selected_years[5]`. Los valores específicos para cada año son:
 
 ```{r mostrar_datos_barras, echo=FALSE, results='asis'}
-cat("- Año", py$selected_years[1], ":", num(py$exports[1]), "millones de tebos\n")
-cat("- Año", py$selected_years[2], ":", num(py$exports[2]), "millones de tebos\n")
-cat("- Año", py$selected_years[3], ":", num(py$exports[3]), "millones de tebos\n")
-cat("- Año", py$selected_years[4], ":", num(py$exports[4]), "millones de tebos\n")
-cat("- Año", py$selected_years[5], ":", num(py$exports[5]), "millones de tebos\n")
+cat("- Año ", py$selected_years[1], ": ", num(py$exports[1]), " millones de tebos\n", sep = "")
+cat("- Año ", py$selected_years[2], ": ", num(py$exports[2]), " millones de tebos\n", sep = "")
+cat("- Año ", py$selected_years[3], ": ", num(py$exports[3]), " millones de tebos\n", sep = "")
+cat("- Año ", py$selected_years[4], ": ", num(py$exports[4]), " millones de tebos\n", sep = "")
+cat("- Año ", py$selected_years[5], ": ", num(py$exports[5]), " millones de tebos\n", sep = "")
 ```
 
 \
@@ -369,8 +369,8 @@ if (anio == py$selected_years[1]) {
   valor_total <- py$exports[5]
 }
 
-cat("**Valor total de exportaciones en", anio, ":", num(valor_total),
-    "millones de tebos**\n")
+cat("**Valor total de exportaciones en ", anio, ": ", num(valor_total),
+    " millones de tebos**\n", sep = "")
 ```
 
 \
@@ -400,8 +400,8 @@ Sustituyendo los valores:
 
 ```{r calculo_detallado, echo=FALSE, results='asis'}
 cat("Valor de", producto_seleccionado, "= ", num(valor_total), " millones de tebos × ",
-    py$sizes[py$producto_index + 1], "%\n")
-cat("Valor de", producto_seleccionado, "= ", num(valor_total), " × ", num(py$sizes[py$producto_index + 1] / 100), "\n")
+    py$sizes[py$producto_index + 1], "%\n\n")
+cat("Valor de", producto_seleccionado, "= ", num(valor_total), " × ", num(py$sizes[py$producto_index + 1] / 100), "\n\n")
 cat("Valor de", producto_seleccionado, "= ", num(valor_total * (py$sizes[py$producto_index + 1] / 100)),
     " millones de tebos\n")
 ```

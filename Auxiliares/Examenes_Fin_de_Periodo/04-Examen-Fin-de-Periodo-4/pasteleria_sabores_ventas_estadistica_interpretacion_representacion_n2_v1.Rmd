@@ -421,10 +421,10 @@ Para resolver este problema, necesitamos:
 
 ```{r analisis_tabla, echo=FALSE, results='asis'}
 preferencias_ordenadas <- sort(datos$preferencias, decreasing = TRUE)
-cat("- ", names(preferencias_ordenadas)[1], ": ", preferencias_ordenadas[1], " clientes\n")
-cat("- ", names(preferencias_ordenadas)[2], ": ", preferencias_ordenadas[2], " clientes\n")
-cat("- ", names(preferencias_ordenadas)[3], ": ", preferencias_ordenadas[3], " clientes\n")
-cat("- ", names(preferencias_ordenadas)[4], ": ", preferencias_ordenadas[4], " clientes\n")
+cat("- ", names(preferencias_ordenadas)[1], ": ", preferencias_ordenadas[1], " clientes\n", sep = "")
+cat("- ", names(preferencias_ordenadas)[2], ": ", preferencias_ordenadas[2], " clientes\n", sep = "")
+cat("- ", names(preferencias_ordenadas)[3], ": ", preferencias_ordenadas[3], " clientes\n", sep = "")
+cat("- ", names(preferencias_ordenadas)[4], ": ", preferencias_ordenadas[4], " clientes\n", sep = "")
 ```
 
 Los 2 sabores más preferidos son: **`r names(preferencias_ordenadas)[1]`** y **`r names(preferencias_ordenadas)[2]`**.
@@ -433,7 +433,7 @@ Los 2 sabores más preferidos son: **`r names(preferencias_ordenadas)[1]`** y **
 
 ```{r analisis_grafico, echo=FALSE, results='asis'}
 ventas_ordenadas <- sort(datos$ventas_por_dia, decreasing = TRUE)
-cat("El día con mayor número de ventas es: **", names(ventas_ordenadas)[1], "** con ", ventas_ordenadas[1], " tortas vendidas.\n")
+cat("El día con mayor número de ventas es: **", names(ventas_ordenadas)[1], "** con ", ventas_ordenadas[1], " tortas vendidas.\n", sep = "")
 ```
 
 **Respuesta:** Se venderán el `r tolower(datos$dia_mayor_ventas)` y los sabores serán `r tolower(datos$sabores_mas_preferidos[1])` y `r tolower(datos$sabores_mas_preferidos[2])`.
