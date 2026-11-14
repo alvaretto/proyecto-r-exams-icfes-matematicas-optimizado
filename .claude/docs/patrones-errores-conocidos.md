@@ -4108,3 +4108,201 @@ Control positivo medido en la prueba mínima: con las variantes (a), (f) y (g) e
 
 - `man pandoc`, sección «Math», extensión `tex_math_dollars`
 - `A-Produccion/01-En-PreDesarrollo/serie-seno-aproximacion-n3/salida/aplicar_cambios_r4.py` y `salida/fase2c_r4_detractor.md`
+
+---
+
+## Error 45: Una lista numerada del ejercicio cambia el número de la pregunta siguiente y pierde sus propios números, cuando la plantilla numera las preguntas con `enumerate`
+
+### ❌ Mensaje de Error
+
+No hay mensaje: el PDF compila sin avisos. Lo que se lee, con cuatro ejercicios reales y la plantilla oficial anterior (`solpcielo.tex` del commit `7dcbd282`):
+
+```
+1. Escenario: …
+2. Escenario: …
+3. Escenario: …      su retroalimentación trae «1. Ordenar los datos…», unas viñetas y «2. Comparar las medianas:»
+2. Escenario: …      es la cuarta pregunta
+```
+
+Y dentro de la tercera, la lista que el autor numeró sale con letras, y las dos veces con «a)»:
+
+```
+a) Ordenar los datos de cada modelo y encontrar su mediana:
+a) Comparar las medianas:
+```
+
+El primer caso visto fue la retroalimentación de un examen de 11 preguntas, numerada 1, 2, 3, **2, 3, 4, 5, 6, 7, 8, 9**, con una clave en el encabezado que decía 1 a 11 (repetido el 2026-11-14 con la plantilla `retro_celular.tex` del commit `7dcbd282`, en las versiones 1 y 3).
+
+### 🔍 Causa Raíz
+
+Pandoc escribe toda lista numerada de Markdown como si fuera de primer nivel. Medido con `pandoc -f markdown -t latex` (pandoc 3.11) sobre «3. Sumar. / 4. Anotar.»:
+
+```latex
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Sumar.
+```
+
+Con una lista que empieza en 1 escribe lo mismo sin la línea `\setcounter`. Es la extensión `startnum` de su manual: el número inicial se conserva «where possible in the output format».
+
+Una plantilla que numera las preguntas con `\begin{enumerate}` y un `\item` por pregunta ya ocupa ese primer nivel. La lista del ejercicio queda en el segundo, que LaTeX numera con `enumii` y rotula con `\labelenumii`. De ahí los dos efectos:
+
+- **(A) Cambia el número de la pregunta siguiente.** `\setcounter{enumi}{N-1}` es global y cae sobre el contador de las preguntas. La pregunta siguiente toma el número en que empieza la última lista de ese tipo que se imprimió antes: 2 en el caso de arriba; 5 con una lista que empieza en 5; 3 con una que empieza en 3.
+- **(B) La lista pierde sus números.** `\def\labelenumi{…}` redefine la etiqueta del primer nivel, que la lista no usa: sale con la del segundo («(a)» con `plain.tex`; «a)» con `solpcielo.tex`, que carga `babel` en español, y en la hoja NOPS generada con `language = "es"`) y empieza siempre en la primera letra. Esto pasa con toda lista numerada, también con la que empieza en 1.
+
+Numeran así las preguntas, y están medidas: la plantilla oficial anterior `solpcielo.tex`; `plain.tex`, la que `exams2pdf()` usa por defecto; y la que arma `exams2nops()` (`\newenvironment{question}{\item}{}` dentro de `\begin{enumerate}`). En Word (`exams2pandoc()`), pandoc lee ese LaTeX y no arrastra el contador, pero sí la etiqueta: aparece solo el efecto (B).
+
+**Por qué no lo ve ningún validador.**
+
+- No hay error ni aviso, y el `.tex` no lleva los números: los calcula LaTeX al compilar.
+- Con un solo ejercicio no hay pregunta siguiente. Todo render de un `.Rmd` suelto sale bien numerado.
+- En HTML todo sale bien: cada lista lleva su `start` y no comparte contador con nada.
+- Una comparación de texto entre salidas no mira las etiquetas de las listas.
+- **Una coincidencia lo esconde.** Si la lista empieza en `k` y va en la pregunta `k-1`, la pregunta siguiente recibe el número que le tocaba. Pasó dos veces el 2026-11-14: un mutante que debía morir sobrevivió, porque la lista de la Solution empezaba en 2 y estaba en la primera pregunta; y la primera medición de NOPS dio 1, 2, 3, 4 con una lista «3., 4.» en la segunda pregunta. Con esa misma lista en la primera pregunta, NOPS da 1, 3, 4, 5.
+
+### ✅ Solución Verificada
+
+**En las plantillas propias: preguntas y opciones en listas propias de `enumitem`, con sus contadores.** Así la lista de pandoc vuelve a ser de primer nivel: su `\setcounter{enumi}` no toca a nadie y su etiqueta es la que escribió el autor.
+
+```latex
+%% ❌ ANTES (solpcielo.tex, commit 7dcbd282)
+\newenvironment{question}{\item \textbf{Escenario:}\newline}{}
+\newenvironment{solution}{\textbf{Retroalimentación:}\newline}{}
+\newenvironment{answerlist}{\renewcommand{\labelenumi}{(\alph{enumi})}\begin{enumerate}}{\end{enumerate}}
+…
+\begin{enumerate}
+
+%% \exinput{exercises}
+
+\end{enumerate}
+```
+
+```latex
+%% ✅ DESPUÉS (A-Produccion/perifericos/solpcielo.tex)
+\usepackage{enumitem}
+…
+\newlist{preguntas}{enumerate}{1}
+\setlist[preguntas]{label=\arabic*.}
+\newlist{opciones}{enumerate}{1}
+\setlist[opciones]{label=\emph{\alph*})}
+\newenvironment{question}{\item \textbf{Escenario:}\newline}{}
+\newenvironment{solution}{\textbf{Retroalimentación:}\newline}{}
+\newenvironment{answerlist}{\begin{opciones}}{\end{opciones}}
+…
+\begin{preguntas}
+
+%% \exinput{exercises}
+
+\end{preguntas}
+```
+
+Llevan este arreglo `solpcielo.tex`, `solpcielo_cloze.tex`, `cuadernillo_oficio_2col.tex` y `retro_celular.tex`, las cuatro en `A-Produccion/perifericos/`. Las etiquetas de las preguntas y de las opciones no cambian: los cinco ejercicios de los tres subproyectos que copian `solpcielo*.tex` dan el mismo PDF, píxel a píxel, con la plantilla anterior y con la nueva.
+
+**En las plantillas que no son nuestras (NOPS, `plain.tex`, Word): escribir la lista como texto en el `.Rmd`.** Con el punto escapado pandoc ya no ve una lista, y la barra al final del renglón parte la línea:
+
+```markdown
+<!-- ❌ ANTES: lista numerada de Markdown -->
+3. Sumar las tres cantidades.
+4. Anotar el total en la cartelera.
+
+<!-- ✅ DESPUÉS: los mismos renglones, como texto -->
+3\. Sumar las tres cantidades.\
+4\. Anotar el total en la cartelera.
+```
+
+Pandoc escribe entonces `3. Sumar las tres cantidades.\\` y `4. Anotar el total en la cartelera.` dentro de un párrafo, sin `enumerate`.
+
+### 🧪 Validación de la Solución
+
+`exams` 2.4.5, pandoc 3.11, pdfTeX de TinyTeX, LibreOffice para pasar el Word a PDF, `MPLBACKEND=Agg`. Una versión de cada conjunto, con `seed` fija. Los números se leen del texto del PDF (`pdftotext -layout`), que es lo que ve quien lo recibe; el HTML, con `pandoc -f html -t plain`.
+
+Conjuntos:
+
+- **REALES**: `cateto_teorema_pitagoras…n3_v1_1.Rmd`, `vaso-cilindrico-v6.Rmd`, `2023-Matematicas-11-2-04-Op-D-V2.Rmd` y `pasteleria_sabores…n2_v1.Rmd` (de `Auxiliares/Examenes_Fin_de_Periodo/`). La Solution del tercero trae «1. Ordenar…», unas viñetas y «2. Comparar…»: la segunda lista empieza en 2.
+- **ENUNCIADO**: `f_lista.Rmd`, `f_texto.Rmd`, `f_texto.Rmd` (de `00-Cuadernillos-Oficio-2Col/pruebas/fixtures/`) y el del cateto. `f_lista` va de primero y trae la lista «3., 4.» en el enunciado y una que empieza en 5 en la Solution.
+- **TEXTO**: el conjunto ENUNCIADO, con las dos listas de `f_lista` escritas como texto (`3\.` y la barra final).
+
+Número impreso de cada pregunta:
+
+| Salida | Plantilla | REALES | ENUNCIADO | TEXTO |
+|---|---|---|---|---|
+| `exams2pdf()` | `solpcielo.tex` anterior (`7dcbd282`) | 1, 2, 3, **2** | 1, **5, 6, 7** | 1, 2, 3, 4 |
+| `exams2pdf()` | `solpcielo.tex` oficial | 1, 2, 3, 4 | 1, 2, 3, 4 | 1, 2, 3, 4 |
+| `exams2pdf()` | `plain.tex` del paquete | no medido | 1, **5, 6, 7** | 1, 2, 3, 4 |
+| `exams2nops()` | la del paquete (no imprime la Solution) | no medido | 1, **3, 4, 5** | 1, 2, 3, 4 |
+| `exams2pandoc(type = "docx")` | `plain.tex` del paquete | 1, 2, 3, 4 | 1, 2, 3, 4 | 1, 2, 3, 4 |
+| `exams2html()` | `plain.html` del paquete | 1, 2, 3, 4 | 1, 2, 3, 4 | 1, 2, 3, 4 |
+
+Cómo sale rotulada la lista «3., 4.» del enunciado (conjunto ENUNCIADO):
+
+| Salida y plantilla | Lista de Markdown | Lista como texto |
+|---|---|---|
+| PDF, `solpcielo.tex` anterior | «a), b)» | «3., 4.» |
+| PDF, `solpcielo.tex` oficial | «3., 4.» | «3., 4.» |
+| PDF, `plain.tex` del paquete | «(a), (b)» | «3., 4.» |
+| NOPS | «a), b)» | «3., 4.» |
+| Word, `plain.tex` del paquete | «a., b.» | «3., 4.» |
+| HTML | «3., 4.» | «3., 4.» |
+
+Con el motor de cuadernillos (`generar_cuadernillos.R`, plantillas de `perifericos/`) y `f_lista`, `f_texto`, `f_texto`: el cuadernillo del estudiante, el del docente y la retroalimentación numeran 1, 2, 3 y conservan «3., 4.» y «5.»; su Word numera 1, 2, 3, pero rotula la lista del enunciado «a., b.». La variante como texto no se midió con el Word del motor.
+
+**Cuántos ejercicios lo tienen hoy.** Conteo sin tejer (secciones Question y Solution de cada `.Rmd`, con `pandoc -t json`). Es una cota inferior: no ve las listas que escribe un `cat()` ni las que arma una cadena de R.
+
+| Conjunto | `.Rmd` | Lista numerada en el enunciado | Lista numerada en la Solution | De esas, alguna no empieza en 1 |
+|---|---|---|---|---|
+| Exámenes 01, 02 y 04 | 33 | 0 | 16 | 5 |
+| `A-Produccion/` | 452 | 0 | 112 | 1 |
+
+Ningún enunciado tiene hoy una lista numerada: el número de las preguntas de una hoja NOPS no está expuesto mientras eso siga así. El efecto (A) aparece hoy donde se imprime la Solution de varias preguntas seguidas (retroalimentación, cuadernillo del docente, PDF del aula con `solpcielo*.tex`) y con una plantilla que numere con `enumerate`.
+
+### 🔎 Cómo detectarlo mecánicamente
+
+- **En el motor de cuadernillos**: la guarda C13 de `verificar_cuadernillos.R` exige que los números impresos sean 1..Q en cada cuadernillo y en cada retroalimentación; los lee de las anclas que la plantilla escribe con el mismo contador que imprime el número. La prueban los mutantes M15 y M15b, dentro de `tests/testthat/test_cuadernillos_oficio.R`.
+- **En un PDF del aula** (`solpcielo*.tex`):
+
+  ```bash
+  pdftotext -layout salida.pdf - | grep -E '^ {0,14}[0-9]+\. Escenario:'    # deben salir 1, 2, …, Q, en orden
+  ```
+
+  Control positivo: el conjunto ENUNCIADO con la plantilla de `git show 7dcbd282:A-Produccion/perifericos/solpcielo.tex` da 1, 5, 6, 7.
+- **La prueba tiene que poder fallar**: al menos tres preguntas, la lista en la primera, y un número inicial que no sea el de la pregunta siguiente.
+- `solpcielo.tex` y `solpcielo_cloze.tex` **no tienen guarda ejecutable propia**: la suite vigila las dos plantillas del motor, no estas.
+
+### 📋 Checklist de Corrección
+
+- [ ] La plantilla propia numera preguntas y opciones con `\newlist` de `enumitem`, no con `enumerate`.
+- [ ] Una copia local de `solpcielo*.tex` se rehace desde la oficial de `A-Produccion/perifericos/` antes de imprimir varias preguntas con su retroalimentación.
+- [ ] Si las preguntas se leen en el PDF de `exams2nops()`, con `plain.tex` o en Word, ningún enunciado lleva una lista numerada de Markdown; si hace falta, va como texto (`3\.` y barra al final del renglón).
+- [ ] La numeración se comprueba en un PDF de varias preguntas, no en el render de un ejercicio suelto, y con un caso que pueda fallar.
+
+### 📚 Ejemplo Funcional Utilizado
+
+- Plantillas: `A-Produccion/perifericos/solpcielo.tex` y `solpcielo_cloze.tex` (líneas de `\newlist` y `\begin{preguntas}`), `cuadernillo_oficio_2col.tex` y `retro_celular.tex`.
+- Ejercicio real con la lista en la Solution: `Auxiliares/Examenes_Fin_de_Periodo/01-ExamenFinPeriodo-1/2023-Matematicas-11-2-04-Op-D-V2.Rmd` (líneas 163 a 169).
+- Ejercicio de prueba con la lista en el enunciado: `Auxiliares/Examenes_Fin_de_Periodo/00-Cuadernillos-Oficio-2Col/pruebas/fixtures/f_lista.Rmd`.
+
+### 📅 Historial
+
+| Fecha | Cambio |
+|---|---|
+| 2026-11-14 | Hallado en la retroalimentación del examen real de 11 preguntas (motor de cuadernillos). Corregidas las dos plantillas del motor; guarda C13 y mutantes M15 y M15b |
+| 2026-11-14 | Medido el mismo defecto en la plantilla oficial `solpcielo.tex` (1, 5, 6) y corregidas `solpcielo.tex` y `solpcielo_cloze.tex`, por instrucción del profesor |
+| 2026-11-14 | Documentado. Medición nueva en PDF, NOPS, Word y HTML con ejercicios reales: el defecto está también en `plain.tex` y en la plantilla de `exams2nops()`, y en Word se pierde la etiqueta de la lista. Remedio medido para esas plantillas: la lista como texto |
+
+Resultados por formato, después del arreglo de las plantillas propias:
+
+| Formato | Número de las preguntas | Etiquetas de la lista del ejercicio |
+|---|---|---|
+| PDF con `solpcielo*.tex`, cuadernillo y retroalimentación del motor | ✅ | ✅ |
+| HTML | ✅ (nunca tuvo el defecto) | ✅ |
+| Word (`exams2pandoc`, plantilla del paquete y del motor) | ✅ | ❌ letras en lugar de números, salvo con la lista como texto |
+| NOPS y PDF con `plain.tex` (plantillas del paquete) | ❌ con una lista de Markdown en el enunciado; ✅ con la lista como texto | ❌ letras; ✅ con la lista como texto |
+
+### 📚 Referencias
+
+- `man pandoc`, extensión `startnum`
+- `.claude/docs/reglas/material-aula.md` (regla #26), apartado «Numeración de las preguntas: listas propias, no `enumerate`»
+- `Auxiliares/Examenes_Fin_de_Periodo/00-Cuadernillos-Oficio-2Col/INVESTIGACION.md`, §10.6 y §10.7

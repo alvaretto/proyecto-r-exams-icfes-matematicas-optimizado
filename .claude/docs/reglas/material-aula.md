@@ -68,7 +68,7 @@ escribió el autor. Medido el 2026-11-14:
 
 | Plantilla | Antes | Después |
 |---|---|---|
-| `retro_celular.tex`, examen real de 11 preguntas | 1, 2, 3, **2**, 4, 5, 6, 7, 8, 9 (la clave del encabezado decía 1 a 11) | 1 a 11 |
+| `retro_celular.tex`, examen real de 11 preguntas | 1, 2, 3, **2, 3, 4, 5, 6, 7, 8, 9** (la clave del encabezado decía 1 a 11) | 1 a 11 |
 | `solpcielo.tex`, tres preguntas, la primera con las listas «3., 4.» y «5.» | 1, **5**, **6**; la lista como «a), b)» | 1, 2, 3; la lista como «3., 4.» |
 
 Por instrucción del profesor del 2026-11-14 («Corregirla ahora»), `solpcielo.tex` y `solpcielo_cloze.tex` numeran con dos
@@ -85,6 +85,12 @@ Lo que queda igual: de los 144 archivos `solpcielo*.tex` del repo, 131 ya eran v
 rehicieron: sus ejercicios dan el mismo PDF con una y con otra, y la aprobación sellada del CLOZE del diagrama de Venn
 incluye el md5 de su plantilla local. Se rehacen en el próximo ciclo de cada ejercicio. `pcielo.tex` y `pcielo_nosol.tex` no
 tienen el defecto: las convierte pandoc, que no comparte contadores entre listas.
+
+Lo que este arreglo no cubre está medido en el **Error 45** de `.claude/docs/patrones-errores-conocidos.md`: la plantilla de
+`exams2nops()` y `plain.tex` del paquete numeran las preguntas con `enumerate` y tienen el mismo defecto (con una lista
+«3., 4.» en el enunciado de la primera pregunta, la hoja NOPS numera 1, 3, 4, 5); y en Word la lista del ejercicio sale con
+letras. Hoy ningún enunciado del repo trae una lista numerada (0 de 33 en los exámenes y 0 de 452 en `A-Produccion/`). Si
+hace falta una, se escribe como texto (`3\.` y una barra al final del renglón): así sale bien en los cuatro formatos.
 
 ### Plantilla local de una pregunta por página
 

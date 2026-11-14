@@ -525,8 +525,9 @@ El PRP manda que, si una medición lo contradice, gane la medición y se declare
   pedido (3 cm = 85,4 pt; 5 cm = 142,3 pt) y solo se reduce lo que no cabe. Las muestras del 2026-11-13 llevaban el defecto.
 - **Numeración de las preguntas.** Cuando una lista numerada del ejercicio no empieza en 1, pandoc escribe
   `\setcounter{enumi}{N}`. Con las preguntas numeradas por `enumi`, la retroalimentación del examen real numeró
-  1, 2, 3, **2**, 4, 5, 6, 7, 8, 9: la lista «2. Comparar las medianas» de la Solution 3 cambió el número de la pregunta 4 y
-  corrió las siete siguientes, mientras la clave del encabezado decía 1..11. Las dos plantillas numeran ahora con listas
+  1, 2, 3, **2, 3, 4, 5, 6, 7, 8, 9**: la lista «2. Comparar las medianas» de la Solution 3 cambió el número de la pregunta 4
+  y corrió las siete siguientes, mientras la clave del encabezado decía 1..11. Documentado como Error 45 en
+  `.claude/docs/patrones-errores-conocidos.md`, con la medición en PDF, NOPS, Word y HTML. Las dos plantillas numeran ahora con listas
   propias (`\newlist{preguntas}`, `\newlist{opciones}`), y las listas de pandoc recuperan la etiqueta del autor («1.», «2.»)
   en lugar de «a)». El cuadernillo quedó idéntico píxel a píxel (0 píxeles distintos en 4 páginas × 3 versiones; control:
   146 033 entre dos páginas distintas). De ahí la guarda C13.
@@ -628,6 +629,9 @@ El PRP manda que, si una medición lo contradice, gane la medición y se declare
 - **Preguntas enteras.** Con `partir_preguntas = FALSE`, una pregunta más alta que la columna (30,3 cm; 27,8 cm en la
   primera página) no cabe, y el motor no la reduce: C3 falla y hay que volver al valor por defecto. Además gasta más
   papel: 6 caras en lugar de 4 en dos de las tres versiones del examen real.
+- **Lista numerada en un enunciado** (Error 45). En el Word, la lista del ejercicio sale con letras («a., b.») en lugar de
+  sus números; el cuadernillo, el del docente y la retroalimentación la conservan. La hoja NOPS no se ve afectada, porque
+  del NOPS solo se usa la hoja. Ninguno de los 33 `.Rmd` de los exámenes trae una lista numerada en el enunciado.
 - **Imágenes dentro de una celda** de una tabla del Word: no se reducen a la celda, solo a la columna.
 - **C10 es manual.** El verificador deja las hojas en gris; alguien tiene que mirarlas.
 - **Escaneo**: probado solo en simulación (§10.5).

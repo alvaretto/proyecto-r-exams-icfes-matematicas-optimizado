@@ -8,6 +8,27 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.44.1 (2026-11-14)
+
+Documentación del defecto de numeración hallado con el motor de cuadernillos. No cambia ninguna norma: la compacta de la
+regla #26 solo gana la referencia «(Error 45)» (4 610 caracteres; tope: 5 000).
+
+1. **Error 45** (`patrones-errores-conocidos.md`): una lista numerada del ejercicio cambia el número de la pregunta siguiente
+   y pierde sus propios números cuando la plantilla numera las preguntas con `enumerate`. Causa: pandoc la escribe como de
+   primer nivel (`\def\labelenumi` y, si no empieza en 1, `\setcounter{enumi}{N-1}`). Medido con `exams` 2.4.5 y pandoc
+   3.11 en PDF, NOPS, Word y HTML, con cuatro ejercicios reales, la plantilla oficial anterior y la corregida. Lo nuevo
+   frente a la v3.44.0: el defecto está también en `plain.tex` y en la plantilla de `exams2nops()` (con una lista «3., 4.»
+   en el enunciado de la primera pregunta, la hoja NOPS numera 1, 3, 4, 5), y en Word la lista sale con letras. Remedio
+   medido donde la plantilla no es nuestra: la lista como texto (`3\.` y una barra al final del renglón). Alcance contado
+   sin tejer, como cota inferior: 0 enunciados con lista numerada (33 `.Rmd` de los exámenes y 452 de `A-Produccion/`); 128
+   Solutions con alguna, y 6 con una que no empieza en 1.
+2. **Una cifra corregida.** La retroalimentación del examen de 11 preguntas salía 1, 2, 3, 2, 3, 4, 5, 6, 7, 8, 9, y no
+   «1, 2, 3, 2, 4, 5, 6, 7, 8, 9» como decían el íntegro de la regla #26 y el §10.6 de `INVESTIGACION.md`: la quinta
+   pregunta lleva el número solo en su renglón y la búsqueda con que se anotó no lo vio. Repetido con la plantilla
+   `retro_celular.tex` del commit `7dcbd282`, en las versiones 1 y 3.
+3. **Referencias cruzadas:** íntegro de la regla #26 (lo que el arreglo de las plantillas no cubre), `INVESTIGACION.md`
+   §10.6 y §10.7, e `INDICE_LECCIONES.md` v1.7 (Error 45 en §2.1 y §8; filas 3.44.0 y 3.44.1 en §6).
+
 ### Cambios v3.44.0 (2026-11-14)
 
 Motor de cuadernillos Saber 11 en oficio a doble columna (`Auxiliares/Examenes_Fin_de_Periodo/00-Cuadernillos-Oficio-2Col/`,
