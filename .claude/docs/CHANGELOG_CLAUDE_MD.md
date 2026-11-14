@@ -8,6 +8,25 @@
 > mismo formato de siempre (`### Cambios vX.Y.Z (fecha)`). En `.claude/CLAUDE.md` solo se
 > actualizan **Versión** y **Fecha** de la sección Metainformación.
 
+### Cambios v3.45.0 (2026-11-14)
+
+Dos decisiones del profesor sobre el Error 45 («Tres decisiones. Aprobado»; la tercera era el commit de la v3.44.1).
+
+1. **Regla #26 v1.3, norma nueva, en sus dos capas:** en un examen cuyas preguntas se leen en el PDF de `exams2nops()`, una
+   lista numerada de un enunciado se escribe como texto (`3\.` y una barra al final del renglón), no como lista de Markdown.
+   Con la lista, la pregunta siguiente sale con otro número que el de su fila en la hoja de respuestas (medido con cuatro
+   preguntas: 1, 3, 4, 5). No aplica al examen con cuadernillo propio, donde del NOPS solo se usa la hoja. Sin guarda
+   mecánica: hoy ningún enunciado del repo trae una lista numerada.
+2. **Suite nueva:** `tests/testthat/test_plantillas_oficiales_numeracion.R` (4 bloques, 20 expectativas, unos 9 s),
+   registrada en `tests/run_all_tests.R` con su `watch` (`perifericos/solpcielo`). Vigila que `solpcielo.tex` y
+   `solpcielo_cloze.tex` numeren las preguntas con listas propias: una capa estática, que no necesita LaTeX, y un render
+   real de tres ejercicios con la lista en el primero. Cada capa lleva su mutante: con la plantilla devuelta a `enumerate`,
+   las preguntas salen 1, 5, 6.
+3. **Error 45 e índices:** la entrada nombra la guarda nueva en lugar de decir que esas plantillas no tenían;
+   `INDICE_LECCIONES.md` v1.8 (fila 3.45.0 en §6); el párrafo de la regla #26 en el índice nombra la norma.
+
+Compacta medida después del cambio: `material-aula.md` 4 956 caracteres (tope: 5 000).
+
 ### Cambios v3.44.1 (2026-11-14)
 
 Documentación del defecto de numeración hallado con el motor de cuadernillos. No cambia ninguna norma: la compacta de la

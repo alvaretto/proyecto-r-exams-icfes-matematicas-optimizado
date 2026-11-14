@@ -25,7 +25,7 @@ El agente `validator` del Context Engineering global tiene la función de "crear
 La lista vive en `tests/run_all_tests.R`; la columna «Qué valida» copia su campo `nombre`.
 
 <!-- SUITES:INICIO — generado por tests/sincronizar_doc_suites.R; no editar a mano -->
-Cifras (derivadas del runner): 54 suites, 582 bloques `test_that` y 8 suites sin `watch`.
+Cifras (derivadas del runner): 55 suites, 586 bloques `test_that` y 8 suites sin `watch`.
 
 | # | Archivo | Qué valida |
 |---|---------|-----------|
@@ -82,9 +82,10 @@ Cifras (derivadas del runner): 54 suites, 582 bloques `test_that` y 8 suites sin
 | 51 | `test_post_exams2_informe.R` | Hook post-render: el informe llega al modelo en JSON, avisa si no halla el .Rmd y 2I-2L con ruta relativa (v6.2) |
 | 52 | `test_post_exams2_cwd.R` | Hook post-render v6.3: el ejercicio sale del .Rmd y no del cwd; no escribe en el repo ni sella (8 casos + mutantes) |
 | 53 | `test_cuadernillos_oficio.R` | Cuadernillos oficio 2 columnas (Regla #26) |
-| 54 | `test_doc_suites_sincronizada.R` | Documento de cobertura sincronizado: tabla de suites generada desde el runner, fases y version del hook |
+| 54 | `test_plantillas_oficiales_numeracion.R` | Plantillas oficiales solpcielo: preguntas numeradas con listas propias (Regla #26, Error 45) |
+| 55 | `test_doc_suites_sincronizada.R` | Documento de cobertura sincronizado: tabla de suites generada desde el runner, fases y version del hook |
 
-En modo rápido (`R_TESTS_QUICK=1`, el del pre-push) corren siempre las 8 suites sin `watch` (1, 2, 5, 7, 9, 10, 13 y 48). Las otras 46 corren solo si cambió algún archivo que vigilan.
+En modo rápido (`R_TESTS_QUICK=1`, el del pre-push) corren siempre las 8 suites sin `watch` (1, 2, 5, 7, 9, 10, 13 y 48). Las otras 47 corren solo si cambió algún archivo que vigilan.
 <!-- SUITES:FIN -->
 
 ---

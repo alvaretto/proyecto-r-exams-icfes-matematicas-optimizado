@@ -450,6 +450,12 @@ suites <- list(
               "pandoc_cuadernillo", "referencia_oficio_2col", "test_cuadernillos_oficio")
   ),
   list(
+    nombre = "Plantillas oficiales solpcielo: preguntas numeradas con listas propias (Regla #26, Error 45)",
+    archivo = "tests/testthat/test_plantillas_oficiales_numeracion.R",
+    critico = TRUE,
+    watch = c("perifericos/solpcielo", "test_plantillas_oficiales_numeracion")
+  ),
+  list(
     nombre = "Documento de cobertura sincronizado: tabla de suites generada desde el runner, fases y version del hook",
     archivo = "tests/testthat/test_doc_suites_sincronizada.R",
     critico = TRUE,

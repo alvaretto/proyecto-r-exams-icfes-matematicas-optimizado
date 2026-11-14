@@ -4269,7 +4269,7 @@ Ningún enunciado tiene hoy una lista numerada: el número de las preguntas de u
 
   Control positivo: el conjunto ENUNCIADO con la plantilla de `git show 7dcbd282:A-Produccion/perifericos/solpcielo.tex` da 1, 5, 6, 7.
 - **La prueba tiene que poder fallar**: al menos tres preguntas, la lista en la primera, y un número inicial que no sea el de la pregunta siguiente.
-- `solpcielo.tex` y `solpcielo_cloze.tex` **no tienen guarda ejecutable propia**: la suite vigila las dos plantillas del motor, no estas.
+- **En las plantillas oficiales** `solpcielo.tex` y `solpcielo_cloze.tex` (desde el 2026-11-14): `tests/testthat/test_plantillas_oficiales_numeracion.R`. Una capa estática, que no necesita LaTeX, exige que los ejercicios vayan dentro de la lista propia `preguntas`; otra compila tres ejercicios con la lista en el primero y exige 1, 2, 3 y la lista con sus números. Los mutantes devuelven la plantilla a `enumerate` y exigen 1, 5, 6. Las copias locales de cada ejercicio no tienen guarda.
 
 ### 📋 Checklist de Corrección
 
@@ -4291,6 +4291,7 @@ Ningún enunciado tiene hoy una lista numerada: el número de las preguntas de u
 | 2026-11-14 | Hallado en la retroalimentación del examen real de 11 preguntas (motor de cuadernillos). Corregidas las dos plantillas del motor; guarda C13 y mutantes M15 y M15b |
 | 2026-11-14 | Medido el mismo defecto en la plantilla oficial `solpcielo.tex` (1, 5, 6) y corregidas `solpcielo.tex` y `solpcielo_cloze.tex`, por instrucción del profesor |
 | 2026-11-14 | Documentado. Medición nueva en PDF, NOPS, Word y HTML con ejercicios reales: el defecto está también en `plain.tex` y en la plantilla de `exams2nops()`, y en Word se pierde la etiqueta de la lista. Remedio medido para esas plantillas: la lista como texto |
+| 2026-11-14 | Por decisión del profesor: test `test_plantillas_oficiales_numeracion.R` para las dos plantillas oficiales, y norma en la regla #26 v1.3 (una lista numerada en un enunciado que se lee en el PDF de NOPS va como texto) |
 
 Resultados por formato, después del arreglo de las plantillas propias:
 
@@ -4304,5 +4305,5 @@ Resultados por formato, después del arreglo de las plantillas propias:
 ### 📚 Referencias
 
 - `man pandoc`, extensión `startnum`
-- `.claude/docs/reglas/material-aula.md` (regla #26), apartado «Numeración de las preguntas: listas propias, no `enumerate`»
+- `.claude/docs/reglas/material-aula.md` (regla #26), apartados «Numeración de las preguntas: listas propias, no `enumerate`» y «NOPS en oficio»
 - `Auxiliares/Examenes_Fin_de_Periodo/00-Cuadernillos-Oficio-2Col/INVESTIGACION.md`, §10.6 y §10.7

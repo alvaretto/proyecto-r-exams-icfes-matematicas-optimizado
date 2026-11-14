@@ -90,7 +90,14 @@ Lo que este arreglo no cubre está medido en el **Error 45** de `.claude/docs/pa
 `exams2nops()` y `plain.tex` del paquete numeran las preguntas con `enumerate` y tienen el mismo defecto (con una lista
 «3., 4.» en el enunciado de la primera pregunta, la hoja NOPS numera 1, 3, 4, 5); y en Word la lista del ejercicio sale con
 letras. Hoy ningún enunciado del repo trae una lista numerada (0 de 33 en los exámenes y 0 de 452 en `A-Produccion/`). Si
-hace falta una, se escribe como texto (`3\.` y una barra al final del renglón): así sale bien en los cuatro formatos.
+hace falta una, se escribe como texto (`3\.` y una barra al final del renglón): así sale bien en los cuatro formatos. Para un
+examen que se lee en el PDF de NOPS es norma desde la v1.3 (apartado «NOPS en oficio»).
+
+Desde el 2026-11-14 la numeración de las dos plantillas oficiales tiene guarda:
+`tests/testthat/test_plantillas_oficiales_numeracion.R`. Una capa estática, que no necesita LaTeX, comprueba que los
+ejercicios van dentro de la lista propia `preguntas`; otra compila tres ejercicios con la lista en el primero y lee los
+números impresos (1, 2, 3). Cada capa lleva su mutante: con la plantilla devuelta a `enumerate`, las preguntas salen
+1, 5, 6. Las copias locales de cada ejercicio no tienen guarda.
 
 ### Plantilla local de una pregunta por página
 
@@ -116,6 +123,23 @@ for (pdf in list.files(dir_salida, paste0("^", nombre_nops, "[0-9]+\\.pdf$"), fu
 ```
 
 Se imprime el `*_oficio.pdf` a tamaño real. Falta la prueba con papel y escáner reales: la del 2026-11-06 fue simulada.
+
+**Lista numerada en un enunciado (v1.3, Error 45).** La plantilla de `exams2nops()` numera las preguntas con `enumerate`, y
+pandoc escribe una lista numerada de Markdown sobre ese mismo contador. Medido el 2026-11-14 (`exams` 2.4.5, pandoc 3.11)
+con cuatro preguntas y una lista «3., 4.» en el enunciado de la primera: el PDF de NOPS las numera 1, **3, 4, 5**, mientras
+la hoja de respuestas tiene las filas 1 a 4, y la lista sale «a), b)». Quien lee las preguntas en ese PDF marca en la fila
+equivocada. Norma: en un examen cuyas preguntas se leen en el PDF de `exams2nops()`, una lista numerada de un enunciado se
+escribe como texto, con el punto escapado y una barra al final del renglón:
+
+```markdown
+3\. Sumar las tres cantidades.\
+4\. Anotar el total en la cartelera.
+```
+
+Así las preguntas salen 1, 2, 3, 4 y la lista «3., 4.», en NOPS, PDF, Word y HTML. No aplica al examen con cuadernillo
+propio, donde del NOPS solo se usa la hoja y el cuadernillo numera con listas propias. Hoy ningún enunciado del repo trae
+una lista numerada (0 de 33 en los exámenes y 0 de 452 en `A-Produccion/`, contados sin tejer), y las listas de la Solution
+no se imprimen en NOPS. Esta norma no tiene guarda mecánica: la aplica quien arma el semillero de NOPS.
 
 ### Examen con cuadernillo propio (hoja NOPS aparte)
 
@@ -219,6 +243,10 @@ cada ejercicio que se imprime y los orquestadores al crear su semillero. Una gua
 `exams2webquiz()` solo, y un gate sin barrido daría rojos en masa. Los semilleros aprobados antes de esta regla se ajustan
 en el próximo ciclo de su ejercicio: el de `diagrama-venn-juegos-mesa-n3/Cloze` exporta a Moodle sin `seed`.
 
+Excepción: la numeración de las preguntas en `solpcielo.tex` y `solpcielo_cloze.tex` sí tiene guarda en la suite
+(`test_plantillas_oficiales_numeracion.R`, con `watch` sobre `perifericos/solpcielo`), y las plantillas del cuadernillo
+tienen la suya (`test_cuadernillos_oficio.R`, guarda C13).
+
 ## Referencias cruzadas
 
 - Regla #4 (`graficos-como-opciones.md`): opciones gráficas; su impresión remite aquí.
@@ -237,3 +265,4 @@ en el próximo ciclo de su ejercicio: el de `diagrama-venn-juegos-mesa-n3/Cloze`
 |---|---|---|
 | 1.0 | 2026-11-09 | Regla nueva. Sale de `diagrama-venn-juegos-mesa-n3` y de dos decisiones del profesor: `perifericos/` en disco es la versión oficial y recupera la semilla, el tope de 100, `\pandocbounded` y `none`, y el cuestionario sin internet. |
 | 1.2 | 2026-11-14 | Examen con cuadernillo propio y hoja NOPS aparte: `twocolumn = FALSE` como excepción declarada, una sola matriz de semillas con `startid` por sesión, y la fuga del estado de knitr entre ejercicios. Sale del motor de `00-Cuadernillos-Oficio-2Col/`. Sus cuatro plantillas pasan a ser versión oficial en `perifericos/`. `solpcielo.tex` y `solpcielo_cloze.tex` numeran las preguntas con listas propias, por instrucción del profesor. El cuadernillo sale siempre en dos versiones, estudiante y docente, y las preguntas se parten por defecto (`partir_preguntas`), también por instrucción del profesor. |
+| 1.3 | 2026-11-14 | Norma nueva, por decisión del profesor: en un examen cuyas preguntas se leen en el PDF de `exams2nops()`, una lista numerada de un enunciado va como texto (Error 45: la hoja NOPS numeró 1, 3, 4, 5). Guarda nueva para la numeración de `solpcielo.tex` y `solpcielo_cloze.tex`: `test_plantillas_oficiales_numeracion.R`. |
